@@ -3,26 +3,20 @@
 
     <!-- /shop/checkout route -->
     <template id="website_sale.checkout">
-        <t t-call="website_sale.checkout_layout">
-            <t t-set="additional_title">Shop - Checkout</t>
-            <t t-set="redirect" t-valuef="/shop/checkout"/>
-            <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
+        <t t-call="website_sale.checkout_layout"
+            additional_title.translate="Shop - Checkout"
+            redirect.f="/shop/checkout"
+            same_shipping="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)">
             <div id="shop_checkout">
                 <t t-if="order._has_deliverable_products()">
                     <div class="mb-4">
-                        <t t-call="website_sale.delivery_form">
-                            <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
-                        </t>
+                        <t t-call="website_sale.delivery_form" selected_dm_id="order.carrier_id.id"/>
                     </div>
                     <div class="mb-4">
-                        <t t-call="website_sale.delivery_address_list">
-                            <t t-set="addresses" t-value="delivery_addresses"/>
-                        </t>
+                        <t t-call="website_sale.delivery_address_list" addresses="delivery_addresses"/>
                     </div>
                 </t>
-                <t t-call="website_sale.billing_address_list">
-                    <t t-set="addresses" t-value="billing_addresses"/>
-                </t>
+                <t t-call="website_sale.billing_address_list" addresses="billing_addresses"/>
             </div>
         </t>
     </template>
@@ -37,9 +31,7 @@
             <ul t-if="delivery_methods" id="o_delivery_methods" class="list-group">
                 <t t-foreach="delivery_methods" t-as="dm">
                     <li name="o_delivery_method" class="list-group-item">
-                        <t t-call="website_sale.delivery_method">
-                            <t t-set="is_selected" t-value="dm.id == selected_dm_id"/>
-                        </t>
+                        <t t-call="website_sale.delivery_method" is_selected="dm.id == selected_dm_id"/>
                     </li>
                 </t>
             </ul>
@@ -163,10 +155,9 @@
                     <i class="oi oi-plus me-2"/>Add Address
                 </a>
             </div>
-            <t t-call="website_sale.address_list">
-                <t t-set="addresses" t-value="delivery_addresses"/>
-                <t t-set="selected_address" t-value="order.partner_shipping_id"/>
-            </t>
+            <t t-call="website_sale.address_list"
+                addresses="delivery_addresses"
+                selected_address="order.partner_shipping_id"/>
         </div>
     </template>
 
@@ -207,25 +198,22 @@
                 id="billing_container"
                 t-attf-class="mt-3 {{'d-none' if use_delivery_as_billing and has_delivery else ''}}"
             >
-                <t t-call="website_sale.address_list">
-                    <t t-set="addresses" t-value="billing_addresses"/>
-                    <t t-set="selected_address" t-value="order.partner_invoice_id"/>
-                </t>
+                <t t-call="website_sale.address_list"
+                    addresses="billing_addresses"
+                    selected_address="order.partner_invoice_id"/>
             </div>
         </div>
     </template>
 
     <template id="website_sale.address_list" inherit_id="portal.address_list" primary="True">
         <t t-call="portal.address_card" position="replace">
-            <t t-call="website_sale.address_card">
+            <t t-set="contact" t-value="address"/>
+            <t t-call="website_sale.address_card"
+                is_user_address="address == request.env.user.partner_id"
+                contact="contact"
+                can_be_edited="contact._can_be_edited_by_current_customer(order_sudo=order)"
+                selected="address == selected_address">
                 <!-- Drop show_removal and address_update_url which were in the base call to portal.address_card -->
-                <t t-set="is_user_address" t-value="address == request.env.user.partner_id"/>
-                <t t-set="contact" t-value="address"/>
-                <t
-                    t-set="can_be_edited"
-                    t-value="contact._can_be_edited_by_current_customer(order_sudo=order)"
-                />
-                <t t-set="selected" t-value="address == selected_address"/>
             </t>
         </t>
     </template>

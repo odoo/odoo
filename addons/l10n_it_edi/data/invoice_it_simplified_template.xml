@@ -18,7 +18,7 @@
         <template id="account_invoice_it_simplified_FatturaPA_export">
             <t t-set="currency" t-value="record.currency_id or record.company_currency_id"/>
             <t t-set="bank" t-value="record.partner_bank_id"/>
-            <p:FatturaElettronicaSemplificata t-att-versione="formato_trasmissione" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.0 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.0/Schema_del_file_xml_FatturaPA_versione_1.0.xsd">
+            <p:FatturaElettronicaSemplificata xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" t-att-versione="formato_trasmissione" xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.0 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.0/Schema_del_file_xml_FatturaPA_versione_1.0.xsd">
                 <FatturaElettronicaHeader>
                     <DatiTrasmissione>
                         <IdTrasmittente>
@@ -43,10 +43,9 @@
                             <Nome t-out="format_alphanumeric(seller_info['first_name'], 60)"/>
                             <Cognome t-out="format_alphanumeric(seller_info['last_name'], 60)"/>
                         </t>
-                        <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede">
-                            <t t-set="partner" t-value="seller"/>
-                            <t t-set="partner_info" t-value="seller_info"/>
-                        </t>
+                        <t t-call="l10n_it_edi.account_invoice_it_FatturaPA_sede"
+                            partner="seller"
+                            partner_info="seller_info"/>
                         <RappresentanteFiscale t-if="seller.l10n_it_has_tax_representative">
                             <IdFiscaleIVA>
                                 <IdPaese t-out="representative_info['country_code']"/>

@@ -68,14 +68,12 @@
                     <CentreCode t-out="(ac.get('center_code') or '')[:10]"/>
                     <RoleTypeCode t-out="ac.get('role_type_code')"/>
                     <Name t-out="(ac.get('name') or '')[:40]"/>
-                    <t t-call="l10n_es_edi_facturae.address_type">
-                        <t t-set="partner" t-value="ac.get('partner')"/>
-                        <t t-set="partner_country_code" t-value="ac.get('partner_country_code')"/>
-                    </t>
-                    <t t-call="l10n_es_edi_facturae.contact_details_type">
-                        <t t-set="partner" t-value="ac.get('partner')"/>
-                        <t t-set="partner_phone" t-value="ac.get('partner_phone')"/>
-                    </t>
+                    <t t-call="l10n_es_edi_facturae.address_type"
+                        partner="ac.get('partner')"
+                        partner_country_code="ac.get('partner_country_code')"/>
+                    <t t-call="l10n_es_edi_facturae.contact_details_type"
+                        partner="ac.get('partner')"
+                        partner_phone="ac.get('partner_phone')"/>
                     <PhysicalGLN t-out="(ac.get('physical_gln') or '')[:14]"/>
                     <LogicalOperationalPoint t-out="(ac.get('logical_operational_point') or '')[:14]"/>
                 </AdministrativeCentre>
@@ -308,22 +306,20 @@
                 </FileHeader>
                 <Parties>
                     <SellerParty>
-                        <t t-call="l10n_es_edi_facturae.business_type">
-                            <t t-set="partner" t-value="self_party if is_outstanding else other_party"/>
-                            <t t-set="partner_country_code" t-value="self_party_country_code if is_outstanding else other_party_country_code"/>
-                            <t t-set="partner_phone" t-value="False if is_outstanding else other_party_phone"/>
-                            <t t-set="partner_name" t-value="self_party_name if is_outstanding else other_party_name"/>
-                            <t t-set="administrative_centers" t-value="self_party_administrative_centers if is_outstanding else other_party_administrative_centers"/>
-                        </t>
+                        <t t-call="l10n_es_edi_facturae.business_type"
+                            partner="self_party if is_outstanding else other_party"
+                            partner_country_code="self_party_country_code if is_outstanding else other_party_country_code"
+                            partner_phone="False if is_outstanding else other_party_phone"
+                            partner_name="self_party_name if is_outstanding else other_party_name"
+                            administrative_centers="self_party_administrative_centers if is_outstanding else other_party_administrative_centers"/>
                     </SellerParty>
                     <BuyerParty>
-                        <t t-call="l10n_es_edi_facturae.business_type">
-                            <t t-set="partner" t-value="other_party if is_outstanding else self_party"/>
-                            <t t-set="partner_country_code" t-value="other_party_country_code if is_outstanding else self_party_country_code"/>
-                            <t t-set="partner_phone" t-value="other_party_phone if is_outstanding else False"/>
-                            <t t-set="partner_name" t-value="other_party_name if is_outstanding else self_party_name"/>
-                            <t t-set="administrative_centers" t-value="other_party_administrative_centers if is_outstanding else self_party_administrative_centers"/>
-                        </t>
+                        <t t-call="l10n_es_edi_facturae.business_type"
+                            partner="other_party if is_outstanding else self_party"
+                            partner_country_code="other_party_country_code if is_outstanding else self_party_country_code"
+                            partner_phone="other_party_phone if is_outstanding else False"
+                            partner_name="other_party_name if is_outstanding else self_party_name"
+                            administrative_centers="other_party_administrative_centers if is_outstanding else self_party_administrative_centers"/>
                     </BuyerParty>
                 </Parties>
                 <Invoices>

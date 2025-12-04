@@ -84,9 +84,7 @@
                   <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                     <t t-if="token and not invalid_token">
-                        <t t-call="auth_signup.fields">
-                            <t t-set="autofocus" t-value="1"/>
-                        </t>
+                        <t t-call="auth_signup.fields" autofocus="1"/>
                     </t>
 
                     <t t-if="not token">

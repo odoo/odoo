@@ -9,15 +9,12 @@
     <t t-set="img_class" t-valuef="col-md-4"/>
     <t t-set="content_class" t-valuef="col-md-8"/>
 
-    <t t-call="website.layout">
-        <t t-set="pageName" t-value="'website_forum'"/>
+    <t t-call="website.layout" pageName.f="website_forum">
         <div id="wrap">
             <div class="oe_structure oe_empty" id="oe_structure_forum_all_top"/>
             <div id="o_wforum_forums_index_list" class="container pt-lg-4 pb-5">
                 <div class="row justify-content-center">
-                    <t t-if="forums" t-call="website_forum.forum_all_all_entries">
-                        <t t-set="_forums" t-value="forums"/>
-                    </t>
+                    <t t-if="forums" t-call="website_forum.forum_all_all_entries" _forums="forums"/>
                     <div t-else="" class="alert alert-info">No forum is available yet.</div>
                 </div>
             </div>

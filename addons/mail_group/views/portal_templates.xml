@@ -86,11 +86,10 @@
                         <div>
                             <t t-call="portal.pager"/>
                         </div>
-                        <t t-call="mail_group.messages_short">
-                            <t t-set="messages" t-value="messages"/>
-                            <t t-set="msg_more_count" t-value="0"/>
-                            <t t-set="parent_message" t-value="None"/>
-                        </t>
+                        <t t-call="mail_group.messages_short"
+                            messages="messages"
+                            msg_more_count="0"
+                            parent_message="None"/>
                         <div>
                             <t t-call="portal.pager"/>
                         </div>
@@ -101,8 +100,8 @@
     </template>
 
     <template id="group_message">
-        <t t-call="portal.portal_layout">
         <t t-set="additional_title"><t t-out="message.subject"/></t>
+        <t t-call="portal.portal_layout" additional_title="additional_title">
             <section class="container">
                 <div class="row w-100 mt-4">
                     <div class="col-lg-3">
@@ -142,17 +141,14 @@
                         <t t-set="group_message_child_ids" t-value="message.group_message_child_ids.filtered(lambda m: m.moderation_status == 'accepted')"/>
                         <div t-if="group_message_child_ids" class="o_mg_replies mt-3">
                             <h4 class="o_page_header">Follow-Ups</h4>
-                            <t t-call="mail_group.messages_short">
-                                <t t-set="messages" t-value="group_message_child_ids[:replies_per_page]"/>
-                                <t t-set="msg_more_count" t-value="len(group_message_child_ids) - replies_per_page"/>
-                                <t t-set="parent_message" t-value="message"/>
-                            </t>
+                            <t t-call="mail_group.messages_short"
+                                messages="group_message_child_ids[:replies_per_page]"
+                                msg_more_count="len(group_message_child_ids) - replies_per_page"
+                                parent_message="message"/>
                         </div>
                         <div t-if="message.group_message_parent_id and message.group_message_parent_id.moderation_status == 'accepted'">
                             <h4 class="o_page_header">Reference</h4>
-                            <t t-call="mail_group.messages_short">
-                                <t t-set="messages" t-value="[message.group_message_parent_id]"/>
-                            </t>
+                            <t t-call="mail_group.messages_short" messages="[message.group_message_parent_id]"/>
                         </div>
                     </div>
                 </div>
@@ -188,11 +184,10 @@
                                 </a>
                             </p>
                             <div class="o_mg_link_content o_mg_replies ms-5 d-none">
-                                <t t-call="mail_group.messages_short">
-                                    <t t-set="messages" t-value="group_message_child_ids[:replies_per_page]"/>
-                                    <t t-set="msg_more_count" t-value="len(group_message_child_ids) - replies_per_page"/>
-                                    <t t-set="parent_message" t-value="message"/>
-                                </t>
+                                <t t-call="mail_group.messages_short"
+                                    messages="group_message_child_ids[:replies_per_page]"
+                                    msg_more_count="len(group_message_child_ids) - replies_per_page"
+                                    parent_message="message"/>
                             </div>
                         </div>
                     </div>

@@ -3,13 +3,13 @@
 <data>
 <template id="report_purchaserequisition_document">
     <t t-set="o" t-value="o.with_context(lang=o.vendor_id.lang)"/>
-    <t t-call="web.external_layout">
-        <t t-set="address">
-            <span t-field="o.vendor_id" t-options='{"widget": "contact", "fields": ["name","address"], "no_marker": True}'/>
-            <br/>
-            <span t-field="o.vendor_id" t-options='{"widget": "contact", "fields": ["phone"], "phone_icons": True}'/>
-            <p t-if="o.vendor_id.vat"><t t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="o.vendor_id.vat"/></p>
-        </t>
+    <t t-set="address">
+        <span t-field="o.vendor_id" t-options='{"widget": "contact", "fields": ["name","address"], "no_marker": True}'/>
+        <br/>
+        <span t-field="o.vendor_id" t-options='{"widget": "contact", "fields": ["phone"], "phone_icons": True}'/>
+        <p t-if="o.vendor_id.vat"><t t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>: <span t-field="o.vendor_id.vat"/></p>
+    </t>
+    <t t-call="web.external_layout" address="address">
         <div class="page">
             <div class="oe_structure"/>
             <h2><span t-out="dict(o._fields['requisition_type'].selection).get(o.requisition_type)">Purchase Agreement:</span> <span t-field="o.name">BO00004</span></h2>

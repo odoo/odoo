@@ -538,27 +538,28 @@
                 </tbody>
             </table>
         </div>
-        <t t-call="web.external_layout_body">
-            <t t-set="hide_title" t-value="True"/>
-            <t t-set="customized_address_layout">
-                <table class="o_ignore_layout_styling table table-borderless mb-0">
-                    <tbody>
-                        <tr>
-                            <td t-attf-class="p-0 {{'pt-3' if information_block else ''}}">
-                                <t t-call="web.address_layout" custom_layout_address="True"/>
-                            </td>
-                            <td t-if="not information_block" class="align-bottom p-0 ps-2">
-                                <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title"/>
-                            </td>
-                        </tr>
-                        <tr t-if="information_block">
-                            <td colspan="2" class="align-bottom p-0">
-                                <h2 class="text-nowrap text-end" t-out="layout_document_title"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </t>
+        <t t-set="customized_address_layout">
+            <table class="o_ignore_layout_styling table table-borderless mb-0">
+                <tbody>
+                    <tr>
+                        <td t-attf-class="p-0 {{'pt-3' if information_block else ''}}">
+                            <t t-call="web.address_layout" custom_layout_address="True"/>
+                        </td>
+                        <td t-if="not information_block" class="align-bottom p-0 ps-2">
+                            <h2 class="mb-4 text-nowrap text-end" t-out="layout_document_title"/>
+                        </td>
+                    </tr>
+                    <tr t-if="information_block">
+                        <td colspan="2" class="align-bottom p-0">
+                            <h2 class="text-nowrap text-end" t-out="layout_document_title"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </t>
+        <t t-call="web.external_layout_body"
+            hide_title="True"
+            customized_address_layout="customized_address_layout">
             <t t-out="0"/>
         </t>
         <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
@@ -602,13 +603,14 @@
                 </div>
             </div>
         </div>
-        <t t-call="web.external_layout_body">
-            <t t-set="hide_title" t-value="True"/>
-            <t t-set="customized_address_layout">
-                <div class="pt-2">
-                    <t t-call="web.address_layout" custom_layout_address="True"/>
-                </div>
-            </t>
+        <t t-set="customized_address_layout">
+            <div class="pt-2">
+                <t t-call="web.address_layout" custom_layout_address="True"/>
+            </div>
+        </t>
+        <t t-call="web.external_layout_body"
+            hide_title="True"
+            customized_address_layout="customized_address_layout">
             <t t-out="0"/>
         </t>
         <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
@@ -648,10 +650,10 @@
 
     <template id="external_layout_dual">
         <div t-attf-class="o_company_#{company.id}_layout o_layout_dual_header header">
-            <svg class="position-absolute start-0 top-0 z-n1" width="100%" height="60" preserveAspectRatio="none" viewBox="0 0 1000 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="position-absolute start-0 top-0 z-n1" width="100%" height="60" preserveAspectRatio="none" viewBox="0 0 1000 60" fill="none">
                 <path d="M0 0h1000v16L0 60z" t-att-fill="company.primary_color" fill-opacity=".15"/>
             </svg>
-            <svg class="position-absolute start-0 top-0 z-n1" width="70" height="140" preserveAspectRatio="none" viewBox="0 0 80 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="position-absolute start-0 top-0 z-n1" width="70" height="140" preserveAspectRatio="none" viewBox="0 0 80 160" fill="none">
                 <path d="M0 0h80L0 160z" t-att-fill="company.secondary_color" fill-opacity=".15"/>
             </svg>
             <table class="w-100 table-borderless">
@@ -669,10 +671,10 @@
             <t t-out="0"/>
         </t>
         <div t-attf-class="o_company_#{company.id}_layout o_layout_dual_footer footer position-relative {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
-            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed o_dual_shape_1' or 'position-absolute bottom-0'}} start-0" width="100%" height="60" preserveAspectRatio="none" viewBox="0 0 1000 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed o_dual_shape_1' or 'position-absolute bottom-0'}} start-0" width="100%" height="60" preserveAspectRatio="none" viewBox="0 0 1000 60" fill="none">
                 <path d="M0 0h1000v16L0 60z" t-att-fill="company.primary_color" fill-opacity=".15" transform="rotate(180 500 30)"/>
             </svg>
-            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute bottom-0'}} end-0" width="70" height="140" preserveAspectRatio="none" viewBox="0 0 80 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute bottom-0'}} end-0" width="70" height="140" preserveAspectRatio="none" viewBox="0 0 80 160" fill="none">
                 <path d="M0 0h80L0 160z" t-att-fill="company.secondary_color" fill-opacity=".15" transform="rotate(180 40 80)"/>
             </svg>
             <t
@@ -685,7 +687,7 @@
 
     <template id="external_layout_lines">
         <div t-attf-class="o_company_#{company.id}_layout o_layout_lines_header header">
-            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} z-n1" t-attf-style="{{report_type == 'pdf' and 'top: -50mm; right: -108mm;' or 'top: -142mm; right: -110mm'}}" t-att-width="report_type == 'pdf' and '1064' or '100%'" t-att-height="report_type == 'pdf' and '748' or '100%'" viewBox="0 0 1423 1061" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} z-n1" t-attf-style="{{report_type == 'pdf' and 'top: -50mm; right: -108mm;' or 'top: -142mm; right: -110mm'}}" t-att-width="report_type == 'pdf' and '1064' or '100%'" t-att-height="report_type == 'pdf' and '748' or '100%'" viewBox="0 0 1423 1061" fill="none">
                 <path class="o_lines_path_1" d="M1422.5 907h-210c-168.64-9.078-185.42-238.3-199-382C999.921 381.3 860.195 256 657 256c-119.89 0-341.722-.532-405.5-111-8.833-15-28-52.5-28-145"/>
                 <path class="o_lines_path_2" d="M1397.72 924.056h-210c-168.64-9.078-185.42-238.3-198.997-382-13.579-143.7-153.305-269-356.5-269-119.891 0-341.722-.533-405.5-111-8.834-15-28-52.5-28-145"/>
                 <path class="o_lines_path_3" d="M1372.94 941.111h-210c-168.64-9.077-185.417-238.3-198.996-382-13.578-143.7-153.305-269-356.5-269-119.89 0-341.721-.532-405.5-111-8.833-15-28-52.5-28-145"/>
@@ -714,7 +716,7 @@
             <t t-out="0"/>
         </t>
         <div t-attf-class="o_company_#{company.id}_layout footer position-relative {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
-            <svg t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute bottom-0'}} start-0" style="top: -4mm" width="100%" height="206" viewBox="0 0 1508 206" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute bottom-0'}} start-0" style="top: -4mm" width="100%" height="206" viewBox="0 0 1508 206" fill="none">
                 <path class="o_lines_path_1" d="M1 144C476.147 225.333 1031.85 225.333 1507 144"/>
                 <path class="o_lines_path_2" d="M1 123.571C476.147 204.905 1031.85 204.905 1507 123.571"/>
                 <path class="o_lines_path_3" d="M1 103.143C476.147 184.476 1031.85 184.476 1507 103.143"/>

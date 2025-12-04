@@ -4,9 +4,8 @@
     <template id="survey_page_statistics" name="Survey: result statistics page">
         <t t-set="no_livechat" t-value="True"/>
         <t t-set="no_survey_navigation" t-value="True"/>
-        <t t-call="survey.layout">
-            <t t-call="survey.survey_button_form_view" />
-            <t t-set="page_record_limit" t-value="10"/><!-- Change this record_limit to change number of record  per page-->
+        <t t-call="survey.layout" page_record_limit="10">
+            <t t-call="survey.survey_button_form_view" /><!-- Change this record_limit to change number of record  per page-->
             <div class="o_container_small o_survey_result">
                 <t t-call="survey.survey_page_statistics_header" />
                 <t t-call="survey.survey_page_statistics_inner" />
@@ -52,8 +51,8 @@
                 </div>
                 <div class="d-sm-none w-100"/>
                 <div class="col">
-                    <h4 class="text-primary"><t t-call="survey.survey_remove_unnecessary_decimals">
-                        <t t-set="value_to_format" t-value="survey_data['global_success_rate']"/></t>%</h4>
+                    <h4 class="text-primary"><t t-call="survey.survey_remove_unnecessary_decimals"
+    value_to_format="survey_data['global_success_rate']"/>%</h4>
                     <h6>Success rate</h6>
                 </div>
                 <div t-if="survey.answer_duration_avg" class="col">
@@ -394,8 +393,8 @@
         <div class="tab-content">
             <div t-if="question_answered" role="tabpanel" class="tab-pane active with-3d-shadow with-transitions survey_graph"
                 t-att-id="'survey_graph_question_%d' % question.id"
-                t-att-data-question-id= "question.id"
-                data-graph-type= "multi_bar"
+                t-att-data-question-id="question.id"
+                data-graph-type="multi_bar"
                 t-att-data-graph-data="graph_data">
                 <!-- canvas element for drawing Multibar chart -->
                 <canvas class="mx-auto w-100 h-auto"/>
@@ -447,7 +446,7 @@
                 <tr t-foreach="comment_lines" t-as="input_line">
                     <td>
                         <a t-att-href="input_line.user_input_id.get_print_url()">
-                            <t t-out="input_line_index + 1"></t>
+                            <t t-out="input_line_index + 1"/>
                         </a>
                     </td>
                     <td>

@@ -87,9 +87,7 @@
                     </div>
                     <!-- Pager -->
                     <div class='navbar mb-3 w-100'>
-                        <t t-call="website.pager">
-                            <t t-set="classname" t-valuef="mx-auto"/>
-                        </t>
+                        <t t-call="website.pager" classname.f="mx-auto"/>
                     </div>
                 </div>
             </div>
@@ -191,8 +189,7 @@
 
 <!-- Apply -->
 <template id="apply">
-    <t t-call="website.layout">
-        <t t-set="additional_title">Apply Job</t>
+    <t t-call="website.layout" additional_title.translate="Apply Job">
 
         <div id="wrap"  class="container">
             <nav aria-label="breadcrumb" class="mt-5">
@@ -875,150 +872,140 @@
 
 <template id="job_filter_by_countries" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="10">
     <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]" position="before">
-        <t t-call="website_hr_recruitment.job_filter_base">
-            <t t-set="filter_label">Countries</t>
-            <t t-set="selected_filter" t-value="country_id"/>
-            <t t-set="is_unset_selected" t-value="is_remote"/>
-            <t t-set="id_selected_arg" t-value="'country_id'"/>
-            <t t-set="all_arg" t-value="'all_countries=1'"/>
-            <t t-set="unset_arg" t-value="'is_remote=1'"/>
-            <t t-set="non_filter_params" t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"/>
-            <t t-set="count_per_filter" t-value="count_per_country"/>
-            <t t-set="dropdown_id" t-value="'countries_dropdown'"/>
-        </t>
+        <t t-call="website_hr_recruitment.job_filter_base"
+            filter_label.translate="Countries"
+            selected_filter="country_id"
+            is_unset_selected="is_remote"
+            id_selected_arg.f="country_id"
+            all_arg.f="all_countries=1"
+            unset_arg.f="is_remote=1"
+            non_filter_params.f="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"
+            count_per_filter="count_per_country"
+            dropdown_id.f="countries_dropdown"/>
     </xpath>
     <xpath expr="//div[hasclass('accordion-flush')]" position="inside">
-        <t t-call="website_hr_recruitment.job_filter_base_mobile">
-            <t t-set="filter_label">Countries</t>
-            <t t-set="selected_filter" t-value="country_id"/>
-            <t t-set="is_unset_selected" t-value="is_remote"/>
-            <t t-set="id_selected_arg" t-value="'country_id'"/>
-            <t t-set="all_arg" t-value="'all_countries=1'"/>
-            <t t-set="unset_arg" t-value="'is_remote=1'"/>
-            <t t-set="non_filter_params" t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"/>
-            <t t-set="count_per_filter" t-value="count_per_country"/>
-            <t t-set="dropdown_id" t-value="'countriesDropdown'"/>
-        </t>
+        <t t-call="website_hr_recruitment.job_filter_base_mobile"
+            filter_label.translate="Countries"
+            selected_filter="country_id"
+            is_unset_selected="is_remote"
+            id_selected_arg.f="country_id"
+            all_arg.f="all_countries=1"
+            unset_arg.f="is_remote=1"
+            non_filter_params.f="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"
+            count_per_filter="count_per_country"
+            dropdown_id.f="countriesDropdown"/>
     </xpath>
 </template>
 
 <template id="job_filter_by_industries" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="15">
     <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]" position="before">
-        <t t-call="website_hr_recruitment.job_filter_base">
-            <t t-set="filter_label">Industries</t>
-            <t t-set="selected_filter" t-value="industry_id"/>
-            <t t-set="is_unset_selected" t-value="is_industry_untyped"/>
-            <t t-set="id_selected_arg" t-value="'industry_id'"/>
-            <t t-set="all_arg" t-value="'all_industries=1'"/>
-            <t t-set="unset_arg" t-value="'is_industry_untyped=1'"/>
-            <t t-set="non_filter_params" t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_country_param}"/>
-            <t t-set="count_per_filter" t-value="count_per_industry"/>
-            <t t-set="dropdown_id" t-value="'industriesDropdown'"/>
-        </t>
+        <t t-call="website_hr_recruitment.job_filter_base"
+            filter_label.translate="Industries"
+            selected_filter="industry_id"
+            is_unset_selected="is_industry_untyped"
+            id_selected_arg.f="industry_id"
+            all_arg.f="all_industries=1"
+            unset_arg.f="is_industry_untyped=1"
+            non_filter_params.f="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_country_param}"
+            count_per_filter="count_per_industry"
+            dropdown_id.f="industriesDropdown"/>
     </xpath>
     <xpath expr="//div[hasclass('accordion-flush')]" position="inside">
-        <t t-call="website_hr_recruitment.job_filter_base_mobile">
-            <t t-set="filter_label">Industries</t>
-            <t t-set="selected_filter" t-value="industry_id"/>
-            <t t-set="is_unset_selected" t-value="is_industry_untyped"/>
-            <t t-set="id_selected_arg" t-value="'industry_id'"/>
-            <t t-set="all_arg" t-value="'all_industries=1'"/>
-            <t t-set="unset_arg" t-value="'is_industry_untyped=1'"/>
-            <t t-set="non_filter_params" t-valuef="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_country_param}"/>
-            <t t-set="count_per_filter" t-value="count_per_industry"/>
-            <t t-set="dropdown_id" t-value="'industriesDropdown'"/>
-        </t>
+        <t t-call="website_hr_recruitment.job_filter_base_mobile"
+            filter_label.translate="Industries"
+            selected_filter="industry_id"
+            is_unset_selected="is_industry_untyped"
+            id_selected_arg.f="industry_id"
+            all_arg.f="all_industries=1"
+            unset_arg.f="is_industry_untyped=1"
+            non_filter_params.f="#{current_department_param}#{current_office_param}#{current_employment_type_param}#{current_country_param}"
+            count_per_filter="count_per_industry"
+            dropdown_id.f="industriesDropdown"/>
     </xpath>
 </template>
 
 <template id="job_filter_by_offices" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="20">
     <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]" position="before">
-        <t t-call="website_hr_recruitment.job_filter_base">
-            <t t-set="filter_label">Offices</t>
-            <t t-set="selected_filter" t-value="office_id"/>
-            <t t-set="is_unset_selected" t-value="is_remote"/>
-            <t t-set="id_selected_arg" t-value="'office_id'"/>
-            <t t-set="all_arg" t-value="'all_offices=1'"/>
-            <t t-set="unset_arg" t-value="'is_remote=1'"/>
-            <t t-set="non_filter_params" t-valuef="#{current_department_param}#{current_employment_type_param}#{current_industry_param}"/>
-            <t t-set="count_per_filter" t-value="count_per_office"/>
-            <t t-set="dropdown_id" t-value="'officesDropdown'"/>
-            <t t-set="untype_label">Remote</t>
-        </t>
+        <t t-call="website_hr_recruitment.job_filter_base"
+            filter_label.translate="Offices"
+            selected_filter="office_id"
+            is_unset_selected="is_remote"
+            id_selected_arg.f="office_id"
+            all_arg.f="all_offices=1"
+            unset_arg.f="is_remote=1"
+            non_filter_params.f="#{current_department_param}#{current_employment_type_param}#{current_industry_param}"
+            count_per_filter="count_per_office"
+            dropdown_id.f="officesDropdown"
+            untype_label.translate="Remote"/>
     </xpath>
     <xpath expr="//div[hasclass('accordion-flush')]" position="inside">
-        <t t-call="website_hr_recruitment.job_filter_base_mobile">
-            <t t-set="filter_label">Offices</t>
-            <t t-set="selected_filter" t-value="office_id"/>
-            <t t-set="is_unset_selected" t-value="is_remote"/>
-            <t t-set="id_selected_arg" t-value="'office_id'"/>
-            <t t-set="all_arg" t-value="'all_offices=1'"/>
-            <t t-set="unset_arg" t-value="'is_remote=1'"/>
-            <t t-set="non_filter_params" t-valuef="#{current_department_param}#{current_employment_type_param}#{current_industry_param}"/>
-            <t t-set="count_per_filter" t-value="count_per_office"/>
-            <t t-set="dropdown_id" t-value="'officesDropdown'"/>
-            <t t-set="untype_label">Remote</t>
-        </t>
+        <t t-call="website_hr_recruitment.job_filter_base_mobile"
+            filter_label.translate="Offices"
+            selected_filter="office_id"
+            is_unset_selected="is_remote"
+            id_selected_arg.f="office_id"
+            all_arg.f="all_offices=1"
+            unset_arg.f="is_remote=1"
+            non_filter_params.f="#{current_department_param}#{current_employment_type_param}#{current_industry_param}"
+            count_per_filter="count_per_office"
+            dropdown_id.f="officesDropdown"
+            untype_label.translate="Remote"/>
     </xpath>
 </template>
 
 <template id="job_filter_by_departments" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="30">
     <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]" position="before">
-        <t t-call="website_hr_recruitment.job_filter_base">
-            <t t-set="filter_label">Departments</t>
-            <t t-set="selected_filter" t-value="department_id"/>
-            <t t-set="is_unset_selected" t-value="is_other_department"/>
-            <t t-set="id_selected_arg" t-value="'department_id'"/>
-            <t t-set="all_arg" t-value="'all_departments=1'"/>
-            <t t-set="unset_arg" t-value="'is_other_department=1'"/>
-            <t t-set="non_filter_params" t-valuef="#{current_country_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"/>
-            <t t-set="count_per_filter" t-value="count_per_department"/>
-            <t t-set="dropdown_id" t-value="'departmentsDropdown'"/>
-            <t t-set="untype_label">Others</t>
-        </t>
+        <t t-call="website_hr_recruitment.job_filter_base"
+            filter_label.translate="Departments"
+            selected_filter="department_id"
+            is_unset_selected="is_other_department"
+            id_selected_arg.f="department_id"
+            all_arg.f="all_departments=1"
+            unset_arg.f="is_other_department=1"
+            non_filter_params.f="#{current_country_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"
+            count_per_filter="count_per_department"
+            dropdown_id.f="departmentsDropdown"
+            untype_label.translate="Others"/>
     </xpath>
     <xpath expr="//div[hasclass('accordion-flush')]" position="inside">
-        <t t-call="website_hr_recruitment.job_filter_base_mobile">
-            <t t-set="filter_label">Departments</t>
-            <t t-set="selected_filter" t-value="department_id"/>
-            <t t-set="is_unset_selected" t-value="is_other_department"/>
-            <t t-set="id_selected_arg" t-value="'department_id'"/>
-            <t t-set="all_arg" t-value="'all_departments=1'"/>
-            <t t-set="unset_arg" t-value="'is_other_department=1'"/>
-            <t t-set="non_filter_params" t-valuef="#{current_country_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"/>
-            <t t-set="count_per_filter" t-value="count_per_department"/>
-            <t t-set="dropdown_id" t-value="'departmentsDropdown'"/>
-            <t t-set="untype_label">Others</t>
-        </t>
+        <t t-call="website_hr_recruitment.job_filter_base_mobile"
+            filter_label.translate="Departments"
+            selected_filter="department_id"
+            is_unset_selected="is_other_department"
+            id_selected_arg.f="department_id"
+            all_arg.f="all_departments=1"
+            unset_arg.f="is_other_department=1"
+            non_filter_params.f="#{current_country_param}#{current_office_param}#{current_employment_type_param}#{current_industry_param}"
+            count_per_filter="count_per_department"
+            dropdown_id.f="departmentsDropdown"
+            untype_label.translate="Others"/>
     </xpath>
 </template>
 
 <template id="job_filter_by_employment_type" inherit_id="website_hr_recruitment.topbar_customizations" active="False" priority="40">
     <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]" position="before">
-        <t t-call="website_hr_recruitment.job_filter_base">
-            <t t-set="filter_label">Types</t>
-            <t t-set="selected_filter" t-value="contract_type_id"/>
-            <t t-set="is_unset_selected" t-value="is_untyped"/>
-            <t t-set="id_selected_arg" t-value="'contract_type_id'"/>
-            <t t-set="all_arg" t-value="'all_employment_types=1'"/>
-            <t t-set="unset_arg" t-value="'is_untyped=1'"/>
-            <t t-set="non_filter_params" t-valuef="#{current_country_param}#{current_department_param}#{current_office_param}#{current_industry_param}"/>
-            <t t-set="count_per_filter" t-value="count_per_employment_type"/>
-            <t t-set="dropdown_id" t-value="'employmentDropdown'"/>
-        </t>
+        <t t-call="website_hr_recruitment.job_filter_base"
+            filter_label.translate="Types"
+            selected_filter="contract_type_id"
+            is_unset_selected="is_untyped"
+            id_selected_arg.f="contract_type_id"
+            all_arg.f="all_employment_types=1"
+            unset_arg.f="is_untyped=1"
+            non_filter_params.f="#{current_country_param}#{current_department_param}#{current_office_param}#{current_industry_param}"
+            count_per_filter="count_per_employment_type"
+            dropdown_id.f="employmentDropdown"/>
     </xpath>
     <xpath expr="//div[hasclass('accordion-flush')]" position="inside">
-        <t t-call="website_hr_recruitment.job_filter_base_mobile">
-            <t t-set="filter_label">Types</t>
-            <t t-set="selected_filter" t-value="contract_type_id"/>
-            <t t-set="is_unset_selected" t-value="is_untyped"/>
-            <t t-set="id_selected_arg" t-value="'contract_type_id'"/>
-            <t t-set="all_arg" t-value="'all_employment_types=1'"/>
-            <t t-set="unset_arg" t-value="'is_untyped=1'"/>
-            <t t-set="non_filter_params" t-valuef="#{current_country_param}#{current_department_param}#{current_office_param}#{current_industry_param}"/>
-            <t t-set="count_per_filter" t-value="count_per_employment_type"/>
-            <t t-set="dropdown_id" t-value="'employmentDropdown'"/>
-        </t>
+        <t t-call="website_hr_recruitment.job_filter_base_mobile"
+            filter_label.translate="Types"
+            selected_filter="contract_type_id"
+            is_unset_selected="is_untyped"
+            id_selected_arg.f="contract_type_id"
+            all_arg.f="all_employment_types=1"
+            unset_arg.f="is_untyped=1"
+            non_filter_params.f="#{current_country_param}#{current_department_param}#{current_office_param}#{current_industry_param}"
+            count_per_filter="count_per_employment_type"
+            dropdown_id.f="employmentDropdown"/>
     </xpath>
 </template>
 
@@ -1052,10 +1039,10 @@
 <!-- Search Bar -->
 <template id="job_search_bar" inherit_id="website_hr_recruitment.topbar_customizations" active="True">
     <xpath expr="//div[hasclass('o_jobs_topbar_search_bar')]/button" position="before">
-        <t t-call="website.website_search_box_input">
-            <t t-set="_form_classes" t-valuef="flex-grow-1"/>
-            <t t-set="search_type" t-valuef="jobs"/>
-            <t t-set="display_description" t-valuef="true"/>
+        <t t-call="website.website_search_box_input"
+            _form_classes.f="flex-grow-1"
+            search_type.f="jobs"
+            display_description.f="true">
             <input t-if="country_id" type="hidden" name="country_id" t-att-value="country_id.id"/>
             <input t-if="office_id" type="hidden" name="office_id" t-att-value="office_id.id"/>
             <input t-if="department_id" type="hidden" name="department_id" t-att-value="department_id.id"/>

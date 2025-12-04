@@ -2,13 +2,13 @@
 <odoo>
 
     <template id="report_stock_inventory_print">
-        <t t-call="web.html_container">
-            <t t-set="head_start">
-                <base t-att-href="base_url"/>
-            </t>
-            <t t-set="head_end">
-                <t t-call-assets="stock.assets_stock_print_report" t-js="False" t-autoprefix="true"/>
-            </t>
+        <t t-set="head_start">
+            <base t-att-href="base_url"/>
+        </t>
+        <t t-set="head_end">
+            <t t-call-assets="stock.assets_stock_print_report" t-js="False" t-autoprefix="true"/>
+        </t>
+        <t t-call="web.html_container" head_start="head_start" head_end="head_end">
             <t t-call='stock.report_stock_body_print'/>
         </t>
     </template>

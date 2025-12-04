@@ -3,8 +3,7 @@
 
 <!-- Page -->
 <template id="layout" name="Partners Layout">
-    <t t-call="website.layout">
-        <t t-set="additional_title">Resellers</t>
+    <t t-call="website.layout" additional_title.translate="Resellers">
         <div id="wrap">
             <div class="oe_structure oe_empty" id="oe_structure_website_crm_partner_assign_layout_1"
                 data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"/>
@@ -162,11 +161,10 @@
                 <t t-if="last_grade != partner.grade_id.id">
                     <h2 class="mt-3 mb-2 col-12 h5-fs">
                         <span t-field="partner.grade_id"/> Resellers
-                        <t t-call="website.publish_management">
-                            <t t-set="object" t-value="partner.grade_id"/>
-                            <t t-set="publish_edit" t-value="True"/>
-                            <t t-set="action" t-value="'partnership.res_partner_grade_action'"/>
-                        </t>
+                        <t t-call="website.publish_management"
+                            object="partner.grade_id"
+                            publish_edit="True"
+                            action.f="partnership.res_partner_grade_action"/>
                     </h2>
                     <t t-set="last_grade" t-value="partner.grade_id.id"/>
                 </t>
@@ -196,9 +194,7 @@
                 </div>
             </t>
             <div class="navbar">
-                <t t-call="website.pager">
-                   <t t-set="classname" t-valuef="mx-auto"/>
-                </t>
+                <t t-call="website.pager" classname.f="mx-auto"/>
             </div>
         </div>
     </t>
@@ -302,17 +298,16 @@
         <div t-if="not edit_page" class="mt-4 mb-3">
             <a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}" aria-label="Back to resellers list"><i class="oi oi-chevron-left me-2"/>Back to resellers</a>
         </div>
-        <t t-call="website_partner.partner_detail">
-            <t t-set="right_column">
-                <div id="right_column"><t t-call="website_crm_partner_assign.references_block"/></div>
-            </t>
+        <t t-set="right_column">
+            <div id="right_column"><t t-call="website_crm_partner_assign.references_block"/></div>
         </t>
+        <t t-call="website_partner.partner_detail" right_column="right_column"/>
     </t>
 </template>
 
 <template id="contact_details" inherit_id="website_crm_partner_assign.partner" name="Contact Details">
-    <xpath expr="//t[@t-call='website_partner.partner_detail']" position="inside">
-        <t t-set="contact_details" t-value="True"/>
+    <xpath expr="//t[@t-call='website_partner.partner_detail']" position="attributes">
+        <attribute name="contact_details">True</attribute>
     </xpath>
 </template>
 
@@ -370,12 +365,9 @@
     </template>
 
     <template id="portal_my_leads" name="My Leads">
-        <t t-call="portal.portal_layout">
-            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+        <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-            <t t-call="portal.portal_searchbar">
-                <t t-set="title">Leads</t>
-            </t>
+            <t t-call="portal.portal_searchbar" title.translate="Leads"/>
             <div t-if="not leads" class="alert alert-warning" role="alert">
                 There are no leads.
             </div>
@@ -405,11 +397,9 @@
     </template>
 
     <template id="portal_my_opportunities" name="My Opportunities">
-        <t t-call="portal.portal_layout">
-            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+        <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-            <t t-call="portal.portal_searchbar">
-                <t t-set="title">Opportunities</t>
+            <t t-call="portal.portal_searchbar" title.translate="Opportunities">
 
                 <div t-if="request.env.user.partner_id.grade_id or request.env.user.commercial_partner_id.grade_id">
                     <button class="btn btn-primary" name='new_opp' data-bs-toggle="modal" data-bs-target=".modal_new_opp" title="Add an opportunity" aria-label="Add an opportunity">
@@ -647,9 +637,7 @@
             <div>
                 <h3>Communication history</h3>
                 <div>
-                    <t t-call="portal.message_thread">
-                        <t t-set="object" t-value="lead"/>
-                    </t>
+                    <t t-call="portal.message_thread" object="lead"/>
                 </div>
             </div>
         </t>
@@ -706,7 +694,7 @@
                         <strong class="col-12 col-sm-4">Next Activity</strong>
                         <div class="col" t-if="user_activity">
                             <span t-field="user_activity.activity_type_id"/>
-                            <span t-if="user_activity.date_deadline">&#160;on&#160;</span>
+                            <span t-if="user_activity.date_deadline"> on </span>
                             <span t-field="user_activity.date_deadline"/>
                             <em class="d-block" t-field="user_activity.summary"/>
                         </div>
@@ -946,9 +934,7 @@
             <div>
                 <h3>Communication history</h3>
                 <div>
-                    <t t-call="portal.message_thread">
-                        <t t-set="object" t-value="opportunity"/>
-                    </t>
+                    <t t-call="portal.message_thread" object="opportunity"/>
                 </div>
             </div>
         </t>

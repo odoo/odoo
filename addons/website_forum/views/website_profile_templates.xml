@@ -126,9 +126,7 @@
                                 <div class="mb-4">
                                     <h5 class="border-bottom pb-1">Favourite Questions</h5>
                                     <div class="mb-1" t-foreach="favourite" t-as="question">
-                                        <t t-call="website_forum.display_post">
-                                            <t t-set="hide_fav_icon" t-value="True"/>
-                                        </t>
+                                        <t t-call="website_forum.display_post" hide_fav_icon="True"/>
                                     </div>
                                 </div>
                             </t>
@@ -177,13 +175,13 @@
                     <div class="mb-4">
                         <h5 class="border-bottom pb-1 flex align-items-center justify-content-between" style="height:43px;">
                             Votes
-                            <t t-if="my_profile" t-call="website.website_search_box_input">
-                                <t t-set="_form_classes" t-valuef="d-flex flex-row align-items-center flex-wrap float-end"/>
-                                <t t-set="search_type" t-valuef="forums"/>
-                                <t t-set="action" t-value="'/forum/%s%s' % (forum_id or 'all', '/tag/%s/questions' % slug(tag) if tag else '')"/>
-                                <t t-set="display_description" t-value="true"/>
-                                <t t-set="display_detail" t-valuef="false"/>
-                                <t t-set="placeholder" t-valuef="Search Posts..."/>
+                            <t t-if="my_profile" t-call="website.website_search_box_input"
+                                _form_classes.f="d-flex flex-row align-items-center flex-wrap float-end"
+                                search_type.f="forums"
+                                action="'/forum/%s%s' % (forum_id or 'all', '/tag/%s/questions' % slug(tag) if tag else '')"
+                                display_description="true"
+                                display_detail.f="false"
+                                placeholder.f="Search Posts...">
                                 <input type="hidden" name="my" value="upvoted"/>
                                 <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
                                 <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>

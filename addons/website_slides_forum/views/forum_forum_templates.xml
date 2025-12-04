@@ -6,12 +6,8 @@
             <t t-if="forums">
                 <t t-set="courses_discussions" t-value="forums.filtered(lambda f: f.slide_channel_id)"/>
                 <t t-set="regular_forums" t-value="forums - courses_discussions"/>
-                <t t-call="website_forum.forum_all_all_entries">
-                    <t t-set="_forums" t-value="regular_forums"/>
-                </t>
-                <t t-call="website_forum.forum_all_all_entries">
-                    <t t-set="_forums" t-value="courses_discussions"/>
-                </t>
+                <t t-call="website_forum.forum_all_all_entries" _forums="regular_forums"/>
+                <t t-call="website_forum.forum_all_all_entries" _forums="courses_discussions"/>
             </t>
         </xpath>
     </template>

@@ -14,9 +14,7 @@
             <t t-if="channel">
                 <div class="mb32">
                     <h5 class="border-bottom pb-1">Completed Courses</h5>
-                    <t t-if="courses_completed" t-call="website_slides.display_course">
-                        <t t-set="courses" t-value="courses_completed"></t>
-                    </t>
+                    <t t-if="courses_completed" t-call="website_slides.display_course" courses="courses_completed"/>
                     <div t-elif="request.env.user == user" class="text-muted d-inline-block">
                         Go through all its content to see a Course in this section. <br />
                         <a href="/slides/" class="btn-link">
@@ -30,9 +28,7 @@
                 </div>
                 <div class="mb32">
                     <h5 class="border-bottom pb-1">Ongoing Courses</h5>
-                    <t t-if="courses_ongoing" t-call="website_slides.display_course">
-                        <t t-set="courses" t-value="courses_ongoing"></t>
-                    </t>
+                    <t t-if="courses_ongoing" t-call="website_slides.display_course" courses="courses_ongoing"/>
                      <p t-elif="request.env.user == user" class="text-muted">
                         All the courses you attend will appear here. <br />
                         <a href="/slides/" class="btn-link o_translate_inline">

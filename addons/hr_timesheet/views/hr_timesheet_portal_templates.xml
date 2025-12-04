@@ -9,12 +9,9 @@
     </template>
 
     <template id="portal_my_timesheets" name="My Timesheets">
-        <t t-call="portal.portal_layout">
-            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+        <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-            <t t-call="portal.portal_searchbar">
-                <t t-set="title">Timesheets</t>
-            </t>
+            <t t-call="portal.portal_searchbar" title.translate="Timesheets"/>
             <t t-if="not grouped_timesheets">
                 <div class="alert alert-warning" role="alert">
                     There are no timesheets.

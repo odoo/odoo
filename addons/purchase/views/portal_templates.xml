@@ -18,12 +18,9 @@
   </template>
 
   <template id="portal_my_purchase_rfqs" name="My Requests For Quotation">
-      <t t-call="portal.portal_layout">
-          <t t-set="breadcrumbs_searchbar" t-value="True"/>
+      <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-          <t t-call="portal.portal_searchbar">
-              <t t-set="title" >Requests For Quotation</t>
-          </t>
+          <t t-call="portal.portal_searchbar" title.translate="Requests For Quotation"/>
           <t t-if="not rfqs">
               <p class="alert alert-warning">There are currently no requests for quotation for your account.</p>
           </t>
@@ -51,12 +48,9 @@
   </template>
 
   <template id="portal_my_purchase_orders" name="My Purchase Orders">
-      <t t-call="portal.portal_layout">
-          <t t-set="breadcrumbs_searchbar" t-value="True"/>
+      <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-          <t t-call="portal.portal_searchbar">
-              <t t-set="title">Purchase Orders</t>
-          </t>
+          <t t-call="portal.portal_searchbar" title.translate="Purchase Orders"/>
           <t t-if="not orders">
               <p class="alert alert-warning">There are currently no purchase orders for your account.</p>
           </t>
@@ -100,44 +94,43 @@
   <template id="portal_my_purchase_order" name="Purchase Order" inherit_id="portal.portal_sidebar" primary="True">
       <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
           <t t-set="o_portal_fullwidth_alert" groups="purchase.group_purchase_manager">
-              <t t-call="portal.portal_back_in_edit_mode">
-                  <t t-set="backend_url" t-value="'/odoo/action-purchase.purchase_rfq/%s' % (order.id)"/>
-              </t>
+              <t t-call="portal.portal_back_in_edit_mode"
+                  backend_url="'/odoo/action-purchase.purchase_rfq/%s' % (order.id)"/>
           </t>
 
           <div class="row o_portal_purchase_sidebar">
               <!-- Sidebar -->
-              <t t-call="portal.portal_record_sidebar">
-                  <t t-set="classes" t-value="'col-lg-4 col-xxl-3 d-print-none'"/>
-
-                  <t t-set="title">
-                      <h2 t-field="order.amount_total" data-id="total_amount" class="mb-0 text-break"/>
-                  </t>
-                  <t t-set="entries">
-                      <div class="d-flex flex-column gap-4 mt-3">
-                          <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="fa fa-print me-1"/>Download / Print</a>
-                          <div class="navspy flex-grow-1 ps-0" t-ignore="true" role="complementary">
-                              <ul class="nav flex-column bs-sidenav"></ul>
-                          </div>
-                          <div t-if="order.user_id">
-                              <h6 class="small text-muted">Buyer</h6>
-                                <t t-call="portal.portal_my_contact">
-                                    <t t-set="_contactAvatar" t-value="image_data_uri(order.user_id.avatar_128)"/>
-                                    <t t-set="_contactName" t-value="order.user_id.name"/>
-                                    <t t-set="_contactLink" t-value="True"/>
-                                    <div t-field="order.user_id" t-options='{"widget": "contact", "fields": ["phone"], "no_marker": False}'/>
-                                </t>
-                          </div>
-
-                          <div t-if="order._get_edi_builders()">
-                            <button id="portal_connect_software_modal_btn" type="button" class="btn btn-primary"
-                            data-bs-toggle="modal" data-bs-target="#portal_connect_software_modal">
-                                Connect with your software!
-                            </button>
-                          </div>
-                      </div>
-                  </t>
+              <t t-set="title">
+                  <h2 t-field="order.amount_total" data-id="total_amount" class="mb-0 text-break"/>
               </t>
+              <t t-set="entries">
+                  <div class="d-flex flex-column gap-4 mt-3">
+                      <a class="btn btn-secondary o_print_btn o_portal_invoice_print" t-att-href="order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="View Details" role="button" target="_blank"><i class="fa fa-print me-1"/>Download / Print</a>
+                      <div class="navspy flex-grow-1 ps-0" t-ignore="true" role="complementary">
+                          <ul class="nav flex-column bs-sidenav"></ul>
+                      </div>
+                      <div t-if="order.user_id">
+                          <h6 class="small text-muted">Buyer</h6>
+                            <t t-call="portal.portal_my_contact"
+                                _contactAvatar="image_data_uri(order.user_id.avatar_128)"
+                                _contactName="order.user_id.name"
+                                _contactLink="True">
+                                <div t-field="order.user_id" t-options='{"widget": "contact", "fields": ["phone"], "no_marker": False}'/>
+                            </t>
+                      </div>
+
+                      <div t-if="order._get_edi_builders()">
+                        <button id="portal_connect_software_modal_btn" type="button" class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#portal_connect_software_modal">
+                            Connect with your software!
+                        </button>
+                      </div>
+                  </div>
+              </t>
+              <t t-call="portal.portal_record_sidebar"
+                  classes.f="col-lg-4 col-xxl-3 d-print-none"
+                  title="title"
+                  entries="entries"/>
 
               <div class="modal fade" id="portal_connect_software_modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -384,10 +377,9 @@
 
   <template id="purchase_order_portal_content_totals_table">
       <table class="table table-sm">
-          <t t-call="purchase.document_tax_totals">
-                <t t-set="tax_totals" t-value="order.tax_totals"/>
-                <t t-set="currency" t-value="order.currency_id"/>
-          </t>
+          <t t-call="purchase.document_tax_totals"
+              tax_totals="order.tax_totals"
+              currency="order.currency_id"/>
       </table>
   </template>
 

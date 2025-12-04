@@ -2,10 +2,11 @@
 <odoo>
 <data>
 <template id="report_package_barcode">
-    <t t-call="web.basic_layout">
+    <t t-set="uom_unit_id" t-value="env.ref('uom.product_uom_unit').id"/>
+    <t t-call="web.basic_layout"
+        uom_unit_id="uom_unit_id"
+        gs1_uom_patterns="{rule.associated_uom_id.id: rule.pattern[1:4] + str(len(str('{:.10f}'.format(rule.associated_uom_id.rounding).rstrip('0')).split('.')[1])) for rule in env['barcode.rule'].search([('associated_uom_id', '!=', False), ('associated_uom_id.id', '!=', uom_unit_id), ('is_gs1_nomenclature', '=', True)])}">
         <!-- quantity patterns are always 3 digit codes + 1 digit for number of digits (excluding units) -->
-        <t t-set="uom_unit_id" t-value="env.ref('uom.product_uom_unit').id"/>
-        <t t-set="gs1_uom_patterns" t-value="{rule.associated_uom_id.id: rule.pattern[1:4] + str(len(str('{:.10f}'.format(rule.associated_uom_id.rounding).rstrip('0')).split('.')[1])) for rule in env['barcode.rule'].search([('associated_uom_id', '!=', False), ('associated_uom_id.id', '!=', uom_unit_id), ('is_gs1_nomenclature', '=', True)])}"/>
         <t t-foreach="docs" t-as="o">
             <div class="page mt-4">
                 <div class="oe_structure"/>
@@ -69,9 +70,9 @@
                                 <div t-field="child_package.name">Package Reference</div>
                             </div>
                         </div>
-                        <t t-call="stock.report_package_barcode_content">
+                        <t t-call="stock.report_package_barcode_content"
+                            package_quants="child_package.contained_quant_ids.filtered('quantity')">
                             <!-- Filters out package's quants with no quantity. -->
-                            <t t-set="package_quants" t-value="child_package.contained_quant_ids.filtered('quantity')"/>
                         </t>
                     </div>
                     <div class="oe_structure"/>
@@ -84,14 +85,12 @@
                                 <span class="mt0 float-start">No assigned package</span>
                             </h2>
                         </div>
-                        <t t-call="stock.report_package_barcode_content">
-                            <t t-set="package_quants" t-value="o.quant_ids.filtered('quantity')"/>
-                        </t>
+                        <t t-call="stock.report_package_barcode_content"
+                            package_quants="o.quant_ids.filtered('quantity')"/>
                     </div>
                     <div class="mt-2" t-else="">
-                        <t t-call="stock.report_package_barcode_content">
-                            <t t-set="package_quants" t-value="o.quant_ids.filtered('quantity')"/>
-                        </t>
+                        <t t-call="stock.report_package_barcode_content"
+                            package_quants="o.quant_ids.filtered('quantity')"/>
                     </div>
                 </t>
             </div>

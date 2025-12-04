@@ -14,8 +14,8 @@
                 t-value="product and product.valid_product_template_attribute_line_ids"
             />
 
-            <t t-if="isCompareAvailable" t-call="website_sale.product_tile_element_visibility">
-                <t t-set="visible_element_class" t-value="'o_wsale_products_opt_has_comparison'"/>
+            <t t-if="isCompareAvailable" t-call="website_sale.product_tile_element_visibility"
+                visible_element_class.f="o_wsale_products_opt_has_comparison">
 
                 <t
                     t-set="attrib_categories"
@@ -147,9 +147,7 @@
                             data-bs-parent="#product_accordion"
                         >
                             <div class="accordion-body pt-0">
-                                <t t-call="website_sale_comparison.specifications_table">
-                                    <t t-set="is_accordion" t-value="True"/>
-                                </t>
+                                <t t-call="website_sale_comparison.specifications_table" is_accordion="True"/>
                             </div>
                         </div>
                     </div>
@@ -207,8 +205,7 @@
     </template>
 
     <template id="product_compare" name="Comparator Page">
-        <t t-call="website.layout">
-            <t t-set="additional_title">Shop Comparator</t>
+        <t t-call="website.layout" additional_title.translate="Shop Comparator">
             <div id="wrap" class="o_wsale_comparison_page">
                 <div class="oe_structure oe_empty" id="oe_structure_website_sale_comparison_product_compare_1"/>
                 <div t-attf-class="oe_website_sale pb-5 #{website.shop_page_container == 'fluid' and 'container-fluid' or 'container'}">
@@ -346,9 +343,8 @@
                                             />
                                             <small t-if="combination_info.get('base_unit_price')"
                                                    class="d-block text-muted">
-                                                <t t-call="website_sale.base_unit_price">
-                                                    <t t-set="base_unit_price" t-value="combination_info['base_unit_price']"/>
-                                                </t>
+                                                <t t-call="website_sale.base_unit_price"
+                                                    base_unit_price="combination_info['base_unit_price']"/>
                                             </small>
                                         </span>
                                         <div class="mt-auto pt-3">
@@ -425,12 +421,7 @@
                                         class="o_wsale_compare_table_column d-flex flex-column align-items-center flex-shrink-0"
                                     >
                                         <div class="small text-muted">Tags</div>
-                                        <t t-call="website_sale.product_tags">
-                                            <t
-                                                t-set="all_product_tags"
-                                                t-value="product.all_product_tag_ids"
-                                            />
-                                        </t>
+                                        <t t-call="website_sale.product_tags" all_product_tags="product.all_product_tag_ids"/>
                                     </li>
                                 </ul>
                             </t>

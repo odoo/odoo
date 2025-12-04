@@ -5,9 +5,7 @@
     <!-- Change pricelist -->
     <xpath expr="//div[hasclass('o_wevent_price_range')]" position="after">
         <div id="o_wevent_tickets_pricelist" class="collapse show">
-            <t t-call="website_sale.pricelist_list">
-                <t t-set="_classes" t-valuef="d-inline p-0 ms-2 my-1"/>
-            </t>
+            <t t-call="website_sale.pricelist_list" _classes.f="d-inline p-0 ms-2 my-1"/>
         </div>
     </xpath>
     <!-- Add style display for price if the ticket is available -->
