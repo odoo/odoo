@@ -146,7 +146,7 @@
                     <button name="button_cancel" invisible="state not in ('draft', 'to approve', 'sent', 'purchase') or locked" string="Cancel" type="object" data-hotkey="x"/>
                     <button name="button_lock" type="object" string="Lock" invisible="locked or state != 'purchase' or not lock_confirmed_po == 'lock'" data-hotkey="l"/>
                     <button name="button_unlock" type="object" string="Unlock" invisible="not locked" groups="purchase.group_purchase_manager" data-hotkey="l"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase" readonly="1"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,purchase" readonly="1"/>
                 </header>
                 <div class="alert alert-warning" role="alert" invisible="not purchase_warning_text">
                     <field name="purchase_warning_text" class="fw-bold"/>
@@ -219,7 +219,7 @@
                         <group>
                             <field name="date_order" invisible="state  == 'purchase'" readonly="state in ['cancel', 'purchase']"/>
                             <label for="date_planned"/>
-                            <div name="date_planned_div" class="o_row">
+                            <div name="date_planned_div">
                                 <field name="date_planned" readonly="state not in ('draft', 'sent', 'to approve', 'purchase')"/>
                             </div>
                             <label for="receipt_reminder_email" class="d-none" groups="purchase.group_send_reminder"/>
@@ -406,15 +406,14 @@
                                 <group name="purchase_info" string="purchase">
                                     <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state in ['cancel', 'purchase']"/>
+                                    <field name="date_approve" invisible="state not in ('purchase', 'cancel')"/>
                                 </group>
                                 <group name="billing_info" string="billing">
-                                    <field name="date_approve"/>
                                     <field name="invoice_status" invisible="state in ('draft', 'sent', 'to approve', 'cancel')"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" readonly="invoice_status == 'invoiced' or locked"/>
                                 </group>
                                 <group name="tracking_info" string="tracking">
                                     <field name="origin"/>
-                                    <field name="receipt_status" invisible="state != 'purchase'"/>
                                 </group>
                             </group>
                         </page>

@@ -127,6 +127,8 @@ class PurchaseOrder(models.Model):
                         to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
                 if to_log:
                     order._log_decrease_ordered_quantity(to_log)
+        if 'priority' in vals:
+            self.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel')).priority = vals['priority']
         return res
 
     # --------------------------------------------------
@@ -396,6 +398,7 @@ class PurchaseOrder(models.Model):
             'company_id': self.company_id.id,
             'state': 'draft',
             'reference_ids': [Command.set(self.reference_ids.ids)],
+            'priority': self.priority,
         }
 
     def _create_picking(self):
