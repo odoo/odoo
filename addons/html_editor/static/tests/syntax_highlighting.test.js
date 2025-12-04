@@ -229,6 +229,23 @@ test("should fill an empty pre", async () => {
     });
 });
 
+test("should convert empty codeblock into base container on backspace", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: "<pre></pre>",
+        contentBeforeEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "" }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        stepFunction: async () => {
+            const textarea = queryOne("textarea");
+            await click(textarea);
+            await pressAndWait("Backspace");
+        },
+        contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+        contentAfter: `<p>[]<br></p>`,
+    });
+});
+
 test("the textarea should never contains zws", async () => {
     await testEditorWithHighlightedContent({
         contentBefore: "<pre>a\u200bb\ufeffc</pre>",
@@ -1149,8 +1166,8 @@ test("restore paragraph from code block", async () => {
         stepFunction: async () => {
             await click(".o_code_toolbar span.fa-paragraph");
         },
-        contentAfterEdit: '<div class="o-paragraph">[]abc</div>',
-        contentAfter: `<div>[]abc</div>`,
+        contentAfterEdit: "<p>[]abc</p>",
+        contentAfter: `<p>[]abc</p>`,
         config: configWithEmbeddings,
     });
 });
