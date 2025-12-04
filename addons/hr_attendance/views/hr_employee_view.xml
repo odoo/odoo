@@ -5,11 +5,6 @@
         <field name="name">hr.employee.search.view</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//separator[@name='managers_groupby_separator']" position="before">
-                <filter name="group_attendance_manager" string="Attendance Approver" context="{'group_by': 'attendance_manager_id'}" groups="hr_attendance.group_hr_attendance_user"/>
-            </xpath>
-        </field>
     </record>
 
     <record id="view_employee_form_inherit_hr_attendance" model="ir.ui.view">
