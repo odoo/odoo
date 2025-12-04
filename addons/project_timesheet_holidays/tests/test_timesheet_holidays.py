@@ -69,6 +69,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'date_from': time.strftime('%Y-01-01'),
             'date_to': time.strftime('%Y-12-31'),
         })
+        self.user_employee.group_ids |= self.env.ref('hr_holidays.group_hr_holidays_employee')
 
     def test_validate_with_timesheet(self):
         # employee creates a leave request

@@ -573,7 +573,7 @@ class TestCreateEvents(TestCommon):
             self.skipTest("The 'hr_holidays' module must be installed to run this test.")
 
         self.user_hrmanager = mail_new_test_user(self.env, login='bastien', groups='base.group_user,hr_holidays.group_hr_holidays_manager')
-        self.user_employee = mail_new_test_user(self.env, login='enguerran', password='enguerran', groups='base.group_user')
+        self.user_employee = mail_new_test_user(self.env, login='enguerran', password='enguerran', groups='base.group_user,hr_holidays.group_hr_holidays_employee')
         self.rd_dept = self.env['hr.department'].with_context(tracking_disable=True).create({
             'name': 'Research and Development',
         })
