@@ -13,6 +13,12 @@ patch(Thread.prototype, {
         if (this.channel?.channel_type !== "livechat") {
             return super._computeDiscussAppCategory();
         }
+        if (
+            this.channel.livechat_status === "need_help" &&
+            this.store.discuss.livechatLookingForHelpCategory
+        ) {
+            return this.store.discuss.livechatLookingForHelpCategory;
+        }
         return (
             this.channel.livechat_channel_id?.appCategory ??
             this.channel.appAsLivechats?.defaultLivechatCategory
@@ -33,7 +39,10 @@ patch(Thread.prototype, {
     },
 
     get inChathubOnNewMessage() {
-        return this.channel?.channel_type === "livechat" || super.inChathubOnNewMessage;
+        if (this.channel?.channel_type === "livechat") {
+            return Boolean(this.self_member_id);
+        }
+        return super.inChathubOnNewMessage;
     },
 
     /**
@@ -50,6 +59,7 @@ patch(Thread.prototype, {
         if (
             this.channel?.channel_type === "livechat" &&
             this.channel?.channel_member_ids.length <= 2 &&
+            this.channel.self_member_id &&
             !this.livechat_end_dt
         ) {
             await this.askLeaveConfirmation(

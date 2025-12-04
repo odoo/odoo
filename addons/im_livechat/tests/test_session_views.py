@@ -96,14 +96,23 @@ class TestImLivechatLookingForHelpViews(TestImLivechatSessionViews):
             "im_livechat.discuss_channel_looking_for_help_action"
         )
 
-    def start_needhelp_session(self):
+    def start_needhelp_session(self, guest_name=None):
         self.authenticate(None, None)
+        cookies = {}
+        if guest_name:
+            guest = self.env["mail.guest"].create({"name": guest_name})
+            cookies = {guest._cookie_name: guest._format_auth_cookie()}
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
-            {"channel_id": self.livechat_channel.id, "previous_operator_id": self.bob.partner_id.id},
+            {
+                "channel_id": self.livechat_channel.id,
+                "previous_operator_id": self.bob.partner_id.id,
+            },
+            cookies=cookies,
         )
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         chat.livechat_status = "need_help"
+        return chat
 
     def test_looking_for_help_list_real_time_update(self):
         self.start_needhelp_session()
@@ -119,4 +128,22 @@ class TestImLivechatLookingForHelpViews(TestImLivechatSessionViews):
             f"/odoo/action-{self.looking_for_help_action.id}?view_type=kanban",
             "im_livechat.looking_for_help_kanban_real_time_update_tour",
             login="bob_looking_for_help",
+        )
+
+    def test_looking_for_help_discuss_category(self):
+        self.env["discuss.channel"].search([("livechat_status", "=", "need_help")]).unlink()
+        agent = new_test_user(self.env, "agent", groups="im_livechat.im_livechat_group_user")
+        accounting_expertise, sales_expertise = self.env["im_livechat.expertise"].create(
+            [{"name": "Accounting"}, {"name": "Sales"}],
+        )
+        agent.livechat_expertise_ids = sales_expertise
+        accounting_chat = self.start_needhelp_session(guest_name="Visitor Accounting")
+        accounting_chat.livechat_expertise_ids = accounting_expertise
+        sales_chat = self.start_needhelp_session(guest_name="Visitor Sales")
+        sales_chat.livechat_expertise_ids = sales_expertise
+        self._reset_bus()
+        self.start_tour(
+            "/odoo/discuss",
+            "im_livechat.looking_for_help_discuss_category_tour",
+            login="agent",
         )

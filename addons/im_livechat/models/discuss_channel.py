@@ -193,17 +193,26 @@ class DiscussChannel(models.Model):
     )
 
     def write(self, vals):
-        if "livechat_status" not in vals:
+        if "livechat_status" not in vals and "livechat_expertise_ids" not in vals:
             return super().write(vals)
-        needing_help_before = self.filtered(lambda c: c.livechat_status == "need_help")
+        need_help_before = self.filtered(lambda c: c.livechat_status == "need_help")
         result = super().write(vals)
-        needing_help_after = self.filtered(lambda c: c.livechat_status == "need_help")
-        if needing_help_before != needing_help_after:
-            self.env.ref("im_livechat.im_livechat_group_user")._bus_send(
+        need_help_after = self.filtered(lambda c: c.livechat_status == "need_help")
+        group_livechat_user = self.env.ref("im_livechat.im_livechat_group_user")
+        store = Store(bus_channel=group_livechat_user, bus_subchannel="LOOKING_FOR_HELP")
+        added_need_help = need_help_after - need_help_before
+        removed_need_help = need_help_before - need_help_after
+        store.add(added_need_help, "_store_channel_fields")
+        store.add(removed_need_help, ["livechat_status"])
+        if "livechat_expertise_ids" in vals:
+            store.add(need_help_after, [Store.Many("livechat_expertise_ids", ["name"])])
+        store.bus_send()
+        if added_need_help or removed_need_help:
+            group_livechat_user._bus_send(
                 "im_livechat.looking_for_help/update",
                 {
-                    "added_channel_ids": (needing_help_after - needing_help_before).ids,
-                    "removed_channel_ids": (needing_help_before - needing_help_after).ids,
+                    "added_channel_ids": added_need_help.ids,
+                    "removed_channel_ids": removed_need_help.ids,
                 },
                 subchannel="LOOKING_FOR_HELP",
             )

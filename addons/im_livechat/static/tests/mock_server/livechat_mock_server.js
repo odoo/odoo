@@ -247,6 +247,15 @@ patch(mailDataHelpers, {
                 LivechatChannel.browse(LivechatChannel.search([])),
                 makeKwArgs({ fields: ["are_you_inside", "name"] })
             );
+            return;
+        }
+        if (name === "/im_livechat/looking_for_help") {
+            const DiscussChannel = this.env["discuss.channel"];
+            store.add(
+                DiscussChannel.browse(
+                    DiscussChannel.search([["livechat_status", "=", "need_help"]])
+                )
+            );
         }
     },
 });

@@ -38,7 +38,7 @@ registerThreadAction("livechat-status", {
             params: { btn, inThreadActions: true },
         };
     },
-    name: ({ thread }) => thread.livechatStatusLabel,
+    name: ({ channel }) => channel.livechatStatusLabel,
     nameClass: "fst-italic small",
     sequence: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 10 : 5),
     sequenceGroup: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 5 : 7),
