@@ -144,7 +144,7 @@ const deleteSelectedPage = [
     },
     {
         content: "Click on OK",
-        trigger: ".modal-content footer button.btn-primary:not([disabled])",
+        trigger: ".modal-content footer button.btn-danger:not([disabled])",
         run: "click",
     },
 ];

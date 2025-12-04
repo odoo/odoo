@@ -77,7 +77,7 @@
         </CheckBox>
 
         <t t-set-slot="footer">
-            <button class="btn btn-primary" t-on-click="() => this.onClickDelete()"  t-att-disabled="!this.state.confirm">
+            <button class="btn btn-danger" t-on-click="() => this.onClickDelete()"  t-att-disabled="!this.state.confirm">
                 Delete
             </button>
             <button class="btn btn-secondary" t-on-click="() => this.props.close()">

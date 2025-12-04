@@ -33,6 +33,7 @@ export class PAVListRenderer extends ListRenderer {
                 title: _t("Bye-bye, record!"),
                 body: deleteConfirmationMessage,
                 confirmLabel: _t("Delete"),
+                confirmClass: "btn-danger",
                 confirm: () => this.onConfirmDelete(record).then(resolve),
                 cancel: resolve,
                 cancelLabel: _t("No, keep it"),
