@@ -6,6 +6,7 @@ import {
 } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
+import { fillClipboardData } from "../utils/clipboard";
 import { unwrapContents, wrapInlinesInBlocks, splitTextNode, fillEmpty } from "../utils/dom";
 import { ancestors, childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
@@ -221,14 +222,7 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         }
-        const dataHtmlElement = this.document.createElement("data");
-        dataHtmlElement.append(clonedContents);
-        prependOriginToImages(dataHtmlElement, window.location.origin);
-        const odooHtml = dataHtmlElement.innerHTML;
-        const odooText = selection.textContent();
-        ev.clipboardData.setData("text/plain", odooText);
-        ev.clipboardData.setData("text/html", odooHtml);
-        ev.clipboardData.setData("application/vnd.odoo.odoo-editor", odooHtml);
+        fillClipboardData(ev, selection.textContent(), clonedContents);
         if (commonAncestor && commonAncestor.nodeType === Node.ELEMENT_NODE) {
             this.dispatchTo("normalize_handlers", commonAncestor);
         }
@@ -797,17 +791,4 @@ export function isHtmlContentSupported(node) {
         node,
         '[data-oe-model]:not([data-oe-field="arch"]):not([data-oe-type="html"]),[data-oe-translation-id]'
     );
-}
-
-/**
- * Add origin to relative img src.
- * @param {string} origin
- */
-function prependOriginToImages(doc, origin) {
-    doc.querySelectorAll("img").forEach((img) => {
-        const src = img.getAttribute("src");
-        if (src && !/^(http|\/\/|data:)/.test(src)) {
-            img.src = origin + (src.startsWith("/") ? src : "/" + src);
-        }
-    });
 }
