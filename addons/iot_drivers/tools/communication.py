@@ -4,7 +4,7 @@ import time
 from odoo.addons.iot_drivers import main
 from odoo.addons.iot_drivers.tools import helpers, system
 from odoo.addons.iot_drivers.tools.system import IS_WINDOWS, IOT_IDENTIFIER
-from odoo.addons.iot_drivers.server_logger import close_server_log_sender_handler
+from odoo.addons.iot_drivers.server_logger import server_logger
 
 _logger = logging.getLogger(__name__)
 
@@ -40,7 +40,8 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
             _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
         case 'server_clear':
             helpers.disconnect_from_server()
-            close_server_log_sender_handler()
+            if server_logger:
+                server_logger.close()
         case 'server_update':
             system.update_conf({
                 'remote_server': kwargs['server_url']
