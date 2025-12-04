@@ -33,8 +33,6 @@
                         domain="[('my_activity_date_deadline', '=', 'today')]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', 'today')]"/>
-                    <filter string="Ongoing Activity Plan" name="filter_ongoing_activity_plan"
-                         domain="[('activity_plans_ids', '!=', False)]"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
@@ -62,22 +60,21 @@
                              ]"
                             groups="hr.group_hr_manager"/>
                     <separator />
-                    <filter string="Contract Start Date" name="contract_date_start" date="contract_date_start" groups="hr.group_hr_manager"/>
-                    <filter string="Contract End Date" name="contract_date_end" date="contract_date_end" groups="hr.group_hr_manager"/>
+                    <filter string="Contract Start" name="contract_date_start" date="contract_date_start" groups="hr.group_hr_manager"/>
+                    <filter string="Contract End" name="contract_date_end" date="contract_date_end" groups="hr.group_hr_manager"/>
                     <separator />
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group>
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
                         <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type'}"/>
                         <separator name="main_groupby_separator"/>
-                        <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday_month'}"/>
+                        <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday_month'}" invisible="1"/>
                         <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'contract_date_start'}" groups="hr.group_hr_manager"/>
                         <separator name="secondary_groupby_separator"/>
                         <separator name="managers_groupby_separator"/>
-                        <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
-                        <separator/>
                         <filter string="Properties" name="group_by_employee_properties" context="{'group_by': 'employee_properties'}"/>
                     </group>
                 </search>
@@ -649,8 +646,8 @@
                                 <field class="hr_tags" name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                                 <footer class="py-0">
                                     <div class="d-flex ms-auto">
-                                        <field name="user_id" widget="many2one_avatar_user" readonly="1" class="mb-1 ms-2"/>
-                                        <field name="activity_ids" widget="kanban_activity" class="m-1 ms-2"/>
+                                        <field name="user_id" widget="many2one_avatar_user" readonly="1" class="m-1 ms-2 d-flex align-items-center justify-content-center"/>
+                                        <field name="activity_ids" widget="kanban_activity" class="m-1 ms-2 d-flex align-items-center justify-content-center"/>
                                     </div>
                                 </footer>
                             </main>

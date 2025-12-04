@@ -26,11 +26,6 @@
             <field name="name">hr.employee.search.view</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_filter"/>
-            <field name="arch" type="xml">
-                <xpath expr="//separator[@name='managers_groupby_separator']" position="before">
-                    <filter name="group_expense_manager" string="Expense Approver" context="{'group_by': 'expense_manager_id'}"/>
-                </xpath>
-            </field>
         </record>
     </data>
 </odoo>
