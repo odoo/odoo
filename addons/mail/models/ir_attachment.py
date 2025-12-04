@@ -83,6 +83,7 @@ class IrAttachment(models.Model):
             "mimetype",
             "name",
             "res_name",
+            "res_model",
             Store.One("thread", [], as_thread=True),
             "type",
             "url",
