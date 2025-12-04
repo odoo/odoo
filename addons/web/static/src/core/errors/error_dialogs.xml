@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="web.WarningDialog">
-        <Dialog title="title" size="'md'" contentClass="'o_error_dialog'">
+        <Dialog title="title" size="'sm'" contentClass="'o_error_dialog'">
             <div role="alert">
-                <p t-esc="message" class="text-prewrap"/>
+                <p t-esc="message" class="text-prewrap mb-0"/>
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary o-default-button" t-on-click="props.close" data-available-offline="">Close</button>
@@ -51,7 +51,7 @@
     </t>
 
     <t t-name="web.ErrorDialog">
-        <Dialog title.translate="Oops!" size="state.showTraceback ? 'xl' : 'md'" contentClass="'o_error_dialog'">
+        <Dialog title.translate="Oops!" size="state.showTraceback ? 'lg' : 'sm'" contentClass="'o_error_dialog'">
             <div role="alert">
                 <p>
                     Something went wrong... If you really are stuck, share the report with your friendly support service

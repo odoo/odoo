@@ -642,6 +642,7 @@ export class PropertiesField extends Component {
             title: _t("Delete Property Field"),
             body: message,
             confirmLabel: _t("Delete Field"),
+            confirmClass: "btn-danger",
             cancelLabel: _t("Discard"),
             confirm: () => {
                 const propertiesDefinitions = this.propertiesList;

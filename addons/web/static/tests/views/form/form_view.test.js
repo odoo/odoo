@@ -6179,7 +6179,7 @@ test(`deleting a record`, async () => {
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1);
 
-    await contains(`.modal-footer button.btn-primary`).click();
+    await contains(`.modal-footer button.btn-danger`).click();
     expect(`.o_breadcrumb`).toHaveText("second record");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("blip");
 });
@@ -6201,7 +6201,7 @@ test(`deleting a record on desktop`, async () => {
     await toggleActionMenu();
     await toggleMenuItem("Delete");
 
-    await contains(`.modal-footer button.btn-primary`).click();
+    await contains(`.modal-footer button.btn-danger`).click();
     expect(getPagerValue()).toEqual([1]);
     expect(getPagerLimit()).toBe(2);
 });
@@ -6227,7 +6227,7 @@ test(`deleting the last record`, async () => {
     expect(`.modal`).toHaveCount(1);
     expect.verifySteps([]);
 
-    await contains(`.modal-footer button.btn-primary`).click();
+    await contains(`.modal-footer button.btn-danger`).click();
     expect(`.modal`).toHaveCount(0);
     expect.verifySteps(["unlink", "history-back"]);
 });
@@ -6249,7 +6249,7 @@ test("delete the last record (without previous action)", async () => {
     await mountWithCleanup(WebClient);
     await toggleActionMenu();
     await toggleMenuItem("Delete");
-    await contains(`.modal-footer button.btn-primary`).click();
+    await contains(`.modal-footer button.btn-danger`).click();
     expect.verifySteps(["__DEFAULT_ACTION__ called"]);
 });
 
@@ -9493,7 +9493,7 @@ test(`delete a duplicated record`, async () => {
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1);
 
-    await contains(`.modal-footer .btn-primary`).click();
+    await contains(`.modal-footer .btn-danger`).click();
     expect(`.o_field_widget`).toHaveText("first record");
     expect.verifySteps(["unlink"]);
 });
@@ -11799,7 +11799,7 @@ test(`prevent recreating a deleted record`, async () => {
     await contains(`.o-dropdown--menu .dropdown-item:contains(Delete)`).click();
     expect(`.modal`).toHaveCount(1);
 
-    await contains(`.modal-footer button.btn-primary`).click();
+    await contains(`.modal-footer button.btn-danger`).click();
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(0);
 });

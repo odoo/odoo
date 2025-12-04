@@ -1,7 +1,8 @@
 .modal.o_technical_modal {
     --o-control-panel-breadcrumbs-display: none;
+    --formView-sheetBg-padding-x: var(--modal-padding);
 
-    backdrop-filter: blur(.5px) grayscale(50%);
+    backdrop-filter: grayscale(50%);
 
     .modal-content {
         .modal-header .modal-title {
@@ -9,6 +10,10 @@
             white-space: nowrap;
             text-overflow: ellipsis;
         }
+    }
+
+    &.o_modal_no_body_padding .modal-body {
+        padding: 0;
     }
 
     .modal-footer {
@@ -23,18 +28,18 @@
         }
 
         @include media-breakpoint-down(md) {
+            .btn, .o_file_input {
+                width: 100%;
+            }
+
             .btn {
-                width: 45%;
                 text-overflow: ellipsis;
                 white-space: inherit;
             }
         }
 
         @include media-breakpoint-down(sm) {
-            > .btn {
-                padding-top: map-get($spacers, 2);
-                padding-bottom: map-get($spacers, 2);
-            }
+            --btn-padding-y: #{map-get($spacers, 2)};
         }
     }
 
@@ -42,8 +47,29 @@
         --modal-header-border-width: 0;
         --modal-footer-border-width: 0;
 
-        .modal-body {
-            padding: 0 var(--modal-padding);
+        $_halfPadding: calc(var(--modal-padding) * 0.5);
+
+        --modal-padding: var(--Dialog-padding, #{map-get($spacers, 3)});
+        --modal-header-padding-x: var(--modal-padding);
+        --modal-header-padding-y: var(--modal-padding);
+        --modal-header-padding: var(--modal-padding) var(--modal-padding) #{$_halfPadding};
+        
+        &.o_modal_no_body_padding .modal-body {
+            padding: 0;
+
+            .o_form_sheet_bg {
+                --formView-sheetBg-padding-x: var(--modal-padding);
+            }
+        }
+
+        &.o_modal_body_padding {
+            .modal-body {
+                padding: #{$_halfPadding} var(--modal-padding);
+            }
+
+            @include media-breakpoint-up(sm) {
+                --Dialog-padding: #{map-get($spacers, 4)};
+            }
         }
 
         @include media-breakpoint-down(sm) {
@@ -58,6 +84,12 @@
 
             .modal-content {
                 max-height: calc(100vh - #{$modal-dialog-margin * 8});
+            }
+        }
+
+        @include media-breakpoint-up(sm) {
+            .btn-close.position-sm-absolute {
+                margin: map-get($spacers, 2);
             }
         }
     }
@@ -76,21 +108,20 @@
             }
 
             .modal-header {
-                padding: 0;
-
-                .modal-title {
-                    padding: var(--modal-header-padding);
-                    padding-right: 0;
+                button.oi-arrow-left, .o_expand_button {
+                    // Use BS default btn-close padding logic
+                    padding: calc(var(--#{$prefix}modal-header-padding-y) * .5) calc(var(--#{$prefix}modal-header-padding-x) * .5);
                 }
 
-                .btn-close, .oi-arrow-left[data-bs-dismiss="modal"] {
-                    padding: var(--modal-header-padding);
+                .o_expand_button {
+                    // Use BS default btn-close margin logic
+                    margin: calc(-.5 * var(--#{$prefix}modal-header-padding-y)) calc(-.5 * var(--#{$prefix}modal-header-padding-x)) calc(-.5 * var(--#{$prefix}modal-header-padding-y)) auto;
                 }
 
-                .oi-arrow-left[data-bs-dismiss="modal"] + .modal-title {
-                    padding-left: 0;
+                button.oi-arrow-left {
+                    // Invert BS default btn-close margin logic
+                    margin: calc(-.5 * var(--#{$prefix}modal-header-padding-y)) auto calc(-.5 * var(--#{$prefix}modal-header-padding-y)) calc(-.5 * var(--#{$prefix}modal-header-padding-x));
                 }
-
             }
 
             .modal-body {

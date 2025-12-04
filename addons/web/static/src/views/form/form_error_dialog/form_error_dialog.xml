@@ -2,11 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FormErrorDialog">
-        <Dialog header="false" size="'md'" contentClass="'o_error_dialog o_form_error_dialog'">
-            <div role="alert">
-                <h1 class="text-danger">Oh snap!</h1>
-                <p t-esc="message" class="text-prewrap"/>
-            </div>
+        <Dialog size="'sm'" title.translate="'Oh snap!'" contentClass="'o_error_dialog o_form_error_dialog'">
+            <p t-esc="message" class="text-prewrap"/>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="stay">Stay here</button>
                 <button class="btn btn-secondary" t-if="redirectAction" t-on-click="onRedirectBtnClicked"><t t-esc="redirectBtnLabel"/></button>

@@ -6,7 +6,7 @@
             <div role="dialog" class="modal d-block"
                 tabindex="-1"
                 t-att-class="{ o_technical_modal: props.technical, o_modal_full: isFullscreen, o_inactive_modal: !data.isActive }"
-                t-attf-class="o_modal_design_{{ design }}"
+                t-attf-class="o_modal_design_{{ design }} {{ !props.withBodyPadding ? 'o_modal_no_body_padding': 'o_modal_body_padding' }}"
                 t-ref="modalRef"
                 >
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" t-attf-class="modal-{{props.size}}">
@@ -19,10 +19,10 @@
                                 </t>
                             </t>
                         </header>
-                        <main class="modal-body" t-attf-class="{{ props.bodyClass }} {{ !props.withBodyPadding ? 'p-0': '' }}">
+                        <main class="modal-body" t-attf-class="{{ props.bodyClass }}">
                             <t t-slot="default" close="() => this.data.close()" />
                         </main>
-                        <footer t-if="props.footer" class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
+                        <footer t-if="props.footer" class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-2 w-100">
                             <t t-slot="footer" close="() => this.data.close()"/>
                         </footer>
                     </div>
@@ -35,14 +35,14 @@
         <t t-if="fullscreen">
             <button class="btn oi oi-arrow-left oi-large" aria-label="Close" tabindex="-1" t-on-click="dismiss" data-available-offline=""/>
         </t>
-        <h4 class="modal-title text-break flex-grow-1" t-att-class="{ 'me-auto': fullscreen, 'fs-5': props.size == 'sm' }">
+        <h4 class="modal-title text-wrap text-break fs-3 flex-grow-1" t-att-class="{ 'me-auto ms-3': fullscreen }">
             <t t-esc="props.title"/>
         </h4>
         <t t-if="onExpand">
-            <button type="button" class="fa fa-expand btn opacity-75 opacity-100-hover o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand" data-available-offline=""/>
+            <button type="button" class="fa fa-expand btn opacity-50 opacity-100-hover o_expand_button" aria-label="Expand" tabindex="-1" t-on-click="onExpand" data-available-offline=""/>
         </t>
         <t t-if="!fullscreen">
-            <button type="button" class="btn-close" t-att-class="{'position-absolute top-0 end-0 mt-1 me-1': design == 'minimal' and !onExpand  }" aria-label="Close" tabindex="-1" t-on-click="dismiss" data-available-offline=""/>
+            <button type="button" class="btn-close" title="Close" t-att-class="{'position-sm-absolute top-0 end-0': design == 'minimal' and !onExpand }" aria-label="Close" tabindex="-1" t-on-click="dismiss" data-available-offline=""/>
         </t>
     </t>
 </templates>

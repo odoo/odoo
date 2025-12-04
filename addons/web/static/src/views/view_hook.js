@@ -208,6 +208,7 @@ export function useDeleteRecords(model) {
             cancelLabel: _t("No, keep it"),
             confirm,
             confirmLabel: _t("Delete"),
+            confirmClass: "btn-danger",
             title: _t("Bye-bye, record!"),
         };
     }
