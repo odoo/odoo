@@ -1,0 +1,47 @@
+/* Needed to enable Dark Mode in email client user agents */
+:root {
+    color-scheme: light dark;
+    supported-color-schemes: light dark;
+}
+
+/* Dark Mode media queries to target Apple and iOS */
+@media (prefers-color-scheme: dark ) {
+    .darkmode-bg {
+        background-color: #1B1D26 !important;
+    }
+
+    .darkmode-bg-and-text {
+        background-color: #1B1D26 !important;
+        color: #FFFFF0 !important;
+    }
+
+    .darkmode-text {
+        color: #FFFFF0 !important;
+    }
+}
+
+/* Dark Mode rules to target some Android and Outlook.com */
+[data-ogsc] .darkmode-bg {
+    background-color: #1B1D26 !important;
+}
+
+[data-ogsc] .darkmode-bg-and-text {
+    background-color: #1B1D26 !important;
+    color: #FFFFF0 !important;
+}
+
+[data-ogsc] .darkmode-text {
+    color: #FFFFF0 !important;
+}
+
+
+/* Dark Mode hack to keep white text white in Gmail. Uses color blends ala Remi Parmentier: https://www.hteumeuleu.com/2021/fixing-gmail-dark-mode-css-blend-modes */
+u + .body {
+    background:#1B1D26;
+    mix-blend-mode:screen;
+}
+
+u + .body {
+    background:#1B1D26;
+    mix-blend-mode:difference;
+}

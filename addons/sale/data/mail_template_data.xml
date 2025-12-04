@@ -141,7 +141,7 @@
                         </t>
                     </p>
                     <t t-if="hasattr(object, 'website_id') and object.website_id">
-                        <div style="margin: 0px; padding: 0px;">
+                        <div style="margin: 0px; padding: 0px;" class="darkmode-bg-and-text">
                             <!-- The following loop is also used in the addons > sale > data > mail_template_data.xml file because we want the same layout. -->
                             <t t-foreach="object.order_line" t-as="line">
                                 <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and not line.combo_item_id">
@@ -275,7 +275,7 @@
                             </t>
                         </div>
                         <div style="margin: 10px 0 16px; padding: 0px;">
-                            <table width="100%" t-if="hasattr(object, 'carrier_id') and object.carrier_id" style="max-width: 590px; font-size: 14px; border-spacing: 0px 4px; white-space: nowrap;" role="presentation">
+                            <table width="100%" t-if="hasattr(object, 'carrier_id') and object.carrier_id" style="max-width: 590px; font-size: 14px; border-spacing: 0px 4px; white-space: nowrap;" role="presentation" class="darkmode-bg-and-text">
                                 <tr>
                                     <td style="padding-top: 8px; width: 50%; border-top: 1px solid #dee2e6;" align="left">Delivery</td>
                                     <td style="padding-top: 8px; width: 50%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_delivery, object.currency_id) or ''">$ 0.00</td>

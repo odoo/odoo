@@ -339,6 +339,7 @@ This module provides the core of the Odoo Web Client.
         "web.assets_web_dark": [
             ('include', 'web.assets_web'),
             'web/static/src/**/*.dark.scss',
+            'web/static/src/css/mail_darkmode.css',
         ],
 
         # ---------------------------------------------------------------------
