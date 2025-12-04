@@ -820,22 +820,24 @@ class TestAPI(ThreadRecipients):
                 self.assertDictEqual(recipient, expected)
 
     @users("employee")
-    def test_message_get_suggested_recipients_conversation_filter(self):
+    def test_message_get_suggested_recipients_and_subject_conversation_filter(self):
         """ Test sorting of messages when suggested is used in reply-all based
         on last message. """
         test_record = self.env['mail.test.recipients'].create({
             'email_cc': '"Test Cc" <test.cc.1@test.example.com>',
             'name': 'Test Recipients',
         })
-        for user, post_values, expected in [
+        for user, post_values, expected_recipients, expected_subject in [
             (
                 self.user_employee,
                 {
                     'body': 'Note with pings, to ignore',
                     'message_type': 'comment',
                     'subtype_id': self.env.ref('mail.mt_note').id,
+                    'subject': 'Some internal comment',
                 },
-                []
+                [],
+                'Test Recipients',
             ), (
                 self.user_root,
                 {
@@ -844,6 +846,7 @@ class TestAPI(ThreadRecipients):
                     'body': 'Incoming (old) email',
                     'message_type': 'email',
                     'subtype_id': self.env.ref('mail.mt_comment').id,
+                    'subject': 'Increase order quantity',
                 },
                 [{
                     'create_values': {},
@@ -851,6 +854,7 @@ class TestAPI(ThreadRecipients):
                     'name': 'Outdated',
                     'partner_id': False,
                 }],
+                'Increase order quantity',
             ), (
                 self.user_employee,
                 {
@@ -858,6 +862,7 @@ class TestAPI(ThreadRecipients):
                     'message_type': 'comment',
                     'partner_ids': self.user_portal.partner_id.ids,
                     'subtype_id': self.env.ref('mail.mt_comment').id,
+                    'subject': 'Order for 100 chairs',
                 },
                 [{
                     'create_values': {},
@@ -870,6 +875,7 @@ class TestAPI(ThreadRecipients):
                     'name': self.user_employee.name,
                     'partner_id': self.user_employee.partner_id.id,
                 }],
+                'Order for 100 chairs',
             ), (
                 self.user_root,
                 {
@@ -877,6 +883,7 @@ class TestAPI(ThreadRecipients):
                     'body': 'Some marketing email',
                     'message_type': 'email_outgoing',
                     'subtype_id': self.env.ref('mail.mt_note').id,
+                    'subject': 'Promotion on tables!',
                 },
                 [{
                     'create_values': {},
@@ -889,15 +896,18 @@ class TestAPI(ThreadRecipients):
                     'name': self.user_employee.name,
                     'partner_id': self.user_employee.partner_id.id,
                 }],
+                'Order for 100 chairs',
             ),
         ]:
             test_record.with_user(user).message_post(**post_values)
             test_record.message_unsubscribe(partner_ids=test_record.message_partner_ids.ids)
-            suggested = test_record._message_get_suggested_recipients(reply_discussion=True, no_create=True)
+            suggested_recipients = test_record._message_get_suggested_recipients(reply_discussion=True, no_create=True)
+            suggested_subject = test_record._message_get_suggested_subject()
             # as we can't use sorted directly, reorder manually, hey
-            expected.sort(key=lambda item: item['partner_id'], reverse=True)
+            expected_recipients.sort(key=lambda item: item['partner_id'], reverse=True)
             with self.subTest(message=post_values['body']):
-                for sugg, expected_sugg in zip(suggested, expected, strict=True):
+                self.assertEqual(suggested_subject, expected_subject)
+                for sugg, expected_sugg in zip(suggested_recipients, expected_recipients, strict=True):
                     self.assertDictEqual(sugg, expected_sugg)
 
     @mute_logger('openerp.addons.mail.models.mail_mail')

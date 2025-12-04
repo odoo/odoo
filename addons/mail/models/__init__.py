@@ -14,6 +14,7 @@ from . import mail_composer_mixin
 from . import mail_thread
 from . import mail_thread_blacklist
 from . import mail_thread_main_attachment
+from . import mail_thread_subject_suggested
 from . import mail_tracking_duration_mixin
 from . import template_reset_mixin
 

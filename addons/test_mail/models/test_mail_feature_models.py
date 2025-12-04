@@ -9,7 +9,7 @@ from odoo.fields import Domain
 class MailTestRecipients(models.Model):
     _name = 'mail.test.recipients'
     _description = "Test Recipients Computation"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread.subject.suggested']
     _primary_email = 'customer_email'
 
     company_id = fields.Many2one('res.company')
