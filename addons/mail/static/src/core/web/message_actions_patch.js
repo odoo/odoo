@@ -38,7 +38,9 @@ registerMessageAction("reply-all", {
             message_id: message.id,
         });
         const recipientIds = recipients.map((r) => r.id);
-        const emailFrom = message.author_id?.email || message.email_from;
+        // usually reply_to is what you want people to see as being "from"
+        // showing this avoids "leaking" the actual user when reply_to is an alias
+        const emailFrom = message.reply_to || message.email_from || message.author_id?.email;
         const [name, email] = emailFrom ? parseEmail(emailFrom) : ["", ""];
         const datetime = _t("%(date)s at %(time)s", {
             date: message.datetime.toFormat("ccc, MMM d, yyyy"),
@@ -68,7 +70,9 @@ registerMessageAction("forward", {
     icon: "fa fa-share",
     name: _t("Forward"),
     onSelected: async ({ message, owner, store, thread }) => {
-        const emailFrom = message.author_id?.email || message.email_from;
+        // usually reply_to is what you want people to see as being "from"
+        // showing this avoids "leaking" the actual user when reply_to is an alias
+        const emailFrom = message.reply_to || message.email_from || message.author_id?.email;
         const [name, email] = emailFrom ? parseEmail(emailFrom) : ["", ""];
         const datetime = _t("%(date)s at %(time)s", {
             date: message.datetime.toFormat("ccc, MMM d, yyyy"),
