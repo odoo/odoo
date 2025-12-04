@@ -333,14 +333,13 @@ export class PosOrderline extends PosOrderlineAccounting {
         );
         const price = ProductPrice.round(this.price_unit || 0);
         const product = orderline.getProduct();
-        let order_line_price = product.getPrice(
+        const order_line_price = product.getPrice(
             orderline.order_id.pricelist_id,
             this.getQuantity(),
             0,
             false,
             product
         );
-        order_line_price = this.currency.round(order_line_price);
 
         const isSameCustomerNote =
             (Boolean(orderline.getCustomerNote()) === false &&
@@ -355,7 +354,11 @@ export class PosOrderline extends PosOrderlineAccounting {
             this.isPosGroupable() &&
             this.getDiscount() === orderline.getDiscount() &&
             this.price_type === orderline.price_type &&
-            this.currency.isZero(price - order_line_price - orderline.getPriceExtra()) &&
+            this.currency.isZero(
+                this.currency.round(price) -
+                    this.currency.round(order_line_price) -
+                    orderline.getPriceExtra()
+            ) &&
             (!this.isLotTracked() || getLotName(this) === getLotName(orderline)) &&
             this.full_product_name === orderline.full_product_name &&
             isSameCustomerNote &&
