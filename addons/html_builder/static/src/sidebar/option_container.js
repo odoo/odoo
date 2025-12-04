@@ -3,7 +3,6 @@ import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useOperation } from "../core/operation_plugin";
-import { uniqueId } from "@web/core/utils/functions";
 import {
     BaseOptionComponent,
     useApplyVisibility,
@@ -71,10 +70,6 @@ export class OptionsContainer extends BaseOptionComponent {
             return true;
         }
         return groups.every((group) => this.hasGroup[group]);
-    }
-
-    getOptionKey(OptionClass) {
-        return uniqueId(`${OptionClass.name}-${OptionClass.template}`);
     }
 
     get title() {

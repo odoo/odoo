@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
-    <xpath expr="//switchable_views" position="after">
+    <xpath expr="//t[@id='module_specific_options']" position="after">
         <add_to_cart_option selector=".s_add_to_cart"/>
         <checkout_page_option
             template="website_sale.checkoutPageOption"

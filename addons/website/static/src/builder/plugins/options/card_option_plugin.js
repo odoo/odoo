@@ -20,7 +20,7 @@ export class CardOptionPlugin extends Plugin {
             { selector: CARD_PARENT_HANDLERS, applyTo: CARD_DISABLE_WIDTH_APPLY_TO },
             { selector: CARD_PARENT_HANDLERS, applyTo: WEBSITE_BG_APPLY_TO },
         ],
-        builder_options_context: {
+        builder_options_render_context: {
             cardDisableWidthApplyTo: CARD_DISABLE_WIDTH_APPLY_TO,
             websiteBgApplyTo: WEBSITE_BG_APPLY_TO,
             cardParentHandlers: CARD_PARENT_HANDLERS,

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
-    <xpath expr="//switchable_views" position="after">
+    <xpath expr="//t[@id='module_specific_options']" position="after">
         <newsletter_layout_option
             template="website_mass_mailing.NewsletterLayoutOption"
             selector=".s_newsletter_block"
@@ -12,7 +12,7 @@
             exclude=".s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list, .s_newsletter_box .s_newsletter_list, .s_newsletter_centered .s_newsletter_list, .s_newsletter_grid .s_newsletter_list, .s_newsletter_aside .s_newsletter_list"/>
         <newsletter_subscribe_common_option
             selector=".o_newsletter_popup"
-            exclude=".s_newsletter_list"/>
+            applyTo=".s_newsletter_list"/>
     </xpath>
 </t>
 

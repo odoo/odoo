@@ -8,6 +8,8 @@
         <t t-set="verticalAlignmentOptionSelector"
             t-value="`.s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_reviews_wall, .s_key_images, .s_cards_soft, .s_cards_grid`"/>
         <div>
+            <!-- TODO DUAU: find a better name -->
+            <t id="topmost_options"/>
             <replace_media_option
                 t-att-selector="replaceMediaOptionSelector"
                 t-attf-exclude="{{replaceMediaOptionExclude}}"/>

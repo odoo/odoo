@@ -35,7 +35,7 @@
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
-    <xpath expr="//switchable_views" position="after">
+    <xpath expr="//t[@id='module_specific_options']" position="after">
         <wishlist_page_option
             template="website_sale.WishlistPageOption"
             selector="main:has(.o_wishlist_table)"

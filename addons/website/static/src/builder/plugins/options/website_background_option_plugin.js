@@ -29,7 +29,7 @@ export class WebsiteBackgroundOptionPlugin extends Plugin {
                 exclude: WEBSITE_BACKGROUND_BG_COLOR_OPTION_EXCLUDE,
             },
         ],
-        builder_options_context: {
+        builder_options_render_context: {
             baseOnlyBgImageSelector: BASE_ONLY_BG_IMAGE_SELECTOR,
             websiteBackgroundBgColorImageOptionSelector:
                 WEBSITE_BACKGROUND_BG_COLOR_IMAGE_OPTION_SELECTOR,

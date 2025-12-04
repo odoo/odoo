@@ -8,7 +8,7 @@
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
-    <xpath expr="//switchable_views" position="after">
+    <xpath expr="//t[@id='module_specific_options']" position="after">
         <slides_forum_option
             template="website_slides_forum.slidesForumOption"
             selector="main:has(#o_wforum_forums_index_list)"

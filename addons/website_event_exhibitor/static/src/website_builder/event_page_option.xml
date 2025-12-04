@@ -15,7 +15,7 @@
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
-    <xpath expr="//switchable_views" position="after">
+    <xpath expr="//t[@id='module_specific_options']" position="after">
         <event_page_filter_option
             template="website_event_exhibitor.EventPageFilterOption"
             selector="main:has(.o_wevent_event_tags_form)"

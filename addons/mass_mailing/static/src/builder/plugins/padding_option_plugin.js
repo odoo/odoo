@@ -7,7 +7,7 @@ export class PaddingOptionPlugin extends Plugin {
 
     resources = {
         mark_color_level_selector_params: [{ selector: HORIZONTAL_PADDING_OPTION_SELECTOR }],
-        builder_options_context: {
+        builder_options_render_context: {
             horizontalPaddingOptionSelector : HORIZONTAL_PADDING_OPTION_SELECTOR,
         }
     };

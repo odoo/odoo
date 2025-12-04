@@ -58,7 +58,7 @@ export class VisibilityOptionPlugin extends Plugin {
                 callWith: "value",
             },
         ],
-        builder_options_context: {
+        builder_options_render_context: {
             deviceVisibilityOptionSelector: DEVICE_VISIBILITY_OPTION_SELECTOR,
         },
     };

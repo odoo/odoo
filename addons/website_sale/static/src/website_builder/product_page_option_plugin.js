@@ -67,7 +67,7 @@ export class ProductPageOptionPlugin extends Plugin {
                 }
             });
         },
-        builder_options_context: {
+        builder_options_render_context: {
             productPageOptionSelector: PRODUCT_PAGE_OPTION_SELECTOR,
         }
     };

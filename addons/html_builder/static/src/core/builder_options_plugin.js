@@ -94,6 +94,7 @@ import { renderToElement } from "@web/core/utils/render";
  * }[]} has_overlay_options
  * @typedef {CSSSelector[]} no_parent_containers
  * @typedef {((el: HTMLElement) => boolean)[]} keep_overlay_options
+ * @typedef {{[key: string]: string}[]} builder_options_render_context
  */
 /**
  * @typedef {((arg: { el: HTMLElement, reasons: [] }) => void)[]} clone_disabled_reason_providers
@@ -584,7 +585,7 @@ export class BuilderOptionsPlugin extends Plugin {
     getBuilderOptionsFromTemplate() {
         const template = renderToElement(
             this.config.builderOptionsTemplate,
-            this.getBuilderOptionsContext()
+            this.getBuilderOptionsRenderContext()
         );
         return Array.from(template.children, (node) => this.createOptionClassFromNode(node));
     }
@@ -744,13 +745,13 @@ export class BuilderOptionsPlugin extends Plugin {
         return context;
     }
 
-    getBuilderOptionsContext() {
-        if (!this.builderOptionsContext) {
-            const resourceResult = this.getResource("builder_options_context");
+    getBuilderOptionsRenderContext() {
+        if (!this.builderOptionsRenderContext) {
+            const resourceResult = this.getResource("builder_options_render_context");
             const context = Object.assign({}, ...resourceResult);
-            this.builderOptionsContext = Object.freeze(context);
+            this.builderOptionsRenderContext = Object.freeze(context);
         }
-        return this.builderOptionsContext;
+        return this.builderOptionsRenderContext;
     }
 }
 

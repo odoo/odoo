@@ -25,7 +25,7 @@
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
-    <xpath expr="//switchable_views" position="after">
+    <xpath expr="//t[@id='module_specific_options']" position="after">
         <customer_filter_option
             selector="main:not(:has(#oe_structure_website_partnership_layout_1)):has(.o_wcrm_filters_top)"
             title="Customers Page"

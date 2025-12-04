@@ -5,7 +5,33 @@
         <xpath expr="//t[@t-set][last()]" position="after">
         </xpath>
 
-        <xpath expr="//replace_media_option" position="before">
+        <xpath expr="//t[@id='topmost_options']" position="after">
+            <website_background_option
+                t-att-selector="blockquoteParentHandlers"
+                t-att-applyTo="blockquoteDisableWidthApplyTo"
+                props='{ "withColors": true,"withImages": true, "withShapes": true, "withColorCombinations": true }'/>
+            <website_background_option
+                selector="section"
+                applyTo=":scope > .carousel:not(.s_carousel_cards)"
+                props='{ "withColors": true, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": true }'/>
+            <website_background_option
+                selector=".s_process_step .s_process_step_number"
+                props='{ "withColors": true, "withImages": false, "withColorCombinations": false }'/>
+            <website_background_option
+                t-att-selector="cardParentHandlers"
+                t-att-applyTo="websiteBgApplyTo"
+                props='{ "withColors": true, "withImages": true, "withShapes": true, "withColorCombinations": true }'/>
+            <website_background_option
+                t-att-selector="websiteBackgroundBgColorImageOptionSelector"
+                t-att-exclude="websiteBackgroundBgColorImageOptionExclude"
+                props='{ "withColors": true, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": true }'/>
+            <website_background_option
+                t-att-selector="websiteBackgroundBgColorOptionSelector"
+                t-att-exclude="websiteBackgroundBgColorOptionExclude"
+                props='{ "withColors": true, "withImages": false, "withColorCombinations": true }'/>
+            <website_background_option
+                t-att-selector="baseOnlyBgImageSelector"
+                props='{ "withColors": false, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": false }'/>
             <portal_option
                 template="website.PortalOption"
                 selector=".o_portal_index_card > a"
@@ -70,32 +96,6 @@
             <ecomm_categories_showcase_option
                 template="website.EcommCategoriesShowcaseOption"
                 selector=".s_ecomm_categories_showcase"/>
-            <website_background_option
-                t-att-selector="blockquoteParentHandlers"
-                t-att-applyTo="blockquoteDisableWidthApplyTo"
-                props='{ "withColors": true,"withImages": true, "withShapes": true, "withColorCombinations": true }'/>
-            <website_background_option
-                selector="section"
-                applyTo=":scope > .carousel:not(.s_carousel_cards)"
-                props='{ "withColors": true, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": true }'/>
-            <website_background_option
-                selector=".s_process_step .s_process_step_number"
-                props='{ "withColors": true, "withImages": false, "withColorCombinations": false }'/>
-            <website_background_option
-                t-att-selector="cardParentHandlers"
-                t-att-applyTo="websiteBgApplyTo"
-                props='{ "withColors": true, "withImages": true, "withShapes": true, "withColorCombinations": true }'/>
-            <website_background_option
-                t-att-selector="websiteBackgroundBgColorImageOptionSelector"
-                t-att-exclude="websiteBackgroundBgColorImageOptionExclude"
-                props='{ "withColors": true, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": true }'/>
-            <website_background_option
-                t-att-selector="websiteBackgroundBgColorOptionSelector"
-                t-att-exclude="websiteBackgroundBgColorOptionExclude"
-                props='{ "withColors": true, "withImages": false, "withColorCombinations": true }'/>
-            <website_background_option
-                t-att-selector="baseOnlyBgImageSelector"
-                props='{ "withColors": false, "withImages": true, "withVideos": true, "withShapes": true, "withColorCombinations": false }'/>
         </xpath>
 
         <xpath expr="//many2one_option" position="after">
@@ -154,6 +154,7 @@
                 selector=".o_page_breadcrumb"
                 groups='["website.group_website_designer"]'
                 editableOnly="false"/>
+            <social_media_links selector=".s_social_media"/>
             <table_of_content_option template="website.TableOfContentOption" selector=".s_table_of_content"/>
             <table_of_content_navbar_option template="website.TableOfContentNavbarOption" selector=".s_table_of_content_navbar_wrap"/>
             <card_option selector=".s_card" t-attf-exclude="div:is({{cardParentHandlers}}) > .s_card"/>
@@ -171,17 +172,22 @@
             <avatars_option
                 template="website.AvatarsOption"
                 selector=".s_avatars"/>
-            <popup_option template="website.PopupOption" selector=".s_popup"/>
+            <popup_option
+                template="website.PopupOption"
+                selector=".s_popup"
+                exclude="#website_cookies_bar"
+                applyTo=".modal"/>
             <switchable_views
                 selector=".o_portal_wrap"
                 groups='["website.group_website_designer"]'
                 editableOnly="false"/>
             <dot_color_option template="website.DotColorOption" selector=".s_timeline_images .s_timeline_images_row"/>
-            <!-- TODO DUAU: all modules specific options were between those two, should I add a "hook" there? -->
             <layout_option
                 selector="section, section.s_carousel_wrapper .carousel-item, .s_carousel_intro_item"
                 exclude=".s_dynamic, .s_dynamic_snippet_content, .s_dynamic_snippet_title, .s_masonry_block, .s_framed_intro, .s_features_grid, .s_media_list, .s_table_of_content, .s_process_steps, .s_image_gallery, .s_pricelist_boxed, .s_quadrant, .s_pricelist_cafe, .s_faq_horizontal, .s_image_frame, .s_card_offset, .s_contact_info, .s_tabs, .s_tabs_images, .s_floating_blocks .s_floating_blocks_block, .s_banner_categories, .s_splash_intro"
                 applyTo=":scope > *:has(> .row), :scope > .s_allow_columns"/>
+            <!-- TODO DUAU: look for a better name -->
+            <t id="module_specific_options"/>
         </xpath>
 
         <xpath expr="//layout_column_option" position="after">
@@ -309,6 +315,7 @@
                 selector="section, .s_carousel .carousel-item, .s_carousel_intro_item"
                 exclude="[data-snippet] :not(.oe_structure) > [data-snippet],#footer > *,#o_wblog_post_content *, .s_bento_banner section[data-name='Card'],.s_floating_blocks .s_floating_blocks_block, .s_bento_block_card"
                 applyTo=":scope > .container, :scope > .container-fluid, :scope > .o_container_small"/>
+            <cover_properties_option selector=".o_record_cover_container" editableOnly="false"/>
             <process_steps_option selector=".s_process_steps"/>
             <scroll_button_option
                 selector="section"

@@ -17,7 +17,7 @@
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
-    <xpath expr="//switchable_views" position="after">
+    <xpath expr="//t[@id='module_specific_options']" position="after">
         <courses_list_page_option
             template="website_slides.CoursesListPageOption"
             selector="main:has(.o_wslides_home_main)"

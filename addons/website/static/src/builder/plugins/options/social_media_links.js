@@ -7,7 +7,6 @@ export class SocialMediaLinks extends BaseOptionComponent {
     static id = "social_media_links";
     static template = "website.SocialMediaLinks";
     static dependencies = ["socialMediaOptionPlugin", "history"];
-    static selector = ".s_social_media";
 
     setup() {
         super.setup();

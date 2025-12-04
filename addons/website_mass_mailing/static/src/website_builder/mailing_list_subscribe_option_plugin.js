@@ -20,7 +20,6 @@ export class MailingListSubscribeOptionPlugin extends Plugin {
     };
 
     setup() {
-        // TODO DUAU: check how to manage that
         const builderOptions = this.dependencies.builderOptions.getBuilderOptions();
         this.newsletterOptions = filterExtends(builderOptions, NewsletterSubscribeCommonOption);
     }

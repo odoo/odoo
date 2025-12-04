@@ -5,7 +5,7 @@
         <xpath expr="//t[@t-set][last()]" position="after">
         </xpath>
 
-        <xpath expr="//replace_media_option" position="before">
+        <xpath expr="//t[@id='topmost_options']" position="after">
             <add_product_option
                 selector=".s_pricelist_boxed_section:has(> .container)"
                 props='{ "productSelector": ".container" }'/>

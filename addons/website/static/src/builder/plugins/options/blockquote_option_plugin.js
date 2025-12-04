@@ -13,7 +13,7 @@ export class BlockquoteOptionPlugin extends Plugin {
             { selector: ".s_blockquote", exclude: SPECIAL_BLOCKQUOTE_SELECTOR },
             { selector: BLOCKQUOTE_PARENT_HANDLERS, applyTo: BLOCKQUOTE_DISABLE_WIDTH_APPLY_TO },
         ],
-        builder_options_context: {
+        builder_options_render_context: {
             specialBlockquoteSelector: SPECIAL_BLOCKQUOTE_SELECTOR,
             blockquoteDisableWidthApplyTo: BLOCKQUOTE_DISABLE_WIDTH_APPLY_TO,
             blockquoteParentHandlers: BLOCKQUOTE_PARENT_HANDLERS,
