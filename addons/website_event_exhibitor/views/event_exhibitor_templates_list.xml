@@ -239,16 +239,14 @@
 <!-- ============================================================ -->
 
 <template id="exhibitor_card" name="Exhibitor Card">
-    <article class="o_wesponsor_card card h-100">
+    <article class="o_wesponsor_card card h-100" t-att-data-publish="sponsor.website_published and 'on' or 'off'">
+        <t t-if="not sponsor.website_published" t-call="website.unpublished_badge" badge_position="'left'"/>
         <div class="row g-0 h-100" t-att-data-publish="sponsor.website_published and 'on' or 'off'">
             <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
             <header t-att-class="'overflow-hidden col-12 %s' % ('bg-secondary' if not sponsor_image_url else '')">
                 <div class="d-block h-100 w-100">
                     <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
                         t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
-                        <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
-                            <i class="fa fa-ban me-2"/>Unpublished
-                        </small>
                         <img class="position-absolute me-3 mt-3"
                             style="right: 0; top: 0; max-height: 20px;"
                             t-if="sponsor.partner_id.country_id"
@@ -257,9 +255,6 @@
                     </div>
                     <div t-else="" class="o_wesponsor_gradient card-img-top"
                         style="padding-top: 50%">
-                        <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
-                            <i class="fa fa-ban me-2"/>Unpublished
-                        </small>
                     </div>
                 </div>
             </header>

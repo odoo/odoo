@@ -486,7 +486,6 @@
                     <img class="position-absolute" t-attf-src="/website_profile/static/src/img/rank_#{user_index + 1}.svg" alt="User rank" style="bottom: 0; right: -10px"/>
                 </div>
                 <h3 class="mt-2 mb-0" t-out="user['name']"></h3>
-                <span class="badge text-bg-danger fw-normal" t-if="not user['website_published']">Unpublished</span>
                 <strong class="text-muted" t-out="user['rank']"/>
                 <div class="h3 my-2" t-if="user['karma_gain']">
                     <span t-attf-class="badge #{ 'text-bg-success' if user['karma_gain'] > 0 else 'text-bg-warning'}">
@@ -523,9 +522,6 @@
                     <t t-else="">All time </t>
                 </span>
             </t>
-        </td>
-        <td class="align-middle fw-bold text-end text-nowrap">
-            <span t-if="not user['website_published']" class="badge text-bg-danger fw-normal m-1">Unpublished</span>
         </td>
         <td class="align-middle fw-bold text-end text-nowrap">
             <b t-out="user['karma']"/> <span class="text-muted small fw-bold">XP</span>

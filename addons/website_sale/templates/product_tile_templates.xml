@@ -44,6 +44,7 @@
         t-att-data-publish="product.website_published and 'on' or 'off'"
         t-att-aria-label="product.name"
     >
+        <t t-if="not product.website_published" t-call="website.unpublished_badge" badge_position="'left'"/>
         <div t-attf-class="oe_product_image position-relative flex-grow-0 overflow-hidden">
             <!-- Fetch Images Data -->
             <t
@@ -130,15 +131,6 @@
                                     t-out="'('+combination_name+')'"
                                 />
                             </t>
-                        </a>
-                        <a
-                            t-if="not product.website_published"
-                            role="button"
-                            t-att-href="product_href"
-                            class="btn btn-sm btn-danger"
-                            title="This product is unpublished."
-                        >
-                            Unpublished
                         </a>
                     </h2>
                     <!-- Description -->

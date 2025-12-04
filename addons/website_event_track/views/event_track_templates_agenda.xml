@@ -175,6 +175,7 @@
 
 <template id="agenda_main_track" name="Track Agenda: Track">
     <div class="d-flex flex-column h-100" t-att-data-publish="track.website_published and 'on' or 'off'">
+        <t t-if="not track.website_published and is_event_user" t-call="website.unpublished_badge" badge_classes="'mx-auto'"/>
         <div class="o_we_agenda_card d-flex flex-column h-100">
             <div class="o_we_agenda_card_content position-relative d-flex flex-column justify-content-center my-1">
                 <div class="o_we_agenda_card_title mb-1">
@@ -206,9 +207,6 @@
                     <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
                         class="mx-1 badge text-bg-danger rounded-1">Live
                     </small>
-                    <small t-if="not track.website_published and is_event_user"
-                        title="Unpublished"
-                        class="ms-1 mt-1 mt-md-0 badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</small>
                     <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))">
                         <t t-call="website_event_track.track_widget_reminder"
                             reminder_light="False"

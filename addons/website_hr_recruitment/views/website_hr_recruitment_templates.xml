@@ -45,15 +45,15 @@
                                 </div>
                             </t>
                             <div t-foreach="jobs" t-as="job" class="col-lg mb32">
-                                <div t-attf-class="card #{not job.website_published and 'o_jobs_unpublished'}">
+                                <div class="card" t-att-data-publish="job.website_published and 'on' or 'off'">
+                                    <t t-if="not job.website_published" t-call="website.unpublished_badge" badge_offset="'4'"/>
                                     <a t-attf-href="/jobs/#{ slug(job) }"
-                                            t-attf-class="text-decoration-none text-reset"
+                                            class="text-decoration-none text-reset"
                                             draggable="false">
                                         <div class="card-body p-4">
                                             <div class="mt0 d-flex justify-content-between align-items-center">
                                                 <h3 t-field="job.name"/>
                                                 <span t-if="job.publish_on" class="badge pagination text-bg-warning mb8">scheduled</span>
-                                                <span t-elif="not job.website_published" class="badge pagination text-bg-danger mb8">unpublished</span>
                                             </div>
                                             <h5 t-if="job.no_of_recruitment >= 1" class="text-reset">
                                                 <span t-field="job.no_of_recruitment"/>
