@@ -316,9 +316,9 @@ class MaintenanceRequest(models.Model):
 
     def _read_group_equipment_id(self, records, domain):
         """ Read group customization in order to display all the equipment in
-            the kanban view, even if they are empty.
+            the gantt/kanban view, even if they are empty.
         """
-        return records + self.env['maintenance.equipment'].search([])
+        return self.env['maintenance.equipment'].search([])
 
     @api.model_create_multi
     def create(self, vals_list):

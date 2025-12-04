@@ -101,7 +101,7 @@
                     <group>
                         <group>
                             <field name="owner_user_id" string="Requested By" invisible="1"/>
-                            <field name="equipment_id"  context="{'default_company_id':company_id, 'default_category_id':category_id}"/>
+                            <field name="equipment_id" context="{'default_company_id':company_id, 'default_category_id':category_id}" required="1"/>
                             <field name="category_id" groups="maintenance.group_equipment_manager" context="{'default_company_id':company_id}" invisible="not equipment_id"/>
                             <field name="done" invisible="1"/>
                             <field name="close_date" readonly="True" invisible="not done"/>
