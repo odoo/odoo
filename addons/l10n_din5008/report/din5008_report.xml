@@ -204,6 +204,13 @@
                                 <td>Delivery Date</td>
                                 <td><t t-out="o.delivery_date" t-options="{'widget': 'date'}"/></td>
                             </tr>
+                            <tr t-if="o.invoice_incoterm_id">
+                                <td>Incoterm</td>
+                                <td t-if="o.incoterm_location">
+                                    <span t-out="o.invoice_incoterm_id.code"/> - <span t-out="o.incoterm_location"/>
+                                </td>
+                                <td t-else="" t-out="o.invoice_incoterm_id.code"/>
+                            </tr>
                             <tr t-if="o.invoice_origin">
                                 <td>Source</td>
                                 <td><t t-out="o.invoice_origin"/></td>
