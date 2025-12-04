@@ -119,7 +119,7 @@ export class BlockTab extends Component {
                 });
 
                 if (snippetEl) {
-                    await scrollTo(snippetEl, { extraOffset: 50 });
+                    await this.scrollToDroppedSnippet(snippetEl);
                     await this.processDroppedSnippet(snippetEl);
                 }
                 this.state.ongoingInsertion = false;
@@ -176,7 +176,7 @@ export class BlockTab extends Component {
         });
 
         if (selectedSnippetEl) {
-            await scrollTo(selectedSnippetEl, { extraOffset: 50 });
+            await this.scrollToDroppedSnippet(selectedSnippetEl);
             await this.processDroppedSnippet(selectedSnippetEl);
         } else {
             this.cancelDragAndDrop();
@@ -480,6 +480,18 @@ export class BlockTab extends Component {
         };
 
         this.draggableComponent = useDragAndDrop(dragAndDropOptions);
+    }
+
+    /**
+     * Scroll to the dropped snippet and leave a space of 50px above to show
+     * what is above. If the snippet takes 100% of the screen height, we show it
+     * by not having an extra offset above it.
+     *
+     * @param {HTMLElement} snippetEl
+     */
+    async scrollToDroppedSnippet(snippetEl) {
+        const isFullScreenHeight = snippetEl.matches(".o_full_screen_height");
+        await scrollTo(snippetEl, { extraOffset: isFullScreenHeight ? 0 : 50 });
     }
 
     /**
