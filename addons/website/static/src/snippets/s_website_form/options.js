@@ -404,7 +404,7 @@ const FieldEditor = FormEditor.extend({
         const input = this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea');
         const fileInputEl = this.$target[0].querySelector("input[type=file]");
         const description = this.$target[0].querySelector('.s_website_form_field_description');
-        field.placeholder = input && input.placeholder;
+        field.placeholder = (input && input.placeholder) || '';
         if (input) {
             // textarea value has no attribute,  date/datetime timestamp property is formated
             field.value = input.getAttribute('value') || input.value;
