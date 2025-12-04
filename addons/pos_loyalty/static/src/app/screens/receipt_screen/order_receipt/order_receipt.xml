@@ -27,12 +27,6 @@
                     </div>
                 </t>
             </t>
-            <t t-if="order.partner_id and order.preset_id?.identification != 'address'">
-                <div class="d-flex pt-3" style="font-size: 75%;">
-                    <span>Customer</span>
-                    <span t-out="order.partner_id.name" class="ms-auto fw-bolder"/>
-                </div>
-            </t>
             <t t-if="order.new_coupon_info and order.new_coupon_info.length !== 0">
                 <div class="pos-coupon-rewards pt-3">
                     <t t-foreach="order.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
