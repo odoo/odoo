@@ -650,7 +650,8 @@ class DiscussChannel(models.Model):
                 "is_internal": False,
                 "res_id": self.id,
                 "res_model_id": self.env["ir.model"]._get_id("discuss.channel"),
-                "rated_partner_id": self.livechat_agent_partner_ids[:1].id,
+                # sudo: res.partner - visitor can access the agent record to add a rating
+                "rated_partner_id": self.sudo().livechat_agent_partner_ids[:1].id,
                 "partner_id": user.partner_id.id,
             }
             rating_sudo = self.env["rating.rating"].sudo().create(rating_values)
