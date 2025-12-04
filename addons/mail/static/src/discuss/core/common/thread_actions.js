@@ -76,18 +76,18 @@ registerThreadAction("remove-from-favorites", {
 registerThreadAction("notification-settings", {
     actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: NotificationSettings,
-    actionPanelComponentProps: ({ thread }) => ({ thread }),
-    actionPanelOpen({ owner, store, thread }) {
+    actionPanelComponentProps: ({ channel }) => ({ channel }),
+    actionPanelOpen({ channel, owner, store }) {
         if (owner.isDiscussSidebarChannelActions || owner.env.inMeetingView) {
             store.env.services.dialog?.add(ChannelActionDialog, {
-                title: thread.name,
+                title: channel.name,
                 contentComponent: NotificationSettings,
-                contentProps: { thread },
+                contentProps: { channel },
             });
         } else {
             this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
                 hasSizeConstraints: true,
-                thread,
+                channel,
             });
         }
     },

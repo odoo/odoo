@@ -18,7 +18,7 @@ class NotificationDialog extends Component {
 
 export class NotificationSettings extends Component {
     static components = { ActionPanel, Dropdown, DropdownItem };
-    static props = ["hasSizeConstraints?", "thread", "close?", "className?"];
+    static props = ["channel", "close?", "className?", "hasSizeConstraints?"];
     static template = "discuss.NotificationSettings";
 
     setup() {
@@ -28,7 +28,7 @@ export class NotificationSettings extends Component {
     }
 
     setMute(minutes) {
-        this.store.settings.setMuteDuration(minutes, this.props.thread);
+        this.store.settings.setMuteDuration(minutes, this.props.channel);
         this.props.close?.();
     }
 
