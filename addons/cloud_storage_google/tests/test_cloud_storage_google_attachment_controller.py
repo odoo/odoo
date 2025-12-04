@@ -49,6 +49,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                 "id": attachment.id,
                                 "mimetype": "text/x-python",
                                 "name": "__init__.py",
+                                "res_model": attachment.res_model,
                                 "res_name": False,
                                 "thread": False,
                                 "voice": False,
