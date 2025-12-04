@@ -113,6 +113,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/js/tours/account.js',
             'account/static/src/js/search/search_bar/search_bar.js',
             'account/static/src/helpers/*.js',
+            'account/static/src/webclient/**/*',
         ],
         # Unit test files
         'web.assets_unit_tests': [
