@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+
+    <t t-name="html_builder.BuilderListDialog">
+        <Dialog contentClass="'o_bl_dialog'" title.translate="Manage Records" size="'lg'">
+            <input type="search" class="form-control" placeholder="Search" t-on-input="onSearch" />
+            <div class="row w-100">
+                <div class="o_left_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap">
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <h4 class="m-0">Excluded records</h4>
+                        <button class="btn btn-sm btn-link p-0" t-on-click="includeAll">
+                            <i class="fa fa-plus me-1" />Include all</button>
+                    </div>
+                    <div class="o_list_panel overflow-auto border mt-2">
+                        <h3 t-if="searchExcluded.length === 0" class="text-center text-muted my-2">No record.</h3>
+                        <t t-foreach="searchExcluded" t-as="record" t-key="record.id">
+                            <div class="o_list_item cursor-pointer position-relative ps-4"
+                                t-on-click="() => this.include(record)">
+                                <div class="d-flex align-items-center">
+                                    <span class="overflow-hidden w-100" t-esc="record.display_name" />
+                                    <span title="Include record" class="fa fa-plus float-end m-1 pe-2" />
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                <div class="o_right_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap mt-3 mt-md-0">
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <h4 class="m-0">Included records</h4>
+                        <button class="btn btn-sm btn-link p-0" t-on-click="excludeAll">
+                            <i class="fa fa-minus me-1" />Exclude all</button>
+                    </div>
+                    <div class="o_list_panel overflow-auto border mt-2">
+                        <h3 t-if="searchIncluded.length === 0" class="text-center text-muted my-2">No record.</h3>
+                        <t t-foreach="searchIncluded" t-as="record" t-key="record.id">
+                            <div class="o_list_item cursor-pointer position-relative ps-4"
+                                t-on-click="() => this.exclude(record)">
+                                <div class="d-flex align-items-center">
+                                    <span class="overflow-hidden w-100" t-esc="record.display_name" />
+                                    <span class="fa fa-minus m-1 pe-2 float-end" title="Exclude record" />
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="save" t-att-disabled="state.includedRecords.length === 0">Save</button>
+                <button class="btn btn-secondary" t-on-click="() => props.close()">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+
+</template>

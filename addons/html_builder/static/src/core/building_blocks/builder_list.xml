@@ -4,6 +4,7 @@
 <t t-name="html_builder.BuilderList">
     <BuilderComponent>
         <div class="w-100 p-2 py-0">
+            <t t-set="isMany2X" t-value="this.allRecords and this.allRecords.length"/>
             <t t-if="state.value?.length > 2">
                 <div class="o_we_table_wrapper">
                     <table t-ref="table">
@@ -34,6 +35,7 @@
                                                     t-att-name="entry[0]"
                                                     t-att-value="item[entry[0]]"
                                                     t-att-data-id="item._id"
+                                                    t-att-disabled="isMany2X"
                                                     t-on-input="onInput"
                                                     t-on-change="onChange"
                                             />
@@ -53,41 +55,31 @@
                     </table>
                 </div>
             </t>
-            <div class="o-hb-select-wrapper" t-if="this.allRecords and this.allRecords.length" >
-                <t t-set="availableRecords" t-value="this.getAvailableRecords()"></t>
+            <div t-if="isMany2X" class="o-hb-select-wrapper">
+                <t t-set="excludedRecords" t-value="this.getExcludedRecords()"></t>
                 <div class="mt-1 ms-auto">
-                    <Dropdown state="this.dropdown" menuClass="'o-hb-select-dropdown mt-1'">
-                        <button class="bl-dropdown-toggle o-hb-select-toggle o-hb-btn btn btn-success text-start o-dropdown-caret w-100 mx-auto px-3"
-                            t-att-disabled="!availableRecords.length">
-                            <t t-set="noAvailableRecordLabel">You don't have any record to add</t>
-                            <span class=""
-                                t-att-title="!availableRecords.length ? noAvailableRecordLabel : ''"
-                                t-att-style="!availableRecords.length ? 'pointer-events: auto; display: inline-block;' : ''">
-                                <t t-out="props.addItemTitle" />
-                            </span>
-                        </button>
-                        <t t-set-slot="content">
-                            <t t-foreach="availableRecords" t-as="item" t-key="item.id">
-                                <t t-foreach="Object.entries(props.itemShape).filter(([key, value]) => !value.endsWith('boolean'))" t-as="entry" t-key="entry[0]">
-                                    <div class="o-hb-select-dropdown-item d-flex flex-column cursor-pointer o-dropdown-item dropdown-item o-navigable w-100 mx-auto"
-                                        style="max-height: 50vh;"
-                                        t-att-type="entry[1]"
-                                        t-att-name="entry[0]"
-                                        t-att-data-id="item.id"
-                                        t-on-click="addItem"
-                                    >
-                                        <t t-out="item[entry[0]]" />
-                                    </div>
-                                </t>
-                            </t>
-                        </t>
-                    </Dropdown>
+                    <div class="d-flex align-items-center gap-2">
+                        <div title="Add a record to the list">
+                            <SelectMenu
+                                choices="excludedRecords.map((record) => ({ value: record, label: record.display_name  }))"
+                                onSelect="(record) => this.addItem(record)"
+                                class="'o-hb-selectMany2X-wrapper min-w-0'"
+                                menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown'"
+                                togglerClass="'o-hb-selectMany2X-toggle btn-secondary'"
+                                disabled="!excludedRecords.length"
+                            >
+                                <t t-out="props.addItemTitle"/>
+                            </SelectMenu>
+                        </div>
+                        <button type="button" class="btn btn-lg btn-secondary fa fa-refresh" title="Update the list with all records and sort it alphabetically" t-on-click="updateRecords"/>
+                        <button type="button" class="btn btn-lg btn-secondary fa fa-gear" title="Open the record list manager" t-on-click="openRecordsDialog"/>
+                    </div>
                 </div>
             </div>
             <t t-else="">
                 <div class="text-end mt-1">
                     <button type="button" class="builder_list_add_item o-hb-btn btn btn-success px-3"
-                            t-on-click="addItem">
+                            t-on-click="() => this.addItem()">
                         <t t-out="props.addItemTitle"/>
                     </button>
                 </div>
