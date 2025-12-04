@@ -109,8 +109,11 @@ export class BannerPlugin extends Plugin {
                 categoryId: "banner",
             },
         ],
-        power_buttons_visibility_predicates: ({ anchorNode }) =>
-            !closestElement(anchorNode, ".o_editor_banner"),
+        power_buttons_visibility_predicates: ({ anchorNode }) => {
+            if (closestElement(anchorNode, ".o_editor_banner")) {
+                return false;
+            }
+        },
         move_node_blacklist_selectors: ".o_editor_banner *",
         move_node_whitelist_selectors: ".o_editor_banner",
 

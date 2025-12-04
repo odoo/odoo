@@ -49,7 +49,6 @@ export class DropZonePlugin extends Plugin {
                     return false;
                 }
             }
-            return true;
         },
         selection_placeholder_container_predicates: (container) => {
             if (container.classList.contains("oe_structure")) {

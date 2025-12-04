@@ -87,8 +87,11 @@ export class ColumnPlugin extends Plugin {
             },
         ],
         unremovable_node_predicates: isUnremovableColumn,
-        power_buttons_visibility_predicates: ({ anchorNode }) =>
-            !closestElement(anchorNode, ".o_text_columns"),
+        power_buttons_visibility_predicates: ({ anchorNode }) => {
+            if (closestElement(anchorNode, ".o_text_columns")) {
+                return false;
+            }
+        },
         move_node_whitelist_selectors: ".o_text_columns",
         move_node_blacklist_selectors: ".o_text_columns *",
         hint_targets_providers: (selectionData) => {

@@ -87,7 +87,6 @@ export class GridLayoutPlugin extends Plugin {
                 return false;
             }
         }
-        return true;
     }
 
     getActiveOverlayButtons(target) {
@@ -423,7 +422,6 @@ export class GridLayoutPlugin extends Plugin {
         if (isColumn && this.config.isMobileView(targetEl)) {
             return false;
         }
-        return true;
     }
 
     /**

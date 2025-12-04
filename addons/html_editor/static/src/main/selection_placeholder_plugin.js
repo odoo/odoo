@@ -55,8 +55,11 @@ export class SelectionPlaceholderPlugin extends Plugin {
                 return true;
             }
         },
-        power_buttons_visibility_predicates: ({ anchorNode }) =>
-            !closestElement(anchorNode, PLACEHOLDER_SELECTOR),
+        power_buttons_visibility_predicates: ({ anchorNode }) => {
+            if (closestElement(anchorNode, PLACEHOLDER_SELECTOR)) {
+                return false;
+            }
+        },
         move_node_blacklist_selectors: PLACEHOLDER_SELECTOR,
         system_node_selectors: PLACEHOLDER_SELECTOR,
         system_classes: BLINKER_CLASS,

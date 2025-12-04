@@ -32,7 +32,6 @@ class SpacingOptionPlugin extends Plugin {
                 return false;
             }
         }
-        return true;
     }
 
     removeGridPreviews(el) {
