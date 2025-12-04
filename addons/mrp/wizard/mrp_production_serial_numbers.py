@@ -73,7 +73,22 @@ class MrpProductionSerials(models.TransientModel):
         if self.production_id.qty_producing != len(self.production_id.lot_producing_ids):
             self.production_id.qty_producing = len(self.production_id.lot_producing_ids)
         (self.workorder_id or self.production_id).set_qty_producing()
+<<<<<<< b6c1048c2ceccedd2573aba2b0c6d770c3e997a4
         if new_lots and self.production_id.picking_type_id.auto_print_generated_mrp_lot:
             print_action = self.production_id._autoprint_generated_lots(new_lots)
             print_action['close_on_report_download'] = True
             return print_action
+||||||| b492d4c2b21cfc82048d32040ae1c174723d1c8a
+=======
+
+        print_actions = self.production_id._autoprint_mass_generated_lots()
+        if print_actions:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'do_multi_print',
+                'context': {},
+                'params': {
+                    'reports': print_actions,
+                }
+            }
+>>>>>>> 07047e8c1d78f91adfdab6d74067be04a0e1a1c6
