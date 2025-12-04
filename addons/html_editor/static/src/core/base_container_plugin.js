@@ -37,19 +37,6 @@ export class BaseContainerPlugin extends Plugin {
         baseContainers: ["P", "DIV"],
     };
     static dependencies = ["selection"];
-    /**
-     * Register one of the predicates for `invalid_for_base_container_predicates`
-     * as a property for optimization, see variants of `isCandidateForBaseContainer`.
-     */
-    hasNonPhrasingContentPredicate = (element) =>
-        element?.nodeType === Node.ELEMENT_NODE && containsAnyNonPhrasingContent(element);
-    /**
-     * The `unsplittable` predicate for `invalid_for_base_container_predicates`
-     * is defined in this file and not in split_plugin because it has to be removed
-     * in a specific case: see `isCandidateForBaseContainerAllowUnsplittable`.
-     */
-    isUnsplittablePredicate = (element) =>
-        this.getResource("unsplittable_node_predicates").some((fn) => fn(element));
     /** @type {import("plugins").EditorResources} */
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),
@@ -77,8 +64,19 @@ export class BaseContainerPlugin extends Plugin {
                 isProtected(node) ||
                 isProtecting(node) ||
                 isMediaElement(node),
-            this.isUnsplittablePredicate,
-            this.hasNonPhrasingContentPredicate,
+            (element, options) => {
+                if (!options?.allowUnsplittable) {
+                    return this.getResource("unsplittable_node_predicates").some((p) => p(element));
+                }
+            },
+            (element, options) => {
+                if (!options?.shallow) {
+                    return (
+                        element?.nodeType === Node.ELEMENT_NODE &&
+                        containsAnyNonPhrasingContent(element)
+                    );
+                }
+            },
         ],
         system_classes: [BASE_CONTAINER_CLASS],
     };
@@ -101,7 +99,9 @@ export class BaseContainerPlugin extends Plugin {
         const closestEditable = (n) =>
             isContentEditable(n.parentElement) ? closestEditable(n.parentElement) : n;
 
-        const isUnsplittable = this.isUnsplittablePredicate(node);
+        const isUnsplittable = this.getResource("unsplittable_node_predicates").some((p) =>
+            p(node)
+        );
         const isCandidateForBase = this.isCandidateForBaseContainerAllowUnsplittable(node);
 
         if (isUnsplittable || !isCandidateForBase) {
@@ -168,15 +168,11 @@ export class BaseContainerPlugin extends Plugin {
      * oe_unbreakable) => it stays unsplittable.
      */
     isCandidateForBaseContainerAllowUnsplittable(element) {
-        for (const predicate of this.getResource("invalid_for_base_container_predicates")) {
-            if (predicate === this.isUnsplittablePredicate) {
-                continue;
-            }
-            if (predicate(element)) {
-                return false;
-            }
-        }
-        return true;
+        return !this.getResource("invalid_for_base_container_predicates").some((p) =>
+            p(element, {
+                allowUnsplittable: true,
+            })
+        );
     }
 
     /**
@@ -187,16 +183,11 @@ export class BaseContainerPlugin extends Plugin {
      * compute childNodes multiple times in more complex operations.
      */
     shallowIsCandidateForBaseContainer(element) {
-        const predicates = this.getResource("invalid_for_base_container_predicates");
-        for (const predicate of predicates) {
-            if (predicate === this.hasNonPhrasingContentPredicate) {
-                continue;
-            }
-            if (predicate(element)) {
-                return false;
-            }
-        }
-        return true;
+        return !this.getResource("invalid_for_base_container_predicates").some((p) =>
+            p(element, {
+                shallow: true,
+            })
+        );
     }
 
     cleanForSave(root) {
