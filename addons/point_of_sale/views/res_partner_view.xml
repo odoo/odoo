@@ -17,7 +17,7 @@
                 </div>
                 <xpath expr="//group[@name='purchase']" position="after">
                     <group string="Point Of Sale" name="point_of_sale" groups="point_of_sale.group_pos_user">
-                        <field name="barcode"/>
+                        <field name="barcode" help="Barcode must start with `042`"/>
                     </group>
                 </xpath>
             </field>

@@ -53,6 +53,14 @@ class ResPartner(models.Model):
             'account.fiscal.position': self.env['account.fiscal.position']._load_pos_data_read(fiscal_positions, config),
         }
 
+    @api.constrains('barcode')
+    def _check_barcode_prefix(self):
+        for partner in self:
+            if partner.barcode and not partner.barcode.startswith("042"):
+                self.env.user._bus_send("simple_notification", {
+                    'message': _("Barcode must start with 042")
+            })
+
     @api.model
     def _load_pos_data_domain(self, data, config):
         # Collect partner IDs from loaded orders

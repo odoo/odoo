@@ -1538,6 +1538,10 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'John Doe',
             'barcode': '0421234567890',
         })
+        self.env['res.partner'].create({
+            'name': 'Dusty-Bun',
+            'barcode': '0241234567890',
+        })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'BarcodeScanPartnerTour', login="pos_user")
 
