@@ -81,6 +81,17 @@ export class Message extends Record {
             )?.dataset.oDatetime;
         },
     });
+    /** attachments not already clearly visible in the body, unlike inlined images */
+    extra_body_attachment_ids = fields.Attr("ir.attachment", {
+        compute() {
+            const parsedBody = new DOMParser().parseFromString(this.body, "text/html");
+            const inlinedImageAttachmentIds = [
+                ...parsedBody.querySelectorAll("img[data-attachment-id]"),
+            ].map((img) => parseInt(img.dataset.attachmentId));
+
+            return this.attachment_ids.filter((a) => !inlinedImageAttachmentIds.includes(a.id));
+        },
+    });
     hasLink = fields.Attr(false, {
         compute() {
             if (this.isBodyEmpty) {

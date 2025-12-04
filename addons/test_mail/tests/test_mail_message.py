@@ -308,10 +308,11 @@ class TestMessageValues(MailCommon):
             'body': 'taratata <img src="data:image/png;base64,iV/+OkI=" width="2"> <img src="data:image/png;base64,iV/+OkI=" width="2">',
         })
         self.assertEqual(len(msg.attachment_ids), 1)
+        attachment = msg.attachment_ids[0]
         self.assertEqual(
             msg.body,
-            '<p>taratata <img src="/web/image/{attachment.id}?access_token={attachment.access_token}" alt="image0" width="2"> '
-            '<img src="/web/image/{attachment.id}?access_token={attachment.access_token}" alt="image0" width="2"></p>'.format(attachment=msg.attachment_ids[0])
+            f'<p>taratata <img src="/web/image/{attachment.id}?access_token={attachment.access_token}" alt="image0" data-attachment-id="{attachment.id}" width="2"> '
+            f'<img src="/web/image/{attachment.id}?access_token={attachment.access_token}" alt="image0" data-attachment-id="{attachment.id}" width="2"></p>'
         )
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.models')

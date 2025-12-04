@@ -137,8 +137,8 @@
                                 </div>
                                 <div class="position-relative">
                                     <AttachmentList
-                                        t-if="message.attachment_ids.length > 0"
-                                        attachments="message.attachment_ids.map((a) => a)"
+                                        t-if="message.extra_body_attachment_ids.length > 0"
+                                        attachments="message.extra_body_attachment_ids"
                                         unlinkAttachment.bind="onClickAttachmentUnlink"
                                         messageSearch="props.messageSearch"/>
                                 </div>

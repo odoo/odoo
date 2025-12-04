@@ -729,8 +729,10 @@ class MailMessage(models.Model):
                             attachment.generate_access_token()
                             attachments = values.setdefault('attachment_ids', [])
                             attachments.append((4, attachment.id))
-                            data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name]
-                    return '%s%s alt="%s"' % (data_to_url[key][0], match.group(3), data_to_url[key][1])
+                            data_to_url[key] = ['/web/image/%s?access_token=%s' % (attachment.id, attachment.access_token), name, attachment.id]
+                    # data-attachment-id helps identify image attachments that are already inserted in the body
+                    # this is notably used to avoid displaying them twice in the chatter
+                    return f'{data_to_url[key][0]}{match.group(3)} alt="{data_to_url[key][1]}" data-attachment-id="{data_to_url[key][2]}"'
                 values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'] or '')
 
             # delegate creation of tracking after the create as sudo to avoid access rights issues
