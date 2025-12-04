@@ -57,7 +57,7 @@
                                 <group col="2">
                                     <group>
                                         <separator string="Sender &amp; Recipients"/>
-                                        <field name="email_from" placeholder="Sender's email"/>
+                                        <field name="email_from" placeholder="Sender's email" options="{'dynamic_placeholder': true}"/>
                                         <field name="use_default_to"/>
                                         <field name="email_to" invisible="use_default_to"
                                                 placeholder="Comma-separated recipient addresses"/>
@@ -65,7 +65,7 @@
                                                 placeholder="Comma-separated ids of recipient partners"/>
                                         <field name="email_cc" invisible="use_default_to"
                                                 placeholder="Comma-separated carbon copy of recipients addresses"/>
-                                        <field name="reply_to" placeholder="Capture replies in the chatter"/>
+                                        <field name="reply_to" placeholder="Chatter of the record"/>
                                     </group>
                                     <group>
                                         <separator string="Technical"/>
@@ -73,7 +73,7 @@
                                         <field name="has_mail_server" invisible="1"/>
                                         <field name="mail_server_id" invisible="not has_mail_server" placeholder="By order of server priority"/>
                                         <field name="auto_delete"/>
-                                        <field name="scheduled_date" string="Scheduled Send Date" placeholder="Send Instantly" options="{'dynamic_placeholder': true}"/>
+                                        <field name="scheduled_date" string="Send Date" placeholder="Send Instantly" options="{'dynamic_placeholder': true}"/>
                                     </group>
                                 </group>
                             </page>
