@@ -1,12 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
-import { fillShrunkPhrasingParent } from "@html_editor/utils/dom";
+import { fillEmpty, fillShrunkPhrasingParent } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { htmlEscape } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { closestBlock } from "@html_editor/utils/blocks";
-import { isParagraphRelatedElement } from "../utils/dom_info";
+import { isEmptyBlock, isParagraphRelatedElement } from "../utils/dom_info";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 function isAvailable(selection) {
@@ -112,6 +112,10 @@ export class BannerPlugin extends Plugin {
             !closestElement(anchorNode, ".o_editor_banner"),
         move_node_blacklist_selectors: ".o_editor_banner *",
         move_node_whitelist_selectors: ".o_editor_banner",
+
+        /** Overrides */
+        delete_backward_overrides: this.handleDeleteBackward.bind(this),
+        delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
     };
 
     setup() {
@@ -172,5 +176,19 @@ export class BannerPlugin extends Plugin {
                 this.dependencies.history.addStep();
             },
         });
+    }
+
+    // Transform empty banner into base container on backspace.
+    handleDeleteBackward(range) {
+        const editorBannerContent = closestElement(range.endContainer, ".o_editor_banner_content");
+        if (!isEmptyBlock(editorBannerContent)) {
+            return;
+        }
+        const bannerElement = closestElement(editorBannerContent, ".o_editor_banner");
+        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+        fillEmpty(baseContainer);
+        bannerElement.replaceWith(baseContainer);
+        this.dependencies.selection.setCursorStart(baseContainer);
+        return true;
     }
 }
