@@ -235,9 +235,10 @@
                                         </div>
                                     </div>
                                     <div class="col-md-auto flex-grow-1 pt-1" invisible="mailing_on_mailing_list or not mailing_model_id">
-                                        <field name="mailing_domain" widget="domain"
+                                        <field name="mailing_domain" widget="mass_mailing_domain"
                                             options="{'model': 'mailing_model_real', 'foldable': True}"
                                             readonly="state in ('sending', 'done')"/>
+                                        <field name="use_exclusion_list" invisible="1"/> <!-- Used by `mass_mailing_domain` -->
                                     </div>
                                     <div invisible="mailing_on_mailing_list" class="col-md-auto o_mailing_filter_width flex-shrink-1" title="Save as favorite">
                                         <field name="mailing_filter_id" placeholder="Reload a favorite filter" nolabel="1"
@@ -371,8 +372,6 @@
                                         <field name="name" string="Name" required="False" readonly="state in ('sending', 'done')"/>
                                         <field name="mail_server_id" invisible="not mail_server_available" readonly="state in ('sending', 'done')"/>
                                         <field name="keep_archives" readonly="state in ('sending', 'done')"/>
-                                        <!-- Not using a dedicated server and being set means generic sending, won't allow disabling it. -->
-                                        <field name="use_exclusion_list" invisible="not mail_server_id and use_exclusion_list" readonly="state != 'draft'"/>
                                     </group>
                                 </group>
                             </page>
