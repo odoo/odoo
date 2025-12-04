@@ -729,7 +729,7 @@ test("A new form view can be reloaded after a failed one", async () => {
     await contains(".o_cp_action_menus .fa-cog").click();
     await contains(".o_menu_item:contains(Delete)").click();
     expect(".modal").toHaveCount(1, { message: "a confirm modal should be displayed" });
-    await contains(".modal-footer button.btn-primary").click();
+    await contains(".modal-footer button.btn-danger").click();
     // The form view is automatically switched to the next record
     expect(".o_last_breadcrumb_item").toHaveText("Second record");
     expect(browser.location.pathname).toBe("/odoo/action-3/2");
@@ -2735,7 +2735,7 @@ test("click on breadcrumb of a deleted record", async () => {
     expect(".o_dialog").toHaveCount(1);
 
     // confirm
-    await contains(".o_dialog .modal-footer .btn-primary").click();
+    await contains(".o_dialog .modal-footer .btn-danger").click();
 
     expect(".o_form_view").toHaveCount(1);
     expect(queryAllTexts(".breadcrumb-item")).toEqual(["", "First record", "Partners"]);

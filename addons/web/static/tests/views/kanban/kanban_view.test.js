@@ -1382,7 +1382,7 @@ test("pager, ungrouped, deleting all records from last page", async () => {
     await contains(".o_kanban_record a").click();
 
     expect(".o_dialog").toHaveCount(1);
-    await contains(".o_dialog footer .btn-primary").click();
+    await contains(".o_dialog footer .btn-danger").click();
 
     expect(getPagerValue()).toEqual([1, 3]);
     expect(getPagerLimit()).toBe(3);
@@ -1453,7 +1453,7 @@ test("click on a button type='delete' to delete a record in a column", async () 
     await animationFrame();
     expect(".modal").toHaveCount(1);
 
-    await contains(".modal .btn-primary").click();
+    await contains(".modal .btn-danger").click();
 
     expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(1);
     expect(queryAll(".o_kanban_load_more", { root: getKanbanColumn(0) })).toHaveCount(0);

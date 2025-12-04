@@ -1895,7 +1895,7 @@ test("properties: form view and falsy domain, properties are not empty", async (
     await animationFrame();
     await click(".o_field_property_definition_delete");
     await animationFrame();
-    await click(".modal-content .btn-primary");
+    await click(".modal-content .btn-danger");
     await animationFrame();
     expect(".o_test_properties_not_empty").toHaveCount(1);
 
@@ -1904,7 +1904,7 @@ test("properties: form view and falsy domain, properties are not empty", async (
     await animationFrame();
     await click(".o_field_property_definition_delete");
     await animationFrame();
-    await click(".modal-content .btn-primary");
+    await click(".modal-content .btn-danger");
     await animationFrame();
     expect(".o_test_properties_not_empty").toHaveCount(1);
 
@@ -1914,7 +1914,7 @@ test("properties: form view and falsy domain, properties are not empty", async (
     await animationFrame();
     await click(".o_field_property_definition_delete");
     await animationFrame();
-    await click(".modal-content .btn-primary");
+    await click(".modal-content .btn-danger");
     await animationFrame();
     expect(".o_test_properties_not_empty").toHaveCount(0);
 });

@@ -76,7 +76,7 @@
         pointer-events: auto;
         touch-action: none;
         z-index: $zindex-offcanvas - 1;
-        backdrop-filter: blur(0px) grayscale(0%);
+        backdrop-filter: grayscale(0%);
     }
 
     // Dismiss area
@@ -138,7 +138,7 @@
 
         .o_bottom_sheet_backdrop {
             opacity: MAX(var(--BottomSheet-progress, 0), 0.2);
-            backdrop-filter: blur(.5px) grayscale(50%);
+            backdrop-filter: grayscale(50%);
         }
     }
 
@@ -182,7 +182,7 @@
 
         .o_bottom_sheet_backdrop {
             opacity: 0;
-            backdrop-filter: blur(0) grayscale(0%);
+            backdrop-filter: grayscale(0%);
             @media (prefers-reduced-motion: no-preference) {
                 transition: all var(--BottomSheet-slideOut-duration, 300ms) var(--BottomSheet-slideOut-easing, ease-in);
             }

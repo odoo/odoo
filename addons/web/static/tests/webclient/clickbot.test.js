@@ -460,8 +460,8 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     });
     const expectedModalHtml = /* xml */ `
         <header class="modal-header">
-            <h4 class="modal-title text-break flex-grow-1">Oops!</h4>
-            <button type="button" class="btn-close position-absolute top-0 end-0 mt-1 me-1" aria-label="Close" tabindex="-1" data-available-offline=""></button>
+            <h4 class="modal-title text-wrap text-break fs-3 flex-grow-1">Oops!</h4>
+            <button type="button" class="btn-close position-sm-absolute top-0 end-0" title="Close" aria-label="Close" tabindex="-1" data-available-offline=""></button>
         </header>
         <main class="modal-body">
             <div role="alert">
@@ -481,7 +481,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
                 </details>
             </div>
         </main>
-        <footer class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-1 w-100">
+        <footer class="modal-footer d-empty-none justify-content-around justify-content-md-start flex-wrap gap-2 w-100">
             <button class="btn btn-primary o-default-button" data-available-offline="">Close</button>
         </footer>`
         .trim()

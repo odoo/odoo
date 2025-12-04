@@ -210,10 +210,7 @@
         // entire available room. To define its properties we use sheet's CSS
         // variables in order to keep consistency and ease inner components
         // contextual adaptations (notepad, alerts, listView...).
-        --formView-sheet-padding-y: #{$o-sheet-vpadding};
-        --formView-sheet-padding-x: #{$o-horizontal-padding};
-
-        padding: var(--formView-sheet-padding-y) var(--formView-sheet-padding-x);
+        padding: var(--formView-sheet-padding-y, #{$o-sheet-vpadding}) var(--formView-sheet-padding-x, #{$o-horizontal-padding});
         background-color: $o-view-background-color;
 
         .o_notebook {
@@ -246,11 +243,8 @@
 
     // Sheet
     .o_form_sheet {
-        --formView-sheet-padding-y: #{map-get($spacers, 3)};
-        --formView-sheet-padding-x: #{map-get($spacers, 3)};
-
         margin: 0 var(--formView-sheet-margin-x, calc(var(--formView-sheetBg-padding-x) * -1));
-        padding: var(--formView-sheet-padding-y) var(--formView-sheet-padding-x);
+        padding: var(--formView-sheet-padding-y, #{map-get($spacers, 3)}) var(--formView-sheet-padding-x, #{map-get($spacers, 3)});
         border-style: solid;
         border-color: $border-color;
         border-width: var(--formView-sheet-border-width, 1px 0 1px 0);

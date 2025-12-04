@@ -2797,7 +2797,7 @@ test(`enabling delete in list when groupby m2m field`, async () => {
     });
 
     await toggleMenuItem("Delete"); // toggle delete action
-    await contains(`.modal-footer .btn-primary`).click(); // confirm the delete action
+    await contains(`.modal-footer .btn-danger`).click(); // confirm the delete action
     // check that after delete the record is deleted in both 2nd and 3rd groups
     expect(`.o_data_row`).toHaveCount(3, {
         message: "record should be deleted from both the groups",
@@ -2838,7 +2838,7 @@ test(`enabling delete in list when groupby m2m field and multi selecting the sam
     await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
 
     await toggleMenuItem("Delete"); // toggle delete action
-    await contains(`.modal-footer .btn-primary`).click(); // confirm the delete action
+    await contains(`.modal-footer .btn-danger`).click(); // confirm the delete action
     // check that after delete the record is deleted in both 2nd and 3rd groups
     expect(`.o_data_row`).toHaveCount(3, {
         message: "record should be deleted from both the groups",
@@ -4815,7 +4815,7 @@ test(`monetary aggregates in grouped list (!= currencies in same group, delete)`
     expect(`.o_data_row_selected`).toHaveCount(3);
     await toggleActionMenu();
     await toggleMenuItem("Delete");
-    await contains(`.o_dialog footer .btn-primary`).click(); // confirm
+    await contains(`.o_dialog footer .btn-danger`).click(); // confirm
     expect(`.o_data_row`).toHaveCount(0);
     expect(`.o_group_header:last`).toHaveText("Yes 0 0.00", { inline: true });
 });
@@ -5615,7 +5615,7 @@ test(`deleting one record and verify context key`, async () => {
         message: "body should have modal-open class",
     });
 
-    await contains(`.modal footer button.btn-primary`).click();
+    await contains(`.modal footer button.btn-danger`).click();
     expect.verifySteps(["unlink"]);
     expect(`tbody td.o_field_cell`).toHaveCount(3, { message: "should have 3 records" });
 });
@@ -5675,7 +5675,7 @@ test(`deleting record which throws UserError should close confirmation dialog`, 
 
     expect.errors(1);
 
-    await contains(`.modal footer button.btn-primary`).click();
+    await contains(`.modal footer button.btn-danger`).click();
     await waitFor(".modal .modal-title:contains(Invalid Operation)");
 
     expect.verifyErrors(["Odoo Server Error"]);
@@ -5715,7 +5715,7 @@ test(`delete all records matching the domain`, async () => {
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
-    await contains(`.modal footer button.btn-primary`).click();
+    await contains(`.modal footer button.btn-danger`).click();
     expect.verifySteps(["unlink"]);
 });
 
@@ -5758,7 +5758,7 @@ test(`delete all records matching the domain (limit reached)`, async () => {
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
-    await contains(`.modal footer button.btn-primary`).click();
+    await contains(`.modal footer button.btn-danger`).click();
     expect.verifySteps(["unlink", "notify"]);
 });
 
@@ -6117,7 +6117,7 @@ test(`grouped, update the count of the group (and ancestors) when a record is de
     await clickRecordSelector();
     await toggleActionMenu();
     await toggleMenuItem("Delete");
-    await contains(`.modal .btn-primary`).click();
+    await contains(`.modal .btn-danger`).click();
     expect(`.o_group_header:eq(0)`).toHaveText("blip 5", { inline: true });
     expect(`.o_group_header:eq(2)`).toHaveText("Yes 3", { inline: true });
 });
@@ -6145,7 +6145,7 @@ test(`grouped list, reload aggregates when a record is deleted`, async () => {
     await clickRecordSelector();
     await toggleActionMenu();
     await toggleMenuItem("Delete");
-    await contains(`.modal-footer .btn-primary`).click();
+    await contains(`.modal-footer .btn-danger`).click();
     expect(".o_group_header .o_list_number").toHaveText("1,000");
 });
 
@@ -7661,7 +7661,7 @@ test(`non empty editable list with sample data: delete all records`, async () =>
     await contains(`thead .o_list_record_selector input`).click();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Delete");
-    await contains(`.modal-footer .btn-primary`).click();
+    await contains(`.modal-footer .btn-danger`).click();
 
     // Final state: no more sample data, but nocontent helper displayed
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
@@ -7744,7 +7744,7 @@ test(`empty editable list with sample data: create and delete record`, async () 
     await contains(`.o_data_row input`).click();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await toggleMenuItem("Delete");
-    await contains(`.modal-footer .btn-primary`).click();
+    await contains(`.modal-footer .btn-danger`).click();
 
     // Final state: there should be no table, but the no content helper
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
@@ -12856,7 +12856,7 @@ test(`list view move to previous page when all records from last page deleted`, 
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await contains(`.o-dropdown--menu .o_menu_item:contains(Delete)`).click();
-    await contains(`.modal button.btn-primary`).click();
+    await contains(`.modal button.btn-danger`).click();
     expect(getPagerValue()).toEqual([1, 3]);
     expect(getPagerLimit()).toBe(3);
     expect.verifySteps([
@@ -12899,7 +12899,7 @@ test(`grouped list view move to previous page of group when all records from las
     await contains(`.o_data_row .o_list_record_selector input`).click();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await contains(`.dropdown-item:contains(Delete)`).click();
-    await contains(`.modal .btn-primary`).click();
+    await contains(`.modal .btn-danger`).click();
     expect(`th.o_group_name:eq(0) .o_pager:visible`).toHaveCount(0);
     expect(`.o_data_row`).toHaveCount(2);
 });
@@ -12940,7 +12940,7 @@ test(`grouped list view move to previous page of group when all records from las
     await contains(`.o_data_row .o_list_record_selector input`).click();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await contains(`.dropdown-item:contains(Delete)`).click();
-    await contains(`.modal .btn-primary`).click();
+    await contains(`.modal .btn-danger`).click();
     expect(`th.o_group_name:eq(0) .o_pager_counter`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(2);
 });
@@ -12974,7 +12974,7 @@ test(`grouped list view move to next page when all records from the current page
     await contains(`thead .o_list_record_selector input`).click();
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
     await contains(`.dropdown-item:contains(Delete)`).click();
-    await contains(`.modal .btn-primary`).click();
+    await contains(`.modal .btn-danger`).click();
     expect(`.o_group_header:eq(0) .o_group_name`).toHaveText(`Value 1 1-2 / 4`, {
         inline: true,
     });
