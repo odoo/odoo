@@ -139,7 +139,7 @@ class PeppolConnectorCommon(AccountTestInvoicingCommon):
                         'kwargs': kwargs,
                     }
                     results = replacement_method(url, **kwargs)
-                    return DotDict({**results, 'json': lambda: results})
+                    return DotDict({**results, 'json': lambda: results, 'raise_for_status': lambda: None})
             self.assertFalse(url, "Missing mock!")
 
         with patch('requests.get', mock_request), patch('requests.post', mock_request):
