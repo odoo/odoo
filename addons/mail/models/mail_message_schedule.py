@@ -66,6 +66,7 @@ class MailMessageSchedule(models.Model):
                 records = self.env[model].browse(schedules.mapped('mail_message_id.res_id'))
             else:
                 records = [self.env['mail.thread']] * len(schedules)
+                existing = records
 
             for record, schedule in zip(records, schedules):
                 notify_kwargs = dict(default_notify_kwargs or {}, skip_existing=True)
