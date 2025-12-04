@@ -10,7 +10,6 @@ from odoo.tests import tagged
 _FALSE_LEAF, _TRUE_LEAF = (0, '=', 1), (1, '=', 1)
 
 
-@tagged('at_install', '-post_install')
 class TransactionExpressionCase(TransactionCase):
 
     def _search(self, model, domain, init_domain=Domain.TRUE, test_complement=True):
@@ -47,7 +46,6 @@ class TransactionExpressionCase(TransactionCase):
 
 
 @tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
 
     @classmethod
@@ -1442,6 +1440,7 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
 
 
 @tagged('res_partner')
+@tagged('at_install', '-post_install')
 class TestExpression2(TransactionExpressionCase):
 
     def test_long_table_alias(self):
@@ -1452,6 +1451,7 @@ class TestExpression2(TransactionExpressionCase):
 
 
 @tagged('res_partner')
+@tagged('at_install', '-post_install')
 class TestBypassAccess(TransactionExpressionCase):
 
     def test_bypass_search_access(self):
@@ -2680,7 +2680,6 @@ class TestMany2many(TransactionCase):
             self.User.search([('group_ids', '=', False)], order='id')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAnyfy(TransactionCase):
     def _test_combine_anies(self, domain, expected):
         model = self.env['res.partner']

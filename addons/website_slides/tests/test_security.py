@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
-from odoo import http
 from odoo.addons.base.tests.test_mimetypes import PNG
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website_slides.tests import common
@@ -12,7 +11,6 @@ from odoo.tools import mute_logger
 
 
 @tagged('security')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccess(common.SlidesCase):
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')

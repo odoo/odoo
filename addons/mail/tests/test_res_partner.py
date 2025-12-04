@@ -14,7 +14,62 @@ from odoo.tools import mute_logger
 
 
 @tagged('res_partner', 'mail_tools', 'mail_thread_api')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestPartnerAtInstall(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.samples = [
+            ('"Raoul Grosbedon" <raoul@chirurgiens-dentistes.fr> ', 'Raoul Grosbedon', 'raoul@chirurgiens-dentistes.fr'),
+            ('ryu+giga-Sushi@aizubange.fukushima.jp', 'ryu+giga-sushi@aizubange.fukushima.jp', 'ryu+giga-sushi@aizubange.fukushima.jp'),
+            ('Raoul chirurgiens-dentistes.fr', 'Raoul chirurgiens-dentistes.fr', ''),
+            (" Raoul O'hara  <!@historicalsociety.museum>", "Raoul O'hara", '!@historicalsociety.museum'),
+            ('Raoul Grosbedon <raoul@CHIRURGIENS-dentistes.fr> ', 'Raoul Grosbedon', 'raoul@chirurgiens-dentistes.fr'),
+            ('Raoul megaraoul@chirurgiens-dentistes.fr', 'Raoul', 'megaraoul@chirurgiens-dentistes.fr'),
+            ('"Patrick Da Beast Poilvache" <PATRICK@example.com>', 'Patrick Da Beast Poilvache', 'patrick@example.com'),
+            ('Patrick Caché <patrick@EXAMPLE.COM>', 'Patrick Da Beast Poilvache', 'patrick@example.com'),
+            ('Patrick Caché <patrick.2@EXAMPLE.COM>', 'Patrick Caché', 'patrick.2@example.com'),
+            # multi email
+            ('"Multi Email" <multi.email@example.com>, multi.email.2@example.com', 'Multi Email', 'multi.email@example.com')
+        ]
+
+    def test_log_portal_group(self):
+        Users = self.env['res.users']
+        subtype_note = self.env.ref('mail.mt_note')
+        group_portal, group_user = self.env.ref('base.group_portal'), self.env.ref('base.group_user')
+
+        # check at update
+        new_user = Users.create({
+            'email': 'micheline@test.example.com',
+            'login': 'michmich',
+            'name': 'Micheline Employee',
+        })
+        self.assertEqual(len(new_user.message_ids), 1, 'Should contain Contact created log message')
+        new_msg = new_user.message_ids
+        self.assertNotIn('Portal Access Granted', new_msg.body)
+        self.assertIn('Contact created', new_msg.body)
+
+        new_user.write({'group_ids': [(4, group_portal.id), (3, group_user.id)]})
+        new_msg = new_user.message_ids[0]
+        self.assertIn('Portal Access Granted', new_msg.body)
+        self.assertEqual(new_msg.subtype_id, subtype_note)
+
+        # check at create
+        new_user = Users.create({
+            'email': 'micheline.2@test.example.com',
+            'group_ids': [(4, group_portal.id)],
+            'login': 'michmich.2',
+            'name': 'Micheline Portal',
+        })
+        self.assertEqual(len(new_user.message_ids), 2, 'Should contain Contact created + Portal access log messages')
+        new_msg = new_user.message_ids[0]
+        self.assertIn('Portal Access Granted', new_msg.body)
+        self.assertEqual(new_msg.subtype_id, subtype_note)
+
+
+@tagged('res_partner', 'mail_tools', 'mail_thread_api')
 class TestPartner(MailCommon):
 
     @classmethod
@@ -490,39 +545,6 @@ class TestPartner(MailCommon):
                     'name': partner.name,
                     'partner_id': partner.id,
                 }])
-
-    def test_log_portal_group(self):
-        Users = self.env['res.users']
-        subtype_note = self.env.ref('mail.mt_note')
-        group_portal, group_user = self.env.ref('base.group_portal'), self.env.ref('base.group_user')
-
-        # check at update
-        new_user = Users.create({
-            'email': 'micheline@test.example.com',
-            'login': 'michmich',
-            'name': 'Micheline Employee',
-        })
-        self.assertEqual(len(new_user.message_ids), 1, 'Should contain Contact created log message')
-        new_msg = new_user.message_ids
-        self.assertNotIn('Portal Access Granted', new_msg.body)
-        self.assertIn('Contact created', new_msg.body)
-
-        new_user.write({'group_ids': [(4, group_portal.id), (3, group_user.id)]})
-        new_msg = new_user.message_ids[0]
-        self.assertIn('Portal Access Granted', new_msg.body)
-        self.assertEqual(new_msg.subtype_id, subtype_note)
-
-        # check at create
-        new_user = Users.create({
-            'email': 'micheline.2@test.example.com',
-            'group_ids': [(4, group_portal.id)],
-            'login': 'michmich.2',
-            'name': 'Micheline Portal',
-        })
-        self.assertEqual(len(new_user.message_ids), 2, 'Should contain Contact created + Portal access log messages')
-        new_msg = new_user.message_ids[0]
-        self.assertIn('Portal Access Granted', new_msg.body)
-        self.assertEqual(new_msg.subtype_id, subtype_note)
 
     @users('admin')
     def test_name_create_corner_cases(self):

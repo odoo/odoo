@@ -13,6 +13,42 @@ DEFAULT_DATADIR = odoo.tools.config._default_options['data_dir']
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
+class TestConfigManagerAtInstall(TransactionCase):
+    maxDiff = None
+
+    def setUp(self):
+        super().setUp()
+        patcher = patch.dict('os.environ', {'ODOO_RC': EMPTY_CONFIG_PATH}, clear=True)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.config = configmanager()
+
+    def parse_reset(self, args=None):
+        with (
+            patch.dict(self.config._runtime_options, {}),
+            patch.dict(self.config._cli_options, {}),
+            patch.dict(self.config._env_options, {}),
+            patch.dict(self.config._file_options, {}),
+            patch.dict(self.config._default_options, {}),
+        ):
+            cli = self.config._parse_config(args)
+            return cli, dict(self.config.options)
+
+
+    def test_13_empty_db_replica_host(self):
+        with self.assertLogs('py.warnings', 'WARNING') as capture:
+            _, options = self.parse_reset(['--db_replica_host', ''])
+        self.assertIsNone(options['db_replica_host'])
+        self.assertEqual(options['dev_mode'], ['replica'])
+        self.assertEqual(len(capture.output), 1)
+        self.assertIn('Since 19.0, an empty --db_replica_host', capture.output[0])
+
+        with self.assertNoLogs('py.warnings', 'WARNING'):
+            _, options = self.parse_reset(['--db_replica_host', '', '--dev', 'replica'])
+        self.assertIsNone(options['db_replica_host'])
+        self.assertEqual(options['dev_mode'], ['replica'])
+
+
 class TestConfigManager(TransactionCase):
     maxDiff = None
 
@@ -736,16 +772,3 @@ class TestConfigManager(TransactionCase):
                 else:
                     _, options = self.parse_reset(args)
                 self.assertEqual(options['stop_after_init'], stop_after_init)
-
-    def test_13_empty_db_replica_host(self):
-        with self.assertLogs('py.warnings', 'WARNING') as capture:
-            _, options = self.parse_reset(['--db_replica_host', ''])
-        self.assertIsNone(options['db_replica_host'])
-        self.assertEqual(options['dev_mode'], ['replica'])
-        self.assertEqual(len(capture.output), 1)
-        self.assertIn('Since 19.0, an empty --db_replica_host', capture.output[0])
-
-        with self.assertNoLogs('py.warnings', 'WARNING'):
-            _, options = self.parse_reset(['--db_replica_host', '', '--dev', 'replica'])
-        self.assertIsNone(options['db_replica_host'])
-        self.assertEqual(options['dev_mode'], ['replica'])

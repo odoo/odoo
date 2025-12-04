@@ -34,7 +34,6 @@ class TestLeadMergeCommon(TestLeadConvertMassCommon):
 
 
 @tagged('lead_manage')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadMerge(TestLeadMergeCommon):
 
     def _run_merge_wizard(self, leads):

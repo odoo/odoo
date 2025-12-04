@@ -5,7 +5,6 @@ import base64
 import re
 from ast import literal_eval
 from datetime import datetime
-from unittest.mock import patch
 
 from freezegun import freeze_time
 from psycopg2 import IntegrityError
@@ -22,7 +21,6 @@ BASE_64_STRING = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A
 
 
 @tagged("mass_mailing")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailValues(MassMailCommon):
 
     @classmethod

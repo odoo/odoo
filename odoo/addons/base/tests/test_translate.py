@@ -5,7 +5,6 @@ from unittest.mock import patch
 import logging
 import time
 
-from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 import io
 
@@ -20,7 +19,6 @@ _stats_logger = logging.getLogger('odoo.tests.stats')
 SPECIAL_CHARACTERS = " ¥®°²Æçéðπ⁉€∇⓵▲☑♂♥✓➔『にㄅ㊀中한︸🌈🌍👌😀"
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TranslationToolsTestCase(BaseCase):
     def assertItemsEqual(self, a, b, msg=None):
         self.assertEqual(sorted(a), sorted(b), msg)
@@ -397,7 +395,7 @@ class TestTranslationExport(TransactionCase):
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
-class TestTranslation(TransactionCase):
+class TestTranslationAtInstall(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -456,6 +454,86 @@ class TestTranslation(TransactionCase):
         category.invalidate_recordset()
         self.assertEqual(category.with_context(lang='en_US').name, 'Customers')
 
+    def test_105_duplicate_record_multi_no_en(self):
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env['res.lang']._activate_lang('nl_NL')
+        self.customers.with_context(lang='nl_NL').name = 'Klanten'
+        self.env['res.lang']._activate_lang('zh_CN')
+        self.customers.with_context(lang='zh_CN').name = '客户'
+        self.env.ref('base.lang_en').active = False
+        self.env.ref('base.lang_zh_CN').active = False
+
+        category = self.customers
+        translations = category._fields['name']._get_stored_translations(category)
+        self.assertDictEqual(
+            translations,
+            {
+                'en_US': 'Customers',
+                'fr_FR': 'Clients',
+                'nl_NL': 'Klanten',
+                'zh_CN': '客户',
+            }
+        )
+
+        category_copy = self.customers.with_context(lang='fr_FR').copy()
+        translations = category_copy._fields['name']._get_stored_translations(category_copy)
+
+        self.assertDictEqual(
+            translations,
+            {
+                'en_US': 'Customers',
+                'fr_FR': 'Clients',
+                'nl_NL': 'Klanten',
+            },
+            'English, French and Dutch translation should be copied, Chinese translation should be dropped'
+        )
+
+    def test_111_prefetch_langs(self):
+        category_en = self.customers.with_context(lang='en_US')
+
+        self.env.ref('base.lang_nl').active = True
+        category_nl = category_en.with_context(lang='nl_NL')
+        category_nl.name = 'Klanten'
+
+        self.assertTrue(self.env.ref('base.lang_fr').active)
+        category_fr = category_en.with_context(lang='fr_FR')
+
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env.ref('base.lang_en').active = False
+
+        category_fr.with_context(prefetch_langs=True).name
+        category_nl.name
+        category_en.name
+        category_fr.invalidate_recordset()
+
+        with self.assertQueryCount(1):
+            self.assertEqual(category_fr.with_context(prefetch_langs=True).name, 'Clients')
+
+        with self.assertQueryCount(0):
+            self.assertEqual(category_nl.name, 'Klanten')
+            self.assertEqual(category_en.name, 'Customers')
+
+
+class TestTranslation(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.customers = cls.env['res.partner.category'].create({'name': 'Customers'})
+
+        cls.customers_xml_id = cls.customers.export_data(['id']).get('datas')[0][0]
+        po_string = '''
+        #. module: __export__
+        #: model:res.partner.category,name:%s
+        msgid "Customers"
+        msgstr "Clients"
+        ''' % cls.customers_xml_id
+        with io.BytesIO(bytes(po_string, encoding='utf-8')) as f:
+            f.name = 'dummy'
+            translation_importer = TranslationImporter(cls.env.cr, verbose=True)
+            translation_importer.load(f, 'po', 'fr_FR')
+            translation_importer.save(overwrite=True)
+
     def test_101_create_translated_record(self):
         category = self.customers.with_context({})
         self.assertEqual(category.name, 'Customers', "Error in basic name")
@@ -491,40 +569,6 @@ class TestTranslation(TransactionCase):
         categories = padawans_fr.search([('id', 'in', [self.customers.id, padawans.id])], order='name')
         self.assertEqual(categories.ids, [padawans.id, self.customers.id],
             "Search ordered by translated name should return Padawans (Apprentis) before Customers (Clients)")
-
-    def test_105_duplicate_record_multi_no_en(self):
-        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
-        self.env['res.lang']._activate_lang('nl_NL')
-        self.customers.with_context(lang='nl_NL').name = 'Klanten'
-        self.env['res.lang']._activate_lang('zh_CN')
-        self.customers.with_context(lang='zh_CN').name = '客户'
-        self.env.ref('base.lang_en').active = False
-        self.env.ref('base.lang_zh_CN').active = False
-
-        category = self.customers
-        translations = category._fields['name']._get_stored_translations(category)
-        self.assertDictEqual(
-            translations,
-            {
-                'en_US': 'Customers',
-                'fr_FR': 'Clients',
-                'nl_NL': 'Klanten',
-                'zh_CN': '客户',
-            }
-        )
-
-        category_copy = self.customers.with_context(lang='fr_FR').copy()
-        translations = category_copy._fields['name']._get_stored_translations(category_copy)
-
-        self.assertDictEqual(
-            translations,
-            {
-                'en_US': 'Customers',
-                'fr_FR': 'Clients',
-                'nl_NL': 'Klanten',
-            },
-            'English, French and Dutch translation should be copied, Chinese translation should be dropped'
-        )
 
     def test_107_duplicate_record_en(self):
         category = self.customers.with_context({'lang': 'en_US'}).copy()
@@ -572,32 +616,6 @@ class TestTranslation(TransactionCase):
         category_in = CategoryEs.search([('name', 'in', ['Customers'])])
         self.assertIn(self.customers, category_in, "Search with 'in' should use the English name if the current language translation is not available")
 
-    def test_111_prefetch_langs(self):
-        category_en = self.customers.with_context(lang='en_US')
-
-        self.env.ref('base.lang_nl').active = True
-        category_nl = category_en.with_context(lang='nl_NL')
-        category_nl.name = 'Klanten'
-
-        self.assertTrue(self.env.ref('base.lang_fr').active)
-        category_fr = category_en.with_context(lang='fr_FR')
-
-        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
-        self.env.ref('base.lang_en').active = False
-
-        category_fr.with_context(prefetch_langs=True).name
-        category_nl.name
-        category_en.name
-        category_fr.invalidate_recordset()
-
-        with self.assertQueryCount(1):
-            self.assertEqual(category_fr.with_context(prefetch_langs=True).name, 'Clients')
-
-        with self.assertQueryCount(0):
-            self.assertEqual(category_nl.name, 'Klanten')
-            self.assertEqual(category_en.name, 'Customers')
-
-
     # TODO Currently, the unique constraint doesn't work for translatable field
     # def test_111_unique_en(self):
     #     Country = self.env['res.country']
@@ -614,7 +632,62 @@ class TestTranslation(TransactionCase):
     #         country_3 = Country.create({'name': 'Odoo'})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestTranslationWriteAtInstall(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.category = cls.env['res.partner.category'].create({'name': 'Reblochon'})
+        cls.category_xml_id = cls.category.export_data(['id']).get('datas')[0][0]
+
+    def test_03_fr_single(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env.ref('base.lang_en').active = False
+
+        langs = self.env['res.lang'].get_installed()
+        self.assertEqual([('fr_FR', 'French / Français')], langs, "Test did not started with expected languages")
+
+        self.category.with_context(lang='fr_FR').write({'name': 'French Name'})
+
+        fr_name = self.category.with_context(lang='fr_FR').read(['name'])
+        self.assertEqual(fr_name[0]['name'], "French Name", "Reference field not updated")
+
+        # read from the cache
+        self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
+
+        # read from database
+        self.category.invalidate_recordset()
+        self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
+
+    def test_04_fr_multi_no_en(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('es_ES')
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env.ref('base.lang_en').active = False
+
+        langs = self.env['res.lang'].get_installed()
+        self.assertEqual([('fr_FR', 'French / Français'), ('es_ES', 'Spanish / Español')], langs,
+                         "Test did not start with the expected languages")
+
+        self.category.with_context(lang='fr_FR').write({'name': 'French Name'})
+        self.category.with_context(lang='es_ES').write({'name': 'Spanish Name'})
+        self.category.with_context(lang=None).write({'name': 'None Name'})
+
+        # read from the cache first
+        self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
+        self.assertEqual(self.category.with_context(lang='es_ES').name, "Spanish Name")
+        self.assertEqual(self.category.with_context(lang=None).name, "None Name")
+
+        # force save to database and clear the cache: force a clean state
+        self.category.invalidate_recordset()
+
+        # read from database
+        self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
+        self.assertEqual(self.category.with_context(lang='es_ES').name, "Spanish Name")
+        self.assertEqual(self.category.with_context(lang=None).name, "None Name")
+
+
 class TestTranslationWrite(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -671,26 +744,6 @@ class TestTranslationWrite(TransactionCase):
             with self.assertRaises(UserError):
                 self.category.with_context(lang=lang).create({'name': 'new value'})
 
-    def test_03_fr_single(self):
-        self.env['res.lang']._activate_lang('fr_FR')
-        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
-        self.env.ref('base.lang_en').active = False
-
-        langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('fr_FR', 'French / Français')], langs, "Test did not started with expected languages")
-
-        self.category.with_context(lang='fr_FR').write({'name': 'French Name'})
-
-        fr_name = self.category.with_context(lang='fr_FR').read(['name'])
-        self.assertEqual(fr_name[0]['name'], "French Name", "Reference field not updated")
-
-        # read from the cache
-        self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
-
-        # read from database
-        self.category.invalidate_recordset()
-        self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
-
     def test_04_fr_multi(self):
         self.env['res.lang']._activate_lang('fr_FR')
 
@@ -725,33 +778,6 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(self.category.with_context(lang=None).name, "English Name")
         self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
         self.assertEqual(self.category.with_context(lang='en_US').name, "English Name")
-
-    def test_04_fr_multi_no_en(self):
-        self.env['res.lang']._activate_lang('fr_FR')
-        self.env['res.lang']._activate_lang('es_ES')
-        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
-        self.env.ref('base.lang_en').active = False
-
-        langs = self.env['res.lang'].get_installed()
-        self.assertEqual([('fr_FR', 'French / Français'), ('es_ES', 'Spanish / Español')], langs,
-                         "Test did not start with the expected languages")
-
-        self.category.with_context(lang='fr_FR').write({'name': 'French Name'})
-        self.category.with_context(lang='es_ES').write({'name': 'Spanish Name'})
-        self.category.with_context(lang=None).write({'name': 'None Name'})
-
-        # read from the cache first
-        self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
-        self.assertEqual(self.category.with_context(lang='es_ES').name, "Spanish Name")
-        self.assertEqual(self.category.with_context(lang=None).name, "None Name")
-
-        # force save to database and clear the cache: force a clean state
-        self.category.invalidate_recordset()
-
-        # read from database
-        self.assertEqual(self.category.with_context(lang='fr_FR').name, "French Name")
-        self.assertEqual(self.category.with_context(lang='es_ES').name, "Spanish Name")
-        self.assertEqual(self.category.with_context(lang=None).name, "None Name")
 
     def test_05_remove_multi_false(self):
         self._test_05_remove_multi(False)
@@ -966,7 +992,57 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(info['models'][model._name]["fields"]['name']['string'], LABEL)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestXMLTranslationAtInstall(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env['res.lang']._activate_lang('nl_NL')
+
+    def create_view(self, archf, terms, **kwargs):
+        view = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'model': 'res.partner',
+            'arch': archf % terms,
+        })
+        view.invalidate_recordset()
+
+        val = {'en_US': archf % terms}
+        for lang, trans_terms in kwargs.items():
+            val[lang] = archf % trans_terms
+        query = """UPDATE ir_ui_view
+                      SET arch_db = %s
+                    WHERE id = %s"""
+        self.env.cr.execute(query, (Json(val), view.id))
+        return view
+
+    def test_sync_xml_no_en(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
+
+        archf = '<form string="X">%s<div>%s</div></form>'
+        terms_en = ('Bread and cheese', 'Fork')
+        terms_fr = ('Pain et fromage', 'Fourchetta')
+        terms_nl = ('Brood and kaas', 'Vork')
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
+
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env.ref('base.lang_en').active = False
+
+        env_nolang = self.env(context={})
+        env_fr = self.env(context={'lang': 'fr_FR'})
+        env_nl = self.env(context={'lang': 'nl_NL'})
+
+        # style change and typo change
+        terms_fr = ('Pain <span style="font-weight:bold">et</span> fromage', 'Fourchette')
+        view.with_env(env_fr).write({'arch_db': archf % terms_fr})
+
+        self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_fr)
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
+
+
 class TestXMLTranslation(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1103,31 +1179,6 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
         self.assertEqual(view.with_env(env_fr).arch_db, archf % (terms_en[0], terms_fr[1]))
         self.assertEqual(view.with_env(env_nl).arch_db, archf % (terms_en[0], terms_nl[1]))
-
-    def test_sync_xml_no_en(self):
-        self.env['res.lang']._activate_lang('fr_FR')
-        self.env['res.lang']._activate_lang('nl_NL')
-
-        archf = '<form string="X">%s<div>%s</div></form>'
-        terms_en = ('Bread and cheese', 'Fork')
-        terms_fr = ('Pain et fromage', 'Fourchetta')
-        terms_nl = ('Brood and kaas', 'Vork')
-        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
-
-        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
-        self.env.ref('base.lang_en').active = False
-
-        env_nolang = self.env(context={})
-        env_fr = self.env(context={'lang': 'fr_FR'})
-        env_nl = self.env(context={'lang': 'nl_NL'})
-
-        # style change and typo change
-        terms_fr = ('Pain <span style="font-weight:bold">et</span> fromage', 'Fourchette')
-        view.with_env(env_fr).write({'arch_db': archf % terms_fr})
-
-        self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_fr)
-        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
-        self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
     def test_sync_xml_attribute(self):
         """ check translations with attribute can be cleaned up after write """

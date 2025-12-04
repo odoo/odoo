@@ -11,7 +11,6 @@ from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval, const_eval, expr_eval
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSafeEval(BaseCase):
     def test_const(self):
         # NB: True and False are names in Python 2 not consts

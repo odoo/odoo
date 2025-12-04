@@ -174,7 +174,59 @@ class TestNodeLocator(common.TransactionCase):
         self.assertIsNone(node)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestViewInheritanceAtInstall(ViewCase):
+
+    def test_view_validate_attrs_groups_query_count(self):
+        _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.group_system')
+        hit, miss = counter.hit, counter.miss
+
+        with self.assertQueryCount(6):
+            base_view = self.assertValid("""
+                <form string="View">
+                    <field name="name" groups="base.group_system"/>
+                    <field name="priority" groups="base.group_system"/>
+                    <field name="inherit_id" groups="base.group_system"/>
+                </form>
+            """)
+        self.assertEqual(counter.hit, hit)
+        self.assertEqual(counter.miss, miss)
+
+        with self.assertQueryCount(3):
+            self.assertValid("""
+                <field name="name" position="replace">
+                    <field name="key" groups="base.group_system"/>
+                </field>
+            """, inherit_id=base_view.id)
+        self.assertEqual(counter.hit, hit)
+        self.assertEqual(counter.miss, miss)
+
+    def test_view_validate_button_action_query_count(self):
+        _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.action_ui_view')
+        hit, miss = counter.hit, counter.miss
+
+        with self.assertQueryCount(10):
+            base_view = self.assertValid("""
+                <form string="View">
+                    <header>
+                        <button type="action" name="base.action_ui_view"/>
+                        <button type="action" name="base.action_ui_view_custom"/>
+                        <button type="action" name="base.action_ui_view"/>
+                    </header>
+                    <field name="name"/>
+                </form>
+            """)
+        self.assertEqual(counter.hit, hit)
+        self.assertEqual(counter.miss, miss + 2)
+
+        with self.assertQueryCount(5):
+            self.assertValid("""
+                <field name="name" position="replace"/>
+            """, inherit_id=base_view.id)
+        self.assertEqual(counter.hit, hit + 2)
+        self.assertEqual(counter.miss, miss + 2)
+
+
 class TestViewInheritance(ViewCase):
     def arch_for(self, name, view_type='form', parent=None):
         """ Generates a trivial view of the specified ``view_type``.
@@ -322,55 +374,6 @@ class TestViewInheritance(ViewCase):
             # 2: _get_inheriting_views: id, inherit_id, mode, groups
             # 3: _combine: arch_db
             self.view_ids['A'].get_combined_arch()
-
-    def test_view_validate_button_action_query_count(self):
-        _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.action_ui_view')
-        hit, miss = counter.hit, counter.miss
-
-        with self.assertQueryCount(10):
-            base_view = self.assertValid("""
-                <form string="View">
-                    <header>
-                        <button type="action" name="base.action_ui_view"/>
-                        <button type="action" name="base.action_ui_view_custom"/>
-                        <button type="action" name="base.action_ui_view"/>
-                    </header>
-                    <field name="name"/>
-                </form>
-            """)
-        self.assertEqual(counter.hit, hit)
-        self.assertEqual(counter.miss, miss + 2)
-
-        with self.assertQueryCount(5):
-            self.assertValid("""
-                <field name="name" position="replace"/>
-            """, inherit_id=base_view.id)
-        self.assertEqual(counter.hit, hit + 2)
-        self.assertEqual(counter.miss, miss + 2)
-
-    def test_view_validate_attrs_groups_query_count(self):
-        _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.group_system')
-        hit, miss = counter.hit, counter.miss
-
-        with self.assertQueryCount(6):
-            base_view = self.assertValid("""
-                <form string="View">
-                    <field name="name" groups="base.group_system"/>
-                    <field name="priority" groups="base.group_system"/>
-                    <field name="inherit_id" groups="base.group_system"/>
-                </form>
-            """)
-        self.assertEqual(counter.hit, hit)
-        self.assertEqual(counter.miss, miss)
-
-        with self.assertQueryCount(3):
-            self.assertValid("""
-                <field name="name" position="replace">
-                    <field name="key" groups="base.group_system"/>
-                </field>
-            """, inherit_id=base_view.id)
-        self.assertEqual(counter.hit, hit)
-        self.assertEqual(counter.miss, miss)
 
     def test_no_arch(self):
         self.d1._check_xml()
@@ -624,7 +627,6 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(not_broken.invalid_locators, [{"broken_hierarchy": True}])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
     architecture. IO state parameters (cr, uid, model, context) are used for
@@ -833,7 +835,6 @@ class TestApplyInheritanceWrapSpecs(ViewCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestApplyInheritanceMoveSpecs(ViewCase):
     def setUp(self):
         super(TestApplyInheritanceMoveSpecs, self).setUp()
@@ -1088,10 +1089,9 @@ class TestNoModel(ViewCase):
         self.assertEqual(view.arch, ARCH % TEXT_FR)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTemplating(ViewCase):
     def setUp(self):
-        super(TestTemplating, self).setUp()
+        super().setUp()
         self.patch(self.registry, '_init', False)
 
     def test_branding_t0(self):

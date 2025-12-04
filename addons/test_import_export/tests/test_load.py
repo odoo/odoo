@@ -666,7 +666,6 @@ class test_selection_function(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_m2o(ImporterCase):
     model_name = 'export.many2one'
 
@@ -1068,7 +1067,6 @@ class test_m2m(ImporterCase):
         self.assertEqual(values(b[0].value), [84, 9])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_o2m(ImporterCase):
     model_name = 'export.one2many'
 

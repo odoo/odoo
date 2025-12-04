@@ -7,7 +7,7 @@ from unittest.mock import patch
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase, users
+from odoo.tests import TransactionCase, users
 from odoo.tools import mute_logger
 
 
@@ -114,7 +114,6 @@ class TestPropertiesMixin(TransactionCase):
         return field._list_to_dict(read_value)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class PropertiesCase(TestPropertiesMixin):
 
     @mute_logger('odoo.sql_db')

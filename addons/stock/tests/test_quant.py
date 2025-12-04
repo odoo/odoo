@@ -12,7 +12,6 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged, Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockQuant(TestStockCommon):
 
     @classmethod

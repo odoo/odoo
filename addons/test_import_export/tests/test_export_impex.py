@@ -306,7 +306,6 @@ class test_reference(CreatorCase):
         self.assertEqual(self.export(self.ref_value, context={'import_compat': False}), [[self.ref_record.display_name]])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class test_o2m(CreatorCase):
     model_name = 'export.one2many'
     commands = [

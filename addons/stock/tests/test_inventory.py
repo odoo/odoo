@@ -4,14 +4,13 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import Command
 from odoo.exceptions import ValidationError
-from odoo.tests import tagged, Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestInventory(TransactionCase):
     @classmethod
     def setUpClass(cls):
-        super(TestInventory, cls).setUpClass()
+        super().setUpClass()
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.pack_location = cls.env.ref('stock.location_pack_zone')
         cls.pack_location.active = True

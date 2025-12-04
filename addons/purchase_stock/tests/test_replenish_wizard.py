@@ -8,7 +8,6 @@ from odoo.tests import tagged, Form
 from .common import PurchaseTestCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReplenishWizard(PurchaseTestCommon):
     @classmethod
     def setUpClass(cls):

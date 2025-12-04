@@ -3,7 +3,6 @@ from odoo.fields import Command, Domain
 from odoo.tests import tagged, TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubqueries(TransactionCase):
     """ Test the subqueries made by search() with relational fields. """
     maxDiff = None
@@ -417,7 +416,6 @@ class TestSubqueries(TransactionCase):
             Head.search([('node_id', 'parent_of', nodes.ids)])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSearchRelated(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1502,7 +1500,6 @@ class TestSearchAny(TransactionCase):
             model.search(Domain('foo_ids', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFlushSearch(TransactionCase):
 
     @classmethod
@@ -1817,6 +1814,7 @@ class TestFlushSearch(TransactionCase):
         self.assertEqual(self.env['test_orm.custom.table_query_sql'].search([]).sum_quantity, 25)
 
 
+@tagged('at_install', '-post_install')
 class TestDatePartNumber(TransactionExpressionCase):
     @classmethod
     def setUpClass(cls):

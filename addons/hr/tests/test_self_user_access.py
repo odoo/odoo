@@ -102,12 +102,52 @@ class TestSelfAccessPreferences(TestHrCommon):
         self.assertEqual(action['display_name'], 'Change my Preferences')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestSelfAccessRightsAtInstall(TestHrCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.richard = new_test_user(cls.env, login='ric', groups='base.group_user', name='Simple employee', email='ric@example.com')
+        cls.richard_emp = cls.env['hr.employee'].create({
+            'name': 'Richard',
+            'user_id': cls.richard.id,
+            'private_phone': '21454',
+        })
+        cls.hubert = new_test_user(cls.env, login='hub', groups='base.group_user', name='Simple employee', email='hub@example.com')
+        cls.hubert_emp = cls.env['hr.employee'].create({
+            'name': 'Hubert',
+            'user_id': cls.hubert.id,
+        })
+
+        cls.protected_fields_emp = OrderedDict([(k, v) for k, v in cls.env['hr.employee']._fields.items() if v.groups == 'hr.group_hr_user'])
+        # Compute fields and id field are always readable by everyone
+        cls.read_protected_fields_emp = OrderedDict([(k, v) for k, v in cls.env['hr.employee']._fields.items() if not v.compute and k != 'id'])
+        cls.self_protected_fields_user = OrderedDict([
+            (k, field)
+            for k, field in cls.env['res.users']._fields.items()
+            # get fields built with `employee_field` function
+            if callable(field.compute) and hasattr(field.compute, 'is_field_employee')
+        ])
+
+    def testReadOtherEmployee(self):
+        with self.assertRaises(AccessError):
+            self.hubert_emp.with_user(self.richard).read(self.protected_fields_emp.keys())
+        # Check simple user can read all public fields of private employee
+        public_fields = [
+            field_name
+            for field_name in self.env['hr.employee.public']._fields
+            if field_name in self.env['hr.employee']._fields
+        ]
+        res = self.hubert_emp.with_user(self.richard).read(public_fields)
+        self.assertEqual(len(public_fields), len(res[0]))
+
+
 class TestSelfAccessRights(TestHrCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestSelfAccessRights, cls).setUpClass()
+        super().setUpClass()
         cls.richard = new_test_user(cls.env, login='ric', groups='base.group_user', name='Simple employee', email='ric@example.com')
         cls.richard_emp = cls.env['hr.employee'].create({
             'name': 'Richard',
@@ -134,18 +174,6 @@ class TestSelfAccessRights(TestHrCommon):
     def testReadSelfEmployee(self):
         with self.assertRaises(AccessError):
             self.hubert_emp.with_user(self.richard).read(self.protected_fields_emp.keys())
-
-    def testReadOtherEmployee(self):
-        with self.assertRaises(AccessError):
-            self.hubert_emp.with_user(self.richard).read(self.protected_fields_emp.keys())
-        # Check simple user can read all public fields of private employee
-        public_fields = [
-            field_name
-            for field_name in self.env['hr.employee.public']._fields
-            if field_name in self.env['hr.employee']._fields
-        ]
-        res = self.hubert_emp.with_user(self.richard).read(public_fields)
-        self.assertEqual(len(public_fields), len(res[0]))
 
     # Write hr.employee #
     def testWriteSelfEmployee(self):

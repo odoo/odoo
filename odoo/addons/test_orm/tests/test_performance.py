@@ -11,6 +11,271 @@ _logger = logging.getLogger(__name__)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
+class TestPerformanceAtInstall(SavepointCaseWithUserDemo):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._load_partners_set()
+
+        partner3 = cls.env['res.partner'].search([('name', '=', 'AnalytIQ')], limit=1)
+        partner4 = cls.env['res.partner'].search([('name', '=', 'Urban Trends')], limit=1)
+        partner10 = cls.env['res.partner'].search([('name', '=', 'Ctrl-Alt-Fix')], limit=1)
+        partner12 = cls.env['res.partner'].search([('name', '=', 'Ignitive Labs')], limit=1)
+
+        cls.env['test_performance.base'].create([{
+            'name': 'Object 0',
+            'value': 0,
+            'partner_id': partner3.id,
+        }, {
+            'name': 'Object 1',
+            'value': 10,
+            'partner_id': partner3.id,
+        }, {
+            'name': 'Object 2',
+            'value': 20,
+            'partner_id': partner4.id,
+        }, {
+            'name': 'Object 3',
+            'value': 30,
+            'partner_id': partner10.id,
+        }, {
+            'name': 'Object 4',
+            'value': 40,
+            'partner_id': partner12.id,
+        }])
+        cls.env.invalidate_all()
+
+    @mute_logger('odoo.models.unlink')
+    @users('__system__', 'demo')
+    @warmup
+    def test_write_base_one2many(self):
+        """ Write on one2many field. """
+        rec1 = self.env['test_performance.base'].create({'name': 'X'})
+
+        # create N lines on rec1: O(1) queries
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec1.write({'line_ids': [Command.create({'value': 0})]})
+        self.assertEqual(len(rec1.line_ids), 1)
+
+        with self.assertQueryCount(4):
+            self.env.invalidate_all()
+            rec1.write({'line_ids': [Command.create({'value': val}) for val in range(1, 12)]})
+        self.assertEqual(len(rec1.line_ids), 12)
+
+        lines = rec1.line_ids
+
+        # update N lines: O(1) queries
+        with self.assertQueryCount(4):
+            self.env.invalidate_all()
+            rec1.write({'line_ids': [Command.update(line.id, {'value': 42}) for line in lines[0]]})
+        self.assertEqual(rec1.line_ids, lines)
+
+        with self.assertQueryCount(4):
+            self.env.invalidate_all()
+            rec1.write({'line_ids': [Command.update(line.id, {'value': 42 + line.id}) for line in lines[1:]]})
+        self.assertEqual(rec1.line_ids, lines)
+
+        # delete N lines: O(1) queries
+        with self.assertQueryCount(10):
+            self.env.invalidate_all()
+            rec1.write({'line_ids': [Command.delete(line.id) for line in lines[0]]})
+        self.assertEqual(rec1.line_ids, lines[1:])
+
+        with self.assertQueryCount(9):
+            self.env.invalidate_all()
+            rec1.write({'line_ids': [Command.delete(line.id) for line in lines[1:]]})
+        self.assertFalse(rec1.line_ids)
+        self.assertFalse(lines.exists())
+
+        rec1.write({'line_ids': [Command.create({'value': val}) for val in range(12)]})
+        lines = rec1.line_ids
+
+        # unlink N lines: O(1) queries
+        with self.assertQueryCount(10):
+            self.env.invalidate_all()
+            rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[0]]})
+        self.assertEqual(rec1.line_ids, lines[1:])
+
+        with self.assertQueryCount(9):
+            self.env.invalidate_all()
+            rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[1:]]})
+        self.assertFalse(rec1.line_ids)
+        self.assertFalse(lines.exists())
+
+        rec1.write({'line_ids': [Command.create({'value': val}) for val in range(12)]})
+        lines = rec1.line_ids
+        rec2 = self.env['test_performance.base'].create({'name': 'X'})
+
+        # link N lines from rec1 to rec2: O(1) queries
+        with self.assertQueryCount(6):
+            self.env.invalidate_all()
+            rec2.write({'line_ids': [Command.link(line.id) for line in lines[0]]})
+        self.assertEqual(rec1.line_ids, lines[1:])
+        self.assertEqual(rec2.line_ids, lines[0])
+
+        with self.assertQueryCount(6):
+            self.env.invalidate_all()
+            rec2.write({'line_ids': [Command.link(line.id) for line in lines[1:]]})
+        self.assertFalse(rec1.line_ids)
+        self.assertEqual(rec2.line_ids, lines)
+
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec2.write({'line_ids': [Command.link(line.id) for line in lines[0]]})
+        self.assertEqual(rec2.line_ids, lines)
+
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec2.write({'line_ids': [Command.link(line.id) for line in lines[1:]]})
+        self.assertEqual(rec2.line_ids, lines)
+
+        # empty N lines in rec2: O(1) queries
+        with self.assertQueryCount(10):
+            self.env.invalidate_all()
+            rec2.write({'line_ids': [Command.clear()]})
+        self.assertFalse(rec2.line_ids)
+
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec2.write({'line_ids': [Command.clear()]})
+        self.assertFalse(rec2.line_ids)
+
+        rec1.write({'line_ids': [Command.create({'value': val}) for val in range(12)]})
+        lines = rec1.line_ids
+
+        # set N lines in rec2: O(1) queries
+        with self.assertQueryCount(6):
+            self.env.invalidate_all()
+            rec2.write({'line_ids': [Command.set(lines[0].ids)]})
+        self.assertEqual(rec1.line_ids, lines[1:])
+        self.assertEqual(rec2.line_ids, lines[0])
+
+        with self.assertQueryCount(5):
+            self.env.invalidate_all()
+            rec2.write({'line_ids': [Command.set(lines.ids)]})
+        self.assertFalse(rec1.line_ids)
+        self.assertEqual(rec2.line_ids, lines)
+
+        with self.assertQueryCount(4):
+            self.env.invalidate_all()
+            rec2.write({'line_ids': [Command.set(lines.ids)]})
+        self.assertEqual(rec2.line_ids, lines)
+
+    @mute_logger('odoo.models.unlink')
+    @users('__system__', 'demo')
+    @warmup
+    def test_write_base_many2many(self):
+        """ Write on many2many field. """
+        rec1 = self.env['test_performance.base'].create({'name': 'X'})
+
+        # create N tags on rec1: O(1) queries
+        with self.assertQueryCount(4):
+            self.env.invalidate_all()
+            rec1.write({'tag_ids': [Command.create({'name': 0})]})
+        self.assertEqual(len(rec1.tag_ids), 1)
+
+        with self.assertQueryCount(4):
+            self.env.invalidate_all()
+            rec1.write({'tag_ids': [Command.create({'name': val}) for val in range(1, 12)]})
+        self.assertEqual(len(rec1.tag_ids), 12)
+
+        tags = rec1.tag_ids
+
+        # update N tags: O(N) queries
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec1.write({'tag_ids': [Command.update(tag.id, {'name': 'X'}) for tag in tags[0]]})
+        self.assertEqual(rec1.tag_ids, tags)
+
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec1.write({'tag_ids': [Command.update(tag.id, {'name': 'X'}) for tag in tags[1:]]})
+        self.assertEqual(rec1.tag_ids, tags)
+
+        # delete N tags: O(1) queries
+        with self.assertQueryCount(__system__=6, demo=6):
+            self.env.invalidate_all()
+            rec1.write({'tag_ids': [Command.delete(tag.id) for tag in tags[0]]})
+        self.assertEqual(rec1.tag_ids, tags[1:])
+
+        with self.assertQueryCount(__system__=6, demo=6):
+            self.env.invalidate_all()
+            rec1.write({'tag_ids': [Command.delete(tag.id) for tag in tags[1:]]})
+        self.assertFalse(rec1.tag_ids)
+        self.assertFalse(tags.exists())
+
+        rec1.write({'tag_ids': [Command.create({'name': val}) for val in range(12)]})
+        tags = rec1.tag_ids
+
+        # unlink N tags: O(1) queries
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec1.write({'tag_ids': [Command.unlink(tag.id) for tag in tags[0]]})
+        self.assertEqual(rec1.tag_ids, tags[1:])
+
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec1.write({'tag_ids': [Command.unlink(tag.id) for tag in tags[1:]]})
+        self.assertFalse(rec1.tag_ids)
+        self.assertTrue(tags.exists())
+
+        rec2 = self.env['test_performance.base'].create({'name': 'X'})
+
+        # link N tags from rec1 to rec2: O(1) queries
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[0]]})
+        self.assertEqual(rec2.tag_ids, tags[0])
+
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[1:]]})
+        self.assertEqual(rec2.tag_ids, tags)
+
+        with self.assertQueryCount(2):
+            self.env.invalidate_all()
+            rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[1:]]})
+        self.assertEqual(rec2.tag_ids, tags)
+
+        # empty N tags in rec2: O(1) queries
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec2.write({'tag_ids': [Command.clear()]})
+        self.assertFalse(rec2.tag_ids)
+        self.assertTrue(tags.exists())
+
+        with self.assertQueryCount(2):
+            self.env.invalidate_all()
+            rec2.write({'tag_ids': [Command.clear()]})
+        self.assertFalse(rec2.tag_ids)
+
+        # set N tags in rec2: O(1) queries
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec2.write({'tag_ids': [Command.set(tags.ids)]})
+        self.assertEqual(rec2.tag_ids, tags)
+
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec2.write({'tag_ids': [Command.set(tags[:8].ids)]})
+        self.assertEqual(rec2.tag_ids, tags[:8])
+
+        with self.assertQueryCount(4):
+            self.env.invalidate_all()
+            rec2.write({'tag_ids': [Command.set(tags[4:].ids)]})
+        self.assertEqual(rec2.tag_ids, tags[4:])
+
+        with self.assertQueryCount(3):
+            self.env.invalidate_all()
+            rec2.write({'tag_ids': [Command.set(tags.ids)]})
+        self.assertEqual(rec2.tag_ids, tags)
+
+        with self.assertQueryCount(2):
+            self.env.invalidate_all()
+            rec2.write({'tag_ids': [Command.set(tags.ids)]})
+        self.assertEqual(rec2.tag_ids, tags)
+
 class TestPerformance(SavepointCaseWithUserDemo):
 
     @classmethod
@@ -263,123 +528,6 @@ class TestPerformance(SavepointCaseWithUserDemo):
             records.write({'value': 42})
 
     @mute_logger('odoo.models.unlink')
-    @users('__system__', 'demo')
-    @warmup
-    def test_write_base_one2many(self):
-        """ Write on one2many field. """
-        rec1 = self.env['test_performance.base'].create({'name': 'X'})
-
-        # create N lines on rec1: O(1) queries
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec1.write({'line_ids': [Command.create({'value': 0})]})
-        self.assertEqual(len(rec1.line_ids), 1)
-
-        with self.assertQueryCount(4):
-            self.env.invalidate_all()
-            rec1.write({'line_ids': [Command.create({'value': val}) for val in range(1, 12)]})
-        self.assertEqual(len(rec1.line_ids), 12)
-
-        lines = rec1.line_ids
-
-        # update N lines: O(1) queries
-        with self.assertQueryCount(4):
-            self.env.invalidate_all()
-            rec1.write({'line_ids': [Command.update(line.id, {'value': 42}) for line in lines[0]]})
-        self.assertEqual(rec1.line_ids, lines)
-
-        with self.assertQueryCount(4):
-            self.env.invalidate_all()
-            rec1.write({'line_ids': [Command.update(line.id, {'value': 42 + line.id}) for line in lines[1:]]})
-        self.assertEqual(rec1.line_ids, lines)
-
-        # delete N lines: O(1) queries
-        with self.assertQueryCount(10):
-            self.env.invalidate_all()
-            rec1.write({'line_ids': [Command.delete(line.id) for line in lines[0]]})
-        self.assertEqual(rec1.line_ids, lines[1:])
-
-        with self.assertQueryCount(9):
-            self.env.invalidate_all()
-            rec1.write({'line_ids': [Command.delete(line.id) for line in lines[1:]]})
-        self.assertFalse(rec1.line_ids)
-        self.assertFalse(lines.exists())
-
-        rec1.write({'line_ids': [Command.create({'value': val}) for val in range(12)]})
-        lines = rec1.line_ids
-
-        # unlink N lines: O(1) queries
-        with self.assertQueryCount(10):
-            self.env.invalidate_all()
-            rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[0]]})
-        self.assertEqual(rec1.line_ids, lines[1:])
-
-        with self.assertQueryCount(9):
-            self.env.invalidate_all()
-            rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[1:]]})
-        self.assertFalse(rec1.line_ids)
-        self.assertFalse(lines.exists())
-
-        rec1.write({'line_ids': [Command.create({'value': val}) for val in range(12)]})
-        lines = rec1.line_ids
-        rec2 = self.env['test_performance.base'].create({'name': 'X'})
-
-        # link N lines from rec1 to rec2: O(1) queries
-        with self.assertQueryCount(6):
-            self.env.invalidate_all()
-            rec2.write({'line_ids': [Command.link(line.id) for line in lines[0]]})
-        self.assertEqual(rec1.line_ids, lines[1:])
-        self.assertEqual(rec2.line_ids, lines[0])
-
-        with self.assertQueryCount(6):
-            self.env.invalidate_all()
-            rec2.write({'line_ids': [Command.link(line.id) for line in lines[1:]]})
-        self.assertFalse(rec1.line_ids)
-        self.assertEqual(rec2.line_ids, lines)
-
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec2.write({'line_ids': [Command.link(line.id) for line in lines[0]]})
-        self.assertEqual(rec2.line_ids, lines)
-
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec2.write({'line_ids': [Command.link(line.id) for line in lines[1:]]})
-        self.assertEqual(rec2.line_ids, lines)
-
-        # empty N lines in rec2: O(1) queries
-        with self.assertQueryCount(10):
-            self.env.invalidate_all()
-            rec2.write({'line_ids': [Command.clear()]})
-        self.assertFalse(rec2.line_ids)
-
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec2.write({'line_ids': [Command.clear()]})
-        self.assertFalse(rec2.line_ids)
-
-        rec1.write({'line_ids': [Command.create({'value': val}) for val in range(12)]})
-        lines = rec1.line_ids
-
-        # set N lines in rec2: O(1) queries
-        with self.assertQueryCount(6):
-            self.env.invalidate_all()
-            rec2.write({'line_ids': [Command.set(lines[0].ids)]})
-        self.assertEqual(rec1.line_ids, lines[1:])
-        self.assertEqual(rec2.line_ids, lines[0])
-
-        with self.assertQueryCount(5):
-            self.env.invalidate_all()
-            rec2.write({'line_ids': [Command.set(lines.ids)]})
-        self.assertFalse(rec1.line_ids)
-        self.assertEqual(rec2.line_ids, lines)
-
-        with self.assertQueryCount(4):
-            self.env.invalidate_all()
-            rec2.write({'line_ids': [Command.set(lines.ids)]})
-        self.assertEqual(rec2.line_ids, lines)
-
-    @mute_logger('odoo.models.unlink')
     def test_write_base_one2many_with_constraint(self):
         """ Write on one2many field with lines being deleted and created. """
         rec = self.env['test_performance.base'].create({'name': 'Y'})
@@ -389,120 +537,6 @@ class TestPerformance(SavepointCaseWithUserDemo):
         # not performed before the create()
         rec.write({'line_ids': [Command.clear()] + [Command.create({'value': val}) for val in range(6)]})
         self.assertEqual(len(rec.line_ids), 6)
-
-    @mute_logger('odoo.models.unlink')
-    @users('__system__', 'demo')
-    @warmup
-    def test_write_base_many2many(self):
-        """ Write on many2many field. """
-        rec1 = self.env['test_performance.base'].create({'name': 'X'})
-
-        # create N tags on rec1: O(1) queries
-        with self.assertQueryCount(4):
-            self.env.invalidate_all()
-            rec1.write({'tag_ids': [Command.create({'name': 0})]})
-        self.assertEqual(len(rec1.tag_ids), 1)
-
-        with self.assertQueryCount(4):
-            self.env.invalidate_all()
-            rec1.write({'tag_ids': [Command.create({'name': val}) for val in range(1, 12)]})
-        self.assertEqual(len(rec1.tag_ids), 12)
-
-        tags = rec1.tag_ids
-
-        # update N tags: O(N) queries
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec1.write({'tag_ids': [Command.update(tag.id, {'name': 'X'}) for tag in tags[0]]})
-        self.assertEqual(rec1.tag_ids, tags)
-
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec1.write({'tag_ids': [Command.update(tag.id, {'name': 'X'}) for tag in tags[1:]]})
-        self.assertEqual(rec1.tag_ids, tags)
-
-        # delete N tags: O(1) queries
-        with self.assertQueryCount(__system__=6, demo=6):
-            self.env.invalidate_all()
-            rec1.write({'tag_ids': [Command.delete(tag.id) for tag in tags[0]]})
-        self.assertEqual(rec1.tag_ids, tags[1:])
-
-        with self.assertQueryCount(__system__=6, demo=6):
-            self.env.invalidate_all()
-            rec1.write({'tag_ids': [Command.delete(tag.id) for tag in tags[1:]]})
-        self.assertFalse(rec1.tag_ids)
-        self.assertFalse(tags.exists())
-
-        rec1.write({'tag_ids': [Command.create({'name': val}) for val in range(12)]})
-        tags = rec1.tag_ids
-
-        # unlink N tags: O(1) queries
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec1.write({'tag_ids': [Command.unlink(tag.id) for tag in tags[0]]})
-        self.assertEqual(rec1.tag_ids, tags[1:])
-
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec1.write({'tag_ids': [Command.unlink(tag.id) for tag in tags[1:]]})
-        self.assertFalse(rec1.tag_ids)
-        self.assertTrue(tags.exists())
-
-        rec2 = self.env['test_performance.base'].create({'name': 'X'})
-
-        # link N tags from rec1 to rec2: O(1) queries
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[0]]})
-        self.assertEqual(rec2.tag_ids, tags[0])
-
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[1:]]})
-        self.assertEqual(rec2.tag_ids, tags)
-
-        with self.assertQueryCount(2):
-            self.env.invalidate_all()
-            rec2.write({'tag_ids': [Command.link(tag.id) for tag in tags[1:]]})
-        self.assertEqual(rec2.tag_ids, tags)
-
-        # empty N tags in rec2: O(1) queries
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec2.write({'tag_ids': [Command.clear()]})
-        self.assertFalse(rec2.tag_ids)
-        self.assertTrue(tags.exists())
-
-        with self.assertQueryCount(2):
-            self.env.invalidate_all()
-            rec2.write({'tag_ids': [Command.clear()]})
-        self.assertFalse(rec2.tag_ids)
-
-        # set N tags in rec2: O(1) queries
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec2.write({'tag_ids': [Command.set(tags.ids)]})
-        self.assertEqual(rec2.tag_ids, tags)
-
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec2.write({'tag_ids': [Command.set(tags[:8].ids)]})
-        self.assertEqual(rec2.tag_ids, tags[:8])
-
-        with self.assertQueryCount(4):
-            self.env.invalidate_all()
-            rec2.write({'tag_ids': [Command.set(tags[4:].ids)]})
-        self.assertEqual(rec2.tag_ids, tags[4:])
-
-        with self.assertQueryCount(3):
-            self.env.invalidate_all()
-            rec2.write({'tag_ids': [Command.set(tags.ids)]})
-        self.assertEqual(rec2.tag_ids, tags)
-
-        with self.assertQueryCount(2):
-            self.env.invalidate_all()
-            rec2.write({'tag_ids': [Command.set(tags.ids)]})
-        self.assertEqual(rec2.tag_ids, tags)
 
     @users('__system__', 'demo')
     @warmup

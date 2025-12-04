@@ -157,6 +157,23 @@ class TestMailRenderCommon(common.MailCommon):
 
 @tagged('mail_render')
 @tagged('at_install', '-post_install')  # LEGACY at_install
+class TestMailRenderAtInstall(TestMailRenderCommon):
+
+    @users('employee')
+    def test_render_field_not_existing(self):
+        """ Test trying to render a not-existing field: raise a proper ValueError
+        instead of crashing / raising a KeyError """
+        template = self.env['mail.template'].browse(self.test_template.ids)
+        partner = self.env['res.partner'].browse(self.render_object_fr.ids)
+        with self.assertRaises(ValueError):
+            _rendered = template._render_field(
+                'not_existing',
+                partner.ids,
+                compute_lang=True
+            )[partner.id]
+
+
+@tagged('mail_render')
 class TestMailRender(TestMailRenderCommon):
 
     @users('employee')
@@ -244,19 +261,6 @@ class TestMailRender(TestMailRenderCommon):
                     if not res_ids:
                         self.assertFalse(rendered_all,
                                          'Rendering: void input -> void output')
-
-    @users('employee')
-    def test_render_field_not_existing(self):
-        """ Test trying to render a not-existing field: raise a proper ValueError
-        instead of crashing / raising a KeyError """
-        template = self.env['mail.template'].browse(self.test_template.ids)
-        partner = self.env['res.partner'].browse(self.render_object_fr.ids)
-        with self.assertRaises(ValueError):
-            _rendered = template._render_field(
-                'not_existing',
-                partner.ids,
-                compute_lang=True
-            )[partner.id]
 
     @users('employee')
     def test_render_template_inline_template(self):
@@ -516,7 +520,6 @@ class TestRegexRendering(common.MailCommon):
 
 
 @tagged('mail_render')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailRenderSecurity(TestMailRenderCommon):
     """ Test security of rendering, based on qweb finding + restricted rendering
     group usage. """

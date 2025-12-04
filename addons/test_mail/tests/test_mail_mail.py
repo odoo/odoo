@@ -17,12 +17,11 @@ from odoo import api, Command, fields, SUPERUSER_ID
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, LockError
-from odoo.tests import common, tagged, users
+from odoo.tests import tagged, users
 from odoo.tools import formataddr, mute_logger
 
 
 @tagged('mail_mail')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailMail(MailCommon):
 
     @classmethod

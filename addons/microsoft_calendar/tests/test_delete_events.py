@@ -20,7 +20,6 @@ from odoo.addons.microsoft_calendar.tests.common import (
 
 
 @patch.object(ResUsers, '_get_microsoft_calendar_token', mock_get_token)
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDeleteEvents(TestCommon):
 
     @patch_api

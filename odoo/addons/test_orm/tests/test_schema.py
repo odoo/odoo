@@ -226,7 +226,6 @@ class TestReflection(common.TransactionCase):
                             self.assertEqual(field_description['sortable'], field.type != 'binary')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSchema(common.TransactionCase):
 
     def get_table_data(self, tablename):

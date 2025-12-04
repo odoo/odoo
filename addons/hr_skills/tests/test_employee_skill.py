@@ -9,14 +9,13 @@ from odoo.tests import tagged, Form
 from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEmployeeSkills(TransactionCase):
 
     @classmethod
-    def _create_skill_types(self, vals_list):
-        skill_types = self.env['hr.skill.type']
+    def _create_skill_types(cls, vals_list):
+        skill_types = cls.env['hr.skill.type']
         for vals in vals_list:
-            with Form(self.env['hr.skill.type']) as skill_type_form:
+            with Form(cls.env['hr.skill.type']) as skill_type_form:
                 skill_type_form.name = vals['name']
                 skill_type_form.is_certification = vals.get('certificate', False)
                 for skill_val in vals['skills']:

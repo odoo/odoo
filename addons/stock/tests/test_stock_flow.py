@@ -7,7 +7,144 @@ from odoo.tools import mute_logger, float_round
 from odoo import Command, fields
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestStockFlowAtInstall(TestStockCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('base.group_user').write({
+            'implied_ids': [Command.link(cls.env.ref('stock.group_production_lot').id)],
+        })
+        decimal_product_uom = cls.env.ref('uom.decimal_product_uom')
+        decimal_product_uom.digits = 3
+        cls.partner_company2 = cls.env['res.partner'].create({
+            'name': 'My Company (Chicago)-demo',
+            'email': 'chicago@yourcompany.com',
+            'company_id': False,
+        })
+        cls.company = cls.env['res.company'].create({
+            'currency_id': cls.env.ref('base.USD').id,
+            'partner_id': cls.partner_company2.id,
+            'name': 'My Company (Chicago)-demo',
+        })
+        cls.uom_sdozen = cls.UomObj.create({
+            'name': 'Test-SDozenA',
+            'relative_factor': 144,
+            'relative_uom_id': cls.uom_unit.id,
+        })
+
+        # Product for different unit of measure.
+        cls.DozA = cls.ProductObj.create({'name': 'Dozon-A', 'is_storable': True, 'uom_id': cls.uom_dozen.id})
+        cls.SDozA = cls.ProductObj.create({'name': 'SuperDozon-A', 'is_storable': True, 'uom_id': cls.uom_sdozen.id})
+        cls.UnitA = cls.ProductObj.create({'name': 'Unit-A', 'is_storable': True})
+
+    def test_70_picking_state_all_at_once_reserve(self):
+        """ This test will check that the state of the picking is correctly computed according
+        to the state of its move lines and its move type.
+        """
+        # move_type: direct == partial, one == all at once
+        # picking: confirmed == waiting availability
+
+        # -----------------------------------------------------------
+        # "all at once" and "reserve" scenario
+        # -----------------------------------------------------------
+        # get one product in stock
+        inventory_quant = self.env['stock.quant'].create({
+            'location_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'inventory_quantity': 1,
+        })
+        inventory_quant.action_apply_inventory()
+
+        # create a "all at once" delivery order for two products
+        picking_out = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'state': 'draft',
+            'location_dest_id': self.customer_location.id,
+        })
+        picking_out.move_type = 'one'
+
+        self.MoveObj.create({
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        # validate this delivery order, it should be in the waiting state
+        picking_out.action_assign()
+        self.assertEqual(picking_out.state, "confirmed")
+
+        # receive one product in stock
+        inventory_quant.inventory_quantity = 2
+        inventory_quant.action_apply_inventory()
+        # recheck availability of the delivery order, it should be assigned
+        picking_out.action_assign()
+        self.assertEqual(len(picking_out.move_ids), 1.0)
+        self.assertEqual(picking_out.move_ids.product_qty, 2.0)
+        self.assertEqual(picking_out.state, "assigned")
+
+    def test_74_move_state_waiting_mto(self):
+        """ This test will check that when a move is unreserved, its state changes to 'waiting' if
+        it has ancestors or if it has a 'procure_method' equal to 'make_to_order' else the state
+        changes to 'confirmed'.
+        """
+        picking_out = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'state': 'draft',
+            'location_dest_id': self.customer_location.id,
+        })
+        move_mto_alone = self.MoveObj.create({
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'procure_method': 'make_to_order',
+        })
+        move_with_ancestors = self.MoveObj.create({
+            'product_id': self.productB.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        self.MoveObj.create({
+            'product_id': self.productB.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_dest_ids': [Command.link(move_with_ancestors.id)],
+        })
+        other_move = self.MoveObj.create({
+            'product_id': self.productC.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productC.uom_id.id,
+            'picking_id': picking_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        move_mto_alone._action_confirm()
+        move_with_ancestors._action_confirm()
+        other_move._action_confirm()
+
+        move_mto_alone._do_unreserve()
+        move_with_ancestors._do_unreserve()
+        other_move._do_unreserve()
+
+        self.assertEqual(move_mto_alone.state, "waiting")
+        self.assertEqual(move_with_ancestors.state, "waiting")
+        self.assertEqual(other_move.state, "confirmed")
+
+
 class TestStockFlow(TestStockCommon):
     @classmethod
     def setUpClass(cls):
@@ -1485,54 +1622,6 @@ class TestStockFlow(TestStockCommon):
         quants = self.env['stock.quant']._gather(self.productE, self.stock_location)
         self.assertEqual(sum(quants.mapped('quantity')), 0, 'We should have no quants in the end')
 
-    def test_70_picking_state_all_at_once_reserve(self):
-        """ This test will check that the state of the picking is correctly computed according
-        to the state of its move lines and its move type.
-        """
-        # move_type: direct == partial, one == all at once
-        # picking: confirmed == waiting availability
-
-        # -----------------------------------------------------------
-        # "all at once" and "reserve" scenario
-        # -----------------------------------------------------------
-        # get one product in stock
-        inventory_quant = self.env['stock.quant'].create({
-            'location_id': self.stock_location.id,
-            'product_id': self.productA.id,
-            'inventory_quantity': 1,
-        })
-        inventory_quant.action_apply_inventory()
-
-        # create a "all at once" delivery order for two products
-        picking_out = self.PickingObj.create({
-            'picking_type_id': self.picking_type_out.id,
-            'location_id': self.stock_location.id,
-            'state': 'draft',
-            'location_dest_id': self.customer_location.id,
-        })
-        picking_out.move_type = 'one'
-
-        self.MoveObj.create({
-            'product_id': self.productA.id,
-            'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
-            'picking_id': picking_out.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-        })
-        # validate this delivery order, it should be in the waiting state
-        picking_out.action_assign()
-        self.assertEqual(picking_out.state, "confirmed")
-
-        # receive one product in stock
-        inventory_quant.inventory_quantity = 2
-        inventory_quant.action_apply_inventory()
-        # recheck availability of the delivery order, it should be assigned
-        picking_out.action_assign()
-        self.assertEqual(len(picking_out.move_ids), 1.0)
-        self.assertEqual(picking_out.move_ids.product_qty, 2.0)
-        self.assertEqual(picking_out.state, "assigned")
-
     def test_71_picking_state_all_at_once_force_assign(self):
         """ This test will check that the state of the picking is correctly computed according
         to the state of its move lines and its move type.
@@ -1643,64 +1732,6 @@ class TestStockFlow(TestStockCommon):
         # validate this delivery order, it should be in the waiting state
         picking_out.action_assign()
         self.assertEqual(picking_out.state, "confirmed")
-
-    def test_74_move_state_waiting_mto(self):
-        """ This test will check that when a move is unreserved, its state changes to 'waiting' if
-        it has ancestors or if it has a 'procure_method' equal to 'make_to_order' else the state
-        changes to 'confirmed'.
-        """
-        picking_out = self.PickingObj.create({
-            'picking_type_id': self.picking_type_out.id,
-            'location_id': self.stock_location.id,
-            'state': 'draft',
-            'location_dest_id': self.customer_location.id,
-        })
-        move_mto_alone = self.MoveObj.create({
-            'product_id': self.productA.id,
-            'product_uom_qty': 2,
-            'product_uom': self.productA.uom_id.id,
-            'picking_id': picking_out.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'procure_method': 'make_to_order',
-        })
-        move_with_ancestors = self.MoveObj.create({
-            'product_id': self.productB.id,
-            'product_uom_qty': 2,
-            'product_uom': self.productB.uom_id.id,
-            'picking_id': picking_out.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-        })
-        self.MoveObj.create({
-            'product_id': self.productB.id,
-            'product_uom_qty': 2,
-            'product_uom': self.productB.uom_id.id,
-            'picking_id': picking_out.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'move_dest_ids': [Command.link(move_with_ancestors.id)],
-        })
-        other_move = self.MoveObj.create({
-            'product_id': self.productC.id,
-            'product_uom_qty': 2,
-            'product_uom': self.productC.uom_id.id,
-            'picking_id': picking_out.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-        })
-
-        move_mto_alone._action_confirm()
-        move_with_ancestors._action_confirm()
-        other_move._action_confirm()
-
-        move_mto_alone._do_unreserve()
-        move_with_ancestors._do_unreserve()
-        other_move._do_unreserve()
-
-        self.assertEqual(move_mto_alone.state, "waiting")
-        self.assertEqual(move_with_ancestors.state, "waiting")
-        self.assertEqual(other_move.state, "confirmed")
 
     def test_80_partial_picking_without_backorder(self):
         """ This test will create a picking with an initial demand for a product
@@ -2642,9 +2673,6 @@ class TestStockFlow(TestStockCommon):
         backorder_wizard.process()
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
         self.assertEqual(bo.state, 'assigned')
-
-@tagged('-at_install', 'post_install')
-class TestStockFlowPostInstall(TestStockCommon):
 
     def test_last_delivery_partner_field_on_lot(self):
         partner = self.env['res.partner'].create({'name': 'Super Partner'})

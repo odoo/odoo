@@ -2,10 +2,9 @@
 
 from odoo.api import NewId
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSort(TransactionCase):
     @classmethod
     def setUpClass(cls):

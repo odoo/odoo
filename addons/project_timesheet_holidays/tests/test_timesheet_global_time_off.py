@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.tests import tagged, common
+from odoo.tests import common
 from odoo.exceptions import UserError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
     def setUp(self):

@@ -12,6 +12,170 @@ from odoo.exceptions import UserError
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
+class TestProcRuleAtInstall(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.product = cls.env['product.product'].create({
+            'name': 'Desk Combination',
+            'type': 'consu',
+        })
+        cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
+
+    def test_reordering_rule_1(self):
+        # Required for `location_id` to be visible in the view
+        self.product.is_storable = True
+        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
+        orderpoint_form.product_id = self.product
+        orderpoint_form.product_min_qty = 0.0
+        orderpoint_form.product_max_qty = 5.0
+        orderpoint = orderpoint_form.save()
+
+        # get auto-created pull rule from when warehouse is created
+        rule = self.env['stock.rule'].search([
+            ('route_id', '=', warehouse.reception_route_id.id),
+            ('location_dest_id', '=', warehouse.lot_stock_id.id),
+            ('location_src_id', '=', self.env.ref('stock.stock_location_suppliers').id),
+            ('action', '=', 'pull'),
+            ('procure_method', '=', 'make_to_stock'),
+            ('picking_type_id', '=', warehouse.in_type_id.id)])
+
+        # add a delay [i.e. lead days] so procurement will be triggered based on forecasted stock
+        rule.delay = 9.0
+
+        delivery_move = self.env['stock.move'].create({
+            'date': datetime.today() + timedelta(days=5),
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 12.0,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+        })
+        delivery_move._action_confirm()
+        orderpoint._compute_qty()
+        self.env['stock.rule'].run_scheduler()
+
+        receipt_move = self.env['stock.move'].search([
+            ('product_id', '=', self.product.id),
+            ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
+        ])
+        self.assertTrue(receipt_move)
+        self.assertEqual(receipt_move.date.date(), date.today())
+        self.assertEqual(receipt_move.product_uom_qty, 17.0)
+
+    def test_reordering_rule_3(self):
+        """Test how replenishment_uom_id affects qty_to_order and qty_to_order_to_max"""
+        stock_location = self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.productA = self.env['product.product'].create({
+            'name': 'Desk Combination',
+            'is_storable': True,
+        })
+        pack_of_10 = self.env['uom.uom'].create({
+            'name': 'pack of 10',
+            'relative_factor': 10.0,
+            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
+        })
+        single_unit = self.env['uom.uom'].create({
+            'name': 'Test UoM',
+            'relative_factor': 1,
+            'rounding': 1.0
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.productA.id,
+            'location_id': stock_location.id,
+            'inventory_quantity': 14.5,
+        }).action_apply_inventory()
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.env['res.users'].browse(2)).create({
+            'name': 'ProductA RR',
+            'product_id': self.productA.id,
+            'product_min_qty': 15.0,
+            'product_max_qty': 30.0,
+            'replenishment_uom_id': pack_of_10.id,
+            'trigger': 'manual'
+        })
+        self.assertEqual(orderpoint.qty_to_order, 20.0)  # 15.0 < 14.5 + 10 <= 30.0
+        self.assertEqual(orderpoint.qty_to_order_to_max, 20.0)
+        # Test search on computed field
+        rr = self.env['stock.warehouse.orderpoint'].search([
+            ('qty_to_order', '>', 0),
+            ('product_id', '=', self.productA.id),
+        ])
+        self.assertTrue(rr)
+
+        orderpoint.replenishment_uom_id = single_unit
+        self.assertEqual(orderpoint.qty_to_order, 16.0)  # 15.0 < 14.5 + 15 <= 30.0
+        self.assertEqual(orderpoint.qty_to_order_to_max, 16.0)
+        orderpoint.replenishment_uom_id = False
+        self.assertEqual(orderpoint.qty_to_order, 15.5)  # 15.0 < 14.5 + 15.5 <= 30.0
+        self.assertEqual(orderpoint.qty_to_order_to_max, 15.5)
+
+        orderpoint.qty_to_order = 10.0
+        self.assertEqual(orderpoint.qty_to_order_manual, 10.0)
+        orderpoint.action_replenish()
+        self.assertEqual(orderpoint.qty_to_order, 0)
+        orderpoint._compute_qty_to_order_to_max()   # force recompute because replenishing triggers a window refresh
+        self.assertEqual(orderpoint.qty_to_order_to_max, 5.5)
+
+        orderpoint.replenishment_uom_id = pack_of_10
+        self.assertEqual(orderpoint.qty_to_order_to_max, 10.0)
+        orderpoint.replenishment_uom_id = single_unit
+        self.assertEqual(orderpoint.qty_to_order_to_max, 6.0)
+
+    def test_orderpoint_warning(self):
+        """ Checks that the warning correctly computes depending on the configuration. """
+        self.product.is_storable = True
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 50,
+        })
+        self.assertFalse(orderpoint.show_supply_warning, "There should at least be the rule from route 'My Company: Receive in 1 step (stock)'.")
+
+        # Archive the route
+        orderpoint.rule_ids.route_id.active = False
+        orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
+        self.assertTrue(orderpoint.show_supply_warning)
+
+        # Add a route to the product
+        product_route = self.env['stock.route'].create({
+            'name': 'Supplier -> Stock',
+            'product_selectable': True,
+            'rule_ids': [Command.create({
+                'name': 'Supplier -> Stock',
+                'action': 'pull',
+                'picking_type_id': self.ref('stock.picking_type_in'),
+                'location_src_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': self.ref('stock.stock_location_stock'),
+            })],
+        })
+        self.product.write({'route_ids': [Command.set(product_route.ids)]})
+        orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
+        self.assertFalse(orderpoint.show_supply_warning)
+
+    def test_replenishment_order_to_max(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        self.product.is_storable = True
+        self.env['stock.quant']._update_available_quantity(self.product, warehouse.lot_stock_id, 10)
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'ProductB RR',
+            'product_id': self.product.id,
+            'product_min_qty': 5,
+            'product_max_qty': 200,
+        })
+        self.assertEqual(orderpoint.qty_forecast, 10.0)
+        self.assertEqual(orderpoint.qty_to_order_to_max, 190)
+        orderpoint.action_replenish()
+        orderpoint._compute_qty_to_order_to_max()   # force recompute because replenishing triggers a window refresh
+        self.assertEqual(orderpoint.qty_forecast, 200.0)
+        self.assertEqual(orderpoint.qty_to_order_to_max, 0)
+
+
 class TestProcRule(TransactionCase):
 
     @classmethod
@@ -213,49 +377,6 @@ class TestProcRule(TransactionCase):
         self.assertEqual(move_orig.date_deadline, new_deadline, msg='deadline date should be unchanged')
         self.assertEqual(move_dest.date_deadline, new_deadline, msg='deadline date should be unchanged')
 
-    def test_reordering_rule_1(self):
-        # Required for `location_id` to be visible in the view
-        self.product.is_storable = True
-        self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
-        orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
-        orderpoint_form.product_id = self.product
-        orderpoint_form.product_min_qty = 0.0
-        orderpoint_form.product_max_qty = 5.0
-        orderpoint = orderpoint_form.save()
-
-        # get auto-created pull rule from when warehouse is created
-        rule = self.env['stock.rule'].search([
-            ('route_id', '=', warehouse.reception_route_id.id),
-            ('location_dest_id', '=', warehouse.lot_stock_id.id),
-            ('location_src_id', '=', self.env.ref('stock.stock_location_suppliers').id),
-            ('action', '=', 'pull'),
-            ('procure_method', '=', 'make_to_stock'),
-            ('picking_type_id', '=', warehouse.in_type_id.id)])
-
-        # add a delay [i.e. lead days] so procurement will be triggered based on forecasted stock
-        rule.delay = 9.0
-
-        delivery_move = self.env['stock.move'].create({
-            'date': datetime.today() + timedelta(days=5),
-            'product_id': self.product.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 12.0,
-            'location_id': warehouse.lot_stock_id.id,
-            'location_dest_id': self.ref('stock.stock_location_customers'),
-        })
-        delivery_move._action_confirm()
-        orderpoint._compute_qty()
-        self.env['stock.rule'].run_scheduler()
-
-        receipt_move = self.env['stock.move'].search([
-            ('product_id', '=', self.product.id),
-            ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
-        ])
-        self.assertTrue(receipt_move)
-        self.assertEqual(receipt_move.date.date(), date.today())
-        self.assertEqual(receipt_move.product_uom_qty, 17.0)
-
     def test_reordering_rule_2(self):
         """Test when there is not enough product to assign a picking => automatically run
         reordering rule (RR). Add extra product to already confirmed picking => automatically
@@ -342,65 +463,6 @@ class TestProcRule(TransactionCase):
         self.assertTrue(receipt_move2)
         self.assertEqual(receipt_move2.date.date(), date.today())
         self.assertEqual(receipt_move2.product_uom_qty, 10.0)
-
-    def test_reordering_rule_3(self):
-        """Test how replenishment_uom_id affects qty_to_order and qty_to_order_to_max"""
-        stock_location = self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.productA = self.env['product.product'].create({
-            'name': 'Desk Combination',
-            'is_storable': True,
-        })
-        pack_of_10 = self.env['uom.uom'].create({
-            'name': 'pack of 10',
-            'relative_factor': 10.0,
-            'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
-        })
-        single_unit = self.env['uom.uom'].create({
-            'name': 'Test UoM',
-            'relative_factor': 1,
-            'rounding': 1.0
-        })
-        self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.productA.id,
-            'location_id': stock_location.id,
-            'inventory_quantity': 14.5,
-        }).action_apply_inventory()
-
-        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.env['res.users'].browse(2)).create({
-            'name': 'ProductA RR',
-            'product_id': self.productA.id,
-            'product_min_qty': 15.0,
-            'product_max_qty': 30.0,
-            'replenishment_uom_id': pack_of_10.id,
-            'trigger': 'manual'
-        })
-        self.assertEqual(orderpoint.qty_to_order, 20.0)  # 15.0 < 14.5 + 10 <= 30.0
-        self.assertEqual(orderpoint.qty_to_order_to_max, 20.0)
-        # Test search on computed field
-        rr = self.env['stock.warehouse.orderpoint'].search([
-            ('qty_to_order', '>', 0),
-            ('product_id', '=', self.productA.id),
-        ])
-        self.assertTrue(rr)
-
-        orderpoint.replenishment_uom_id = single_unit
-        self.assertEqual(orderpoint.qty_to_order, 16.0)  # 15.0 < 14.5 + 15 <= 30.0
-        self.assertEqual(orderpoint.qty_to_order_to_max, 16.0)
-        orderpoint.replenishment_uom_id = False
-        self.assertEqual(orderpoint.qty_to_order, 15.5)  # 15.0 < 14.5 + 15.5 <= 30.0
-        self.assertEqual(orderpoint.qty_to_order_to_max, 15.5)
-
-        orderpoint.qty_to_order = 10.0
-        self.assertEqual(orderpoint.qty_to_order_manual, 10.0)
-        orderpoint.action_replenish()
-        self.assertEqual(orderpoint.qty_to_order, 0)
-        orderpoint._compute_qty_to_order_to_max()   # force recompute because replenishing triggers a window refresh
-        self.assertEqual(orderpoint.qty_to_order_to_max, 5.5)
-
-        orderpoint.replenishment_uom_id = pack_of_10
-        self.assertEqual(orderpoint.qty_to_order_to_max, 10.0)
-        orderpoint.replenishment_uom_id = single_unit
-        self.assertEqual(orderpoint.qty_to_order_to_max, 6.0)
 
     def test_orderpoint_replenishment_view_1(self):
         """ Create two warehouses + two moves
@@ -604,23 +666,6 @@ class TestProcRule(TransactionCase):
         self.assertEqual(orderpoint.location_id, location)
         orderpoint.unlink()
 
-    def test_replenishment_order_to_max(self):
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
-        self.product.is_storable = True
-        self.env['stock.quant']._update_available_quantity(self.product, warehouse.lot_stock_id, 10)
-        orderpoint = self.env['stock.warehouse.orderpoint'].create({
-            'name': 'ProductB RR',
-            'product_id': self.product.id,
-            'product_min_qty': 5,
-            'product_max_qty': 200,
-        })
-        self.assertEqual(orderpoint.qty_forecast, 10.0)
-        self.assertEqual(orderpoint.qty_to_order_to_max, 190)
-        orderpoint.action_replenish()
-        orderpoint._compute_qty_to_order_to_max()   # force recompute because replenishing triggers a window refresh
-        self.assertEqual(orderpoint.qty_forecast, 200.0)
-        self.assertEqual(orderpoint.qty_to_order_to_max, 0)
-
     def test_orderpoint_location_archive(self):
         warehouse = self.env['stock.warehouse'].create({
             'name': 'Test Warehouse',
@@ -694,37 +739,6 @@ class TestProcRule(TransactionCase):
         orderpoint_list_view = Form(self.env['stock.warehouse.orderpoint'], view='stock.view_warehouse_orderpoint_tree_editable')
         self.assertEqual(orderpoint_list_view.qty_to_order, 0)
         self.assertFalse(orderpoint_list_view.product_id)
-
-    def test_orderpoint_warning(self):
-        """ Checks that the warning correctly computes depending on the configuration. """
-        self.product.is_storable = True
-        orderpoint = self.env['stock.warehouse.orderpoint'].create({
-            'product_id': self.product.id,
-            'product_min_qty': 10,
-            'product_max_qty': 50,
-        })
-        self.assertFalse(orderpoint.show_supply_warning, "There should at least be the rule from route 'My Company: Receive in 1 step (stock)'.")
-
-        # Archive the route
-        orderpoint.rule_ids.route_id.active = False
-        orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
-        self.assertTrue(orderpoint.show_supply_warning)
-
-        # Add a route to the product
-        product_route = self.env['stock.route'].create({
-            'name': 'Supplier -> Stock',
-            'product_selectable': True,
-            'rule_ids': [Command.create({
-                'name': 'Supplier -> Stock',
-                'action': 'pull',
-                'picking_type_id': self.ref('stock.picking_type_in'),
-                'location_src_id': self.ref('stock.stock_location_suppliers'),
-                'location_dest_id': self.ref('stock.stock_location_stock'),
-            })],
-        })
-        self.product.write({'route_ids': [Command.set(product_route.ids)]})
-        orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
-        self.assertFalse(orderpoint.show_supply_warning)
 
     @freeze_time('2025-09-02 14:00:00')
     def test_orderpoint_deadline_date(self):

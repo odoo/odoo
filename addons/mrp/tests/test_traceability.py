@@ -13,7 +13,6 @@ from freezegun import freeze_time
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTraceability(TestMrpCommon):
     TRACKING_TYPES = ['none', 'serial', 'lot']
 

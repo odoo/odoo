@@ -24,7 +24,6 @@ from . import mail_examples
 
 
 @tagged('mail_sanitize')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSanitizer(BaseCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
 
@@ -552,7 +551,6 @@ class TestHtmlTools(BaseCase):
 
 
 @tagged('mail_tools')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEmailTools(BaseCase):
     """ Test some of our generic utility functions for emails """
 

@@ -20,7 +20,6 @@ class TestAccessRights(TestProjectCommon):
         return self.env['project.task'].with_user(with_user or self.env.user).create(values)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRUDVisibilityFollowers(TestAccessRights):
 
     def setUp(self):

@@ -21,7 +21,6 @@ from odoo.tools.image import image_to_base64
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrAttachment(TransactionCaseWithUserDemo):
     def setUp(self):
         super(TestIrAttachment, self).setUp()

@@ -10,7 +10,6 @@ from odoo.tests import tagged
 
 
 @tagged('sms_post')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
     """ TODO
 
@@ -303,7 +302,6 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
 
 
 @tagged('sms_post')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSMSPostException(SMSCommon, TestSMSRecipients):
 
     @classmethod

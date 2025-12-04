@@ -14,7 +14,115 @@ from odoo.tests import Form, tagged, users
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 @tagged('leave_requests')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestLeaveRequestsAtInstall(TestHrHolidaysCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Make sure we have the rights to create, validate and delete the leaves, leave types and allocations
+        LeaveType = cls.env['hr.leave.type'].with_user(cls.user_hrmanager_id).with_context(tracking_disable=True)
+
+        cls.holidays_type_1 = LeaveType.create({
+            'name': 'NotLimitedHR',
+            'requires_allocation': False,
+            'leave_validation_type': 'hr',
+        })
+        cls.holidays_type_2 = LeaveType.create({
+            'name': 'Limited',
+            'requires_allocation': True,
+            'employee_requests': True,
+            'leave_validation_type': 'hr',
+        })
+        cls.holidays_type_3 = LeaveType.create({
+            'name': 'TimeNotLimited',
+            'requires_allocation': False,
+            'leave_validation_type': 'manager',
+        })
+
+        cls.holidays_type_4 = LeaveType.create({
+            'name': 'Limited with 2 approvals',
+            'requires_allocation': True,
+            'employee_requests': True,
+            'leave_validation_type': 'both',
+        })
+        cls.holidays_support_document = LeaveType.create({
+            'name': 'Time off with support document',
+            'support_document': True,
+            'requires_allocation': False,
+            'leave_validation_type': 'no_validation',
+        })
+        cls.holidays_type_half = LeaveType.create({
+            'name': 'Time off in half-days',
+            'requires_allocation': False,
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'half_day',
+        })
+        cls.holidays_type_hours = LeaveType.create({
+            'name': 'Time off in hours',
+            'requires_allocation': False,
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+
+        cls.irregular_calendar = cls.env['resource.calendar'].create({
+            'name': 'Irregular Calendar With Gaps',
+            'tz': 'Europe/Brussels',
+            'company_id': False,
+            'attendance_ids': [(5, 0, 0),
+                ## Hours Per Week: 33, Avg hours_per_day = 6.6, 75% = 4.95
+                (0, 0, {'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Monday Lunch', 'dayofweek': '0', 'hour_from': 12, 'hour_to': 13, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17.6, 'day_period': 'afternoon'}),
+                ## For a single period day, an attendance is considered a full day if hours are more than 75% of avg hours per day
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '1', 'hour_from': 14, 'hour_to': 19.6, 'day_period': 'afternoon'}),
+
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 6, 'hour_to': 10, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Lunch', 'dayofweek': '2', 'hour_from': 10, 'hour_to': 11, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 11, 'hour_to': 15.6, 'day_period': 'afternoon'}),
+
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '3', 'hour_from': 7, 'hour_to': 10, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Lunch', 'dayofweek': '3', 'hour_from': 10, 'hour_to': 11, 'day_period': 'lunch'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '3', 'hour_from': 11, 'hour_to': 14.6, 'day_period': 'afternoon'}),
+                ## Normal Half-Day since it doesn't exceed 75% of average hours per day
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 11.6, 'day_period': 'morning'}),
+            ],
+        })
+
+        cls.set_employee_create_date(cls.employee_emp_id, '2010-02-03 00:00:00')
+        cls.set_employee_create_date(cls.employee_hruser_id, '2010-02-03 00:00:00')
+
+    @freeze_time('2011-12-24 10:00:00')
+    def test_validated_leave_back_to_approval(self):
+        """
+        =====================================================================================================================
+        | case 1: An approved leave can be moved back to confirm state if user has group `group_hr_holidays_user`           |
+        | case 2: An approved leave can't be moved back to confirm state if user doesn't have group `group_hr_holidays_user`|
+        =====================================================================================================================
+        """
+        sick_leave_type = self.env['hr.leave.type'].create({
+            'name': 'leave in days',
+            'request_unit': 'day',
+            'leave_validation_type': 'both',
+            'requires_allocation': False,
+        })
+        sick_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'leave for 3 days',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': sick_leave_type.id,
+            'request_date_from': '2011-12-23',
+            'request_date_to': '2011-12-25',
+        })
+
+        sick_leave.with_user(self.user_hruser_id).action_approve()
+        sick_leave.with_user(self.user_hruser_id).action_back_to_approval()
+        self.assertEqual(sick_leave.state, 'confirm')
+
+        sick_leave.with_user(self.user_hruser_id).action_approve()
+        sick_leave.with_user(self.user_employee_id).action_back_to_approval()
+        self.assertEqual(sick_leave.state, 'validate')
+
+
 class TestLeaveRequests(TestHrHolidaysCommon):
 
     def _check_holidays_status(self, holiday_status, employee, ml, lt, rl, vrl):
@@ -1766,36 +1874,6 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 expected_days,
                 f"{data['name']} should have {expected_days} days duration"
             )
-
-    @freeze_time('2011-12-24 10:00:00')
-    def test_validated_leave_back_to_approval(self):
-        """
-        =====================================================================================================================
-        | case 1: An approved leave can be moved back to confirm state if user has group `group_hr_holidays_user`           |
-        | case 2: An approved leave can't be moved back to confirm state if user doesn't have group `group_hr_holidays_user`|
-        =====================================================================================================================
-        """
-        sick_leave_type = self.env['hr.leave.type'].create({
-            'name': 'leave in days',
-            'request_unit': 'day',
-            'leave_validation_type': 'both',
-            'requires_allocation': False,
-        })
-        sick_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
-            'name': 'leave for 3 days',
-            'employee_id': self.employee_emp_id,
-            'holiday_status_id': sick_leave_type.id,
-            'request_date_from': '2011-12-23',
-            'request_date_to': '2011-12-25',
-        })
-
-        sick_leave.with_user(self.user_hruser_id).action_approve()
-        sick_leave.with_user(self.user_hruser_id).action_back_to_approval()
-        self.assertEqual(sick_leave.state, 'confirm')
-
-        sick_leave.with_user(self.user_hruser_id).action_approve()
-        sick_leave.with_user(self.user_employee_id).action_back_to_approval()
-        self.assertEqual(sick_leave.state, 'validate')
 
     def test_unified_time_off_half_day_scenarios(self):
         leave_half_day_am = self.env['hr.leave'].with_user(self.user_employee_id).create({
