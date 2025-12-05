@@ -434,6 +434,16 @@ class Domain:
         """
         return self._optimize(model, OptimizationLevel.BASIC)
 
+    def optimize_dynamic(self, model: BaseModel) -> Domain:
+        """Perform optimizations of the node given a model.
+
+        This is an intermediate step between "basic" and "full" optimizations.
+        After the basic optimizations, it expands dynamic values like relative
+        dates. This enables to check for the actual values in the conditions of
+        a domain, for instance.
+        """
+        return self._optimize(model, OptimizationLevel.DYNAMIC_VALUES)
+
     def optimize_full(self, model: BaseModel) -> Domain:
         """Perform optimizations of the node given a model.
 
