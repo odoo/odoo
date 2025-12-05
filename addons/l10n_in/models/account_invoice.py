@@ -259,22 +259,8 @@ class AccountMove(models.Model):
                     }
 
                 if applicable_sections := move._get_l10n_in_tds_tcs_applicable_sections():
-                    tds_tcs_applicable_lines = (
-                        move.move_type == 'out_invoice'
-                        and move._get_tcs_applicable_lines(move.invoice_line_ids)
-                        or move.invoice_line_ids
-                    )
                     warnings['tds_tcs_threshold_alert'] = {
                         'message': applicable_sections._get_warning_message(),
-                        'action': tds_tcs_applicable_lines.with_context(
-                            default_tax_type_use=True,
-                            move_type=move.move_type == 'in_invoice'
-                        )._get_records_action(
-                            name=action_name,
-                            domain=[('id', 'in', tds_tcs_applicable_lines.ids)],
-                            views=[(_xmlid_to_res_id("l10n_in.view_move_line_list_l10n_in_withholding"), "list")]
-                        ),
-                        'action_text': action_text,
                     }
 
             if (
