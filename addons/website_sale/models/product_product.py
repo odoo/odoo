@@ -153,79 +153,49 @@ class ProductProduct(models.Model):
             self.website_published = True
         else:
             self.website_published = False
-            
-    def _enrich_markup_data(self, markup_data):
-        """ Method to inherit in other modules in case of adding data
-        
-        :param markup_data dict: generated on _to_markup_data
-        :return: Markup modified if necessary
+
+    def _to_markup_data(self, website):
+        """ Generate JSON-LD markup data for the current product.
+
+        :param website website: The current website.
+        :return: The JSON-LD markup data.
         :rtype: dict
         """
         self.ensure_one()
-        return markup_data
 
-    def _to_markup_data(self, website):
-        """ Generate JSON-LD markup data for products.
+        product_price = request.pricelist._get_product_price(
+            self, quantity=1, target_currency=website.currency_id
+        )
+        # Use sudo to access cross-company taxes.
+        product_taxes_sudo = self.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+        taxes = request.fiscal_position.map_tax(product_taxes_sudo)
+        price = self.product_tmpl_id._apply_taxes_to_price(
+            product_price, website.currency_id, product_taxes_sudo, taxes, self, website=website
+        )
 
-        :param website website: The current website.
-        :return: An array of the JSON-LD markup data.
-        :rtype: array of dicts
-        """
-        markups = []
         base_url = website.get_base_url()
-        base_markup_data = {
+        markup_data = {
             '@context': 'https://schema.org',
             '@type': 'Product',
+            'name': self.with_context(display_default_code=False).display_name,
+            'url': f'{base_url}{self.website_url}',
+            'image': f'{base_url}{website.image_url(self, "image_1920")}',
             'offers': {
                 '@type': 'Offer',
+                'price': price,
                 'priceCurrency': website.currency_id.name,
             },
         }
-        
-        elements_to_markup = self.product_variant_ids._read_group(
-            [('id', 'in', self.product_variant_ids.ids)], 
-            ['product_tmpl_id'],
-            ['id:recordset']
-        )
-        
-        for product_tmpl, products in elements_to_markup:
-            markup_data_for_tmpl = {
-                **base_markup_data,
+        if self.website_meta_description or self.description_sale:
+            markup_data['description'] = self.website_meta_description or self.description_sale
+        if website.is_view_active('website_sale.product_comment') and self.rating_count:
+            markup_data['aggregateRating'] = {
+                '@type': 'AggregateRating',
+                # sudo: product.product - visitor can access product average rating
+                'ratingValue': self.sudo().rating_avg,
+                'reviewCount': self.rating_count,
             }
-            if product_tmpl.website_meta_description or product_tmpl.description_sale:
-                markup_data_for_tmpl['description'] = product_tmpl.website_meta_description or product_tmpl.description_sale
-            
-            if website.is_view_active('website_sale.product_comment') and product_tmpl.rating_count:
-                markup_data_for_tmpl['aggregateRating'] = {
-                    '@type': 'AggregateRating',
-                    # sudo: product.product - visitor can access product average rating
-                    'ratingValue': product_tmpl.sudo().rating_avg,
-                    'reviewCount': product_tmpl.rating_count,
-                }
-            
-            product_taxes_sudo = product_tmpl.sudo().taxes_id._filter_taxes_by_company(self.env.company)
-            taxes = request.fiscal_position.map_tax(product_taxes_sudo)
-            
-            for product in products:
-                product_price = request.pricelist._get_product_price(
-                    product, quantity=1, target_currency=website.currency_id
-                )
-                price = product_tmpl._apply_taxes_to_price(
-                    product_price, website.currency_id, product_taxes_sudo, taxes, self, website=website
-                )
-                markup_data_for_product = {
-                    **markup_data_for_tmpl,
-                    'name': product.with_context(display_default_code=False).display_name,
-                    'url': f'{base_url}{product.website_url}',
-                    'image': f'{base_url}{website.image_url(product, "image_1920")}',
-                    'offers': {
-                        **markup_data_for_tmpl['offers'],
-                        'price': price,
-                    }
-                }
-                markups.append(product._enrich_markup_data(markup_data_for_product))
-                
-        return markups
+        return markup_data
 
     def _get_image_1920_url(self):
         """ Returns the local url of the product main image.

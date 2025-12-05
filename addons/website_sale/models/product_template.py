@@ -1013,24 +1013,33 @@ class ProductTemplate(models.Model):
         return price, pricelist_rule_id
 
     def _to_markup_data(self, website):
-        markups = []
-        for product_tmpl in self:
-            if product_tmpl.product_variant_count == 1:
-                markups.append(product_tmpl.product_variant_id._to_markup_data(website)[0])
-            else:
-                base_url = website.get_base_url()
-                markup_data = {
-                    '@context': 'https://schema.org/',
-                    '@type': 'ProductGroup',
-                    'name': product_tmpl.name,
-                    'image': f'{base_url}{website.image_url(product_tmpl, "image_1920")}',
-                    'url': f'{base_url}{product_tmpl.website_url}',
-                    'hasVariant': product_tmpl.product_variant_ids._to_markup_data(website)
-                }
-            if product_tmpl.description_ecommerce:
-                markup_data['description'] = text_from_html(product_tmpl.description_ecommerce)
+        """ Generate JSON-LD markup data for the current product template.
 
-        return markups
+        If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
+        Otherwise, the markup data generation is delegated to the variant to use the
+        https://schema.org/Product schema.
+
+        :param website website: The current website.
+        :return: The JSON-LD markup data.
+        :rtype: dict
+        """
+        self.ensure_one()
+
+        if self.product_variant_count == 1:
+            return self.product_variant_id._to_markup_data(website)
+
+        base_url = website.get_base_url()
+        markup_data = {
+            '@context': 'https://schema.org/',
+            '@type': 'ProductGroup',
+            'name': self.name,
+            'image': f'{base_url}{website.image_url(self, "image_1920")}',
+            'url': f'{base_url}{self.website_url}',
+            'hasVariant': [product._to_markup_data(website) for product in self.product_variant_ids]
+        }
+        if self.description_ecommerce:
+            markup_data['description'] = text_from_html(self.description_ecommerce)
+        return markup_data
 
     def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):
         """Return the ribbon to display for the current template.

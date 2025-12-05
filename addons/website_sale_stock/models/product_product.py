@@ -80,9 +80,9 @@ class ProductProduct(models.Model):
                 mail.send(raise_exception=False)
                 product.stock_notification_partner_ids -= partner
 
-    def _enrich_markup_data(self, markup_data):
+    def _to_markup_data(self, website):
         """ Override of `website_sale` to include the product availability in the offer. """
-        markup_data = super()._enrich_markup_data(markup_data)
+        markup_data = super()._to_markup_data(website)
         if self.is_product_variant and self.is_storable:
             if not self._is_sold_out():
                 availability = 'https://schema.org/InStock'

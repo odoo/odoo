@@ -48,7 +48,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         })
         website = self.website
         with MockRequest(website.env, website=website):
-            markup_data = product_template._to_markup_data(self.website)[0]
+            markup_data = product_template._to_markup_data(self.website)
         self.assertEqual(markup_data['@type'], 'ProductGroup')
         self.assertEqual(len(markup_data['hasVariant']), 2)
 
@@ -56,7 +56,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         product_template = self.env['product.template'].create({'name': 'Test product'})
         website = self.website
         with MockRequest(website.env, website=website):
-            markup_data = product_template._to_markup_data(self.website)[0]
+            markup_data = product_template._to_markup_data(self.website)
         self.assertEqual(markup_data['@type'], 'Product')
 
     def test_markup_data_uses_taxes_excluded_price_when_configured_on_website(self):
@@ -64,7 +64,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             'show_line_subtotals_tax_selection': 'tax_excluded'
         }).execute()
         with MockRequest(self.website.env, website=self.website):
-            markup_data = self.product._to_markup_data(self.website)[0]
+            markup_data = self.product._to_markup_data(self.website)
             self.assertEqual(
                 markup_data['offers']['price'],
                 self.website.currency_id.round(self.product.base_unit_price),
@@ -77,7 +77,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.product.price_extra = 10
         with MockRequest(self.website.env, website=self.website):
             product_tmpl = self.product.product_tmpl_id
-            markup_data = self.product._to_markup_data(self.website)[0]
+            markup_data = self.product._to_markup_data(self.website)
             self.assertEqual(
                 markup_data['offers']['price'],
                 self.website.currency_id.round(
