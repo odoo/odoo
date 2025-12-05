@@ -7,6 +7,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.tools import html_sanitize
 
 
 class SaleOrder(models.Model):
@@ -162,6 +163,8 @@ class SaleOrder(models.Model):
         error = request.session.get("error_promo_code")
         if error and delete:
             request.session.pop("error_promo_code")
+        if error:
+            return html_sanitize(error)
         return error
 
     def get_promo_code_success_message(self, delete=True):
@@ -181,11 +184,7 @@ class SaleOrder(models.Model):
         self._update_programs_and_rewards()
 
     def _cart_update_order_line(self, order_line, quantity, **kwargs):
-        if (
-            quantity <= 0
-            and order_line.coupon_id
-            and order_line.reward_id
-        ):
+        if quantity <= 0 and order_line.coupon_id and order_line.reward_id:
             # When a reward line is deleted we remove it from the auto claimable rewards
             order_line = order_line.with_context(website_sale_loyalty_delete=True)
 
