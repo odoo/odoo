@@ -1,4 +1,4 @@
-import { debounce, Deferred, Logger } from "@bus/workers/bus_worker_utils";
+import { debounce, Logger } from "@bus/workers/bus_worker_utils";
 
 /**
  * Type of events that can be sent from the worker to its clients.
@@ -54,28 +54,27 @@ export class WebsocketWorker {
     CONNECTION_CHECK_DELAY = 60_000;
 
     constructor(name) {
-        this.name = name;
-        // Timestamp of start of most recent bus service sender
-        this.newestStartTs = undefined;
-        this.websocketURL = "";
-        this.currentUID = null;
-        this.currentDB = null;
-        this.isWaitingForNewUID = true;
+        this.active = true;
         this.channelsByClient = new Map();
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
-        this.active = true;
-        this.state = WORKER_STATE.IDLE;
+        this.currentDB = null;
+        this.currentUID = null;
+        this.firstSubscribeResolver = Promise.withResolvers();
         this.isReconnecting = false;
+        this.isWaitingForNewUID = true;
         this.lastChannelSubscription = null;
-        this.loggingEnabled = null;
-        this.firstSubscribeDeferred = new Deferred();
         this.lastNotificationId = 0;
+        this.loggingEnabled = null;
         this.messageWaitQueue = [];
-        this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
-        this._debouncedUpdateChannels = debounce(this._updateChannels, 300);
-        this._debouncedSendToServer = debounce(this._sendToServer, 300);
+        this.name = name;
+        this.newestStartTs = undefined;
+        this.state = WORKER_STATE.IDLE;
+        this.websocketURL = "";
 
+        this._debouncedSendToServer = debounce(this._sendToServer, 300);
+        this._debouncedUpdateChannels = debounce(this._updateChannels, 300);
+        this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
         this._onWebsocketClose = this._onWebsocketClose.bind(this);
         this._onWebsocketError = this._onWebsocketError.bind(this);
         this._onWebsocketMessage = this._onWebsocketMessage.bind(this);
@@ -344,7 +343,8 @@ export class WebsocketWorker {
         this._logDebug("_onWebsocketClose", code, reason);
         this._updateState(WORKER_STATE.DISCONNECTED);
         this.lastChannelSubscription = null;
-        this.firstSubscribeDeferred = new Deferred();
+        /** @type {{promise: Promise<void>, resolve: Function, reject: Function}} */
+        this.firstSubscribeResolver = Promise.withResolvers();
         if (this.isReconnecting) {
             // Connection was not established but the close event was
             // triggered anyway. Let the onWebsocketError method handle
@@ -429,7 +429,7 @@ export class WebsocketWorker {
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.isReconnecting = false;
-        this.firstSubscribeDeferred.then(() => {
+        this.firstSubscribeResolver.promise.then(() => {
             if (!this.websocket) {
                 return;
             }
@@ -494,7 +494,7 @@ export class WebsocketWorker {
             if (message["event_name"] === "subscribe") {
                 this.websocket.send(payload);
             } else {
-                this.firstSubscribeDeferred.then(() => this.websocket.send(payload));
+                this.firstSubscribeResolver.promise.then(() => this.websocket.send(payload));
             }
             this._restartConnectionCheckInterval();
         }
@@ -572,7 +572,7 @@ export class WebsocketWorker {
                 event_name: "subscribe",
                 data: { channels: allTabsChannels, last: this.lastNotificationId },
             });
-            this.firstSubscribeDeferred.resolve();
+            this.firstSubscribeResolver.resolve();
         }
     }
     /**
