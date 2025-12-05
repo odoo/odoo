@@ -271,13 +271,13 @@ class TestAuthTimeoutHttp(HttpCase):
         self.rpc("auth.passkey.key.create", "make_key", wizard_id, {"id": self.passkey_credential_id})
 
     def check_identity(self, credentials):
-        return self.url_open("/auth-timeout/session/check-identity", json={"params": credentials})
+        return self.url_open("/web/session/identity/check", json={"params": credentials})
 
     def assertMustCheckIdentity(self):
         result = self.rpc("res.users", "read", [self.user.id], ["login"])
         self.assertEqual(
             result.get("error", {}).get("data", {}).get("name"),
-            "odoo.addons.auth_timeout.models.ir_http.CheckIdentityException",
+            "odoo.http.CheckIdentityException",
         )
 
     def assertSessionExpired(self):

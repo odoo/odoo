@@ -216,6 +216,18 @@
         </div>
     </template>
 
+    <template id="web.check_identity" name="Check Identity">
+        <t t-call="web.login_layout">
+            <div class="oe_check_identity_form">
+                <div class="text-center">
+                    <img t-attf-src="/logo.png?company={{ request.env.company.id }}" style="padding: 0px; margin: 0px; height: auto; height: 48px;" t-att-alt="request.env.company.name"/>
+                    <h3>Confirm access</h3>
+                </div>
+                <owl-component name="web.check_identity_form" t-att-props="json.dumps({'redirect': redirect})"/>
+            </div>
+        </t>
+    </template>
+
     <template id="web.test_helpers">
         <t t-call-assets="web.tests_assets" t-js="False"/>
         <style>

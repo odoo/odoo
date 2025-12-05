@@ -4,25 +4,6 @@ from odoo import models
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    def _get_auth_methods(self):
-        """
-        Return the list of authentication methods available to the user.
-
-        This includes passkeys (WebAuthn), TOTP (app or mail), and password,
-        depending on the user's configured credentials and MFA policy.
-
-        :return: A list of enabled authentication method types (e.g., ["webauthn", "totp", "password"]).
-        :rtype: list[str]
-        """
-        self.ensure_one()
-        auth_methods = []
-        if self.auth_passkey_key_ids:
-            auth_methods.append("webauthn")
-        if mfa_type := self._mfa_type():
-            auth_methods.append(mfa_type)
-        auth_methods.append("password")
-        return auth_methods
-
     def _get_lock_timeouts(self):
         """
         Return the user's configured session and inactivity timeouts.

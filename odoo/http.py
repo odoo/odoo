@@ -368,6 +368,11 @@ class SessionExpiredException(Exception):
     http_status = HTTPStatus.FORBIDDEN
 
 
+class CheckIdentityException(SessionExpiredException):
+    """ Exception raised when a user is requested to re-authenticate. """
+    loglevel = logging.DEBUG
+
+
 def content_disposition(filename, disposition_type='attachment'):
     """
     Craft a ``Content-Disposition`` header, see :rfc:`6266`.
@@ -2712,6 +2717,13 @@ class HttpDispatcher(Dispatcher):
         :returns: a WSGI application
         """
         if isinstance(exc, SessionExpiredException):
+
+            if isinstance(exc, CheckIdentityException):
+                # The user is redirected to the identity confirmation page.
+                # This ensures that re-authentication can be completed before
+                # redirecting to the original request.
+                return self.request.redirect_query('/web/session/identity', {'redirect': request.httprequest.full_path})
+
             session = self.request.session
             was_connected = session.uid is not None
             session.logout(keep_db=True)

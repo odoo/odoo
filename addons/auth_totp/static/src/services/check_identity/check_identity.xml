@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="auth_totp.CheckIdentityFormTOTP">
+        <div class="text-center">
+            <i class="fa fa-3x fa-mobile" aria-hidden="true"/>
+            <h3>Authentication code</h3>
+        </div>
+        <input name="token" inputmode="numeric" pattern="[0-9]+" class="form-control" placeholder="XXXXXX"/>
+        <div class="text-center gap-1 d-grid mb-1 pt-3">
+            <button type="submit" class="btn btn-primary">Verify</button>
+        </div>
+        <div>
+            Open your two-factor authenticator (TOTP) app or browser extension to view your authentication code.
+        </div>
+    </t>
+    <t t-name="auth_totp.CheckIdentityLinkStringTOTP">Use your authenticator app</t>
+
+</templates>

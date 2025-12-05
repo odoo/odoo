@@ -30,7 +30,11 @@ can setup API keys to replace their main password.
             'auth_totp/static/tests/**/*',
         ],
         'web.assets_backend': [
-            'auth_totp/static/src/**/*',
+            'auth_totp/static/src/scss/**/*',
+            'auth_totp/static/src/services/check_identity/*',
+        ],
+        'web.assets_frontend': [
+            'auth_totp/static/src/services/check_identity/*',
         ],
     },
     'author': 'Odoo S.A.',
