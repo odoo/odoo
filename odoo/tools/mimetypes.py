@@ -2,9 +2,11 @@
 """ Mimetypes related utilities. """
 
 import collections
+import io
 import logging
 import mimetypes
 import re
+from os import PathLike
 
 from . import _mimetypes
 
@@ -34,7 +36,7 @@ _olecf_mimetypes = {'application/x-ole-storage', 'application/CDFV2'}
 def guess_mimetype(
     bin_data: collections.abc.Buffer,  # bytes, bytearray, memoryview
     default: str = 'application/octet-stream',
-):
+) -> str:
     """
     Get a glance at the first ``MIMETYPE_HEAD_SIZE`` (2kiB) bytes of the
     given binary data and try to determine the content mimetype.
@@ -65,6 +67,15 @@ def guess_mimetype(
     if magic:
         return _magic_guess_mimetype(bin_data, default)
     return _mimetypes.guess_mimetype(bin_data, default)
+
+
+def guess_file_mimetype(
+    path: PathLike,
+    default: str = 'application/octet-stream',
+) -> str:
+    if magic:
+        return magic.from_file(path, mime=True)
+    return _mimetypes.guess_file_mimetype(path)
 
 
 def get_extension(filename: str) -> str:
@@ -141,6 +152,14 @@ def fix_filename_extension(filename, mimetype):
     return filename
 
 
+def is_mimetype_textual(mimetype):
+    maintype, subtype = mimetype.split('/')
+    return (
+        maintype == 'text'
+        or (maintype == 'application' and subtype in {'documents-email', 'json', 'xml'})
+    )
+
+
 def _magic_guess_mimetype(bin_data: bytes):
     mimetype = magic.from_buffer(bin_data[:MIMETYPE_HEAD_SIZE], mime=True)
     if mimetype in ('application/CDFV2', 'application/x-ole-storage'):
@@ -157,11 +176,7 @@ def _magic_guess_mimetype(bin_data: bytes):
         # magic doesn't properly detect some Microsoft Office
         # documents created after 2025, use our own check to further
         # discriminate the mimetype.
-        # /!\ Only work when bin_data holds the whole zipfile. /!\
-        if _mimetypes.is_docx(bin_data):
-            return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        if _mimetypes.is_xlsx(bin_data):
-            return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        if _mimetypes.is_pptx(bin_data):
-            return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+        with io.BytesIO(bin_data) as file:
+            if mimetype_ := _mimetypes.guess_office_open_xml(file):
+                return mimetype_
     return mimetype

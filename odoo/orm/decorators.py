@@ -359,10 +359,10 @@ def model_create_multi(method: Callable[[T, list[ValuesType]], T]) -> Callable[[
             records = model.create([vals, ...])
     """
     @wraps(method)
-    def create(self: T, vals_list: list[ValuesType] | ValuesType) -> T:
+    def create(self: T, vals_list: list[ValuesType] | ValuesType, **kwargs) -> T:
         if isinstance(vals_list, Mapping):
             vals_list = [vals_list]
-        return method(self, vals_list)
+        return method(self, vals_list, **kwargs)
 
     create._api_model = True  # type: ignore
     return create

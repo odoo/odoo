@@ -4,29 +4,44 @@ import base64
 import binascii
 import contextlib
 import hashlib
+import io
 import logging
 import mimetypes
 import os
-import psycopg2
 import re
+import tempfile
 import uuid
 import warnings
-import werkzeug
-
 from collections import defaultdict
 from collections.abc import Collection
 
-from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
+import psycopg2
+import werkzeug
+
+from odoo import _, api, fields, models
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.http import Stream, root, request
-from odoo.tools import config, consteq, human_size, image, split_every, str2bool, OrderedSet
+from odoo.http import Stream, request, root
+from odoo.tools import (
+    OrderedSet,
+    config,
+    consteq,
+    human_size,
+    image,
+    split_every,
+    str2bool,
+)
 from odoo.tools.constants import PREFETCH_MAX
-from odoo.tools.mimetypes import guess_mimetype, fix_filename_extension, _olecf_mimetypes
+from odoo.tools.mimetypes import (
+    fix_filename_extension,
+    guess_file_mimetype,
+    guess_mimetype,
+)
 from odoo.tools.misc import limited_field_access_token
 
 _logger = logging.getLogger(__name__)
 SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
+KEEP_COMPUTED_FIELDS = object()  # sentinel that cannot be given over RPC
 
 
 def condition_values(model, field_name, domain):
@@ -116,7 +131,7 @@ class IrAttachment(models.Model):
         return os.path.join(self._filestore(), path)
 
     @api.model
-    def _get_path(self, bin_data, sha):
+    def _get_path(self, new_file, sha):
         # scatter files across 256 dirs
         # we use '/' in the db (even on windows)
         fname = sha[:2] + '/' + sha
@@ -126,8 +141,14 @@ class IrAttachment(models.Model):
             os.makedirs(dirname, exist_ok=True)
 
         # prevent sha-1 collision
-        if os.path.isfile(full_path) and not self._same_content(bin_data, full_path):
-            raise UserError(_("The attachment collides with an existing file."))
+        if os.path.isfile(full_path):
+            pos = new_file.tell()
+            try:
+                with open(full_path, 'rb') as existing_file:
+                    if not self._same_content(existing_file, new_file):
+                        raise UserError(_("The attachment collides with an existing file."))
+            finally:
+                new_file.seek(pos)
         return fname, full_path
 
     @api.model
@@ -144,7 +165,7 @@ class IrAttachment(models.Model):
     @api.model
     def _file_write(self, bin_value, checksum):
         assert isinstance(self, IrAttachment)
-        fname, full_path = self._get_path(bin_value, checksum)
+        fname, full_path = self._get_path(io.BytesIO(bin_value), checksum)
         if not os.path.exists(full_path):
             try:
                 with open(full_path, 'wb') as fp:
@@ -316,17 +337,14 @@ class IrAttachment(models.Model):
         return hashlib.sha1(bin_data or b'').hexdigest()
 
     @api.model
-    def _same_content(self, bin_data, filepath):
-        BLOCK_SIZE = 1024
-        with open(filepath, 'rb') as fd:
-            i = 0
-            while True:
-                data = fd.read(BLOCK_SIZE)
-                if data != bin_data[i * BLOCK_SIZE:(i + 1) * BLOCK_SIZE]:
-                    return False
-                if not data:
-                    break
-                i += 1
+    def _same_content(self, file1, file2):
+        while True:
+            chunk1 = file1.read(io.DEFAULT_BUFFER_SIZE)
+            chunk2 = file2.read(io.DEFAULT_BUFFER_SIZE)
+            if chunk1 != chunk2:
+                return False
+            if not chunk1:
+                break
         return True
 
     def _compute_mimetype(self, values):
@@ -721,16 +739,17 @@ class IrAttachment(models.Model):
         return res
 
     @api.model_create_multi
-    def create(self, vals_list):
+    def create(self, vals_list, *, _keep_computed_fields=None):
         record_tuple_set = set()
 
         # remove computed field depending of datas
-        vals_list = [{
-            key: value
-            for key, value
-            in vals.items()
-            if key not in ('file_size', 'checksum', 'store_fname')
-        } for vals in vals_list]
+        if _keep_computed_fields is not KEEP_COMPUTED_FIELDS:
+            vals_list = [{
+                key: value
+                for key, value
+                in vals.items()
+                if key not in ('file_size', 'checksum', 'store_fname')
+            } for vals in vals_list]
         checksum_raw_map = {}
 
         for values in vals_list:
@@ -840,9 +859,9 @@ class IrAttachment(models.Model):
         ]).unlink()
         self.env.registry.clear_cache('assets')
 
-    def _from_request_file(self, file, *, mimetype, **vals):
+    def _from_request_file(self, file, *, mimetype, **create_vals):
         """
-        Create an attachment out of a request file
+        Create an attachment out of a request file.
 
         :param file: the request file
         :param str mimetype:
@@ -856,29 +875,44 @@ class IrAttachment(models.Model):
               mimetype to the given value, it adds the corresponding
               file extension at the end of the filename unless the
               filename already had a valid extension.
+        :param dict vals: values for create
         """
+        overrides = {'type': 'binary'}
         if mimetype == 'TRUST':
-            mimetype = file.content_type
-            filename = file.filename
+            overrides['mimetype'] = file.content_type
+            if 'name' not in create_vals:
+                overrides['name'] = file.filename
         elif mimetype == 'GUESS':
-            head = file.read(1024)
-            file.seek(-len(head), 1)  # rewind
-            mimetype = guess_mimetype(head)
-            filename = fix_filename_extension(file.filename, mimetype)
-            if mimetype in ('application/zip', *_olecf_mimetypes):
-                mimetype = mimetypes.guess_type(filename)[0]
+            pass  # below
         elif all(mimetype.partition('/')):
-            filename = fix_filename_extension(file.filename, mimetype)
+            overrides['mimetype'] = mimetype
+            overrides['name'] = fix_filename_extension(
+                create_vals.get('name', file.filename), mimetype)
         else:
-            raise ValueError(f'{mimetype=}')
+            e = f"neither a mimetype nor {'TRUST'!r} nor {'GUESS'!r}: {mimetype!r}"
+            raise ValueError(e)
 
-        return self.create({
-            'name': filename,
-            'type': 'binary',
-            'raw': file.read(),  # load the entire file in memory :(
-            'mimetype': mimetype,
-            **vals,
-        })
+        with tempfile.NamedTemporaryFile(dir=self._full_path('upload'), suffix='.part') as tmp:
+            sha1 = hashlib.sha1()
+            while chunk := file.read(io.DEFAULT_BUFFER_SIZE):
+                sha1.update(chunk)
+                tmp.write(chunk)
+            tmp.flush()
+            overrides['checksum'] = sha1.hexdigest()
+            overrides['file_size'] = tmp.tell()
+            if mimetype == 'GUESS':
+                overrides['mimetypes'] = guess_file_mimetype(tmp.name)
+                overrides['name'] = fix_filename_extension(
+                    create_vals.get('name', file.filename), overrides['mimetypes'])
+            tmp.seek(0)
+            overrides['store_fname'], full_path = self._get_path(tmp, overrides['checksum'])
+
+            # The order of the following lines matters!
+            attach = self.create([create_vals | overrides], _keep_computed_fields=KEEP_COMPUTED_FIELDS)
+            self._mark_for_gc(attach.store_fname)
+            os.rename(tmp.name, full_path)
+
+        return attach
 
     def _to_http_stream(self):
         """ Create a :class:`~Stream`: from an ir.attachment record. """

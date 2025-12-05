@@ -3,6 +3,7 @@
 
 from . import constants
 from . import urls
+from . import zipstream
 from .parse_version import parse_version
 from .cache import ormcache
 from .config import config

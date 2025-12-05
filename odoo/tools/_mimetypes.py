@@ -1,19 +1,36 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import io
-import re
+import itertools
+import logging
+import struct
 import typing
 import zipfile
 
+from . import zipstream
+
+_logger = logging.getLogger()
 MIMETYPE_HEAD_SIZE = 2048
 
 
-def guess_mimetype(bin_data: bytes, default: str):
+def guess_mimetype(bin_data: bytes, default: str | None):
     for supported_mimetype in _database.values():
         if supported_mimetype.match(bin_data):
             return supported_mimetype.mimetype
 
     return default
+
+
+def _odoo_guess_file_mimetype(path, default='application/octet-stream'):
+    with open(path, 'rb') as file:
+        bin_data = file.read(MIMETYPE_HEAD_SIZE)
+        mimetype = guess_mimetype(bin_data)
+        if mimetype == 'application/zip':
+            for func in (guess_open_document, guess_office_open_xml):
+                file.seek(0)
+                if mimetype_ := func(file):
+                    return mimetype_
+    return mimetype or default
 
 
 _database = {}
@@ -59,7 +76,7 @@ def _match_magic_number(bin_data, *, all=(), any=()):
     return False
 
 
-# text/
+# Text
 
 @register('image/svg+xml')
 def is_svg(bin_data):
@@ -80,7 +97,7 @@ def is_xml(bin_data):
     return _match_magic_number(bin_data, all=[_Signature(b'<')]) and is_txt(bin_data)
 
 
-# application/
+# Applications
 
 def is_cfb(bin_data):
     return _match_magic_number(bin_data, all=[
@@ -93,7 +110,7 @@ def is_pdf(bin_data):
     return _match_magic_number(bin_data, all=[_Signature(b'%PDF-')])
 
 
-@register('application/zip')
+# registered last, at the end of the file
 def is_zip(bin_data):
     return _match_magic_number(bin_data, all=[_Signature(bytes.fromhex('50 4B 03 04'))])
 
@@ -135,32 +152,79 @@ def is_webp(bin_data):
 
 # Microsoft Office
 
-def _match_office_open_xml(bin_data, *, dirname):
-    if not is_zip(bin_data):
-        return False
+def guess_office_open_xml(file):
+    pos = file.pos()
+    try:
+        zfile = zipfile.ZipFile(file)
+        filename = '[Content_Types].xml'
+        with zfile:
+            if filename not in zfile.namelist():
+                return None
+            data = zfile.read(filename)
+    except zipfile.BadZipFile:
+        # File likely truncated, try again but reading only 1 file.
+        file.seek(pos)
+        try:
+            zstream = zipstream.extract(file)
+            try:
+                filename = next(zstream).filename.decode()
+            except (StopIteration, UnicodeDecodeError):
+                return None
+            data = b''.join(itertools.takewhile(b''.__ne__, zstream))
+        except Exception:  # noqa: BLE001
+            _logger.warning("error reading zip file", exc_info=True)
+            return None
 
-    with io.BytesIO(bin_data) as file, zipfile.ZipFile(file) as zip:
-        filenames = zip.namelist()
+    if filename == '[Content_Types].xml':
+        for mimetype in (
+            _database['docx'].mimetype,
+            _database['pptx'].mimetype,
+            _database['xlsx'].mimetype,
+        ):
+            if mimetype in data:
+                return mimetype
+    elif filename == '_rels/.rels':
+        for dirname, mimetype in (
+            ('word/', _database['docx'].mimetype),
+            ('ppt/', _database['pptx'].mimetype),
+            ('xl/', _database['xlsx'].mimetype),
+        ):
+            if data.find(f'Target="{dirname}'.encode()) != -1:
+                return mimetype
+    else:
+        for dirname, mimetype in [
+            ('word/', _database['docx'].mimetype),
+            ('ppt/', _database['pptx'].mimetype),
+            ('xl/', _database['xlsx'].mimetype),
+        ]:
+            if filename.startswith(dirname):
+                return mimetype
 
-        if '[Content_Types].xml' not in filenames:
-            return False
-
-        return any(entry.startswith(dirname) for entry in filenames)
+    return None
 
 
 @register('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
 def is_docx(bin_data):
-    return _match_office_open_xml(bin_data, dirname='word/')
+    if not is_zip(bin_data):
+        return False
+    with io.BytesIO(bin_data) as file:
+        return guess_office_open_xml(file) == _database['docx'].mimetype
 
 
 @register('application/vnd.openxmlformats-officedocument.presentationml.presentation')
 def is_pptx(bin_data):
-    return _match_office_open_xml(bin_data, dirname='ppt/')
+    if not is_zip(bin_data):
+        return False
+    with io.BytesIO(bin_data) as file:
+        return guess_office_open_xml(file) == _database['pptx'].mimetype
 
 
 @register('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 def is_xlsx(bin_data):
-    return _match_office_open_xml(bin_data, dirname='xl/')
+    if not is_zip(bin_data):
+        return False
+    with io.BytesIO(bin_data) as file:
+        return guess_office_open_xml(file) == _database['xlsx'].mimetype
 
 
 @register('application/msword')
@@ -225,35 +289,50 @@ def is_xls(bin_data):
 
 # Open Document
 
-def _match_open_document(bin_data, *, dirname):
-    if not is_zip(bin_data):
-        return False
+def guess_open_document(file) -> bytes:
+    mimetype = None
+    pos = file.pos()
+    try:
+        zfile = zipfile.ZipFile(file)
+        with zfile:
+            if 'mimetype' in zfile.namelist():
+                mimetype = zfile.read('mimetype')
+    except zipfile.BadZipFile:
+        # File likely truncated, try again but reading only 1 file.
+        file.seek(pos)
+        try:
+            zstream = zipstream.extract(file)
+            try:
+                local_file = next(zstream)
+            except StopIteration:
+                return None  # empty zip
+            if local_file.filename != b'mimetype':
+                return None
+            mimetype = b''.join(itertools.takewhile(b''.__ne__, zstream))
+            if len(mimetype) != local_file.uncompressed_size:
+                mimetype = None
+        except Exception:  # noqa: BLE001
+            _logger.warning("error reading zip file", exc_info=True)
+            return None
 
-    mime_validator = re.compile(
-        r"""
-        [\w-]+ # type-name
-        / # subtype separator
-        [\w-]+ # registration facet or subtype
-        (?:\.[\w-]+)* # optional faceted name
-        (?:\+[\w-]+)? # optional structured syntax specifier
-    """, re.VERBOSE)
-
-    with io.BytesIO(bin_data) as file, zipfile.ZipFile(file) as zip:
-        filenames = zip.namelist()
-
-        if 'mimetype' not in filenames:
-            return False
-
-        marcel = zip.read('mimetype').decode('ascii')
-
-        return len(marcel) < 256 and mime_validator.match(marcel) and dirname in marcel
+    # TODO: restore regexp matching mimetype
+    return mimetype
 
 
 @register('application/vnd.oasis.opendocument.text')
 def is_odt(bin_data):
-    return _match_open_document(bin_data, dirname='text')
+    if not is_zip(bin_data):
+        return False
+    with io.BytesIO(bin_data) as file:
+        return guess_open_document(file) == _database['odt'].mimetype.encode()
 
 
 @register('application/vnd.oasis.opendocument.spreadsheet')
 def is_ods(bin_data):
-    return _match_open_document(bin_data, dirname='spreadsheet')
+    if not is_zip(bin_data):
+        return False
+    with io.BytesIO(bin_data) as file:
+        return guess_open_document(file) == _database['ods'].mimetype.encode()
+
+
+register('application/zip')(is_zip)  # must be last
