@@ -16,7 +16,193 @@ from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale.tests.test_pricelist import TestWebsitePriceList
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestWebsiteAllPerformanceAtInstall(TestWebsitePerformanceCommon, TestWebsitePriceList, WebsiteSaleCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Attachment needed for the replacement of images
+        cls.env['ir.attachment'].create({
+            'public': True,
+            'name': 's_default_image.jpg',
+            'type': 'url',
+            'url': f'{cls.base_url()}/web/image/website.s_banner_default_image.jpg',
+        })
+
+        cats = cls.env['product.public.category'].create([{
+            'name': 'Level 0',
+        }, {
+            'name': 'Level 1',
+        }, {
+            'name': 'Level 2',
+        }])
+        cats[2].parent_id = cats[1].id
+        cats[1].parent_id = cats[0].id
+
+        # First image (blue) for the template.
+        color_blue = '#4169E1'
+        name_blue = 'Royal Blue'
+        # Red for the variant.
+        color_red = '#CD5C5C'
+        name_red = 'Indian Red'
+
+        # Create the color attribute.
+        cls.product_attribute = cls.env['product.attribute'].create({
+            'name': 'Beautiful Color',
+            'display_type': 'color',
+        })
+
+        # create the color attribute values
+        cls.attr_values = cls.env['product.attribute.value'].create([{
+            'name': name_blue,
+            'attribute_id': cls.product_attribute.id,
+            'html_color': color_blue,
+            'sequence': 1,
+        }, {
+            'name': name_red,
+            'attribute_id': cls.product_attribute.id,
+            'html_color': color_red,
+            'sequence': 2,
+        },
+        ])
+
+        # first image (blue) for the template
+        f = io.BytesIO()
+        Image.new('RGB', (1920, 1080), '#4169E1').save(f, 'JPEG')
+        f.seek(0)
+        blue_image = base64.b64encode(f.read())
+
+        # second image (red) for the variant 1
+        f = io.BytesIO()
+        Image.new('RGB', (800, 500), '#FF69E1').save(f, 'JPEG')
+        f.seek(0)
+        red_image = base64.b64encode(f.read())
+
+        cls.productA = cls.env['product.product'].create({
+            'name': 'Product A',
+            'list_price': 100,
+            'sale_ok': True,
+            'website_published': True,
+            'website_sequence': 1,
+            'public_categ_ids': [Command.link(cats[2].id)],
+        })
+
+        cls.productB = cls.env['product.product'].create({
+            'name': 'Product B',
+            'list_price': 100,
+            'sale_ok': True,
+            'website_published': True,
+            'image_1920': red_image,
+            'website_sequence': -10,
+        })
+
+        cls.templateC = cls.env['product.template'].create({
+            'name': 'Test Remove Image',
+            'image_1920': blue_image,
+            'website_sequence': -10,
+            'public_categ_ids': [Command.link(cats[1].id)],
+        })
+        cls.productC = cls.templateC.product_variant_ids[0]
+        cls.productC.write({
+            'name': 'Product C',
+            'list_price': 100,
+            'sale_ok': True,
+            'website_published': True,
+        })
+        cls.product_images = cls.env['product.image'].with_context(default_product_tmpl_id=cls.productC.product_tmpl_id.id).create([{
+            'name': 'Template image',
+            'image_1920': blue_image,
+        }, {
+            'name': 'Variant image',
+            'image_1920': red_image,
+            'product_variant_id': cls.productC.id,
+        }])
+
+        for i in range(20):
+            template = cls.env['product.template'].create({
+                'name': f'Product test {i}',
+                'list_price': 100,
+                'sale_ok': True,
+                'image_1920': red_image,
+                'website_sequence': -9,
+                'attribute_line_ids': [
+                    Command.create({
+                        'attribute_id': cls.product_attribute.id,
+                        'value_ids': [Command.set(cls.product_attribute.value_ids.ids)],
+                    }),
+                ],
+            })
+            variant = template.product_variant_ids[0]
+            if i % 5:
+                variant.website_published = True
+            if i % 4:
+                variant.website_sequence = -7
+
+            images = [{
+                'name': 'Template image',
+                'image_1920': blue_image,
+            }]
+            if i % 2:
+                images.append({
+                    'name': 'Variant image',
+                    'image_1920': red_image,
+                    'product_variant_id': variant.id,
+                })
+            cls.env['product.image'].create(images)
+
+        fpos = cls.env["account.fiscal.position"].create({
+            'name': 'Fiscal Position BE',
+            'country_id': cls.env.ref('base.be').id,
+            'auto_apply': True,
+            'sequence': -1,
+        })
+        usd = cls.env.ref('base.USD')
+        cls.env['product.pricelist'].create({
+            'name': 'Custom pricelist (TEST)',
+            'currency_id': usd.id,
+            'sequence': -1,
+            'item_ids': [(0, 0, {
+                'base': 'list_price',
+                'applied_on': '1_product',
+                'product_tmpl_id': cls.templateC.id,
+                'price_discount': 20,
+                'min_quantity': 2,
+                'compute_price': 'formula',
+            })],
+        })
+        tax_group = cls.env['account.tax.group'].create({'name': 'Test 6%'})
+        cls.env['account.tax'].create({
+                'name': "Test 6%",
+                'fiscal_position_ids': fpos,
+                'amount': 6,
+                'price_include_override': 'tax_included',
+                'type_tax_use': 'sale',
+                'amount_type': 'percent',
+                'country_id': cls.env.ref('base.us').id,
+                'tax_group_id': tax_group.id,
+        })
+
+    def setUp(self):
+        super().setUp()
+        self.session = None
+        self.env['website'].search([]).channel_id = False
+
+    def test_perf_sql_queries_shop(self):
+        # To increase the query count you must ask the permission to al
+        query_count, queries = self._get_queries_shop()
+
+        if self._has_demo_data():
+            query_count += 4
+            queries['account_tax'] += 1
+            queries['account_account_tag'] += 1
+            queries['product_template_attribute_value'] += 2
+
+        self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
+        self._check_url_hot_query('/shop', query_count, queries)
+
+
 class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceList, WebsiteSaleCommon):
 
     @classmethod
@@ -352,20 +538,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
 
     def _has_demo_data(self):
         return bool(self.env['ir.module.module'].search_count([('demo', '=', True)]))
-
-    def test_perf_sql_queries_shop(self):
-        # To increase the query count you must ask the permission to al
-        query_count, queries = self._get_queries_shop()
-
-        if self._has_demo_data():
-            query_count += 4
-            queries['account_tax'] += 1
-            queries['account_account_tag'] += 1
-            queries['product_template_attribute_value'] += 2
-
-        self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
-        self._check_url_hot_query('/shop', query_count, queries)
-
 
 @tagged('post_install', '-at_install')
 class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):

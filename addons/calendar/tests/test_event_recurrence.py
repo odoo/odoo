@@ -26,7 +26,6 @@ class TestRecurrentEvents(TransactionCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCreateRecurrentEvents(TestRecurrentEvents):
 
     @classmethod
@@ -407,7 +406,53 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
         self.assertTrue(updated_events[1].recurrency, "It should have recurrency in the updated events")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestUpdateRecurrentEventsAtInstall(TestRecurrentEvents):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        event = cls.env['calendar.event'].create({
+            'name': 'Recurrent Event',
+            'start': datetime(2019, 10, 22, 1, 0),
+            'stop': datetime(2019, 10, 24, 18, 0),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'tue': True,
+            'interval': 1,
+            'count': 3,
+            'event_tz': 'Etc/GMT-4',
+        })
+        cls.recurrence = event.recurrence_id
+        cls.events = event.recurrence_id.calendar_event_ids.sorted('start')
+
+    def test_update_name_future(self):
+        # update regular event (not the base event)
+        old_events = self.events[1:]
+        old_events[0].write({
+            'name': 'New name',
+            'recurrence_update': 'future_events',
+            'rrule_type': 'daily',
+            'count': 5,
+        })
+        new_recurrence = self.env['calendar.recurrence'].search([('id', '>', self.events[0].recurrence_id.id)])
+        self.assertTrue(self.events[0].recurrence_id.exists())
+        self.assertEqual(new_recurrence.count, 5)
+        self.assertFalse(any(old_event.active for old_event in old_events - old_events[0]))
+        for event in new_recurrence.calendar_event_ids:
+            self.assertEqual(event.name, 'New name')
+
+        # update the base event
+        new_events = new_recurrence.calendar_event_ids.sorted('start')
+        new_events[0].write({
+            'name': 'Old name',
+            'recurrence_update': 'future_events'
+        })
+        self.assertTrue(new_recurrence.exists())
+        for event in new_recurrence.calendar_event_ids:
+            self.assertEqual(event.name, 'Old name')
+
+
 class TestUpdateRecurrentEvents(TestRecurrentEvents):
 
     @classmethod
@@ -594,32 +639,6 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         self.assertEqual(events.recurrence_id.count, 4, "The new recurrence should have 4")
         self.assertTrue(event.recurrence_id.tue)
         self.assertTrue(event.recurrence_id.fri)
-
-    def test_update_name_future(self):
-        # update regular event (not the base event)
-        old_events = self.events[1:]
-        old_events[0].write({
-            'name': 'New name',
-            'recurrence_update': 'future_events',
-            'rrule_type': 'daily',
-            'count': 5,
-        })
-        new_recurrence = self.env['calendar.recurrence'].search([('id', '>', self.events[0].recurrence_id.id)])
-        self.assertTrue(self.events[0].recurrence_id.exists())
-        self.assertEqual(new_recurrence.count, 5)
-        self.assertFalse(any(old_event.active for old_event in old_events - old_events[0]))
-        for event in new_recurrence.calendar_event_ids:
-            self.assertEqual(event.name, 'New name')
-
-        # update the base event
-        new_events = new_recurrence.calendar_event_ids.sorted('start')
-        new_events[0].write({
-            'name': 'Old name',
-            'recurrence_update': 'future_events'
-        })
-        self.assertTrue(new_recurrence.exists())
-        for event in new_recurrence.calendar_event_ids:
-            self.assertEqual(event.name, 'Old name')
 
     def test_update_recurrence_all(self):
         self.events[1].write({

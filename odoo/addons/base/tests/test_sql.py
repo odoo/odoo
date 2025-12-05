@@ -6,7 +6,6 @@ from odoo.tests.common import tagged, BaseCase, TransactionCase
 from odoo.tools import SQL, mute_logger, sql
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSQL(BaseCase):
 
     def test_sql_empty(self):

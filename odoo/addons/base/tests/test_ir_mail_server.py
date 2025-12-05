@@ -49,7 +49,47 @@ class EmailConfigCase(TransactionCase):
 
 
 @tagged('mail_server')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestIrMailServerAtInstall(TransactionCase, MockSmtplibCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.config_parameter'].sudo().set_str('mail.default.from_filter', None)
+        cls._init_mail_servers()
+
+    @users('admin')
+    def test_mail_server_get_test_email_from(self):
+        """ Test the email used to test the mail server connection. Check
+        from_filter parsing / default fallback value. """
+        self.env.user.email = 'mitchell.admin@example.com'
+        test_server = self.env['ir.mail_server'].create({
+            'from_filter': 'example_2.com, example_3.com',
+            'name': 'Test Server',
+            'smtp_host': 'smtp_host',
+            'smtp_encryption': 'none',
+        })
+        for from_filter, expected_test_email in zip(
+            [
+                'example_2.com, example_3.com',
+                'dummy.com, full_email@example_2.com, dummy2.com',
+                # fallback on user's email
+                ' ',
+                ',',
+                False,
+            ], [
+                'noreply@example_2.com',
+                'full_email@example_2.com',
+                self.env.user.email,
+                self.env.user.email,
+                self.env.user.email,
+            ],
+        ):
+            with self.subTest(from_filter=from_filter):
+                test_server.from_filter = from_filter
+                email_from = test_server._get_test_email_from()
+                self.assertEqual(email_from, expected_test_email)
+
+@tagged('mail_server')
 class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
     @classmethod
@@ -148,38 +188,6 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                 'smtp_encryption': 'none',
                 'smtp_authentication': 'certificate',
             })
-
-    @users('admin')
-    def test_mail_server_get_test_email_from(self):
-        """ Test the email used to test the mail server connection. Check
-        from_filter parsing / default fallback value. """
-        self.env.user.email = 'mitchell.admin@example.com'
-        test_server = self.env['ir.mail_server'].create({
-            'from_filter': 'example_2.com, example_3.com',
-            'name': 'Test Server',
-            'smtp_host': 'smtp_host',
-            'smtp_encryption': 'none',
-        })
-        for from_filter, expected_test_email in zip(
-            [
-                'example_2.com, example_3.com',
-                'dummy.com, full_email@example_2.com, dummy2.com',
-                # fallback on user's email
-                ' ',
-                ',',
-                False,
-            ], [
-                'noreply@example_2.com',
-                'full_email@example_2.com',
-                self.env.user.email,
-                self.env.user.email,
-                self.env.user.email,
-            ],
-        ):
-            with self.subTest(from_filter=from_filter):
-                test_server.from_filter = from_filter
-                email_from = test_server._get_test_email_from()
-                self.assertEqual(email_from, expected_test_email)
 
     def test_mail_server_match_from_filter(self):
         """ Test the from_filter field on the "ir.mail_server". """

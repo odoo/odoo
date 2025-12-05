@@ -92,7 +92,6 @@ class MimeGuessingCases:
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMimeGuessingOdoo(BaseCase, MimeGuessingCases):
     guess_mimetype = staticmethod(_odoo_guess_mimetype)
 

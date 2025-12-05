@@ -77,7 +77,171 @@ class TestReportsCommon(TransactionCase):
         return res
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestReportsAtInstall(TestReportsCommon):
+    def test_report_reception_3_multiwarehouse(self):
+        """ Check that reception report respects same warehouse for
+        receipts and deliveries.
+        """
+        # Warehouse config.
+        wh_2 = self.env['stock.warehouse'].create({
+            'name': 'Other Warehouse',
+            'code': 'OTHER',
+        })
+        picking_type_out_2 = self.env['stock.picking.type'].search([
+            ('code', '=', 'outgoing'),
+            ('warehouse_id', '=', wh_2.id),
+        ])
+
+        # Creates delivery in warehouse2
+        delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = picking_type_out_2
+        with delivery_form.move_ids.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 100
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+
+        # Create a receipt in warehouse1
+        receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        receipt_form.partner_id = self.partner
+        receipt_form.picking_type_id = self.picking_type_in
+        with receipt_form.move_ids.new() as move_line:
+            move_line.product_id = self.product
+            move_line.quantity = 15
+        receipt = receipt_form.save()
+
+        report = self.env['report.stock.report_reception']
+        report_values = report._get_report_values(docids=[receipt.id])
+        self.assertEqual(len(report_values['sources_to_lines']), 0, "The receipt and delivery are in different warehouses => no moves to link to should be found.")
+
+    def test_report_forecast_4_intermediate_transfers(self):
+        """ Create a receipt in 3 steps and check the report line.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_routes = self.env.ref('stock.group_adv_location')
+        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
+        self.env.user.write({'group_ids': [(4, grp_multi_routes.id)]})
+        # Warehouse config.
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.reception_steps = 'three_steps'
+        # Product config.
+        self.product.write({'route_ids': [(4, self.env.ref('stock.route_warehouse0_mto').id)]})
+        # Create a RR
+        reordering_rule = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product RR',
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': self.product.id,
+            'product_min_qty': 5,
+            'product_max_qty': 10,
+        })
+        reordering_rule.action_replenish()
+        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        pickings = self.env['stock.picking'].search([('product_id', '=', self.product.id)])
+        receipt = pickings.filtered(lambda p: p.picking_type_id.id == self.picking_type_in.id)
+
+        # The Forecasted Report don't show intermediate moves, it must display only ingoing/outgoing documents.
+        self.assertEqual(len(lines), 2, "The report must have only 2 lines.")
+        self.assertEqual(lines[1]['document_in']['id'], receipt.id, "The report must only show the receipt.")
+        self.assertEqual(lines[1]['document_out'], False)
+        self.assertEqual(lines[1]['quantity'], reordering_rule.product_max_qty)
+
+    def test_report_forecast_5_multi_warehouse(self):
+        """ Create some transfer for two different warehouses and check the
+        report display the good moves according to the selected warehouse.
+        """
+        # Warehouse config.
+        wh_2 = self.wh_2
+        picking_type_out_2 = self.env['stock.picking.type'].search([
+            ('code', '=', 'outgoing'),
+            ('warehouse_id', '=', wh_2.id),
+        ])
+
+        # Creates a delivery then checks draft picking quantities.
+        delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = self.picking_type_out
+        delivery = delivery_form.save()
+        with delivery_form.move_ids.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 5
+        delivery = delivery_form.save()
+
+        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1, "Must have 1 line.")
+        self.assertEqual(draft_picking_qty['out'], 5)
+
+        report_values, docs, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse_id': wh_2.id},
+        )
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(draft_picking_qty['out'], 0)
+
+        # Confirm the delivery -> The report still have 1 line.
+        delivery.action_confirm()
+        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(draft_picking_qty['out'], 0)
+        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
+        self.assertEqual(lines[0]['quantity'], 5)
+
+        report_values, docs, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse_id': wh_2.id},
+        )
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(draft_picking_qty['out'], 0)
+
+        # Creates a delivery for the second warehouse.
+        delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = picking_type_out_2
+        delivery_2 = delivery_form.save()
+        with delivery_form.move_ids.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 8
+        delivery_2 = delivery_form.save()
+
+        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(draft_picking_qty['out'], 0)
+        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
+        self.assertEqual(lines[0]['quantity'], 5)
+
+        report_values, docs, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse_id': wh_2.id},
+        )
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(draft_picking_qty['out'], 8)
+        # Confirm the second delivery -> The report must now have 1 line.
+        delivery_2.action_confirm()
+        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(draft_picking_qty['out'], 0)
+        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
+        self.assertEqual(lines[0]['quantity'], 5)
+
+        report_values, docs, lines = self.get_report_forecast(
+            product_template_ids=self.product_template.ids,
+            context={'warehouse_id': wh_2.id},
+        )
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1)
+        self.assertEqual(draft_picking_qty['out'], 0)
+        self.assertEqual(lines[0]['document_out']['id'], delivery_2.id)
+        self.assertEqual(lines[0]['quantity'], 8)
+
+
 class TestReports(TestReportsCommon):
     def _check_closure_commands(self, zpl_rendered_template):
         wrong_xz_count = findall(r'\^XZ[^\\]+[^n]', str(zpl_rendered_template))
@@ -713,131 +877,6 @@ class TestReports(TestReportsCommon):
         self.assertEqual(lines[5]['document_in'], False)
         self.assertEqual(lines[6]['document_out']['id'], delivery_6.id)
         self.assertEqual(lines[6]['document_in'], False)
-
-    def test_report_forecast_4_intermediate_transfers(self):
-        """ Create a receipt in 3 steps and check the report line.
-        """
-        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
-        grp_multi_routes = self.env.ref('stock.group_adv_location')
-        self.env.user.write({'group_ids': [(4, grp_multi_loc.id)]})
-        self.env.user.write({'group_ids': [(4, grp_multi_routes.id)]})
-        # Warehouse config.
-        warehouse = self.env.ref('stock.warehouse0')
-        warehouse.reception_steps = 'three_steps'
-        # Product config.
-        self.product.write({'route_ids': [(4, self.env.ref('stock.route_warehouse0_mto').id)]})
-        # Create a RR
-        reordering_rule = self.env['stock.warehouse.orderpoint'].create({
-            'name': 'Product RR',
-            'location_id': warehouse.lot_stock_id.id,
-            'product_id': self.product.id,
-            'product_min_qty': 5,
-            'product_max_qty': 10,
-        })
-        reordering_rule.action_replenish()
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        pickings = self.env['stock.picking'].search([('product_id', '=', self.product.id)])
-        receipt = pickings.filtered(lambda p: p.picking_type_id.id == self.picking_type_in.id)
-
-        # The Forecasted Report don't show intermediate moves, it must display only ingoing/outgoing documents.
-        self.assertEqual(len(lines), 2, "The report must have only 2 lines.")
-        self.assertEqual(lines[1]['document_in']['id'], receipt.id, "The report must only show the receipt.")
-        self.assertEqual(lines[1]['document_out'], False)
-        self.assertEqual(lines[1]['quantity'], reordering_rule.product_max_qty)
-
-    def test_report_forecast_5_multi_warehouse(self):
-        """ Create some transfer for two different warehouses and check the
-        report display the good moves according to the selected warehouse.
-        """
-        # Warehouse config.
-        wh_2 = self.wh_2
-        picking_type_out_2 = self.env['stock.picking.type'].search([
-            ('code', '=', 'outgoing'),
-            ('warehouse_id', '=', wh_2.id),
-        ])
-
-        # Creates a delivery then checks draft picking quantities.
-        delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
-        delivery_form.partner_id = self.partner
-        delivery_form.picking_type_id = self.picking_type_out
-        delivery = delivery_form.save()
-        with delivery_form.move_ids.new() as move_line:
-            move_line.product_id = self.product
-            move_line.product_uom_qty = 5
-        delivery = delivery_form.save()
-
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
-        self.assertEqual(len(lines), 1, "Must have 1 line.")
-        self.assertEqual(draft_picking_qty['out'], 5)
-
-        report_values, docs, lines = self.get_report_forecast(
-            product_template_ids=self.product_template.ids,
-            context={'warehouse_id': wh_2.id},
-        )
-        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(draft_picking_qty['out'], 0)
-
-        # Confirm the delivery -> The report still have 1 line.
-        delivery.action_confirm()
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(draft_picking_qty['out'], 0)
-        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
-        self.assertEqual(lines[0]['quantity'], 5)
-
-        report_values, docs, lines = self.get_report_forecast(
-            product_template_ids=self.product_template.ids,
-            context={'warehouse_id': wh_2.id},
-        )
-        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(draft_picking_qty['out'], 0)
-
-        # Creates a delivery for the second warehouse.
-        delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
-        delivery_form.partner_id = self.partner
-        delivery_form.picking_type_id = picking_type_out_2
-        delivery_2 = delivery_form.save()
-        with delivery_form.move_ids.new() as move_line:
-            move_line.product_id = self.product
-            move_line.product_uom_qty = 8
-        delivery_2 = delivery_form.save()
-
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(draft_picking_qty['out'], 0)
-        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
-        self.assertEqual(lines[0]['quantity'], 5)
-
-        report_values, docs, lines = self.get_report_forecast(
-            product_template_ids=self.product_template.ids,
-            context={'warehouse_id': wh_2.id},
-        )
-        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(draft_picking_qty['out'], 8)
-        # Confirm the second delivery -> The report must now have 1 line.
-        delivery_2.action_confirm()
-        report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(draft_picking_qty['out'], 0)
-        self.assertEqual(lines[0]['document_out']['id'], delivery.id)
-        self.assertEqual(lines[0]['quantity'], 5)
-
-        report_values, docs, lines = self.get_report_forecast(
-            product_template_ids=self.product_template.ids,
-            context={'warehouse_id': wh_2.id},
-        )
-        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(draft_picking_qty['out'], 0)
-        self.assertEqual(lines[0]['document_out']['id'], delivery_2.id)
-        self.assertEqual(lines[0]['quantity'], 8)
 
     def test_report_forecast_5_multi_warehouse_chain(self):
         """ Create a MTO chain inter warehouse, the forecast report should ignore the
@@ -1679,43 +1718,6 @@ class TestReports(TestReportsCommon):
         self.assertEqual(mto_move.state, 'assigned', "MTO move state shouldn't have changed")
         total_non_mto_qty = sum(move.quantity for move in non_mto_moves)
         self.assertEqual(total_non_mto_qty, outgoing_qty - (receipt1_qty + receipt2_qty), "Unassigned move should be also unreserved")
-
-    def test_report_reception_3_multiwarehouse(self):
-        """ Check that reception report respects same warehouse for
-        receipts and deliveries.
-        """
-        # Warehouse config.
-        wh_2 = self.env['stock.warehouse'].create({
-            'name': 'Other Warehouse',
-            'code': 'OTHER',
-        })
-        picking_type_out_2 = self.env['stock.picking.type'].search([
-            ('code', '=', 'outgoing'),
-            ('warehouse_id', '=', wh_2.id),
-        ])
-
-        # Creates delivery in warehouse2
-        delivery_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
-        delivery_form.partner_id = self.partner
-        delivery_form.picking_type_id = picking_type_out_2
-        with delivery_form.move_ids.new() as move_line:
-            move_line.product_id = self.product
-            move_line.product_uom_qty = 100
-        delivery = delivery_form.save()
-        delivery.action_confirm()
-
-        # Create a receipt in warehouse1
-        receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
-        receipt_form.partner_id = self.partner
-        receipt_form.picking_type_id = self.picking_type_in
-        with receipt_form.move_ids.new() as move_line:
-            move_line.product_id = self.product
-            move_line.quantity = 15
-        receipt = receipt_form.save()
-
-        report = self.env['report.stock.report_reception']
-        report_values = report._get_report_values(docids=[receipt.id])
-        self.assertEqual(len(report_values['sources_to_lines']), 0, "The receipt and delivery are in different warehouses => no moves to link to should be found.")
 
     def test_report_reception_5_move_splitting(self):
         """ Check the complicated use cases of correct move splitting when assigning/unassigning when:

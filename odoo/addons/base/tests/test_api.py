@@ -10,7 +10,63 @@ from odoo.tests import tagged
 from odoo.exceptions import AccessError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestAPIAtInstall(SavepointCaseWithUserDemo):
+    @mute_logger('odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_50_environment(self):
+        """ Test environment on records. """
+        # partners and reachable records are attached to self.env
+        partners = self.env['res.partner'].search([('name', 'ilike', 'j'), ('id', 'in', self.partners.ids)])
+        self.assertEqual(partners.env, self.env)
+        for x in (partners, partners[0], partners[0].company_id):
+            self.assertEqual(x.env, self.env)
+        for p in partners:
+            self.assertEqual(p.env, self.env)
+
+        # check that the current user can read and modify company data
+        partners[0].company_id.name
+        partners[0].company_id.write({'name': 'Fools'})
+
+        # create an environment with a demo user
+        demo = self.env['res.users'].create({
+            'name': 'test_environment_demo',
+            'login': 'test_environment_demo',
+            'password': 'test_environment_demo',
+        })
+        demo_env = self.env(user=demo)
+        self.assertNotEqual(demo_env, self.env)
+
+        # partners and related records are still attached to self.env
+        self.assertEqual(partners.env, self.env)
+        for x in (partners, partners[0], partners[0].company_id):
+            self.assertEqual(x.env, self.env)
+        for p in partners:
+            self.assertEqual(p.env, self.env)
+
+        # create record instances attached to demo_env
+        demo_partners = partners.with_user(demo)
+        self.assertEqual(demo_partners.env, demo_env)
+        for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
+            self.assertEqual(x.env, demo_env)
+        for p in demo_partners:
+            self.assertEqual(p.env, demo_env)
+
+        # demo user can read but not modify company data
+        demo_partner = self.env['res.partner'].search([('name', '=', 'Landon Roberts')]).with_user(demo)
+        self.assertTrue(demo_partner.company_id, 'This partner is supposed to be linked to a company')
+        demo_partner.company_id.name
+        with self.assertRaises(AccessError):
+            demo_partner.company_id.write({'name': 'Pricks'})
+
+        # remove demo user from all groups
+        demo.write({'group_ids': [Command.clear()]})
+
+        # demo user can no longer access partner data
+        with self.assertRaises(AccessError):
+            demo_partner.company_id.name
+
+
 class TestAPI(SavepointCaseWithUserDemo):
     """ test the new API of the ORM """
 
@@ -163,60 +219,6 @@ class TestAPI(SavepointCaseWithUserDemo):
             p.write({'active': False})
         for p in partners:
             self.assertFalse(p.active)
-
-    @mute_logger('odoo.models')
-    @mute_logger('odoo.addons.base.models.ir_model')
-    def test_50_environment(self):
-        """ Test environment on records. """
-        # partners and reachable records are attached to self.env
-        partners = self.env['res.partner'].search([('name', 'ilike', 'j'), ('id', 'in', self.partners.ids)])
-        self.assertEqual(partners.env, self.env)
-        for x in (partners, partners[0], partners[0].company_id):
-            self.assertEqual(x.env, self.env)
-        for p in partners:
-            self.assertEqual(p.env, self.env)
-
-        # check that the current user can read and modify company data
-        partners[0].company_id.name
-        partners[0].company_id.write({'name': 'Fools'})
-
-        # create an environment with a demo user
-        demo = self.env['res.users'].create({
-            'name': 'test_environment_demo',
-            'login': 'test_environment_demo',
-            'password': 'test_environment_demo',
-        })
-        demo_env = self.env(user=demo)
-        self.assertNotEqual(demo_env, self.env)
-
-        # partners and related records are still attached to self.env
-        self.assertEqual(partners.env, self.env)
-        for x in (partners, partners[0], partners[0].company_id):
-            self.assertEqual(x.env, self.env)
-        for p in partners:
-            self.assertEqual(p.env, self.env)
-
-        # create record instances attached to demo_env
-        demo_partners = partners.with_user(demo)
-        self.assertEqual(demo_partners.env, demo_env)
-        for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
-            self.assertEqual(x.env, demo_env)
-        for p in demo_partners:
-            self.assertEqual(p.env, demo_env)
-
-        # demo user can read but not modify company data
-        demo_partner = self.env['res.partner'].search([('name', '=', 'Landon Roberts')]).with_user(demo)
-        self.assertTrue(demo_partner.company_id, 'This partner is supposed to be linked to a company')
-        demo_partner.company_id.name
-        with self.assertRaises(AccessError):
-            demo_partner.company_id.write({'name': 'Pricks'})
-
-        # remove demo user from all groups
-        demo.write({'group_ids': [Command.clear()]})
-
-        # demo user can no longer access partner data
-        with self.assertRaises(AccessError):
-            demo_partner.company_id.name
 
     @mute_logger('odoo.models')
     def test_60_cache(self):

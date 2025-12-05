@@ -54,7 +54,6 @@ class TestEventInternalsCommon(EventCase):
 
 
 @tagged('event_event')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEventData(TestEventInternalsCommon):
 
     @users('user_eventmanager')

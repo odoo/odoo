@@ -241,7 +241,6 @@ class MailGatewayCommon(MailCommon):
 
 
 @tagged('mail_gateway')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailgateway(MailGatewayCommon):
 
     def test_assert_initial_values(self):

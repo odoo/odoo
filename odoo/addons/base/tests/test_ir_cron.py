@@ -71,7 +71,6 @@ class CronMixinCase:
         return {'name': f'Dummy partner for TestIrCron {unique}'}
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestIrCron(TransactionCase, CronMixinCase):
 
     @classmethod

@@ -1,13 +1,10 @@
 """ Implementation of "INVENTORY VALUATION TESTS" spreadsheet. """
 
 from odoo import Command
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
-from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationStandard(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -199,7 +196,6 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertEqual(sub_loc_quant.quantity, 30)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationAVCO(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -434,7 +430,6 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product.qty_available, 2)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationFIFO(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):

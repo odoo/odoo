@@ -19,7 +19,227 @@ from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestFieldsAtInstall(TransactionCaseWithUserDemo, TransactionExpressionCase):
+    def test_13_inverse_with_unlink(self):
+        """ test x2many delete command combined with an inverse field """
+
+        country1 = self.env['res.country'].create({'name': 'test country', 'code': 'ZV'})
+        country2 = self.env['res.country'].create({'name': 'other country', 'code': 'ZX'})
+        company = self.env['res.company'].create({
+            'name': 'test company',
+            'child_ids': [
+                (0, 0, {'name': 'Child Company 1'}),
+                (0, 0, {'name': 'Child Company 2'}),
+            ],
+        })
+        child_company = company.child_ids[0]
+
+        # check first that the field has an inverse and is not stored
+        field = type(company).country_id
+        self.assertFalse(field.store)
+        self.assertTrue(field.inverse)
+
+        company.write({'country_id': country1.id})
+        self.assertEqual(company.country_id, country1)
+
+        company.write({
+            'country_id': country2.id,
+            'child_ids': [(2, child_company.id)],
+        })
+        self.assertEqual(company.country_id, country2)
+
+    def test_23_relation(self):
+        """ test relation fields """
+        demo = self.user_demo
+        message = self.env.ref('test_orm.message_0_0')
+
+        # check environment of record and related records
+        self.assertEqual(message.env, self.env)
+        self.assertEqual(message.discussion.env, self.env)
+
+        demo_env = self.env(user=demo)
+        self.assertNotEqual(demo_env, self.env)
+
+        # check environment of record and related records
+        self.assertEqual(message.env, self.env)
+        self.assertEqual(message.discussion.env, self.env)
+
+        # "migrate" message into demo_env, and check again
+        demo_message = message.with_user(demo)
+        self.assertEqual(demo_message.env, demo_env)
+        self.assertEqual(demo_message.discussion.env, demo_env)
+
+        # See YTI FIXME
+        self.env.invalidate_all()
+
+        # assign record's parent to a record in demo_env
+        message.discussion = message.discussion.copy({'name': 'Copy'})
+
+        # both message and its parent field must be in self.env
+        self.assertEqual(message.env, self.env)
+        self.assertEqual(message.discussion.env, self.env)
+
+    def test_28_company_dependent_search(self):
+        """ Test the search on company-dependent fields in all corner cases.
+            This assumes that filtered_domain() correctly filters records when
+            its domain refers to company-dependent fields.
+        """
+        IrDefault = self.env['ir.default']
+        Model = self.env['test_orm.company']
+
+        # create 4 records for all cases: two with explicit truthy values, one
+        # with an explicit falsy value, and one without an explicit value
+        records = Model.create([{}] * 4)
+        record_fallback = Model.create({})
+
+        # For each field, we assign values to the records, and test a number of
+        # searches.  The search cases are given by comparison operators, and for
+        # each operator, we test a number of possible operands.  Every search()
+        # returns a subset of the records, and we compare it to an equivalent
+        # search performed by filtered_domain().
+
+        def test_field(field_name, truthy_values, operations):
+            # set ir.defaults to all records except the last one
+            for rec, val in zip(records, truthy_values + [False]):
+                rec[field_name] = val
+
+            # test without default value
+            test_cases(field_name, operations)
+
+            # set default value to False
+            IrDefault.set(Model._name, field_name, False)
+            self.env.flush_all()
+            self.env.invalidate_all()
+            for rec, val in zip(records, truthy_values + [False]):
+                rec[field_name] = val
+            test_cases(field_name, operations, False)
+
+            # set default value to truthy_values[0]
+            IrDefault.set(Model._name, field_name, truthy_values[0])
+            self.env.flush_all()
+            self.env.invalidate_all()
+            for rec, val in zip(records, truthy_values + [False]):
+                rec[field_name] = val
+            test_cases(field_name, operations, truthy_values[0])
+
+        def test_cases(field_name, operations, default=None):
+            model = self.env['test_orm.company']
+            field = model._fields[field_name]
+            field_fallback = field.get_company_dependent_fallback(model)
+            record_fallback[field_name] = field_fallback
+            current_thread = threading.current_thread()
+
+            for operator, values in operations.items():
+                for value in values:
+                    domain = [(field_name, operator, value)]
+                    company_dependent_column_not_null = not record_fallback.filtered_domain(domain)
+                    if company_dependent_column_not_null:
+                        with self.subTest(domain=domain, default=default):
+                            Model.search([('id', 'in', records.ids)] + domain)
+                            current_thread.query_count = 0
+                            current_thread.query_time = 0
+                            Model.search([('id', 'in', records.ids)] + domain)  # warmup
+                            if current_thread.query_count:
+                                # parent_of and child_of may need extra queries
+                                expected_contained_sqls = [''] * (current_thread.query_count - 1) + [f'"test_orm_company"."{field_name}" IS NOT NULL']
+                                with self.assertQueriesContain(expected_contained_sqls):
+                                    Model.search([('id', 'in', records.ids)] + domain)
+
+                    with self.subTest(domain=domain, default=default):
+                        self._search(
+                            Model,
+                            [('id', 'in', records.ids)] + domain,
+                            [('id', 'in', records.ids)],
+                            test_complement=True,
+                        )
+
+        # boolean fields
+        test_field('truth', [True, True], {
+            '=': (True, False),
+            '!=': (True, False),
+        })
+        # integer fields
+        test_field('count', [10, -2], {
+            '=': (10, -2, 0, False),
+            '!=': (10, -2, 0, False),
+            '<': (10, -2, 0),
+            '>=': (10, -2, 0),
+            '<=': (10, -2, 0),
+            '>': (10, -2, 0),
+        })
+        # float fields
+        test_field('phi', [1.61803, -1], {
+            '=': (1.61803, -1, 0, False),
+            '!=': (1.61803, -1, 0, False),
+            '<': (1.61803, -1, 0),
+            '>=': (1.61803, -1, 0),
+            '<=': (1.61803, -1, 0),
+            '>': (1.61803, -1, 0),
+        })
+        # char fields
+        test_field('foo', ['qwer', 'azer'], {
+            'like': ('qwer', 'azer'),
+            'ilike': ('qwer', 'azer'),
+            'not like': ('qwer', 'azer'),
+            'not ilike': ('qwer', 'azer'),
+            '=': ('qwer', 'azer', False),
+            '!=': ('qwer', 'azer', False),
+            'not in': (['qwer', 'azer'], ['qwer', False], [False], []),
+            'in': (['qwer', 'azer'], ['qwer', False], [False], []),
+        })
+        # date fields
+        date1, date2 = date(2021, 11, 22), date(2021, 11, 23)
+        test_field('date', [date1, date2], {
+            '=': (date1, date2, False),
+            '!=': (date1, date2, False),
+            '<': (date1, date2),
+            '>=': (date1, date2),
+            '<=': (date1, date2),
+            '>': (date1, date2),
+        })
+        # datetime fields
+        moment1, moment2 = datetime(2021, 11, 22), datetime(2021, 11, 23)
+        test_field('moment', [moment1, moment2], {
+            '=': (moment1, moment2, False),
+            '!=': (moment1, moment2, False),
+            '<': (moment1, moment2),
+            '>=': (moment1, moment2),
+            '<=': (moment1, moment2),
+            '>': (moment1, moment2),
+        })
+        # many2one fields
+        tag1, tag2 = self.env['test_orm.multi.tag'].create([{'name': 'one'}, {'name': 'two'}])
+        test_field('tag_id', [tag1.id, tag2.id], {
+            'like': (tag1.name, tag2.name),
+            'ilike': (tag1.name, tag2.name),
+            'not like': (tag1.name, tag2.name),
+            'not ilike': (tag1.name, tag2.name),
+            '=': (tag1.id, tag2.id, False),
+            '!=': (tag1.id, tag2.id, False),
+            'in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
+            'not in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
+            'any': ([('name', '=', tag1.name)], [('name', '=', False)], []),
+            'not any': ([('name', '=', tag1.name)], [('name', '=', False)], []),
+        })
+
+        company0 = self.env.ref('base.main_company')
+        company1 = self.env['res.company'].create({'name': 'A1', 'parent_id': company0.id})
+        company2 = self.env['res.company'].create({'name': 'B1', 'parent_id': company1.id})
+
+        company1.partner_id.parent_id = company0.partner_id
+        company2.partner_id.parent_id = company1.partner_id
+        self.env.invalidate_all()
+        test_field('company_id', [company1.id, company2.id], {
+            'child_of': (company0.id, company1.id, company2.id),
+            'parent_of': (company0.id, company1.id, company2.id),
+        })
+        test_field('partner_id', [company1.id, company2.id], {
+            'child_of': (company0.partner_id.id, company1.partner_id.id, company2.partner_id.id),
+            'parent_of': (company0.partner_id.id, company1.partner_id.id, company2.partner_id.id),
+        })
+
+
 class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def setUp(self):
@@ -749,34 +969,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         with self.assertRaises(AccessError):
             foo.with_user(user).display_name = 'Forbidden'
 
-    def test_13_inverse_with_unlink(self):
-        """ test x2many delete command combined with an inverse field """
-
-        country1 = self.env['res.country'].create({'name': 'test country', 'code': 'ZV'})
-        country2 = self.env['res.country'].create({'name': 'other country', 'code': 'ZX'})
-        company = self.env['res.company'].create({
-            'name': 'test company',
-            'child_ids': [
-                (0, 0, {'name': 'Child Company 1'}),
-                (0, 0, {'name': 'Child Company 2'}),
-            ],
-        })
-        child_company = company.child_ids[0]
-
-        # check first that the field has an inverse and is not stored
-        field = type(company).country_id
-        self.assertFalse(field.store)
-        self.assertTrue(field.inverse)
-
-        company.write({'country_id': country1.id})
-        self.assertEqual(company.country_id, country1)
-
-        company.write({
-            'country_id': country2.id,
-            'child_ids': [(2, child_company.id)],
-        })
-        self.assertEqual(company.country_id, country2)
-
     def test_14_search(self):
         """ test search on computed fields """
         discussion = self.env.ref('test_orm.discussion_0')
@@ -1199,36 +1391,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             record_list.state = 'zz_ZZ'
         record_call.lang = 'zz_ZZ'
 
-    def test_23_relation(self):
-        """ test relation fields """
-        demo = self.user_demo
-        message = self.env.ref('test_orm.message_0_0')
-
-        # check environment of record and related records
-        self.assertEqual(message.env, self.env)
-        self.assertEqual(message.discussion.env, self.env)
-
-        demo_env = self.env(user=demo)
-        self.assertNotEqual(demo_env, self.env)
-
-        # check environment of record and related records
-        self.assertEqual(message.env, self.env)
-        self.assertEqual(message.discussion.env, self.env)
-
-        # "migrate" message into demo_env, and check again
-        demo_message = message.with_user(demo)
-        self.assertEqual(demo_message.env, demo_env)
-        self.assertEqual(demo_message.discussion.env, demo_env)
-
-        # See YTI FIXME
-        self.env.invalidate_all()
-
-        # assign record's parent to a record in demo_env
-        message.discussion = message.discussion.copy({'name': 'Copy'})
-
-        # both message and its parent field must be in self.env
-        self.assertEqual(message.env, self.env)
-        self.assertEqual(message.discussion.env, self.env)
 
     def test_24_reference(self):
         """ test reference fields. """
@@ -1646,165 +1808,6 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             record.search([('id', '=', record.id), ('tag_id', '=', False)]),
             record,
         )
-
-    def test_28_company_dependent_search(self):
-        """ Test the search on company-dependent fields in all corner cases.
-            This assumes that filtered_domain() correctly filters records when
-            its domain refers to company-dependent fields.
-        """
-        IrDefault = self.env['ir.default']
-        Model = self.env['test_orm.company']
-
-        # create 4 records for all cases: two with explicit truthy values, one
-        # with an explicit falsy value, and one without an explicit value
-        records = Model.create([{}] * 4)
-        record_fallback = Model.create({})
-
-        # For each field, we assign values to the records, and test a number of
-        # searches.  The search cases are given by comparison operators, and for
-        # each operator, we test a number of possible operands.  Every search()
-        # returns a subset of the records, and we compare it to an equivalent
-        # search performed by filtered_domain().
-
-        def test_field(field_name, truthy_values, operations):
-            # set ir.defaults to all records except the last one
-            for rec, val in zip(records, truthy_values + [False]):
-                rec[field_name] = val
-
-            # test without default value
-            test_cases(field_name, operations)
-
-            # set default value to False
-            IrDefault.set(Model._name, field_name, False)
-            self.env.flush_all()
-            self.env.invalidate_all()
-            for rec, val in zip(records, truthy_values + [False]):
-                rec[field_name] = val
-            test_cases(field_name, operations, False)
-
-            # set default value to truthy_values[0]
-            IrDefault.set(Model._name, field_name, truthy_values[0])
-            self.env.flush_all()
-            self.env.invalidate_all()
-            for rec, val in zip(records, truthy_values + [False]):
-                rec[field_name] = val
-            test_cases(field_name, operations, truthy_values[0])
-
-        def test_cases(field_name, operations, default=None):
-            model = self.env['test_orm.company']
-            field = model._fields[field_name]
-            field_fallback = field.get_company_dependent_fallback(model)
-            record_fallback[field_name] = field_fallback
-            current_thread = threading.current_thread()
-
-            for operator, values in operations.items():
-                for value in values:
-                    domain = [(field_name, operator, value)]
-                    company_dependent_column_not_null = not record_fallback.filtered_domain(domain)
-                    if company_dependent_column_not_null:
-                        with self.subTest(domain=domain, default=default):
-                            Model.search([('id', 'in', records.ids)] + domain)
-                            current_thread.query_count = 0
-                            current_thread.query_time = 0
-                            Model.search([('id', 'in', records.ids)] + domain)  # warmup
-                            if current_thread.query_count:
-                                # parent_of and child_of may need extra queries
-                                expected_contained_sqls = [''] * (current_thread.query_count - 1) + [f'"test_orm_company"."{field_name}" IS NOT NULL']
-                                with self.assertQueriesContain(expected_contained_sqls):
-                                    Model.search([('id', 'in', records.ids)] + domain)
-
-                    with self.subTest(domain=domain, default=default):
-                        self._search(
-                            Model,
-                            [('id', 'in', records.ids)] + domain,
-                            [('id', 'in', records.ids)],
-                            test_complement=True,
-                        )
-
-        # boolean fields
-        test_field('truth', [True, True], {
-            '=': (True, False),
-            '!=': (True, False),
-        })
-        # integer fields
-        test_field('count', [10, -2], {
-            '=': (10, -2, 0, False),
-            '!=': (10, -2, 0, False),
-            '<': (10, -2, 0),
-            '>=': (10, -2, 0),
-            '<=': (10, -2, 0),
-            '>': (10, -2, 0),
-        })
-        # float fields
-        test_field('phi', [1.61803, -1], {
-            '=': (1.61803, -1, 0, False),
-            '!=': (1.61803, -1, 0, False),
-            '<': (1.61803, -1, 0),
-            '>=': (1.61803, -1, 0),
-            '<=': (1.61803, -1, 0),
-            '>': (1.61803, -1, 0),
-        })
-        # char fields
-        test_field('foo', ['qwer', 'azer'], {
-            'like': ('qwer', 'azer'),
-            'ilike': ('qwer', 'azer'),
-            'not like': ('qwer', 'azer'),
-            'not ilike': ('qwer', 'azer'),
-            '=': ('qwer', 'azer', False),
-            '!=': ('qwer', 'azer', False),
-            'not in': (['qwer', 'azer'], ['qwer', False], [False], []),
-            'in': (['qwer', 'azer'], ['qwer', False], [False], []),
-        })
-        # date fields
-        date1, date2 = date(2021, 11, 22), date(2021, 11, 23)
-        test_field('date', [date1, date2], {
-            '=': (date1, date2, False),
-            '!=': (date1, date2, False),
-            '<': (date1, date2),
-            '>=': (date1, date2),
-            '<=': (date1, date2),
-            '>': (date1, date2),
-        })
-        # datetime fields
-        moment1, moment2 = datetime(2021, 11, 22), datetime(2021, 11, 23)
-        test_field('moment', [moment1, moment2], {
-            '=': (moment1, moment2, False),
-            '!=': (moment1, moment2, False),
-            '<': (moment1, moment2),
-            '>=': (moment1, moment2),
-            '<=': (moment1, moment2),
-            '>': (moment1, moment2),
-        })
-        # many2one fields
-        tag1, tag2 = self.env['test_orm.multi.tag'].create([{'name': 'one'}, {'name': 'two'}])
-        test_field('tag_id', [tag1.id, tag2.id], {
-            'like': (tag1.name, tag2.name),
-            'ilike': (tag1.name, tag2.name),
-            'not like': (tag1.name, tag2.name),
-            'not ilike': (tag1.name, tag2.name),
-            '=': (tag1.id, tag2.id, False),
-            '!=': (tag1.id, tag2.id, False),
-            'in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
-            'not in': ([tag1.id, tag2.id], [tag2.id, False], [False], []),
-            'any': ([('name', '=', tag1.name)], [('name', '=', False)], []),
-            'not any': ([('name', '=', tag1.name)], [('name', '=', False)], []),
-        })
-
-        company0 = self.env.ref('base.main_company')
-        company1 = self.env['res.company'].create({'name': 'A1', 'parent_id': company0.id})
-        company2 = self.env['res.company'].create({'name': 'B1', 'parent_id': company1.id})
-
-        company1.partner_id.parent_id = company0.partner_id
-        company2.partner_id.parent_id = company1.partner_id
-        self.env.invalidate_all()
-        test_field('company_id', [company1.id, company2.id], {
-            'child_of': (company0.id, company1.id, company2.id),
-            'parent_of': (company0.id, company1.id, company2.id),
-        })
-        test_field('partner_id', [company1.id, company2.id], {
-            'child_of': (company0.partner_id.id, company1.partner_id.id, company2.partner_id.id),
-            'parent_of': (company0.partner_id.id, company1.partner_id.id, company2.partner_id.id),
-        })
 
     def test_29_company_dependent_html(self):
         company0 = self.env.ref('base.main_company')
@@ -3275,6 +3278,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(related_float_field.column_type[1], 'numeric')
 
 
+@tagged('at_install', '-post_install')
 class TestX2many(TransactionExpressionCase):
 
     @classmethod
@@ -3973,7 +3977,6 @@ class TestMagicFields(TransactionCase):
         self.assertTrue(field.store)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestParentStore(TransactionCaseWithUserDemo):
 
     @classmethod
@@ -4240,6 +4243,7 @@ class TestRequiredMany2oneTransient(TransactionCase):
 
 
 @tagged('m2oref')
+@tagged('at_install', '-post_install')
 class TestMany2oneReference(TransactionExpressionCase):
 
     def test_delete_m2o_reference_records(self):

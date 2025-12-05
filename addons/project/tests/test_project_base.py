@@ -91,7 +91,79 @@ class TestProjectCommon(TransactionCase):
             })
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestProjectBaseAtInstall(TestProjectCommon):
+    def test_change_project_or_partner_company(self):
+        """ Tests that it is impossible to change the company of a project
+            if the company of the partner is different and vice versa if the company of the project is set.
+            If the company of the project is not set, there are no restriction on its partner company-wise.
+        """
+        company_1 = self.env.company
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        partner = self.env['res.partner'].create({
+            'name': 'Partner',
+        })
+        self.project_pigs.partner_id = partner
+
+        # Neither the partner nor the project have a company. Their companies can be updated.
+        self.assertFalse(partner.company_id)
+        self.assertFalse(self.project_pigs.company_id)
+        self.project_pigs.company_id = company_1
+        self.assertEqual(self.project_pigs.company_id, company_1, "The company of the project should have been updated.")
+        self.project_pigs.company_id = False
+        # if the partner company is set, the project's should also be set
+        partner.company_id = company_1
+
+        # If the partner has a company, the project must have the same
+        self.assertEqual(partner.company_id, self.project_pigs.company_id, "The company of the project should have been updated.")
+
+        # The partner has a company and the project has a company. The partner's can only be set to False, the project's can not be changed
+        with self.assertRaises(UserError):
+            # Cannot change the company of a project if both the project and its partner have a company
+            self.project_pigs.company_id = company_2
+        with self.assertRaises(UserError):
+            # Cannot change the company of a partner if both the project and its partner have a company
+            partner.company_id = company_2
+        partner.company_id = False
+        self.project_pigs.company_id = False
+        self.assertFalse(self.project_pigs.company_id, "The company of the project should have been set to False.")
+        self.project_pigs.company_id = company_1
+        self.project_goats.company_id = company_1
+        self.project_goats.partner_id = partner
+        with self.assertRaises(UserError):
+            # Cannot change the company of a partner that part of multiple projects with different companies
+            self.project_goats.partner_id.company_id = company_2
+
+
+        # The project has a company, but the partner has none. The partner can only be set to False/project.company but the project can have any new company.
+        with self.assertRaises(UserError):
+            # Cannot change the company of a partner if both the project and its partner have a company
+            partner.company_id = company_2
+        self.project_pigs.company_id = company_2
+        self.assertEqual(self.project_pigs.company_id, company_2, "The company of the project should have been updated.")
+        self.project_pigs.company_id = False
+        self.assertFalse(self.project_pigs.company_id, "The company of the project should have been set to False.")
+        self.project_pigs.company_id = company_1
+        partner.company_id = company_1
+        self.assertEqual(partner.company_id, company_1, "The company of the partner should have been updated.")
+
+    @users('bastien')
+    def test_create_favorite_from_project_form(self):
+        Project = self.env['project.project']
+        form1 = Form(Project)
+        form1.name = 'Project Test1'
+        self.assertFalse(form1.is_favorite)
+        project1 = form1.save()
+        self.assertFalse(project1.is_favorite)
+
+        form2 = Form(Project)
+        form2.name = 'Project Test2'
+        form2.is_favorite = True
+        self.assertTrue(form2.is_favorite)
+        project2 = form2.save()
+        self.assertTrue(project2.is_favorite)
+
+
 class TestProjectBase(TestProjectCommon):
 
     def test_delete_project_with_tasks(self):
@@ -185,22 +257,6 @@ class TestProjectBase(TestProjectCommon):
         self.assertFalse(project2.is_favorite)
 
     @users('bastien')
-    def test_create_favorite_from_project_form(self):
-        Project = self.env['project.project']
-        form1 = Form(Project)
-        form1.name = 'Project Test1'
-        self.assertFalse(form1.is_favorite)
-        project1 = form1.save()
-        self.assertFalse(project1.is_favorite)
-
-        form2 = Form(Project)
-        form2.name = 'Project Test2'
-        form2.is_favorite = True
-        self.assertTrue(form2.is_favorite)
-        project2 = form2.save()
-        self.assertTrue(project2.is_favorite)
-
-    @users('bastien')
     def test_edit_favorite_from_project_form(self):
         project1, project2 = self.env['project.project'].create([{
             'name': 'Project Test1',
@@ -215,60 +271,6 @@ class TestProjectBase(TestProjectCommon):
         with Form(project2) as form:
             form.is_favorite = False
         self.assertFalse(project2.is_favorite)
-
-    def test_change_project_or_partner_company(self):
-        """ Tests that it is impossible to change the company of a project
-            if the company of the partner is different and vice versa if the company of the project is set.
-            If the company of the project is not set, there are no restriction on its partner company-wise.
-        """
-        company_1 = self.env.company
-        company_2 = self.env['res.company'].create({'name': 'Company 2'})
-        partner = self.env['res.partner'].create({
-            'name': 'Partner',
-        })
-        self.project_pigs.partner_id = partner
-
-        # Neither the partner nor the project have a company. Their companies can be updated.
-        self.assertFalse(partner.company_id)
-        self.assertFalse(self.project_pigs.company_id)
-        self.project_pigs.company_id = company_1
-        self.assertEqual(self.project_pigs.company_id, company_1, "The company of the project should have been updated.")
-        self.project_pigs.company_id = False
-        # if the partner company is set, the project's should also be set
-        partner.company_id = company_1
-
-        # If the partner has a company, the project must have the same
-        self.assertEqual(partner.company_id, self.project_pigs.company_id, "The company of the project should have been updated.")
-
-        # The partner has a company and the project has a company. The partner's can only be set to False, the project's can not be changed
-        with self.assertRaises(UserError):
-            # Cannot change the company of a project if both the project and its partner have a company
-            self.project_pigs.company_id = company_2
-        with self.assertRaises(UserError):
-            # Cannot change the company of a partner if both the project and its partner have a company
-            partner.company_id = company_2
-        partner.company_id = False
-        self.project_pigs.company_id = False
-        self.assertFalse(self.project_pigs.company_id, "The company of the project should have been set to False.")
-        self.project_pigs.company_id = company_1
-        self.project_goats.company_id = company_1
-        self.project_goats.partner_id = partner
-        with self.assertRaises(UserError):
-            # Cannot change the company of a partner that part of multiple projects with different companies
-            self.project_goats.partner_id.company_id = company_2
-
-
-        # The project has a company, but the partner has none. The partner can only be set to False/project.company but the project can have any new company.
-        with self.assertRaises(UserError):
-            # Cannot change the company of a partner if both the project and its partner have a company
-            partner.company_id = company_2
-        self.project_pigs.company_id = company_2
-        self.assertEqual(self.project_pigs.company_id, company_2, "The company of the project should have been updated.")
-        self.project_pigs.company_id = False
-        self.assertFalse(self.project_pigs.company_id, "The company of the project should have been set to False.")
-        self.project_pigs.company_id = company_1
-        partner.company_id = company_1
-        self.assertEqual(partner.company_id, company_1, "The company of the partner should have been updated.")
 
     def test_add_customer_rating_project(self):
         """ Tests that the rating_ids field contains a rating once created

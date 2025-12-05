@@ -79,7 +79,6 @@ class ThreadRecipients(MailCommon, TestRecipients):
 
 
 @tagged('mail_thread', 'mail_thread_api', 'mail_tools')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAPI(ThreadRecipients):
 
     @classmethod

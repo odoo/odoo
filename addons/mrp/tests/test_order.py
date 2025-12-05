@@ -13,9 +13,8 @@ from odoo.tests.common import HttpCase, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestMrpOrder(TestMrpCommon):
-
+@tagged('at_install', '-post_install')
+class TestMrpOrderAtInstall(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -23,34 +22,6 @@ class TestMrpOrder(TestMrpCommon):
             'product_selectable': True,
         })
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
-
-    def test_access_rights_manager(self):
-        """ Checks an MRP manager can create, confirm and cancel a manufacturing order. """
-        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_manager))
-        man_order_form.product_id = self.product_4
-        man_order_form.product_qty = 5.0
-        man_order_form.bom_id = self.bom_1
-        man_order_form.location_src_id = self.shelf_1
-        man_order_form.location_dest_id = self.output_location
-        man_order = man_order_form.save()
-        man_order.action_confirm()
-        man_order.action_cancel()
-        self.assertEqual(man_order.state, 'cancel', "Production order should be in cancel state.")
-        man_order.unlink()
-
-    def test_access_rights_user(self):
-        """ Checks an MRP user can create, confirm and cancel a manufacturing order. """
-        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
-        man_order_form.product_id = self.product_4
-        man_order_form.product_qty = 5.0
-        man_order_form.bom_id = self.bom_1
-        man_order_form.location_src_id = self.shelf_1
-        man_order_form.location_dest_id = self.output_location
-        man_order = man_order_form.save()
-        man_order.action_confirm()
-        man_order.action_cancel()
-        self.assertEqual(man_order.state, 'cancel', "Production order should be in cancel state.")
-        man_order.unlink()
 
     def test_basic(self):
         """ Checks a basic manufacturing order: no routing (thus no workorders), no lot and
@@ -131,6 +102,226 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(len(mo_copy_2.move_raw_ids), 2, "Incorrect number of component moves.")
         self.assertEqual(len(mo_copy_2.move_finished_ids), 1, "Incorrect number of moves for products to produce [i.e. copying a cancelled MO should copy its cancelled moves]")
         self.assertEqual(mo_copy_2.move_finished_ids.product_uom_qty, 3, "Incorrect qty of products to produce")
+
+    def test_propagate_quantity_on_backorders(self):
+        """Create a MO for a product with several work orders.
+        Produce different quantities to test quantity propagation and workorder cancellation.
+        """
+
+        # setup test
+
+        work_center_1 = self.env['mrp.workcenter'].create({"name": "WorkCenter 1", "time_start": 11})
+        work_center_2 = self.env['mrp.workcenter'].create({"name": "WorkCenter 2", "time_start": 12})
+        work_center_3 = self.env['mrp.workcenter'].create({"name": "WorkCenter 3", "time_start": 13})
+
+        product = self.env['product.template'].create({"name": "Finished Product"})
+        component_1 = self.env['product.template'].create({"name": "Component 1", "is_storable": True})
+        component_2 = self.env['product.template'].create({"name": "Component 2", "is_storable": True})
+        component_3 = self.env['product.template'].create({"name": "Component 3", "is_storable": True})
+
+        self.env['stock.quant'].create({
+            "product_id": component_1.product_variant_id.id,
+            "location_id": self.stock_location.id,
+            "quantity": 100
+        })
+        self.env['stock.quant'].create({
+            "product_id": component_2.product_variant_id.id,
+            "location_id": self.stock_location.id,
+            "quantity": 100
+        })
+        self.env['stock.quant'].create({
+            "product_id": component_3.product_variant_id.id,
+            "location_id": self.stock_location.id,
+            "quantity": 100
+        })
+
+        self.env['mrp.bom'].create({
+            "product_tmpl_id": product.id,
+            "product_id": False,
+            "product_qty": 1,
+            "bom_line_ids": [
+                [0, 0, {"product_id": component_1.product_variant_id.id, "product_qty": 1}],
+                [0, 0, {"product_id": component_2.product_variant_id.id, "product_qty": 1}],
+                [0, 0, {"product_id": component_3.product_variant_id.id, "product_qty": 1}]
+            ],
+            "operation_ids": [
+                [0, 0, {"name": "Operation 1", "workcenter_id": work_center_1.id}],
+                [0, 0, {"name": "Operation 2", "workcenter_id": work_center_2.id}],
+                [0, 0, {"name": "Operation 3", "workcenter_id": work_center_3.id}]
+            ]
+        })
+
+        # create a manufacturing order for 20 products
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product.product_variant_id
+        mo_form.product_qty = 20
+        mo = mo_form.save()
+
+        self.assertEqual(mo.state, 'draft')
+        mo.action_confirm()
+
+        wo_1, wo_2, wo_3 = mo.workorder_ids
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(wo_1.state, 'ready')
+        self.assertEqual(wo_1.duration_expected, 11 + 20 * 60)
+
+        # produce 20 / 10 / 5 on workorders, create backorder
+
+        duration_expected = wo_1.duration_expected
+        wo_1.button_start()
+        wo_1.qty_producing = 20
+        self.assertEqual(mo.state, 'progress')
+        wo_1.button_finish()
+        self.assertEqual(duration_expected, wo_1.duration_expected)
+
+        wo_2.button_start()
+        wo_2.qty_producing = 10
+        wo_2.button_finish()
+        self.assertEqual(wo_2.duration_expected, 12 + 10 * 60)
+
+        wo_3.button_start()
+        wo_3.qty_producing = 5
+        wo_3.button_finish()
+        self.assertEqual(wo_3.duration_expected, 13 + 5 * 60)
+
+        self.assertEqual(mo.state, 'to_close')
+        mo.button_mark_done()
+
+        bo = self.env['mrp.production.backorder'].create({
+            "mrp_production_backorder_line_ids": [
+                [0, 0, {"mrp_production_id": mo.id, "to_backorder": True}]
+            ]
+        })
+        bo.action_backorder()
+
+        self.assertEqual(mo.state, 'done')
+
+        mo_2 = mo.production_group_id.production_ids - mo
+        wo_4, wo_5, wo_6 = mo_2.workorder_ids
+
+        self.assertEqual(wo_4.state, 'cancel')
+        self.assertEqual(wo_5.duration_expected, 12 + 15 * 60)
+
+        # produce 10 / 5, create backorder
+
+        wo_5.button_start()
+        wo_5.qty_producing = 10
+        self.assertEqual(mo_2.state, 'progress')
+        wo_5.button_finish()
+
+        wo_6.button_start()
+        wo_6.qty_producing = 5
+        wo_6.button_finish()
+
+        self.assertEqual(mo_2.state, 'to_close')
+        mo_2.button_mark_done()
+
+        bo = self.env['mrp.production.backorder'].create({
+            "mrp_production_backorder_line_ids": [
+                [0, 0, {"mrp_production_id": mo_2.id, "to_backorder": True}]
+            ]
+        })
+        bo.action_backorder()
+
+        self.assertEqual(mo_2.state, 'done')
+
+        mo_3 = mo.production_group_id.production_ids - (mo | mo_2)
+        wo_7, wo_8, wo_9 = mo_3.workorder_ids
+
+        self.assertEqual(wo_7.state, 'cancel')
+        self.assertEqual(wo_8.state, 'cancel')
+        self.assertEqual(wo_9.duration_expected, 13 + 10 * 60)
+
+        # produce 10 and finish work
+
+        wo_9.button_start()
+        wo_9.qty_producing = 10
+        self.assertEqual(mo_3.state, 'progress')
+        wo_9.button_finish()
+
+        self.assertEqual(mo_3.state, 'to_close')
+        mo_3.button_mark_done()
+        self.assertEqual(mo_3.state, 'done')
+
+    def test_starting_wo_twice(self):
+        """
+            Check that the work order is started only once when clicking the start button several times.
+        """
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_2
+        production_form.product_qty = 1
+        production = production_form.save()
+        production_form = Form(production)
+        with production_form.workorder_ids.new() as wo:
+            wo.name = 'OP1'
+            wo.workcenter_id = self.workcenter_1
+            wo.duration_expected = 40
+        production = production_form.save()
+        production.action_confirm()
+        production.button_plan()
+        production.workorder_ids[0].button_start()
+        production.workorder_ids[0].button_start()
+        self.assertEqual(len(production.workorder_ids[0].time_ids.filtered(lambda t: t.date_start and not t.date_end)), 1)
+
+    def test_timers_after_cancelling_mo(self):
+        """
+            Check that the timers in the workorders are stopped after the cancellation of the MO
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_2
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+
+        wo = mo.workorder_ids
+        wo.button_start()
+        mo.action_cancel()
+        self.assertEqual(mo.state, 'cancel', 'Manufacturing order should be cancelled.')
+        self.assertEqual(wo.state, 'cancel', 'Workorders should be cancelled.')
+        self.assertTrue(mo.workorder_ids.time_ids.date_end, 'The timers must stop after the cancellation of the MO')
+
+
+class TestMrpOrder(TestMrpCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.ref('mrp.route_warehouse0_manufacture').write({
+            'product_selectable': True,
+        })
+        cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
+
+    def test_access_rights_manager(self):
+        """ Checks an MRP manager can create, confirm and cancel a manufacturing order. """
+        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_manager))
+        man_order_form.product_id = self.product_4
+        man_order_form.product_qty = 5.0
+        man_order_form.bom_id = self.bom_1
+        man_order_form.location_src_id = self.shelf_1
+        man_order_form.location_dest_id = self.output_location
+        man_order = man_order_form.save()
+        man_order.action_confirm()
+        man_order.action_cancel()
+        self.assertEqual(man_order.state, 'cancel', "Production order should be in cancel state.")
+        man_order.unlink()
+
+    def test_access_rights_user(self):
+        """ Checks an MRP user can create, confirm and cancel a manufacturing order. """
+        man_order_form = Form(self.env['mrp.production'].with_user(self.user_mrp_user))
+        man_order_form.product_id = self.product_4
+        man_order_form.product_qty = 5.0
+        man_order_form.bom_id = self.bom_1
+        man_order_form.location_src_id = self.shelf_1
+        man_order_form.location_dest_id = self.output_location
+        man_order = man_order_form.save()
+        man_order.action_confirm()
+        man_order.action_cancel()
+        self.assertEqual(man_order.state, 'cancel', "Production order should be in cancel state.")
+        man_order.unlink()
 
     def test_production_availability(self):
         """ Checks the availability of a production order through mutliple calls to `action_assign`.
@@ -2871,147 +3062,6 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(workorder.time_ids[0].loss_type, 'productive', "Remaining time tracking should be productive")
         self.assertEqual(workorder.time_ids[0].duration, real_duration_decreased - real_duration_under_expected, "Time tracking duration should have been reduced to reflect new shorter duration")
 
-    def test_propagate_quantity_on_backorders(self):
-        """Create a MO for a product with several work orders.
-        Produce different quantities to test quantity propagation and workorder cancellation.
-        """
-
-        # setup test
-
-        work_center_1 = self.env['mrp.workcenter'].create({"name": "WorkCenter 1", "time_start": 11})
-        work_center_2 = self.env['mrp.workcenter'].create({"name": "WorkCenter 2", "time_start": 12})
-        work_center_3 = self.env['mrp.workcenter'].create({"name": "WorkCenter 3", "time_start": 13})
-
-        product = self.env['product.template'].create({"name": "Finished Product"})
-        component_1 = self.env['product.template'].create({"name": "Component 1", "is_storable": True})
-        component_2 = self.env['product.template'].create({"name": "Component 2", "is_storable": True})
-        component_3 = self.env['product.template'].create({"name": "Component 3", "is_storable": True})
-
-        self.env['stock.quant'].create({
-            "product_id": component_1.product_variant_id.id,
-            "location_id": self.stock_location.id,
-            "quantity": 100
-        })
-        self.env['stock.quant'].create({
-            "product_id": component_2.product_variant_id.id,
-            "location_id": self.stock_location.id,
-            "quantity": 100
-        })
-        self.env['stock.quant'].create({
-            "product_id": component_3.product_variant_id.id,
-            "location_id": self.stock_location.id,
-            "quantity": 100
-        })
-
-        self.env['mrp.bom'].create({
-            "product_tmpl_id": product.id,
-            "product_id": False,
-            "product_qty": 1,
-            "bom_line_ids": [
-                [0, 0, {"product_id": component_1.product_variant_id.id, "product_qty": 1}],
-                [0, 0, {"product_id": component_2.product_variant_id.id, "product_qty": 1}],
-                [0, 0, {"product_id": component_3.product_variant_id.id, "product_qty": 1}]
-            ],
-            "operation_ids": [
-                [0, 0, {"name": "Operation 1", "workcenter_id": work_center_1.id}],
-                [0, 0, {"name": "Operation 2", "workcenter_id": work_center_2.id}],
-                [0, 0, {"name": "Operation 3", "workcenter_id": work_center_3.id}]
-            ]
-        })
-
-        # create a manufacturing order for 20 products
-
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product.product_variant_id
-        mo_form.product_qty = 20
-        mo = mo_form.save()
-
-        self.assertEqual(mo.state, 'draft')
-        mo.action_confirm()
-
-        wo_1, wo_2, wo_3 = mo.workorder_ids
-        self.assertEqual(mo.state, 'confirmed')
-        self.assertEqual(wo_1.state, 'ready')
-        self.assertEqual(wo_1.duration_expected, 11 + 20 * 60)
-
-        # produce 20 / 10 / 5 on workorders, create backorder
-
-        duration_expected = wo_1.duration_expected
-        wo_1.button_start()
-        wo_1.qty_producing = 20
-        self.assertEqual(mo.state, 'progress')
-        wo_1.button_finish()
-        self.assertEqual(duration_expected, wo_1.duration_expected)
-
-        wo_2.button_start()
-        wo_2.qty_producing = 10
-        wo_2.button_finish()
-        self.assertEqual(wo_2.duration_expected, 12 + 10 * 60)
-
-        wo_3.button_start()
-        wo_3.qty_producing = 5
-        wo_3.button_finish()
-        self.assertEqual(wo_3.duration_expected, 13 + 5 * 60)
-
-        self.assertEqual(mo.state, 'to_close')
-        mo.button_mark_done()
-
-        bo = self.env['mrp.production.backorder'].create({
-            "mrp_production_backorder_line_ids": [
-                [0, 0, {"mrp_production_id": mo.id, "to_backorder": True}]
-            ]
-        })
-        bo.action_backorder()
-
-        self.assertEqual(mo.state, 'done')
-
-        mo_2 = mo.production_group_id.production_ids - mo
-        wo_4, wo_5, wo_6 = mo_2.workorder_ids
-
-        self.assertEqual(wo_4.state, 'cancel')
-        self.assertEqual(wo_5.duration_expected, 12 + 15 * 60)
-
-        # produce 10 / 5, create backorder
-
-        wo_5.button_start()
-        wo_5.qty_producing = 10
-        self.assertEqual(mo_2.state, 'progress')
-        wo_5.button_finish()
-
-        wo_6.button_start()
-        wo_6.qty_producing = 5
-        wo_6.button_finish()
-
-        self.assertEqual(mo_2.state, 'to_close')
-        mo_2.button_mark_done()
-
-        bo = self.env['mrp.production.backorder'].create({
-            "mrp_production_backorder_line_ids": [
-                [0, 0, {"mrp_production_id": mo_2.id, "to_backorder": True}]
-            ]
-        })
-        bo.action_backorder()
-
-        self.assertEqual(mo_2.state, 'done')
-
-        mo_3 = mo.production_group_id.production_ids - (mo | mo_2)
-        wo_7, wo_8, wo_9 = mo_3.workorder_ids
-
-        self.assertEqual(wo_7.state, 'cancel')
-        self.assertEqual(wo_8.state, 'cancel')
-        self.assertEqual(wo_9.duration_expected, 13 + 10 * 60)
-
-        # produce 10 and finish work
-
-        wo_9.button_start()
-        wo_9.qty_producing = 10
-        self.assertEqual(mo_3.state, 'progress')
-        wo_9.button_finish()
-
-        self.assertEqual(mo_3.state, 'to_close')
-        mo_3.button_mark_done()
-        self.assertEqual(mo_3.state, 'done')
-
     def test_planning_workorder(self):
         """
             Check that the fastest work center is used when planning the workorder.
@@ -3100,24 +3150,6 @@ class TestMrpOrder(TestMrpCommon):
         mo_2.button_plan()
         self.assertEqual(mo_2.workorder_ids[0].workcenter_id.id, workcenter_2.id, 'workcenter_2 is faster than workcenter_1 to manufacture 4 units')
 
-    def test_timers_after_cancelling_mo(self):
-        """
-            Check that the timers in the workorders are stopped after the cancellation of the MO
-        """
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = self.bom_2
-        mo_form.product_qty = 1
-        mo = mo_form.save()
-        mo.action_confirm()
-        mo.button_plan()
-
-        wo = mo.workorder_ids
-        wo.button_start()
-        mo.action_cancel()
-        self.assertEqual(mo.state, 'cancel', 'Manufacturing order should be cancelled.')
-        self.assertEqual(wo.state, 'cancel', 'Workorders should be cancelled.')
-        self.assertTrue(mo.workorder_ids.time_ids.date_end, 'The timers must stop after the cancellation of the MO')
-
     def test_manual_duration(self):
         production_form = Form(self.env['mrp.production'])
         production_form.product_id = self.bom_4.product_id
@@ -3134,28 +3166,6 @@ class TestMrpOrder(TestMrpCommon):
         production.button_mark_done()
 
         self.assertEqual(production.duration, production.workorder_ids.duration_expected)
-
-    def test_starting_wo_twice(self):
-        """
-            Check that the work order is started only once when clicking the start button several times.
-        """
-        # Required for `workorder_ids` to be visible in the view
-        self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
-        production_form = Form(self.env['mrp.production'])
-        production_form.bom_id = self.bom_2
-        production_form.product_qty = 1
-        production = production_form.save()
-        production_form = Form(production)
-        with production_form.workorder_ids.new() as wo:
-            wo.name = 'OP1'
-            wo.workcenter_id = self.workcenter_1
-            wo.duration_expected = 40
-        production = production_form.save()
-        production.action_confirm()
-        production.button_plan()
-        production.workorder_ids[0].button_start()
-        production.workorder_ids[0].button_start()
-        self.assertEqual(len(production.workorder_ids[0].time_ids.filtered(lambda t: t.date_start and not t.date_end)), 1)
 
     def test_qty_update_and_method_reservation(self):
         """

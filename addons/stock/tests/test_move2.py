@@ -8,13 +8,11 @@ from odoo.exceptions import UserError
 
 from odoo import Command
 from odoo.tests import tagged, Form
-from odoo.tools import float_is_zero, float_compare
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPickShip(TestStockCommon):
     def create_pick_ship(self):
         picking_client = self.env['stock.picking'].create({
@@ -926,7 +924,82 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(return_pick.picking_type_id, picking_client.location_id.warehouse_id.in_type_id)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
+class TestSinglePickingAtInstall(TestStockCommon):
+    def test_additional_move_1(self):
+        """ On a planned trasfer, add a stock move when the picking is already ready. Check that
+        the check availability button appears and work.
+        """
+        # Make some stock for productA and productB.
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'state': 'draft',
+        })
+        move_1 = self.MoveObj.create({
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        move_2 = self.MoveObj.create({
+            'product_id': self.productB.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': receipt.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        receipt.action_confirm()
+        move_1.quantity = 10
+        move_2.quantity = 10
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+        self.assertEqual(self.productA.qty_available, 10)
+        self.assertEqual(self.productB.qty_available, 10)
+
+        # Create a delivery for 1 productA, reserve, check the picking is ready
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_type': 'one',
+            'state': 'draft',
+        })
+        move_3 = self.MoveObj.create({
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        delivery_order.action_confirm()
+        delivery_order.action_assign()
+        self.assertEqual(delivery_order.state, 'assigned')
+
+        # Add a unit of productB, the check_availability button should appear.
+        delivery_order = Form(delivery_order)
+        with delivery_order.move_ids.new() as move:
+            move.product_id = self.productB
+            move.product_uom_qty = 10
+        delivery_order = delivery_order.save()
+
+        # The autocofirm ran, the picking shoud be confirmed and reservable.
+        self.assertEqual(delivery_order.state, 'confirmed')
+        self.assertEqual(delivery_order.show_check_availability, True)
+
+        delivery_order.action_assign()
+        self.assertEqual(delivery_order.state, 'assigned')
+        self.assertEqual(delivery_order.show_check_availability, False)
+
+        self.assertEqual(self.env['stock.quant']._gather(self.productA, self.stock_location).reserved_quantity, 10.0)
+        self.assertEqual(self.env['stock.quant']._gather(self.productB, self.stock_location).reserved_quantity, 10.0)
+
+
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):
         """ Check the good behavior of creating a backorder for an available stock move.
@@ -2165,79 +2238,6 @@ class TestSinglePicking(TestStockCommon):
         picking.move_ids.remove(0)
         picking = picking.save()
         self.assertEqual(len(picking.move_ids), 0)
-
-    def test_additional_move_1(self):
-        """ On a planned trasfer, add a stock move when the picking is already ready. Check that
-        the check availability button appears and work.
-        """
-        # Make some stock for productA and productB.
-        receipt = self.env['stock.picking'].create({
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.stock_location.id,
-            'picking_type_id': self.picking_type_in.id,
-            'state': 'draft',
-        })
-        move_1 = self.MoveObj.create({
-            'product_id': self.productA.id,
-            'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
-            'picking_id': receipt.id,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.stock_location.id,
-        })
-        move_2 = self.MoveObj.create({
-            'product_id': self.productB.id,
-            'product_uom_qty': 10,
-            'product_uom': self.productB.uom_id.id,
-            'picking_id': receipt.id,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': self.stock_location.id,
-        })
-        receipt.action_confirm()
-        move_1.quantity = 10
-        move_2.quantity = 10
-        receipt.move_ids.picked = True
-        receipt.button_validate()
-        self.assertEqual(self.productA.qty_available, 10)
-        self.assertEqual(self.productB.qty_available, 10)
-
-        # Create a delivery for 1 productA, reserve, check the picking is ready
-        delivery_order = self.env['stock.picking'].create({
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-            'picking_type_id': self.picking_type_out.id,
-            'move_type': 'one',
-            'state': 'draft',
-        })
-        move_3 = self.MoveObj.create({
-            'product_id': self.productA.id,
-            'product_uom_qty': 10,
-            'product_uom': self.productA.uom_id.id,
-            'picking_id': delivery_order.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
-        })
-        delivery_order.action_confirm()
-        delivery_order.action_assign()
-        self.assertEqual(delivery_order.state, 'assigned')
-
-        # Add a unit of productB, the check_availability button should appear.
-        delivery_order = Form(delivery_order)
-        with delivery_order.move_ids.new() as move:
-            move.product_id = self.productB
-            move.product_uom_qty = 10
-        delivery_order = delivery_order.save()
-
-        # The autocofirm ran, the picking shoud be confirmed and reservable.
-        self.assertEqual(delivery_order.state, 'confirmed')
-        self.assertEqual(delivery_order.show_check_availability, True)
-
-        delivery_order.action_assign()
-        self.assertEqual(delivery_order.state, 'assigned')
-        self.assertEqual(delivery_order.show_check_availability, False)
-
-        self.assertEqual(self.env['stock.quant']._gather(self.productA, self.stock_location).reserved_quantity, 10.0)
-        self.assertEqual(self.env['stock.quant']._gather(self.productB, self.stock_location).reserved_quantity, 10.0)
 
     def test_additional_move_2(self):
         """ On an immediate trasfer, add a stock move when the picking is already ready. Check that

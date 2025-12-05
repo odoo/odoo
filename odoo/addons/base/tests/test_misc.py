@@ -482,7 +482,6 @@ class TestUrlValidate(BaseCase):
         self.assertEqual(validate_url('#model=project.task&id=3603607'), 'http://#model=project.task&id=3603607')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestUrlJoin(BaseCase):
     # simple path joins
     def test_basic_relative_path(self):

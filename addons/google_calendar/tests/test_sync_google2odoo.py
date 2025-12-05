@@ -14,7 +14,6 @@ from odoo import Command, tools
 
 
 @patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSyncGoogle2Odoo(TestSyncGoogle):
 
     def setUp(self):
