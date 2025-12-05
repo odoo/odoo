@@ -528,9 +528,13 @@ class ProductPricelistItem(models.Model):
         elif is_product_template:
             if self.applied_on == "1_product" and product.id != self.product_tmpl_id.id:
                 res = False
-            elif self.applied_on == "0_product_variant" and not (
-                product.product_variant_count == 1
-                and product.product_variant_id.id == self.product_id.id
+            elif (
+                self.applied_on == "0_product_variant"
+                and not self.env.context.get('no_discard_of_variant_rules')
+                and not (
+                    product.product_variant_count == 1
+                    and product.product_variant_id.id == self.product_id.id
+                )
             ):
                 # product self acceptable on template if has only one variant
                 res = False

@@ -1030,7 +1030,7 @@ class ProductTemplate(models.Model):
 
         variants = self.product_variant_ids
         products_price = request.pricelist._get_products_price(
-            variants, quantity=1, target_currency=website.currency_id
+            variants, quantity=1, target_currency=website.currency_id, unique_template=True,
         )
 
         # Use sudo to access cross-company taxes.
