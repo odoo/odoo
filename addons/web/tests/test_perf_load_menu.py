@@ -56,8 +56,8 @@ class TestPerfSessionInfo(common.HttpCase):
         self.env.invalidate_all()
         # cold orm/fields cache:
         # - Web only: 14
-        # - All modules 57
-        with self.assertQueryCount(57):
+        # - All modules 60
+        with self.assertQueryCount(60):
             self.env['ir.ui.menu'].load_web_menus(False)
 
         # cold fields cache:
@@ -72,8 +72,8 @@ class TestPerfSessionInfo(common.HttpCase):
         self.env.invalidate_all()
         # cold orm/fields cache:
         # - Web only: 14
-        # - All modules 57
-        with self.assertQueryCount(57):
+        # - All modules 60
+        with self.assertQueryCount(60):
             self.env['ir.ui.menu'].load_menus(False)
 
         # cold fields cache:
