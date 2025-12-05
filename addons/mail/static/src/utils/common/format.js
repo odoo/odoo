@@ -298,7 +298,10 @@ async function _generateEmojisOnHtml(htmlString) {
     for (const emoji of emojis) {
         for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
             const escapedSource = htmlEscape(String(source));
-            const regexp = new RegExp("(\\s|^)(" + escapeRegExp(escapedSource) + ")(?=\\s|$)", "g");
+            const regexp = new RegExp(
+                "(\\s|^)(" + escapeRegExp(escapedSource) + ")(?=\\s|$|<)",
+                "g"
+            );
             htmlString = htmlReplace(htmlString, regexp, (_, group1) => group1 + emoji.codepoints);
         }
     }
