@@ -754,7 +754,9 @@ class SaleOrder(models.Model):
     @api.depends('order_line.amount_to_invoice')
     def _compute_amount_to_invoice(self):
         for order in self:
-            order.amount_to_invoice = sum(order.order_line.mapped('amount_to_invoice'))
+            amount_to_invoice = sum(order.order_line.mapped('amount_to_invoice'))
+            downpayment_amount = sum(order.order_line.filtered('is_downpayment').mapped('amount_invoiced'))
+            order.amount_to_invoice = amount_to_invoice - downpayment_amount
 
     @api.depends('order_line.amount_invoiced')
     def _compute_amount_invoiced(self):

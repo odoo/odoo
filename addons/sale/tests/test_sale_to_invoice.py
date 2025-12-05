@@ -1340,3 +1340,15 @@ class TestSaleToInvoice(TestSaleCommon):
             invoice.team_id, team2,
             "Invoice team should be the same as the order's team",
         )
+
+    def test_amount_to_invoice_downpayment(self):
+        self.sale_order.action_confirm()
+        downpayment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 100,
+        })
+        pre_invoice_amount = self.sale_order.amount_to_invoice
+        downpayment.create_invoices()
+        self.sale_order.invoice_ids.action_post()
+        self.assertEqual(self.sale_order.amount_invoiced, 100.0)
+        self.assertEqual(self.sale_order.amount_to_invoice, pre_invoice_amount - 100.0)
