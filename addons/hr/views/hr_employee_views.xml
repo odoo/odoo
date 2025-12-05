@@ -296,7 +296,7 @@
                                         <field name="sex" string="Gender"/>
                                     </group>
                                     <group string="Emergency Contact">
-                                        <field name="emergency_contact" string="Contact"/>
+                                        <field name="emergency_contact" string="Contact Name"/>
                                         <field name="emergency_phone" class="o_force_ltr" string="Phone"/>
                                     </group>
                                     <group string="Visa &amp; Work Permit">
@@ -317,7 +317,7 @@
                                     </group>
                                     <group name="citizenship" string="Citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id"/>
+                                        <field name="identification_id" placeholder="Issued by Government"/>
                                         <field name="ssnid"/>
                                         <label for="passport_id"/>
                                         <div class="o_wrap_label d-flex flex-row gap-3 align-items-baseline">
@@ -352,7 +352,7 @@
                                     </group>
                                     <group string="Education" name="hr_education_group">
                                         <field name="certificate"/>
-                                        <field name="study_field"/>
+                                        <field name="study_field" placeholder="e.g. Engineering, Commerce, Business Administration, ..."/>
                                     </group>
                                     <group string="Documents" name="hr_document_group">
                                         <field name="id_card"/>
@@ -431,7 +431,7 @@
                                             <span invisible="not user_id or is_user_active">
                                                 (User is Inactive)
                                             </span>
-                                            <field name="tz" required="id"/>
+                                            <field name="tz" required="id" placeholder="User Timezone"/>
                                         </div>
                                     </group>
                                     <group name="managers" string="Approvers">
@@ -445,7 +445,7 @@
                                         </div>
                                     </group>
                                     <group string="Attendance/Point of Sale" name="identification_group">
-                                        <field name="pin" string="PIN Code"/>
+                                        <field name="pin" string="PIN Code" placeholder="e.g. 1234"/>
                                         <label for="barcode"/>
                                         <div class="o_row">
                                             <field name="barcode"/>
