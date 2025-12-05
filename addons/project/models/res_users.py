@@ -15,6 +15,7 @@ class ResUsers(models.Model):
         export_string_translation=False,
         copy=False,
     )
+    followed_project_ids = fields.Many2many('project.project', store=False, search='_search_followed_project_ids', export_string_translation=False)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -34,3 +35,10 @@ class ResUsers(models.Model):
                 ProjectTaskTypeSudo.with_context(default_project_id=False).create(create_vals)
 
             return internal_users
+
+    def _search_followed_project_ids(self, operator, value):
+        followers = self.env['mail.followers'].search([
+            ('res_model', '=', 'project.project'),
+            ('res_id', operator, value)
+        ])
+        return [('partner_id', 'in', followers.partner_id.ids)]
