@@ -655,7 +655,8 @@ class StockMove(models.Model):
         return rslt
 
     def _get_partner_id_for_valuation_lines(self):
-        return (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
+        partner = self.picking_id.partner_id or self.partner_id
+        return (partner and self.env['res.partner']._find_accounting_partner(partner).id) or False
 
     def _prepare_move_split_vals(self, uom_qty):
         vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
