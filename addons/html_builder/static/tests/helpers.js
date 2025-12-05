@@ -1,6 +1,6 @@
 import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
-import { Img } from "@html_builder/core/img";
+import { Image } from "@html_builder/core/img";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { revertPreview } from "@html_builder/core/utils";
 import { unformat } from "@html_editor/../tests/_helpers/format";
@@ -28,10 +28,10 @@ import { uniqueId } from "@web/core/utils/functions";
 export function patchWithCleanupImg() {
     const defaultImg =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
-    patchWithCleanup(Img, {
+    patchWithCleanup(Image, {
         template: xml`<img t-att-data-src="props.src" t-att-alt="props.alt" t-att-class="props.class" t-att-style="props.style" t-att="props.attrs" src="${defaultImg}"/>`,
     });
-    patchWithCleanup(Img.prototype, {
+    patchWithCleanup(Image.prototype, {
         loadImage: () => {},
         getSvg: function () {
             this.isSvg = () => false;

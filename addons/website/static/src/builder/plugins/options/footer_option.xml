@@ -13,7 +13,7 @@
 
 <t t-name="website.FooterTemplateChoice">
     <BuilderSelectItem title="props.title" actionParam="{ view: props.view, vars: { 'footer-template': props.varName } }">
-        <Img attrs="{ style: 'width: 100%;' }" src="props.imgSrc"/>
+        <Image attrs="{ style: 'width: 100%;' }" src="props.imgSrc"/>
     </BuilderSelectItem>
 </t>
 
@@ -21,13 +21,13 @@
     <BuilderRow label.translate="Content width">
         <BuilderButtonGroup action="'previewableWebsiteConfig'">
             <BuilderButton actionParam="{ views: ['website.footer_copyright_content_width_small'], previewClass: 'o_container_small'}">
-                <Img src="'/website/static/src/img/snippets_options/content_width_small.svg'"/>
+                <Image src="'/website/static/src/img/snippets_options/content_width_small.svg'"/>
             </BuilderButton>
             <BuilderButton actionParam="{ views: [], previewClass: 'container'}">
-                <Img src="'/website/static/src/img/snippets_options/content_width_normal.svg'"/>
+                <Image src="'/website/static/src/img/snippets_options/content_width_normal.svg'"/>
             </BuilderButton>
             <BuilderButton actionParam="{ views: ['website.footer_copyright_content_width_fluid'], previewClass: 'container-fluid'}">
-                <Img src="'/website/static/src/img/snippets_options/content_width_full.svg'"/>
+                <Image src="'/website/static/src/img/snippets_options/content_width_full.svg'"/>
             </BuilderButton>
         </BuilderButtonGroup>
     </BuilderRow>
