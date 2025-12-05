@@ -107,5 +107,5 @@ class MrpProduction(models.Model):
 
     def _post_inventory(self, cancel_backorder=False):
         res = super()._post_inventory(cancel_backorder=cancel_backorder)
-        self.filtered(lambda mo: mo.state == 'done')._post_labour()
+        self.filtered(lambda mo: not mo.reservation_state and mo.state == 'done')._post_labour()
         return res
