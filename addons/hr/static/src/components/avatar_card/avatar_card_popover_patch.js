@@ -9,19 +9,19 @@ export const patchAvatarCardPopover = {
         this.userInfoTemplate = "hr.avatarCardUserInfos";
     },
     get email() {
-        return this.employeeId?.work_email || super.email;
+        return this.employee?.work_email || super.email;
     },
     get phone() {
-        return this.employeeId?.work_phone || super.phone;
+        return this.employee?.work_phone || super.phone;
     },
-    get employeeId() {
+    get employee() {
         return this.partner?.employee_id;
     },
     async getProfileAction() {
-        if (!this.employeeId) {
+        if (!this.employee) {
             return super.getProfileAction(...arguments);
         }
-        return this.orm.call("hr.employee", "get_formview_action", [this.employeeId.id]);
+        return this.orm.call("hr.employee", "get_formview_action", [this.employee.id]);
     },
 };
 

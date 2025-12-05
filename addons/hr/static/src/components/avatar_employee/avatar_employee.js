@@ -7,7 +7,7 @@ export class AvatarEmployee extends Avatar {
     get popoverProps() {
         return {
             ...super.popoverProps,
-            recordModel: this.props.resModel,
+            model: this.props.resModel,
         };
     }
 }

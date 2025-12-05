@@ -10,6 +10,15 @@
         'web.assets_backend': [
             'resource_mail/static/src/**/*',
         ],
+        'im_livechat.assets_embed_core': [
+            'resource_mail/static/src/core/common/**/*',
+        ],
+        'mail.assets_public': [
+            'resource_mail/static/src/core/common/**/*',
+        ],
+        'portal.assets_chatter_helpers': [
+            'resource_mail/static/src/core/common/**/*',
+        ],
         'web.assets_unit_tests': [
             'resource_mail/static/tests/**/*',
         ],

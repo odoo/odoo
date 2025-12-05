@@ -29,11 +29,15 @@ export class AvatarCardPopover extends Component {
         this.actionService = useService("action");
         this.store = useService("mail.store");
         this.dialog = useService("dialog");
-        this.openChat = useOpenChat(this.props.model);
+        this.openChat = useOpenChat(this.openChatModel);
         this.store.fetchStoreData("avatar_card", {
             id: this.props.id,
             model: this.props.model,
         });
+    }
+
+    get openChatModel() {
+        return this.props.model;
     }
 
     get canOpenSettingMenu() {

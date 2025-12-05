@@ -1169,7 +1169,7 @@ function _process_request_for_internal_user(store, name, params) {
     }
     if (name === "avatar_card") {
         const { id, model } = params;
-        if (!id || !["res.users", "res.partner"].includes(model)) {
+        if (!id || !_get_supported_avatar_card_models().includes(model)) {
             return;
         }
         const Model = this.env[model];
@@ -1179,6 +1179,11 @@ function _process_request_for_internal_user(store, name, params) {
             store.add(Model.browse(record), makeKwArgs({ fields }));
         }
     }
+}
+
+function _get_supported_avatar_card_models() {
+    // not modular but avoids verbose overrides
+    return ["res.users", "res.partner", "resource.resource", "hr.employee", "hr.employee.public"];
 }
 
 const ids_by_model = {

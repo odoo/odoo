@@ -9,6 +9,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.tools import convert
+from odoo.addons.mail.tools.discuss import Store
 
 
 class HrEmployee(models.Model):
@@ -205,3 +206,7 @@ class HrEmployee(models.Model):
                 'date_end': current_date_start + relativedelta(days=-1),
             })
         return res[::-1]
+
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        super()._store_avatar_card_fields(res)
+        res.many("employee_skill_ids", ["color", "display_name"])

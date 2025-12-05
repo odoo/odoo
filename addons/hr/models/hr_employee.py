@@ -1963,8 +1963,6 @@ class HrEmployee(models.Model):
             '|', ('contract_date_end', '>=', date_from), ('contract_date_end', '=', False),
         ])
 
-    def get_avatar_card_data(self, fields):
-        return self.read(fields)
     # ---------------------------------------------------------
     # Messaging
     # ---------------------------------------------------------
@@ -1989,16 +1987,11 @@ class HrEmployee(models.Model):
         }
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
-        res.attr("company_id")
         res.one("department_id", ["name"])
-        res.attr("work_email")
+        res.one("user_id", lambda res: (res.attr("share"), res.one("partner_id", ["im_status"])))
         res.one("work_location_id", ["location_type", "name"])
-        res.attr("work_phone")
-        if res.target_user().has_group("hr.group_hr_user"):
-            # job_title is not a field of hr.employee.public, but it is a field of hr.employee
-            res.attr("job_title")
-        # HACK: fetch the employee fields from employees to retrieve hr.employee.public fields if no access to hr.employee
-        self.fetch(map(Store.get_field_name, res))
+        res.extend(["company_id", "hr_icon_display", "job_title", "name", "show_hr_icon_display"])
+        res.extend(["work_email", "work_phone"])
 
     @api.depends('bank_account_ids')
     def _compute_primary_bank_account_id(self):

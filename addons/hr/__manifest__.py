@@ -69,9 +69,11 @@
         'mail.assets_public': [
             'hr/static/src/core/common/**/*',
         ],
+        'portal.assets_chatter_helpers': [
+            'hr/static/src/core/common/**/*',
+        ],
         'web.assets_unit_tests': [
             'hr/static/tests/**/*',
-            'hr/static/tests/mock_server/mock_server.js',
             ('remove', 'hr/static/tests/tours/**/*'),
             ('remove', 'hr/static/tests/legacy/**/*'),
         ],
