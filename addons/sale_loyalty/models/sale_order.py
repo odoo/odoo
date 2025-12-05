@@ -166,6 +166,7 @@ class SaleOrder(models.Model):
         for coupon, change in self.filtered(lambda s: s.state != 'sale')._get_point_changes().items():
             coupon.points += change
         res = super().action_confirm()
+        self._assign_program_to_user()
         # Prioritize any action from super()
         if isinstance(res, bool) and has_claimable_rewards:
             res = {
@@ -229,6 +230,16 @@ class SaleOrder(models.Model):
             'domain': [('order_id', '=', self.id), ('program_type', '=', 'gift_card')],
             'context': {'create': False},
         }
+
+    def _assign_program_to_user(self):
+        for order in self:
+            program = order.code_enabled_rule_ids.program_id
+            partner = order.partner_id
+
+            if program.once_per_user:
+                program.sudo().write({
+                    'user_ids': [(4, partner.id)]
+                })
 
     def _send_reward_coupon_mail(self):
         coupons = self.env['loyalty.card']
@@ -1445,6 +1456,12 @@ class SaleOrder(models.Model):
         coupon = False
         check_date = self._get_confirmed_tx_create_date()
 
+        if program.once_per_user and self.env.user.id == self.env.ref('base.public_user').id:
+            return {'error': (
+            "%s <a href=%s><u>%s</u></a> %s"
+        ) % (_("You must"), "/web/login", _("login"), _("to use this code"))}
+        if program.once_per_user and self.env.user.partner_id in program.user_ids:
+            return {'error': _("This promo code can only be used once.")}
         if rule in self.code_enabled_rule_ids:
             return {'error': _("This promo code is already applied.")}
 
@@ -1492,7 +1509,8 @@ class SaleOrder(models.Model):
             # Update the points for our programs, this will take the new trigger in account
             self._update_programs_and_rewards()
         elif program.applies_on != 'future' or not coupon:
-            apply_result = self._try_apply_program(program, coupon)
+            if not program.once_per_user or not self.env.user.partner_id in program.user_ids:
+                apply_result = self._try_apply_program(program, coupon)
             if 'error' in apply_result and (not program.is_nominative or (program.is_nominative and not coupon)):
                 if rule:
                     self.code_enabled_rule_ids -= rule

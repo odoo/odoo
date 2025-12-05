@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 from datetime import timedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -153,6 +154,8 @@ class SaleOrder(models.Model):
         error = request.session.get('error_promo_code')
         if error and delete:
             request.session.pop('error_promo_code')
+        if error:
+            return Markup(error)
         return error
 
     def get_promo_code_success_message(self, delete=True):
