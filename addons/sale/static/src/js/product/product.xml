@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="sale.Product">
-        <td class="o_sale_product_configurator_img py-3 px-0">
+        <td class="o_sale_product_configurator_img pb-3 ps-0 pe-2 pe-lg-0">
             <img
-                class="w-75 w-lg-100 border rounded"
+                class="w-100 border rounded"
                 t-att-src="imageUrl"
                 alt="Product Image"
             />
@@ -11,13 +11,13 @@
         <td class="p-0 p-md-3 product_name_description">
             <div
                 name="o_sale_product_configurator_name"
-                class="mb-1 mb-lg-3 text-break text-truncate"
+                class="mb-1 mb-lg-3"
             >
-                <span class="h5" t-out="this.props.display_name"/>
+                <span class="h5 o_line_clamp" t-out="this.props.display_name"/>
                 <div
                     t-if="this.props.description_sale"
                     t-out="this.props.description_sale"
-                    class="text-muted small text-truncate"
+                    class="o_sale_product_configurator_description o_line_clamp text-muted small"
                 />
                 <div t-if="this.props.selectedComboItems" class="text-muted small">
                     <div
@@ -76,7 +76,7 @@
         <t t-else="">
             <td
                 name="price"
-                class="o_sale_product_configurator_price py-3 px-0 text-end"
+                class="o_sale_product_configurator_price pb-3 px-0 text-end"
             >
                 <div
                     t-if="env.showPrice"
