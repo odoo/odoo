@@ -6,7 +6,7 @@ import { user } from "@web/core/user";
 
 export class RevokeAllTrustedDevices extends Interaction {
     static selector = "#auth_totp_portal_revoke_all_devices";
-    dynamiContent = {
+    dynamicContent = {
         _root: { "t-on-click.prevent": this.onClick },
     };
 
