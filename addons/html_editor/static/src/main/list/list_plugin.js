@@ -269,6 +269,8 @@ export class ListPlugin extends Plugin {
             throw new Error(`listStyle is not compatible with "CL" list type`);
         }
 
+        this.dependencies.split.splitBlockSegments();
+
         // @todo @phoenix: original implementation removed whitespace-only text nodes from targetedNodes.
         // Check if this is necessary.
 
@@ -844,6 +846,7 @@ export class ListPlugin extends Plugin {
     }
 
     handleTab() {
+        this.dependencies.split.splitBlockSegments();
         const selection = this.dependencies.selection.getEditableSelection();
         const closestLI = closestElement(selection.anchorNode, "LI");
         if (closestLI) {

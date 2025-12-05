@@ -1,16 +1,39 @@
+import { isListItem } from "@html_editor/main/list/utils";
 import { Plugin } from "../plugin";
-import { isBlock } from "../utils/blocks";
+import { isBlock, closestBlock } from "../utils/blocks";
 import { fillEmpty, splitTextNode } from "../utils/dom";
 import {
+    allowsParagraphRelatedElements,
     isContentEditable,
     isContentEditableAncestor,
+    isPhrasingContent,
     isTextNode,
     isVisible,
 } from "../utils/dom_info";
-import { prepareUpdate } from "../utils/dom_state";
-import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
+import { prepareUpdate, isFakeLineBreak } from "../utils/dom_state";
+import {
+    childNodes,
+    closestElement,
+    firstLeaf,
+    lastLeaf,
+    ancestors,
+    createDOMPathGenerator,
+} from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
+
+const isInList = (node, editable) =>
+    ancestors(node, editable).find((ancestor) => isListItem(ancestor));
+const isLineBreak = (node) => node.nodeName === "BR" && !isFakeLineBreak(node);
+const [getPreviousLeavesInBlock, getNextLeavesInBlock] = [DIRECTIONS.LEFT, DIRECTIONS.RIGHT]
+    .map((direction) =>
+        createDOMPathGenerator(direction, {
+            leafOnly: true,
+            stopTraverseFunction: isBlock,
+            stopFunction: isBlock,
+        })
+    )
+    .map((path) => (node, offset) => [...path(node, offset)]);
 
 /**
  * @typedef { Object } SplitShared
@@ -21,6 +44,7 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
  * @property { SplitPlugin['splitElement'] } splitElement
  * @property { SplitPlugin['splitElementBlock'] } splitElementBlock
  * @property { SplitPlugin['splitSelection'] } splitSelection
+ * @property { SplitPlugin['splitBlockSegments'] } splitBlockSegments
  */
 
 /**
@@ -43,6 +67,7 @@ export class SplitPlugin extends Plugin {
         "splitAroundUntil",
         "splitSelection",
         "isUnsplittable",
+        "splitBlockSegments",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -319,6 +344,98 @@ export class SplitPlugin extends Plugin {
                       focusOffset: startOffset,
                   };
         return this.dependencies.selection.setSelection(selection, { normalize: false });
+    }
+
+    /**
+     * Split in order to isolate any block segment in the selection. A block
+     * segment forms a deliberate line in the content, separated using line
+     * breaks. A line break in a list item cannot create block segments as the
+     * list item visually marks its own segment (with a bullet point).
+     *
+     * eg: `<p>a<br>b<br>[c<br>d<br>e]<br>f<br>g</p>` marks seven line segments
+     * (one per letter). The selection contains 3 line segments, which will be
+     * isolated like this:
+     * `<p>a<br>b</p><p>[c</p><p>d</p><p>e]</p><p>f<br>g</p>`.
+     */
+    splitBlockSegments() {
+        const { setSelection, getEditableSelection } = this.dependencies.selection;
+        const { startContainer, startOffset, endContainer, endOffset } = getEditableSelection();
+
+        const brs = [
+            // BR before the selection:
+            getPreviousLeavesInBlock(startContainer, startOffset).find(isLineBreak),
+            // Selected BRs:
+            ...this.dependencies.selection.getTargetedNodes(),
+            // BR after the selection:
+            getNextLeavesInBlock(endContainer, endOffset).find(isLineBreak),
+        ].filter((node) => node && isLineBreak(node) && !isInList(node, this.editable));
+        for (const br of brs) {
+            let block = closestBlock(br);
+            if (!block?.isContentEditable) {
+                continue;
+            }
+
+            // Check if we can split at this line break.
+            const unsplittable = ancestors(br, block).find(this.isUnsplittable.bind(this));
+            const canWrapInUnsplittable = allowsParagraphRelatedElements(unsplittable);
+            if (unsplittable) {
+                if (canWrapInUnsplittable) {
+                    // If splitting here would split an unsplittable element,
+                    // remove the line break and wrap the content around it in
+                    // new base containers.
+                    const cursors = this.dependencies.selection.preserveSelection();
+                    const children = [...unsplittable.childNodes];
+                    const brIndex = childNodeIndex(br);
+                    // Wrap only until the first node that can't be wrapped, in
+                    // both directions.
+                    const isInvalid = (node) => !isPhrasingContent(node);
+                    const startInvalid = children.slice(0, brIndex).findLast(isInvalid);
+                    const endInvalid = children.slice(brIndex + 1).find(isInvalid);
+                    const childrenToInsert = children.slice(
+                        startInvalid ? childNodeIndex(startInvalid) + 1 : 0,
+                        endInvalid ? childNodeIndex(endInvalid) : children.length
+                    );
+                    // The new base container will become the new block parent
+                    // of the BR.
+                    block = this.dependencies.baseContainer.createBaseContainer();
+                    childrenToInsert[0]?.before(block);
+                    block.append(...childrenToInsert);
+                    cursors.restore();
+                } else {
+                    // If we can't insert a base container here, there's nothing
+                    // we can do.
+                    continue;
+                }
+            }
+
+            // Now let's split at the line break.
+            const cursors = this.dependencies.selection.preserveSelection();
+            let { anchorNode, anchorOffset, focusNode, focusOffset } = getEditableSelection();
+            const brIndex = childNodeIndex(br);
+            const oldParent = br.parentElement;
+            const [before, after] = this.splitElementUntil(oldParent, brIndex, block.parentElement);
+            br.remove();
+            [before, after].forEach(fillEmpty);
+
+            // Restore the selection.
+            if ([anchorNode, focusNode].some((node) => node === oldParent)) {
+                // We can't use `cursors.remapNode` here because the old parent
+                // was split into two new nodes.
+                // eg, `<p>[a<br>b]</p>` with selection (p, 0, p, 3) ->
+                // `<p>[a</p><p>b]</p>` -> anchor p !== focus p.
+                const remapPos = (i) => (i <= brIndex ? [before, 0] : [after, i - brIndex - 1]);
+                [[anchorNode, anchorOffset], [focusNode, focusOffset]] = [
+                    [anchorNode, anchorOffset],
+                    [focusNode, focusOffset],
+                ].map(([node, offset]) => (node === oldParent ? remapPos(offset) : [node, offset]));
+                setSelection(
+                    { anchorNode, anchorOffset, focusNode, focusOffset },
+                    { normalize: false }
+                );
+            } else {
+                cursors.restore();
+            }
+        }
     }
 
     onBeforeInput(e) {

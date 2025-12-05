@@ -36,7 +36,7 @@ import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 
 export class ShortCutPlugin extends Plugin {
     static id = "shortcut";
-    static dependencies = ["userCommand", "selection"];
+    static dependencies = ["userCommand", "selection", "split"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -85,24 +85,38 @@ export class ShortCutPlugin extends Plugin {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
-        const blockEl = closestBlock(selection.anchorNode);
+        let blockEl = closestBlock(selection.anchorNode);
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
         let spaceOffset = selection.anchorOffset;
+        let lineBreak;
+        let lineOffset = 0;
         let leftLeaf = leftDOMPath.next().value;
         while (leftLeaf) {
             // Calculate spaceOffset by adding lengths of previous text nodes
             // to correctly find offset position for selection within inline
             // elements. e.g. <p>ab<strong>cd []e</strong></p>
-            spaceOffset += leftLeaf.length;
+            spaceOffset += leftLeaf.length || 0;
+            // Similarly, calculate lineOffset to find the beginning of the line
+            // by adding lengths of previous nodes from the moment a line break
+            // is found.
+            if (lineBreak) {
+                lineOffset += leftLeaf.length || 0;
+            } else if (leftLeaf.nodeName === "BR") {
+                lineBreak = leftLeaf;
+            }
             leftLeaf = leftDOMPath.next().value;
         }
-        const precedingText = blockEl.textContent.substring(0, spaceOffset - 1);
+        const precedingText = blockEl.textContent.substring(lineOffset, spaceOffset - 1);
         const matchedShortcut = this.getResource("shorthands").find(({ pattern }) =>
-            pattern.test(precedingText)
+            pattern.test(precedingText.trim())
         );
         if (matchedShortcut) {
             const command = this.dependencies.userCommand.getCommand(matchedShortcut.commandId);
             if (command) {
+                if (lineBreak) {
+                    this.dependencies.split.splitBlockSegments();
+                    blockEl = closestBlock(selection.anchorNode);
+                }
                 this.dependencies.selection.setSelection({
                     anchorNode: blockEl.firstChild,
                     anchorOffset: 0,
