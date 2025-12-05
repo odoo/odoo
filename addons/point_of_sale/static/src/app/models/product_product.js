@@ -237,28 +237,32 @@ export class ProductProduct extends Base {
         return [];
     }
 
-    _isArchivedCombination(attributeValueIds) {
-        if (!this._archived_combinations) {
+    _isArchivedCombination(attributeValueIds, exclusion) {
+        const excludedPTAV = new Set();
+        if (exclusion && exclusion.size > 0) {
+            for (const ptavId of attributeValueIds) {
+                for (const excludedPtavId of exclusion.get(ptavId) || []) {
+                    excludedPTAV.add(excludedPtavId);
+                }
+            }
+        } else if (!this._archived_combinations) {
             return false;
         }
-        const excludedPTAV = new Set();
-        let isCombinationArchived = false;
-        for (const archivedCombination of this._archived_combinations) {
-            const ptavCommon = archivedCombination.filter((ptav) =>
-                attributeValueIds.includes(ptav)
-            );
-            if (ptavCommon.length === attributeValueIds.length) {
-                // all attributes must be disabled from each other
-                archivedCombination.forEach((ptav) => excludedPTAV.add(ptav));
-            } else if (ptavCommon.length === attributeValueIds.length - 1) {
-                // In this case we only need to disable the remaining ptav
-                const disablePTAV = archivedCombination.find(
-                    (ptav) => !attributeValueIds.includes(ptav)
+        if (this._archived_combinations) {
+            for (const archivedCombination of this._archived_combinations) {
+                const ptavCommon = archivedCombination.filter((ptav) =>
+                    attributeValueIds.includes(ptav)
                 );
-                excludedPTAV.add(disablePTAV);
-            }
-            if (ptavCommon.length === attributeValueIds.length) {
-                isCombinationArchived = true;
+                if (ptavCommon.length === attributeValueIds.length) {
+                    // all attributes must be disabled from each other
+                    archivedCombination.forEach((ptav) => excludedPTAV.add(ptav));
+                } else if (ptavCommon.length === attributeValueIds.length - 1) {
+                    // In this case we only need to disable the remaining ptav
+                    const disablePTAV = archivedCombination.find(
+                        (ptav) => !attributeValueIds.includes(ptav)
+                    );
+                    excludedPTAV.add(disablePTAV);
+                }
             }
         }
         this.attribute_line_ids.forEach((attribute_line) => {
@@ -266,7 +270,7 @@ export class ProductProduct extends Base {
                 ptav["excluded"] = excludedPTAV.has(ptav.id);
             });
         });
-        return isCombinationArchived;
+        return attributeValueIds.some((id) => excludedPTAV.has(id));
     }
 
     get productDisplayName() {
