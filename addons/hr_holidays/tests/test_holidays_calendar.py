@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime, time, timedelta
+from datetime import date, timedelta
 
 from odoo.addons.base.tests.common import HttpCase
 from odoo.tests.common import tagged
@@ -69,12 +68,11 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
 
         leave.action_validate()
 
-        expected_fd_start = datetime.combine(test_date, time(8, 0))
-        expected_fd_stop = datetime.combine(test_date, time(17, 0))
-        self.assertEqual(leave.meeting_id.start, expected_fd_start,
-                        f"Meeting start date should be {expected_fd_start}")
-        self.assertEqual(leave.meeting_id.stop, expected_fd_stop,
-                        f"Meeting end date should be {expected_fd_stop}")
+        self.assertEqual(leave.meeting_id.allday, True)
+        self.assertEqual(leave.meeting_id.start_date, test_date,
+                        f"Meeting start date should be {test_date}")
+        self.assertEqual(leave.meeting_id.stop_date, test_date,
+                        f"Meeting end date should be {test_date}")
 
         # case 2: half day in Los/Angeles tz
 
@@ -92,10 +90,6 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
 
         leave_half.action_validate()
 
-        expected_hd_start = datetime.combine(test_date_half, time(13, 0))
-        expected_hd_stop = datetime.combine(test_date_half, time(17, 0))
-
-        self.assertEqual(leave_half.meeting_id.start, expected_hd_start,
-                        f"Half-day meeting start date should be {expected_hd_start}")
-        self.assertEqual(leave_half.meeting_id.stop, expected_hd_stop,
-                        f"Half-day meeting end date should be {expected_hd_stop}")
+        self.assertEqual(leave_half.meeting_id.allday, False)
+        self.assertEqual(leave_half.meeting_id.start, leave_half.date_from)
+        self.assertEqual(leave_half.meeting_id.stop, leave_half.date_to)

@@ -1148,9 +1148,14 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 meeting_name = _("%s on Time Off : %.2f day(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_days)
                 allday_value = not holiday.request_unit_half
 
-            leave_tz = timezone(holiday.tz) if holiday.tz else UTC
-            start_value = UTC.localize(holiday.date_from).astimezone(leave_tz).replace(tzinfo=None)
-            stop_value = UTC.localize(holiday.date_to).astimezone(leave_tz).replace(tzinfo=None)
+            if allday_value:
+                # `start` and `stop` are not in UTC for allday events
+                leave_tz = timezone(holiday.tz) if holiday.tz else UTC
+                start_value = UTC.localize(holiday.date_from).astimezone(leave_tz).replace(tzinfo=None)
+                stop_value = UTC.localize(holiday.date_to).astimezone(leave_tz).replace(tzinfo=None)
+            else:
+                start_value = holiday.date_from
+                stop_value = holiday.date_to
 
             meeting_values = {
                 'name': meeting_name,
