@@ -311,10 +311,12 @@ export function cleanupNetwork() {
 
 /** @type {typeof fetch} */
 export async function mockedFetch(input, init) {
-    if (!mockFetchFn) {
-        throw new Error("Can't make a request when fetch is not mocked");
-    }
     const strInput = String(input);
+    if (!mockFetchFn) {
+        throw new Error(
+            `Can't make a request when fetch is not mocked.\nReceived fetch call to: "${strInput}"`
+        );
+    }
     const controller = markOpen(new AbortController());
 
     init = { ...init };
