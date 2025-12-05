@@ -905,6 +905,7 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered_at_date(self):
         if not self._date_in_the_past():
             # Avoid useless compute if we don't look in the past.
+            self.fetch(["qty_delivered"])
             for line in self:
                 line.qty_delivered_at_date = line.qty_delivered
             return
@@ -985,6 +986,7 @@ class SaleOrderLine(models.Model):
     def _compute_qty_invoiced_at_date(self):
         if not self._date_in_the_past():
             # Avoid useless compute if we don't look in the past.
+            self.fetch(["qty_invoiced"])
             for line in self:
                 line.qty_invoiced_at_date = line.qty_invoiced
             return
