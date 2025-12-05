@@ -114,11 +114,6 @@ class HrAttendanceOvertimeRule(models.Model):
     expected_hours_from_contract = fields.Boolean(
         string="Hours from employee schedule",
         default=True,
-        help=(
-            "The attendance can go into negative extra hours to\n"
-            "represent the missing hours compared to what is expected.\n"
-            "It will not work if the employee doesn't have a 'Working Schedule'."
-        ),
     )
 
     resource_calendar_id = fields.Many2one(
@@ -366,6 +361,7 @@ class HrAttendanceOvertimeRule(models.Model):
             lambda r: {p: i for i, p in enumerate(periods)}[r.quantity_period]
         ):
             period = rule.quantity_period
+            absence_management = self._is_absence_management_enabled()
             for date in attendances_by[period]:
                 if rule.expected_hours_from_contract and attendances.employee_id.resource_calendar_id.flexible_hours:
                     continue
@@ -377,7 +373,7 @@ class HrAttendanceOvertimeRule(models.Model):
                 overtime_quantity = work_hours_by[period][date] - expected_hours
                 # if overtime_quantity <= -rule.employee_tolerance and rule.undertime: make negative adjustment
                 # Handle undertime: convert missing hours into intervals to be deducted later
-                if overtime_quantity < 0:
+                if overtime_quantity < 0 and absence_management:
                     success = rule._get_undertime_intervals_by_date(
                         date,
                         period,
@@ -504,3 +500,6 @@ class HrAttendanceOvertimeRule(models.Model):
         overridden by optional modules to apply real undertime logic.
         """
         return False
+
+    def _is_absence_management_enabled(self):
+        return bool(self.env.company.absence_management)
