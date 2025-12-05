@@ -22,7 +22,7 @@ class AsyncHTTPHandler(logging.Handler):
     _MAX_BATCH_SIZE = 50
     """Maximum number of sent logs batched at once. Used to avoid too heavy request. Log records still in the queue will
     be handle in future flushes"""
-    _FLUSH_INTERVAL = 12
+    _FLUSH_INTERVAL = 0.5
     """How much seconds it will sleep before checking for new logs to send"""
     _REQUEST_TIMEOUT = 10
     """Amount of seconds to wait per log to send before timeout"""
