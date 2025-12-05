@@ -37,8 +37,11 @@ class HrLeave(models.Model):
     def _get_deductible_employee_overtime(self, employees):
         # return dict {employee: number of hours}
         diff_by_employee = defaultdict(lambda: 0)
+        overtimeline = self.env['hr.attendance.overtime.line'].sudo()
+        records = overtimeline.search([])
         for employee, hours in self.env['hr.attendance.overtime.line'].sudo()._read_group(
             domain=[
+                ('quantity_comparison', '=', 'exceed'),
                 ('compensable_as_leave', '=', True),
                 ('employee_id', 'in', employees.ids),
                 ('status', '=', 'approved'),
@@ -47,6 +50,17 @@ class HrLeave(models.Model):
             aggregates=['manual_duration:sum'],
         ):
             diff_by_employee[employee] += hours
+        for employee, hours in self.env['hr.attendance.overtime.line'].sudo()._read_group(
+            domain=[
+                ('quantity_comparison', '=', 'fall_behind'),
+                ('deduct_as_leave', '=', True),
+                ('employee_id', 'in', employees.ids),
+                ('status', '=', 'approved'),
+            ],
+            groupby=['employee_id'],
+            aggregates=['manual_duration:sum'],
+        ):
+            diff_by_employee[employee] -= hours
         for employee, hours in self._read_group(
             domain=[
                 ('holiday_status_id.overtime_deductible', '=', True),

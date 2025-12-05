@@ -6,7 +6,7 @@
         <field name="name">hr.attendance.overtime.rule.form</field>
         <field name="model">hr.attendance.overtime.rule</field>
         <field name="arch" type="xml">
-            <form>
+            <form js_class="overtime_rule_form_view">
                 <sheet>
                     <div class="oe_title">
                         <label for="name" string="Rule Name"/>
@@ -26,7 +26,8 @@
                                 <span colspan="2" class="d-flex gap-1" invisible="base_off != 'quantity'">
                                     <label for="quantity_period" string="If the worked hours on a"/>
                                     <field style="width:10ch" nolabel="1" name="quantity_period"/>
-                                    <label for="expected_hours_from_contract" string="exceed"/>
+                                    <!-- <label for="expected_hours_from_contract" string="exceed"/> -->
+                                    <field style="width:10ch" nolabel="1" name="quantity_comparison"/>
                                     <field class="w-auto" name="expected_hours_from_contract" nolabel="1" widget="boolean_radio" options="{
                                         'yes_label_element_id': 'expected_hours_from_contract_yes',
                                         'no_label_element_id': 'expected_hours_from_contract_no'
@@ -34,12 +35,14 @@
                                     <template id="expected_hours_from_contract_yes">the amount defined on the contract</template>
                                     <template id="expected_hours_from_contract_no">a specific duration</template>
                                 </span>
-                                <label for="expected_hours" string="Duration to exceed:" invisible="base_off != 'quantity' or expected_hours_from_contract"/>
+                                <!-- <label for="expected_hours" string="Duration to exceed:" invisible="base_off != 'quantity' or expected_hours_from_contract"/> -->
+                                <field name="expected_hours_label" nolabel="1" readonly="1" invisible="base_off != 'quantity' or expected_hours_from_contract"/>
                                 <span name="expected_hours" class="fw-bold" invisible="base_off != 'quantity' or expected_hours_from_contract">
                                     <field name="expected_hours" widget="float_time" style="width:10ch"/>
                                     hours
                                 </span>
-                                <field name="employer_tolerance" widget="float_time" string="With a tolerance in favor of the employer of"/>
+                                <field name="employer_tolerance" widget="float_time" string="With a tolerance in favor of the employer of" invisible="quantity_comparison == 'fall_behind'"/>
+                                <field name="employee_tolerance" widget="float_time" string="With a tolerance in favor of the employee of" invisible="quantity_comparison == 'exceed'"/>
                                 <!-- TIMING -->
                                 <field name="timing_type" widget="radio" string="If the employee works" invisible="base_off != 'timing'"/>
                                 <span class="fw-bold" invisible="base_off != 'timing' or timing_type not in ['work_days', 'non_work_days']">Between</span>
@@ -55,12 +58,17 @@
                                 string="Action" 
                                 style="grid-template-columns:max-content 1fr"
                             >
-                                <span colspan="2" class="mb-3 fw-bold">The hours will be considered extra and submitted to approval.</span>
-                                                <label for="paid" string="Pay extra hours"/>
-                                <span class="d-flex gap-1" name="paid">
+                                <span colspan="2" class="mb-3 fw-bold" invisible="quantity_comparison == 'fall_behind'">The hours will be considered extra and submitted to approval. If approved, they will be added to your pool of Extra Hours.</span>
+                                <span colspan="2" class="mb-3 fw-bold" invisible="quantity_comparison == 'exceed'">The hours will be considered extra and submitted to approval. If approved, they will be subtracted from your pool of Extra Hours.</span>
+                                                <label for="paid" string="Pay extra hours" invisible="quantity_comparison == 'fall_behind'"/>
+                                <span class="d-flex gap-1" name="paid" invisible="quantity_comparison == 'fall_behind'">
                                     <field class="w-auto" nolabel="1" name="paid"/>
                                     <label for="amount_rate" string="with a rate of" invisible="not paid"/>
                                     <field name="amount_rate" style="width:10ch" widget="percentage" invisible="not paid"/>
+                                </span>
+                                <label for="set_missing_hours" string="Set missing hours" invisible="quantity_comparison == 'exceed'"/>
+                                <span class="d-flex gap-1" name="paid" invisible="quantity_comparison == 'exceed'">
+                                    <field class="w-auto" nolabel="1" name="set_missing_hours"/>
                                 </span>
                             </group>
                         </page>
