@@ -411,7 +411,7 @@ class AccountEdiCommon(models.AbstractModel):
             limit=1,
         ) if state_code and country else self.env['res.country.state']
         if not partner and name and vat:
-            partner_vals = {'name': name, 'email': email, 'phone': phone}
+            partner_vals = {'name': name, 'email': email, 'phone': phone, 'is_company': True}
             if peppol_eas and peppol_endpoint:
                 partner_vals.update({'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint})
             partner = self.env['res.partner'].create(partner_vals)
