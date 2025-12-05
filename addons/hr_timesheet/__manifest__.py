@@ -41,7 +41,6 @@ up a management by affair.
         'views/project_update_views.xml',
         'wizard/hr_employee_delete_wizard_views.xml',
         'views/hr_timesheet_menus.xml',
-        'data/aw_rule_data.xml',
     ],
     'demo': [
         'data/hr_timesheet_demo.xml',
