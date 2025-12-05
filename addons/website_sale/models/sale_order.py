@@ -239,6 +239,15 @@ class SaleOrder(models.Model):
     def _get_amount_total_excluding_delivery(self):
         return sum(self._get_non_delivery_lines().mapped('price_total'))
 
+    def _get_confirmation_template(self):
+        """Override of `sale` to use the website specific order confirmation email template if set."""
+        self.ensure_one()
+
+        if self.website_id and self.website_id.confirmation_email_template_id:
+            return self.website_id.confirmation_email_template_id
+
+        return super()._get_confirmation_template()
+
     def action_confirm(self):
         carts = self.filtered('website_id')
         if self.env.su:
