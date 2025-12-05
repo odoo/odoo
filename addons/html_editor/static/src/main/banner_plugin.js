@@ -137,10 +137,6 @@ export class BannerPlugin extends Plugin {
         this.dependencies.selection.setCursorEnd(
             bannerElement.querySelector(`.o_editor_banner_content > ${baseContainer.tagName}`)
         );
-        // Remove the old element.
-        if (bannerElement.nextSibling?.nodeName === blockEl.nodeName) {
-            bannerElement.nextSibling.remove();
-        }
         this.dependencies.history.addStep();
     }
 
