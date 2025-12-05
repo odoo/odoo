@@ -3,6 +3,7 @@ import hashlib
 import io
 import logging
 import os
+import pprint
 import re
 import textwrap
 import uuid
@@ -75,6 +76,11 @@ class AssetsBundle(object):
             if (css and url.rpartition('.')[2] in STYLE_EXTENSIONS) or (js and url.rpartition('.')[2] in SCRIPT_EXTENSIONS)
         ]
         css_urls = None
+
+        # import pprint; pprint.pprint('name:', name)
+        # pprint.pprint('files:', files)
+        # _logger.debug('\n\n-------------------\nInitializing AssetsBundle: %s\nWith files:\n%s\n-------------------', name, pprint.pformat(files))
+        # print('\n\n-------------------')
 
         # asset-wide html "media" attribute
         for f in files:
