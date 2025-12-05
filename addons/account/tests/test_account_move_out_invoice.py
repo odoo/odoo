@@ -4900,3 +4900,35 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_line_id': percent_tax.id,
             }
         ])
+
+    def test_out_invoice_custom_currency_rate(self):
+        ''' Check the invoice_date will be set automatically at the post date. '''
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.other_currency.id,
+            'invoice_currency_rate': 5,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            'invoice_date': False,
+        })
+        expected_lines_vals = [
+            {
+                'balance': -400.0,
+                'amount_currency': -2000.0,
+            },
+            {
+                'balance': -60.0,
+                'amount_currency': -300.0,
+            },
+            {
+                'balance': 460.0,
+                'amount_currency': 2300.0,
+            },
+        ]
+        self.assertRecordValues(move.line_ids, expected_lines_vals)
+        move.action_post()
+        self.assertRecordValues(move.line_ids, expected_lines_vals)
+        self.assertRecordValues(move, [{
+            'invoice_currency_rate': 5.0,
+            'expected_currency_rate': 2.0,
+        }])
