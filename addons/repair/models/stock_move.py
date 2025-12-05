@@ -93,6 +93,7 @@ class StockMove(models.Model):
             move.group_id = move.repair_id.procurement_group_id.id
             move.origin = move.name
             move.picking_type_id = move.repair_id.picking_type_id.id
+            move.partner_id = move.repair_id.partner_id.id
             repair_moves |= move
         no_repair_moves = moves - repair_moves
         draft_repair_moves = repair_moves.filtered(lambda m: m.state == 'draft' and m.repair_id.state in ('confirmed', 'under_repair'))
