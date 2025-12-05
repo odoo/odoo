@@ -132,7 +132,6 @@ export const busService = {
                         session.websocket_worker_version
                     }`,
                     db: session.db,
-                    debug: odoo.debug,
                     lastNotificationId: parseInt(
                         localStorage.getItem("bus.last_notification_id") ?? 0
                     ),
