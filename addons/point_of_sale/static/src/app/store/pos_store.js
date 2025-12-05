@@ -420,6 +420,28 @@ export class PosStore extends Reactive {
                 this.mainProductVariant[products[i].id] = products[nbrProduct - 1];
             }
         }
+
+        this.productAttributesExclusion = this.computeProductAttributesExclusion();
+    }
+
+    computeProductAttributesExclusion() {
+        const exclusions = new Map();
+
+        const addExclusion = (key, value) => {
+            if (!exclusions.has(key)) {
+                exclusions.set(key, new Set());
+            }
+            exclusions.get(key).add(value);
+        };
+
+        for (const exclusion of this.models["product.template.attribute.exclusion"].getAll()) {
+            const ptavId = exclusion.product_template_attribute_value_id.id;
+            for (const { id: valueId } of exclusion.value_ids) {
+                addExclusion(ptavId, valueId);
+                addExclusion(valueId, ptavId);
+            }
+        }
+        return exclusions;
     }
 
     async onDeleteOrder(order) {
