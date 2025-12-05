@@ -42,7 +42,13 @@ import { delay } from "@web/core/utils/concurrency";
 import { FormController } from "@web/views/form/form_controller";
 import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
-import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
+import {
+    ensureDistinctHistoryStep,
+    insertText,
+    pasteOdooEditorHtml,
+    pasteText,
+    undo,
+} from "./_helpers/user_actions";
 import { unformat } from "./_helpers/format";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
@@ -834,7 +840,9 @@ test("undo after discard html field changes in form", async () => {
     // move the hoot focus in the editor
     await click(".odoo-editor-editable");
     setSelectionInHtmlField();
-    await insertText(htmlEditor, "test");
+    await insertText(htmlEditor, "tes");
+    await ensureDistinctHistoryStep();
+    await insertText(htmlEditor, "t");
     await animationFrame();
     expect(".odoo-editor-editable p").toHaveText("testfirst");
     expect(`.o_form_button_cancel`).toBeVisible();
@@ -1529,7 +1537,10 @@ test("edit and enable/disable codeview with editor toolbar", async () => {
     });
 
     setSelectionInHtmlField();
-    await insertText(htmlEditor, "Hello ");
+    await insertText(htmlEditor, "Hello");
+    await ensureDistinctHistoryStep();
+    await insertText(htmlEditor, " ");
+    await ensureDistinctHistoryStep();
     expect("[name='txt'] .odoo-editor-editable").toHaveInnerHTML("<p>Hello first </p>");
 
     // Switch to code view

@@ -2,6 +2,7 @@ import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { findInSelection } from "@html_editor/utils/selection";
 import {
     animationFrame,
+    advanceTime,
     click,
     manuallyDispatchProgrammaticEvent,
     press,
@@ -13,8 +14,17 @@ import { execCommand } from "./userCommands";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { STEP_DEBOUNCE_DELAY } from "@html_editor/core/history_plugin";
 
 /** @typedef {import("@html_editor/plugin").Editor} Editor */
+
+/**
+ * Makes enough time pass to ensure that undo/redo will not collapse
+ * steps before and after this call.
+ */
+export async function ensureDistinctHistoryStep() {
+    await advanceTime(STEP_DEBOUNCE_DELAY + 1);
+}
 
 /**
  * Simulates text insertion in the editor by dispatching keyboard/input events

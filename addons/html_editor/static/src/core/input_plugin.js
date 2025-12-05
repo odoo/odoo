@@ -19,7 +19,7 @@ export class InputPlugin extends Plugin {
     }
 
     onInput(ev) {
-        this.dependencies.history.addStep();
+        this.dependencies.history.addStep({ batchable: ev.inputType === "insertText" });
         this.dispatchTo("input_handlers", ev);
     }
 }

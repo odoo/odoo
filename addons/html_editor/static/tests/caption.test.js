@@ -15,7 +15,12 @@ import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embeddi
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
-import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
+import {
+    deleteBackward,
+    deleteForward,
+    ensureDistinctHistoryStep,
+    insertText,
+} from "./_helpers/user_actions";
 import { cleanHints } from "./_helpers/dispatch";
 import { getContent, setSelection } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
@@ -368,6 +373,7 @@ test("undo in a caption undoes the last caption action then returns to regular e
         contentBefore: `<p><img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption="${caption}"></p><h1>[]Heading</h1>`,
         stepFunction: async (editor) => {
             await insertText(editor, "a");
+            await ensureDistinctHistoryStep();
             const heading = queryOne("h1");
             expect(heading.textContent).toBe("aHeading");
             await toggleCaption();
@@ -378,6 +384,7 @@ test("undo in a caption undoes the last caption action then returns to regular e
             await editor.document.execCommand("insertText", false, "b");
             await editor.document.execCommand("insertText", false, "c");
             await editor.document.execCommand("insertText", false, "d");
+            await ensureDistinctHistoryStep();
             await editor.document.execCommand("delete", false, null); // Backspace.
             expect(input.value).toBe(`${caption}bc`);
 
