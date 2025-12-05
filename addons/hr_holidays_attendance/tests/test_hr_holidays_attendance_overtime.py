@@ -31,9 +31,8 @@ class TestHrAttendanceOvertime(HttpCase):
         cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
             'attendance_overtime_validation': 'no_validation',
-            # 'overtime_company_threshold': 10,
-            # 'overtime_employee_threshold': 10,
         })
+        cls.company.absence_management = True
         cls.company.resource_calendar_id.tz = 'Europe/Brussels'
         cls.company_1 = cls.env['res.company'].create({
             'name': 'Overtime Inc.',
@@ -129,6 +128,7 @@ class TestHrAttendanceOvertime(HttpCase):
 
     def test_daily_undertime_applies(self):
         """Daily undertime should generate negative overtime."""
+        self.env.company.absence_management = True
         version = self.employee._get_version(date(2025, 8, 20))
         ruleset = self.env['hr.attendance.overtime.ruleset'].create({
             'name': 'Daily Undertime',
@@ -162,6 +162,7 @@ class TestHrAttendanceOvertime(HttpCase):
     def test_daily_undertime_consumes_overtime(self):
         """When a daily quantity rule creates both positive and negative overtime across days,
         negative (undertime) hours must reduce the employee's total overtime balance."""
+        self.env.company.absence_management = True
         version = self.employee._get_version(date(2025, 8, 20))
         ruleset = self.env['hr.attendance.overtime.ruleset'].create({
             'name': 'Daily 8h with compensable undertime',
@@ -205,6 +206,7 @@ class TestHrAttendanceOvertime(HttpCase):
     def test_undertime_applies_only_for_day_selector(self):
         """Ensure undertime is generated for quantity/day rules but not for quantity/week rules."""
         # Day-based quantity rule -> undertime should be created for a short single-day attendance
+        self.env.company.absence_management = True
         version = self.employee._get_version(date(2025, 8, 20))
         ruleset_day = self.env['hr.attendance.overtime.ruleset'].create({
             'name': 'Daily 8h',
@@ -259,6 +261,7 @@ class TestHrAttendanceOvertime(HttpCase):
 
     def test_undertime_larger_than_overtime_results_negative_balance(self):
         """If undertime is larger than prior overtime, the net overtime becomes negative."""
+        self.env.company.absence_management = True
         version = self.employee._get_version(date(2025, 8, 20))
         ruleset = self.env['hr.attendance.overtime.ruleset'].create({
             'name': 'Daily 8h - compensable',
@@ -295,3 +298,45 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertAlmostEqual(durations.get(date(2025, 8, 21)), -2.0, 2)
         # Net total should be -1.0 hours
         self.assertAlmostEqual(sum(durations.values()), -1.0, 2)
+
+    def test_no_undertime_applies_without_absence_management(self):
+        self.env.company.absence_management = False
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Daily 8h - compensable',
+            'rule_ids': [Command.create({
+                'name': '8h/day',
+                'base_off': 'quantity',
+                'quantity_period': 'day',
+                'expected_hours': 8,
+                'expected_hours_from_contract': False,
+                'compensable_as_leave': True,
+            })],
+        })
+        version = self.employee._get_version(date(2025, 8, 20))
+        version.ruleset_id = ruleset
+
+        # 5h undertime (3h worked) - No undertime must be applied
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 8, 20, 8, 0),
+            'check_out': datetime(2025, 8, 20, 11, 0),
+        })
+
+        overtimes = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2025, 8, 20)),
+        ])
+        self.assertAlmostEqual(overtimes.duration, 0, 2, "There should be 0 hours of undertime because absence management is not activated.")
+
+        # 1h overtime (9h worked) - Overtime must still be applied
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2025, 8, 21, 8, 0),
+            'check_out': datetime(2025, 8, 21, 18, 0),
+        })
+
+        overtimes = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2025, 8, 21)),
+        ])
+        self.assertAlmostEqual(overtimes.duration, 1, 2, "There should be 1 hour of overtime even though absence management is not activated.")

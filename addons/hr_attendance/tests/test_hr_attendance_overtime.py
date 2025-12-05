@@ -1,10 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, datetime
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests import Form, HttpCase, new_test_user
 from odoo.tests.common import tagged
+from odoo.addons.hr_attendance.models.hr_attendance_overtime_rule import HrAttendanceOvertimeRule
 
 
 @tagged('hr_attendance_overtime')
@@ -1258,3 +1260,58 @@ class TestHrAttendanceOvertime(HttpCase):
 
             self.assertAlmostEqual(attendance_company_be.overtime_hours, 8, 2, "Employee from Company 1 should have overtime for working on a public holiday.")
             self.assertAlmostEqual(attendance_company_de.overtime_hours, 0, 2, "Employee from Company 2 should not have overtime for working on a non-holiday day.")
+
+    def test_undertimes_without_holidays_module(self):
+        with patch.object(HrAttendanceOvertimeRule, "_extra_overtime_vals", return_value={}):
+            ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+                'name': 'Combined Ruleset',
+                'rule_ids': [
+                    Command.create({
+                        'name': "Small Daily Qty",
+                        'base_off': 'quantity',
+                        'quantity_period': 'day',
+                        'expected_hours_from_contract': True,
+                    }),
+                ],
+            })
+            rule = ruleset.rule_ids[0]
+            employee = self.env['hr.employee'].create({'name': "Test Emp"})
+            attendance = self.env['hr.attendance'].create({
+                'employee_id': employee.id,
+                'check_in': datetime(2021, 1, 2, 8, 0),
+                'check_out': datetime(2021, 1, 2, 10, 0),
+            })
+            version_map = {
+                employee: {
+                    attendance.check_in.date(): attendance,
+                }
+            }
+            vals = rule._generate_overtime_vals(
+                employee,
+                attendance,
+                version_map,
+            )
+            for val in vals:
+                self.assertGreaterEqual(
+                    val["duration"],
+                    0,
+                    "Undertime should not be created when hr_holidays_attendance module is missing."
+                )
+
+    def test_dynamic_tooltip_absence_management_enabled(self):
+        company = self.env.company
+        rule = self.env['hr.attendance.overtime.rule']
+
+        # tooltip when absence management is enabled
+        company.absence_management = True
+        ctx = rule.get_overtime_rule_form_context()
+        self.assertTrue(ctx['absence_management_enabled'])
+        self.assertIn("negative extra hours", ctx['overtime_tooltip'])
+        self.assertNotIn("enable the Absence Management", ctx['overtime_tooltip'])
+
+        # tooltip when absence management is disabled
+        company.absence_management = False
+        ctx = rule.get_overtime_rule_form_context()
+        self.assertFalse(ctx['absence_management_enabled'])
+        self.assertIn("tracks overtime only", ctx['overtime_tooltip'])
+        self.assertIn("enable the Absence Management", ctx['overtime_tooltip'])
