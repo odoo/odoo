@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, tools
 from odoo.tools import format_time
+from odoo.addons.mail.tools.discuss import Store
 
 
 class HrEmployeePublic(models.Model):
@@ -215,5 +216,9 @@ class HrEmployeePublic(models.Model):
               ON v.id = e.current_version_id
         )""" % (self._table, self._get_fields()))
 
-    def get_avatar_card_data(self, fields):
-        return self.read(fields)
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        res.one("department_id", ["name"])
+        res.one("user_id", lambda res: (res.attr("share"), res.one("partner_id", ["im_status"])))
+        res.one("work_location_id", ["location_type", "name"])
+        res.extend(["company_id", "hr_icon_display", "job_title", "name", "show_hr_icon_display"])
+        res.extend(["work_email", "work_phone"])

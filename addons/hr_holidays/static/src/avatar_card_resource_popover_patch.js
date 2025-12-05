@@ -5,13 +5,10 @@ import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card
 import { patch } from "@web/core/utils/patch";
 
 patch(AvatarCardResourcePopover.prototype, {
-    get fieldNames() {
-        return [...super.fieldNames, "leave_date_to"];
-    },
     get outOfOfficeDateEndText() {
-        if (!this.record.leave_date_to) {
+        if (!this.employee?.leave_date_to) {
             return "";
         }
-        return getOutOfOfficeDateEndText(this.record.leave_date_to);
+        return getOutOfOfficeDateEndText(this.employee.leave_date_to);
     },
 });

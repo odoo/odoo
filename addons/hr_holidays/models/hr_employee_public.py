@@ -3,6 +3,7 @@
 from datetime import date, timedelta
 
 from odoo import fields, models
+from odoo.addons.mail.tools.discuss import Store
 
 
 class HrEmployeePublic(models.Model):
@@ -67,3 +68,7 @@ class HrEmployeePublic(models.Model):
         })
         action['context'] = ctx
         return action
+
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        super()._store_avatar_card_fields(res)
+        res.attr("leave_date_to")

@@ -53,8 +53,7 @@ test("many2one in list view", async () => {
 
     // click on first employee avatar
     await contains(".o_data_cell .o_m2o_avatar > img:eq(0)").click();
-    await waitFor(".o_avatar_card");
-    expect(".o-mail-avatar-card-name").toHaveText("Mario");
+    await waitFor(".o-mail-avatar-card-name:text(Mario)");
     expect(".o_card_user_infos > a").toHaveText("Mario@partner.com");
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();
@@ -63,7 +62,7 @@ test("many2one in list view", async () => {
 
     // click on second employee
     await contains(".o_data_cell .o_m2o_avatar > img:eq(1)").click();
-    expect(".o-mail-avatar-card-name").toHaveText("Luigi");
+    await waitFor(".o-mail-avatar-card-name:text(Luigi)");
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();
@@ -72,7 +71,7 @@ test("many2one in list view", async () => {
 
     // click on third employee (same as first)
     await contains(".o_data_cell .o_m2o_avatar > img:eq(2)").click();
-    expect(".o-mail-avatar-card-name").toHaveText("Mario");
+    await waitFor(".o-mail-avatar-card-name:text(Mario)");
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o-mail-avatar-card-name").toHaveText("Mario");
     expect(".o_card_user_infos > a").toHaveText("Mario@partner.com");
@@ -262,8 +261,7 @@ test("many2one in form view", async () => {
 
     // Clicking on first employee's avatar
     await contains(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar:eq(0)").click();
-    await waitFor(".o_avatar_card");
-    expect(".o-mail-avatar-card-name").toHaveText("Mario");
+    await waitFor(".o-mail-avatar-card-name:text(Mario)");
     expect(".o_card_user_infos > a").toHaveText("Mario@partner.com");
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();
@@ -272,7 +270,7 @@ test("many2one in form view", async () => {
 
     // Clicking on second employee's avatar
     await contains(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar:eq(1)").click();
-    expect(".o-mail-avatar-card-name").toHaveText("Luigi");
+    await waitFor(".o-mail-avatar-card-name:text(Luigi)");
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();
@@ -354,8 +352,7 @@ test("many2one widget in list view", async () => {
 
     // Clicking on first employee's avatar
     await contains(".o_data_cell .o_m2m_avatar:eq(0)").click();
-    await waitFor(".o_avatar_card");
-    expect(".o-mail-avatar-card-name").toHaveText("Mario");
+    await waitFor(".o-mail-avatar-card-name:text(Mario)");
     expect(".o_card_user_infos > a").toHaveText("Mario@partner.com");
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();
@@ -364,7 +361,7 @@ test("many2one widget in list view", async () => {
 
     // Clicking on second employee's avatar
     await contains(".o_data_cell .o_m2m_avatar:eq(1)").click();
-    expect(".o-mail-avatar-card-name").toHaveText("Yoshi");
+    await waitFor(".o-mail-avatar-card-name:text(Yoshi)");
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();
@@ -430,8 +427,7 @@ test("many2many in kanban view", async () => {
 
     // Clicking on first employee's avatar
     await contains(".o_kanban_record img.o_m2m_avatar:eq(1)").click();
-    await waitFor(".o_avatar_card");
-    expect(".o-mail-avatar-card-name").toHaveText("Mario");
+    await waitFor(".o-mail-avatar-card-name:text(Mario)");
     expect(".o_card_user_infos > a").toHaveText("Mario@partner.com");
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();
@@ -440,7 +436,7 @@ test("many2many in kanban view", async () => {
 
     // Clicking on second employee's avatar
     await contains(".o_kanban_record img.o_m2m_avatar:eq(0)").click();
-    expect(".o-mail-avatar-card-name").toHaveText("Luigi");
+    await waitFor(".o-mail-avatar-card-name:text(Luigi)");
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();
@@ -482,14 +478,13 @@ test("many2many: click on an employee not associated with a user", async () => {
 
     // Clicking on first employee's avatar (employee with no user)
     await contains(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar:eq(0)").click();
-    await waitFor(".o_avatar_card");
-    expect(".o-mail-avatar-card-name").toHaveText("Mario");
+    await waitFor(".o-mail-avatar-card-name:text(Mario)");
     expect(".o_card_user_infos > a").toHaveText("Mario@partner.com");
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("View Profile");
 
     // Clicking on second employee's avatar (employee with user)
     await contains(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar:eq(1)").click();
-    expect(".o-mail-avatar-card-name").toHaveText("Luigi");
+    await waitFor(".o-mail-avatar-card-name:text(Luigi)");
     expect(".o_avatar_card").toHaveCount(1);
     expect(".o_avatar_card_buttons button:eq(0)").toHaveText("Send message");
     await contains(".o_avatar_card_buttons button:eq(0)").click();

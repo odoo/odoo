@@ -1,6 +1,3 @@
-import { onWillStart } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
-import { useOpenChat } from "@mail/core/web/open_chat_hook";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
 export class AvatarCardResourcePopover extends AvatarCardPopover {
@@ -9,65 +6,39 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
     static props = {
         ...AvatarCardPopover.props,
         model: { type: String, optional: true },
-        recordModel: {
-            type: String,
-            optional: true,
-        },
     };
 
     static defaultProps = {
         ...AvatarCardPopover.defaultProps,
-        recordModel: "resource.resource",
+        model: "resource.resource",
     };
 
-    setup() {
-        this.orm = useService("orm");
-        this.store = useService("mail.store");
-        this.actionService = useService("action");
-        this.openChat = useOpenChat("res.users");
-        onWillStart(this.onWillStart);
+    get openChatModel() {
+        return "res.users";
     }
 
-    async onWillStart() {
-        [this.record] = await this.orm.call(this.props.recordModel, 'get_avatar_card_data', [[this.props.id], this.fieldNames], {});
-        await Promise.all(this.loadAdditionalData());
+    get resource() {
+        return this.store["resource.resource"].get(this.props.id);
     }
 
-    loadAdditionalData() {
-        // To use when overriden in other modules to load additional data, returns promise(s)
-        return [];
-    }
-
-    get fieldNames() {
-        return ["email", "im_status", "name", "phone", "resource_type", "share", "user_id"];
+    get user() {
+        return this.resource?.user_id;
     }
 
     get name() {
-        return this.record.name;
-    }
-
-    get email() {
-        return this.record.email;
-    }
-
-    get phone() {
-        return this.record.phone;
+        return this.resource?.name;
     }
 
     get displayAvatar() {
-        return this.record.user_id?.length;
+        return this.resource?.resource_type !== "material";
     }
 
     get showViewProfileBtn() {
         return false;
     }
 
-    get userId() {
-        return this.record.user_id[0];
-    }
-
     onSendClick() {
-        this.openChat(this.userId);
+        this.openChat(this.user.id);
         this.props.close();
     }
 }

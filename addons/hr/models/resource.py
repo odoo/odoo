@@ -7,6 +7,7 @@ from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
 from odoo.tools.intervals import Intervals
+from odoo.addons.mail.tools.discuss import Store
 
 
 class ResourceResource(models.Model):
@@ -135,3 +136,9 @@ class ResourceResource(models.Model):
         for resource in resources_with_employee:
             result[resource] = employee_calendars[resource.employee_id.id]
         return result
+
+    def _store_avatar_card_fields(self, res: Store.FieldList):
+        super()._store_avatar_card_fields(res)
+        res.attr("department_id")
+        # sudo: resource.resource - can access employee information of resource
+        res.one("employee_id", "_store_avatar_card_fields", sudo=True)

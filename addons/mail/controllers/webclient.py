@@ -114,7 +114,7 @@ class WebclientController(ThreadController):
             )
         if name == "avatar_card":
             record_id, model = params.get("id"), params.get("model")
-            if not record_id or model not in ("res.users", "res.partner"):
+            if not record_id or model not in self._get_supported_avatar_card_models():
                 return
             context = {
                 "active_test": False,
@@ -146,3 +146,7 @@ class WebclientController(ThreadController):
                 "model": "mail.box",
             },
         )
+
+    @classmethod
+    def _get_supported_avatar_card_models(self):
+        return ["res.users", "res.partner"]
