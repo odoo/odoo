@@ -100,17 +100,19 @@ class Id(Field[IdType | typing.Literal[False]]):
         pass                            # this column is created with the table
 
     def __get__(self, record, owner=None):
-        if record is None:
-            return self         # the field is accessed through the class owner
-
         # the code below is written to make record.id as quick as possible
-        ids = record._ids
-        size = len(ids)
-        if size == 0:
-            return False
-        elif size == 1:
-            return ids[0]
-        raise ValueError("Expected singleton: %s" % record)
+        try:
+            ids = record._ids
+        except AttributeError:
+            assert record is None, "only access through the owner"
+            return self
+        try:
+            if not ids:
+                return False
+            record_id, = ids
+            return record_id
+        except ValueError:
+            raise ValueError("Expected singleton: %s" % record) from None
 
     def __set__(self, record, value):
         raise TypeError("field 'id' cannot be assigned")
