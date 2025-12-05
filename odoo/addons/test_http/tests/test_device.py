@@ -53,11 +53,11 @@ class TestDevice(TestHttpBase):
             patch.dict(odoo.tools.config.options, {'proxy_mode': bool(ip)}):
             return self.url_open(url=endpoint, headers=headers)
 
-    def info_trace(self, trace):
+    def info_device(self, device):
         return {
-            'ip_address': trace['ip_address'],
-            'user_agent': trace['user_agent'],
-            'elapsed_time': trace['last_activity'] - trace['first_activity'],
+            'ip_address': device['ip_address'],
+            'user_agent': device['user_agent'],
+            'elapsed_time': device['last_activity'] - device['first_activity'],
         }
 
     def get_devices(self, user=None):
@@ -83,7 +83,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_trace']), 1)
+        self.assertEqual(len(session['_devices']), 1)
 
     def test_detection_device_no_readonly(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
@@ -93,7 +93,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_trace']), 1)
+        self.assertEqual(len(session['_devices']), 1)
 
     def test_detection_user_public(self):
         session = self.authenticate(None, None)
@@ -103,7 +103,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 0)
         self.assertEqual(len(devices), 0)
         self.assertEqual(len(logs), 0)
-        self.assertEqual(len(session['_trace']), 0)
+        self.assertEqual(len(session['_devices']), 0)
 
     def test_detection_device_readonly_then_no_readonly(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
@@ -113,7 +113,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_trace']), 1)
+        self.assertEqual(len(session['_devices']), 1)
 
         self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
 
@@ -121,7 +121,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_trace']), 1)
+        self.assertEqual(len(session['_devices']), 1)
 
     def test_detection_device_according_to_time(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
@@ -131,8 +131,10 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_trace']), 1)
-        self.assertEqual(self.info_trace(session['_trace'][0])['elapsed_time'], 0)
+        self.assertEqual(len(session['_devices']), 1)
+
+        device_1 = next(iter(session['_devices'].values()))
+        self.assertEqual(self.info_device(device_1)['elapsed_time'], 0)
 
         self.hit('2024-01-01 08:30:00', '/test_http/greeting-public?readonly=0')
 
@@ -140,8 +142,10 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_trace']), 1)
-        self.assertEqual(self.info_trace(session['_trace'][0])['elapsed_time'], 0)  # No trace update (< 3600 sec)
+        self.assertEqual(len(session['_devices']), 1)
+
+        device_1 = next(iter(session['_devices'].values()))
+        self.assertEqual(self.info_device(device_1)['elapsed_time'], 0)  # No trace update (< 3600 sec)
 
         self.hit('2024-01-01 09:00:00', '/test_http/greeting-public?readonly=0')
 
@@ -149,8 +153,10 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 2)
-        self.assertEqual(len(session['_trace']), 1)
-        self.assertEqual(self.info_trace(session['_trace'][0])['elapsed_time'], 3600)
+        self.assertEqual(len(session['_devices']), 1)
+
+        device_1 = next(iter(session['_devices'].values()))
+        self.assertEqual(self.info_device(device_1)['elapsed_time'], 3600)
 
         self.hit('2024-01-01 10:00:00', '/test_http/greeting-public?readonly=0')
 
@@ -158,8 +164,10 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 3)
-        self.assertEqual(len(session['_trace']), 1)
-        self.assertEqual(self.info_trace(session['_trace'][0])['elapsed_time'], 7200)
+        self.assertEqual(len(session['_devices']), 1)
+
+        device_1 = next(iter(session['_devices'].values()))
+        self.assertEqual(self.info_device(device_1)['elapsed_time'], 7200)
 
     def test_detection_device_according_to_useragent(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
@@ -170,8 +178,10 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_trace']), 1)
-        self.assertEqual(self.info_trace(session['_trace'][0])['user_agent'], USER_AGENT_linux_chrome)
+        self.assertEqual(len(session['_devices']), 1)
+
+        device_1 = next(iter(session['_devices'].values()))
+        self.assertEqual(self.info_device(device_1)['user_agent'], USER_AGENT_linux_chrome)
 
         self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0', headers={'User-Agent': USER_AGENT_linux_firefox})
 
@@ -179,8 +189,10 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 2)
         self.assertEqual(len(logs), 2)
-        self.assertEqual(len(session['_trace']), 2)
-        self.assertEqual(self.info_trace(session['_trace'][1])['user_agent'], USER_AGENT_linux_firefox)
+        self.assertEqual(len(session['_devices']), 2)
+
+        _, device_2 = session['_devices'].values()
+        self.assertEqual(self.info_device(device_2)['user_agent'], USER_AGENT_linux_firefox)
 
     def test_detection_device_according_to_ipaddress(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
@@ -190,7 +202,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 1)
         self.assertEqual(len(logs), 1)
-        self.assertEqual(len(session['_trace']), 1)
+        self.assertEqual(len(session['_devices']), 1)
 
         self.hit('2024-01-01 08:00:01', '/test_http/greeting-public?readonly=0', ip=TEST_IP)
 
@@ -198,9 +210,11 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 1)
         self.assertEqual(len(devices), 2)
         self.assertEqual(len(logs), 2)
-        self.assertEqual(len(session['_trace']), 2)
-        self.assertNotEqual(self.info_trace(session['_trace'][0])['ip_address'], TEST_IP)
-        self.assertEqual(self.info_trace(session['_trace'][1])['ip_address'], TEST_IP)
+        self.assertEqual(len(session['_devices']), 2)
+
+        device_1, device_2 = session['_devices'].values()
+        self.assertNotEqual(self.info_device(device_1)['ip_address'], TEST_IP)
+        self.assertEqual(self.info_device(device_2)['ip_address'], TEST_IP)
 
         localized_device = devices.filtered(lambda device: device.ip_address == TEST_IP)
         self.assertEqual(localized_device.country, 'France')
@@ -296,7 +310,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(sessions), 0)
         self.assertEqual(len(devices), 0)
         self.assertEqual(len(logs), 0)
-        self.assertEqual(len(session['_trace']), 0)
+        self.assertEqual(len(session['_devices']), 0)
 
     def test_detection_device_default_order(self):
         self.authenticate(self.user_admin.login, self.user_admin.login)
@@ -423,10 +437,10 @@ class TestDevice(TestHttpBase):
         # the session check and therefore we won't go through the device update.
         # `authenticate` method in the test is not the real method.
         # To check that we are not creating a session (by making it dirty),
-        # we can check that there is no `_trace`.
+        # we can check that there is no `_devices`.
         # This means that the device logic will not create a session file
         # (because we are not passing in the `_update_device` logic).
-        self.assertFalse(session['_trace'])
+        self.assertFalse(session['_devices'])
 
     def test_keep_user_reference_after_user_deletion(self):
         self.authenticate(self.user_internal.login, self.user_internal.login)
