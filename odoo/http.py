@@ -262,7 +262,7 @@ def get_default_session():
         'login': None,
         'uid': None,
         'session_token': None,
-        '_trace': [],
+        '_devices': {},
     }
 
 
@@ -1218,9 +1218,39 @@ class Session(collections.abc.MutableMapping):
     def touch(self):
         self.is_dirty = True
 
-    def update_trace(self, request):
+    def get_device(self, request):
         """
-            :return: dict if a device log has to be inserted, ``None`` otherwise
+        :return: dict that corresponds to the current device
+        """
+        # TODO (v20): remove backward compatibility
+        if '_devices' not in self:
+            self['_devices'] = {}
+            self.is_dirty = True
+
+        ip_address = request.httprequest.remote_addr
+        user_agent = request.httprequest.user_agent.string
+        # No collision with different IP addresses
+        device_key = f'{ip_address.encode().hex()}{adler32(user_agent.encode()):x}'
+
+        with contextlib.suppress(KeyError):
+            return self['_devices'][device_key]
+
+        geoip = GeoIP(ip_address)
+
+        self['_devices'][device_key] = new_device = {
+            'ip_address': ip_address,
+            'user_agent': user_agent,
+            'first_activity': int(datetime.now().timestamp()),
+            'last_activity': None,
+            'country': geoip.country.name,
+            'city': geoip.city.name,
+        }
+        self.is_dirty = True
+        return new_device
+
+    def update_device(self, request):
+        """
+        :return: dict if the current device has been updated, ``None`` otherwise
         """
         if self.get('_trace_disable'):
             # To avoid generating useless logs, e.g. for automated technical sessions,
@@ -1232,29 +1262,16 @@ class Session(collections.abc.MutableMapping):
             # metadata tracking on modified records, etc.)
             return None
 
-        user_agent = request.httprequest.user_agent.string
-        ip_address = request.httprequest.remote_addr
+        device = self.get_device(request)
+
         now = int(datetime.now().timestamp())
-        for trace in self['_trace']:
-            if trace.get('ip_address') == ip_address and trace.get('user_agent') == user_agent:
-                # If the device logs are not up to date (i.e. not updated for one hour or more)
-                if bool(now - trace['last_activity'] >= DEVICE_ACTIVITY_UPDATE_FREQUENCY):
-                    trace['last_activity'] = now
-                    self.is_dirty = True
-                    return trace
-                return None
-        geoip = GeoIP(ip_address)
-        new_trace = {
-            'ip_address': ip_address,
-            'user_agent': user_agent,
-            'first_activity': now,
-            'last_activity': now,
-            'country': geoip.country.name,
-            'city': geoip.city.name,
-        }
-        self['_trace'].append(new_trace)
+        if device['last_activity'] \
+            and (now - device['last_activity']) < DEVICE_ACTIVITY_UPDATE_FREQUENCY:
+            return None
+
+        device['last_activity'] = now
         self.is_dirty = True
-        return new_trace
+        return device
 
     def _delete_old_sessions(self):
         root.session_store.delete_old_sessions(self)

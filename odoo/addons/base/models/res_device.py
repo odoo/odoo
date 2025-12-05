@@ -50,8 +50,8 @@ class ResDeviceLog(models.Model):
 
             :param request: Request or WebsocketRequest object
         """
-        trace = request.session.update_trace(request)
-        if not trace:
+        device = request.session.update_device(request)
+        if not device:
             return
 
         user_id = request.session.uid
@@ -69,12 +69,12 @@ class ResDeviceLog(models.Model):
             """,
                 session_identifier=session_identifier,
                 user_id=user_id,
-                ip_address=trace['ip_address'],
-                user_agent=trace['user_agent'][:1024],  # Truncate very long user-agent
-                country=trace.get('country'),  # TODO (v20): remove backward compatibility by forcing the key
-                city=trace.get('city'),  # TODO (v20): remove backward compatibility by forcing the key
-                first_activity=datetime.fromtimestamp(trace['first_activity']),
-                last_activity=datetime.fromtimestamp(trace['last_activity']),
+                ip_address=device['ip_address'],
+                user_agent=device['user_agent'][:1024],  # Truncate very long user-agent
+                country=device.get('country'),  # TODO (v20): remove backward compatibility by forcing the key
+                city=device.get('city'),  # TODO (v20): remove backward compatibility by forcing the key
+                first_activity=datetime.fromtimestamp(device['first_activity']),
+                last_activity=datetime.fromtimestamp(device['last_activity']),
                 revoked=False,
             ))
         _logger.info('User %d inserts device log (%s)', user_id, session_identifier)
