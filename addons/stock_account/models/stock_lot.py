@@ -7,7 +7,7 @@ class StockLot(models.Model):
     _inherit = 'stock.lot'
 
     lot_valuated = fields.Boolean(related='product_id.lot_valuated', readonly=True, store=False)
-    avg_cost = fields.Monetary(string="Average Cost", currency_field='company_currency_id')
+    avg_cost = fields.Monetary(string="Average Cost", compute='_compute_avg_cost', store=True, readonly=True, currency_field='company_currency_id')
     total_value = fields.Monetary(string="Total Value", compute='_compute_value', compute_sudo=True, currency_field='company_currency_id')
     company_currency_id = fields.Many2one('res.currency', 'Valuation Currency', compute='_compute_value', compute_sudo=True)
     standard_price = fields.Float(
@@ -29,7 +29,6 @@ class StockLot(models.Model):
         for lot in self:
             if not lot.lot_valuated:
                 lot.total_value = 0.0
-                lot.avg_cost = 0.0
                 continue
 
             qty_available = lot.product_qty
@@ -39,7 +38,27 @@ class StockLot(models.Model):
                 lot.total_value = lot.product_id._run_avco(at_date=at_date, lot=lot)[1]
             else:
                 lot.total_value = lot.product_id._run_fifo(qty_available, at_date=at_date, lot=lot)
-            lot.avg_cost = lot.total_value / qty_available if qty_available else 0.0
+
+    # TODO: remove avg cost column in master and merge the two compute methods
+    @api.depends('product_id.lot_valuated')
+    @api.depends_context('to_date')
+    def _compute_avg_cost(self):
+        """Compute totals of multiple svl related values"""
+        at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
+
+        self.avg_cost = 0.0
+        for lot in self:
+            if not lot.lot_valuated:
+                continue
+
+            qty_available = lot.product_qty
+            if lot.product_id.cost_method == 'standard':
+                total_value = lot.standard_price * qty_available
+            elif lot.product_id.cost_method == 'average':
+                total_value = lot.product_id._run_avco(at_date=at_date, lot=lot)[1]
+            else:
+                total_value = lot.product_id._run_fifo(qty_available, at_date=at_date, lot=lot)
+            lot.avg_cost = total_value / qty_available if qty_available else 0.0
 
     @api.model_create_multi
     def create(self, vals_list):
