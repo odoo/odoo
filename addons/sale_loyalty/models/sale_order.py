@@ -168,6 +168,10 @@ class SaleOrder(models.Model):
         :rtype: bool | dict
         """
         for order in self:
+            programs = order.code_enabled_rule_ids.program_id
+            for program in programs:
+                if program.once_per_user and order.partner_id in program.partner_ids:
+                    raise UserError(order.env._("This promo code can only be used once."))
             all_coupons = (
                 order.applied_coupon_ids
                 | order.coupon_point_ids.coupon_id
@@ -207,6 +211,7 @@ class SaleOrder(models.Model):
                 )
             coupon.points += change
         res = super().action_confirm()
+        self._add_users_to_program()
         # Prioritize any action from super()
         if isinstance(res, bool) and has_claimable_rewards:
             res = {
@@ -272,6 +277,12 @@ class SaleOrder(models.Model):
             "domain": [("order_id", "=", self.id), ("program_type", "=", "gift_card")],
             "context": {"create": False},
         }
+
+    def _add_users_to_program(self):
+        for program, orders in self.grouped(lambda o: o.code_enabled_rule_ids.program_id).items():
+            if program.once_per_user:
+                partners = orders.partner_id
+                program.sudo().write({"partner_ids": [Command.link(p.id) for p in partners]})
 
     def _send_reward_coupon_mail(self):
         coupons = self.env["loyalty.card"]
@@ -1699,6 +1710,16 @@ class SaleOrder(models.Model):
         coupon = False
         check_date = self._get_confirmed_tx_create_date()
 
+        if program.once_per_user and self.env.user._is_public():
+            return {
+                "error": self.env._(
+                    "<span>You must "
+                    "<a href='/web/login?redirect=/shop/checkout'>"
+                    "login</a> to use this code</span>"
+                )
+            }
+        if program.once_per_user and self.partner_id in program.partner_ids:
+            return {"error": self.env._("This promo code can only be used once.")}
         if (
             rule in self.code_enabled_rule_ids
             and program in self.order_line.filtered("is_reward_line").reward_id.program_id

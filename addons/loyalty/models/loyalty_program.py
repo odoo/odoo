@@ -120,6 +120,8 @@ class LoyaltyProgram(models.Model):
     )
     limit_usage = fields.Boolean(string="Limit Usage")
     max_usage = fields.Integer()
+    once_per_user = fields.Boolean(string="Once per user")
+    partner_ids = fields.Many2many(string="Used by", comodel_name="res.partner")
     # Dictates when the points can be used:
     # current: if the order gives enough points on that order, the reward may directly be claimed,
     #     points lost otherwise.
@@ -449,8 +451,7 @@ class LoyaltyProgram(models.Model):
                 "reward_ids": [
                     Command.clear(),
                     Command.create({
-                        "discount_applicability": "specific",
-                        "discount_product_ids": first_sale_product,
+                        "discount_applicability": "order",
                         "discount_mode": "percent",
                         "discount": 10,
                     }),
