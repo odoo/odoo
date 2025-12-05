@@ -248,12 +248,12 @@ class ResourceCalendar(models.Model):
         if not resources_per_tz:
             resources_per_tz = {start_dt.tzinfo: self.env['resource.resource']}
 
-        domain = Domain.AND([
+        attendances_domain = Domain.AND([
             Domain(domain or Domain.TRUE),
             Domain('calendar_id', '=', self.id),
         ])
 
-        attendances = self.env['resource.calendar.attendance'].search(domain)
+        attendances = self.env['resource.calendar.attendance'].search(attendances_domain)
         duration_based_attendances = attendances.filtered('duration_based')
         all_duration_based_attendances = attendances.calendar_id.attendance_ids.filtered('duration_based')
         # Resource specific attendances
@@ -348,14 +348,19 @@ class ResourceCalendar(models.Model):
                 hours_per_day = calendar_data.get('hours_per_day')
                 is_fully_flexible = not calendar and not hours_per_week and not hours_per_day
                 is_flexible = not calendar and (hours_per_week or hours_per_day)
-                if resource and is_fully_flexible:
+                if not domain and resource and is_fully_flexible:
+                    # A domain is only provided in extensions of `_work_intervals_batch` so when a domain is present,
+                    # we should use the standard attendance intervals rather than the flexible employee special handling.
+                    # This prevents a scenario where `_work_intervals_batch` calls this method twice and returns the same
+                    # value, causing the them to cancel out.
+                    #
                     # If the resource is fully flexible, return the whole period from start_dt to end_dt with a dummy attendance
                     hours = (end_dt - start_dt).total_seconds() / 3600
                     dummy_attendance = self.env['resource.calendar.attendance'].new({
                         'duration_hours': hours,
                     })
                     result_per_resource_id[resource.id] = Intervals([(start_datetime, end_datetime, dummy_attendance)], keep_distinct=True)
-                elif resource and is_flexible:
+                elif not domain and resource and is_flexible:
                     # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
                     # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
                     # and weekly range for time offs and overtime calculations and work entry generation
