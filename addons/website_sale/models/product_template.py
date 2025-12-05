@@ -1028,6 +1028,26 @@ class ProductTemplate(models.Model):
         if self.product_variant_count == 1:
             return self.product_variant_id._to_markup_data(website)
 
+        variants = self.product_variant_ids
+        products_price = request.pricelist._get_products_price(
+            variants, quantity=1, target_currency=website.currency_id
+        )
+
+        # Use sudo to access cross-company taxes.
+        product_taxes_sudo = self.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+        taxes = request.fiscal_position.map_tax(product_taxes_sudo)
+        product_tax_ids = product_taxes_sudo.ids
+        mapped_tax_ids = taxes.ids
+
+        variant_data = [
+            product.with_context(
+                product_tax_ids=product_tax_ids,
+                mapped_tax_ids=mapped_tax_ids,
+                variant_price=products_price[product.id]
+            )._to_markup_data(website)
+            for product in variants
+        ]
+
         base_url = website.get_base_url()
         markup_data = {
             '@context': 'https://schema.org/',
@@ -1035,7 +1055,7 @@ class ProductTemplate(models.Model):
             'name': self.name,
             'image': f'{base_url}{website.image_url(self, "image_1920")}',
             'url': f'{base_url}{self.website_url}',
-            'hasVariant': [product._to_markup_data(website) for product in self.product_variant_ids]
+            'hasVariant': variant_data
         }
         if self.description_ecommerce:
             markup_data['description'] = text_from_html(self.description_ecommerce)
