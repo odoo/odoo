@@ -516,17 +516,18 @@ class AccountEdiFormat(models.Model):
             domains.append([('default_code', '=', default_code)])
         if name:
             domains += [[('name', '=', name)], [('name', 'ilike', name)]]
-        products = self.env['product.product'].search(
-            expression.AND([
-                expression.OR(domains),
-                [('company_id', 'in', [False, self.env.company.id])],
-            ]),
-        )
-        if products:
-            for domain in domains:
-                products_by_domain = products.filtered_domain(domain)
-                if products_by_domain:
-                    return products_by_domain[0]
+
+        for domain in domains:
+            product = self.env['product.product'].search(
+                expression.AND([
+                    domain,
+                    [('company_id', 'in', [False, self.env.company.id])],
+                ]),
+                limit=1
+            )
+            # We need a single product. Exit early if one is found (implements the priority logic).
+            if product:
+                return product
         return self.env['product.product']
 
     def _retrieve_tax(self, amount, type_tax_use):
