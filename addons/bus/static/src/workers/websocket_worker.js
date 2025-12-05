@@ -64,8 +64,6 @@ export class WebsocketWorker {
         this.channelsByClient = new Map();
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
-        this.debugModeByClient = new Map();
-        this.isDebug = false;
         this.active = true;
         this.state = WORKER_STATE.IDLE;
         this.isReconnecting = false;
@@ -253,8 +251,6 @@ export class WebsocketWorker {
      */
     _unregisterClient(client) {
         this.channelsByClient.delete(client);
-        this.debugModeByClient.delete(client);
-        this.isDebug = [...this.debugModeByClient.values()].some(Boolean);
         this._debouncedUpdateChannels();
     }
 
@@ -263,8 +259,6 @@ export class WebsocketWorker {
      *
      * @param {Object} param0
      * @param {string} [param0.db] Database name.
-     * @param {String} [param0.debug] Current debugging mode for the
-     * given client.
      * @param {Number} [param0.lastNotificationId] Last notification id
      * known by the client.
      * @param {String} [param0.websocketURL] URL of the websocket endpoint.
@@ -276,8 +270,6 @@ export class WebsocketWorker {
      */
     _initializeConnection(client, { db, debug, lastNotificationId, uid, websocketURL, startTs }) {
         if (this.newestStartTs && this.newestStartTs > startTs) {
-            this.debugModeByClient.set(client, debug);
-            this.isDebug = [...this.debugModeByClient.values()].some(Boolean);
             this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
             this.sendToClient(client, "BUS:INITIALIZED");
             return;
@@ -285,8 +277,6 @@ export class WebsocketWorker {
         this.newestStartTs = startTs;
         this.websocketURL = websocketURL;
         this.lastNotificationId = lastNotificationId;
-        this.debugModeByClient.set(client, debug);
-        this.isDebug = [...this.debugModeByClient.values()].some(Boolean);
         const isCurrentUserKnown = uid !== undefined;
         if (this.isWaitingForNewUID && isCurrentUserKnown) {
             this.isWaitingForNewUID = false;
