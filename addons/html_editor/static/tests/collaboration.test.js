@@ -31,7 +31,14 @@ import {
 import { cleanHints } from "./_helpers/dispatch";
 import { unformat } from "./_helpers/format";
 import { getContent } from "./_helpers/selection";
-import { addStep, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
+import {
+    addStep,
+    deleteBackward,
+    deleteForward,
+    ensureDistinctHistoryStep,
+    redo,
+    undo,
+} from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { wrapInlinesInBlocks } from "@html_editor/utils/dom";
 
@@ -1143,6 +1150,7 @@ describe("Collaboration with embedded components", () => {
             )
         );
         e1.shared.history.addStep();
+        await ensureDistinctHistoryStep();
         mergePeersSteps(peerInfos);
         await animationFrame();
         deleteBackward(e1);

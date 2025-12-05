@@ -171,6 +171,8 @@ import { trackOccurrences, trackOccurrencesPair } from "../utils/tracking";
  * @typedef {((node: Node, attributeName: string, attributeValue: string) => boolean)[]} set_attribute_overrides
  */
 
+export const STEP_DEBOUNCE_DELAY = 250;
+
 export class HistoryPlugin extends Plugin {
     static id = "history";
     static dependencies = ["selection", "sanitize"];
@@ -1051,10 +1053,26 @@ export class HistoryPlugin extends Plugin {
 
     /**
      * @param { Object } [params]
-     * @param { "original"|"undo"|"redo"|"restore" } [params.type]
+     * @param { boolean } [batchable]
      * @param {Object} [params.extraStepInfos]
      */
-    addStep({ type = "original", extraStepInfos } = {}) {
+    addStep({ batchable = false, extraStepInfos } = {}) {
+        return this._addStep({ batchable, extraStepInfos });
+    }
+
+    /**
+     * @param { Object } [params]
+     * @param { "original"|"undo"|"redo"|"restore" } [params.type]
+     * @param { boolean } [batchable]
+     * @param { Date } [batchingTimestamp]
+     * @param {Object} [params.extraStepInfos]
+     */
+    _addStep({
+        type = "original",
+        batchable = false,
+        batchingTimestamp = Date.now(),
+        extraStepInfos,
+    } = {}) {
         // @todo @phoenix should we allow to pause the making of a step?
         // if (!this.stepsActive) {
         //     return;
@@ -1070,6 +1088,8 @@ export class HistoryPlugin extends Plugin {
         // It is useful for external components if they execute shared.can[Undo|Redo]
         const currentStep = this.currentStep;
         currentStep.type = type;
+        currentStep.batchable = batchable;
+        currentStep.batchingTimestamp = batchingTimestamp;
         this.handleObserverRecords();
         const currentMutationsCount = currentStep.mutations.length;
         if (currentMutationsCount === 0) {
@@ -1098,9 +1118,12 @@ export class HistoryPlugin extends Plugin {
         if (extraStepInfos) {
             currentStep.extraStepInfos = extraStepInfos;
         }
+        currentStep.extraStepInfos.originalTimestamp ??= Date.now();
         this.currentStep = this.processHistoryStep({
             id: this.generateId(),
             type: undefined,
+            batchable: undefined,
+            batchingTimestamp: undefined,
             selection: {},
             mutations: [],
             previousStepId: undefined,
@@ -1135,18 +1158,20 @@ export class HistoryPlugin extends Plugin {
         // mutations of the revert itself will be added to the same step and
         // grow exponentially at each undo.
         lastStep.mutations = [];
-
-        const pos = this.getNextUndoIndex();
         let revertedStep;
-        if (pos > 0) {
-            revertedStep = this.steps[pos];
+        for (revertedStep of this.getNextUndoSteps()) {
             this.revertedSteps.add(revertedStep.id);
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
             this.setSerializedFocus(revertedStep.activeElementId);
             this.stageFocus();
             this.setSerializedSelection(revertedStep.selection);
             this.currentStep.selection = revertedStep.selectionAfter;
-            this.addStep({ type: "undo", extraStepInfos: revertedStep.extraStepInfos });
+            this._addStep({
+                type: "undo",
+                batchable: revertedStep.batchable,
+                batchingTimestamp: revertedStep.batchingTimestamp,
+                extraStepInfos: revertedStep.extraStepInfos,
+            });
             // Consider the last position of the history as an undo.
         }
         this.dispatchTo("post_undo_handlers", revertedStep);
@@ -1162,17 +1187,20 @@ export class HistoryPlugin extends Plugin {
         // mutations plus the ones that revert it, with net effect zero.
         this.currentStep.mutations = [];
 
-        const pos = this.getNextRedoIndex();
         let revertedStep;
-        if (pos > 0) {
-            revertedStep = this.steps[pos];
+        for (revertedStep of this.getNextRedoSteps()) {
             this.revertedSteps.add(revertedStep.id);
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
             this.setSerializedFocus(revertedStep.activeElementId);
             this.stageFocus();
             this.setSerializedSelection(revertedStep.selection);
             this.currentStep.selection = revertedStep.selectionAfter;
-            this.addStep({ type: "redo", extraStepInfos: revertedStep.extraStepInfos });
+            this._addStep({
+                type: "redo",
+                batchable: revertedStep.batchable,
+                batchingTimestamp: revertedStep.batchingTimestamp,
+                extraStepInfos: revertedStep.extraStepInfos,
+            });
         }
         this.dispatchTo("post_redo_handlers", revertedStep);
     }
@@ -1216,10 +1244,12 @@ export class HistoryPlugin extends Plugin {
     /**
      * Get the step index in the history to undo.
      * Return -1 if no undo index can be found.
+     *
+     * @param { number } fromIndex step index from which to search
      */
-    getNextUndoIndex() {
+    getNextUndoIndex(fromIndex = this.steps.length) {
         // Go back to first step that can be undone ("original" or "redo").
-        for (let index = this.steps.length - 1; index >= 0; index--) {
+        for (let index = fromIndex - 1; index >= 0; index--) {
             const step = this.steps[index];
             if (!this.isReversibleStep(index) || this.discardedSteps.has(step.id)) {
                 continue;
@@ -1231,6 +1261,45 @@ export class HistoryPlugin extends Plugin {
         // There is no steps left to be undone, return an index that does not
         // point to any step
         return -1;
+    }
+    /**
+     * Returns the steps to be reverted by a single undo.
+     */
+    getNextUndoSteps() {
+        let referenceStepIndex = this.getNextUndoIndex();
+        if (referenceStepIndex === -1) {
+            return [];
+        }
+        let nextStepIndex = this.getNextUndoIndex(referenceStepIndex);
+        const result = [this.steps[referenceStepIndex]];
+        while (nextStepIndex >= 0 && this.canStepsBeBatched(referenceStepIndex, nextStepIndex)) {
+            result.push(this.steps[nextStepIndex]);
+            referenceStepIndex = nextStepIndex;
+            nextStepIndex = this.getNextUndoIndex(nextStepIndex);
+        }
+        return result;
+    }
+    /**
+     * Returns true if steps can be batched in a single undo/redo.
+     * Currrently: steps with a single mutation on the same text node.
+     * @param { number } index1
+     * @param { number } index2
+     */
+    canStepsBeBatched(index1, index2) {
+        const step1 = this.steps[index1];
+        const step2 = this.steps[index2];
+        if (!step1.batchable || !step2.batchable) {
+            return false;
+        }
+        // Keep only if close enough in time.
+        if (
+            Math.abs(
+                step1.extraStepInfos.originalTimestamp - step2.extraStepInfos.originalTimestamp
+            ) > STEP_DEBOUNCE_DELAY
+        ) {
+            return false;
+        }
+        return true;
     }
     /**
      * Meant to be overriden.
@@ -1249,11 +1318,13 @@ export class HistoryPlugin extends Plugin {
     /**
      * Get the step index in the history to redo.
      * Return -1 if no redo index can be found.
+     *
+     * @param { number } fromIndex step index from which to search
      */
-    getNextRedoIndex() {
+    getNextRedoIndex(fromIndex = this.steps.length) {
         // Look for an "undo" step that has not yet been redone. Stop search if
         // a "original" step is found.
-        for (let index = this.steps.length - 1; index >= 0; index--) {
+        for (let index = fromIndex - 1; index >= 0; index--) {
             const step = this.steps[index];
             if (!this.isReversibleStep(index) || this.discardedSteps.has(step.id)) {
                 continue;
@@ -1266,6 +1337,23 @@ export class HistoryPlugin extends Plugin {
             }
         }
         return -1;
+    }
+    /**
+     * Returns the steps to be redone by a single redo.
+     */
+    getNextRedoSteps() {
+        let referenceStepIndex = this.getNextRedoIndex();
+        if (referenceStepIndex === -1) {
+            return [];
+        }
+        let nextStepIndex = this.getNextRedoIndex(referenceStepIndex);
+        const result = [this.steps[referenceStepIndex]];
+        while (nextStepIndex >= 0 && this.canStepsBeBatched(referenceStepIndex, nextStepIndex)) {
+            result.push(this.steps[nextStepIndex]);
+            referenceStepIndex = nextStepIndex;
+            nextStepIndex = this.getNextRedoIndex(nextStepIndex);
+        }
+        return result;
     }
     /**
      * Insert a step in the history.
@@ -1675,7 +1763,7 @@ export class HistoryPlugin extends Plugin {
         this.setSerializedSelection(lastRevertedStep.selection);
         // Register resulting mutations as a new "restore" step (prevent undo).
         this.dispatchContentUpdated();
-        this.addStep({ type: "restore" });
+        this._addStep({ type: "restore" });
     }
 
     setStepExtra(key, value) {

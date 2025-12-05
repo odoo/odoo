@@ -257,7 +257,7 @@ export class DeletePlugin extends Plugin {
             throw new Error("Invalid direction");
         }
         this.dispatchTo("delete_handlers");
-        this.dependencies.history.addStep();
+        this.dependencies.history.addStep({ batchable: true });
     }
 
     // --------------------------------------------------------------------------

@@ -6,7 +6,13 @@ import { browser } from "@web/core/browser/browser";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
-import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
+import {
+    deleteBackward,
+    ensureDistinctHistoryStep,
+    insertText,
+    tripleClick,
+    undo,
+} from "../_helpers/user_actions";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import {
     compareHighlightedContent,
@@ -158,6 +164,7 @@ describe("Selection collapsed", () => {
                 contentBefore: "<p>ab<b>c[]</b>de</p>",
                 stepFunction: async (editor) => {
                     deleteBackward(editor);
+                    await ensureDistinctHistoryStep();
                     await insertText(editor, "x");
                     undo(editor);
                 },
