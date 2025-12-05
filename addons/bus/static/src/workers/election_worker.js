@@ -1,17 +1,15 @@
-import { Deferred } from "@bus/workers/bus_worker_utils";
-
 export class ElectionWorker {
     MAIN_TAB_TIMEOUT_PERIOD = 3000;
 
     /** @type {Set<MessagePort>} */
     candidates = new Set();
-    /** @type {Deferred|null} */
-    electionDeferred = null;
+    /** @type {PromiseWithResolvers<void>|null} */
+    electionResolver = null;
     /** @type {number|null} */
     heartbeatRequestInterval = null;
     lastHeartbeat = Date.now();
-    /** @type {Deferred|null} */
-    masterReplyDeferred = null;
+    /** @type {PromiseWithResolvers<void>|null} */
+    masterReplyResolver = null;
     /** @type {MessagePort|null} */
     masterTab = null;
 
@@ -34,28 +32,28 @@ export class ElectionWorker {
     }
 
     async ensureMasterPresence() {
-        this.masterReplyDeferred ??= new Deferred();
+        this.masterReplyResolver ??= Promise.withResolvers();
         if (this.masterTab) {
             this.requestHeartbeat(this.masterTab);
         } else {
             this.startElection();
         }
-        await this.masterReplyDeferred;
+        await this.masterReplyResolver?.promise;
     }
 
     startElection() {
         clearInterval(this.heartbeatRequestInterval);
         this.masterTab?.postMessage({ type: "ELECTION:UNASSIGN_MASTER" });
         this.masterTab = null;
-        this.electionDeferred ??= new Deferred();
+        this.electionResolver ??= Promise.withResolvers();
         this.requestHeartbeat();
     }
 
     finishElection(messagePort) {
         this.masterTab = messagePort;
         messagePort.postMessage({ type: "ELECTION:ASSIGN_MASTER" });
-        this.electionDeferred.resolve();
-        this.electionDeferred = null;
+        this.electionResolver.resolve();
+        this.electionResolver = null;
         this.heartbeatRequestInterval = setInterval(
             () => this.requestHeartbeat(this.masterTab),
             this.MAIN_TAB_TIMEOUT_PERIOD / 2
@@ -70,7 +68,7 @@ export class ElectionWorker {
         switch (action) {
             case "ELECTION:REGISTER":
                 this.candidates.add(event.target);
-                await this.electionDeferred;
+                await this.electionResolver?.promise;
                 if (!this.masterTab) {
                     this.startElection();
                 }
@@ -89,13 +87,13 @@ export class ElectionWorker {
                 });
                 break;
             case "ELECTION:HEARTBEAT":
-                if (this.electionDeferred) {
+                if (this.electionResolver) {
                     this.finishElection(event.target);
                 }
                 if (this.masterTab === event.target) {
                     this.lastHeartbeat = Date.now();
-                    this.masterReplyDeferred?.resolve();
-                    this.masterReplyDeferred = null;
+                    this.masterReplyResolver?.resolve();
+                    this.masterReplyResolver = null;
                 }
                 break;
             default:

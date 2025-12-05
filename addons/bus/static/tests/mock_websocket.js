@@ -19,7 +19,7 @@ function cleanupWekSocketWorker() {
         clearTimeout(currentWebSocketWorker.connectTimeout);
     }
 
-    currentWebSocketWorker.firstSubscribeDeferred = new Deferred();
+    currentWebSocketWorker.firstSubscribeResolver = new Deferred();
     currentWebSocketWorker.websocket = null;
     currentWebSocketWorker = null;
 }

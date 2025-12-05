@@ -26,23 +26,6 @@ export function debounce(func, wait, immediate) {
     };
 }
 
-/**
- * @deprecated Use Promise.withResolvers() instead.
- *
- * Deferred is basically a resolvable/rejectable extension of Promise.
- */
-export class Deferred extends Promise {
-    constructor() {
-        let resolve;
-        let reject;
-        const prom = new Promise((res, rej) => {
-            resolve = res;
-            reject = rej;
-        });
-        return Object.assign(prom, { resolve, reject });
-    }
-}
-
 export class Logger {
     static LOG_TTL = 24 * 60 * 60 * 1000; // 24 hours
     static gcInterval = null;
