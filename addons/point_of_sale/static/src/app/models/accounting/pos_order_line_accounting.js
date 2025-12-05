@@ -174,7 +174,7 @@ export class PosOrderlineAccounting extends Base {
         return accountTaxHelpers.prepare_base_line_for_taxes_computation(
             this,
             this.prepareBaseLineForTaxesComputationExtraValues({
-                price_unit: this.productProductPrice,
+                price_unit: this.price_unit,
                 quantity: this.getQuantity(),
                 tax_ids: this.tax_ids,
                 ...opts,
