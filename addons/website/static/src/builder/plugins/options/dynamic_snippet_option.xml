@@ -35,7 +35,7 @@
             <t t-foreach="filteredTemplates" t-as="template" t-key="template.key">
                 <t t-if="template.thumb">
                     <BuilderSelectItem actionParam="template">
-                        <Img src="template.thumb" alt="template.name" svgCheck="false"/>
+                        <Image src="template.thumb" alt="template.name" svgCheck="false"/>
                     </BuilderSelectItem>
                 </t>
                 <t t-else="">

@@ -29,7 +29,7 @@ const svgCache = new Cache(async (src) => {
     return xmlDoc.getElementsByTagName("svg")[0];
 }, JSON.stringify);
 
-export class Img extends Component {
+export class Image extends Component {
     static props = {
         src: String,
         class: { type: String, optional: true },
@@ -108,7 +108,7 @@ export class Img extends Component {
 
     loadImage() {
         return new Promise((resolve, reject) => {
-            const img = new Image();
+            const img = new window.Image();
             img.onload = () => resolve({ status: "loaded" });
             img.onerror = () => resolve({ status: "error" });
             img.src = this.props.src;
