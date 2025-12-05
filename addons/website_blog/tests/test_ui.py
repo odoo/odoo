@@ -103,3 +103,26 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
 
         self.start_tour("/blog", "blog_tags_with_date", login="admin")
+
+    def test_blog_posts_dynamic_snippet_visibility(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_edit', login='admin')
+        # Unpublish blog posts so the dynamic snippet can't show content.
+        blog_posts = self.env['blog.post'].search([])
+        blog_posts.write({'website_published': False})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_empty', login='admin')
+        # Compatibility with old snippets only with the `o_dynamic_empty` class.
+        homepage_view = self.env['ir.ui.view'].search([
+            ('website_id', '=', self.env.ref('website.default_website').id),
+            ('key', '=', 'website.homepage'),
+        ])
+        homepage_view_arch_old = homepage_view.arch_db.replace('s_dynamic_empty', 'o_dynamic_empty').replace('o_dynamic_snippet_empty', '')
+        homepage_view.write({'arch': homepage_view_arch_old})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_empty', login='admin')
+        blog_posts.write({'website_published': True})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_visible', login='admin')
+        # Compatibility with old but edited snippets (having `o_dynamic_empty` & `o_dynamic_snippet_empty` classes).
+        homepage_view_arch_old_edited = homepage_view.arch_db.replace('o_dynamic_empty', 'o_dynamic_empty o_dynamic_snippet_empty')
+        homepage_view.write({'arch': homepage_view_arch_old_edited})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_visible', login='admin')
+        blog_posts.write({'website_published': False})
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_empty', login='admin')
