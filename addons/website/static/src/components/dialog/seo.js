@@ -541,7 +541,7 @@ class SEOPreview extends Component {
         return this.props.description || "";
     }
 }
-class TitleDescription extends Component {
+export class TitleDescription extends Component {
     static template = "website.TitleDescription";
     static props = {
         canEditSeo: Boolean,
