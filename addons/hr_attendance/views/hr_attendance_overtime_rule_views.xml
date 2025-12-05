@@ -27,10 +27,12 @@
                                     <label for="quantity_period" string="If the worked hours on a"/>
                                     <field style="width:10ch" nolabel="1" name="quantity_period"/>
                                     <label for="expected_hours_from_contract" string="differs"/>
-                                    <field class="w-auto" name="expected_hours_from_contract" nolabel="1" widget="boolean_radio" options="{
+                                    <field class="w-auto" name="expected_hours_from_contract" nolabel="1" widget="boolean_radio_overtime_help" options="{
                                         'yes_label_element_id': 'expected_hours_from_contract_yes',
                                         'no_label_element_id': 'expected_hours_from_contract_no'
-                                    }"/>
+                                    }" help="Computes overtime against the working schedule.
+                                    To also allow negative balances for missing hours, enable Absence Management.
+                                    An active Working Schedule is required on the employee."/>
                                     <template id="expected_hours_from_contract_yes">from the amount defined on the contract</template>
                                     <template id="expected_hours_from_contract_no">from a specific duration</template>
                                 </span>

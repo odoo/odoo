@@ -501,5 +501,34 @@ class HrAttendanceOvertimeRule(models.Model):
         """
         return False
 
+    @api.model
+    def get_overtime_rule_form_context(self):
+        """
+        RPC helper for the web client.
+        Returns a small context dict used by the client when opening the rule form
+        from a ruleset one2many (Add a line). This avoids adding DB fields and
+        allows the client widget to know whether Absence Management is enabled
+        for the ruleset's company and provide a suitable tooltip.
+        """
+        absence_management_enabled = self._is_absence_management_enabled()
+
+        if absence_management_enabled:
+            tooltip = (
+                "The attendance can go into negative extra hours to\n"
+                "represent the missing hours compared to what is expected.\n"
+                "It will not work if the employee doesn't have a working schedule."
+            )
+        else:
+            tooltip = (
+                "This rule currently tracks overtime only.\n"
+                "To track missing hours as well,\n"
+                "please enable the Absence Management setting."
+            )
+
+        return {
+            'absence_management_enabled': absence_management_enabled,
+            'overtime_tooltip': tooltip,
+        }
+
     def _is_absence_management_enabled(self):
         return bool(self.env.company.absence_management)
