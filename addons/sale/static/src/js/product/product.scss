@@ -28,8 +28,16 @@
     }
 }
 
-.product_name_description {
-    max-width: 8rem;
+@include media-breakpoint-down(sm) {
+    .oe_striked_price {
+        margin-bottom: 0;
+    }
+}
+
+@include media-breakpoint-between(sm, md) {
+    [name="sale_product_configurator_formatted_price"]:only-child {
+        margin-bottom: map-get($spacers, 2) !important;
+    }
 }
 
 .o_sale_product_configurator_description {

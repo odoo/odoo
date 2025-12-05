@@ -8,7 +8,7 @@
                 alt="Product Image"
             />
         </td>
-        <td class="p-0 p-md-3 product_name_description">
+        <td class="d-block p-0 p-md-3 product_name_description">
             <div
                 name="o_sale_product_configurator_name"
                 class="mb-1 mb-lg-3"
@@ -42,11 +42,11 @@
         </td>
         <t t-if="!this.props.optional">
             <td
-                class="o_sale_product_configurator_qty w-25 py-3 px-0 text-end"
+                class="o_sale_product_configurator_qty d-flex d-sm-table-cell align-items-center justify-content-between flex-wrap w-sm-25 py-3 px-0 text-sm-end"
             >
                 <div
                     t-if="env.showPrice"
-                    class="d-md-flex gap-2 align-items-baseline justify-content-end"
+                    class="d-flex flex-sm-column flex-md-row flex-wrap gap-1 align-items-baseline align-items-sm-end align-items-md-baseline justify-content-start justify-content-sm-end"
                 >
                     <t t-call="sale.product_price" name="sale_product_configurator_price"/>
                 </div>
@@ -64,7 +64,7 @@
                     class="h5"
                 />
                 <a
-                    class="d-block mt-2 text-end"
+                    class="d-block mt-2 w-100 text-end"
                     role="button"
                     t-if="!isMainProduct"
                     t-on-click="() => this.env.removeProduct(this.props.product_tmpl_id)"
@@ -76,11 +76,11 @@
         <t t-else="">
             <td
                 name="price"
-                class="o_sale_product_configurator_price pb-3 px-0 text-end"
+                class="o_sale_product_configurator_price d-flex d-sm-table-cell align-items-center justify-content-between p-0 pb-3 text-sm-end"
             >
                 <div
                     t-if="env.showPrice"
-                    class="d-md-flex gap-2 align-items-baseline justify-content-end"
+                    class="d-flex flex-sm-column flex-md-row flex-wrap gap-1 align-items-baseline align-items-sm-end align-items-md-baseline justify-content-start justify-content-sm-end"
                 >
                     <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
                 </div>
@@ -100,7 +100,7 @@
     <t t-name="sale.product_price">
         <span
             name="sale_product_configurator_formatted_price"
-            class="h5 text-nowrap fw-bold text-end h6 mb-2 d-block"
+            class="h5 text-nowrap fw-bold text-end h6 mb-0 mb-md-2 d-block"
             t-out="getFormattedPrice()"
         />
         <div t-if="this.props.price_info" t-out="this.props.price_info" class="text-muted"/>
