@@ -259,6 +259,21 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_pay_unpaid_order_from_kiosk", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder(2.53),
+            TicketScreen.loadSelectedOrder(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("refund_multiple_products_amounts_compliance", {
     steps: () =>
         [
