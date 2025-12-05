@@ -279,6 +279,9 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     async onEditPage() {
+        if (!this.websiteContext) {
+            await this.iframeLoaded;
+        }
         this.websiteContext.showResourceEditor = false;
         this.blockIframe();
 
@@ -351,6 +354,10 @@ export class WebsiteBuilderClientAction extends Component {
         const currentTitle = iframe.contentDocument.title;
         history.replaceState(history.state, currentTitle, iframe.contentDocument.location.href);
         this.title.setParts({ action: currentTitle });
+        const frontendIconEl = iframe.contentDocument.querySelector("link[rel~='icon']");
+        if (frontendIconEl) {
+            document.querySelector("link[rel~='icon']").href = frontendIconEl.href;
+        }
     }
 
     onIframeLoad(ev) {

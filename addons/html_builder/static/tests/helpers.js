@@ -2,6 +2,7 @@ import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Img } from "@html_builder/core/img";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
+import { revertPreview } from "@html_builder/core/utils";
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
@@ -248,7 +249,7 @@ export async function setupHTMLBuilder(
 
     let lastUpdatePromise;
     const waitSidebarUpdated = async () => {
-        await attachedEditor.shared.operation.next();
+        await revertPreview(attachedEditor);
         // The tick ensures that lastUpdatePromise has correctly been assigned
         await tick();
         await lastUpdatePromise;

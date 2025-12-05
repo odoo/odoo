@@ -1,4 +1,8 @@
 .s_dynamic_snippet_products {
+    &:not(:has(.s_dynamic_snippet_row)) {
+            display: none !important;
+        }
+
     // Adjusts carousel arrows' aligments
     @mixin o-aligns-controlers {
 
