@@ -207,6 +207,31 @@ class IrHttp(models.AbstractModel):
         return location
 
     @classmethod
+    def _remove_lang_from_url(cls, path_or_uri: str) -> str:
+        ''' Remove the language code from a relative URL if present.
+            Nothing will be done for absolute or invalid URLs.
+        '''
+        lang = request.env['res.lang']
+        location = path_or_uri.strip()
+        try:
+            url = urllib.parse.urlparse(location)
+        except ValueError:
+            return location
+
+        if url and not url.netloc and not url.scheme and url.path:
+            lang_url_codes = [info.url_code for info in lang._get_frontend().values()]
+            loc, sep, qs = location.partition('?')
+            ps = loc.split('/')
+
+            if len(ps) > 1 and ps[1] in lang_url_codes:
+                ps.pop(1)
+            if ps and not ps[-1]:
+                ps.pop(-1)
+
+            location = '/'.join(ps) + sep + qs
+        return location
+
+    @classmethod
     def _url_for(cls, url_from: str, lang_code: str | None = None) -> str:
         ''' Return the url with the rewriting applied.
             Nothing will be done for absolute URL, invalid URL, or short URL from 1 char.
