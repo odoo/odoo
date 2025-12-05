@@ -20,13 +20,18 @@
                             </button>
                         </t>
                         <t t-set-slot="toggler">
-                            <input type="text" class="o_input" t-att-value="fileName" readonly="readonly" />
-                            <button
-                                class="btn btn-link btn-sm lh-1 fa fa-pencil o_select_file_button"
-                                data-tooltip="Edit"
-                                aria-label="Edit"
-                            >
-                            </button>
+                            <span t-if="!fileName" class="btn btn-primary o_select_file_button py-0">
+                                Replace current file
+                            </span>
+                            <t t-else="">
+                                <input  type="text" class="o_input" t-att-value="fileName" readonly="readonly" />
+                                <button
+                                    class="btn btn-link btn-sm lh-1 fa fa-pencil o_select_file_button"
+                                    data-tooltip="Edit"
+                                    aria-label="Edit"
+                                >
+                                </button>
+                            </t>
                         </t>
                         <button
                             class="btn btn-link btn-sm lh-1 fa fa-trash o_clear_file_button"

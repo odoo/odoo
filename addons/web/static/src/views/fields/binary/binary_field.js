@@ -21,6 +21,8 @@ export class BinaryField extends Component {
         // See https://www.iana.org/assignments/media-types/media-types.xhtml
         allowedMIMETypes: { type: String, optional: true },
         fileNameField: { type: String, optional: true },
+        // Show a button instead of file size when there is no file name
+        useReplaceButton: { type: Boolean, optional: true },
     };
     static defaultProps = {
         acceptedFileExtensions: "*",
@@ -32,7 +34,12 @@ export class BinaryField extends Component {
 
     get fileName() {
         let value = this.props.record.data[this.props.name];
-        value = value && typeof value === "string" ? value : false;
+        value =
+            value && typeof value === "string"
+                ? this.props.useReplaceButton
+                    ? false
+                    : value
+                : false;
         return (this.props.record.data[this.props.fileNameField] || value || "").slice(
             0,
             toBase64Length(MAX_FILENAME_SIZE_BYTES)
@@ -94,6 +101,7 @@ export const binaryField = {
         acceptedFileExtensions: options.accepted_file_extensions,
         allowedMIMETypes: options.allowed_mime_type,
         fileNameField: attrs.filename,
+        useReplaceButton: options.use_replace_button,
     }),
 };
 
