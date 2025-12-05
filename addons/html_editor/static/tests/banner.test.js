@@ -283,3 +283,19 @@ test("should move heading element inside the banner, with paragraph element afte
             </div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
     );
 });
+
+test("Inserting a banner should not remove the next sibling block", async () => {
+    const { el, editor } = await setupEditor("<p><br>[]</p><p>b</p>");
+    await insertText(editor, "/banner");
+    await animationFrame();
+    expect(".active .o-we-command-name").toHaveText("Banner Info");
+    await press("enter");
+    expect(getContent(el)).toBe(
+        `<p data-selection-placeholder=""><br></p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
+                    <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
+                </div>
+            </div><p>b</p>`
+    );
+});
