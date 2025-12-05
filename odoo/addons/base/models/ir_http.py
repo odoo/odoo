@@ -8,6 +8,7 @@ import logging
 import os
 import re
 import threading
+import time
 import unicodedata
 
 import werkzeug
@@ -250,7 +251,7 @@ class IrHttp(models.AbstractModel):
         elif not check_sec_headers():
             e = 'Missing "Authorization" or Sec-headers for interactive usage.'
             raise werkzeug.exceptions.Unauthorized(e, www_authenticate=WWWAuthenticate('bearer'))
-        cls._auth_method_user()
+        cls._authenticate_explicit('user')
 
     @classmethod
     def _auth_method_user(cls):
@@ -271,10 +272,10 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _authenticate(cls, endpoint):
         auth = 'none' if http.is_cors_preflight(request, endpoint) else endpoint.routing['auth']
-        cls._authenticate_explicit(auth)
+        cls._authenticate_explicit(auth, check_identity=endpoint.routing.get('check_identity', True))
 
     @classmethod
-    def _authenticate_explicit(cls, auth):
+    def _authenticate_explicit(cls, auth, **extra):
         session_expired_exc = None
         try:
             if request.session.uid is not None:
@@ -293,6 +294,12 @@ class IrHttp(models.AbstractModel):
         except Exception:
             _logger.info("Exception during request Authentication.", exc_info=True)
             raise AccessDenied()
+
+        if auth == 'user' and request.session.uid is not None and (must_check_identity := cls._must_check_identity()):
+            if must_check_identity.get('logout'):
+                raise http.SessionExpiredException(f'User {request.session.uid} needs to login again')
+            if must_check_identity.get('check_identity') and extra.get('check_identity', True):
+                raise http.CheckIdentityException(f'User {request.session.uid} needs to confirm his identity')
 
     @classmethod
     def _geoip_resolve(cls):
@@ -458,3 +465,66 @@ class IrHttp(models.AbstractModel):
     @api.model
     def _verify_request_recaptcha_token(self, action: str):
         return
+
+    @classmethod
+    def _must_check_identity(cls):
+        """
+        Determine whether the current user session requires identity confirmation.
+        :return: A dictionary describing the re-authentication requirement.
+        Possible keys:
+        - `logout` [bool]: True if a full login is required
+        - `check_identity` [bool]: True if an identity check is required
+        - `mfa` [bool]: True if multi-factor authentication is required
+        - `1fa_method` [str]: previously used auth method, to avoid reuse as second factor
+        """
+        return {}
+
+    @classmethod
+    def _check_identity(cls, credential):
+        """
+        Verify the user's identity using the given credentials.
+        Handles both single and multi-factor authentication flows depending on the
+        current session state and configured timeout rules.
+
+        :param dict credential: A dictionary containing authentication data. Must include
+            a "type" key (e.g., "password", "totp", "webauthn"). If empty, the method
+            returns the list of available authentication methods.
+
+        :return: A dictionary indicating the outcome of the identity check:
+
+            - {"auth_methods": [...]} if no credential is provided,
+            - {"mfa": True, "auth_methods": [...]} if a second factor is required,
+            - None if re-authentication is complete.
+
+        :rtype: dict or None
+        """
+        user = request.env.user
+        auth_methods = user._get_auth_methods()
+
+        reauth_requirements = cls._must_check_identity()
+        assert set(reauth_requirements).issubset(('logout', 'check_identity', 'mfa', '1fa_method')), reauth_requirements
+
+        first_fa_method = reauth_requirements.get('1fa_method')
+
+        if not credential:
+            if first_fa_method in auth_methods:
+                auth_methods.remove(first_fa_method)
+            return {'user_id': user.id, 'login': user.login, 'auth_methods': auth_methods}
+
+        auth = user._check_credentials(credential, {"interactive": True})
+
+        session = request.session
+
+        if first_fa_method and first_fa_method != auth['auth_method']:  # User checked with the 2fa
+            session.pop("identity-check-1fa")
+
+        # User checked with the 1fa
+        elif reauth_requirements.get('mfa') and auth['mfa'] != 'skip' and len(auth_methods) > 1:
+            session['identity-check-1fa'] = (time.time(), credential['type'])
+            auth_methods.remove(credential['type'])
+            return {'mfa': True, 'auth_methods': auth_methods}
+
+        # Use the same key as the one used for the `check_identity` wrapper
+        session['identity-check-last'] = time.time()
+
+        return None

@@ -77,3 +77,15 @@ class Session(http.Controller):
     def logout(self, redirect='/odoo'):
         request.session.logout(keep_db=True)
         return request.redirect(redirect, 303)
+
+    @http.route('/web/session/identity', type='http', auth='user', methods=['GET'], sitemap=False, check_identity=False)
+    def session_identity(self, redirect=None):
+        """ Display the authentication form in a page. Used when an HTTP call raises a `CheckIdentityException`. """
+        return request.render('web.check_identity', {'redirect': redirect})
+
+    # Cannot be readonly because checking the identity can lead to some data being written
+    # (e.g. totp rate limit during a totp by mail)
+    @http.route('/web/session/identity/check', type='jsonrpc', auth='user', methods=['POST'], check_identity=False)
+    def session_identity_check(self, **kwargs):
+        """ JSON route used to receive the authentication form sent by the user. """
+        return request.env['ir.http']._check_identity(kwargs)

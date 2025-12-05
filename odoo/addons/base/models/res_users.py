@@ -291,6 +291,15 @@ class ResUsers(models.Model):
         """ To be overridden if RPC access needs to be restricted to API keys, e.g. for 2FA """
         return False
 
+    def _get_auth_methods(self):
+        """ Return a list of authentication methods available to the user. """
+        self.ensure_one()
+        auth_methods = []
+        if mfa_type := self._mfa_type():
+            auth_methods.append(mfa_type)
+        auth_methods.append('password')
+        return auth_methods
+
     def _check_credentials(self, credential, env):
         """ Validates the current user's password.
 

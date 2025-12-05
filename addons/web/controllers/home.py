@@ -79,7 +79,12 @@ class Home(http.Controller):
         except AccessError:
             return request.redirect('/web/login?error=access')
 
-    @http.route('/web/webclient/load_menus', type='http', auth='user', methods=['GET'], readonly=True)
+    # `/web/webclient/load_menus` must be `check_identity=False`
+    # because it is called in Javascript using a simple `fetch` rather than a `rpc(...)`
+    # within a QWeb template (see `web.webclient_bootstrap` in `webclient_templates.xml`).
+    # Only `rpc` is overriden to catch `CheckIdentityException` to display the screen lock dialog.
+    # `fetch` isn't and therefore raises an error upon receiving a `CheckIdentityException`.
+    @http.route('/web/webclient/load_menus', type='http', auth='user', methods=['GET'], readonly=True, check_identity=False)
     def web_load_menus(self, lang=None):
         """
         Loads the menus for the webclient

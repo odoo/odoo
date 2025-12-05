@@ -1485,6 +1485,10 @@ class WebsiteSession(Session):
     def logout(self, *args, **kw):
         return super().logout(*args, **kw)
 
+    @http.route(website=True)
+    def session_identity(self, redirect=None):
+        return super().session_identity(redirect)
+
 
 class WebsiteBinary(Binary):
 

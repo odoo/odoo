@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CheckIdentityDialog">
+        <Dialog title.translate="Confirm access" size="'md'" contentClass="'o_error_dialog'" footer="false">
+            <CheckIdentityForm t-props="formProps"/>
+        </Dialog>
+    </t>
+
+    <t t-name="web.CheckIdentityForm">
+        <p role="alert" class="alert alert-danger" t-if="state.error" t-esc="state.error"/>
+        <div class="text-center border rounded mb-3 p-3">
+            <img t-attf-src="/web/image/res.users/{{user.userId}}/avatar_128" class="o_avatar rounded me-1"/>
+            Signed in as <strong t-out="user.name"/>
+        </div>
+        <div class="border rounded mb-3 p-3 bg-light">
+            <form t-att-id="state.authMethod" t-on-submit.prevent="onSubmit" class="o_check_identity_form">
+                <input type="hidden" name="type" t-att-value="state.authMethod"/>
+                <t t-call="{{ getAuthMethodFormTemplate(state.authMethod) }}"/>
+            </form>
+        </div>
+        <div t-if="authMethods.length > 1" class="border rounded mb-3 p-3">
+            <h6>Having problems ?</h6>
+            <ul>
+                <t t-foreach="authMethods" t-as="authMethod" t-key="authMethod_index">
+                    <li t-if="state.authMethod !== authMethod">
+                        <a href="#" t-on-click="onChangeAuthMethod" t-att-data-auth-method="authMethod">
+                            <t t-call="{{ getAuthMethodLinkStringTemplate(authMethod) }}"/>
+                        </a>
+                    </li>
+                </t>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="web.CheckIdentityFormPassword">
+        <input name="password" type="password" class="form-control" placeholder="Password"/>
+        <div class="text-end mb-3">
+            <a href="/web/reset_password">Forgot password?</a>
+        </div>
+        <div class="text-center d-grid">
+            <button type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+    </t>
+    <t t-name="web.CheckIdentityLinkStringPassword">Use your password</t>
+
+</templates>

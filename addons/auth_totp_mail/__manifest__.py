@@ -23,6 +23,12 @@ by sending an email to the target user. This email redirects them to:
         'web.assets_tests': [
             'auth_totp_mail/static/tests/**/*',
         ],
+        'web.assets_backend': [
+            'auth_totp_mail/static/src/services/check_identity/*',
+        ],
+        'web.assets_frontend': [
+            'auth_totp_mail/static/src/services/check_identity/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
