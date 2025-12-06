@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-09 15:13+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-12-03 10:33+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "payment_mercado_pago/fr/>\n"
 "Language: fr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
@@ -29,7 +29,7 @@ msgstr "Jeton d'accès"
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
 msgid "Account Country"
-msgstr ""
+msgstr "Pays du compte"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.authorization_error
@@ -40,6 +40,8 @@ msgstr "Une erreur s'est produite"
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.authorization_error
 msgid "An error occurred while linking your Mercado Pago account with Odoo."
 msgstr ""
+"Une erreur est survenue lors de la liaison de votre compte Mercado Pago avec "
+"Odoo."
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
@@ -49,7 +51,7 @@ msgstr "Êtes-vous sûr de vouloir vous déconnecter ?"
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.authorization_error
 msgid "Back to the Mercado Pago provider"
-msgstr ""
+msgstr "Retour au fournisseur Mercado Pago"
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -100,18 +102,18 @@ msgstr "Connecter"
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
 msgid "Connect your account before enabling tokenization."
-msgstr ""
+msgstr "Connectez votre compte avant d’activer la tokenisation."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/controllers/onboarding.py:0
 msgid "Could not find Mercado Pago provider %s"
-msgstr ""
+msgstr "Impossible de trouver le fournisseur Mercado Pago %s"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
 msgid "Disconnect Your Mercado Pago Account"
-msgstr ""
+msgstr "Déconnecter votre compte Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__display_name
@@ -146,32 +148,32 @@ msgstr "Jeton d'accès Mercado Pago"
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token_expiry
 msgid "Mercado Pago Access Token Expiry"
-msgstr ""
+msgstr "Expiration du jeton d’accès Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_account_country_id
 msgid "Mercado Pago Account Country"
-msgstr ""
+msgstr "Pays du compte Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_token__mercado_pago_customer_id
 msgid "Mercado Pago Customer"
-msgstr ""
+msgstr "Client Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_is_oauth_supported
 msgid "Mercado Pago Is Oauth Supported"
-msgstr ""
+msgstr "Prise en charge OAuth par Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_public_key
 msgid "Mercado Pago Public Key"
-msgstr ""
+msgstr "Clé publique Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_refresh_token
 msgid "Mercado Pago Refresh Token"
-msgstr ""
+msgstr "Jeton d’actualisation Mercado Pago"
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -180,6 +182,8 @@ msgid ""
 "Mercado Pago credentials are missing. Click the \"Connect\" button to set up "
 "your account."
 msgstr ""
+"Les identifiants Mercado Pago sont manquants. Cliquez sur le bouton "
+"\"Connecter\" pour configurer votre compte."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -188,6 +192,8 @@ msgid ""
 "Mercado Pago is not available in your country; please use another payment "
 "provider."
 msgstr ""
+"Mercado Pago n’est pas disponible dans votre pays ; veuillez utiliser un "
+"autre fournisseur de paiement."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -228,7 +234,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
 msgid "Received data with invalid status: %s."
-msgstr ""
+msgstr "Données reçues avec un statut invalide : %s."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -246,7 +252,7 @@ msgstr "Données reçues avec un statut manquant."
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
 msgid "Set the account country before connecting the account."
-msgstr ""
+msgstr "Définissez le pays du compte avant de connecter le compte."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__mercado_pago_account_country_id
@@ -254,6 +260,8 @@ msgid ""
 "The country of the Mercado Pago account. The currency will be updated to "
 "match the country of the Mercado Pago account."
 msgstr ""
+"Le pays du compte Mercado Pago. La devise sera mise à jour pour correspondre "
+"au pays du compte Mercado Pago."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
@@ -339,6 +347,11 @@ msgid ""
 "payment details for\n"
 "                        recurring payments."
 msgstr ""
+"Vous devez renouveler votre connexion à Mercado Pago afin d’activer la "
+"nouvelle\n"
+"                    expérience du mode de paiement par carte, qui permet d’"
+"enregistrer les informations de paiement pour\n"
+"                    les paiements récurrents."
 
 #. module: payment_mercado_pago
 #. odoo-python

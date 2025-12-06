@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-28 01:36+0000\n"
+"PO-Revision-Date: 2025-12-05 07:58+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/stock/"
 "ja/>\n"
@@ -419,15 +419,15 @@ msgstr ""
 "* 仕入先：仕入先からのプロダクトの供給元ロケーションを表す仮想ロケーション。"
 "\n"
 "* バーチャル：子ロケーションを集約し、倉庫の階層構造を作成するためのバーチャ"
-"ルロケーション。直接商品を含むことはできません。\n"
+"ルロケーション。直接プロダクトを含むことはできません。\n"
 "* 内部：倉庫内の物理的なロケーション、\n"
-"* 顧客：顧客：顧客へ送られる製品の仕向け地を表す仮想ロケーション。\n"
+"* 顧客：顧客に出荷されるプロダクトの配送先として扱われる仮想ロケーション\n"
 "* 在庫損失：在庫レベルを修正するために行われる在庫オペレーション（物理的な在"
 "庫）の相手先として機能する仮想ロケーション。\n"
-"* 製造：製造業務の仮想的な相手拠点。すなわち、この場所は部品を消費し、完成品"
-"を生産する。\n"
-"* トランジット：企業間または倉庫間のオペレーションに使用される相手先ロケーシ"
-"ョン。"
+"* 製造：製造業務の仮想的な対応ロケーション。つまりこのロケーションで構成品を"
+"消費し、完成品を製造します。\n"
+"* トランジット：企業間または倉庫間のオペレーションに使用される対応ロケーショ"
+"ン。"
 
 #. module: stock
 #. odoo-python
@@ -861,7 +861,7 @@ msgstr "<span class=\"text-muted small\"> 手持ち在庫</span>"
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
-msgstr ""
+msgstr "<span groups=\"!uom.group_uom\">手持ち在庫</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5270,17 +5270,17 @@ msgstr "遅延"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
-msgstr "遅延作業"
+msgstr "期限超過の活動"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Availability"
-msgstr "在庫遅延"
+msgstr "期限超過の活動"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "遅延移動"
+msgstr "期限超過の活動"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__products_availability
