@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-27 09:05+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-12-05 06:18+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "hr_work_entry/ja/>\n"
@@ -64,9 +64,9 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>Employees in "
 "red will be skipped because they have at least one validated work entry."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\""
-"/>赤色で表示されている従業員は、少なくとも1件の確定済み勤務実績があるため、処"
-"理対象から除外されます。"
+"<i class=\"fa fa-exclamation-triangle me-1\" title=\"Warning\"/>赤色で表示さ"
+"れている従業員は、少なくとも1件の確定済み勤務実績があるため、処理対象から除外"
+"されます。"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_regeneration_wizard
@@ -102,6 +102,7 @@ msgstr "<span>時間</span>"
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__active
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Active"
 msgstr "アクティブ"
 
@@ -199,7 +200,8 @@ msgstr "在職中の休暇買取"
 msgid ""
 "Check this setting if you want the hours to be considered as extra time and "
 "added as a bonus to the basic salary."
-msgstr "この設定を有効にすると、該当の時間が残業時間として扱われ、基本給に対するボー"
+msgstr ""
+"この設定を有効にすると、該当の時間が残業時間として扱われ、基本給に対するボー"
 "ナスとして加算されます。"
 
 #. module: hr_work_entry
@@ -716,7 +718,8 @@ msgstr "表示するデータがありません"
 #: code:addons/hr_work_entry/wizard/hr_work_entry_regeneration_wizard.py:0
 msgid ""
 "No work entry can be regenerated in this range of dates and these employees."
-msgstr "この日付範囲およびこれらの従業員については、勤務記録を再生成することはできま"
+msgstr ""
+"この日付範囲およびこれらの従業員については、勤務記録を再生成することはできま"
 "せん。"
 
 #. module: hr_work_entry
@@ -731,13 +734,11 @@ msgstr "通知(未提供)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_overtime
-#, fuzzy
 msgid "OT"
 msgstr "OT"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.hr_work_entry_type_out_of_contract
-#, fuzzy
 msgid "OoC"
 msgstr "OoC"
 
@@ -1120,7 +1121,8 @@ msgstr "勤務記録を分割"
 msgid ""
 "Split work entry duration has to be less than the existing work entry "
 "duration."
-msgstr "分割後の勤務記録の時間は、既存の勤務記録の時間より短くなければなりません。"
+msgstr ""
+"分割後の勤務記録の時間は、既存の勤務記録の時間より短くなければなりません。"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state

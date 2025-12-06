@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-24 12:08+0000\n"
+"PO-Revision-Date: 2025-12-02 14:37+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/hr_expense/"
 "nl/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -61,7 +61,7 @@ msgstr "%(expense_name)s: Het behoort niet tot je afdeling"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: It is your own expense"
-msgstr "%(expense_name)s: Dit is je eigen declaratie"
+msgstr "%(expense_name)s: Dit is je eigen onkostendeclaratie"
 
 #. module: hr_expense
 #. odoo-python
@@ -84,8 +84,8 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
-"%(user)s bevestigt dat deze declaratie geen duplicaat is met vergelijkbare "
-"declaraties."
+"%(user)s bevestigt dat deze onkostendeclaratie geen duplicaat is met "
+"vergelijkbare declaraties."
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense
@@ -281,8 +281,8 @@ msgstr "Een kostenrekening is verwacht"
 #: code:addons/hr_expense/static/src/views/expense_form_view.js:0
 msgid "An expense of same category, amount and date already exists."
 msgstr ""
-"Er bestaat al een declaratie van dezelfde categorie, hetzelfde bedrag en "
-"dezelfde datum."
+"Er bestaat al een onkostendeclaratie van dezelfde categorie, hetzelfde "
+"bedrag en dezelfde datum."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_account
@@ -383,7 +383,7 @@ msgid ""
 "taxes for expenses."
 msgstr ""
 "Zowel de in de prijs inclusief btw als de prijs exclusief btw gedragen zich "
-"voor declaraties als prijs inclusief btw."
+"voor onkostendeclaraties als prijs inclusief btw."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -477,7 +477,7 @@ msgstr "Maak onkosten vanuit inkomende e-mails"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_all
 msgid "Create new expenses to get statistics."
-msgstr "Maak nieuwe declaratie om statistieken te krijgen."
+msgstr "Maak nieuwe onkostendeclaraties om statistieken te krijgen."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -628,7 +628,7 @@ msgstr "Concept"
 #: code:addons/hr_expense/wizard/hr_expense_approve_duplicate.py:0
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__duplicate_expense_ids
 msgid "Duplicate Expense"
-msgstr "Dubbele declaratie"
+msgstr "Dubbele onkostendeclaratie"
 
 #. module: hr_expense
 #. odoo-python
@@ -671,7 +671,7 @@ msgid ""
 "Enter a name then choose a category and configure the amount of your expense."
 msgstr ""
 "Voer een naam in, kies een categorie en configureer het bedrag van je "
-"declaratie."
+"onkostendeclaratie."
 
 #. module: hr_expense
 #: model:account.journal,name:hr_expense.hr_expense_account_journal
@@ -688,7 +688,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_view_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Expense"
-msgstr "Declaratie"
+msgstr "Onkost"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_filtered
@@ -699,7 +699,7 @@ msgstr "Onkostanalyse"
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
 #: model:mail.activity.type,summary:hr_expense.mail_act_expense_approval
 msgid "Expense Approval"
-msgstr "Declaratie goedkeuren"
+msgstr "Onkostendeclaratie goedkeuren"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_approve_duplicate
@@ -710,7 +710,7 @@ msgstr "Declaratieduplicaat goedkeuren"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__expense_manager_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_employee_search_view
 msgid "Expense Approver"
-msgstr "Declaratie goedkeurder"
+msgstr "Goedkeurder onkosten"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -722,7 +722,7 @@ msgstr "Onkostenkaart"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Categories"
-msgstr "Declaratiecategorieën"
+msgstr "Onkostencategorieën"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
@@ -738,7 +738,7 @@ msgstr "Declaratie digitalisering (OCR)"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
 msgid "Expense Manager"
-msgstr "Declaratiebeheerder"
+msgstr "Onkostenbeheerder"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_post_wizard
@@ -748,27 +748,27 @@ msgstr "Boekingswizard voor onkosten"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Expense Refuse Reason Wizard"
-msgstr "Declaratie reden van afwijzen wizard"
+msgstr "Wizard voor afwijsreden onkost"
 
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_expense_img
 msgid "Expense Report Image"
-msgstr "Afbeelding declaratie"
+msgstr "Afbeelding onkostendeclaratie"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_split
 msgid "Expense Split"
-msgstr "Declaratie splitsen"
+msgstr "Onkost splitsen"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__expense_split_line_ids
 msgid "Expense Split Line"
-msgstr "Declaratie gesplitste regel"
+msgstr "Onkost gesplitste regel"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_split_wizard
 msgid "Expense Split Wizard"
-msgstr "Wizard Declaratie splitsen"
+msgstr "Wizard Onkost splitsen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -783,8 +783,7 @@ msgstr "Onkost goedgekeurd"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense categories can be reinvoiced to your customers."
-msgstr ""
-"Declaratiecategorieën kunnen opnieuw worden gefactureerd aan je klanten."
+msgstr "Onkostencategorieën kunnen opnieuw worden gefactureerd aan je klanten."
 
 #. module: hr_expense
 #. odoo-python
@@ -800,7 +799,7 @@ msgstr "Onkost betaald"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Expense refuse reason"
-msgstr "Reden van afwijzen van de declaratie"
+msgstr "Afwijsreden van de onkost"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
@@ -816,7 +815,7 @@ msgstr "Onkost teruggezet naar concept"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expense split"
-msgstr "Declaratieverdeling"
+msgstr "Onkost splitsen"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_to_approve
@@ -853,7 +852,7 @@ msgstr "Onkostenanalyse"
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
 msgid "Expenses Report"
-msgstr "Declaratie"
+msgstr "Onkostenrapport"
 
 #. module: hr_expense
 #. odoo-python
@@ -1321,7 +1320,7 @@ msgstr "Nog geen gegevens!"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense categories found. Let's create one!"
-msgstr "Geen declaratiecategorieën gevonden. Laten we er een maken!"
+msgstr "Geen onkostencategorieën gevonden. Laten we er een maken!"
 
 #. module: hr_expense
 #. odoo-python
@@ -1390,8 +1389,8 @@ msgid ""
 "Give Odoo a hand to find an account by setting up an expense account.\n"
 "%(expense)s %(expense_name)s.\n"
 msgstr ""
-"Odoo heeft je declaratie, product, bedrijf en dagboek bekeken maar heeft "
-"niets gevonden.\n"
+"Odoo heeft je onkostdeclaratie, product, bedrijf en dagboek bekeken maar "
+"heeft niets gevonden.\n"
 "Help Odoo een rekening te vinden door een onkostenrekening in te stellen.\n"
 "%(expense)s %(expense_name)s.\n"
 
@@ -1401,8 +1400,8 @@ msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
 msgstr ""
-"Wanneer je je declaratie hebt aangemaakt, kun je ze indienen zodat je "
-"manager ze kan bevestigen."
+"Wanneer je je onkostendeclaratie hebt aangemaakt, kun je ze indienen zodat "
+"je manager ze kan bevestigen."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1668,7 +1667,7 @@ msgstr "Afkeuren"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr "Declaratie afwijzen"
+msgstr "Onkost afwijzen"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__approval_state__refused
@@ -1731,7 +1730,7 @@ msgstr "Verkoopprijs"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_receipt_expense_ids
 msgid "Same Receipt Expense"
-msgstr "Zelfde declaratie"
+msgstr "Zelfde onkost"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1779,12 +1778,11 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
-"Stuur een e-mail naar deze e-mailalias met het kassabon in bijlage om met "
-"één klik een onkostennota te maken. Als het eerste woord van het e-"
-"mailonderwerp de interne referentie van de categorie of de categorienaam "
-"bevat, wordt automatisch de bijbehorende categorie ingesteld. Typ het "
-"declaratiebedrag in het e-mailonderwerp om het ook op de declaratie in te "
-"stellen."
+"Stuur een e-mail naar deze e-mailalias met de kassabon in bijlage om met één "
+"klik een onkostennota te maken. Als het eerste woord van het e-mailonderwerp "
+"de interne referentie van de categorie of de categorienaam bevat, wordt "
+"automatisch de bijbehorende categorie ingesteld. Typ het onkostenbedrag in "
+"het e-mailonderwerp om het ook op de onkostendeclaratie in te stellen."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1816,7 +1814,9 @@ msgstr "Geef de factuurdatum van de leveranciersfactuur aan."
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
 msgid "Specify whether the product can be selected in an expense."
-msgstr "Specificeer of het product kan worden gebruikt als declaratie."
+msgstr ""
+"Specificeer of het product kan worden geselecteerd kan worden bij een "
+"onkostendeclaratie."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1827,14 +1827,14 @@ msgstr "Splitsen"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Split Expense"
-msgstr "Declaratie splitsen"
+msgstr "Onkost splitsen"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/wizard/hr_expense_split_wizard.py:0
 msgid "Split Expenses"
-msgstr "Declaratie splitsen"
+msgstr "Onkosten splitsen"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
@@ -1976,7 +1976,8 @@ msgid ""
 "You'll have to set the category manually on the expense."
 msgstr ""
 "Het eerste woord van het onderwerp van de e-mail kwam niet overeen met een "
-"categoriecode. Je moet de categorie handmatig instellen op de declaratie."
+"categoriecode. Je moet de categorie handmatig instellen op de "
+"onkostendeclaratie."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1992,13 +1993,13 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
-msgstr "Het gebruikte dagboek als de declaratie is betaald door de werknemer."
+msgstr "Het gebruikte dagboek als de onkost is betaald door de werknemer."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__payment_method_line_id
 msgid "The payment method used when the expense is paid by the company."
 msgstr ""
-"De betaalmethode gebruikt wanneer de declaratie betaald is door het bedrijf."
+"De betaalmethode gebruikt wanneer de onkost betaald is door het bedrijf."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2026,7 +2027,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
 msgid "There you go - expense management in a nutshell!"
-msgstr "Daar ga je - declaratiebeheer in een notendop!"
+msgstr "Ziezo, onkostenbeheer in een notendop!"
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
@@ -2095,7 +2096,7 @@ msgstr "Totaal onbelast bedrag in valuta"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
 msgid "Total amount of the original Expense that we are splitting"
-msgstr "Totaal bedrag van de oorspronkelijke declaratie die we splitsen"
+msgstr "Totaal bedrag van de oorspronkelijke onkostendeclaratie die we splitsen"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
@@ -2160,7 +2161,7 @@ msgstr "Upload"
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_to_process
 msgid "Upload or drop an expense receipt"
-msgstr "Een declaratie uploaden of droppen"
+msgstr "Een onkost uploaden of hierheen slepen"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2181,7 +2182,7 @@ msgstr "Leverancier"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "View Expense"
-msgstr "Bekijk declaratie"
+msgstr "Onkost bekijken"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -2224,11 +2225,11 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
-"Als de kosten van een declaratieproduct anders zijn dan 0, dan kan de "
-"gebruiker                                             dit product gebruikt "
-"het bedrag van de declaratie niet "
+"Als de kosten van een onkostendeclaratieproduct anders zijn dan 0, dan kan "
+"de gebruiker                                             dit product "
+"gebruikt het bedrag van de onkostendeclaratie niet "
 "wijzigen,                                             alleen het aantal. "
-"Gebruik een kostprijs anders dan 0 voor declaratiecategorieën die "
+"Gebruik een kostprijs anders dan 0 voor onkostencategorieën die "
 "door                                            het bedrijf worden "
 "gefinancierd tegen vaste kosten, zoals kilometervergoedingen, "
 "dagvergoedingen, huisvesting                                             of "
@@ -2294,7 +2295,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot delete a posted or approved expense."
-msgstr "Je kunt een geboekte of betaalde declaratie niet verwijderen."
+msgstr "Je kunt een geboekte of betaalde onkost niet verwijderen."
 
 #. module: hr_expense
 #. odoo-python
@@ -2385,7 +2386,7 @@ msgstr "Jouw uitgave"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Your expense has been successfully registered."
-msgstr "Je declaratie is succesvol geregistreerd."
+msgstr "Je onkost is succesvol geregistreerd."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2415,7 +2416,7 @@ msgstr "bijv. mycompany.com"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "expense"
-msgstr "declaratie"
+msgstr "onkost"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

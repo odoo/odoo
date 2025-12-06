@@ -29,7 +29,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-28 18:35+0000\n"
-"PO-Revision-Date: 2025-11-28 14:27+0000\n"
+"PO-Revision-Date: 2025-12-04 14:03+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/account/"
 "de/>\n"
@@ -2567,8 +2567,8 @@ msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The "
 "unmerge operation only splits an account based on its companies."
 msgstr ""
-"Die Zusammenführung des Kontos %s kann aufgehoben werden, da es bereits zu "
-"einem einzigen Unternehmen gehört. Der Vorgang der Aufhebung der "
+"Die Zusammenführung des Kontos %s kann nicht aufgehoben werden, da es "
+"bereits zu einem einzigen Unternehmen gehört. Der Vorgang der Aufhebung der "
 "Zusammenführung teilt ein Konto nur auf der Grundlage seiner Unternehmen auf."
 
 #. module: account
@@ -9496,7 +9496,7 @@ msgstr "Hat IBAN-Warnung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__has_invalid_analytics
 msgid "Has Invalid Analytics"
-msgstr ""
+msgstr "Hat ungültige Analysen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
@@ -10076,7 +10076,7 @@ msgstr "Importvorlage für Rechnungen"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Import Template for Chart of Accounts"
-msgstr "Importvorlage für Kontenplan"
+msgstr "Importvorlage für Kontenpläne"
 
 #. module: account
 #. odoo-python
@@ -11843,7 +11843,7 @@ msgstr "Vertrauensfelder sperren"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Log changes to posted journal entries immutably"
 msgstr ""
-"Protokollieren Sie Änderungen an gebuchten Journalposten unveränderlich"
+"Protokollieren Sie unveränderliche Änderungen an gebuchten Journalbuchungen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -14910,7 +14910,7 @@ msgstr "Begründung auf Gutschrift angezeigt"
 #: code:addons/account/static/src/components/receipt_selector/receipt_selector.js:0
 #: model_terms:ir.ui.view,arch_db:account.view_account_bill_filter
 msgid "Receipt"
-msgstr "Eingang"
+msgstr "Beleg"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -15985,7 +15985,7 @@ msgstr "Wählen Sie hier die Art der Bewertung dieser Zahlungsbedingungszeile."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Select specific invoice and delivery addresses"
-msgstr "Auswahl spezifischer Rechnungs- und Lieferadressen"
+msgstr "Wählen Sie spezifische Rechnungs- und Lieferadressen aus."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16809,7 +16809,7 @@ msgstr "Bestandsbewertung"
 #. module: account
 #: model:account.account,name:account.1_stock_variation
 msgid "Stock Variation"
-msgstr ""
+msgstr "Bestandsabweichung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -19175,6 +19175,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
 msgstr ""
+"Diese Einstellung wird gesperrt, sobald eine Journalbuchung erstellt wurde."
 
 #. module: account
 #. odoo-python
@@ -19612,10 +19613,10 @@ msgid ""
 "limit.                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
-"Auslösen von Warnungen bei der Erstellung von Rechnungen und "
-"Verkaufsaufträgen für Partner, deren Gesamtforderungsbetrag eine bestimmte "
-"Grenze überschreitet.                                      Legen Sie einen "
-"Wert, der größer als 0,0 ist, um eine Kreditlimitprüfung zu aktivieren."
+"Lösen Sie Warnungen bei der Erstellung von Rechnungen und Verkaufsaufträgen "
+"für Partner aus, deren Gesamtforderungsbetrag ein bestimmtes Limit "
+"überschreitet.                                      Legen Sie einen Wert, "
+"der größer als 0,0 ist, fest, um eine Kreditlimitprüfung zu aktivieren."
 
 #. module: account
 #. odoo-python
@@ -19905,7 +19906,7 @@ msgstr "Aktualisierung der Allgemeinen Geschäftsbedingungen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Update exchange rates automatically"
-msgstr "Wechselkurse automatisch aktualisieren"
+msgstr "Aktualisieren Sie Wechselkurse automatisch."
 
 #. module: account
 #. odoo-python
@@ -22065,8 +22066,8 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Zahlungseingang (Ref {{ object.name or 'k. "
-"A.' }})"
+"{{ object.company_id.name }} Zahlungseingang "
+"(Ref. {{ object.name or 'k. A.' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_credit_note

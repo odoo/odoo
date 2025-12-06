@@ -45,7 +45,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-27 14:13+0000\n"
+"PO-Revision-Date: 2025-12-02 14:51+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/mail/fi/>"
 "\n"
@@ -1481,13 +1481,13 @@ msgstr "Aliaksen kontaktien tietoturva"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Alias Domain"
-msgstr "Alias Domain"
+msgstr "Alias-domain"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin_optional__alias_domain
 msgid "Alias Domain Name"
-msgstr "Alias Verkkotunnus"
+msgstr "Alias-domainin nimi"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_alias_domain_action
@@ -1495,7 +1495,7 @@ msgstr "Alias Verkkotunnus"
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_tree
 msgid "Alias Domains"
-msgstr "Alias-verkkotunnukset"
+msgstr "Alias-domainit"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_full_name
@@ -1517,7 +1517,7 @@ msgstr "Alias Status"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
 msgid "Alias domain name"
-msgstr "Alias-verkkotunnus"
+msgstr "Alias-domainin nimi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
@@ -2125,9 +2125,8 @@ msgid ""
 "Bounce alias %(bounce)s is already used for another domain with same name. "
 "Use another bounce or simply use the other alias domain."
 msgstr ""
-"Bounce alias %(bounce)s on jo käytössä toiselle samannimiselle "
-"verkkotunnukselle. Käytä toista bouncea tai yksinkertaisesti toista alias-"
-"verkkotunnusta."
+"Bounce-alias %(bounce)s on jo käytössä toiselle samannimiselle domainille. "
+"Käytä toista bouncea tai toista alias-domainia."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_bounce_email_uniques
@@ -2495,9 +2494,8 @@ msgid ""
 "Catchall alias %(catchall)s is already used for another domain with same "
 "name. Use another catchall or simply use the other alias domain."
 msgstr ""
-"Catchall-aliasta %(catchall)s käytetään jo toisen samannimisen "
-"verkkotunnuksen yhteydessä. Käytä toista catchall-tunnusta tai "
-"yksinkertaisesti toista alias-verkkotunnusta."
+"Catchall-aliasta %(catchall)s käytetään jo toisen samannimisen domainin "
+"yhteydessä. Käytä toista catchallia tai toista alias-domainia."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_domain_catchall_email_uniques
@@ -12532,7 +12530,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use different domains for your mail aliases"
-msgstr "Käytä eri verkkotunnuksia sähköpostialiaksille"
+msgstr "Käytä eri domaineja sähköpostialiaksillesi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__is_batch_mode
@@ -13000,9 +12998,9 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"Emme voineet luoda aliasta %(alias_name)s, koska verkkotunnus %"
-"(alias_domain_name)s kuuluu yritykselle %(alias_company_names)s, kun taas "
-"omistaja-asiakirja kuuluu yritykselle %(company_name)s."
+"Emme voineet luoda aliasta %(alias_name)s, koska domain %(alias_domain_name)"
+"s kuuluu yritykselle %(alias_company_names)s, kun taas omistaja-asiakirja "
+"kuuluu yritykselle %(company_name)s."
 
 #. module: mail
 #. odoo-python
@@ -13012,9 +13010,9 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"Emme voineet luoda aliasta %(alias_name)s, koska verkkotunnus %"
-"(alias_domain_name)s kuuluu yritykselle %(alias_company_names)s, kun taas "
-"kohdeasiakirja kuuluu yritykselle %(company_name)s."
+"Emme voineet luoda aliasta %(alias_name)s, koska domain %(alias_domain_name)"
+"s kuuluu yritykselle %(alias_company_names)s, kun taas kohdeasiakirja kuuluu "
+"yritykselle %(company_name)s."
 
 #. module: mail
 #. odoo-python
@@ -13460,6 +13458,8 @@ msgid ""
 "Your email address is used by an alias domain, and so you can not create a "
 "mail server for it."
 msgstr ""
+"Sähköpostiosoitteesi on alias-domainin käytössä, joten et voi luoda sille "
+"sähköpostipalvelinta."
 
 #. module: mail
 #. odoo-javascript

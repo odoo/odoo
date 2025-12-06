@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-28 04:36+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-12-04 17:51+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/hr/vi/"
 ">\n"
@@ -184,6 +184,10 @@ msgid ""
 "                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
 "title=\"Login\" invisible=\"login == work_email\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope me-1 text-primary\" title=\"Đăng nhập/"
+"Email\" invisible=\"login != work_email\"/>\n"
+"                            <i class=\"fa fa-fw fa-key me-1 text-primary\" "
+"title=\"Đăng nhập\" invisible=\"login == work_email\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -2154,6 +2158,11 @@ msgid "Document"
 msgstr "Tài liệu"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Documents"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
 msgid "Driving License"
 msgstr "Bằng lái xe"
@@ -2505,9 +2514,9 @@ msgid ""
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
 msgstr ""
-"Nhập số Chứng minh nhân dâncủa nhân viên do chính phủ cấp "
-"(ví dụ: Aadhaar, SIN, NIN). Thông tin này được sử dụng cho hồ sơ chính thức "
-"và tuân thủ pháp lý."
+"Nhập số Chứng minh nhân dâncủa nhân viên do chính phủ cấp (ví dụ: Aadhaar, "
+"SIN, NIN). Thông tin này được sử dụng cho hồ sơ chính thức và tuân thủ pháp "
+"lý."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -3668,6 +3677,11 @@ msgstr ""
 "Không hề có quản lý ngớ ngẩn, công cụ nhảm nhí hay giờ làm việc cứng nhắc"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "No user linked"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3683,11 +3697,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not Employed"
 msgstr "Chưa được tuyển dụng"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Not linked to an user"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -4915,6 +4924,8 @@ msgid ""
 "The following users have not been archived as they are still linked to "
 "another active employees: %s"
 msgstr ""
+"Các người dùng sau đây chưa được lưu trữ vì họ vẫn còn liên kết với một nhân "
+"viên khác đang hoạt động: %s"
 
 #. module: hr
 #. odoo-python
@@ -5506,6 +5517,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "We can redirect you to the public employee list."
 msgstr ""
+"Bạn không được phép truy cập vào các bản ghi \"Nhân viên\" (hr.employee).\n"
+"Chúng tôi có thể chuyển hướng bạn đến danh sách nhân viên công khai."
 
 #. module: hr
 #. odoo-python

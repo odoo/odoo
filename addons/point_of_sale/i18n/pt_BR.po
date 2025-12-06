@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:35+0000\n"
-"PO-Revision-Date: 2025-11-24 17:40+0000\n"
+"POT-Creation-Date: 2025-12-05 18:35+0000\n"
+"PO-Revision-Date: 2025-12-05 10:58+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/point_of_sale/pt_BR/>\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -465,12 +465,12 @@ msgstr "<span>Data</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Ongoing</span>"
-msgstr ""
+msgstr "<span>Em andamento</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Opening</span>"
-msgstr ""
+msgstr "<span>Abertura</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -480,7 +480,7 @@ msgstr "<span>Relatórios</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Sold</span>"
-msgstr ""
+msgstr "<span>Vendido</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -561,7 +561,7 @@ msgstr "Já existe um pagamento com esse uuid"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.js:0
 msgid "A request is still being processed in the background. Please wait."
-msgstr ""
+msgstr "Uma solicitação ainda está sendo processada em segundo plano. Aguarde."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -1404,6 +1404,12 @@ msgstr "Saldo"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__bank
 msgid "Bank"
 msgstr "Banco"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Bank App (QR Code)"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
@@ -5364,6 +5370,12 @@ msgid "Nomenclature"
 msgstr "Nomenclatura"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "None required"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Cancelled"
 msgstr "Não cancelado"
@@ -8695,6 +8707,12 @@ msgid "Tel:"
 msgstr "Tel:"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Terminal"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos_button.xml:0
 msgid "Test"
@@ -10872,6 +10890,12 @@ msgstr "qx9h1"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "return"
 msgstr "retorno"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "terminal"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-11-18 14:28+0000\n"
+"PO-Revision-Date: 2025-12-04 03:36+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/mail_group/es_419/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
@@ -152,8 +152,8 @@ msgid ""
 "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
 "title=\"Alias\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Seudónimo\" "
-"title=\"Seudónimo\"/>"
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title="
+"\"Alias\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
@@ -161,8 +161,8 @@ msgid ""
 "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
 "title=\"Alias\"/>"
 msgstr ""
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Seudónimo\" "
-"title=\"Seudónimo\"/>"
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title="
+"\"Alias\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -317,12 +317,12 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
 msgid "Alias"
-msgstr "Seudónimo"
+msgstr "Alias"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
 msgid "Alias Contact Security"
-msgstr "Seudónimo del contacto de seguridad"
+msgstr "Seguridad del contacto del alias"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
@@ -337,27 +337,27 @@ msgstr "Nombre del dominio del alias"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
 msgid "Alias Email"
-msgstr "Correo electrónico del seudónimo"
+msgstr "Correo electrónico del alias"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
 msgid "Alias Name"
-msgstr "Nombre del seudónimo"
+msgstr "Nombre del alias"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
 msgid "Alias Status"
-msgstr "Estado del seudónimo"
+msgstr "Estado del alias"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr "Estado del seudónimo evaluado en el último mensaje recibido."
+msgstr "Estado del alias evaluado en el último mensaje recibido."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
 msgid "Aliased Model"
-msgstr "Modelo con seudónimo"
+msgstr "Modelo con alias"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -729,8 +729,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
-"ID del registro principal que tiene el seudónimo (ejemplo: el proyecto que "
-"contiene el seudónimo para la creación de tareas)"
+"ID del registro principal que tiene el alias "
+"(por ejemplo, el proyecto que contiene el alias para la creación de tareas)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
@@ -1469,9 +1469,10 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"El modelo (tipo de documento de Odoo) al que corresponde este seudónimo. "
+"El modelo (tipo de documento de Odoo) al que corresponde este alias. "
 "Cualquier correo entrante que no sea respuesta a un registro existente "
-"creará un nuevo registro de este modelo (por ejemplo, una tarea de proyecto)."
+"creará un nuevo registro de este modelo "
+"(por ejemplo, una tarea en el proyecto)."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
@@ -1479,8 +1480,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"El nombre del seudónimo de correo, por ejemplo, \"vacantes\" para recibir "
-"mensajes en <vacantes@ejemplo.odoo.com>."
+"El nombre del alias del correo, por ejemplo, \"vacantes\" para recibir los "
+"mensajes de <vacantes@ejemplo.odoo.com>."
 
 #. module: mail_group
 #. odoo-python
@@ -1548,8 +1549,7 @@ msgstr "Cancelar suscripción:"
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid ""
 "When people send an email to the alias of the list, they will appear here."
-msgstr ""
-"Aquí aparecerán los correos que la gente envíe al seudónimo de esta lista."
+msgstr "Aquí aparecerán los correos que la gente envíe al alias de esta lista."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -1600,7 +1600,7 @@ msgstr "_______________________________________________"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "alias"
-msgstr "seudónimo"
+msgstr "alias"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form

@@ -14,17 +14,17 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-23 13:56+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>\n"
+"PO-Revision-Date: 2025-12-03 10:32+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "website_sale_wishlist/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
-"1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : "
+"((n != 0 && n % 1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.empty_wishlist_svg
@@ -82,42 +82,94 @@ msgid ""
 "                }\n"
 "                }"
 msgstr ""
+".heartBeat {\n"
+"                        animation: heartBeat 1.3s ease-in-out forwards;\n"
+"                        animation-delay: 0.75s;\n"
+"                        transform-origin: 74.5px 25.5px;\n"
+"                    }\n"
+"                @keyframes heartBeat {\n"
+"                        0% {\n"
+"                        transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        14% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        28% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"\n"
+"                        42% {\n"
+"                            transform: scale(1.2);\n"
+"                        }\n"
+"\n"
+"                        70% {\n"
+"                            transform: scale(1);\n"
+"                        }\n"
+"                    }\n"
+"                .swing {\n"
+"                    animation: swing 1.3s ease forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: top center\n"
+"                }\n"
+"                @keyframes swing {\n"
+"                    20% {\n"
+"                    transform: rotate(15deg)\n"
+"                }\n"
+"\n"
+"                40% {\n"
+"                    transform: rotate(-10deg)\n"
+"                }\n"
+"\n"
+"                60% {\n"
+"                    transform: rotate(5deg)\n"
+"                }\n"
+"\n"
+"                80% {\n"
+"                    transform: rotate(-5deg)\n"
+"                }\n"
+"\n"
+"                to {\n"
+"                    transform: rotate(0deg)\n"
+"                }\n"
+"                }"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "1 Column"
-msgstr ""
+msgstr "1 colonne"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "2 Columns"
-msgstr ""
+msgstr "2 colonnes"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "3 Columns"
-msgstr ""
+msgstr "3 colonnes"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "4 Columns"
-msgstr ""
+msgstr "4 colonnes"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "5 Columns"
-msgstr ""
+msgstr "5 colonnes"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "6 Columns"
-msgstr ""
+msgstr "6 colonnes"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -166,7 +218,7 @@ msgstr "Ajouter à la liste de souhaits"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_opt_products_design_classes
 msgid "CSS class for wishlist page design"
-msgstr ""
+msgstr "Classe CSS pour la mise en page de la liste de souhaits"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_res_partner
@@ -202,7 +254,7 @@ msgstr "Devise par défaut"
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Desktop"
-msgstr ""
+msgstr "Desktop"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__display_name
@@ -223,29 +275,29 @@ msgstr "Produit dupliqué sur la liste de souhaits de ce partenaire."
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed"
-msgstr ""
+msgstr "Fixe"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed - On Hover"
-msgstr ""
+msgstr "Fixe – Au survol"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "Gap"
-msgstr ""
+msgstr "Espacement"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_gap
 msgid "Gap between products on the wishlist page"
-msgstr ""
+msgstr "Espacement entre les produits sur la page de liste de souhaits"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "Handle your wishlist from the menu icon."
-msgstr ""
+msgstr "Gérez votre liste de souhaits depuis l’icône du menu."
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_product__id
@@ -260,13 +312,13 @@ msgstr "ID"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
 msgid "In your wishlist"
-msgstr ""
+msgstr "Dans votre liste de souhaits"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "Inline"
-msgstr ""
+msgstr "Inline"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__write_uid
@@ -282,13 +334,13 @@ msgstr "Mis à jour le"
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Layout"
-msgstr ""
+msgstr "Layout"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Mobile"
-msgstr ""
+msgstr "Mobile"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -299,22 +351,24 @@ msgstr "Ma liste de souhaits"
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_mobile_columns
 msgid "Number of columns to display on mobile for the wishlist page (1 or 2)"
 msgstr ""
+"Nombre de colonnes à afficher sur mobile pour la page de liste de souhaits "
+"(1 ou 2)"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,help:website_sale_wishlist.field_website__wishlist_grid_columns
 msgid "Number of columns to display on the wishlist page"
-msgstr ""
+msgstr "Nombre de colonnes à afficher sur la page de liste de souhaits"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/products_design_panel.xml:0
 msgid "On Hover"
-msgstr ""
+msgstr "Au survol"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Original price"
-msgstr ""
+msgstr "Prix original"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__partner_id
@@ -361,17 +415,17 @@ msgstr "Liste de souhaits de produits"
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Products Design"
-msgstr ""
+msgstr "Conception de produits"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Remove from wishlist"
-msgstr ""
+msgstr "Retirer de la liste de souhaits"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Sale price"
-msgstr ""
+msgstr "Prix de vente"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_cart_lines
@@ -381,7 +435,7 @@ msgstr "Enregistrer pour plus tard"
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Shop"
-msgstr ""
+msgstr "Boutique"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
@@ -414,33 +468,33 @@ msgstr "Liste de souhaits"
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_grid_columns
 msgid "Wishlist Grid Columns"
-msgstr ""
+msgstr "Colonnes grid liste de souhaits"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_gap
 msgid "Wishlist Grid Gap"
-msgstr ""
+msgstr "Espacement grid liste de souhaits"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_mobile_columns
 msgid "Wishlist Mobile Columns"
-msgstr ""
+msgstr "Colonnes liste de souhaits sur mobile"
 
 #. module: website_sale_wishlist
 #. odoo-javascript
 #: code:addons/website_sale_wishlist/static/src/website_builder/wishlist_page_option_plugin.js:0
 msgid "Wishlist Page"
-msgstr ""
+msgstr "Page de liste de souhaits"
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_website__wishlist_opt_products_design_classes
 msgid "Wishlist Page Design Class"
-msgstr ""
+msgstr "Classe de conception page liste de souhaits"
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_wishlist
 msgid "Your wishlist is empty!"
-msgstr ""
+msgstr "Votre liste de souhaits est vide !"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-fw fa-heart\"/>\n"

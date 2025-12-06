@@ -20,8 +20,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-11-16 15:13+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-12-02 14:54+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/base/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -657,6 +657,9 @@ msgid ""
 "\n"
 "Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"使用 iMin ePOS 打印机，无需在销售点安装物联网盒\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
@@ -786,6 +789,30 @@ msgid ""
 "Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* 新增增值税账簿报告：阿根廷法定要求，记录特定期间内销售或采购的增值税详细信"
+"息\n"
+"* 新增增值税汇总报告：用于分析开票情况\n"
+"* 新增数字增值税账簿功能：支持生成可导入ARCA系统的TXT文件。我们实现的功能包括"
+"：\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"官方文档 ARCA\n"
+"\n"
+"* 数字增值税账簿 - 记录设计 https://www.afip.gob.ar/libro-iva-digital/"
+"documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - 记录设计（与数字增值税账簿相同）：https://www.afip.gob.ar/"
+"comprasyventas/documentos/"
+"RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - 技术规范（提供数字/字母数字字段格式和填写方法的详细信息）： https://"
+"www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-"
+"Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports_simple
@@ -793,6 +820,8 @@ msgid ""
 "\n"
 "* Add export of IVA Simple Tax Report.\n"
 msgstr ""
+"\n"
+"* 新增简化增值税报表导出功能。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_app
@@ -864,6 +893,8 @@ msgid ""
 "\n"
 "- Send and receive documents via Nemhandel network in OIOUBL 2.1 format\n"
 msgstr ""
+"\n"
+"- 通过 Nemhandel 网络以 OIOUBL 2.1 格式收发文件\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -1195,6 +1226,10 @@ msgid ""
 "===========================\n"
 "A helper model for managing transfers between accounts.\n"
 msgstr ""
+"\n"
+"Account Transfers\n"
+"===========================\n"
+"A helper model for managing transfers between accounts.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant
@@ -40349,19 +40384,20 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_theme_real_estate
 msgid "Real Estate Theme - Houses, Appartments, Real Estate Agencies"
-msgstr ""
+msgstr "房地产主题：房屋、公寓、地产代理公司"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_real_estate
 msgid ""
 "Real Estate, Agencies, Construction, Services, Accomodations, Lodging, "
 "Hosting, Houses, Appartments, Vacations, Holidays, Travels"
-msgstr ""
+msgstr "房地产、代理、建筑、服务、住宿、民宿、接待、房屋、公寓、单位、假期、度假、旅"
+"游"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_profile__duration
 msgid "Real elapsed time"
-msgstr ""
+msgstr "实际经历时间"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__resource_ref
@@ -40854,7 +40890,7 @@ msgstr "POS中的饭店功能扩展 "
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.server_action_history_wizard_view
 msgid "Restore Revision"
-msgstr ""
+msgstr "恢复修订"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__soft
@@ -40881,7 +40917,7 @@ msgstr "修订"
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Revision Code"
-msgstr ""
+msgstr "修订代码"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_device_view_tree
@@ -40954,7 +40990,7 @@ msgstr "角色 / 公众"
 #. module: base
 #: model:res.groups,name:base.group_user
 msgid "Role / User"
-msgstr ""
+msgstr "角色/用户"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -41386,7 +41422,7 @@ msgstr "销售佣金 ： 认购"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_enterprise
 msgid "Sale Enterprise"
-msgstr ""
+msgstr "销售企业"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_intrastat
@@ -41466,7 +41502,7 @@ msgstr "销售库存毛利"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock_product_expiry
 msgid "Sale Stock Product Expiry"
-msgstr ""
+msgstr "销售库存产品到期日"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_stock
@@ -41731,7 +41767,7 @@ msgstr "沙特阿拉伯 - POS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_withholding_tax
 msgid "Saudi Arabia - Withholding Tax"
-msgstr ""
+msgstr "沙特阿拉伯 - 预扣税"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
@@ -41820,7 +41856,7 @@ msgstr "范围"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_apikeys_view_kanban
 msgid "Scope:"
-msgstr ""
+msgstr "范围："
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__search
@@ -41922,7 +41958,7 @@ msgstr "选择要将记录链接到的字段"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Select a sequence..."
-msgstr ""
+msgstr "选择一个序列⋯"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -42028,7 +42064,7 @@ msgstr "在您的电子商务店铺中销售租赁产品并管理库存"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_renting_planning
 msgid "Sell rental products on your eCommerce and plan your material resources"
-msgstr ""
+msgstr "在您的电子商务网店销售租赁产品，并规划您的物料资源"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_subscription
@@ -42070,7 +42106,7 @@ msgstr "转出资金"
 #. module: base
 #: model:ir.module.module,summary:base.module_sms_twilio
 msgid "Send SMS messages using Twilio"
-msgstr ""
+msgstr "使用 Twilio 发送短信"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sms
@@ -42090,12 +42126,12 @@ msgstr "发送 Webhook 通知"
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_stock
 msgid "Send WhatsApp messages when a stock transfer is validated"
-msgstr ""
+msgstr "股票转让生效时发送 WhatsApp 消息"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sign
 msgid "Send and request electronic signatures."
-msgstr ""
+msgstr "发送及请求电子签名。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_push_notifications
@@ -42153,7 +42189,7 @@ msgstr "发送 whatsapp 消息作为活动提醒"
 #. module: base
 #: model:ir.module.module,summary:base.module_whatsapp_stock
 msgid "Send whatsapp messages when final stock move"
-msgstr ""
+msgstr "股票最终走势时发送 whatsapp 消息"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_easypost
@@ -42185,6 +42221,9 @@ msgid ""
 "developer.fedex.com/. It is no longercompatible with the older FedEx SOAP "
 "APIs (which have their own credentials)."
 msgstr ""
+"通过 FedEx 发送您的货件并在线追踪。此版本的 FedEx 连接器兼容 FedEx REST API（"
+"详见 https://developer.fedex.com/）。不再兼容旧版 FedEx SOAP API（该 API 使用"
+"独立的凭证）。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_ups_rest
@@ -42193,6 +42232,8 @@ msgid ""
 "the UPS connector is compatiblewith the newest version of the UPS REST APIs "
 "available at https://developer.ups.com/"
 msgstr ""
+"通过 UPS 发送您的货件并在线追踪。此新版本的 UPS 连接器兼容最新版 UPS REST API"
+"（详见 https://developer.ups.com/）。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps_rest
@@ -42201,6 +42242,8 @@ msgid ""
 "USPS connector iscompatible with the new USPS REST API available at https://"
 "developers.usps.com/."
 msgstr ""
+"通过 USPS 发送您的货件并在线追踪。此版本的 USPS 连接器兼容新版 USPS REST API"
+"（详见 https://developers.usps.com/）。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_survey
@@ -42311,7 +42354,7 @@ msgstr "序列填充长度"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__sequence_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__sequence_id
 msgid "Sequence to use"
-msgstr ""
+msgstr "要使用的序列"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_form
@@ -42363,12 +42406,12 @@ msgstr "服务器动作"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server_history
 msgid "Server Action History"
-msgstr ""
+msgstr "服务器操作历史记录"
 
 #. module: base
 #: model:ir.model,name:base.model_server_action_history_wizard
 msgid "Server Action History Wizard"
-msgstr ""
+msgstr "服务器操作历史向导"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
@@ -42413,7 +42456,7 @@ msgstr "销售订单中的服务利润"
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_graphene
 msgid "Service, Corporate, Design, Technology, Robotics, Computers, IT, Blogs"
-msgstr ""
+msgstr "服务、企业、设计、科技、机器人、电脑、IT、网志"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
@@ -42597,7 +42640,7 @@ msgstr "显示所有"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__show_code_history
 #: model:ir.model.fields,field_description:base.field_ir_cron__show_code_history
 msgid "Show Code History"
-msgstr ""
+msgstr "显示代码历史记录"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_view_currency_rates
@@ -43653,14 +43696,14 @@ msgstr "带状样式属性"
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense_stripe
 msgid "Stripe Issuing integration for expenses"
-msgstr ""
+msgstr "开支整合 Stripe Issuing 功能"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_expense_stripe_demo
 msgid ""
 "Stripe Issuing integration for expenses: Demo module for testing and "
 "demonstration purposes"
-msgstr ""
+msgstr "开支整合 Stripe Issuing 功能：用于测试及演示用途的示范模组"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_student_organization
@@ -43815,7 +43858,7 @@ msgstr "Sweden - Accounting Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_returns
 msgid "Sweden - Accounting Returns"
-msgstr ""
+msgstr "瑞典 - 会计报表"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_sie4_export

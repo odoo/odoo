@@ -35,7 +35,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-12 14:57+0000\n"
+"PO-Revision-Date: 2025-12-02 14:48+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/pl/>\n"
@@ -44,9 +44,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -600,7 +600,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Accrual (Future):"
-msgstr "Naliczany (przyszły)"
+msgstr "Naliczany (przyszły):"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
@@ -3837,6 +3837,10 @@ msgid ""
 "during batch generation. Conflicting time off:\n"
 "%s"
 msgstr ""
+"Niektórzy pracownicy mają już wnioski o urlop w godzinach, które pokrywają "
+"się z wybranym okresem. Odoo nie może automatycznie dostosować ani podzielić "
+"urlopów godzinowych podczas generowania partii. Konflikt urlopów:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4237,8 +4241,8 @@ msgid ""
 "with second level (If time off type need second validation)"
 msgstr ""
 "To pole jest automatycznie wypełniane przez użytkownika, który zatwierdza "
-"przydział na drugim poziomie (jeśli typ urlopu wymaga drugiego "
-"zatwierdzenia)."
+"przydział na drugim poziomie (jeśli typ urlopu wymaga drugiego zatwierdzenia)"
+"."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
@@ -4919,10 +4923,10 @@ msgid ""
 "what you want to happen with the unused time off: Lost (time will be reset "
 "to zero), Carried over (accrued time carried over to the next period.)"
 msgstr ""
-"Po upływie czasu przeniesienia, zgodnie z ustawieniami planu, wybierz, co ma "
-"się stać z niewykorzystanym czasem wolnym: utracone (czas zostanie "
-"zresetowany do zera) lub przeniesione (czas zostanie przeniesiony do "
-"następnego okresu)."
+"Po osiągnięciu czasu przeniesienia, zgodnie z ustawieniami planu, wybierz, "
+"co ma się stać z niewykorzystanym czasem wolnym: utracone "
+"(czas zostanie zresetowany do zera) lub przeniesione "
+"(zgromadzony czas zostanie przeniesiony do następnego okresu)."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time

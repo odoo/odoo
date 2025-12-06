@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:37+0000\n"
-"PO-Revision-Date: 2025-11-20 16:10+0000\n"
+"PO-Revision-Date: 2025-12-05 14:36+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/web/es/>"
 "\n"
@@ -32,7 +32,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
 " ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: web
 #. odoo-javascript
@@ -309,7 +309,7 @@ msgstr "3.30"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "31/01/%s"
-msgstr ""
+msgstr "31/01/%s"
 
 #. module: web
 #. odoo-javascript
@@ -490,6 +490,18 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
+"\"profile_aggregation_mode\">\n"
+"                                        <option value=\"tabs\">Separado "
+"(uno por pestaña)</option>\n"
+"                                        <option value=\"temporal\">Temporal "
+"(experimental)</option>\n"
+"                                    </select>\n"
+"                                    <span id=\"temporal_warning\" class="
+"\"alert alert-warning\" style=\"display:none\"><b>Advertencia:</b> el modo "
+"temporal fusionará todas las muestras/ejemplos.<br/>Puede causar resultados "
+"parcialmente no válidos en caso de perfiles concurrentes.<br/>Úsalo con "
+"precaución </span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -906,7 +918,7 @@ msgstr "Añadir una fotografía"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 msgid "Add Property"
-msgstr ""
+msgstr "Añadir una propiedad"
 
 #. module: web
 #. odoo-javascript
@@ -1174,12 +1186,14 @@ msgstr "¿Está seguro de que desea eliminar esta acción incrustada?"
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the %(nbSelected)s selected records?"
 msgstr ""
+"¿Estás seguro de que deseas eliminar los registros seleccionados de %"
+"(nbSelected)s?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the selected record?"
-msgstr ""
+msgstr "¿Estás seguro de que deseas eliminar el registro seleccionado?"
 
 #. module: web
 #. odoo-javascript
@@ -1197,7 +1211,7 @@ msgstr "¿Está seguro de que desea eliminar esta columna?"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Are you sure you want to delete this property field?"
-msgstr ""
+msgstr "¿Estás seguro de que deseas eliminar este campo de propiedad?"
 
 #. module: web
 #. odoo-javascript
@@ -1329,13 +1343,13 @@ msgstr "Volver"
 #. odoo-javascript
 #: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
 msgid "Back to “%s”"
-msgstr "Regresar a “%s”"
+msgstr "Volver a “%s”"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/search/breadcrumbs/breadcrumbs.js:0
 msgid "Back to “%s” form"
-msgstr "Regresar al formulario “%s”"
+msgstr "Volver al formulario “%s”"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -2243,7 +2257,7 @@ msgstr "Grupo personalizado"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Custom range"
-msgstr ""
+msgstr "Rango personalizado"
 
 #. module: web
 #. odoo-python
