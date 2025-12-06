@@ -36,9 +36,61 @@ Developers can start with [the developer tutorials](https://www.odoo.com/documen
 If you believe you have found a security issue, check our [Responsible Disclosure page](https://www.odoo.com/security-report)
 for details and get in touch with us via email.
 
-## Cloud Run + Cloud SQL でのデプロイ
 
-Google Cloud Run で Odoo を構築する手順の詳細は以下のドキュメントにまとめています。
+# 📚 Odoo ドキュメント索引（docs/README.md）
 
-➡️ **[Cloud Run Setup Guide](README_SETUP_CLOUDRUN.md)**  
+このディレクトリは、Odoo リポジトリの **開発・運用・デプロイ関連ドキュメント** をまとめたものです。  
+カテゴリ別に参照したいドキュメントへジャンプできます。
+
+---
+
+## ☁ Cloud Run / Cloud SQL（GCP）
+
+Odoo を Google Cloud 上にデプロイするためのドキュメントです。
+
+- **Cloud Run + Cloud SQL セットアップ手順（完全版）**  
+  Google Cloud Run と Cloud SQL(PostgreSQL) 上で Odoo 19 を動かすための構築手順。  
+  👉 [`README_SETUP.md`](README_SETUP.md)
+
+- **Cloud Run 運用メモ・補足ドキュメント**  
+  Cloud Run の挙動、構成の考え方、運用上の注意点などをまとめたドキュメント。  
+  👉 [`README_CLOUDRUN.md`](README_CLOUDRUN.md)
+
+- **Cloud Run 自動停止 / 再開スクリプト（PowerShell）**  
+  max-instances を切り替えて Cloud Run の「停止」「再開」「状態確認」を行うスクリプト。  
+  👉 [`scripts/odoo-cloudrun.ps1`](scripts/odoo-cloudrun.ps1)
+
+---
+
+## 🐳 Docker / ローカル開発
+
+ローカル環境でのデバッグ用 Dockerfile の使い方など。
+
+- **Dockerfile.debug の使い方（ローカルデバッグ環境）**  
+  `Dockerfile.debug` を使って、debugpy + VSCode で Odoo をデバッグする手順。  
+  👉 [`README_DOCKER_DEBUG.md`](README_DOCKER_DEBUG.md)
+
+---
+
+## 🧩 Odoo 開発（フロントエンド / モジュール）
+
+Odoo 19 の拡張に関するドキュメントです。
+
+- **Odoo 19 OWL（フロントエンド）チュートリアル**  
+  OWL コンポーネントの作り方、`web.assets_backend` への登録方法など、  
+  フロント側の拡張方法を解説。  
+  👉 [`README_OWL_TUTORIAL.md`](README_OWL_TUTORIAL.md)
+
+- **custom_addons モジュールのインストール手順**  
+  Docker 開発環境で `custom_addons` 配下のモジュールを読み込んでインストールする手順。  
+  👉 [`README_INSTALL_MODULE.md`](README_INSTALL_MODULE.md)
+
+---
+
+## 🔧 メンテナンス方針
+
+- 新しいドキュメントを追加した場合は、  
+  1. `docs/` 配下に Markdown を追加  
+  2. この `docs/README.md` にリンクを 1 行足す  
+- スクリプト類は `docs/scripts/` にまとめて配置する想定です。
 
