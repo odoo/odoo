@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
-"PO-Revision-Date: 2025-11-06 14:40+0000\n"
+"PO-Revision-Date: 2025-12-06 08:04+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
 "hr_attendance/pl/>\n"
@@ -24,17 +24,17 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && ("
-"n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
+"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "\"Check Out\" time cannot be earlier than \"Check In\" time."
-msgstr "Czas \"Check Out\" nie może być wcześniejszy niż czas \"Check In\"."
+msgstr "Czas \"Wyjścia\" nie może być wcześniejszy niż czas \"Wejścia\"."
 
 #. module: hr_attendance
 #. odoo-python
@@ -142,7 +142,8 @@ msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
-"Dodaj kilku pracowników, aby móc wybrać pracownika i dokonać jego zameldowania / wymeldowania.\n"
+"Dodaj kilku pracowników, aby móc wybrać pracownika i dokonać jego wejścia / "
+"wyjścia.\n"
 "Aby utworzyć pracowników, przejdź do menu Pracownicy."
 
 #. module: hr_attendance
@@ -165,7 +166,8 @@ msgstr "Wszystko"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Allow Users to Check in/out from Odoo."
-msgstr "Pozwól użytkownikom zarejestrować Przyjście/Wyjście z Odoo."
+msgstr ""
+"Pozwól użytkownikom zarejestrować swoje Wejście/Wyjście w interfejsie Odoo."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -335,8 +337,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee hasn't "
 "checked out since %(datetime)s"
 msgstr ""
-"Nie można utworzyć nowego rekordu obecności dla %(empl_name)s, pracownik nie"
-" dokonał checkout od czasu %(datetime)s"
+"Nie można utworzyć nowego rekordu obecności dla %(empl_name)s, pracownik nie "
+"zarejestrował wyjścia od czasu %(datetime)s"
 
 #. module: hr_attendance
 #. odoo-python
@@ -348,7 +350,7 @@ msgid ""
 "already checked in on %(datetime)s"
 msgstr ""
 "Nie można utworzyć nowego rekordu obecności dla %(empl_name)s, pracownik "
-"dokonał checkin o %(datetime)s"
+"zarejestrował wejście o %(datetime)s"
 
 #. module: hr_attendance
 #. odoo-python
@@ -359,16 +361,16 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
-"Nie można wykonać check out dla %(empl_name)s, nie można znaleźć "
-"odpowiedniego check in. Twoja obecność prawdopodobnie została zmodyfikowana "
-"ręcznie przez HR."
+"Nie można zarejestrować wyjścia dla %(empl_name)s, nie można znaleźć "
+"odpowiedniego rejestru wejścia. Twoja obecność prawdopodobnie została "
+"zmodyfikowana ręcznie przez HR."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
 #, python-format
 msgid "Check IN"
-msgstr "Check IN"
+msgstr "Wejście"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_in
@@ -378,14 +380,14 @@ msgstr "Check IN"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check In"
-msgstr "Check In"
+msgstr "Wejście"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
 #, python-format
 msgid "Check OUT"
-msgstr "Sprawdź"
+msgstr "Wyjście"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -395,7 +397,7 @@ msgstr "Sprawdź"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check Out"
-msgstr "Check Out"
+msgstr "Wyjście"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -403,7 +405,7 @@ msgstr "Check Out"
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 #, python-format
 msgid "Check in"
-msgstr "Check in"
+msgstr "Wejście"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -411,31 +413,31 @@ msgstr "Check in"
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 #, python-format
 msgid "Check out"
-msgstr "Check out"
+msgstr "Wyjście"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
 msgid "Checked in"
-msgstr "Checked in"
+msgstr "Zarejestrował/a wejście"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, python-format
 msgid "Checked in at"
-msgstr "Checked in o"
+msgstr "Zarejestrował/a wejście o"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
 msgid "Checked out"
-msgstr "Checked out"
+msgstr "Zarejestrował/a wyjście"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, python-format
 msgid "Checked out at"
-msgstr "Checked out o"
+msgstr "Zarejestrował/a wyjście o"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -807,12 +809,12 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, python-format
 msgid "Invalid request"
-msgstr "Nieprawidłowy wniosek"
+msgstr "Nieprawidłowe żądanie"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_is_follower
 msgid "Is Follower"
-msgstr "Jest obserwatorem"
+msgstr "Jest obserwującym"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__kiosk
@@ -824,7 +826,7 @@ msgstr "Kiosk"
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Mode"
-msgstr "Tryb pracy kiosku"
+msgstr "Tryb kiosku"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -919,7 +921,7 @@ msgstr "Tryb"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Modes"
-msgstr "TRyby"
+msgstr "Tryby"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -1096,8 +1098,8 @@ msgstr "Szukaj..."
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
 msgstr ""
-"Ustaw kody PIN w formularzu szczegółowym pracownika (w zakładce Ustawienia "
-"HR)."
+"Ustaw kody PIN w formularzu szczegółowym pracownika "
+"(w zakładce Ustawienia HR)."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -1157,8 +1159,8 @@ msgid ""
 "The user will have access to his own attendances on his user / employee "
 "profile"
 msgstr ""
-"Użytkownik będzie mieć dostęp do własnych obecności na swoim profilu "
-"użytkownika/pracownika."
+"Użytkownik będzie mieć dostęp do własnych obecności na swoim profilu uż"
+"ytkownika/pracownika."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_officer
@@ -1215,7 +1217,9 @@ msgstr "Nieznany"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
-msgstr "Użyj kodu PIN aby zatwierdzić wejście"
+msgstr ""
+"Użyj kodu PIN (zdefiniowanego w profilu pracownika), aby zarejestrować "
+"wejście."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -1263,7 +1267,7 @@ msgstr "Historia komunikacji"
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #, python-format
 msgid "Welcome"
-msgstr "Witamy"
+msgstr "Witaj"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1317,11 +1321,11 @@ msgstr "Nie możesz duplikować obecności."
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
 #, python-format
 msgid "check in"
-msgstr "WEJŚCIE"
+msgstr "wejście"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
 #, python-format
 msgid "check out"
-msgstr "WYJŚCIE"
+msgstr "wyjście"
