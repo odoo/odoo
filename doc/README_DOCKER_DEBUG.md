@@ -1,7 +1,22 @@
-Dockerfile.debug をローカルで使用する方法
+# 🐳 Dockerfile.debug の使用方法（ローカル開発向け）
+（Based on HOW_TO_USE_DOCKERFILE_DEBUG.md）:contentReference[oaicite:1]{index=1}
 
-このドキュメントでは、ローカル環境で Dockerfile.debug（デバッグ用 Dockerfile）を利用する手順をまとめています。
-本番（Railway 用）の Dockerfile とは切り替えて使用します。
+このドキュメントでは、Odoo 開発用に  
+**`Dockerfile.debug` を使ったローカルデバッグ環境（debugpy対応）** の構築方法をまとめます。
+
+本番用 Dockerfile と使い分けることで、  
+Railway / Cloud Run では本番構成、ローカルでは快適なデバッグ環境を実現できます。
+
+---
+
+# 🎯 目的
+
+| 環境 | 使用ファイル | 目的 |
+|------|--------------|------|
+| **本番** | Dockerfile | Railway / Cloud Run 用、本番構成 |
+| **開発** | Dockerfile.debug | debugpy による VSCode リモートデバッグ |
+
+---
 
 📌 目的
 
