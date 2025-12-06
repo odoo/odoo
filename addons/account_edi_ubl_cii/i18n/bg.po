@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_edi_ubl_cii
+# * account_edi_ubl_cii
 #
 # Translators:
 # Elena Varbanova, 2024
@@ -11,20 +11,22 @@
 # aleksandar ivanov, 2025
 # Veselina Slavkova, 2025
 # Rumena Georgieva <rumena.georgieva@gmail.com>, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Rumena Georgieva <rumena.georgieva@gmail.com>, 2025\n"
-"Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-12-06 17:08+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-18/"
+"account_edi_ubl_cii/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -65,6 +67,11 @@ msgstr ""
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
 msgid "Account Move Send"
 msgstr "Преместване на акаунт Изпращане"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr "Съветник за изпращане на преместване на сметка"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9923
@@ -912,6 +919,12 @@ msgid "United Kingdom VAT"
 msgstr ""
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
+msgid "Unspported file type via %s"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
 msgid "Vatican VAT"
 msgstr ""
@@ -948,11 +961,6 @@ msgid ""
 "You should include at least one tax per invoice line. [BR-CO-04]-Each "
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category "
 "code (BT-151)."
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
-msgid "Your endpoint"
 msgstr ""
 
 #. module: account_edi_ubl_cii

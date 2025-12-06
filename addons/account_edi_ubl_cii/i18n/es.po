@@ -7,22 +7,23 @@
 # Wil Odoo, 2025
 #
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
-"PO-Revision-Date: 2025-08-12 22:21+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-12-06 17:07+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_ubl_cii/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
-"0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
+" ? 1 : 2);\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -65,6 +66,11 @@ msgstr "Intercambio AS2"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
 msgid "Account Move Send"
 msgstr "Enviar movimiento de cuenta"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr "Asistente de envío de asientos contables"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9923
@@ -957,6 +963,12 @@ msgid "United Kingdom VAT"
 msgstr "Reino Unido - IVA"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
+msgid "Unspported file type via %s"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
 msgid "Vatican VAT"
 msgstr "Ciudad del Vaticano - IVA"
@@ -1001,11 +1013,6 @@ msgstr ""
 "categoría de IVA (BT-151)."
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
-msgid "Your endpoint"
-msgstr "Su punto de conexión"
-
-#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__invoice_edi_format
 msgid "eInvoice format"
@@ -1025,6 +1032,9 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "Your endpoint"
+#~ msgstr "Su punto de conexión"
 
 #, fuzzy
 #~ msgid "Australia BIS Billing 3.0 A-NZ"

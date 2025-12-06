@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_peppol
+# * account_peppol
 #
 # Translators:
 # Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:37+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
-"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-12-03 17:26+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-18/"
+"account_peppol/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -226,11 +229,6 @@ msgstr "Huỷ PEPPOL"
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "Không thể hủy bút toán đã được gửi tới PEPPOL"
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
-msgid "Cannot receive this format"
-msgstr "Không thể nhận định dạng này"
 
 #. module: account_peppol
 #. odoo-python
@@ -494,6 +492,12 @@ msgid "Incoming Invoices Journal"
 msgstr "Sổ nhật ký hoá đơn đến"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__invoice_sending_method
 msgid "Invoice sending"
@@ -551,19 +555,9 @@ msgid "Mobile number"
 msgstr "Số điện thoại"
 
 #. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
-msgid "Not on Peppol"
-msgstr "Không có trên Peppol"
-
-#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
 msgstr "Không được đăng ký"
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
-msgid "Not verified yet"
-msgstr "Chưa được xác minh"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -641,10 +635,25 @@ msgid "PEPPOL: update participant status"
 msgstr "PEPPOL: cập nhật trạng thái đối tượng tham gia"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
+msgid "Partner cannot receive format"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "Partner doesn't have a valid Peppol configuration."
 msgstr "Đối tác không có cấu hình Peppol hợp lệ."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
+msgid "Partner is not on Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
+msgid "Partner is on Peppol"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -711,12 +720,6 @@ msgid "Peppol e-address (EAS)"
 msgstr "Địa chỉ điện tử Peppol (EAS)"
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_verification_state
-#: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_verification_state
-msgid "Peppol endpoint verification"
-msgstr "Xác minh endpoint Peppol"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol error: %s"
@@ -728,6 +731,8 @@ msgid "Peppol ready invoices"
 msgstr "Hoá đơn Peppol sẵn sàng"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_verification_state
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_verification_state
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "Peppol status"
 msgstr "Trạng thái Peppol"
@@ -796,6 +801,10 @@ msgid ""
 "In particular, this email is used by Odoo to reconnect your Peppol account "
 "in case of database change."
 msgstr ""
+"Địa chỉ email liên hệ chính để nhận thông tin và thông báo liên quan đến kết "
+"nối Peppol.\n"
+"Cụ thể, email này được Odoo sử dụng để kết nối lại tài khoản Peppol của bạn "
+"trong trường hợp thay đổi cơ sở dữ liệu."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -884,6 +893,12 @@ msgid "Skipped"
 msgstr "Bị bỏ qua"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Some attachments could not be sent with the XML:"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode_constraint__test
 msgid "Test"
@@ -914,12 +929,6 @@ msgid "The Peppol endpoint identification number is not correct."
 msgstr "Số định danh endpoint Peppol không chính xác."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr "Chứng từ đã được gửi đến Điểm truy cập Peppol để xử lý"
-
-#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "The e-invoicing network"
@@ -946,6 +955,14 @@ msgstr ""
 "Các dịch vụ sau được liệt kê trên người dùng của bạn nhưng không thể cấu "
 "hình được ở đây. Nếu bạn muốn cấu hình chúng theo cách khác, vui lòng liên "
 "hệ với bộ phận hỗ trợ."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid ""
+"The invoice has been sent to the Peppol Access Point. The following "
+"attachments were sent with the XML:"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1013,6 +1030,11 @@ msgid "Too many attempts to request an SMS code. Please try again later."
 msgstr "Bạn đã yêu cầu mã SMS quá nhiều lần. Vui lòng thử lại sau."
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
+msgid "Unchecked"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_endpoint
@@ -1037,11 +1059,6 @@ msgid ""
 msgstr ""
 "Bằng cách sử dụng thông số cấu hình, trường này xác định chế độ EDI nào có "
 "thể được chọn từ giao diện người dùng"
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
-msgid "Valid"
-msgstr "Hợp lệ"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1222,6 +1239,24 @@ msgstr "để gửi hoá đơn, nhưng hoá đơn này"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "sử dụng"
+
+#~ msgid "Cannot receive this format"
+#~ msgstr "Không thể nhận định dạng này"
+
+#~ msgid "Not on Peppol"
+#~ msgstr "Không có trên Peppol"
+
+#~ msgid "Not verified yet"
+#~ msgstr "Chưa được xác minh"
+
+#~ msgid "Peppol endpoint verification"
+#~ msgstr "Xác minh endpoint Peppol"
+
+#~ msgid "The document has been sent to the Peppol Access Point for processing"
+#~ msgstr "Chứng từ đã được gửi đến Điểm truy cập Peppol để xử lý"
+
+#~ msgid "Valid"
+#~ msgstr "Hợp lệ"
 
 #~ msgid "I want to migrate my existing Peppol connection to Odoo (optional):"
 #~ msgstr ""
