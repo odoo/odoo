@@ -38,7 +38,33 @@ for details and get in touch with us via email.
 
 ## Cloud Run + Cloud SQL でのデプロイ
 
+---
+
 Google Cloud Run で Odoo を構築する手順の詳細は以下のドキュメントにまとめています。
+このリポジトリでは、開発・運用のための追加ドキュメントを `docs/` 以下に整理しています。
 
-➡️ **[Cloud Run Setup Guide](README_SETUP_CLOUDRUN.md)**  
+## 📚 Additional Documentation (docs/)
 
+
+### ☁ Cloud Run / Cloud SQL（GCP）
+- Cloud Run + Cloud SQL セットアップガイド  
+  👉 [`docs/README_SETUP.md`](docs/README_SETUP.md)
+
+- Cloud Run 運用補足（アーキテクチャ・注意点など）  
+  👉 [`docs/README_CLOUDRUN.md`](docs/README_CLOUDRUN.md)
+
+- Cloud Run 自動停止/再開スクリプト  
+  👉 [`docs/scripts/odoo-cloudrun.ps1`](docs/scripts/odoo-cloudrun.ps1)
+
+### 🐳 Docker
+- ローカルデバッグ（Dockerfile.debug）の使い方  
+  👉 [`docs/README_DOCKER_DEBUG.md`](docs/README_DOCKER_DEBUG.md)
+
+### 🧩 Odoo 開発（OWL / custom_addons）
+- OWL チュートリアル（フロントエンド）  
+  👉 [`docs/README_OWL_TUTORIAL.md`](docs/README_OWL_TUTORIAL.md)
+
+- custom_addons のインストール手順  
+  👉 [`docs/README_INSTALL_MODULE.md`](docs/README_INSTALL_MODULE.md)
+
+---
