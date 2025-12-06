@@ -2470,7 +2470,11 @@ class AccountMove(models.Model):
     def _search_journal_group_id(self, operator, value):
         field = 'name' if 'like' in operator else 'id'
         journal_groups = self.env['account.journal.group'].search([(field, operator, value)])
-        return [('journal_id', 'not in', journal_groups.excluded_journal_ids.ids)]
+        return Domain.OR([
+            Domain('journal_id', 'not in', group.excluded_journal_ids.ids)
+            & Domain('journal_id.company_id', '=?', group.company_id.id)
+            for group in journal_groups
+        ])
 
     def _search_reconciled_payment_ids(self, operator, value):
         if operator not in ('in', '='):
