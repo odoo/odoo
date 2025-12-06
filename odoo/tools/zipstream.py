@@ -23,9 +23,12 @@ from pathlib import Path
 try:
     from .mimetypes import is_mimetype_textual
 except ImportError:
-    if __name__ != '__main__':
-        raise
-    from mimetypes import is_mimetype_textual
+    def is_mimetype_textual(mimetype):
+        maintype, subtype = mimetype.split('/')
+        return (
+            maintype == 'text'
+            or (maintype == 'application' and subtype in {'documents-email', 'json', 'xml'})
+        )
 
 try:
     import zlib
@@ -771,9 +774,15 @@ def _read_until_next_file(local_file_header, _read_buffer, _read_into):  # noqa:
     buffer = bytearray(io.DEFAULT_BUFFER_SIZE)
 
     def flush(length):
+        nonlocal buffer
+
         if length:
             nonlocal crc32, csize, usize
-            udata = dsor.decompress(memoryview(buffer)[:length]) if dsor else buffer[:length]
+            try:
+                udata = dsor.decompress(memoryview(buffer)[:length]) if dsor else buffer[:length]
+            except Exception as exc:
+                exc.add_note(str(buffer[:length]))
+                raise
             csize += length
             usize += len(udata)
             crc32 = zlib.crc32(udata, crc32)
@@ -784,7 +793,6 @@ def _read_until_next_file(local_file_header, _read_buffer, _read_into):  # noqa:
         while bytes_read < length % len(buffer):
             bytes_read_ = _read_into(memoryview(buffer)[-length + bytes_read:])
             if not bytes_read_:
-                nonlocal buffer
                 buffer = buffer[:-length + bytes_read]
                 break
             bytes_read += bytes_read_
@@ -800,7 +808,7 @@ def _read_until_next_file(local_file_header, _read_buffer, _read_into):  # noqa:
             if found != -1:
                 break
         else:
-            yield from flush(-DataDescriptor._length - 3)
+            yield from flush(dd_length - 3)
             continue
 
         expected_crc32, expected_csize, expected_usize = (
