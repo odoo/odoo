@@ -50,11 +50,11 @@ Odoo を Google Cloud 上にデプロイするためのドキュメントです�
 
 - **Cloud Run + Cloud SQL セットアップ手順（完全版）**  
   Google Cloud Run と Cloud SQL(PostgreSQL) 上で Odoo 19 を動かすための構築手順。  
-  👉 [`README_SETUP.md`](README_SETUP.md)
+  👉 [`README_SETUP.md`](doc/README_SETUP.md)
 
 - **Cloud Run 運用メモ・補足ドキュメント**  
   Cloud Run の挙動、構成の考え方、運用上の注意点などをまとめたドキュメント。  
-  👉 [`README_CLOUDRUN.md`](README_CLOUDRUN.md)
+  👉 [`README_CLOUDRUN.md`](doc/README_CLOUDRUN.md)
 
 - **Cloud Run 自動停止 / 再開スクリプト（PowerShell）**  
   max-instances を切り替えて Cloud Run の「停止」「再開」「状態確認」を行うスクリプト。  
@@ -68,7 +68,7 @@ Odoo を Google Cloud 上にデプロイするためのドキュメントです�
 
 - **Dockerfile.debug の使い方（ローカルデバッグ環境）**  
   `Dockerfile.debug` を使って、debugpy + VSCode で Odoo をデバッグする手順。  
-  👉 [`README_DOCKER_DEBUG.md`](README_DOCKER_DEBUG.md)
+  👉 [`README_DOCKER_DEBUG.md`](doc/README_DOCKER_DEBUG.md)
 
 ---
 
@@ -79,11 +79,11 @@ Odoo 19 の拡張に関するドキュメントです。
 - **Odoo 19 OWL（フロントエンド）チュートリアル**  
   OWL コンポーネントの作り方、`web.assets_backend` への登録方法など、  
   フロント側の拡張方法を解説。  
-  👉 [`README_OWL_TUTORIAL.md`](README_OWL_TUTORIAL.md)
+  👉 [`README_OWL_TUTORIAL.md`](doc/README_OWL_TUTORIAL.md)
 
 - **custom_addons モジュールのインストール手順**  
   Docker 開発環境で `custom_addons` 配下のモジュールを読み込んでインストールする手順。  
-  👉 [`README_INSTALL_MODULE.md`](README_INSTALL_MODULE.md)
+  👉 [`README_INSTALL_MODULE.md`](doc/README_INSTALL_MODULE.md)
 
 ---
 
