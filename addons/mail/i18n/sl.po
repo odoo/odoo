@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 16:06+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -7297,8 +7297,8 @@ msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Obvestilo naj prejme priloge kot seznam seznamov ali naborov "
-"(prejeto%(aids)s)"
+"Obvestilo naj prejme priloge kot seznam seznamov ali naborov (prejeto%"
+"(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -7316,8 +7316,8 @@ msgid ""
 "Notification should receive partners given as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
-"Obvestilo bi morali prejeti partnerji v obliki seznama ID-jev (prejetih "
-"%(pids)s)"
+"Obvestilo bi morali prejeti partnerji v obliki seznama ID-jev (prejetih %"
+"(pids)s)"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -8283,8 +8283,8 @@ msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"Objavljeno sporočilo mora prejeti priloge kot seznam seznamov ali naborov ("
-"prejetih %(aids)s)"
+"Objavljeno sporočilo mora prejeti priloge kot seznam seznamov ali naborov "
+"(prejetih %(aids)s)"
 
 #. module: mail
 #. odoo-python
@@ -8303,8 +8303,8 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received %"
 "(pids)s)"
 msgstr ""
-"Objava sporočila bi morala partnerjem poslati seznam ID-jev (prejetih "
-"%(pids)s)"
+"Objava sporočila bi morala partnerjem poslati seznam ID-jev (prejetih %"
+"(pids)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -9353,6 +9353,12 @@ msgid "Select a user..."
 msgstr "Izberite uporabnika ..."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
 msgid "Self Member"
 msgstr "Samostojni član"
@@ -10105,8 +10111,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
-"Upodabljanje predlog podpira samo inline_template, qweb ali qweb_view ("
-"pogled ali surovi kod); namesto tega so bile prejete %(engine)s ."
+"Upodabljanje predlog podpira samo inline_template, qweb ali qweb_view "
+"(pogled ali surovi kod); namesto tega so bile prejete %(engine)s ."
 
 #. module: mail
 #. odoo-javascript
@@ -10215,8 +10221,8 @@ msgid ""
 "\"%(plan_name)s\" because it is limited to the model \"%"
 "(activity_type_model)s\"."
 msgstr ""
-"Vrsta dejavnosti \"%(activity_type_name)s\" ni združljiva z načrtom "
-"\"%(plan_name)s\" ker je omejena na model \"%(activity_type_model)s\"."
+"Vrsta dejavnosti \"%(activity_type_name)s\" ni združljiva z načrtom \"%"
+"(plan_name)s\" ker je omejena na model \"%(activity_type_model)s\"."
 
 #. module: mail
 #. odoo-python
@@ -10326,10 +10332,10 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Spodnjega sporočila ni bilo mogoče sprejeti na naslovu "
-"%(alias_display_name)s.\n"
-"                 Samo%(contact_description)s lahko stopijo v stik z njim.<br "
-"/><br />\n"
+"Spodnjega sporočila ni bilo mogoče sprejeti na naslovu %"
+"(alias_display_name)s.\n"
+"                 Samo%(contact_description)s lahko stopijo v stik z njim."
+"<br /><br />\n"
 "                 Prosimo, preverite, ali uporabljate pravilen naslov, ali pa "
 "nas kontaktirajte na %(default_email)s ."
 
@@ -11657,8 +11663,8 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"Vzdevka ni bilo mogoče ustvariti, %(alias_name)s ker domena "
-"%(alias_domain_name)s pripada podjetju %(alias_company_names)s medtem ko "
+"Vzdevka ni bilo mogoče ustvariti, %(alias_name)s ker domena %"
+"(alias_domain_name)s pripada podjetju %(alias_company_names)s medtem ko "
 "dokument lastnika pripada podjetju %(company_name)s."
 
 #. module: mail
@@ -11669,8 +11675,8 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"Vzdevka ni bilo mogoče ustvariti, %(alias_name)s ker domena "
-"%(alias_domain_name)s pripada podjetju %(alias_company_names)s medtem ko "
+"Vzdevka ni bilo mogoče ustvariti, %(alias_name)s ker domena %"
+"(alias_domain_name)s pripada podjetju %(alias_company_names)s medtem ko "
 "ciljni dokument pripada podjetju %(company_name)s."
 
 #. module: mail
@@ -12013,7 +12019,8 @@ msgstr "Predloge ne smete definirati na abstraktnem modelu: %s"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid "You sure want this message pinned to %(conversation)s forever and ever?"
-msgstr "Ali res želiš, da to sporočilo ostane pripeto%(conversation)s za vedno?"
+msgstr ""
+"Ali res želiš, da to sporočilo ostane pripeto%(conversation)s za vedno?"
 
 #. module: mail
 #. odoo-javascript
@@ -12044,8 +12051,8 @@ msgstr "Vaš"
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
 msgstr ""
-"E-poštni naslov vašega računa je bil spremenjen iz %(old_email)s "
-"v%(new_email)s."
+"E-poštni naslov vašega računa je bil spremenjen iz %(old_email)s v%"
+"(new_email)s."
 
 #. module: mail
 #. odoo-python

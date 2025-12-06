@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
-"PO-Revision-Date: 2025-11-03 18:00+0000\n"
+"POT-Creation-Date: 2025-12-05 18:37+0000\n"
+"PO-Revision-Date: 2025-12-03 15:50+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s18-2/"
 "account_edi_ubl_cii/it/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -65,6 +65,11 @@ msgstr "Scambio AS2"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
 msgid "Account Move Send"
 msgstr "Movimento contabile inviato"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9923
@@ -306,6 +311,7 @@ msgstr "Direzioni della Commissione Europea  "
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_sg__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send_wizard__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_ir_actions_report__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__display_name
 msgid "Display Name"
@@ -509,6 +515,7 @@ msgstr "IVA Ungheria"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_sg__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__id
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send_wizard__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_ir_actions_report__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__id
 msgid "ID"
@@ -528,7 +535,7 @@ msgstr "Indirizzo di Posta Elettronica Certificata"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Install Chorus Pro"
-msgstr ""
+msgstr "Installa Chorus Pro"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -737,6 +744,8 @@ msgstr ""
 msgid ""
 "Please install the french Chorus pro module to have all the specific rules."
 msgstr ""
+"Installa il modulo francese di Chorus Pro per avere tutte le regole "
+"specifiche."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -988,6 +997,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9932
 msgid "United Kingdom VAT"
 msgstr "IVA Regno Unito"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
+msgid "Unspported file type via %s"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953

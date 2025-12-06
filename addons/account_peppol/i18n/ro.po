@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
+"POT-Creation-Date: 2025-12-05 18:37+0000\n"
 "PO-Revision-Date: 2025-11-15 21:35+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -62,17 +62,6 @@ msgid "%s has requested electronic invoices reception on Peppol."
 msgstr "%s a solicitat primirea facturilor electronice prin Peppol."
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid ""
-".<br/>\n"
-"                            But you are receiving your e-invoices via this "
-"Access Point:"
-msgstr ""
-".<br/>\n"
-"                            Dar primiți facturile electronice prin acest "
-"Access Point:"
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
@@ -83,6 +72,14 @@ msgstr ""
 "                                În Belgia, facturarea electronică este "
 "<u>obligatorie începând cu ianuarie 2026</u> - nu așteptați să vă "
 "înregistrați."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                            But you are receiving your e-invoices via this "
+"Access Point:"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -506,6 +503,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
 msgstr "Jurnalul facturilor primite"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -934,6 +937,12 @@ msgid "Skipped"
 msgstr "Omis"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Some attachments could not be sent with the XML:"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
@@ -982,12 +991,6 @@ msgid "The Peppol service that is used is %s."
 msgstr "Serviciul Peppol utilizat este %s."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr "Documentul a fost trimis la Punctul de Acces Peppol pentru procesare"
-
-#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "The e-invoicing network"
@@ -1014,6 +1017,14 @@ msgstr ""
 "Următoarele servicii sunt listate la participantul dvs., dar nu pot fi "
 "configurate aici. Dacă doriți să le configurați diferit, vă rugăm să "
 "contactați suportul."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid ""
+"The invoice has been sent to the Peppol Access Point. The following "
+"attachments were sent with the XML:"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1249,6 +1260,19 @@ msgstr "pentru a trimite facturi, dar aceasta"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "folosește"
+
+#~ msgid ""
+#~ ".<br/>\n"
+#~ "                            But you are receiving your e-invoices via "
+#~ "this Access Point:"
+#~ msgstr ""
+#~ ".<br/>\n"
+#~ "                            Dar primiți facturile electronice prin acest "
+#~ "Access Point:"
+
+#~ msgid "The document has been sent to the Peppol Access Point for processing"
+#~ msgstr ""
+#~ "Documentul a fost trimis la Punctul de Acces Peppol pentru procesare"
 
 #~ msgid "Your endpoint"
 #~ msgstr "Punctul tău final"

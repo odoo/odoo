@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
+"POT-Creation-Date: 2025-12-05 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/"
@@ -60,16 +60,6 @@ msgid "%s has requested electronic invoices reception on Peppol."
 msgstr "%s 要求通过 Peppol 接收电子发票。"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid ""
-".<br/>\n"
-"                            But you are receiving your e-invoices via this "
-"Access Point:"
-msgstr ""
-".<br/>\n"
-"                            但您通过该接入点接收电子发票："
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
@@ -79,6 +69,14 @@ msgstr ""
 "<br/>\n"
 "                                比利时<u>自 2026 年 1 月起强制使用电子发票</"
 "u>，请立即注册。"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                            But you are receiving your e-invoices via this "
+"Access Point:"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -498,6 +496,12 @@ msgid "Incoming Invoices Journal"
 msgstr "入账发票日记账"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__invoice_sending_method
 msgid "Invoice sending"
@@ -912,6 +916,12 @@ msgid "Skipped"
 msgstr "忽略"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Some attachments could not be sent with the XML:"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
@@ -958,12 +968,6 @@ msgid "The Peppol service that is used is %s."
 msgstr "所使用的 Peppol 服务是 %s。"
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr "文件已发送至 Peppol 接入点进行处理"
-
-#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "The e-invoicing network"
@@ -987,6 +991,14 @@ msgid ""
 msgstr ""
 "以下服务已列在参与者中，但不能在此配置。如果您希望对它们进行不同的配置，请联"
 "系支持部门。"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid ""
+"The invoice has been sent to the Peppol Access Point. The following "
+"attachments were sent with the XML:"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1209,6 +1221,17 @@ msgstr "发送发票，但这个"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "使用"
+
+#~ msgid ""
+#~ ".<br/>\n"
+#~ "                            But you are receiving your e-invoices via "
+#~ "this Access Point:"
+#~ msgstr ""
+#~ ".<br/>\n"
+#~ "                            但您通过该接入点接收电子发票："
+
+#~ msgid "The document has been sent to the Peppol Access Point for processing"
+#~ msgstr "文件已发送至 Peppol 接入点进行处理"
 
 #~ msgid "Your endpoint"
 #~ msgstr "您的终端点"

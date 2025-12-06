@@ -12,11 +12,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 16:04+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-2/mail/th/>"
-"\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s18-2/mail/th/"
+">\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,8 +37,8 @@ msgid ""
 msgstr ""
 "\n"
 "            - ผู้ติดตามเฉพาะ: เลือกผู้ติดต่อเฉพาะที่จะเพิ่ม/ลบออกจากผู้ติดตามของบันทึก\n"
-"            - ผู้ติดตามแบบไดนามิก: ผู้ติดต่อทั้งหมดในฟิลด์ระเบียนที่เลือกจะถูกเพิ่ม/ลบออกจากผู้ติ"
-"ดตาม\n"
+"            - ผู้ติดตามแบบไดนามิก: ผู้ติดต่อทั้งหมดในฟิลด์ระเบียนที่เลือกจะถูกเพิ่ม/"
+"ลบออกจากผู้ติดตาม\n"
 "        "
 
 #. module: mail
@@ -190,13 +190,12 @@ msgid ""
 "(bold_end)s to insert a canned response in your message.%(new_line)sType %"
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
-"%(new_line)s%(new_line)sพิมพ์ %(bold_start)s@username%(bold_end)s เพื่อเมนชั่"
-"นใครบางคน และดึงดูดความสนใจของพวกเขา%(new_line)sพิมพ์ "
-"%(bold_start)s#channel%(bold_end)s เพื่อกล่าวถึงช่อง%(new_line)sพิมพ์ %(bold_start)"
-"s/command%(bold_end)s เพื่อดำเนินการคำสั่ง%(new_line)sพิมพ์ "
-"%(bold_start)s::shortcut%(bold_end)s "
-"เพื่อแทรกการตอบกลับสำเร็จรูปในข้อความของคุณ%(new_line)sพิมพ์ "
-"%(bold_start)s:emoji:%(bold_end)s เพื่อแทรกอีโมจิในข้อความของคุณ"
+"%(new_line)s%(new_line)sพิมพ์ %(bold_start)s@username%(bold_end)s "
+"เพื่อเมนชั่นใครบางคน และดึงดูดความสนใจของพวกเขา%(new_line)sพิมพ์ %"
+"(bold_start)s#channel%(bold_end)s เพื่อกล่าวถึงช่อง%(new_line)sพิมพ์ %(bold_start)s/"
+"command%(bold_end)s เพื่อดำเนินการคำสั่ง%(new_line)sพิมพ์ %(bold_start)s::shortcut%"
+"(bold_end)s เพื่อแทรกการตอบกลับสำเร็จรูปในข้อความของคุณ%(new_line)sพิมพ์ %"
+"(bold_start)s:emoji:%(bold_end)s เพื่อแทรกอีโมจิในข้อความของคุณ"
 
 #. module: mail
 #. odoo-javascript
@@ -2124,8 +2123,8 @@ msgid ""
 "of type 'channel' or 'group'. The sub-channel should have the same type as "
 "the parent."
 msgstr ""
-"ไม่สามารถสร้าง %(ช่อง)s ได้: ช่องหลักไม่ควรเป็นช่องย่อย และควรเป็นประเภท 'ช่อง' หรือ 'กลุ่"
-"ม' ช่องย่อยควรมีประเภทเดียวกับช่องหลัก"
+"ไม่สามารถสร้าง %(ช่อง)s ได้: ช่องหลักไม่ควรเป็นช่องย่อย และควรเป็นประเภท 'ช่อง' หรือ "
+"'กลุ่ม' ช่องย่อยควรมีประเภทเดียวกับช่องหลัก"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -9184,6 +9183,12 @@ msgstr "เลือกภาษา"
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Select a user..."
 msgstr "เลือกผู้ใช้..."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id

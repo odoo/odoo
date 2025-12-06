@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
 "PO-Revision-Date: 2025-11-22 13:18+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s18-2/mail/"
@@ -213,10 +213,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEscape%(close_samp)s %(open_em)sza "
-"%(open_cancel)sodustajanje%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
-"Enter%(close_samp)s %(open_em)sza "
-"%(open_save)sspremanje%(close_save)s%(close_em)s"
+"%(open_samp)sEscape%(close_samp)s %(open_em)sza %(open_cancel)sodustajanje%"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)sza %(open_save)sspremanje%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -226,10 +225,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %"
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEscape%(close_samp)s %(open_em)sza "
-"%(open_cancel)sodustajanje%(close_cancel)s%(close_em)s, "
-"%(open_samp)sEnter%(close_samp)s %(open_em)sza "
-"%(open_save)sspremanje%(close_save)s%(close_em)s"
+"%(open_samp)sEscape%(close_samp)s %(open_em)sza %(open_cancel)sodustajanje%"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sza %"
+"(open_save)sspremanje%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
@@ -9122,6 +9120,12 @@ msgid "Select a user..."
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
 msgid "Self Member"
 msgstr ""
@@ -11700,8 +11704,8 @@ msgstr " "
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
 msgstr ""
-"E-pošta vašeg korisničkog računa promijenjena je iz %(old_email)s u "
-"%(new_email)s."
+"E-pošta vašeg korisničkog računa promijenjena je iz %(old_email)s u %"
+"(new_email)s."
 
 #. module: mail
 #. odoo-python

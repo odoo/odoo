@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
+"POT-Creation-Date: 2025-12-05 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Ujjawal Pathak, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
@@ -57,17 +57,6 @@ msgid "%s has requested electronic invoices reception on Peppol."
 msgstr "%s ने Peppol पर इलेक्ट्रॉनिक इनवॉइस की रसीद का अनुरोध किया है."
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid ""
-".<br/>\n"
-"                            But you are receiving your e-invoices via this "
-"Access Point:"
-msgstr ""
-".<br/>\n"
-"                            हालांकि, आपको ई-इनवॉइस इस ऐक्सेस पॉइंट के ज़रिए  मिल "
-"रहा है:"
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
@@ -77,6 +66,14 @@ msgstr ""
 "<br/>\n"
 "                                बेल्जियम में, इलेक्ट्रॉनिक इनवॉइस <u>जनवरी 2026 से "
 "अनिवार्य</u> कर दिया गया है - जल्दी से रजिस्टर करें."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                            But you are receiving your e-invoices via this "
+"Access Point:"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -491,6 +488,12 @@ msgstr "अगर आपको Peppol से इनवॉइस चाहिए,
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Incoming Invoices Journal"
 msgstr "इनकमिंग इनवॉइस जर्नल"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -909,6 +912,12 @@ msgid "Skipped"
 msgstr "स्किप किया गया"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Some attachments could not be sent with the XML:"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
@@ -955,12 +964,6 @@ msgid "The Peppol service that is used is %s."
 msgstr "जिस Peppol सेवा का इस्तेमाल हो रहा है, वो %s है."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr "आपका दस्तावेज़ Peppol ऐक्सेस प्वाइंट पर आगे की प्रोसेस के लिए भेज दिया गया है"
-
-#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "The e-invoicing network"
@@ -985,6 +988,14 @@ msgid ""
 msgstr ""
 "आपकी पहचान से जुड़ी कुछ सेवाएं यहां दिख रही हैं, पर उन्हें यहीं पर बदला नहीं जा सकता. अगर "
 "आप उनमें बदलाव करना चाहते हैं, तो सहायता टीम से संपर्क करें."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid ""
+"The invoice has been sent to the Peppol Access Point. The following "
+"attachments were sent with the XML:"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1219,6 +1230,18 @@ msgstr "इनवॉइस भेजने के लिए, हालांक�
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "इस्तेमाल"
+
+#~ msgid ""
+#~ ".<br/>\n"
+#~ "                            But you are receiving your e-invoices via "
+#~ "this Access Point:"
+#~ msgstr ""
+#~ ".<br/>\n"
+#~ "                            हालांकि, आपको ई-इनवॉइस इस ऐक्सेस पॉइंट के ज़रिए  "
+#~ "मिल रहा है:"
+
+#~ msgid "The document has been sent to the Peppol Access Point for processing"
+#~ msgstr "आपका दस्तावेज़ Peppol ऐक्सेस प्वाइंट पर आगे की प्रोसेस के लिए भेज दिया गया है"
 
 #~ msgid "Your endpoint"
 #~ msgstr "आपका एंडपॉइंट"

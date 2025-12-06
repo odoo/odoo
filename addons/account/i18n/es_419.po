@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
-"PO-Revision-Date: 2025-11-26 21:45+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-12-06 10:03+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s18-2/account/es_419/>\n"
@@ -2750,7 +2750,7 @@ msgstr "Alertas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_id
 msgid "Alias"
-msgstr "Seudónimo"
+msgstr "Alias"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_domain_id
@@ -2765,7 +2765,7 @@ msgstr "Nombre del dominio del alias"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__alias_name
 msgid "Alias Name"
-msgstr "Seudónimo"
+msgstr "Nombre del alias"
 
 #. module: account
 #. odoo-python
@@ -2847,7 +2847,7 @@ msgstr "Permitir la gestión de redondeo de efectivo"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow to configure taxes using cash basis"
-msgstr "Permitir configurar impuestos con base de efectivo"
+msgstr "Permitir configurar impuestos al momento del pago"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
@@ -3388,6 +3388,11 @@ msgstr "Número de archivos adjuntos"
 #: model:ir.model.fields,field_description:account.field_account_payment__attachment_ids
 msgid "Attachments"
 msgstr "Archivos adjuntos"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
+msgid "Attachments Not Supported"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_activated
@@ -4405,7 +4410,7 @@ msgstr "Origen de base de efectivo"
 #: code:addons/account/models/chart_template.py:0
 #: model:account.journal,name:account.1_caba
 msgid "Cash Basis Taxes"
-msgstr "Impuestos de base de efectivo"
+msgstr "Traslado y acreditación de impuestos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
@@ -6621,12 +6626,17 @@ msgstr "Mostrar prefijo de la cuenta"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__display_alias_fields
 msgid "Display Alias Fields"
-msgstr "Campos mostrados"
+msgstr "Mostrar campos de alias"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
 msgid "Display Amount"
 msgstr "Mostrar importe"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
+msgid "Display Attachments Widget"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -13042,7 +13052,7 @@ msgstr "Categorías de productos"
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr "Categoría de producto"
+msgstr "Categoría del producto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__quantity
@@ -17244,7 +17254,7 @@ msgstr "Este movimiento recurrente se publicará hasta e incluida esta fecha."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "Esta configuración se bloquea al crear un asiento contable."
 
 #. module: account
 #. odoo-python
@@ -19512,7 +19522,7 @@ msgstr "activar la moneda de la factura"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "alias"
-msgstr "seudónimo"
+msgstr "alias"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view

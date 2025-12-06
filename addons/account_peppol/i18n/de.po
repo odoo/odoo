@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
+"POT-Creation-Date: 2025-12-05 18:37+0000\n"
 "PO-Revision-Date: 2025-09-16 01:00+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -61,17 +61,6 @@ msgstr ""
 "%s hat den Empfang von elektronischen Rechnungen über Peppol angefragt."
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid ""
-".<br/>\n"
-"                            But you are receiving your e-invoices via this "
-"Access Point:"
-msgstr ""
-".<br/>\n"
-"                            Aber Sie erhalten Ihre elektronischen Rechnungen "
-"über diesen Zugangspunkt:"
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
@@ -82,6 +71,14 @@ msgstr ""
 "                                In Belgien ist die elektronische "
 "Rechnungsstellung <u>ab Januar 20262 verpflichtend</u> – registrieren Sie "
 "sich jetzt!"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                            But you are receiving your e-invoices via this "
+"Access Point:"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -512,6 +509,12 @@ msgid "Incoming Invoices Journal"
 msgstr "Journal für Eingangsrechnungen"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__invoice_sending_method
 msgid "Invoice sending"
@@ -939,6 +942,12 @@ msgid "Skipped"
 msgstr "Übersprungen"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Some attachments could not be sent with the XML:"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
@@ -987,13 +996,6 @@ msgid "The Peppol service that is used is %s."
 msgstr "Der Peppol-Dienst, der verwendet wird, ist %s."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr ""
-"Das Dokument wurde zur Verarbeitung an den Peppol-Zugangspunkt gesendet"
-
-#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "The e-invoicing network"
@@ -1020,6 +1022,14 @@ msgstr ""
 "Die folgenden Dienste sind auf Ihrem Teilnehmer aufgeführt, können aber hier "
 "nicht konfiguriert werden. Wenn Sie sie anders konfigurieren möchten, wenden "
 "Sie sich bitte an den Support."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid ""
+"The invoice has been sent to the Peppol Access Point. The following "
+"attachments were sent with the XML:"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1262,6 +1272,19 @@ msgstr ", um Rechnungen zu verwenden, aber diese"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "verwendet"
+
+#~ msgid ""
+#~ ".<br/>\n"
+#~ "                            But you are receiving your e-invoices via "
+#~ "this Access Point:"
+#~ msgstr ""
+#~ ".<br/>\n"
+#~ "                            Aber Sie erhalten Ihre elektronischen "
+#~ "Rechnungen über diesen Zugangspunkt:"
+
+#~ msgid "The document has been sent to the Peppol Access Point for processing"
+#~ msgstr ""
+#~ "Das Dokument wurde zur Verarbeitung an den Peppol-Zugangspunkt gesendet"
 
 #~ msgid "Your endpoint"
 #~ msgstr "Ihr Endpunkt"

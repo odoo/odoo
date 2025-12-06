@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
+"POT-Creation-Date: 2025-12-05 18:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -57,17 +57,6 @@ msgid "%s has requested electronic invoices reception on Peppol."
 msgstr "%s đã yêu cầu nhận hóa đơn điện tử trên Peppol."
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid ""
-".<br/>\n"
-"                            But you are receiving your e-invoices via this "
-"Access Point:"
-msgstr ""
-".<br/>\n"
-"                            Nhưng bạn sẽ nhận được hóa đơn điện tử qua Điểm "
-"truy cập này:"
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
@@ -77,6 +66,14 @@ msgstr ""
 "<br/>\n"
 "Tại Bỉ, hóa đơn điện tử sẽ trở nên <u>bắt buộc kể từ tháng 1 năm 2026</u> – "
 "đừng chần chừ, hãy đăng ký ngay từ bây giờ."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                            But you are receiving your e-invoices via this "
+"Access Point:"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -500,6 +497,12 @@ msgid "Incoming Invoices Journal"
 msgstr "Sổ nhật ký hoá đơn đến"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__invoice_sending_method
 msgid "Invoice sending"
@@ -918,6 +921,12 @@ msgid "Skipped"
 msgstr "Bị bỏ qua"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Some attachments could not be sent with the XML:"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
@@ -966,12 +975,6 @@ msgid "The Peppol service that is used is %s."
 msgstr "Dịch vụ Peppol được sử dụng là %s."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr "Chứng từ đã được gửi đến Điểm truy cập Peppol để xử lý"
-
-#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "The e-invoicing network"
@@ -998,6 +1001,14 @@ msgstr ""
 "Các dịch vụ sau được liệt kê trên người dùng của bạn nhưng không thể cấu "
 "hình được ở đây. Nếu bạn muốn cấu hình chúng theo cách khác, vui lòng liên "
 "hệ với bộ phận hỗ trợ."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid ""
+"The invoice has been sent to the Peppol Access Point. The following "
+"attachments were sent with the XML:"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1231,6 +1242,18 @@ msgstr "để gửi hoá đơn, nhưng hoá đơn này"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "sử dụng"
+
+#~ msgid ""
+#~ ".<br/>\n"
+#~ "                            But you are receiving your e-invoices via "
+#~ "this Access Point:"
+#~ msgstr ""
+#~ ".<br/>\n"
+#~ "                            Nhưng bạn sẽ nhận được hóa đơn điện tử qua "
+#~ "Điểm truy cập này:"
+
+#~ msgid "The document has been sent to the Peppol Access Point for processing"
+#~ msgstr "Chứng từ đã được gửi đến Điểm truy cập Peppol để xử lý"
 
 #~ msgid "Your endpoint"
 #~ msgstr "Endpoint của bạn"
