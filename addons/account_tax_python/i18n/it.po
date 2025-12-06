@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_tax_python
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Marianna Ciofani, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:07+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
 "PO-Revision-Date: 2025-07-01 13:06+0000\n"
 "Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: it\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
@@ -40,7 +41,8 @@ msgstr ""
 "    - Percentuale: l'importo dell'imposta è una % del prezzo:\n"
 "        es. 100 * (1 + 10%) = 110 (prezzo non incluso)\n"
 "        es. 110 / (1 + 10%) = 100 (prezzo incluso)\n"
-"    - Percentuale imposta inclusa: l'importo dell'imposta è una frazione del prezzo:\n"
+"    - Percentuale imposta inclusa: l'importo dell'imposta è una frazione del "
+"prezzo:\n"
 "        es. 180 / (1 - 10%) = 200 (prezzo non incluso)\n"
 "        es. 200 * (1 - 10%) = 180 (prezzo incluso)\n"
 "        "
@@ -128,8 +130,8 @@ msgstr ""
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
-msgid "Only product['string'] read-access is allowed"
-msgstr "È consentito solo l'accesso in lettura a product['string']"
+msgid "Only product['string'] or uom['string'] read-access is allowed"
+msgstr ""
 
 #. module: account_tax_python
 #. odoo-python
@@ -158,3 +160,6 @@ msgstr "Chiamata funzione sconosciuta"
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown identifier: %s"
 msgstr "Identificatore sconosciuto: %s"
+
+#~ msgid "Only product['string'] read-access is allowed"
+#~ msgstr "È consentito solo l'accesso in lettura a product['string']"

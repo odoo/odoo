@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-28 18:35+0000\n"
-"PO-Revision-Date: 2025-11-28 16:23+0000\n"
+"PO-Revision-Date: 2025-12-06 13:30+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/da/>\n"
@@ -1578,7 +1578,7 @@ msgstr "<strong>Kilde</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr "<strong>Startbalance</strong>"
+msgstr "<strong>Startsaldo</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2182,7 +2182,7 @@ msgstr "Kontantafrunding"
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Kontoplanskabelon"
+msgstr "Kontoplansskabelon"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -8302,7 +8302,7 @@ msgstr "Fra sidste regnskabsår"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_return_period
 msgid "From previous return period"
-msgstr "Fra tidligere indberetningsperiode"
+msgstr "Fra tidligere angivelsesperiode"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_fiscalyear
@@ -8561,7 +8561,7 @@ msgstr "Har IBAN-advarsel"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__has_invalid_analytics
 msgid "Has Invalid Analytics"
-msgstr ""
+msgstr "Indeholder ugyldige analysefelter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
@@ -9077,7 +9077,7 @@ msgstr "Importér .qif-filer"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Import Template for Chart of Accounts"
-msgstr "Importskabelon for kontoplan"
+msgstr "Import af kontoplansskabelon"
 
 #. module: account
 #. odoo-python
@@ -10415,7 +10415,7 @@ msgstr "Sidste kvartal"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__previous_return_period
 msgid "Last Return Period"
-msgstr "Sidste indberetningsperiode"
+msgstr "Sidste angivelsesperiode"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__last_statement_id
@@ -11607,7 +11607,7 @@ msgstr "Langfristede aktiver"
 #: model:account.account,name:account.1_non_current_liabilities
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_non_current
 msgid "Non-current Liabilities"
-msgstr "Langfristede forpligtelser"
+msgstr "Langfristede passiver"
 
 #. module: account
 #: model:account.account,name:account.1_non_current_assets
@@ -14286,7 +14286,7 @@ msgstr "Gem denne side, og kom tilbage for at konfigurere funktionen."
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
-msgstr "Scan mig med din online bankapp."
+msgstr "Scan mig med din netbank-app."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -14773,7 +14773,7 @@ msgstr "Angiv moms"
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_chart_of_accounts
 msgid "Set up your chart of accounts and record initial balances."
-msgstr "Opsæt din kontoplan, og bogfør åbningssaldi."
+msgstr "Opsæt din kontoplan, og bogfør åbningsbalancer."
 
 #. module: account
 #. odoo-python
@@ -15031,7 +15031,7 @@ msgstr "Standardkommunikation"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
 msgid "Starting Balance"
-msgstr "Startbalance"
+msgstr "Startsaldo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__state
@@ -16398,7 +16398,7 @@ msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
 msgstr ""
-"Journalposteringen indeholder den oprindelige saldo for alle konti i denne "
+"Journalposteringen indeholder åbningsbalancen for alle konti i denne "
 "virksomhed."
 
 #. module: account
@@ -16779,7 +16779,7 @@ msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
-"Startbalancen stemmer ikke overens med slutbalancen fra den foregående "
+"Startsaldoen stemmer ikke overens med slutbalancen fra den foregående "
 "opgørelse, eller en tidligere opgørelse mangler."
 
 #. module: account
@@ -16978,7 +16978,7 @@ msgstr "Dette kvartal"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_return_period
 msgid "This Return Period"
-msgstr "Denne indberetningsperiode"
+msgstr "Denne angivelsesperiode"
 
 #. module: account
 #. odoo-python
@@ -17274,7 +17274,7 @@ msgstr "Denne tilbagevendende postering bogføres til og med denne dato."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "Denne indstilling låses, når en journalpostering er oprettet."
 
 #. module: account
 #. odoo-python
