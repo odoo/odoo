@@ -1,30 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* google_calendar
-# 
+# * google_calendar
+#
 # Translators:
 # Vojtěch Olšan, 2025
 # Wil Odoo, 2025
-# 
+#
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-18 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"PO-Revision-Date: 2025-12-05 16:27+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-18/"
+"google_calendar/cs/>\n"
+"Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: cs\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : "
+"(n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid "%(id)s and %(length)s following"
-msgstr ""
+msgstr "%(id)s a %(length)s následujících"
 
 #. module: google_calendar
 #. odoo-python
@@ -63,7 +67,9 @@ msgstr "Aktivní"
 msgid ""
 "An administrator needs to configure Google Synchronization before you can "
 "use it!"
-msgstr "Před použitím Správce je třeba nakonfigurovat synchronizaci Google!"
+msgstr ""
+"Správce musí nakonfigurovat synchronizaci Google, než ji budete moci "
+"používat!"
 
 #. module: google_calendar
 #. odoo-python
@@ -74,11 +80,15 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronization."
 msgstr ""
+"Při generování tokenu došlo k chybě. Váš autorizační kód může být neplatný "
+"nebo již vypršela jeho platnost [%s]. Zkontrolujte své ID klienta a tajný "
+"klíč na platformě Google APIs nebo zkuste zastavit a restartovat "
+"synchronizaci kalendáře."
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr "Informace o účastníkovi v kalendáři"
+msgstr "Informace o účastnících kalendáře"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_event
@@ -89,7 +99,7 @@ msgstr "Událost kalendáře"
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_cal_id
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_calendar_cal_id
 msgid "Calendar ID"
-msgstr "Calendar ID"
+msgstr "ID kalendáře"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
@@ -99,12 +109,12 @@ msgstr "Zrušit"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
-msgstr "Klientské ID"
+msgstr "ID klienta"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
-msgstr "Klientské tajemství"
+msgstr "Tajný klíč klienta"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_client_id
@@ -119,7 +129,7 @@ msgstr "Client_key"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurační nastavení"
+msgstr "Nastavení konfigurace"
 
 #. module: google_calendar
 #. odoo-javascript
@@ -141,7 +151,7 @@ msgstr "Potvrdit"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_uid
 msgid "Created by"
-msgstr "Vytvořeno uživatelem"
+msgstr "Vytvořeno"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__create_date
@@ -151,12 +161,12 @@ msgstr "Vytvořeno dne"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_odoo
 msgid "Delete from Odoo"
-msgstr "Smazat z Odoo"
+msgstr "Odstranit z Odoo"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
 msgid "Delete from both"
-msgstr "Smazat z obou"
+msgstr "Odstranit z obou"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
@@ -178,7 +188,7 @@ msgstr "Zobrazovací název"
 #. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 msgid "Email"
-msgstr "Email "
+msgstr "Email"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_calendar_alarm_manager
@@ -199,7 +209,7 @@ msgstr "Google"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.view_users_form
 msgid "Google Calendar"
-msgstr "Google kalendář"
+msgstr "Kalendář Google"
 
 #. module: google_calendar
 #: model:ir.actions.act_window,name:google_calendar.google_calendar_reset_account_action
@@ -210,7 +220,7 @@ msgstr "Resetování účtu Google kalendář"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__google_id
 msgid "Google Calendar Event Id"
-msgstr "Google Calendar Event Id"
+msgstr "ID události kalendáře Google"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__google_id
@@ -226,7 +236,7 @@ msgstr "Kalendář Google: synchronizace"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__calendar_event__videocall_source__google_meet
 msgid "Google Meet"
-msgstr ""
+msgstr "Google Meet"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_config_settings__cal_sync_paused
@@ -237,18 +247,18 @@ msgstr "Synchronizace Google pozastavena"
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_synchronization_stopped
 #: model:ir.model.fields,field_description:google_calendar.field_res_users_settings__google_synchronization_stopped
 msgid "Google Synchronization stopped"
-msgstr "Synchronizace Google se zastavila"
+msgstr "Synchronizace Google byla zastavena"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid "Google gave the following explanation: %s"
-msgstr ""
+msgstr "Google poskytl následující vysvětlení: %s"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__guests_readonly
 msgid "Guests Event Modification Permission"
-msgstr ""
+msgstr "Oprávnění k úpravám události pro hosty"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__id
@@ -261,19 +271,19 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Pokud je aktivní pole nastaveno na hodnotu false, umožní vám skrýt informace"
-" o alarmu události bez jeho odebrání."
+"Pokud je aktivní pole nastaveno na hodnotu false, umožní vám to skrýt "
+"informace o alarmu události, aniž byste je odstranili."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_config_settings__cal_sync_paused
 msgid "Indicates if synchronization with Google Calendar is paused or not."
-msgstr ""
+msgstr "Označuje, zda je synchronizace s Kalendářem Google pozastavena nebo ne."
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid "It will not be synced as long at it is not updated."
-msgstr ""
+msgstr "Dokud nebude aktualizováno, nebude synchronizováno."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_res_users__google_calendar_cal_id
@@ -288,24 +298,24 @@ msgstr ""
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_uid
 msgid "Last Updated by"
-msgstr "Naposledy upraveno uživatelem"
+msgstr "Naposledy aktualizováno"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__write_date
 msgid "Last Updated on"
-msgstr "Naposledy upraveno dne"
+msgstr "Poslední aktualizace dne"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
 msgid "Leave them untouched"
-msgstr "Nechte je nedotčené"
+msgstr "Nechejte je nedotčené"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_recurrence__need_sync
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_sync__need_sync
 msgid "Need Sync"
-msgstr "Potřebujete synchronizaci"
+msgstr "Potřeba synchronizace"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_sync_token
@@ -316,18 +326,18 @@ msgstr "Další synchronizační token"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__sync_policy
 msgid "Next Synchronization"
-msgstr "Příští aktualizace"
+msgstr "Další synchronizace"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 msgid "Notification"
-msgstr "Upozornění"
+msgstr "Oznámení"
 
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Pause Synchronization"
-msgstr ""
+msgstr "Pozastavit synchronizaci"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_rtoken
@@ -343,7 +353,7 @@ msgstr "Obnovit účet"
 #. module: google_calendar
 #: model_terms:ir.ui.view,arch_db:google_calendar.google_calendar_reset_account_view_form
 msgid "Reset Google Calendar Account"
-msgstr "Resetujte účet kalendáře Google"
+msgstr "Resetovat účet kalendáře Google"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar_sync
@@ -367,8 +377,8 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
-"Než budete moci službu Google Synchronization použít, musíte ji "
-"nakonfigurovat. Chcete to nyní provést?"
+"Před použitím je nutné nakonfigurovat synchronizaci Google. Chcete to "
+"provést nyní?"
 
 #. module: google_calendar
 #. odoo-python
@@ -377,17 +387,19 @@ msgid ""
 "The following event can only be updated by the organizer according to the "
 "event permissions set on Google Calendar."
 msgstr ""
+"Následující událost může aktualizovat pouze organizátor podle oprávnění "
+"události nastavených v Kalendáři Google."
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid "The following event could not be synced with Google Calendar."
-msgstr ""
+msgstr "Následující událost nebylo možné synchronizovat s Kalendářem Google."
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr "To ovlivní pouze události, jejichž vlastníkem je uživatel"
+msgstr "Toto se týká pouze událostí, jejichž vlastníkem je uživatel."
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
@@ -404,7 +416,7 @@ msgstr "Uživatel"
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users_settings
 msgid "User Settings"
-msgstr "Uživatelské nastavení"
+msgstr "Nastavení uživatele"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
@@ -426,11 +438,11 @@ msgstr "Zdroj videohovoru"
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid "undefined time"
-msgstr ""
+msgstr "neurčitý čas"
 
 #. module: google_calendar
 #. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
-msgstr ""
+msgstr "Zdá se, že nemáte oprávnění k úpravě této události v Kalendáři Google."
