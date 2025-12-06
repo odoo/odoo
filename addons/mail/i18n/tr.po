@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 22:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s18-3/mail/"
@@ -57,8 +57,8 @@ msgstr ""
 "            <p class=\"o_view_nocontent_smiling_face\">\n"
 "                İzin Verilen Listeye adresler ekle\n"
 "            </p><p>\n"
-"                Sizi spam ve yanıt döngülerinden korumak için, Odoo her "
-"<b>%(minutes)i</b> dakikada\n"
+"                Sizi spam ve yanıt döngülerinden korumak için, Odoo her <b>%"
+"(minutes)i</b> dakikada\n"
 "                <b>%(threshold)i</b> e-postalık bir eşiği aşan e-postaları "
 "otomatik olarak engeller.\n"
 "                Ancak, çok sık güncelleme almanız gereken bazı adresler "
@@ -1029,8 +1029,8 @@ msgid ""
 msgstr ""
 "Aktivite planları, yalnızca birkaç tıklamayla bir dizi aktivite atamak için "
 "kullanılır\n"
-"                    (örn. \"Oryantasyon\", \"Aday Takibi\", "
-"\"Proje Kilometre Taşı Toplantısı\", ...)"
+"                    (örn. \"Oryantasyon\", \"Aday Takibi\", \"Proje "
+"Kilometre Taşı Toplantısı\", ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -1312,8 +1312,8 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"%(matching_name)s (%(current_id)s) takma adı zaten %(alias_model_name)s "
-"(%(matching_id)s) ile bağlantılı ve %(parent_name)s %(parent_model_name)s "
+"%(matching_name)s (%(current_id)s) takma adı zaten %(alias_model_name)s (%"
+"(matching_id)s) ile bağlantılı ve %(parent_name)s %(parent_model_name)s "
 "tarafından kullanılıyor."
 
 #. module: mail
@@ -1323,8 +1323,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with %"
 "(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"%(matching_name)s (%(current_id)s) takma adı zaten %(alias_model_name)s "
-"(%(matching_id)s) ile bağlantılı."
+"%(matching_name)s (%(current_id)s) takma adı zaten %(alias_model_name)s (%"
+"(matching_id)s) ile bağlantılı."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1561,7 +1561,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_blacklist.py:0
 msgid "Are you sure you want to unblacklist this email address?"
-msgstr "Bu e-posta adresini kara listeden çıkarmak istediğinizden emin misiniz?"
+msgstr ""
+"Bu e-posta adresini kara listeden çıkarmak istediğinizden emin misiniz?"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__responsible_type__on_demand
@@ -2217,8 +2218,8 @@ msgid ""
 "(e.g. :hello) to use in your messages."
 msgstr ""
 "Mesajlarınızdaki daha uzun içerikle otomatik olarak değiştirilecek hazır "
-"yanıt. Mesajlarınızda kullanmak için ':' yazıp ardından kısayol adını girin ("
-"örn. :merhaba)."
+"yanıt. Mesajlarınızda kullanmak için ':' yazıp ardından kısayol adını girin "
+"(örn. :merhaba)."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -6323,8 +6324,8 @@ msgid ""
 "Local-part of email used for Reply-To to catch answers e.g. 'catchall' in "
 "'catchall@example.com'"
 msgstr ""
-"Yanıtları yakalamak için Yanıtla-Adresi’nde kullanılan e-posta yerel kısmı ("
-"ör. 'catchall@example.com' adresinde 'catchall')"
+"Yanıtları yakalamak için Yanıtla-Adresi’nde kullanılan e-posta yerel kısmı "
+"(ör. 'catchall@example.com' adresinde 'catchall')"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_domain__bounce_alias
@@ -9793,6 +9794,12 @@ msgid "Select a user..."
 msgstr "Bir kullanıcı seçin..."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
 msgid "Self Member"
 msgstr ""
@@ -10609,8 +10616,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
-"Şablon oluşturma yalnızca 'inline_template', 'qweb' veya 'qweb_view' ("
-"görünüm ya da ham) destekler; bunun yerine %(engine)s alındı."
+"Şablon oluşturma yalnızca 'inline_template', 'qweb' veya 'qweb_view' "
+"(görünüm ya da ham) destekler; bunun yerine %(engine)s alındı."
 
 #. module: mail
 #. odoo-javascript
@@ -10690,8 +10697,8 @@ msgid ""
 "%(anchor_start)sextension%(anchor_end)s."
 msgstr ""
 "Bas-Konuş özelliği yalnızca sekme odaktayken kullanılabilir. Bu sekme "
-"dışında Bas-Konuş işlevini etkinleştirmek için "
-"%(anchor_start)suzantımızı%(anchor_end)s indirmenizi öneririz."
+"dışında Bas-Konuş işlevini etkinleştirmek için %(anchor_start)suzantımızı%"
+"(anchor_end)s indirmenizi öneririz."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat

@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 14:48+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s18-3/mail/"
@@ -1858,8 +1858,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
-"%(portal_user_name)sנחסם עקב מחיקת חשבון פורטל ע\"י"
-"%(user_name)s(#%(user_id)s)"
+"%(portal_user_name)sנחסם עקב מחיקת חשבון פורטל ע\"י%(user_name)s(#%"
+"(user_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -5254,7 +5254,8 @@ msgstr ""
 msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
-msgstr "אם אינך מזהה זאת, עליך לשנות את הסיסמה שלך מיד באמצעות הקישור הבא:<br/>"
+msgstr ""
+"אם אינך מזהה זאת, עליך לשנות את הסיסמה שלך מיד באמצעות הקישור הבא:<br/>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain_id
@@ -9559,6 +9560,12 @@ msgstr "בחירת שפה"
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Select a user..."
 msgstr "בחירת משתמש/ת..."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id

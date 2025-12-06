@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:37+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
 "PO-Revision-Date: 2025-11-08 22:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -78,8 +78,8 @@ msgstr ""
 "            </p><p>\n"
 "                Para te proteger de spam e loops de respostas, o Odoo "
 "automaticamente bloqueia e-mails\n"
-"                que chegam ao seu gateway acima do limite de "
-"<b>%(threshold)i</b> e-mails a cada <b>%(minutes)i</b>\n"
+"                que chegam ao seu gateway acima do limite de <b>%"
+"(threshold)i</b> e-mails a cada <b>%(minutes)i</b>\n"
 "                minutos. Caso hajam e-mails dos quais você precise receber "
 "atualizações\n"
 "                frequentes, você pode adicioná-los abaixo e o Odoo não "
@@ -224,7 +224,8 @@ msgstr "%(file1)s e %(file2)s"
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 msgid "%(model_name)s.%(field_path)s does not seem to be a valid field path"
-msgstr "%(model_name)s.%(field_path)s não parece ser um caminho de campo válido"
+msgstr ""
+"%(model_name)s.%(field_path)s não parece ser um caminho de campo válido"
 
 #. module: mail
 #. odoo-javascript
@@ -253,10 +254,10 @@ msgstr ""
 "%(new_line)s%(new_line)sDigite %(bold_start)s@nomedousuario%(bold_end)s "
 "mencionar alguém.%(new_line)sDigite %(bold_start)s#canal%(bold_end)s para "
 "mencionar um canal.%(new_line)sDigite %(bold_start)s/command%(bold_end)s "
-"para executar um comando.%(new_line)sDigite "
-"%(bold_start)s:shortcut%(bold_end)s para inserir uma resposta automática em "
-"sua mensagem.%(new_line)sDigite%(bold_start)s:emoji?:%(bold_end)spara "
-"inserir um emoji na mensagem."
+"para executar um comando.%(new_line)sDigite %(bold_start)s:shortcut%"
+"(bold_end)s para inserir uma resposta automática em sua mensagem.%"
+"(new_line)sDigite%(bold_start)s:emoji?:%(bold_end)spara inserir um emoji na "
+"mensagem."
 
 #. module: mail
 #. odoo-javascript
@@ -266,10 +267,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEsc%(close_samp)s %(open_em)spara "
-"%(open_cancel)scancelar%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
-"Enter%(close_samp)s %(open_em)spara "
-"%(open_save)ssalvar%(close_save)s%(close_em)s"
+"%(open_samp)sEsc%(close_samp)s %(open_em)spara %(open_cancel)scancelar%"
+"(close_cancel)s%(close_em)s, %(open_samp)sCTRL-Enter%(close_samp)s %"
+"(open_em)spara %(open_save)ssalvar%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -279,10 +279,9 @@ msgid ""
 "(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %(open_em)sto %"
 "(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
-"%(open_samp)sEsc%(close_samp)s %(open_em)spara "
-"%(open_cancel)scancelar%(close_cancel)s%(close_em)s, "
-"%(open_samp)sEnter%(close_samp)s %(open_em)spara "
-"%(open_save)ssalvar%(close_save)s%(close_em)s"
+"%(open_samp)sEsc%(close_samp)s %(open_em)spara %(open_cancel)scancelar%"
+"(close_cancel)s%(close_em)s, %(open_samp)sEnter%(close_samp)s %"
+"(open_em)spara %(open_save)ssalvar%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
@@ -639,14 +638,14 @@ msgstr ""
 "mail para os destinatários do modelo\n"
 "e não aparecerá no histórico de mensagens.\n"
 "                                    </span>\n"
-"                                    <span invisible="
-"\"mail_post_method != 'note'\">\n"
+"                                    <span invisible=\"mail_post_method != "
+"'note'\">\n"
 "                                        A mensagem será publicada como uma "
 "nota interna visível para os usuários internos do site\n"
 "no histórico de mensagens.\n"
 "                                    </span>\n"
-"                                    <span invisible="
-"\"mail_post_method != 'comment'\">\n"
+"                                    <span invisible=\"mail_post_method != "
+"'comment'\">\n"
 "                                        A mensagem será publicada como uma "
 "mensagem no registro,\n"
 "notificando todos os seguidores. Ela aparecerá no histórico de mensagens.\n"
@@ -776,8 +775,8 @@ msgstr "Uma mensagem só pode ser agendada no modo monocomentário"
 msgid ""
 "A message cannot be scheduled on a model that does not have a mail thread."
 msgstr ""
-"Uma mensagem não pode ser agendada em um modelo que não tenha um tópico de "
-"e-mail."
+"Uma mensagem não pode ser agendada em um modelo que não tenha um tópico de e-"
+"mail."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
@@ -1089,8 +1088,8 @@ msgid ""
 msgstr ""
 "Os planos de atividades são usados para atribuir uma lista de atividades com "
 "apenas alguns cliques\n"
-"(ex.: \"Integração\", \"Acompanhamento de prospecções\", "
-"\"Reunião sobre marcos do projeto\", ...)"
+"(ex.: \"Integração\", \"Acompanhamento de prospecções\", \"Reunião sobre "
+"marcos do projeto\", ...)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule
@@ -1372,9 +1371,9 @@ msgid ""
 "(alias_model_name)s (%(matching_id)s) and used by the %(parent_name)s %"
 "(parent_model_name)s."
 msgstr ""
-"O alias %(matching_name)s (%(current_id)s) já está vinculado a "
-"%(alias_model_name)s (%(matching_id)s) e é usado por %(parent_name)s "
-"%(parent_model_name)s."
+"O alias %(matching_name)s (%(current_id)s) já está vinculado a %"
+"(alias_model_name)s (%(matching_id)s) e é usado por %(parent_name)s %"
+"(parent_model_name)s."
 
 #. module: mail
 #. odoo-python
@@ -1383,8 +1382,8 @@ msgid ""
 "Alias %(matching_name)s (%(current_id)s) is already linked with %"
 "(alias_model_name)s (%(matching_id)s)."
 msgstr ""
-"O alias %(matching_name)s (%(current_id)s) já está vinculado a "
-"%(alias_model_name)s (%(matching_id)s)."
+"O alias %(matching_name)s (%(current_id)s) já está vinculado a %"
+"(alias_model_name)s (%(matching_id)s)."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
@@ -1586,7 +1585,8 @@ msgstr "Arquivados"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Archived because %(user_name)s (#%(user_id)s) deleted the portal account"
-msgstr "Arquivado porque %(user_name)s (#%(user_id)s) deletou a conta do portal"
+msgstr ""
+"Arquivado porque %(user_name)s (#%(user_id)s) deletou a conta do portal"
 
 #. module: mail
 #. odoo-javascript
@@ -1957,8 +1957,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
-"Bloqueado pela exclusão da conta do portal %(portal_user_name)s por "
-"%(user_name)s (nº %(user_id)s)"
+"Bloqueado pela exclusão da conta do portal %(portal_user_name)s por %"
+"(user_name)s (nº %(user_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -2280,8 +2280,8 @@ msgid ""
 "(e.g. :hello) to use in your messages."
 msgstr ""
 "Resposta predefinida que será automaticamente substituída por conteúdo mais "
-"longo em suas mensagens. Digite ':' seguido do nome de seu atalho (ex.: :olá)"
-" para usar em suas mensagens."
+"longo em suas mensagens. Digite ':' seguido do nome de seu atalho "
+"(ex.: :olá) para usar em suas mensagens."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
@@ -2299,8 +2299,8 @@ msgstr "Não é possível alterar o grupo autorizado do subcanal: %(channels)s."
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "Cannot change initial message nor parent channel of: %(channels)s."
 msgstr ""
-"Não é possível alterar a mensagem inicial nem o canal principal de: "
-"%(channels)s."
+"Não é possível alterar a mensagem inicial nem o canal principal de: %"
+"(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -3521,7 +3521,8 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
 msgid "Determines if the canned response can be edited by the current user"
-msgstr "Determina se a resposta predefinida pode ser editada pelo usuário atual"
+msgstr ""
+"Determina se a resposta predefinida pode ser editada pelo usuário atual"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_shared
@@ -4113,8 +4114,8 @@ msgstr ""
 msgid ""
 "Email addresses that are blacklisted won't receive Email mailings anymore."
 msgstr ""
-"Endereços de e-mail que estão na lista de bloqueio não receberão mais "
-"e-mails."
+"Endereços de e-mail que estão na lista de bloqueio não receberão mais e-"
+"mails."
 
 #. module: mail
 #. odoo-python
@@ -5372,7 +5373,8 @@ msgstr ""
 msgid ""
 "If set, the member will not receive notifications from the channel until "
 "this date."
-msgstr "Se definido, o membro não receberá notificações do canal até esta data."
+msgstr ""
+"Se definido, o membro não receberá notificações do canal até esta data."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
@@ -5769,8 +5771,8 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 msgid "Invalid template or view source record %(svalue)s, is %(model)s instead"
 msgstr ""
-"Modelo ou registro de origem de visualização %(svalue)s inválido, deve ser "
-"%(model)s"
+"Modelo ou registro de origem de visualização %(svalue)s inválido, deve ser %"
+"(model)s"
 
 #. module: mail
 #. odoo-python
@@ -7688,8 +7690,8 @@ msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
-"A notificação deve receber anexos como uma lista de listas ou tuplas (%(aids)"
-"s recebidos)"
+"A notificação deve receber anexos como uma lista de listas ou tuplas (%"
+"(aids)s recebidos)"
 
 #. module: mail
 #. odoo-python
@@ -7698,8 +7700,8 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received %"
 "(aids)s)"
 msgstr ""
-"A notificação deve receber registros de anexos como uma lista de IDs "
-"(%(aids)srecebidos)"
+"A notificação deve receber registros de anexos como uma lista de IDs (%"
+"(aids)srecebidos)"
 
 #. module: mail
 #. odoo-python
@@ -8034,8 +8036,8 @@ msgid ""
 "Oops! We couldn't save your template due to an issue with this value: %"
 "(template_txt)s. Correct it and try again."
 msgstr ""
-"Ops! Não foi possível salvar seu modelo devido a um problema com este "
-"valor:%(template_txt)s. Corrija-o e tente novamente."
+"Ops! Não foi possível salvar seu modelo devido a um problema com este valor:%"
+"(template_txt)s. Corrija-o e tente novamente."
 
 #. module: mail
 #. odoo-javascript
@@ -9891,6 +9893,12 @@ msgid "Select a user..."
 msgstr "Selecione um usuário..."
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
 msgid "Self Member"
 msgstr "Membro autônomo"
@@ -10710,8 +10718,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
-"A renderização de modelo suporta apenas inline_template, qweb, ou qweb_view ("
-"visualização ou bruto); ao invés disso, recebeu %(engine)s."
+"A renderização de modelo suporta apenas inline_template, qweb, ou qweb_view "
+"(visualização ou bruto); ao invés disso, recebeu %(engine)s."
 
 #. module: mail
 #. odoo-javascript
@@ -10945,8 +10953,8 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"A mensagem abaixo não pôde ser aceita pelo endereço de e-mail "
-"%(alias_display_name)s.\n"
+"A mensagem abaixo não pôde ser aceita pelo endereço de e-mail %"
+"(alias_display_name)s.\n"
 "                 Somente %(contact_description)s têm permissão para contatar "
 "este e-mail.<br /><br />\n"
 "                 Utilize o endereço de e-mail correto ou entre em contato "
@@ -10960,8 +10968,8 @@ msgid ""
 "(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"A mensagem abaixo não pôde ser aceita pelo endereço de e-mail "
-"%(alias_display_name)s.\n"
+"A mensagem abaixo não pôde ser aceita pelo endereço de e-mail %"
+"(alias_display_name)s.\n"
 "Tente novamente mais tarde ou entre em contato com %(company_name)s."
 
 #. module: mail
@@ -12374,7 +12382,8 @@ msgstr "Volume de outros usuários"
 msgid ""
 "Want to spice up your conversations with GIFs? Activate the feature in the "
 "settings!"
-msgstr "Quer animar suas conversas com GIFs? Ative o recurso nas configurações!"
+msgstr ""
+"Quer animar suas conversas com GIFs? Ative o recurso nas configurações!"
 
 #. module: mail
 #. odoo-javascript
@@ -12392,8 +12401,8 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "owner document belongs to company %(company_name)s."
 msgstr ""
-"Não foi possível criar o alias %(alias_name)s porque o domínio "
-"%(alias_domain_name)s pertence à empresa %(alias_company_names)s, enquanto o "
+"Não foi possível criar o alias %(alias_name)s porque o domínio %"
+"(alias_domain_name)s pertence à empresa %(alias_company_names)s, enquanto o "
 "documento titular pertence à empresa %(company_name)s."
 
 #. module: mail
@@ -12404,8 +12413,8 @@ msgid ""
 "(alias_domain_name)s belongs to company %(alias_company_names)s while the "
 "target document belongs to company %(company_name)s."
 msgstr ""
-"Não foi possível criar o alias %(alias_name)s porque o domínio "
-"%(alias_domain_name)s pertence à empresa %(alias_company_names)s, enquanto o "
+"Não foi possível criar o alias %(alias_name)s porque o domínio %"
+"(alias_domain_name)s pertence à empresa %(alias_company_names)s, enquanto o "
 "documento de destino pertence à empresa %(company_name)s."
 
 #. module: mail
@@ -12699,8 +12708,8 @@ msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address %(alias_name)s."
 msgstr ""
-"Você só pode usar caracteres latinos não acentuados no endereço do alias "
-"%(alias_name)s."
+"Você só pode usar caracteres latinos não acentuados no endereço do alias %"
+"(alias_name)s."
 
 #. module: mail
 #. odoo-python
@@ -12709,8 +12718,8 @@ msgid ""
 "You cannot use anything else than unaccented latin characters in the domain "
 "name %(domain_name)s."
 msgstr ""
-"Você só pode usar caracteres latinos não acentuados no nome do domínio "
-"%(domain_name)s."
+"Você só pode usar caracteres latinos não acentuados no nome do domínio %"
+"(domain_name)s."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
@@ -12795,7 +12804,8 @@ msgstr "O Seu"
 #: code:addons/mail/models/res_users.py:0
 msgid ""
 "Your account email has been changed from %(old_email)s to %(new_email)s."
-msgstr "O e-mail da sua conta foi alterado de %(old_email)s para %(new_email)s."
+msgstr ""
+"O e-mail da sua conta foi alterado de %(old_email)s para %(new_email)s."
 
 #. module: mail
 #. odoo-python

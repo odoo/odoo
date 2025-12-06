@@ -7,13 +7,14 @@
 # Ujjawal Pathak, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Ujjawal Pathak (pauj)" <pauj@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-26 18:37+0000\n"
-"PO-Revision-Date: 2025-11-15 11:19+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-12-06 11:09+0000\n"
+"Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/stock/"
 "hi/>\n"
 "Language: hi\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -347,6 +348,18 @@ msgid ""
 "* Transit Location: Counterpart location that should be used in inter-"
 "company or inter-warehouses operations"
 msgstr ""
+"* वेंडर लोकेशन: वेंडर से आने वाले प्रॉडक्ट के लिए सोर्स लोकेशन दिखाने वाली वर्चुअल लोकेशन\n"
+"* आपके वेयरहाउस में जगहों की पदानुक्रम (जैसे, मुख्य क्षेत्र और उसके अंदर के उप-क्षेत्र) बनाने के लिए इस्तेमा"
+"ल की जाने वाली वर्चुअल लोकेशन, जो अपनी चाइल्ड लोकेशन को जोड़ती है; इसमें सीधे प्रॉडक्ट नहीं हो सकते\n"
+"* इंटरनल लोकेशन: आपके अपने वेयरहाउस के अंदर की भौतिक (फ़िज़िकल) लोकेशन,\n"
+"* ग्राहक लोकेशन: यह एक वर्चुअल जगह है जो उन प्रॉडक्ट के पहुंचने की जगह को दर्शाती है जो ग्राहकों को भेजे "
+"जाते हैं\n"
+"* इन्वेंट्री लॉस: स्टॉक स्तर को सही करने के लिए इस्तेमाल किए जाने वाले इन्वेंट्री ऑपरेशनों के लिए काउंटरपार्ट लोके"
+"शन के रूप में काम करने वाली वर्चुअल लोकेशन (फ़िज़िकल इन्वेंट्री)\n"
+"* प्रॉडक्शन: प्रॉडक्शन ऑपरेशनों के लिए वर्चुअल काउंटरपार्ट लोकेशन: यह लोकेशन सामग्री का इस्तेमाल करती है "
+"और तैयार प्रॉडक्ट बनाती है\n"
+"* ट्रांज़िट लोकेशन: यह एक काउंटरपार्ट लोकेशन है जिसका इस्तेमाल अलग-अलग कंपनियों या अलग-अलग गोदामों के बीच "
+"सामान के ट्रांसफ़र के लिए किया जाता है"
 
 #. module: stock
 #. odoo-python
@@ -8183,6 +8196,15 @@ msgid ""
 "Least Packages: FIFO but with the least number of packages possible when "
 "there are several packages containing the same product."
 msgstr ""
+"इस प्रॉडक्ट कैटेगरी के लिए सोर्स लोकेशन की परवाह किए बिना इस्तेमाल की जाने वाली एक खास हटाने की रणनीति तय "
+"करें.\n"
+"\n"
+"FIFO: प्रॉडक्ट/लॉट जो पहले स्टॉक किए गए थे, उन्हें पहले बाहर निकाला जाएगा.\n"
+"LIFO: प्रॉडक्ट/लॉट जो आखिरी बार स्टॉक किए गए थे, उन्हें पहले बाहर निकाला जाएगा.\n"
+"सबसे नज़दीकी लोकेशन: टारगेट लोकेशन के सबसे नज़दीक वाले प्रॉडक्ट/लॉट को पहले बाहर निकाला जाएगा.\n"
+"FEFO: सबसे नज़दीकी हटाने की तारीख वाले प्रॉडक्ट/लॉट को पहले बाहर निकाला जाएगा "
+"(इस तरीक़े की उपलब्धता \"खत्म होने की तारीख\" सेटिंग पर निर्भर करती है).\n"
+"सबसे कम पैकेज: FIFO, लेकिन जब एक ही प्रॉडक्ट वाले कई पैकेज हों, तो कम से कम पैकेज इस्तेमाल हों।"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8841,6 +8863,12 @@ msgid ""
 "available, the system will try to find a  rule to bring the products in the "
 "source location."
 msgstr ""
+"स्टॉक से लें: प्रॉडक्ट, सोर्स लोकेशन के उपलब्ध स्टॉक से लिए जाएंगे.\n"
+"दूसरा नियम ट्रिगर करें: सिस्टम सोर्स लोकेशन में प्रॉडक्ट लाने के लिए एक स्टॉक नियम खोजने की कोशिश करेगा. उपलब्"
+"ध स्टॉक को नज़रअंदाज़ किया जाएगा.\n"
+"स्टॉक से लें, अगर अनुपलब्ध है, तो दूसरा नियम ट्रिगर करें: प्रॉडक्ट, सोर्स लोकेशन के उपलब्ध स्टॉक से लिए "
+"जाएंगे. अगर कोई स्टॉक उपलब्ध नहीं है, तो सिस्टम सोर्स लोकेशन में प्रॉडक्ट लाने के लिए एक नियम खोजने की कोशिश "
+"करेगा।"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_allocation
