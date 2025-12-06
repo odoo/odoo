@@ -15,6 +15,7 @@ import dataclasses
 import datetime
 import enum
 import io
+import itertools
 import struct
 from collections.abc import Generator, Iterable, Mapping
 from functools import partial
@@ -50,7 +51,7 @@ MAX_INT32 = 0xFF_FF_FF_FF  # 4GiB - 1
 
 def serialize_time_date(dt: datetime.datetime) -> tuple[int, int]:
     ziptime = dt.second // 2 + (dt.minute << 5) + (dt.hour << 11)
-    zipdate = dt.day + (dt.month << 5) + ((dt.year - 1980) << 9)
+    zipdate = (dt.day - 1) + ((dt.month - 1) << 5) + ((dt.year - 1980) << 9)
     return (ziptime, zipdate)
 
 
@@ -61,7 +62,11 @@ def deserialize_time_date(ziptime: int, zipdate: int) -> datetime.datetime:
     day = (zipdate & 0b11111)
     month = (zipdate & 0b111100000) >> 5
     year = (zipdate & 0b1111111000000000) >> 9
-    return datetime.datetime(1980 + year, month, day, hour, minute, second * 2)
+    try:
+        return datetime.datetime(1980 + year, month + 1, day + 1, hour, minute, second * 2)
+    except ValueError as exc:
+        exc.add_note(str((1980 + year, month + 1, day + 1, hour, minute, second * 2)))
+        raise
 
 
 class OS(enum.IntEnum):
@@ -758,89 +763,105 @@ def _read_file(local_file_header, _read_buffer):
         raise ValueError(  # noqa: TRY301
             f"invalid crc32: {crc32=} != {local_file_header.crc32=}")
 
+    yield b''  # empty byte to signal end of file
+
 
 def _read_until_next_file(local_file_header, _read_buffer, _read_into):  # noqa: RET503
+    if local_file_header.filename == b'docProps/core.xml':
+        pass
     zip64 = ExtraFieldId.ZIP64 in local_file_header.extra_fields
     dd_sign = DataDescriptor.signature
     dd_struct = '<IQQ' if zip64 else '<III'
     dd_length = struct.calcsize(dd_struct)
 
-    rotate_length = struct.calcsize(dd_struct + '4s4s')
-
     crc32 = csize = usize = 0
     if local_file_header.compression:
         dsor = local_file_header.compression.decompressor()
 
-    buffer = bytearray(io.DEFAULT_BUFFER_SIZE)
+    buffer = bytearray(_read_buffer(io.DEFAULT_BUFFER_SIZE))
 
     def flush(length):
-        nonlocal buffer
+        nonlocal buffer, crc32, csize, usize
 
+        if dsor:
+            with memoryview(buffer)[:length] as mv:
+                udata = dsor.decompress(mv)
+        else:
+            udata = buffer[:length]
         if length:
-            nonlocal crc32, csize, usize
-            try:
-                udata = dsor.decompress(memoryview(buffer)[:length]) if dsor else buffer[:length]
-            except Exception as exc:
-                exc.add_note(str(buffer[:length]))
-                raise
-            csize += length
-            usize += len(udata)
-            crc32 = zlib.crc32(udata, crc32)
+            buffer[:-length] = buffer[length:]
+        csize += length
+        usize += len(udata)
+        crc32 = zlib.crc32(udata, crc32)
+        if udata:
             yield udata
 
-        buffer[:-length] = buffer[length:]
         bytes_read = 0
         while bytes_read < length % len(buffer):
-            bytes_read_ = _read_into(memoryview(buffer)[-length + bytes_read:])
+            with memoryview(buffer)[-length + bytes_read:] as mv:
+                bytes_read_ = _read_into(mv)
             if not bytes_read_:
                 buffer = buffer[:-length + bytes_read]
                 break
             bytes_read += bytes_read_
 
-    list(flush(0))
-
     while True:
+        foundpk = buffer.find(b'PK')
+        if foundpk == -1:
+            assert len(buffer) > dd_length + len(dd_sign)
+            yield from flush(len(buffer) - dd_length - len(dd_sign))
+            continue
         for signature in (
             LocalFileHeader.signature,
             CentralDirectoryFileHeader.signature,
         ):
-            found = buffer.find(signature)
+            found = buffer.find(signature, foundpk)
             if found != -1:
                 break
         else:
-            yield from flush(dd_length - 3)
+            assert len(buffer) > dd_length + len(dd_sign)
+            yield from flush(len(buffer) - dd_length - len(dd_sign))
             continue
 
         expected_crc32, expected_csize, expected_usize = (
             struct.unpack(dd_struct, buffer[found - dd_length:found]))
 
-        if (diff := found - len(signature) - dd_length) == expected_csize - csize:
-            # no dd signature
-            yield from flush(diff)
+        if (length := found - dd_length) == expected_csize - csize:
+            # dd signature absent
+            yield from flush(length)
             if usize != expected_usize or crc32 != expected_crc32:
-                yield from flush(dd_length + len(signature))
+                yield from flush(dd_length + 4)  # len(b'PK\3\4')
                 continue
+            buffer = memoryview(buffer)[dd_length:]
         elif (
-            (diff := found - len(signature) - dd_length - len(dd_sign)) == expected_csize - csize
-            and buffer[found - dd_length - len(dd_sign):found - dd_length] == dd_sign
+            (length := found - len(dd_sign) - dd_length) == expected_csize - csize
+            and buffer.startswith(dd_sign, length)
         ):
-            yield from flush(diff)
+            # dd signature absent
+            yield from flush(length)
             if usize != expected_usize or crc32 != expected_crc32:
-                yield from flush(len(dd_sign) + dd_length + len(signature))
+                yield from flush(len(dd_sign) + dd_length + 4)  # len(b'PK\3\4')
                 continue
+            buffer = memoryview(buffer)[len(dd_sign) + dd_length:]
         else:
-            yield from flush(found + len(signature))
+            yield from flush(found + 4)  # len(b'PK\3\4')
             continue
+
+        if dsor:
+            yield from flush(0)
 
         local_file_header.crc32 = crc32
         local_file_header.compressed_size = csize
         local_file_header.uncompressed_size = usize
-        return ...
+        yield b''  # signal end of file
+
+        return buffer  # leftover to reinject
 
 
 def extract(zipfile: io.FileIO) -> Generator[LocalFileHeader | bytes]:
     buffer = None
     fileno = 0
+    header = bytearray(LocalFileHeader._length)
 
     def _read_buffer(n):
         nonlocal buffer
@@ -855,34 +876,31 @@ def extract(zipfile: io.FileIO) -> Generator[LocalFileHeader | bytes]:
     def _read_into(buff):
         nonlocal buffer
         if buffer is None:
-            return zipfile.read_into(buff)
-        bytes_read = buffer.read_into(buff)
+            return zipfile.readinto(buff)
+        bytes_read = buffer.readinto(buff)
         if bytes_read < len(buff):
             buffer = None
-            bytes_read += zipfile.read_into(memoryview(buff)[bytes_read:])
+            bytes_read += zipfile.readinto(memoryview(buff)[bytes_read:])
         return bytes_read
 
     def reinject(data):
         nonlocal buffer
         if buffer is None:
-            buffer = io.BytesIO()
-        pos = buffer.tell()
-        buffer.seek(0, 2)
-        buffer.write(leftover)
-        buffer.seek(pos)
+            buffer = io.BytesIO(leftover)
+        else:
+            buffer = io.BytesIO(buffer.read() + leftover)
 
     try:
         while True:
             fileno += 1
-            header = b''
             local_file_header = None
 
-            header = _read_buffer(LocalFileHeader._length)
-            if not header.startswith(LocalFileHeader.signature):
+            if (_read_into(header) != LocalFileHeader._length
+             or not header.startswith(LocalFileHeader.signature)):
                 break
             *_, filename_len, extra_fields_len = struct.unpack(LocalFileHeader._struct, header)
-            header += _read_buffer(filename_len + extra_fields_len)
-            local_file_header = LocalFileHeader.unpack(header)
+            local_file_header = LocalFileHeader.unpack(
+                header + _read_buffer(filename_len + extra_fields_len))
             yield local_file_header
 
             if local_file_header.flags & Flags.DATA_DESCRIPTOR:
@@ -890,7 +908,6 @@ def extract(zipfile: io.FileIO) -> Generator[LocalFileHeader | bytes]:
                 reinject(leftover)
             else:
                 yield from _read_file(local_file_header, _read_buffer)
-            yield b''  # empty byte to signal end of file
 
     except Exception as exc:
         e = f"while reading file #{fileno} close to offset {zipfile.tell()}, "
@@ -902,8 +919,23 @@ def extract(zipfile: io.FileIO) -> Generator[LocalFileHeader | bytes]:
         raise
 
 
+def helper(zstream):
+    while True:
+        try:
+            local_file = next(zstream)
+            if local_file == b'':
+                print("there's a b'' too much!")
+                continue
+        except StopIteration:
+            break
+        data = b''.join(itertools.takewhile(b''.__ne__, zstream))
+        yield local_file, data
+
+
 def main():
-    import sys  # noqa: PLC0415
+    # ruff: noqa: PLC0415, T201
+    import sys
+    import time
 
     if len(sys.argv) != 3 or '-h' in sys.argv or '--help' in sys.argv:
         sys.exit(f"usage: {sys.argv[0]} <Compress|eXtract> <file>")
@@ -913,15 +945,51 @@ def main():
         sys.exit("not supported")
     elif mode.casefold() in ('x', 'extract'):
         with open(filename, 'rb') as file:
-            for event in extract(file):
-                match event:
-                    case LocalFileHeader():
-                        print(event)  # noqa: T201
-                    case bytes():
-                        pass
+            zstream = extract(file)
+            while True:
+                start = time.time()
+                try:
+                    file = next(zstream)
+                except StopIteration:
+                    break
+                datalen = sum(len(chunk) for chunk in itertools.takewhile(b''.__ne__, zstream))
+                stop = time.time()
+                print(file)
+                print(datalen, "bytes", round(stop - start, 6), "seconds")
     else:
         sys.exit(f"usage: {sys.argv[0]} <Compress|eXtract> <file>")
 
 
 if __name__ == '__main__':
+    # ruff: noqa: PLC0415, T201
+    import linecache
+    import tracemalloc
+
+    def display_top(snapshot, key_type='lineno', limit=10):
+        snapshot = snapshot.filter_traces((
+            tracemalloc.Filter(False, "<frozen importlib._bootstrap>"),
+            tracemalloc.Filter(False, "<unknown>"),
+        ))
+        top_stats = snapshot.statistics(key_type, cumulative=True)
+
+        print("\nMemory Summary -- Top %s lines" % limit)
+        for index, stat in enumerate(top_stats[:limit], 1):
+            frame = stat.traceback[0]
+            print("#%s: %s:%s: %.1f KiB"
+                  % (index, frame.filename, frame.lineno, stat.size / 1024))
+            line = linecache.getline(frame.filename, frame.lineno).strip()
+            if line:
+                print('    %s' % line)
+
+        other = top_stats[limit:]
+        if other:
+            size = sum(stat.size for stat in other)
+            print("%s other: %.1f KiB" % (len(other), size / 1024))
+        total = sum(stat.size for stat in top_stats)
+        print("Total allocated size: %.1f KiB" % (total / 1024))
+
+    tracemalloc.start()
     main()
+    snapshot = tracemalloc.take_snapshot()
+    tracemalloc.stop()
+    display_top(snapshot)
