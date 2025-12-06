@@ -1,18 +1,20 @@
 ############################################################
-# Cloud Run + Odoo 用 Dockerfile（最適化版）
+# Cloud Run + Odoo 用 Dockerfile（シングルDB固定・最適化版）
 # ----------------------------------------------------------
 # - ベースは公式イメージ odoo:19.0 を使用
-# - コンテナ内では Odoo 本体のみを動かす
-# - DB(PostgreSQL) は Cloud SQL など外部サービスを利用
+# - コンテナ内では Odoo 本体のみを動かす（PostgreSQL は外部：Cloud SQL）
 # - DB 接続情報は環境変数(DB_HOST, DB_PORT, DB_USER, DB_PASSWORD)で渡す
-# - Web公開ポートは、Cloud Run が付与する PORT 環境変数を使用
-# - Cloud Run のヘルスチェックに対応できるよう、0.0.0.0 で待受
+# - 使用する DB 名を「odoo」に固定（--db_name=odoo）
+#   → Cloud Run 上で「1サービス = 1つのDB」というシンプルな構成にする
+#   → 昨日のような「削除したDBにセッションが残ってエラー」問題を防ぎやすい
+# - Web 公開ポートは Cloud Run が付与する PORT 環境変数を使う
+#   （ローカルで試す時など PORT 未設定なら 8069 を使用）
 ############################################################
 
 # Odoo 19 の公式 Docker イメージをベースにする
 FROM odoo:19.0
 
-# ログをバッファリングせずに標準出力へ出す（Cloud Run のログ収集と相性が良い）
+# Cloud Run のログ収集と相性を良くするため、Python の出力をバッファリングしない
 ENV PYTHONUNBUFFERED=1
 
 # Odoo が読み込む設定ファイルのパスを環境変数で指定
@@ -31,11 +33,13 @@ ENV ODOO_RC=/etc/odoo/odoo.conf
 # - --http-interface
 #     Cloud Run のリクエストを受け取れるように 0.0.0.0 で待受
 # - --db_host / --db_port / --db_user / --db_password
-#     Cloud SQL や外部 PostgreSQL の接続情報を環境変数から受け取る前提
+#     Cloud SQL（PostgreSQL）の接続情報を環境変数から受け取る前提
+# - --db_name=odoo
+#     使う DB を「odoo」に固定し、マルチDB運用によるトラブルを避ける
 #
 # 【重要】
 #   - このコンテナ内に PostgreSQL は含まれない
-#   - Cloud SQL（PostgreSQL）や別ホストの Postgres へ TCP 接続する構成
+#   - Cloud SQL インスタンス「odoo-postgres」などの外部DBに TCP接続する構成
 CMD ["sh", "-c", "\
   odoo \
     -c ${ODOO_RC} \
@@ -45,4 +49,5 @@ CMD ["sh", "-c", "\
     --db_port=${DB_PORT:-5432} \
     --db_user=${DB_USER} \
     --db_password=${DB_PASSWORD} \
+    --db_name=odoo \
 "]
