@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-28 10:15+0000\n"
-"PO-Revision-Date: 2025-11-20 18:40+0000\n"
+"POT-Creation-Date: 2025-12-04 19:04+0000\n"
+"PO-Revision-Date: 2025-12-06 08:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-17-l10n/"
 "l10n_ma/fr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: l10n_ma
 #: model:account.report.line,name:l10n_ma.tax_report_part_d_1
@@ -158,8 +158,8 @@ msgstr "119 - Autres"
 msgid ""
 "120 - Reversal of VAT in different ways (cessation, regularization, ...)"
 msgstr ""
-"120 - Reversement de la TVA à différents titres (cessation, régularisation, "
-"...)"
+"120 - Reversement de la TVA à différents titres (cessation, "
+"régularisation, ...)"
 
 #. module: l10n_ma
 #: model:account.report.line,name:l10n_ma.tax_report_line_121
@@ -376,8 +376,8 @@ msgid ""
 "186 - Amount claimed as reimbursement for investment property (Article 103 "
 "bis of the CGI)"
 msgstr ""
-"186 - Montant demandé en remboursement au titre des biens d'investissement ("
-"Article 103 bis du CGI)"
+"186 - Montant demandé en remboursement au titre des biens d'investissement "
+"(Article 103 bis du CGI)"
 
 #. module: l10n_ma
 #: model:account.report.line,name:l10n_ma.tax_report_line_187
@@ -681,6 +681,16 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ma
+#: model:ir.model,name:l10n_ma.model_base_document_layout
+msgid "Company Document Layout"
+msgstr "Mise en page des documents de votre société"
+
+#. module: l10n_ma
+#: model:ir.model,name:l10n_ma.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: l10n_ma
 #: model:account.report.line,name:l10n_ma.tax_report_part_d
 msgid "D - Breakdown of deductions"
 msgstr "D - Ventilation des déductions"
@@ -689,6 +699,19 @@ msgstr "D - Ventilation des déductions"
 #: model:account.report.line,name:l10n_ma.tax_report_part_ded
 msgid "Deduction adjustments"
 msgstr "Ajustements des déductions"
+
+#. module: l10n_ma
+#: model_terms:ir.ui.view,arch_db:l10n_ma.view_company_form
+#: model_terms:ir.ui.view,arch_db:l10n_ma.view_partner_property_form
+msgid "ICE"
+msgstr "ICE"
+
+#. module: l10n_ma
+#. odoo-python
+#: code:addons/l10n_ma/models/res_partner.py:0
+#, python-format
+msgid "ICE number should have exactly 15 digits."
+msgstr "Le numéro ICE doit comporter exactement 15 chiffres."
 
 #. module: l10n_ma
 #: model_terms:res.company,invoice_terms_html:l10n_ma.l10n_ma_demo_company_company
@@ -774,6 +797,12 @@ msgid "Tax Due/Ded."
 msgstr "Taxe Due/Déd."
 
 #. module: l10n_ma
+#: model_terms:res.company,sign_terms:l10n_ma.l10n_ma_demo_company_company
+#: model_terms:res.company,sign_terms_html:l10n_ma.l10n_ma_demo_company_company
+msgid "Terms &amp; Conditions"
+msgstr "Conditions générales"
+
+#. module: l10n_ma
 #: model_terms:res.company,invoice_terms_html:l10n_ma.l10n_ma_demo_company_company
 msgid ""
 "The client explicitly waives its own standard terms and conditions, even if "
@@ -812,3 +841,9 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
 "Vous devriez mettre à jour ce document pour refléter vos conditions "
 "générales."
+
+#. module: l10n_ma
+#: model_terms:res.company,sign_terms:l10n_ma.l10n_ma_demo_company_company
+#: model_terms:res.company,sign_terms_html:l10n_ma.l10n_ma_demo_company_company
+msgid "Your conditions..."
+msgstr "Vos conditions..."
