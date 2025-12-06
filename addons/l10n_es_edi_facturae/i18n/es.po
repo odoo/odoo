@@ -3,13 +3,14 @@
 # * l10n_es_edi_facturae
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.2alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-10 09:17+0000\n"
-"PO-Revision-Date: 2025-11-15 13:56+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-12-05 19:02+0000\n"
+"PO-Revision-Date: 2025-12-06 13:24+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s18-4-l10n/"
 "l10n_es_edi_facturae/es/>\n"
 "Language: es\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: l10n_es_edi_facturae
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.corrective_type
@@ -852,8 +853,14 @@ msgstr "Domicilio Receptor"
 
 #. module: l10n_es_edi_facturae
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.corrective_type
-msgid "Rectificación modelo íntegro."
-msgstr "Rectificación modelo íntegro."
+msgid "Rectificación íntegra"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/wizard/account_move_reversal.py:0
+msgid "Reversal of: %(move_name)s - %(reason)s"
+msgstr ""
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_ac_role_type_ids
@@ -1001,7 +1008,7 @@ msgstr "El Punto Lógico Operacional ingresado no es válido."
 #. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/res_partner.py:0
 msgid "The Physical GLN entered is not valid."
-msgstr "El GLN Físico ingresado no es válido."
+msgstr "El GLN físico introducido no es válido."
 
 #. module: l10n_es_edi_facturae
 #. odoo-python
@@ -1113,3 +1120,6 @@ msgstr "text/xml"
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.template_xades_signature
 msgid "urn:oid:1.2.840.10003.5.109.10"
 msgstr "urn:oid:1.2.840.10003.5.109.10"
+
+#~ msgid "Rectificación modelo íntegro."
+#~ msgstr "Rectificación modelo íntegro."
