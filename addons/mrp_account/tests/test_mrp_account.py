@@ -3,6 +3,7 @@
 
 from datetime import timedelta
 
+from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.addons.stock_account.tests.test_account_move import TestAccountMoveStockCommon
 from odoo.tests import Form, tagged
@@ -10,7 +11,7 @@ from odoo.tests.common import new_test_user
 from odoo import fields, Command
 
 
-class TestMrpAccount(TestMrpCommon):
+class TestMrpAccount(TestMrpCommon, MailCase):
 
     @classmethod
     def setUpClass(cls):
@@ -379,6 +380,44 @@ class TestMrpAccount(TestMrpCommon):
         self.assertEqual(production.workorder_ids.mapped('time_ids').mapped('account_move_line_id').mapped('credit'), [
             0.01, 0.01
         ])
+
+    def test_parent_after_child_done(self):
+        """
+        Test the parent mo & workorder states after child has been marked as done
+        """
+        workcenter = self.env['mrp.workcenter'].search([], limit=1)
+        parent, child = self.env['product.product'].create([{
+            'name': n,
+            'is_storable': True,
+        } for n in ['parent', 'child']])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': parent.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': child.id, 'product_qty': 1}),
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'op', 'workcenter_id': workcenter.id}),
+            ]
+        }])
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': child.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+        }])
+        parent_mo = self.env['mrp.production'].create({'product_id': parent.id})
+        parent_mo.action_confirm()  # state: confirmed,  reservation_state: confirmed, workorder_ids.state: waiting
+        self.assertEqual(parent_mo.reservation_state, 'confirmed')
+        self.assertEqual(parent_mo.workorder_ids.state, 'waiting')
+        child_mo = self.env['mrp.production'].create({'product_id': child.id})
+        child_mo.action_confirm()
+        self.assertEqual(child_mo.reservation_state, 'assigned')
+        # flush_tracking & with_context needed to be in the same situation as in the user interface
+        self.flush_tracking()
+        child_mo.with_context({'tracking_disable': False, 'mail_notrack': False}).button_mark_done()
+        self.assertEqual(parent_mo.reservation_state, 'assigned')
+        self.assertEqual(parent_mo.workorder_ids.state, 'ready')
 
 
 @tagged("post_install", "-at_install")

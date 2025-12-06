@@ -542,3 +542,31 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(allocation_5_days.state, 'validate')
         allocation_3_days.action_refuse()
         self.assertEqual(allocation_3_days.state, 'refuse')
+
+    def test_time_off_hours_start_date_attendance(self):
+        """
+        When we set a date_from and/or a date_to  on an attendance, it doesn't appear in global attendances anymore,
+        causing the hours of this attendance to not be taken into account. If all attendances have a date_from and/or
+        a date_to, the total hours_per_day will reach zero, which causes a division per zero when setting a time
+        off based on hours. This test makes sure that we don't divide ever by zero, even in that case.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Standard Calendar',
+            'two_weeks_calendar': False,
+        })
+        self.env['resource.calendar.attendance'].create({
+            'name': 'Monday',
+            'calendar_id': calendar.id,
+            'dayofweek': '0',  # Monday
+            'hour_from': 8,
+            'hour_to': 16,
+            'date_from': '2025-01-01',
+        })
+        self.leave_type.write({'request_unit': 'hour'})
+        with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
+            allocation_form.allocation_type = 'regular'
+            allocation_form.employee_id = self.employee
+            allocation_form.holiday_status_id = self.leave_type
+            allocation_form.number_of_hours_display = 7.2
+            allocation = allocation_form.save()
+            self.assertEqual(allocation.duration_display, '7.2 hours')

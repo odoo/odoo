@@ -1877,6 +1877,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
         }
         return checkout_page_values | payment_form_values
 
+    @route(
+        _express_checkout_delivery_route + '/compute_taxes', type='json', auth='public',
+        website=True, sitemap=False,
+    )
+    def express_checkout_shipping_address_compute_taxes(self):
+        order_sudo = request.website.sale_get_order()
+        order_sudo._recompute_taxes()
+
+        return payment_utils.to_minor_currency_units(order_sudo.amount_total, order_sudo.currency_id)
+
     def _get_shop_payment_errors(self, order):
         """ Check that there is no error that should block the payment.
 

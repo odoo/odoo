@@ -136,6 +136,9 @@ import wUtils from '@website/js/utils';
                             value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
                         },
                     }).enable());
+                    // Disable virtual keyboard to fix popover display issues on
+                    // small screens
+                    input.setAttribute("inputmode", "none");
                 }
                 this.$allDates.addClass('s_website_form_datepicker_initialized');
             }

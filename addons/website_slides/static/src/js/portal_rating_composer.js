@@ -9,15 +9,19 @@ RatingPopupComposer.include({
             (this.options.default_message_id && "/slides/mail/update_comment");
     },
     _reloadRatingPopupComposer: function () {
-        this._super(...arguments);
         if (this.options.res_model !== "slide.channel") {
-            return;
+            return this._super(...arguments);
         }
         const reviewEl = document.querySelector("#review-tab");
         if (reviewEl) {
             reviewEl.textContent = this.rating_count
                 ? _t("Reviews (%s)", this.rating_count)
                 : _t("Reviews");
+        }
+        const editedMessage = this.options["mail.message"]?.[0];
+        // Only update the modal when editing the logged user message
+        if (!editedMessage || this.options.partner_id === editedMessage.author?.id) {
+            return this._super(...arguments);
         }
     },
 });

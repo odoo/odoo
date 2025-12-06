@@ -716,7 +716,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                       'StateCesAmt': 0.0,
                       'StateCesNonAdvlAmt': 0.0,
                       'OthChrg': 0.0,
-                      'TotItemVal': 1000.0
+                      'TotItemVal': 1180.0
                     }
                   ],
                   'ValDtls': {
@@ -728,7 +728,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                     'StCesVal': 0.0,
                     'Discount': 0.0,
                     'RndOffAmt': 0.0,
-                    'TotInvVal': 1000.0
+                    'TotInvVal': 1180.0
                   },
                   'ExpDtls': {
                     'RefClm': 'Y',
@@ -873,7 +873,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                       'StateCesAmt': 0.0,
                       'StateCesNonAdvlAmt': 0.0,
                       'OthChrg': 0.0,
-                      'TotItemVal': 1000.0
+                      'TotItemVal': 1180.0
                     }
                   ],
                   'ValDtls': {
@@ -885,7 +885,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                     'StCesVal': 0.0,
                     'Discount': 0.0,
                     'RndOffAmt': 0.0,
-                    'TotInvVal': 1000.0
+                    'TotInvVal': 1180.0
                   },
                   'ExpDtls': {
                     'RefClm': 'Y',

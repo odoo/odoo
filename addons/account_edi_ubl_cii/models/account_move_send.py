@@ -6,6 +6,7 @@ from lxml import etree
 from xml.sax.saxutils import escape, quoteattr
 
 from odoo import _, api, fields, models, tools, SUPERUSER_ID
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import SUPPORTED_FILE_TYPES
 from odoo.tools import cleanup_xml_node
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
@@ -83,6 +84,26 @@ class AccountMoveSend(models.AbstractModel):
                 'placeholder': True,
             })
         return results
+
+    @api.model
+    def _display_attachments_widget(self, edi_format, sending_methods):
+        ubl_format_info = self.env['res.partner']._get_ubl_cii_formats_info()
+        return (
+            super()._display_attachments_widget(edi_format, sending_methods)
+            or ubl_format_info.get(edi_format, {}).get('embed_attachments')
+        )
+
+    @api.model
+    def _get_ubl_available_attachments(self, mail_attachments_widget, invoice_edi_format):
+        attachment_ids = [values['id'] for values in mail_attachments_widget if values.get('manual')]
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+
+        ubl_format_info = self.env['res.partner']._get_ubl_cii_formats_info().get(invoice_edi_format, {})
+        if not ubl_format_info.get('embed_attachments'):
+            return self.env['ir.attachment'], attachments
+
+        accepted_attachments = attachments.filtered(lambda attachment: attachment.mimetype in SUPPORTED_FILE_TYPES)
+        return accepted_attachments, attachments - accepted_attachments
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -188,9 +209,8 @@ class AccountMoveSend(models.AbstractModel):
             return
 
         xmlns_move_type = 'Invoice' if invoice.move_type == 'out_invoice' else 'CreditNote'
+        anchor_index = tree.index(anchor_elements[0])
         pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
-        filename = pdf_values['name']
-        content = pdf_values['raw']
 
         doc_type_node = ""
         edi_model = invoice_data["ubl_cii_xml_options"]["builder"]
@@ -198,25 +218,45 @@ class AccountMoveSend(models.AbstractModel):
         if doc_type_code_vals['value']:
             doc_type_code_attrs = " ".join(f'{name}="{value}"' for name, value in doc_type_code_vals['attrs'].items())
             doc_type_node = f"<cbc:DocumentTypeCode {doc_type_code_attrs}>{doc_type_code_vals['value']}</cbc:DocumentTypeCode>"
-        to_inject = f'''
-            <cac:AdditionalDocumentReference
-                xmlns="urn:oasis:names:specification:ubl:schema:xsd:{xmlns_move_type}-2"
-                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                <cbc:ID>{escape(filename)}</cbc:ID>
-                {doc_type_node}
-                <cac:Attachment>
-                    <cbc:EmbeddedDocumentBinaryObject
-                        mimeCode="application/pdf"
-                        filename={quoteattr(filename)}>
-                        {base64.b64encode(content).decode()}
-                    </cbc:EmbeddedDocumentBinaryObject>
-                </cac:Attachment>
-            </cac:AdditionalDocumentReference>
-        '''
 
-        anchor_index = tree.index(anchor_elements[0])
-        tree.insert(anchor_index, etree.fromstring(to_inject))
+        attachments_to_embed = [
+            {
+                'filename': attachment.name,
+                'raw': attachment.raw,
+                'mimetype': attachment.mimetype,
+            }
+            for attachment in self._get_ubl_available_attachments(
+                invoice_data['mail_attachments_widget'],
+                invoice_data['invoice_edi_format']
+            )[0]
+        ] if invoice_data.get('mail_attachments_widget') else []
+        attachments_to_embed.append({
+            'filename': pdf_values['name'],
+            'raw': pdf_values['raw'],
+            'mimetype': pdf_values['mimetype'],
+            'xmlns': f'xmlns="urn:oasis:names:specification:ubl:schema:xsd:{xmlns_move_type}-2"',
+            'document_type_node': doc_type_node,
+        })
+
+        for attachment_values in attachments_to_embed:
+            to_inject = f'''
+                <cac:AdditionalDocumentReference
+                    {attachment_values.get("xmlns", "")}
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cbc:ID>{escape(attachment_values["filename"])}</cbc:ID>
+                    {attachment_values.get("document_type_node", "")}
+                    <cac:Attachment>
+                        <cbc:EmbeddedDocumentBinaryObject
+                            mimeCode={quoteattr(attachment_values["mimetype"])}
+                            filename={quoteattr(attachment_values['filename'])}>
+                            {base64.b64encode(attachment_values['raw']).decode()}
+                        </cbc:EmbeddedDocumentBinaryObject>
+                    </cac:Attachment>
+                </cac:AdditionalDocumentReference>
+            '''
+            tree.insert(anchor_index, etree.fromstring(to_inject))
+
         invoice_data['ubl_cii_xml_attachment_values']['raw'] = etree.tostring(
             cleanup_xml_node(tree), xml_declaration=True, encoding='UTF-8'
         )

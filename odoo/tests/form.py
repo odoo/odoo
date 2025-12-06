@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import ast
 import collections
+import collections.abc
 import itertools
 import logging
 from datetime import datetime, date
@@ -568,8 +569,15 @@ class Form:
         self._env.flush_all()
         self._env.clear()  # discard cache and pending recomputations
 
-        if result.get('warning'):
-            _logger.getChild('onchange').warning("%(title)s %(message)s", result['warning'])
+        if w := result.get('warning'):
+            if isinstance(w, collections.abc.Mapping) and w.keys() >= {'title', 'message'}:
+                _logger.getChild('onchange').warning("%(title)s %(message)s", w)
+            else:
+                _logger.getChild('onchange').error(
+                    "received invalid warning %r from onchange on %r (should be a dict with keys `title` and `message`)",
+                    w,
+                    field_names,
+                )
 
         if not field_name:
             # fill in whatever fields are still missing with falsy values
