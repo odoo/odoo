@@ -398,6 +398,9 @@ class ProductProduct(models.Model):
             fifo_stack_size = lot.product_qty
         else:
             fifo_stack_size = self._with_valuation_context().with_context(to_date=at_date).qty_available
+        if self.env.context.get('fifo_qty_already_processed'):
+            # When validating multiple moves at the same time, the qty_available won't be up to date yet
+            fifo_stack_size -= self.env.context['fifo_qty_already_processed']
         if self.uom_id.compare(fifo_stack_size, 0) <= 0:
             return fifo_stack, 0
 

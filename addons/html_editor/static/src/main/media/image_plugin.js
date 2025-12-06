@@ -273,7 +273,6 @@ export class ImagePlugin extends Plugin {
             return;
         }
         targetedImg.style.width = size || "";
-        targetedImg.style.height = size || "";
         this.dependencies.history.addStep();
     }
 

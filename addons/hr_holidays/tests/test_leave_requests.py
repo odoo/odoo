@@ -2107,3 +2107,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         # Assert the manager can approve the leave request assign to portal employee
         leave.with_user(self.user_hrmanager_id).action_approve()
+
+    def test_set_employee_on_leave_req_without_start_date(self):
+        """Test setting the employee on a leave request without a start date."""
+        leave_req_form = Form(self.env['hr.leave'].with_user(self.user_hrmanager_id))
+        leave_req_form.request_date_from = False
+        leave_req_form.employee_id = self.employee_responsible
+
+        self.assertFalse(leave_req_form.can_approve)
