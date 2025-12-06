@@ -11,7 +11,7 @@ from odoo.fields import Domain
 
 PY_OPERATORS = {
     '<': py_operator.lt,
-    '>': py_operator.gt,
+    '>': py_operator.gt, 
     '<=': py_operator.le,
     '>=': py_operator.ge,
     '=': py_operator.eq,
