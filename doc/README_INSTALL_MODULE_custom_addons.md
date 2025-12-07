@@ -13,7 +13,7 @@ odoo:
     - ./custom_addons:/mnt/extra-addons
 
 🔍 配置パス
-C:\GitLab\odoo\odoo_dev\custom_addons\module_template\
+./custom_addons/module_template/
 
 
 この中に以下のファイルが存在すれば OK：

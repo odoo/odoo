@@ -22,7 +22,7 @@ Author: Kazuaki Watanabe
 
 以下のようなディレクトリ構成で作業します：
 
-C:\GitLab\odoo\odoo_dev
+./odoo_dev
 ├─ docker-compose.yml
 ├─ Dockerfile.debug
 ├─ config
@@ -115,7 +115,7 @@ dbfilter = .*
 
 5. Docker コンテナの起動
 
-cd C:\GitLab\odoo\odoo_dev
+cd ./odoo_dev
 docker compose up -d
 
 ブラウザで確認：
@@ -140,7 +140,7 @@ docker compose up -d
 
 8. VSCode デバッグ実行方法
 
-8-1. VSCode で C:\GitLab\odoo\odoo_dev を開く
+8-1. VSCode で ./odoo_dev を開く
 
 8-2. 左の虫アイコン「Run and Debug」をクリック
 

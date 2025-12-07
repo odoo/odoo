@@ -217,7 +217,7 @@ Odoo 19 向けの開発・デバッグ用サンプルモジュールです。
 
 7. Odoo を再起動 → アセット更新
 7-1. Docker のコンテナを再起動
-cd C:\GitLab\odoo\odoo_dev
+cd ./odoo_dev
 docker compose restart odoo
 
 7-2. アセットキャッシュのクリア（推奨）

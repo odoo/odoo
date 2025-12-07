@@ -89,10 +89,10 @@ switch ($Action) {
 
 例：
 
-C:\GitLab\odoo\scripts\
+./scripts/
 
 2. PowerShell でスクリプトのあるフォルダへ移動
-cd C:\GitLab\odoo\scripts
+cd ./scripts
 
 ▶ 実行方法
 3-1. Cloud Run を 停止（max-instances=0）
