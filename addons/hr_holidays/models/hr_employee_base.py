@@ -203,7 +203,11 @@ class HrEmployeeBase(models.AbstractModel):
                     leave_duration = leave[leave_duration_field]
                     skip_excess = False
 
-                    if sorted_leave_allocations.filtered(lambda alloc: alloc.allocation_type == 'accrual') and leave.date_from.date() > target_date:
+                    if leave.date_from.date() > target_date and sorted_leave_allocations.filtered(lambda a: 
+                        a.allocation_type == 'accrual' and 
+                        (a.date_to >= target_date or not a.date_to) and
+                        a.date_from <= leave.date_to.date()
+                    ):
                         to_recheck_leaves_per_leave_type[employee][leave_type]['to_recheck_leaves'] |= leave
                         skip_excess = True
                         continue
