@@ -10,6 +10,7 @@ memory, e.g. to craft a zipfile out of many large file and to send it
 over the network.
 """
 # https://pkwaredownloads.blob.core.windows.net/pkware-general/Documentation/APPNOTE-6.3.9.TXT
+# https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime
 
 import dataclasses
 import datetime
@@ -17,6 +18,7 @@ import enum
 import io
 import itertools
 import struct
+import zlib
 from collections.abc import Generator, Iterable, Mapping
 from functools import partial
 from pathlib import Path
@@ -25,16 +27,7 @@ try:
     from .mimetypes import is_mimetype_textual
 except ImportError:
     def is_mimetype_textual(mimetype):
-        maintype, subtype = mimetype.split('/')
-        return (
-            maintype == 'text'
-            or (maintype == 'application' and subtype in {'documents-email', 'json', 'xml'})
-        )
-
-try:
-    import zlib
-except ImportError:
-    zlib = None
+        return mimetype.startswith('text/')
 
 try:
     import bz2
@@ -50,26 +43,67 @@ MAX_INT32 = 0xFF_FF_FF_FF  # 4GiB - 1
 
 
 def serialize_time_date(dt: datetime.datetime) -> tuple[int, int]:
-    ziptime = dt.second // 2 + (dt.minute << 5) + (dt.hour << 11)
-    zipdate = (dt.day - 1) + ((dt.month - 1) << 5) + ((dt.year - 1980) << 9)
+    """
+    Serialize a python datetime into the MS-DOS format used by ZIP.
+
+    The ZIP datetime are naive, there is no timezone associated with the
+    value. This function uses the datetime as-is, be it naive or aware,
+    UTC or not.
+
+    The MS-DOS format works for dates between 1980 and 2107 (included)
+    and has a precision down to 2 seconds (odd seconds don't exist).
+    This function rejects dates before the range. This function
+    serializes dates after the range, even if the date will not fit in
+    a 16-bits unsigned integer.
+
+    :param dt: A python datetime to be serialized.
+    :returns: A 2 value tuple (time, date), to be ``struct.pack('<HH')``.
+    :raises ValueError: When the given datetime is before 1980.
+    """
+    # https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime
+    if dt.year < 1980:
+        raise ValueError(
+            f"cannot serialize a date before 1970: {dt}")
+    ziptime = (dt.hour << 11) + (dt.minute << 5) + dt.second // 2
+    zipdate = ((dt.year - 1980) << 9) + (dt.month << 5) + dt.day
     return (ziptime, zipdate)
 
 
 def deserialize_time_date(ziptime: int, zipdate: int) -> datetime.datetime:
-    second = (ziptime & 0b11111)
-    minute = (ziptime & 0b11111100000) >> 5
-    hour = (ziptime & 0b1111100000000000) >> 11
-    day = (zipdate & 0b11111)
-    month = (zipdate & 0b111100000) >> 5
-    year = (zipdate & 0b1111111000000000) >> 9
+    """
+    Deserialize a time and date pair in the MS-DOS format used by ZIP
+    into a python datetime.
+
+    The ZIP datetime are naive, there is no timezone associated with the
+    value. This function likewise makes no attempt localize the date and
+    just return the deserialized naive python datetime.
+
+    The MS-DOS format works for dates between 1980 and 2107 (included)
+    and has a precision down to 2 seconds. This function makes no
+    attempt to support dates outside that range.
+
+    :param ziptime: A MS-DOS time as a 16-bits unsigned integer.
+    :param ziptime: A MS-DOS date as a 16-bits unsigned integer.
+    :returns: A naive python datetime, between 1/1/1980-00:00:00 and
+        31/12/2107-23:59:58 (included).
+    """
+    # ruff: noqa: E221
+    # https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-dosdatetimetofiletime
+    second = (ziptime & 0b0000000000011111)
+    minute = (ziptime & 0b0000011111100000) >> 5
+    hour   = (ziptime & 0b1111100000000000) >> 11
+    day    = (zipdate & 0b0000000000011111)
+    month  = (zipdate & 0b0000000111100000) >> 5
+    year   = (zipdate & 0b1111111000000000) >> 9
     try:
-        return datetime.datetime(1980 + year, month + 1, day + 1, hour, minute, second * 2)
+        return datetime.datetime(1980 + year, month, day, hour, minute, second * 2)
     except ValueError as exc:
-        exc.add_note(str((1980 + year, month + 1, day + 1, hour, minute, second * 2)))
+        exc.add_note(str((1980 + year, month, day, hour, minute, second * 2)))
         raise
 
 
 class OS(enum.IntEnum):
+    """ The operating system where a zipfile was created. """
     MSDOS = 0
     AMIGA = 1
     OPOENVMS = 2
@@ -93,9 +127,9 @@ class OS(enum.IntEnum):
 
 
 class Version(enum.IntEnum):
-    DEFAULT = 20
-    ZIP64 = 45
-    UNICODE_FILENAME = 63
+    DEFAULT = 20  # 2.0
+    ZIP64 = 45  # 4.5
+    UNICODE_FILENAME = 63  # 6.3
 
 
 class InternalAttribute(enum.IntFlag, boundary=enum.FlagBoundary.KEEP):
@@ -121,9 +155,8 @@ class CompressionMethod(enum.IntEnum):
     PPMD = 98
 
 
-if zlib:
-    CompressionMethod.DEFLATED.compressor = partial(zlib.compressobj, wbits=-15)
-    CompressionMethod.DEFLATED.decompressor = partial(zlib.decompressobj, wbits=-15)
+CompressionMethod.DEFLATED.compressor = partial(zlib.compressobj, wbits=-15)
+CompressionMethod.DEFLATED.decompressor = partial(zlib.decompressobj, wbits=-15)
 if bz2:
     CompressionMethod.BZIP2.compressor = bz2.BZ2Compressor
     CompressionMethod.BZIP2.decompressor = bz2.BZ2Decompressor
@@ -284,10 +317,12 @@ class LocalFileHeader:
     crc32: int
     compressed_size: int
     uncompressed_size: int
-    filename: bytes
+    filename: str
     extra_fields: dict[ExtraFieldId | int, _ExtraField | bytes]
 
-    def pack(self):
+    def pack(self, *, encoding='ascii'):
+        filename = self.filename.encode(
+            'utf-8' if self.flags & Flags.UNICODE_FILENAME else encoding)
         extra_fields = _serialize_extra_fields(self.extra_fields)
         return struct.pack(self._struct,
             self.signature,
@@ -298,12 +333,12 @@ class LocalFileHeader:
             self.crc32,
             self.compressed_size,
             self.uncompressed_size,
-            len(self.filename),
+            len(filename),
             len(extra_fields),
-        ) + self.filename + extra_fields
+        ) + filename + extra_fields
 
     @classmethod
-    def unpack(cls, file_header):
+    def unpack(cls, file_header, *, encoding='ascii'):
         buffer = io.BytesIO(file_header)
         (
             signature,
@@ -326,15 +361,17 @@ class LocalFileHeader:
             raise ValueError(
                 f"invalid header, expected {cls._length+filename_len+extra_fields_len=} bytes where cls._length=struct.calcsize({cls._struct})={cls._length} {filename_len=} {extra_fields_len=}, got {len(file_header)=} bytes")  # noqa: E226
 
+        flags = Flags(flags)
         return cls(
             version=version,
-            flags=Flags(flags),
+            flags=flags,
             compression=CompressionMethod(compression),
-            modification=deserialize_time_date(moddate, modtime),
+            modification=deserialize_time_date(modtime, moddate),
             crc32=crc32,
             compressed_size=compressed_size,
             uncompressed_size=uncompressed_size,
-            filename=buffer.read(filename_len),
+            filename=buffer.read(filename_len).decode(
+                'utf-8' if flags & Flags.UNICODE_FILENAME else encoding),
             extra_fields=_parse_extra_fields(buffer.read(extra_fields_len)),
         )
 
@@ -358,11 +395,15 @@ class CentralDirectoryFileHeader:
     internal_attribute: int
     external_attribute: int
     local_header_offset: int
-    filename: bytes
-    extra_fields: dict['ExtraFieldId | int', '_ExtraField | bytes']
-    comment: bytes
+    filename: str
+    extra_fields: dict[ExtraFieldId | int, _ExtraField | bytes]
+    comment: str
 
-    def pack(self):
+    def pack(self, *, encoding='ascii'):
+        filename = self.filename.encode(
+            'utf-8' if self.flags & Flags.UNICODE_FILENAME else encoding)
+        comment = self.comment.encode(
+            'utf-8' if self.flags & Flags.UNICODE_FILENAME else encoding)
         extra_fields = _serialize_extra_fields(self.extra_fields)
         return struct.pack(self._struct,
             self.signature,
@@ -375,17 +416,17 @@ class CentralDirectoryFileHeader:
             self.crc32,
             self.compressed_size,
             self.uncompressed_size,
-            len(self.filename),
+            len(filename),
             len(extra_fields),
-            len(self.comment),
+            len(comment),
             self.disk_no,
             self.internal_attribute,
             self.external_attribute,
             self.local_header_offset,
-        ) + self.filename + extra_fields + self.comment
+        ) + filename + extra_fields + comment
 
     @classmethod
-    def unpack(cls, cd_file_header):
+    def unpack(cls, cd_file_header, *, encoding='ascii'):
         buffer = io.BytesIO(cd_file_header)
         (
             signature,
@@ -415,11 +456,12 @@ class CentralDirectoryFileHeader:
             raise ValueError(
                 f"invalid header, expected {cls._length+filename_len+extra_fields_len+comment_len=} bytes where cls._length=struct.calcsize({cls._struct})={cls._length} {filename_len=} {extra_fields_len=} {comment_len=}, got {len(cd_file_header)=} bytes")  # noqa: E226
 
+        flags = Flags(flags)
         return cls(
             version_os=OS(version_os),
             version_zip=Version(version_zip),
             version_needed=Version(version_needed),
-            flags=Flags(flags),
+            flags=flags,
             compression=CompressionMethod(compression),
             modification=deserialize_time_date(modtime, moddate),
             crc32=crc32,
@@ -429,9 +471,11 @@ class CentralDirectoryFileHeader:
             internal_attribute=internal_attribute,
             external_attribute=external_attribute,
             local_header_offset=local_header_offset,
-            filename=buffer.read(filename_len),
+            filename=buffer.read(filename_len).decode(
+                'utf-8' if flags & Flags.UNICODE_FILENAME else encoding),
             extra_fields=_parse_extra_fields(buffer.read(extra_fields_len)),
-            comment=buffer.read(comment_len),
+            comment=buffer.read(comment_len).decode(
+                'utf-8' if flags & Flags.UNICODE_FILENAME else encoding),
         )
 
 
@@ -451,10 +495,10 @@ class EndOfCentralDirectory64:
     central_directory_total_entries_count: int
     central_directory_size: int
     central_directory_offset: int
-    comment: bytes
+    comment: str
 
     @classmethod
-    def unpack(cls, eocd):
+    def unpack(cls, eocd, encoding='utf-8'):
         signature, size, *fields = struct.unpack(cls._struct, eocd[:cls._length])
         if signature != cls.signature:
             raise ValueError(
@@ -462,10 +506,10 @@ class EndOfCentralDirectory64:
         if len(eocd) != size + cls._length_header:
             raise ValueError(
                 f"invalid header, expected {size} bytes, got {len(eocd)=} bytes")
-        comment = eocd[cls._length:]
+        comment = eocd[cls._length:].decode(encoding)
         return cls(*fields, comment)
 
-    def pack(self):
+    def pack(self, encoding='utf-8'):
         return struct.pack(self._struct,
             self.signature,
             self._length + len(self.comment) - self._length_header,
@@ -477,7 +521,7 @@ class EndOfCentralDirectory64:
             self.central_directory_total_entries_count,
             self.central_directory_size,
             self.central_directory_offset,
-        ) + self.comment
+        ) + self.comment.encode(encoding)
 
 
 @dataclasses.dataclass
@@ -626,7 +670,7 @@ def write(
             crc32=0,  # found in data descriptor
             compressed_size=0,  # found in data descriptor
             uncompressed_size=0,  # found in data descriptor
-            filename=attach.name.encode(),
+            filename=attach.name,
             extra_fields=extra_fields,
         )
         yield send(directory[-1].local_file_header.pack())
