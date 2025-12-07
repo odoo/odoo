@@ -1,4 +1,5 @@
 from odoo.tests import tagged
+
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 
 
@@ -8,7 +9,7 @@ class TestItDocumentType(TestItEdi):
     def test_l10n_it_edi_debit_note_document_type(self):
         original_move = self.init_invoice('out_invoice', amounts=[1000], post=True)
 
-        self.assertEqual(original_move.l10n_it_document_type.code, 'TD01')
+        self.assertEqual(original_move.l10n_it_document_type, 'TD01')
 
         move_debit_note_wiz = self.env['account.debit.note'].with_context(
             active_model='account.move',
@@ -27,4 +28,4 @@ class TestItDocumentType(TestItEdi):
         debit_note.action_post()
 
         # when debit note is posted, the IT document type changes to correct type of debit note
-        self.assertEqual(debit_note.l10n_it_document_type.code, 'TD05')
+        self.assertEqual(debit_note.l10n_it_document_type, 'TD05')

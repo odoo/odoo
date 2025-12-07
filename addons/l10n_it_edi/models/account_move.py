@@ -2,19 +2,29 @@
 import logging
 import re
 import uuid
-from base64 import b64encode, b64decode
-from collections import defaultdict
+from base64 import b64decode, b64encode
 from datetime import datetime
 
 from lxml import etree
-from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
+
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import LockError, UserError
-from odoo.tools import cleanup_xml_node, float_compare, float_is_zero, float_repr, html2plaintext
+from odoo.tools import (
+    cleanup_xml_node,
+    float_compare,
+    float_is_zero,
+    float_repr,
+    html2plaintext,
+)
 from odoo.tools.sql import column_exists, create_column
 
-from odoo import _, api, Command, fields, models, modules
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.addons.l10n_it_edi.models.account_payment_method_line import L10N_IT_PAYMENT_METHOD_SELECTION
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import (
+    AccountEdiProxyError,
+)
+from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
+from odoo.addons.l10n_it_edi.models.account_payment_method_line import (
+    L10N_IT_PAYMENT_METHOD_SELECTION,
+)
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 
 _logger = logging.getLogger(__name__)
@@ -22,6 +32,33 @@ _logger = logging.getLogger(__name__)
 
 WAITING_STATES = ('being_sent', 'processing', 'forward_attempt')
 FATTURAPA_FILENAME_RE = "[A-Z]{2}[A-Za-z0-9]{2,28}_[A-Za-z0-9]{0,5}.((?i:xml.p7m|xml))"
+
+# ref: https://fex-app.com/FatturaElettronica/FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/TipoDocumento
+DOCUMENT_TYPES_SELECTION = [
+    ("TD01", "Invoice"),
+    ("TD02", "Deposit/advance on invoice"),
+    ("TD03", "Deposit/advance on vendor bill"),
+    ("TD04", "Credit note"),
+    ("TD05", "Debit note"),
+    ("TD06", "Vendor bill"),
+    ("TD07", "Simplified invoice"),
+    ("TD08", "Simplified credit note"),
+    ("TD09", "Simplified debit note"),
+    ("TD16", "Reverse charged vendor bill integration for domestic reverse charge"),
+    ("TD17", "Reverse charged vendor bill integration for purchase of foreign services"),
+    ("TD18", "Reverse charged vendor bill integration for the purchase of intra-EU goods"),
+    ("TD19", "Reverse charged vendor bill integration for purchase of goods from foreign markets"),
+    ("TD20", "Self-invoice for invoice correction"),
+    ("TD21", "Self-invoice for exceeded threshold"),
+    ("TD22", "Withdrawal of goods from VAT warehouse"),
+    ("TD23", "Withdrawal of goods from VAT warehouse with VAT settlement"),
+    ("TD24", "Deferred invoice"),
+    ("TD25", "Deferred invoice for dropshipping"),
+    ("TD26", "Transfer of depreciable assets and internal transfers"),
+    ("TD27", "Self-invoice for self-consumption, gifts or for free services"),
+    ("TD28", "Self-invoice for purchases from San Marino with VAT (paper invoice)"),
+    ("TD29", "Correction for invoice not delivered or reporting a lower amount"),
+]
 
 
 # -------------------------------------------------------------------------
@@ -61,7 +98,6 @@ class AccountMove(models.Model):
         string="SDI State",
         selection=[
             ('being_sent', 'Being Sent To SdI'),
-            ('requires_user_signature', 'Requires user signature'),  # TODO: remove in master
             ('processing', 'SdI Processing'),
             ('rejected', 'SdI Rejected'),
             ('forwarded', 'SdI Accepted, Forwarded to Partner'),
@@ -116,8 +152,9 @@ class AccountMove(models.Model):
         readonly=False,
     )
 
-    l10n_it_document_type = fields.Many2one(
-        comodel_name='l10n_it.document.type',
+    l10n_it_document_type = fields.Selection(
+        DOCUMENT_TYPES_SELECTION,
+        string="Document Type",
         compute='_compute_l10n_it_document_type',
         store=True,
         readonly=False,
@@ -130,9 +167,8 @@ class AccountMove(models.Model):
         if not column_exists(self.env.cr, 'account_move', 'l10n_it_payment_method'):
             create_column(self.env.cr, 'account_move', 'l10n_it_payment_method', 'varchar')
         if not column_exists(self.env.cr, 'account_move', 'l10n_it_document_type'):
-            create_column(self.env.cr, 'account_move', 'l10n_it_document_type', 'integer')
+            create_column(self.env.cr, 'account_move', 'l10n_it_document_type', 'varchar')
         return super()._auto_init()
-
 
     # -------------------------------------------------------------------------
     # Computes
@@ -167,12 +203,12 @@ class AccountMove(models.Model):
 
     @api.depends('state')
     def _compute_l10n_it_document_type(self):
-        document_type = self.env['l10n_it.document.type'].search([]).grouped('code')
-        for move in self:
-            if move.country_code != 'IT' or move.l10n_it_document_type or move.state != 'posted':
-                continue
-
-            move.l10n_it_document_type = document_type.get(move._l10n_it_edi_get_document_type())
+        for move in self.filtered(lambda x: (
+            x.country_code == 'IT'
+            and not x.l10n_it_document_type
+            and x.state == 'posted'
+        )):
+            move.l10n_it_document_type = move._l10n_it_edi_get_document_type()
 
     @api.depends('commercial_partner_id.l10n_it_pa_index', 'company_id')
     def _compute_l10n_it_partner_pa(self):
@@ -659,11 +695,10 @@ class AccountMove(models.Model):
 
         # Flags
         is_self_invoice = self.l10n_it_edi_is_self_invoice
-        document_type = self.l10n_it_document_type.code
 
         # Represent if the document is a reverse charge refund in a single variable
-        reverse_charge = document_type in ['TD16', 'TD17', 'TD18', 'TD19']
-        is_downpayment = document_type in ['TD02']
+        reverse_charge = self.l10n_it_document_type in ['TD16', 'TD17', 'TD18', 'TD19']
+        is_downpayment = self.l10n_it_document_type in ['TD02']
         reverse_charge_refund = self.move_type == 'in_refund' and reverse_charge
         convert_to_euros = self.currency_id.name != 'EUR'
 
@@ -751,7 +786,7 @@ class AccountMove(models.Model):
         seller_info_values = (company.partner_id if not is_self_invoice else partner)._l10n_it_edi_get_values()
         representative_info_values = company.l10n_it_tax_representative_partner_id._l10n_it_edi_get_values()
 
-        if self._l10n_it_edi_is_simplified_document_type(document_type):
+        if self._l10n_it_edi_is_simplified_document_type(self.l10n_it_document_type):
             formato_trasmissione = "FSM10"
         elif partner._l10n_it_edi_is_public_administration():
             formato_trasmissione = "FPA12"
@@ -865,7 +900,7 @@ class AccountMove(models.Model):
             'is_self_invoice': is_self_invoice,
             'partner_bank': self.partner_bank_id,
             'formato_trasmissione': formato_trasmissione,
-            'document_type': document_type,
+            'document_type': self.l10n_it_document_type,
             'payment_method': self.l10n_it_payment_method,
             'linked_moves': linked_moves,
             'rc_refund': reverse_charge_refund,
@@ -967,11 +1002,17 @@ class AccountMove(models.Model):
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
             'professional_fees': self._l10n_it_edi_is_professional_fees(),
-            **({'debit_note': True} if self.debit_origin_id else {}),
+            'debit_note': bool(self.debit_origin_id),
         }
 
     def _l10n_it_edi_document_type_mapping(self):
-        """ Returns a dictionary with the required features for every TDxx FatturaPA document type """
+        """ Returns a dictionary with the rules to determine the default for the TDxx document type.
+            Order of the rules is important, since they are scanned from top to bottom, and the first
+            one that matches is taken as a valid Document Type.
+            The Document Type can be overridden by hand, as the rules are not exhaustive.
+            i.e. TD20 is for regularization of a previous invoice, it can't be determined by
+                 the move's characteristics, it must be selected manually by the user.
+        """
         return {
             'TD01': {'move_types': ['in_invoice', 'out_invoice'],
                      'import_type': 'in_invoice',
@@ -986,7 +1027,7 @@ class AccountMove(models.Model):
                      'simplified': False,
                      'downpayment': True,
                      'professional_fees': False},
-            'TD03': {'move_types': ['out_invoice'],
+            'TD03': {'move_types': ['in_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
                      'simplified': False,
@@ -1039,7 +1080,7 @@ class AccountMove(models.Model):
                      'import_type': 'in_invoice',
                      'simplified': False,
                      'self_invoice': True,
-                     'services_or_goods': "consu",
+                     'services_or_goods': 'consu',
                      'goods_in_italy': False,
                      'partner_in_eu': True,
                      'tax_tags': {'VJ9'}},
@@ -1047,15 +1088,18 @@ class AccountMove(models.Model):
                      'import_type': 'in_invoice',
                      'simplified': False,
                      'self_invoice': True,
-                     'services_or_goods': "consu",
+                     'services_or_goods': 'consu',
                      'goods_in_italy': True,
                      'tax_tags': {'VJ3'}},
         }
 
     def _l10n_it_edi_get_document_type(self):
         """ Retrieve document type from the move. If not set, compare the features
-        of the invoice to the requirements of each Document Type (TDxx)
-        FatturaPA until you find a valid one. """
+            of the invoice to the requirements of each Document Type (TDxx)
+            FatturaPA until you find a valid one. This function is only called
+            on export, since the document type is stated explicitly in the
+            imported XML file.
+        """
 
         def compare(actual_values, expected_values):
             """ Compare a single entry from the invoice features with the one of the document_type """
@@ -1067,9 +1111,6 @@ class AccountMove(models.Model):
                 return actual_values in expected_values
             # We compare other features directly, one on one
             return actual_values == expected_values
-
-        if self.l10n_it_document_type:
-            return self.l10n_it_document_type.code
 
         invoice_features = self._l10n_it_edi_features_for_document_type_selection()
         for document_type_code, document_type_features in self._l10n_it_edi_document_type_mapping().items():
@@ -1388,7 +1429,7 @@ class AccountMove(models.Model):
                 company_role, partner_role = ('buyer', 'seller') if incoming else ('seller', 'buyer')
                 company_info = buyer_seller_info[company_role]
                 vat = get_text(tree, company_info['vat_xpath'])
-                if vat and vat .casefold() in (company.vat or '').casefold():
+                if vat and vat.casefold() in (company.vat or '').casefold():
                     break
                 codice_fiscale = get_text(tree, company_info['codice_fiscale_xpath'])
                 if codice_fiscale and codice_fiscale.casefold() in (company.l10n_it_codice_fiscale or '').casefold():
@@ -1399,8 +1440,8 @@ class AccountMove(models.Model):
 
             # For unsupported document types, just assume in_invoice, and log that the type is unsupported
             document_type = get_text(tree, '//DatiGeneraliDocumento/TipoDocumento')
-            if l10n_it_document_type := self.env['l10n_it.document.type'].search([('code', '=', document_type)]):
-                self.l10n_it_document_type = l10n_it_document_type
+            if document_type in (code for code, _description in DOCUMENT_TYPES_SELECTION):
+                self.l10n_it_document_type = document_type
 
             move_type = self._l10n_it_edi_document_type_mapping().get(document_type, {}).get('import_type')
             if not move_type:
