@@ -83,7 +83,7 @@ class ProductProduct(models.Model):
 
     @api.depends_context("to_date")
     def _compute_forecasted_without_stock(self):
-        """ Adds orders not receives to forecasted stock tally, """
+        """ Adds orders not received to forecasted stock tally, """
         res = super()._compute_forecasted_without_stock()
         domain = Domain.AND([
             Domain('order_id.state', '=', 'purchase'),
