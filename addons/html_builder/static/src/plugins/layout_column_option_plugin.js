@@ -6,6 +6,10 @@ import { withSequence } from "@html_editor/utils/resource";
 import { LayoutColumnOption } from "@html_builder/plugins/layout_column_option";
 import { LAYOUT_COLUMN } from "@html_builder/utils/option_sequence";
 
+/**
+ * @typedef {((blockerRowCandidate: HTMLElement) => boolean)[]} selection_blocker_row_enablers
+ */
+
 class LayoutColumnOptionPlugin extends Plugin {
     static id = "LayoutColumnOption";
     static dependencies = ["clone", "selection"];
@@ -23,6 +27,11 @@ class LayoutColumnOptionPlugin extends Plugin {
         },
         selection_blocker_predicates: (blocker) => {
             if (blocker.nodeType === Node.ELEMENT_NODE && blocker.classList.contains("row")) {
+                for (const enabler of this.getResource("selection_blocker_row_enablers")) {
+                    if (enabler(blocker)) {
+                        return true;
+                    }
+                }
                 return false;
             }
         },

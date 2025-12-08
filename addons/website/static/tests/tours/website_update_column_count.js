@@ -1,3 +1,4 @@
+import { delay } from "@web/core/utils/concurrency";
 import {
     clickOnSnippet,
     insertSnippet,
@@ -26,6 +27,22 @@ const changeFirstAndSecondColumnsMobileOrder = (snippetRowSelector, snippetName)
         content: "Change the orders of the 1st and 2nd columns",
         trigger: "body .o_overlay_options button[title='Move right']",
         run: "click",
+    },
+    {
+        content: "Wait until scroll starts",
+        trigger: "body",
+        async run() {
+            // Depending on the screen resolution, there might be a scrolling
+            // involved. Ideally, we would want to wait for the scrolling to
+            // start with `body .o_overlay_options:not(:visible)`, but that
+            // would fail the tour if there is no scrolling.
+            // Instead, we wait a few milliseconds to let it start.
+            await delay(10);
+        },
+    },
+    {
+        content: "Wait until scroll ends",
+        trigger: "body .o_overlay_options",
     },
 ];
 

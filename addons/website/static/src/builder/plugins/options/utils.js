@@ -1,5 +1,17 @@
-export const CARD_PARENT_HANDLERS =
-    ".s_three_columns .row > div, .s_comparisons .row > div, .s_cards_grid .row > div, .s_cards_soft .row > div, .s_product_list .row > div, .s_newsletter_centered .row > div, .s_company_team_spotlight .row > div, .s_comparisons_horizontal .row > div, .s_company_team_grid .row > div, .s_company_team_card .row > div, .s_carousel_cards_item";
+export const CARD_PARENT_HANDLERS_ARRAY = [
+    ".s_three_columns .row > div",
+    ".s_comparisons .row > div",
+    ".s_cards_grid .row > div",
+    ".s_cards_soft .row > div",
+    ".s_product_list .row > div",
+    ".s_newsletter_centered .row > div",
+    ".s_company_team_spotlight .row > div",
+    ".s_comparisons_horizontal .row > div",
+    ".s_company_team_grid .row > div",
+    ".s_company_team_card .row > div",
+    ".s_carousel_cards_item",
+];
+export const CARD_PARENT_HANDLERS = CARD_PARENT_HANDLERS_ARRAY.join(", ");
 
 // To remove in master, move it on the Option
 export const ONLY_BG_COLOR_SELECTOR =

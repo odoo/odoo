@@ -30,6 +30,7 @@ declare module "plugins" {
     import { builder_actions, BuilderActionsShared } from "@html_builder/core/builder_actions_plugin";
     import { so_content_addition_selector, so_snippet_addition_selector } from "@html_builder/core/dropzone_selector_plugin";
     import { fontCssVariables } from "@html_builder/plugins/font/font_plugin";
+    import { selection_blocker_row_enablers } from "@html_builder/plugins/layout_column_option_plugin";
     import { apply_custom_css_style } from "@html_builder/core/core_builder_action_plugin";
 
     interface SharedMethods {
@@ -109,6 +110,7 @@ declare module "plugins" {
         filter_for_sibling_dropzone_predicates: filter_for_sibling_dropzone_predicates;
         is_draggable_handlers: is_draggable_handlers;
         keep_overlay_options: keep_overlay_options;
+        selection_blocker_row_enablers: selection_blocker_row_enablers,
 
         // Processors
 

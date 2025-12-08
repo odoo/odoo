@@ -111,7 +111,9 @@ export function cleanUpGrid(rowEl, columnEl, dragHelperEl, backgroundGridEl) {
  */
 export function toggleGridMode(containerEl, preserveSelection, mobileBreakpoint) {
     let rowEl = containerEl.querySelector(":scope > .row");
-    const outOfRowEls = [...containerEl.children].filter((el) => !el.classList.contains("row"));
+    const outOfRowEls = [...containerEl.children].filter(
+        (el) => !el.classList.contains("row") && el.dataset.selectionPlaceholder === undefined
+    );
 
     // Keep the text selection.
     const restoreSelection =
