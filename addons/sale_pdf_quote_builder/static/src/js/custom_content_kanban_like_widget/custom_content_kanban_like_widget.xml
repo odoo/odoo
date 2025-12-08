@@ -55,6 +55,7 @@
                             doc.is_selected = !doc.is_selected;
                             save(id, doc.id, doc.is_selected);
                         }"
+                        t-att-disabled="props.readonly"
                     />
                     <label
                         class="btn btn-secondary m-1"
@@ -82,6 +83,7 @@
                             name="formField.name"
                             value="formField.value"
                             onChange="(value) => { formField.value = value; this.updateJson(); }"
+                            readonly="!!props.readonly"
                         />
                     </t>
                 </div>
