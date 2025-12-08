@@ -248,15 +248,19 @@ patch(PosStore.prototype, {
             (rule) =>
                 rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code)
         );
-        const partnerId = await this.data.call("loyalty.card", "get_loyalty_card_partner_by_code", [
-            code,
-        ]);
+        const partnerId = (
+            await this.data.call("loyalty.card", "get_loyalty_card_partner_by_code", [code])
+        )?.[0];
         let claimableRewards = null;
         let coupon = null;
         // If the code belongs to a loyalty card we just set the partner
         if (partnerId) {
+            if (!this.models["res.partner"].get(partnerId)) {
+                await this.data.read("res.partner", [partnerId]);
+            }
             const partner = this.models["res.partner"].get(partnerId);
             order.setPartner(partner);
+            await this.updateRewards();
         } else if (rule) {
             const date_order = DateTime.fromSQL(order.date_order);
             if (
