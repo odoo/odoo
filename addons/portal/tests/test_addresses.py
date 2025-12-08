@@ -308,3 +308,27 @@ class TestPortalAddresses(BaseCommon, HttpCase):
             self.archive_url, params={'partner_id': child_partner.id},
         )
         self.assertFalse(child_partner.active)
+
+    def test_address_update_when_partner_has_no_name(self):
+        """Check that address updates work correctly with name changes."""
+
+        self.user = self.env['res.users'].create({
+            'login': 'test_user',
+            'password': 'test_user',
+            'name': 'Test User',
+            'email': 'test_user@example.com',
+        })
+        self.authenticate(self.user.login, self.user.password)
+        csrf_token = Request.csrf_token(self)
+
+        # Get partner with no name
+        partner = self.env['res.partner'].search([('name', '=', '')])
+        address_values_with_name = {
+            'csrf_token': csrf_token,
+            'verify_address_values': '',
+            'name': 'New Name',
+            'partner_id': partner.id,
+        }
+        res = self._submit_address_values(address_values_with_name)
+        self.assertEqual(res, {'redirectUrl': '/my/addresses'})
+        self.assertEqual(partner.name, 'New Name')
