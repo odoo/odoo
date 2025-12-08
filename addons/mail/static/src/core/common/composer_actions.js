@@ -39,7 +39,7 @@ export function pickerOnClick(component, action, ev) {
         if (action.sequenceQuick) {
             anchorEl = component.quickActionsRef.el;
         } else {
-            anchorEl = component.moreActionsRef.el ?? action.ref.el;
+            anchorEl = component.moreActionsRef.el ?? component.extraActionsRef.el;
         }
     }
     const previousPicker = component.getActivePicker();
@@ -57,6 +57,7 @@ export function pickerSetup(action, func) {
     component.pickerTargetRef = useRef("picker-target");
     component.quickActionsRef = useRef("quick-actions");
     component.moreActionsRef = useRef("more-actions");
+    component.extraActionsRef = useRef("extra-actions");
     action.ref = useRef(action.id);
     action.picker = func();
 }

@@ -178,7 +178,7 @@
 </t>
 
 <t t-name="mail.Composer.extraActions">
-    <div t-attf-class="{{ actionsContainerClass }}">
+    <div class="o-mail-Composer-extraActions" t-attf-class="{{ actionsContainerClass }}" t-ref="extra-actions">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <ActionList actions="partitionedActions.other" inline="true"/>
         </div>
