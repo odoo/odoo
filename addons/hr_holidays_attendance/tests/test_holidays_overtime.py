@@ -83,6 +83,8 @@ class TestHolidaysOvertime(TransactionCase):
 
             overtime_leave_data = self.leave_type_no_alloc.get_allocation_data(self.employee)
             self.assertEqual(overtime_leave_data[self.employee][0][1]['virtual_remaining_leaves'], 8.0)
+            # `employee_company` must be present to avoid traceback when opening the Time Off Type
+            self.assertTrue(overtime_leave_data[self.employee][0][1].get('employee_company'))
 
             leave = self.env['hr.leave'].create({
                 'name': 'no overtime',
