@@ -364,11 +364,14 @@ const ROOT_MENU = {
     appID: "root",
 };
 
+/** Providing handlers for internal URLs (blob and data) is **optional** */
+const INTERNAL_URL_PROTOCOLS = ["blob:", "data:"];
+
 const R_DATASET_ROUTE = /\/web\/dataset\/call_(?:button|kw)\/[\w.-]+\/(?<step>\w+)/;
-const R_URL_SPECIAL_CHARACTERS = /[.$+()]/g;
 const R_ROUTE_PARAM = /<(?:(?<type>\w+):)?(?<name>[\w-]+)>/g;
-const R_WILDCARD = /\*+/g;
+const R_URL_SPECIAL_CHARACTERS = /[.$+()]/g;
 const R_WEBCLIENT_ROUTE = /(?<step>\/web\/webclient\/\w+)/;
+const R_WILDCARD = /\*+/g;
 
 /** @type {WeakMap<() => any, MockServer>} */
 const mockServers = new WeakMap();
@@ -559,7 +562,6 @@ export class MockServer {
         this._onRoute(["/web/image/<string:model>/<int:id>/<string:field>"], this.loadImage);
         this._onRoute(["/web/webclient/load_menus"], this.loadMenus);
         this._onRoute(["/web/webclient/translations"], this.loadTranslations);
-        this._onRoute([location.origin + "*"], this.loadLocalUrl);
 
         // Register ambiant parameters
         await this.configure(getCurrentParams());
@@ -646,7 +648,10 @@ export class MockServer {
      * @param {URL} url
      */
     _findRouteListeners(url) {
-        const fullRoute = url.origin + url.pathname;
+        // "blob:" and "data:" URLs do not have 'search' and 'hash' parameters
+        const fullRoute = INTERNAL_URL_PROTOCOLS.includes(url.protocol)
+            ? url.href
+            : url.origin + url.pathname;
         /** @type {[RouteCallback, Record<string, string>, RouteOptions][]} */
         const listeners = [];
         for (const [routeRegexes, callback, options] of this._routes) {
@@ -779,7 +784,7 @@ export class MockServer {
         let result = null;
 
         const listeners = this._findRouteListeners(url);
-        if (!listeners.length) {
+        if (!listeners.length && !INTERNAL_URL_PROTOCOLS.includes(url.protocol)) {
             if (url.origin === mockLocation.origin) {
                 error = new MockServerError(`Unimplemented server route: ${url.pathname}`);
             } else {
@@ -1279,11 +1284,6 @@ export class MockServer {
     async loadImage(request, { id, model, field }) {
         return `<fake url to record ${id} on ${model}.${field}>`;
     }
-
-    /**
-     * @type {RouteCallback}
-     */
-    async loadLocalUrl(request) {}
 
     /**
      * @type {RouteCallback<"unique">}
