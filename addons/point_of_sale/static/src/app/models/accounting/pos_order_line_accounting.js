@@ -133,6 +133,10 @@ export class PosOrderlineAccounting extends Base {
         return result;
     }
 
+    get basePrice() {
+        return this.qty * this.price_unit * (1 - this.getDiscount() / 100);
+    }
+
     /**
      * Prepare extra values for the base line used in taxes computation.
      */
