@@ -64,20 +64,7 @@ class ResConfigSettings(models.TransientModel):
     def button_peppol_register_sender_as_receiver(self):
         """Register the existing user as a receiver."""
         self.ensure_one()
-        self.account_peppol_edi_user._peppol_register_sender_as_receiver()
-        self.account_peppol_edi_user._peppol_get_participant_status()
-        if self.account_peppol_proxy_state == 'smp_registration':
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'title': _("Registered to receive documents via Peppol."),
-                    'type': 'success',
-                    'message': _("Your registration on Peppol network should be activated within a day. The updated status will be visible in Settings."),
-                    'next': {'type': 'ir.actions.act_window_close'},
-                }
-            }
-        return True
+        return self.env['peppol.config.wizard'].new().button_peppol_register_sender_as_receiver()
 
     def button_reconnect_this_database(self):
         """Re-establish an out-of-sync connection"""
