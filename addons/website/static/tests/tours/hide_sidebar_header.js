@@ -27,7 +27,14 @@ registerWebsitePreviewTour(
             content: "Check that the loading screen has appeared",
             trigger: ":iframe .o_loading_screen",
         },
-        stepUtils.waitIframeIsReady(),
+        {
+            content: "Wait for the loading screen to disappear",
+            trigger: ":iframe:not(:has(.o_loading_screen))",
+        },
+        {
+            content: "Wait for the 'Content Saved' notification",
+            trigger: ".o_notification :contains('Content Saved')",
+        },
         {
             content: "Check that the header changed to 'Sidebar'",
             trigger: ":iframe #wrapwrap>header.o_header_sidebar",
