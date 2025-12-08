@@ -123,7 +123,7 @@ class StockMoveLine(models.Model):
     @api.depends('state')
     def _compute_picked(self):
         for line in self:
-            if line.move_id.state == 'done':
+            if line.move_id.state == 'done' or (self.env.context.get('allow_parent_move_picked_reset') and line.move_id.picked):
                 line.picked = True
 
     @api.depends('picking_id')

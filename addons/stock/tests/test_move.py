@@ -6683,3 +6683,46 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(aggregate_val_2['qty_ordered'], 1.0)
         self.assertEqual(aggregate_val_2['quantity'], 0)
         self.assertEqual(aggregate_val_2['packaging_qty_ordered'], 0.0)
+
+    def test_newly_added_move_line_is_picked_if_move_is_picked(self):
+        """
+        After a new move line is added in the "Details" popup of a move,
+        it should be automatically marked as picked if the stock move was
+        earlier marked as picked.
+        """
+        lot_1, lot_2 = self.env['stock.lot'].create([{
+            'name': 'lot_1', 'product_id': self.product_lot.id,
+        }, {
+            'name': 'lot_2', 'product_id': self.product_lot.id,
+        }])
+        for lot_id in [lot_1, lot_2]:
+            self.env['stock.quant']._update_available_quantity(
+                self.product_lot, self.stock_location, 3, lot_id=lot_id
+            )
+        # Create a delivery with one move of 3 products
+        with Form(self.env['stock.picking']) as delivery_form:
+            delivery_form.picking_type_id = self.picking_type_out
+            with delivery_form.move_ids.new() as move:
+                move.product_id = self.product_lot
+                move.product_uom_qty = 3
+            delivery = delivery_form.save()
+        delivery.action_confirm()
+        # Verify that the stock move line uses lot_1
+        self.assertEqual(delivery.move_ids.move_line_ids.lot_id, lot_1)
+        # Mark the move as picked, which will also mark the move line as picked
+        delivery.move_ids.picked = True
+        self.assertTrue(delivery.move_ids.move_line_ids.picked)
+        # Split the move lines: 2 from lot_1, 1 from lot_2
+        action = delivery.move_ids.action_show_details()
+        with Form(delivery.move_ids.with_context(action['context']), view=action['view_id']) as form:
+            with form.move_line_ids.edit(0) as existing_move_line:
+                existing_move_line.quantity = 2
+            with form.move_line_ids.new() as new_move_line:
+                new_move_line.lot_id = lot_2
+                new_move_line.quantity = 1
+
+        # The move should still be picked
+        self.assertTrue(delivery.move_ids.picked)
+        # All the move lines are also picked
+        for move_line in delivery.move_ids.move_line_ids:
+            self.assertTrue(move_line.picked)
