@@ -688,6 +688,9 @@ class MailMail(models.Model):
             try:
                 mail = self.browse(mail_id)
                 if mail.state != 'outgoing':
+                    # Apply auto_delete on duplicated mails as they won't be post-processed
+                    if mail.state == 'cancel' and mail.failure_type == 'mail_dup':
+                        mail.sudo().filtered(lambda m: m.auto_delete).unlink()
                     continue
 
                 # Writing on the mail object may fail (e.g. lock on user) which

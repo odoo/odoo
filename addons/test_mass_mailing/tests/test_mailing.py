@@ -16,6 +16,29 @@ class TestMassMailing(TestMassMailCommon):
         super(TestMassMailing, cls).setUpClass()
 
     @users('user_marketing')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_mailing_duplicates_with_auto_delete(self):
+        """ Test mailing duplicates are properly deleted when using auto_delete """
+        mailing_contact_1 = self.env['mailing.contact'].create({'name': 'test 1', 'email': 'test@test.example.com'})
+        mailing_contact_2 = self.env['mailing.contact'].create({'name': 'test 2', 'email': 'test@test.example.com'})
+        mailing_list_1 = self.env['mailing.list'].create({
+            'name': 'A',
+            'contact_ids': (mailing_contact_1 | mailing_contact_2).ids,
+        })
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'SourceName',
+            'subject': 'MailingSubject',
+            'body_html': '<p>Hello World</p>',
+            'mailing_model_id': self.env['ir.model']._get('mailing.list').id,
+            'contact_list_ids': mailing_list_1.ids,
+            'keep_archives': False,
+        })
+        with self.mock_mail_gateway(mail_unlink_sent=True):
+            mailing.action_send_mail()
+
+        self.assertEqual(len(self._new_mails.exists()), 0)
+
+    @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_mailing_gateway_reply(self):
         customers = self.env['res.partner']
