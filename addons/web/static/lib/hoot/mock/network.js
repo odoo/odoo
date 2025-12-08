@@ -265,8 +265,8 @@ let getNetworkDelay = null;
 let mockFetchFn = null;
 /** @type {((websocket: ServerWebSocket) => any) | null} */
 let mockWebSocketConnection = null;
-/** @type {Array<(worker: MockSharedWorker | MockWorker) => any>} */
-let mockWorkerConnection = [];
+/** @type {((worker: MockSharedWorker | MockWorker) => any)[]} */
+const mockWorkerConnections = [];
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -276,7 +276,7 @@ export function cleanupNetwork() {
     // Mocked functions
     mockFetchFn = null;
     mockWebSocketConnection = null;
-    mockWorkerConnection = [];
+    mockWorkerConnections.length = 0;
 
     // Network instances
     for (const instance of openNetworkInstances) {
@@ -469,7 +469,7 @@ export function mockWebSocket(onWebSocketConnected) {
  *  (see {@link mockFetch});
  *  - the `onWorkerConnected` callback will be called after a worker has been created.
  *
- * @param {typeof mockWorkerConnection} [onWorkerConnected]
+ * @param {typeof mockWorkerConnections[number]} [onWorkerConnected]
  * @example
  *  mockWorker((worker) => {
  *      worker.addEventListener("message", (event) => {
@@ -478,7 +478,7 @@ export function mockWebSocket(onWebSocketConnected) {
  *  });
  */
 export function mockWorker(onWorkerConnected) {
-    mockWorkerConnection.push(onWorkerConnected);
+    mockWorkerConnections.push(onWorkerConnected);
 }
 
 /**
@@ -929,7 +929,7 @@ export class MockSharedWorker extends MockEventTarget {
         // First port has to be started manually
         this._messageChannel.port2.start();
 
-        for (const onWorkerConnected of mockWorkerConnection) {
+        for (const onWorkerConnected of mockWorkerConnections) {
             onWorkerConnected(this);
         }
     }
@@ -1040,7 +1040,7 @@ export class MockWorker extends MockEventTarget {
             this.dispatchEvent(new MessageEvent("message", { data: ev.data }));
         });
 
-        for (const onWorkerConnected of mockWorkerConnection) {
+        for (const onWorkerConnected of mockWorkerConnections) {
             onWorkerConnected(this);
         }
     }
