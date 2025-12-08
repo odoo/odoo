@@ -15,9 +15,7 @@ class ReportStockReport_Reception(models.AbstractModel):
     def get_report_data(self, docids, data):
         report_values = self._get_report_values(docids, data)
         report_values['docs'] = self._format_html_docs(report_values.get('docs', False))
-        report_values['sources_info'] = self._format_html_sources_info(report_values.get('sources_to_lines', {}))
-        report_values['sources_to_lines'] = self._format_html_sources_to_lines(report_values.get('sources_to_lines', {}))
-        report_values['sources_to_formatted_scheduled_date'] = self._format_html_sources_to_date(report_values.get('sources_to_formatted_scheduled_date', {}))
+        report_values['product_lines'] = self._format_html_product_lines(report_values.get('product_lines', {}))
         report_values['show_uom'] = self.env.user.has_group('uom.group_uom')
         return report_values
 
@@ -38,6 +36,7 @@ class ReportStockReport_Reception(models.AbstractModel):
             return {'pickings': False, 'reason': msg}
 
         # incoming move qtys
+        product_total_qty = defaultdict(lambda: {'incoming': 0.0, 'assignable': 0.0})
         product_to_qty_draft = defaultdict(float)
         product_to_qty_to_assign = defaultdict(list)
         product_to_total_assigned = defaultdict(lambda: [0.0, []])
@@ -54,6 +53,7 @@ class ReportStockReport_Reception(models.AbstractModel):
                 move.product_qty or
                 move.uom_id._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
             )
+            product_total_qty[move.product_id]['incoming'] += move_quantity
             qty_already_assigned = 0
             if move.move_dest_ids:
                 qty_already_assigned = min(product_to_assigned_qty[move.product_id], move_quantity)
@@ -92,7 +92,7 @@ class ReportStockReport_Reception(models.AbstractModel):
         for out in outs:
             products_to_outs[out.product_id].append(out)
 
-        sources_to_lines = defaultdict(list)  # group by source so we can print them together
+        product_lines = defaultdict(list)  # group by product so we can print them together
         # show potential moves that can be assigned
         for product_id, outs in products_to_outs.items():
             for out in outs:
@@ -126,14 +126,16 @@ class ReportStockReport_Reception(models.AbstractModel):
                         break
 
                 if not product_uom.is_zero(quantity):
-                    sources_to_lines[source].append(self._prepare_report_line(quantity, product_id, out, source[0], move_ins=self.env['stock.move'].browse(moves_in_ids)))
+                    product_lines[product_id].append(self._prepare_report_line(product_id, out, quantity, qty_to_reserve, source=source, move_ins=self.env['stock.move'].browse(moves_in_ids)))
+                    product_total_qty[out.product_id]['assignable'] += quantity
 
                 # draft qtys can be shown but not assigned
                 qty_expected = product_to_qty_draft.get(product_id, 0)
                 if product_uom.compare(qty_to_reserve, quantity) > 0 and not product_uom.is_zero(qty_expected):
                     to_expect = min(qty_expected, qty_to_reserve - quantity)
-                    sources_to_lines[source].append(self._prepare_report_line(to_expect, product_id, out, source[0], is_qty_assignable=False))
+                    product_lines[product_id].append(self._prepare_report_line(product_id, out, to_expect, qty_to_reserve, source=source, is_qty_assignable=False))
                     product_to_qty_draft[product_id] -= to_expect
+                    product_total_qty[out.product_id]['assignable'] += to_expect
 
         # show already assigned moves
         for product_id, qty_and_ins in product_to_total_assigned.items():
@@ -152,37 +154,57 @@ class ReportStockReport_Reception(models.AbstractModel):
                 if out_move.picking_id and source[0] != out_move.picking_id:
                     source = (out_move.picking_id, source[0])
                 qty_assigned = min(total_assigned, out_move.product_qty)
-                sources_to_lines[source].append(
-                    self._prepare_report_line(qty_assigned, product_id, out_move, source[0], is_assigned=True, move_ins=moves_in))
+                product_lines[product_id].append(
+                    self._prepare_report_line(product_id, out_move, qty_assigned, source=source, is_assigned=True, move_ins=moves_in))
+                product_total_qty[out_move.product_id]['assignable'] += qty_assigned
 
-        # dates aren't auto-formatted when printed in report :(
-        sources_to_formatted_scheduled_date = defaultdict(list)
-        for source in sources_to_lines:
-            sources_to_formatted_scheduled_date[source] = self._get_formatted_scheduled_date(source[0])
-
+        for product_id, qty in product_total_qty.items():
+            if qty['incoming'] - qty['assignable'] > 0:
+                product_lines[product_id].append(
+                    self._prepare_report_line(product_id, False, qty['incoming'] - qty['assignable'], is_qty_assignable=False)
+                )
         return {
             'data': data,
             'doc_ids': docids,
             'doc_model': self._get_doc_model(),
-            'sources_to_lines': sources_to_lines,
+            'product_lines': product_lines,
             'precision': self.env['decimal.precision'].precision_get('Product Unit'),
             'docs': docs,
-            'sources_to_formatted_scheduled_date': sources_to_formatted_scheduled_date,
         }
 
-    def _prepare_report_line(self, quantity, product, move_out, source=False, is_assigned=False, is_qty_assignable=True, move_ins=False):
+    def _prepare_report_line(self, product, move_out, required_qty, qty_to_reserve=0, source=False, is_assigned=False, is_qty_assignable=True, move_ins=False):
+        formatted_sources = []
+        date = False
+        if source:
+            # dates aren't auto-formatted when printed in report :(
+            date = self._get_formatted_scheduled_date(source[0])
+            for s in source:
+                formatted = {
+                    'id': s.id,
+                    'model': s._name,
+                    'name': s.display_name,
+                }
+                if s._name == 'stock.picking':
+                    formatted.update({
+                        'priority': s.priority,
+                        'partner_id': s.partner_id.id if s.partner_id else False,
+                        'partner_name': s.partner_id.name if s.partner_id else False,
+                    })
+                formatted_sources.append(formatted)
         return {
-            'source': source,
+            'source': formatted_sources,
             'product': {
                 'id': product.id,
                 'display_name': product.display_name
             },
             'uom': product.uom_id.display_name,
-            'quantity': quantity,
+            'quantity': required_qty,
+            'qty_to_reserve': qty_to_reserve,
             'is_qty_assignable': is_qty_assignable,
             'move_out': move_out,
             'is_assigned': is_assigned,
             'move_ins': move_ins and move_ins.ids or False,
+            'date': date,
         }
 
     def _get_docs(self, docids):
@@ -360,32 +382,9 @@ class ReportStockReport_Reception(models.AbstractModel):
             'display_state': dict(doc._fields['state']._description_selection(self.env)).get(doc.state),
         } for doc in docs] if docs else docs
 
-    def _format_html_sources_to_date(self, sources_to_dates):
-        """ Format sources_to_formatted_scheduled_date to be sent in an html request. """
-        return {str(source): date for (source, date) in sources_to_dates.items()}
-
-    def _format_html_sources_to_lines(self, sources_to_lines):
-        """ Format sources_to_lines to be sent in an html request, while adding an index for OWL's t-foreach. """
+    def _format_html_product_lines(self, product_lines):
+        """ Format product_lines to be sent in an html request, while adding an index for OWL's t-foreach. """
         return {
-            str(source): [{**line, 'index': i, 'move_out_id': line['move_out'].id} for i, line in enumerate(lines)]
-            for source, lines in sources_to_lines.items()
+            str(product): [{**line, 'index': i, 'move_out_id': line['move_out'].id if line['move_out'] else False} for i, line in enumerate(lines)]
+            for product, lines in product_lines.items()
         }
-
-    def _format_html_sources_info(self, sources_to_lines):
-        """ Format used info from sources of sources_to_lines to be sent in an html request. """
-        return {str(source): [self._format_html_source(s, s._name == 'stock.picking')for s in source] for source in sources_to_lines.keys()}
-
-    def _format_html_source(self, source, is_picking=False):
-        """ Format used info from a single source to be sent in an html request. """
-        formatted = {
-            'id': source.id,
-            'model': source._name,
-            'name': source.display_name,
-        }
-        if is_picking:
-            formatted.update({
-                'priority': source.priority,
-                'partner_id': source.partner_id.id if source.partner_id else False,
-                'partner_name': source.partner_id.name if source.partner_id else False,
-            })
-        return formatted

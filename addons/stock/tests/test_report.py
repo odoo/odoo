@@ -76,6 +76,27 @@ class TestReportsCommon(TransactionCase):
                 res[k] = res.get(k, 0) + v
         return res
 
+    def get_sources_and_lines(self, product_lines):
+        """
+        Extract sources and collect lines from product lines.
+
+        Args:
+            product_lines (dict): A dictionary of product lines.
+
+        Returns:
+            tuple: A tuple containing:
+                - A set of source IDs
+                - A list of all lines (product line dictionaries)
+        """
+        all_sources = set()
+        all_lines = []
+        for lines in product_lines.values():
+            for line in lines:
+                if line['source'] and line['source'][0].get('id'):
+                    all_sources.add(line['source'][0]['id'])
+                    all_lines.append(line)
+        return all_sources, all_lines
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReports(TestReportsCommon):
@@ -1503,21 +1524,23 @@ class TestReports(TestReportsCommon):
         # but the quantities aren't available for assignment yet (i.e. can link as chained moves)
         report = self.env['report.stock.report_reception']
         report_values = report._get_report_values(docids=[receipt.id])
-        sources_to_lines = report_values['sources_to_lines']
-        self.assertEqual(len(sources_to_lines), 2, "The report has wrong number of outgoing pickings.")
-        all_lines = []
-        for lines in sources_to_lines.values():
+        product_lines = report_values['product_lines']
+        all_sources, all_lines = set(), []
+        for lines in report_values['product_lines'].values():
             for line in lines:
-                self.assertFalse(line['is_qty_assignable'], "The receipt IS DRAFT => its move quantities ARE NOT available to assign.")
-                all_lines.append(line)
+                if line['source'] and line['source'][0]['id']:
+                    self.assertFalse(line['is_qty_assignable'], "The receipt IS DRAFT => its move quantities ARE NOT available to assign.")
+                    all_sources.add(line['source'][0]['id'])
+                    all_lines.append(line)
+        self.assertEqual(len(all_sources), 2, "The report has wrong number of outgoing pickings.")
         self.assertEqual(len(all_lines), 3, "The report has wrong number of outgoing moves.")
         # we expect this order based on move creation
         self.assertEqual(all_lines[0]['quantity'], 5, "The first move has wrong incoming qty.")
         self.assertEqual(all_lines[0]['product']['id'], self.product.id, "The first move has wrong incoming product to assign.")
-        self.assertEqual(all_lines[1]['quantity'], 5, "The second move has wrong incoming qty.")
-        self.assertEqual(all_lines[1]['product']['id'], product2.id, "The second move has wrong incoming product to assign.")
-        self.assertEqual(all_lines[2]['quantity'], 2, "The last move has wrong incoming qty.")
-        self.assertEqual(all_lines[2]['product']['id'], self.product.id, "The third move has wrong incoming product to assign.")
+        self.assertEqual(all_lines[1]['quantity'], 2, "The last move has wrong incoming qty.")
+        self.assertEqual(all_lines[1]['product']['id'], self.product.id, "The third move has wrong incoming product to assign.")
+        self.assertEqual(all_lines[2]['quantity'], 5, "The second move has wrong incoming qty.")
+        self.assertEqual(all_lines[2]['product']['id'], product2.id, "The second move has wrong incoming product to assign.")
 
         # check that report correctly realizes outgoing moves can be linked when receipt is done
         receipt.action_confirm()
@@ -1527,26 +1550,27 @@ class TestReports(TestReportsCommon):
         receipt.button_validate()
         report_values = report._get_report_values(docids=[receipt.id])
 
-        sources_to_lines = report_values['sources_to_lines']
+        product_lines = report_values['product_lines']
         all_lines = []
         move_ids = []
         qtys = []
         in_ids = []
-        for lines in sources_to_lines.values():
+        for lines in product_lines.values():
             for line in lines:
-                self.assertTrue(line['is_qty_assignable'], "The receipt IS DONE => all of its move quantities ARE assignable")
-                all_lines.append(line)
-                move_ids.append(line['move_out'].id)
-                qtys.append(line['quantity'])
-                in_ids += line['move_ins']
+                if line['source']:
+                    self.assertTrue(line['is_qty_assignable'], "The receipt IS DONE => all of its move quantities ARE assignable")
+                    all_lines.append(line)
+                    move_ids.append(line['move_out'].id)
+                    qtys.append(line['quantity'])
+                    in_ids += line['move_ins']
         # line quantities should be the same when receipt is done compared to when it was draft
         self.assertEqual(len(all_lines), 3, "The report has wrong number of outgoing moves.")
         self.assertEqual(all_lines[0]['quantity'], 5, "The first move has wrong incoming qty to reserve.")
         self.assertEqual(all_lines[0]['product']['id'], self.product.id, "The first move has wrong product to reserve.")
-        self.assertEqual(all_lines[1]['quantity'], 5, "The second move has wrong incoming qty to reserve.")
-        self.assertEqual(all_lines[1]['product']['id'], product2.id, "The second move has wrong product to reserve.")
-        self.assertEqual(all_lines[2]['quantity'], 2, "The last move has wrong incoming qty to reserve.")
-        self.assertEqual(all_lines[2]['product']['id'], self.product.id, "The third move has wrong product to reserve.")
+        self.assertEqual(all_lines[1]['quantity'], 2, "The last move has wrong incoming qty to reserve.")
+        self.assertEqual(all_lines[1]['product']['id'], self.product.id, "The third move has wrong product to reserve.")
+        self.assertEqual(all_lines[2]['quantity'], 5, "The second move has wrong incoming qty to reserve.")
+        self.assertEqual(all_lines[2]['product']['id'], product2.id, "The second move has wrong product to reserve.")
 
         # check that report assign button works correctly
         report.action_assign(move_ids, qtys, in_ids)
@@ -1595,9 +1619,8 @@ class TestReports(TestReportsCommon):
         report = self.env['report.stock.report_reception']
         report_values = report._get_report_values(docids=[receipt1.id, receipt2.id])
         self.assertEqual(len(report_values['docs']), 2, "There should be 2 receipts to assign from in this report")
-        sources_to_lines = report_values['sources_to_lines']
-        self.assertEqual(len(sources_to_lines), 1, "The report has wrong number of outgoing pickings.")
-        all_lines = list(sources_to_lines.values())[0]
+        sources, all_lines = self.get_sources_and_lines(report_values['product_lines'])
+        self.assertEqual(len(sources), 1, "There should only be 1 source (pick move)")
         self.assertEqual(len(all_lines), 1, "The report has wrong number of outgoing move lines.")
         self.assertFalse(all_lines[0]['is_qty_assignable'], "The receipt IS NOT done => its move quantities ARE NOT available to reserve (i.e. done).")
         self.assertEqual(all_lines[0]['quantity'], 8, "The move has wrong incoming qty.")
@@ -1608,9 +1631,8 @@ class TestReports(TestReportsCommon):
             move.quantity = move.product_uom_qty
             move.picked = True
         report_values = report._get_report_values(docids=[receipt1.id, receipt2.id])
-
-        sources_to_lines = report_values['sources_to_lines']
-        all_lines = list(sources_to_lines.values())[0]
+        product_lines = report_values['product_lines']
+        all_lines = next(iter(product_lines.values()))
         # line quantities depends on done vs not done incoming quantities => should be 2 lines now
         self.assertEqual(len(all_lines), 2, "The report has wrong number of lines (1 assignable + 1 not).")
         self.assertEqual(all_lines[0]['quantity'], receipt1_qty, "The first move has wrong incoming qty to assign.")
@@ -1621,8 +1643,8 @@ class TestReports(TestReportsCommon):
         # check that we can assign incoming quantities from 2 different CONFIRMED receipts and then unassign just 1 of them afterwards
         receipt2.action_confirm()
         report_values = report._get_report_values(docids=[receipt1.id, receipt2.id])
-        sources_to_lines = report_values['sources_to_lines']
-        all_lines = list(sources_to_lines.values())[0]
+        product_lines = report_values['product_lines']
+        all_lines = next(iter(product_lines.values()))
         self.assertEqual(len(all_lines), 1, "The report has wrong number of lines (1 outgoing move they are assignable to).")
         self.assertEqual(all_lines[0]['quantity'], incoming_qty, "The total amount of incoming qty to assign should be receipt1 + receipt2's qties.")
         self.assertTrue(all_lines[0]['is_qty_assignable'], "receipts are confirmed, incoming moves should be assignable.")
@@ -1715,7 +1737,8 @@ class TestReports(TestReportsCommon):
 
         report = self.env['report.stock.report_reception']
         report_values = report._get_report_values(docids=[receipt.id])
-        self.assertEqual(len(report_values['sources_to_lines']), 0, "The receipt and delivery are in different warehouses => no moves to link to should be found.")
+        sources, _ = self.get_sources_and_lines(report_values['product_lines'])
+        self.assertEqual(len(sources), 0, "The receipt and delivery are in different warehouses => no moves to link to should be found.")
 
     def test_report_reception_5_move_splitting(self):
         """ Check the complicated use cases of correct move splitting when assigning/unassigning when:
@@ -1826,9 +1849,8 @@ class TestReports(TestReportsCommon):
         # Check backorder assigned quantities
         self.assertEqual(receipt.move_ids.move_dest_ids, backorder.move_ids.move_dest_ids, "Backorder should have copied link to delivery move")
         report_values = report._get_report_values(docids=[backorder.id])
-        sources_to_lines = report_values['sources_to_lines']
-        all_lines = list(sources_to_lines.values())[0]
-        self.assertEqual(len(all_lines), 1, "The report has wrong number of outgoing moves.")
+        sources, all_lines = self.get_sources_and_lines(report_values['product_lines'])
+        self.assertEqual(len(sources), 1, "The report has wrong number of outgoing moves.")
         # we expect that the report won't know about original receipt done amount, so it will show outgoing_qty as assigned
         # (rather than the remaining amount that isn't reserved). This can change if the report becomes more sophisticated
         self.assertEqual(all_lines[0]['quantity'], incoming_qty - orig_incoming_quantity, "The report doesn't have the correct qty assigned.")
@@ -1841,9 +1863,8 @@ class TestReports(TestReportsCommon):
         self.assertEqual(reserved_move.state, 'assigned', "Move w/reserved qty should have full demand reserved")
         self.assertEqual(reserved_move.product_uom_qty, orig_incoming_quantity, "Done amount in original receipt should be amount demanded/reserved in delivery still with a link")
         report_values = report._get_report_values(docids=[backorder.id])
-        sources_to_lines = report_values['sources_to_lines']
-        all_lines = list(sources_to_lines.values())[0]
-        self.assertEqual(len(all_lines), 1, "The report should only contain the remaining non-reserved move")
+        sources, all_lines = self.get_sources_and_lines(report_values['product_lines'])
+        self.assertEqual(len(sources), 1, "The report should only contain the remaining non-reserved move")
         self.assertEqual(all_lines[0]['quantity'], outgoing_qty - orig_incoming_quantity, "The report doesn't have the correct qty to assign")
 
         # Re-assign the remaining delivery amount and check that everything reserves correctly in the end
@@ -1956,8 +1977,8 @@ class TestReports(TestReportsCommon):
             'quantity': 1,
         })
 
-        sources_to_lines = Report._get_report_values(docids=[immediate_receipt_transfer.id])['sources_to_lines']
-        for lines in sources_to_lines.values():
+        product_lines = Report._get_report_values(docids=[immediate_receipt_transfer.id])['product_lines']
+        for lines in product_lines.values():
             for line in lines:
                 self.assertFalse(line['is_qty_assignable'])
 
@@ -1965,10 +1986,9 @@ class TestReports(TestReportsCommon):
         out_move = planned_delivery.move_ids
         in_move = immediate_receipt_transfer.move_ids
 
-        sources_lines_items, = Report._get_report_values(docids=[immediate_receipt_transfer.id])['sources_to_lines'].items()
-        sources, lines = sources_lines_items
-        (source,), = sources
-        self.assertEqual(source, planned_delivery)
+        report_values = Report._get_report_values(docids=[immediate_receipt_transfer.id])
+        sources, lines = self.get_sources_and_lines(report_values['product_lines'])
+        self.assertEqual(sources.pop(), planned_delivery.id)
         self.assertEqual(lines[0]['quantity'], out_move.quantity)
 
         Report.action_assign(out_move.ids, [out_move.quantity], [in_move.ids])
