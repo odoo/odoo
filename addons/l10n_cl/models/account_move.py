@@ -223,7 +223,7 @@ class AccountMove(models.Model):
                     if export else currency_round_other_currency.round(self.amount_total),
                 'round_currency': currency_round_other_currency.decimal_places,
                 'name': self._l10n_cl_normalize_currency_name(currency_round_other_currency.name),
-                'rate': round(abs(self.amount_total_signed) / self.amount_total, 4),
+                'rate': round(abs(self.amount_total_signed) / self.amount_total, 4) if self.amount_total else 1,
             }
         for line in self.line_ids:
             if line.tax_line_id and line.tax_line_id.l10n_cl_sii_code == 14:
