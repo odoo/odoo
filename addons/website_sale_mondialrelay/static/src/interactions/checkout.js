@@ -6,6 +6,7 @@ import { Checkout } from '@website_sale/interactions/checkout';
 // temporary for OnNoResultReturned bug
 import { registry } from '@web/core/registry';
 import { ThirdPartyScriptError } from '@web/core/errors/error_service';
+
 const errorHandlerRegistry = registry.category('error_handlers');
 
 function corsIgnoredErrorHandler(env, error) {
@@ -25,8 +26,7 @@ patch(Checkout.prototype, {
         const useDeliveryAsBillingLabel = this.el.querySelector('#use_delivery_as_billing_label');
         if (useDeliveryAsBillingLabel) {
             this.useDeliveryAsBillingTooltip = window.Tooltip
-                .getOrCreateInstance(useDeliveryAsBillingLabel);
-            this.registerCleanup(() => this.useDeliveryAsBillingTooltip.dispose());
+                .getInstance(useDeliveryAsBillingLabel);
         }
         this._adaptUseDeliveryAsBillingToggle();
     },
