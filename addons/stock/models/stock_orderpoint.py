@@ -730,10 +730,13 @@ class StockWarehouseOrderpoint(models.Model):
                         else:
                             origin = orderpoint.name
                         if orderpoint.product_uom.compare(orderpoint.qty_to_order, 0.0) == 1:
-                            date = orderpoint._get_orderpoint_procurement_date()
-                            global_horizon_days = orderpoint.get_horizon_days()
-                            if global_horizon_days:
-                                date -= relativedelta.relativedelta(days=int(global_horizon_days))
+                            if self.env.context.get('use_deadline'):
+                                date = orderpoint.deadline_date
+                            else:
+                                date = orderpoint._get_orderpoint_procurement_date()
+                                global_horizon_days = orderpoint.get_horizon_days()
+                                if global_horizon_days:
+                                    date -= relativedelta.relativedelta(days=int(global_horizon_days))
                             values = orderpoint._prepare_procurement_values(date=date)
                             procurements.append(self.env['stock.rule'].Procurement(
                                 orderpoint.product_id, orderpoint.qty_to_order, orderpoint.product_uom,

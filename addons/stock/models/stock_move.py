@@ -2429,7 +2429,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 orderpoints_context_by_company[orderpoint.company_id].setdefault(orderpoint.id, set())
                 orderpoints_context_by_company[orderpoint.company_id][orderpoint.id] |= set(move.reference_ids.ids)
         for company, orderpoints in orderpoints_by_company.items():
-            orderpoints.with_context(origins=orderpoints_context_by_company[company])._procure_orderpoint_confirm(
+            orderpoints.with_context(origins=orderpoints_context_by_company[company], use_deadline=True)._procure_orderpoint_confirm(
                 company_id=company, raise_user_error=False)
 
     def _trigger_assign(self):

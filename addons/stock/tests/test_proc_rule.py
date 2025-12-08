@@ -898,6 +898,41 @@ class TestProcRule(TransactionCase):
         self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 2 day(s)', 'In 4 day(s)', 'In 6 day(s)'])
         self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
 
+    @freeze_time('2025-11-01 00:00:00')
+    def test_latest_possible_replenishment_order_date(self):
+        '''
+        Ensure procurement is created to the last possible date when created by
+        confirming a delivery.
+        '''
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+        self.product.is_storable = True
+        self.env['stock.quant']._update_available_quantity(self.product, warehouse.lot_stock_id, 3)
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product RR',
+            'product_id': self.product.id,
+            'product_min_qty': 2,
+            'product_max_qty': 5,
+        })
+        self.env['stock.picking'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'scheduled_date': datetime.now() + timedelta(days=10),
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 7,
+                'quantity': 7,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })]
+        }).action_confirm()
+        replenish_picking = self.env['stock.picking'].search([
+            ('product_id', '=', self.product.id),
+            ('location_dest_id', '=', warehouse.lot_stock_id.id),
+        ])
+        self.assertEqual(replenish_picking.move_ids.product_uom_qty, 9)
+        # No lead time so last possible date is the date of delivery to the partner
+        self.assertEqual(replenish_picking.scheduled_date, datetime.now() + timedelta(days=10))
+
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
