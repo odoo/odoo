@@ -325,7 +325,7 @@
                     t-out="input.textContent"
                 />
             </BuilderSelect>
-            <BuilderSelect t-if="domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT'"
+            <BuilderSelect t-if="domStateDependency.isMultipleInputs || domStateDependency.nodeName === 'SELECT'"
                 id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
             >
                 <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
@@ -381,7 +381,8 @@
                 <BuilderSelectItem dataAttributeActionValue="'fileSet'">Is set</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'!fileSet'">Is not set</BuilderSelectItem>
             </BuilderSelect>
-            <BuilderSelect t-if="domStateDependency.isRecordField"
+            <BuilderSelect t-if="domStateDependency.isRecordField ||
+                (!domStateDependency.isMultipleInputs and domStateDependency.type === 'checkbox')"
                 id="'hidden_condition_record_opt'" dataAttributeAction="'visibilityComparator'" preview="false"
             >
                 <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
@@ -389,7 +390,7 @@
             </BuilderSelect>
         </div>
         <div class="d-flex position-relative p-1 px-2 ps-3 hb-row" data-name="hidden_condition_additional_text">
-            <BuilderSelect t-if="state.conditionValueList and (domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT')"
+            <BuilderSelect t-if="!isMultiSelectVisible"
                 id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
             >
                 <!-- checkbox, select, radio possible values -->
@@ -398,6 +399,10 @@
                     t-out="record.textContent"
                 />
             </BuilderSelect>
+            <BuilderList t-if="isMultiSelectVisible" action="'setDependencyValueList'"
+                sortable="false"
+                isEditable="false"
+                itemShape="{ display_name: 'text', selected: 'boolean' }"/>
             <BuilderSelect t-if="state.conditionValueList and domStateDependency.isRecordField"
                 id="'hidden_condition_record_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
             >

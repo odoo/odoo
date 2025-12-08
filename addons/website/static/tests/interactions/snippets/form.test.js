@@ -430,6 +430,155 @@ test("form submit result cleaned but not removed on stop", async () => {
     expect(queryOne("#s_website_form_result").children.length).toEqual(0);
 });
 
+function formWithVisibilityRulesOnCheckbox(condition) {
+    return `
+        <section class="s_website_form">
+            <form data-model_name="mail.mail">
+                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="one2many">
+                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                        <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
+                            <span class="s_website_form_label_content">Custom Text</span>
+                        </label>
+                        <div class="col-sm">
+                            <div class="row s_col_no_resize s_col_no_bgcolor s_website_form_multiple" data-name="Custom Text" data-display="horizontal">
+                                <div class="checkbox col-12 col-lg-4 col-md-6">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="s_website_form_input form-check-input" id="ofwe8fyqws370" name="Custom Text" value="Option 1" data-fill-with="undefined">
+                                        <label class="form-check-label s_website_form_check_label" for="ofwe8fyqws370">Option 1</label>
+                                    </div>
+                                </div>
+                                <div class="checkbox col-12 col-lg-4 col-md-6">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="s_website_form_input form-check-input" id="ofwe8fyqws371" name="Custom Text" value="Option 2">
+                                        <label class="form-check-label s_website_form_check_label" for="ofwe8fyqws371">Option 2</label>
+                                    </div>
+                                </div>
+                                <div class="checkbox col-12 col-lg-4 col-md-6">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="s_website_form_input form-check-input" id="ofwe8fyqws372" name="Custom Text" value="Option 3">
+                                        <label class="form-check-label s_website_form_check_label" for="ofwe8fyqws372">Option 3</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="Custom Text" data-visibility-condition='["Option 1","Option 2"]' data-visibility-comparator="${condition}">
+                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
+                            <span class="s_website_form_label_content">b</span>
+                        </label>
+                        <div class="col-sm">
+                            <input class="form-control s_website_form_input" type="text" name="b" id="second"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    `;
+}
+
+test("contains conditional visibility(multiple checkbox)", async () => {
+    const { core } = await startInteractions(formWithVisibilityRulesOnCheckbox("contains"));
+    const fieldB = ".s_website_form_field:has(input[name=b])";
+    expect(core.interactions).toHaveLength(1);
+    expect(fieldB).not.toBeVisible();
+
+    await contains("input[value='Option 3']").click();
+    await advanceTime(400); // Debounce delay.
+    expect(fieldB).not.toBeVisible();
+
+    await contains("input[value='Option 2']").click();
+    await advanceTime(400); // Debounce delay.
+    expect(fieldB).toBeVisible();
+
+    await contains("input[value='Option 1']").click();
+    await advanceTime(400); // Debounce delay.
+    expect(fieldB).toBeVisible();
+});
+
+test("does't contains conditional visibility(multiple checkbox)", async () => {
+    const { core } = await startInteractions(formWithVisibilityRulesOnCheckbox("!contains"));
+    const fieldB = ".s_website_form_field:has(input[name=b])";
+    expect(core.interactions).toHaveLength(1);
+    expect(fieldB).toBeVisible();
+
+    await contains("input[value='Option 3']").click();
+    await advanceTime(400); // Debounce delay.
+    expect(fieldB).toBeVisible();
+
+    await contains("input[value='Option 2']").click();
+    await advanceTime(400); // Debounce delay.
+    expect(fieldB).not.toBeVisible();
+
+    await contains("input[value='Option 1']").click();
+    await advanceTime(400); // Debounce delay.
+    expect(fieldB).not.toBeVisible();
+});
+
+function formWithVisibilityRulesOnText(condition) {
+    return `
+        <section class="s_website_form">
+            <form data-model_name="mail.mail">
+                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
+                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                        <label class="col-sm-auto s_website_form_label" style="width: 200px" for="ofwe8fyqws37">
+                            <span class="s_website_form_label_content">a</span>
+                        </label>
+                        <div class="col-sm">
+                            <input class="form-control s_website_form_input" type="text" name="a" required="1" id="obij2aulqyau"/>
+                        </div>
+                    </div>
+                </div>
+                <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="a" data-visibility-condition='test' data-visibility-comparator="${condition}">
+                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="second">
+                            <span class="s_website_form_label_content">b</span>
+                        </label>
+                        <div class="col-sm">
+                            <input class="form-control s_website_form_input" type="text" name="b" id="second"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+    `;
+}
+
+test("contains conditional visibility(text input)", async () => {
+    const { core } = await startInteractions(formWithVisibilityRulesOnText("contains"));
+    const fieldB = ".s_website_form_field:has(input[name=b])";
+    expect(core.interactions).toHaveLength(1);
+    expect(fieldB).not.toBeVisible();
+
+    await contains("input[name=a]").click();
+    await fill("something");
+    await advanceTime(400); // Debounce delay.
+    expect(fieldB).not.toBeVisible();
+
+    await contains("input[name=a]").click();
+    await fill("test string");
+    await advanceTime(400); // Debounce delay.
+    expect(fieldB).toBeVisible();
+});
+
+test("doesn't contains conditional visibility(text input)", async () => {
+    const { core } = await startInteractions(formWithVisibilityRulesOnText("!contains"));
+    const fieldB = ".s_website_form_field:has(input[name=b])";
+    expect(core.interactions).toHaveLength(1);
+    expect(fieldB).toBeVisible();
+
+    await contains("input[name=a]").click();
+    await fill("something");
+    await advanceTime(400); // Debounce delay.
+    expect(fieldB).toBeVisible();
+
+    await contains("input[name=a]").click();
+    await fill("test string");
+    await advanceTime(400); // Debounce delay.
+    expect(fieldB).not.toBeVisible();
+});
+
 test("form prefilled conditional", async () => {
     onRpc("res.users", "read", ({ parent }) => {
         const result = parent();
