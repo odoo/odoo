@@ -1,7 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
-import { Component } from "@odoo/owl";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -72,14 +71,13 @@ export class WebsiteEventTrackReminder extends Interaction {
                 this.reminderOn = reminderOnValue;
                 if (this.reminderOn) {
                     this.favoriteAddedConfirmation = _t("Track successfully added to your favorites.");
-                    Component.env.bus.trigger("open_notification_request", [
-                        "add_track_to_favorite",
-                        {
-                            title: _t("Allow push notifications?"),
-                            body: _t("You have to enable push notifications to get reminders for your favorite tracks."),
-                            delay: 0
-                        },
-                    ]);
+                    // When the `social_push_notifications` module is installed,
+                    // we display a popup that allows the user to enable push
+                    // notifications to receive reminders:
+                    this.env.bus.trigger("SOCIAL_PUSH_NOTIFICATIONS:SHOW_PUSH_NOTIFICATION_REQUEST", {
+                        title: _t("Allow push notifications?"),
+                        body: _t("You have to enable push notifications to get reminders for your favorite tracks."),
+                    });
                     this.bellSelectorEl.classList.replace("fa-bell-o", "fa-bell");
                     this.bellSelectorEl.setAttribute("title", _t("Favorite On"));
                 } else {
