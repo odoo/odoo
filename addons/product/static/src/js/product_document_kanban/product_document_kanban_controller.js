@@ -10,6 +10,7 @@ export class ProductDocumentKanbanController extends KanbanController {
         this.formData = {
             'res_model': this.props.context.default_res_model,
             'res_id': this.props.context.default_res_id,
+            'hideUploadButton': !!this.props.context.hide_upload_button,
         };
     }
 }

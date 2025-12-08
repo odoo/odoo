@@ -12,6 +12,7 @@
         <button
             type="button"
             name="product_upload_document"
+            t-if="!props.formData.hideUploadButton"
             t-attf-class="btn btn-primary"
             t-on-click.stop.prevent="() => this.uploadFileInputRef.el.click()"
         >
