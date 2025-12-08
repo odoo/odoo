@@ -43,7 +43,7 @@ class AccountMove(models.Model):
                 seller_name_enc = get_qr_encoding(1, record.company_id.display_name)
                 company_vat_enc = get_qr_encoding(2, record.company_id.vat)
                 time_sa = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), record.l10n_sa_confirmation_datetime)
-                timestamp_enc = get_qr_encoding(3, time_sa.isoformat())
+                timestamp_enc = get_qr_encoding(3, time_sa.strftime("%Y-%m-%dT%H:%M:%S"))
                 totals = record._get_l10n_sa_totals()
                 invoice_total_enc = get_qr_encoding(4, float_repr(abs(totals['total_amount']), 2))
                 total_vat_enc = get_qr_encoding(5, float_repr(abs(totals['total_tax']), 2))
