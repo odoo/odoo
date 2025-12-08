@@ -36,6 +36,7 @@ class HrLeaveType(models.Model):
         res = super().get_allocation_data(employees, target_date)
         deductible_time_off_types = self.env['hr.leave.type'].search([
             ('overtime_deductible', '=', True),
+<<<<<<< 4952596917849364bd218c0b780eb6a54c86e464
             ('requires_allocation', '=', False)])
         leave_type_names = deductible_time_off_types.mapped('name')
         unspent_overtime = self.env['hr.leave']._get_deductible_employee_overtime(employees)
@@ -49,4 +50,58 @@ class HrLeaveType(models.Model):
                     leave_data[1]['overtime_deductible'] = True
                 else:
                     leave_data[1]['overtime_deductible'] = False
+||||||| 9bbfa8200742ee97783cfa9099c2638af5743415
+            ('requires_allocation', '=', 'no')])
+        for employee in employees:
+            for leave_type in deductible_time_off_types:
+                if leave_type in self and employee.sudo().total_overtime > 0:
+                    lt_info = (
+                        leave_type.name,
+                        {
+                            'remaining_leaves': 0,
+                            'virtual_remaining_leaves': employee.sudo().total_overtime,
+                            'max_leaves': 0,
+                            'leaves_taken': 0,
+                            'virtual_leaves_taken': 0,
+                            'closest_allocation_remaining': 0,
+                            'closest_allocation_expire': False,
+                            'total_virtual_excess': 0,
+                            'virtual_excess_data': {},
+                            'request_unit': leave_type.request_unit,
+                            'icon': leave_type.sudo().icon_id.url,
+                            'allows_negative': leave_type.allows_negative,
+                            'max_allowed_negative': leave_type.max_allowed_negative,
+                            'overtime_deductible': True
+                        },
+                        leave_type.requires_allocation,
+                        leave_type.id)
+                    res[employee].append(lt_info)
+=======
+            ('requires_allocation', '=', 'no')])
+        for employee in employees:
+            for leave_type in deductible_time_off_types:
+                if leave_type in self and employee.sudo().total_overtime > 0:
+                    lt_info = (
+                        leave_type.name,
+                        {
+                            'remaining_leaves': 0,
+                            'virtual_remaining_leaves': employee.sudo().total_overtime,
+                            'max_leaves': 0,
+                            'leaves_taken': 0,
+                            'virtual_leaves_taken': 0,
+                            'closest_allocation_remaining': 0,
+                            'closest_allocation_expire': False,
+                            'total_virtual_excess': 0,
+                            'virtual_excess_data': {},
+                            'request_unit': leave_type.request_unit,
+                            'icon': leave_type.sudo().icon_id.url,
+                            'allows_negative': leave_type.allows_negative,
+                            'max_allowed_negative': leave_type.max_allowed_negative,
+                            'overtime_deductible': True,
+                            'employee_company': employee.company_id.id,
+                        },
+                        leave_type.requires_allocation,
+                        leave_type.id)
+                    res[employee].append(lt_info)
+>>>>>>> c855b30fa9937bfa246fc211311aad79f2f8a052
         return res

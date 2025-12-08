@@ -97,6 +97,56 @@ class TestHolidaysOvertime(TransactionCase):
             self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
             self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')
 
+<<<<<<< 4952596917849364bd218c0b780eb6a54c86e464
+||||||| 9bbfa8200742ee97783cfa9099c2638af5743415
+            overtime_leave_data = self.leave_type_no_alloc.get_allocation_data(self.employee)
+            self.assertEqual(overtime_leave_data[self.employee][0][1]['virtual_remaining_leaves'], 8.0)
+
+            leave = self.env['hr.leave'].create({
+                'name': 'no overtime',
+                'employee_id': self.employee.id,
+                'holiday_status_id': self.leave_type_no_alloc.id,
+                'request_date_from': datetime(2021, 1, 4),
+                'request_date_to': datetime(2021, 1, 4),
+            })
+
+            # The employee doesn't have the right to read the overtime from the leave
+            overtime = leave.sudo().overtime_id.with_user(self.user)
+
+            # An employee cannot delete an overtime adjustment
+            with self.assertRaises(AccessError), self.cr.savepoint():
+                overtime.unlink()
+
+            # ... nor change its duration
+            with self.assertRaises(AccessError), self.cr.savepoint():
+                overtime.duration = 8
+
+=======
+            overtime_leave_data = self.leave_type_no_alloc.get_allocation_data(self.employee)
+            self.assertEqual(overtime_leave_data[self.employee][0][1]['virtual_remaining_leaves'], 8.0)
+            # `employee_company` must be present to avoid traceback when opening the Time Off Type
+            self.assertTrue(overtime_leave_data[self.employee][0][1].get('employee_company'))
+
+            leave = self.env['hr.leave'].create({
+                'name': 'no overtime',
+                'employee_id': self.employee.id,
+                'holiday_status_id': self.leave_type_no_alloc.id,
+                'request_date_from': datetime(2021, 1, 4),
+                'request_date_to': datetime(2021, 1, 4),
+            })
+
+            # The employee doesn't have the right to read the overtime from the leave
+            overtime = leave.sudo().overtime_id.with_user(self.user)
+
+            # An employee cannot delete an overtime adjustment
+            with self.assertRaises(AccessError), self.cr.savepoint():
+                overtime.unlink()
+
+            # ... nor change its duration
+            with self.assertRaises(AccessError), self.cr.savepoint():
+                overtime.duration = 8
+
+>>>>>>> c855b30fa9937bfa246fc211311aad79f2f8a052
     def test_leave_adjust_overtime(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
         self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')
