@@ -26,4 +26,24 @@ patch(OrderPaymentValidation.prototype, {
             super.shouldAskForPartner() || (this.order.shipping_date && !this.order.getPartner())
         );
     },
+
+    async finalizeValidation() {
+        const res = await super.finalizeValidation();
+        try {
+            // Print stock reports if needed.
+            if (this.order.picking_type_id?.has_stock_reports_to_print) {
+                const reports = await this.pos.data.call(
+                    "pos.order",
+                    "get_stock_reports_to_print",
+                    [this.order.id]
+                );
+                for (const report of reports) {
+                    await this.pos.action.doAction(report);
+                }
+            }
+        } catch (error) {
+            return this.handleValidationError(error);
+        }
+        return res;
+    },
 });

@@ -132,3 +132,7 @@ class PosOrder(models.Model):
     @api.model
     def _should_update_quantity_on_product(self):
         return False
+
+    def get_stock_reports_to_print(self):
+        self.ensure_one()
+        return self.picking_ids._get_autoprint_report_actions()
