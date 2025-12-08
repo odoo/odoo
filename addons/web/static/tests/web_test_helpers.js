@@ -1,4 +1,4 @@
-import { before, mockFetch } from "@odoo/hoot";
+import { before, withFetch } from "@odoo/hoot";
 import { loadBundle } from "@web/core/assets";
 import * as _fields from "./_framework/mock_server/mock_fields";
 import * as _models from "./_framework/mock_server/mock_model";
@@ -167,9 +167,7 @@ export function preloadBundle(bundleName, options) {
         if (once) {
             odoo.loader.preventGlobalDefine = true;
         }
-        mockFetch(globalCachedFetch);
-        await loadBundle(bundleName);
-        mockFetch(null);
+        await withFetch(globalCachedFetch, () => loadBundle(bundleName));
         if (once) {
             odoo.loader.preventGlobalDefine = false;
         }
