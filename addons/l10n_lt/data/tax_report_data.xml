@@ -364,8 +364,8 @@
                         <field name="expression_ids">
                             <record id="tax_report_line_35_tag" model="account.report.expression">
                                 <field name="label">balance</field>
-                                <field name="engine">aggregation</field>
-                                <field name="formula">lt_vat_25.balance + lt_vat_26.balance + lt_vat_27.balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">35_tax</field>
                             </record>
                         </field>
                     </record>
