@@ -281,14 +281,16 @@ export class ImageGalleryOptionPlugin extends Plugin {
             carouselEl.removeEventListener("slid.bs.carousel", this.onCarouselSlid);
         }
         container.replaceChildren(slideshowEl);
-        slideshowEl.querySelectorAll("img").forEach((img, index) => {
-            img.setAttribute("data-index", index);
-            if (imagesData[index]?.linkEl) {
-                const linkEl = imagesData[index].linkEl.cloneNode(false);
-                img.before(linkEl);
-                linkEl.append(img);
-            }
-        });
+        slideshowEl
+            .querySelectorAll("img:not(.o_carousel_controllers img)")
+            .forEach((img, index) => {
+                img.setAttribute("data-index", index);
+                if (imagesData[index]?.linkEl) {
+                    const linkEl = imagesData[index].linkEl.cloneNode(false);
+                    img.before(linkEl);
+                    linkEl.append(img);
+                }
+            });
         if (images.length) {
             slideshowEl
                 .querySelector(".carousel .o_carousel_controllers")
@@ -399,7 +401,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
     }
 
     getImages(currentContainer) {
-        const imgs = currentContainer.querySelectorAll("img");
+        const imgs = currentContainer.querySelectorAll("img:not(.o_carousel_controllers img)");
         return [...imgs].sort((imgA, imgB) => this.getIndex(imgA) - this.getIndex(imgB));
     }
 
@@ -425,7 +427,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
     onWillRemove(toRemoveEl) {
         // If the removed element is an image from a gallery, store the gallery
         // element for `onRemoved`.
-        if (toRemoveEl.matches(".s_image_gallery img")) {
+        if (toRemoveEl.matches(".s_image_gallery img:not(.o_carousel_controllers img)")) {
             this.imageRemovedGalleryElement = toRemoveEl.closest(".s_image_gallery");
         }
     }

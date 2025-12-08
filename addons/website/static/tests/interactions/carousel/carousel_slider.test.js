@@ -1,7 +1,8 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
 import { enableTransitions } from "@odoo/hoot-mock";
+import { onceAllImagesLoaded } from "@website/utils/images";
 
 setupInteractionWhiteList("website.carousel_slider");
 beforeEach(enableTransitions);
@@ -29,9 +30,18 @@ test("carousel_slider updates min height of carousel items", async () => {
                         <span class="visually-hidden">Previous</span>
                     </button>
                     <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active" aria-label="Carousel indicator"/>
-                        <button type="button" style="background-image: url(/web/image/website.library_image_03)" data-bs-target="#slideshow_sample" data-bs-slide-to="1" aria-label="Carousel indicator"/>
-                        <button type="button" style="background-image: url(/web/image/website.library_image_02)" data-bs-target="#slideshow_sample" data-bs-slide-to="2" aria-label="Carousel indicator"/>
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="active">
+                            <span class="visually-hidden">Carousel indicator</span>
+                            <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_08"/>
+                        </button>
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1">
+                            <span class="visually-hidden">Carousel indicator</span>
+                            <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_03"/>
+                        </button>
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2">
+                            <span class="visually-hidden">Carousel indicator</span>
+                            <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_02"/>
+                        </button>
                     </div>
                     <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
                         <span class="carousel-control-next-icon" aria-hidden="true"/>
@@ -41,6 +51,7 @@ test("carousel_slider updates min height of carousel items", async () => {
             </div>
         </section>
     `);
+    await onceAllImagesLoaded(getFixture());
     const itemEls = queryAll(".carousel-item");
     const minHeight = itemEls[0].style.minHeight;
 
