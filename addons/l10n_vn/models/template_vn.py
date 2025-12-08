@@ -33,15 +33,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_sale_tax_id': 'tax_sale_vat10',
                 'account_purchase_tax_id': 'tax_purchase_vat10',
                 'transfer_account_id': 'chart1131',
-                'expense_account_id': 'chart1561',
+                'expense_account_id': 'chart632',
                 'income_account_id': 'chart5111',
                 'deferred_expense_account_id': 'chart2421',
                 'deferred_revenue_account_id': 'chart33871',
-                'account_production_wip_account_id': 'chart1542',
+                'account_production_wip_account_id': 'chart154',
                 'default_cash_difference_income_account_id': 'chart711',
                 'default_cash_difference_expense_account_id': 'chart811',
                 'tax_calculation_rounding_method': 'round_per_line',
                 'account_stock_valuation_id': 'chart152',
+                'account_journal_suspense_account_id': 'chart1121',
             },
         }
 
@@ -49,6 +50,17 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_vn_account_account(self):
         return {
             'chart152': {
-                'account_stock_variation_id': 'chart6111',
+                'account_stock_variation_id': 'chart632',
+            },
+        }
+
+    @template('vn', 'account.journal')
+    def _get_vn_account_journal(self):
+        return {
+            'bank': {'default_account_id': 'chart112'},
+            'cash': {
+                'name': self.env._("Cash"),
+                'type': 'cash',
+                'default_account_id': 'chart1111',
             },
         }
