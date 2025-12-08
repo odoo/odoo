@@ -225,6 +225,9 @@ export class ImportAction extends Component {
 
         if (res.ids.length) {
             if (!isTest) {
+                if (res.hasError) {
+                    return;
+                }
                 this.notification.add(_t("%s records successfully imported", res.ids.length), {
                     type: "success",
                 });

@@ -751,6 +751,103 @@ QUnit.module("Base Import Tests", (hooks) => {
         );
     });
 
+    QUnit.test("batched import doesn't exit when a failure occurs", async function (assert) {
+        serverData.actions[2] = {
+            id: 2,
+            name: "Partner List",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            domain: "[]",
+            views: [[false, "list"]],
+        };
+
+        serverData.views = {
+            "partner,false,list": `<list><field name="name"/></list>`,
+            "partner,false,search": "<search></search>",
+        };
+
+        registerFakeHTTPService();
+
+        patchWithCleanup(ImportAction.prototype, {
+            get isBatched() {
+                // make sure the UI displays the batched import options
+                return true;
+            },
+        });
+
+        const notificationMock = (message) => {
+            assert.step(message);
+            return () => {};
+        };
+        registry
+            .category("services")
+            .add("notification", makeFakeNotificationService(notificationMock), {
+                force: true,
+            });
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
+        const steps = [
+            (args) => executeImport(args, true),
+            (args) => executeFailingImport(args[1][0]),
+        ];
+
+        const webClient = await createWebClient({
+            serverData,
+            mockRPC: function (route, args) {
+                switch (route) {
+                    case "/web/dataset/call_kw/partner/get_import_templates":
+                        return Promise.resolve([]);
+
+                    case "/web/dataset/call_kw/base_import.import/parse_preview":
+                        return parsePreview(args.args[1]);
+
+                    case "/web/dataset/call_kw/base_import.import/execute_import":
+                        return steps.shift()(args.args);
+
+                    case "/web/dataset/call_kw/base_import.import/create":
+                        return Promise.resolve(11);
+
+                    case "base_import.import/get_fields":
+                        return Promise.resolve(serverData.models.partner.fields);
+
+                    case "/web/action/load":
+                        assert.step(`/web/action/load id=${args.action_id}`);
+                }
+            },
+        });
+
+        await doAction(webClient, 2);
+        await doAction(webClient, 1);
+
+        assert.verifySteps(["/web/action/load id=2", "/web/action/load id=1"]);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await editInput(target, ".o_control_panel_main_buttons input[type='file']", file);
+        await editInput(target, "input#o_import_batch_limit", 1);
+
+        const importButton = Array.from(
+            target.querySelectorAll(".o_control_panel_main_buttons button")
+        ).find((e) => e.textContent === "Import");
+
+        await click(importButton);
+        await nextTick();
+
+        assert.strictEqual(
+            target.querySelector(".alert-danger")?.textContent,
+            "The file contains blocking errors (see below)"
+        );
+
+        assert.strictEqual(
+            target.querySelector(".o_import_report.alert-danger")?.textContent,
+            "Incorrect value"
+        );
+
+        assert.verifySteps([]); // This makes sure that we don't exit the import action
+    });
+
     QUnit.test(
         "Import view: execute import with option 'use first row as headers'",
         async function (assert) {
