@@ -396,7 +396,8 @@ class StockMove(models.Model):
         """
         if self.env.context.get('force_manual_consumption'):
             for vals in vals_list:
-                vals['manual_consumption'] = True
+                if 'quantity' in vals:
+                    vals['manual_consumption'] = True
         mo_id_to_mo = defaultdict(lambda: self.env['mrp.production'])
         product_id_to_product = defaultdict(lambda: self.env['product.product'])
         for values in vals_list:
@@ -444,7 +445,7 @@ class StockMove(models.Model):
                 updated_product_move._action_confirm()
                 move_to_unlink.unlink()
                 self = other_move + updated_product_move
-        if self.env.context.get('force_manual_consumption'):
+        if self.env.context.get('force_manual_consumption') and 'quantity' in vals:
             vals['manual_consumption'] = True
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve

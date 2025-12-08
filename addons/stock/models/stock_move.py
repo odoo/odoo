@@ -804,6 +804,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             'res_id': self.id,
             'context': dict(
                 self.env.context,
+                allow_parent_move_picked_reset=True,
             ),
         }
 
