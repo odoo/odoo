@@ -26,7 +26,6 @@ import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
-import { nodeSize } from "@html_editor/utils/position";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
@@ -343,12 +342,6 @@ export class ColorPlugin extends Plugin {
                         font = this.dependencies.split.splitAroundUntil(
                             selectedChildren,
                             splitnode
-                        );
-                        cursors.setAnchorOffset(
-                            Math.min(nodeSize(cursors.anchor.node), cursors.anchor.offset)
-                        );
-                        cursors.setFocusOffset(
-                            Math.min(nodeSize(cursors.focus.node), cursors.focus.offset)
                         );
                         // After splitting we need to clear the new nodes created by
                         // `splitElement` that contains only empty text nodes.
