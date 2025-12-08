@@ -116,6 +116,15 @@ class Website(models.Model):
         compute='_compute_send_abandoned_cart_email_activation_time',
         store=True,
     )
+    send_order_rating_emails = fields.Boolean(string="Request ratings", default=False)
+    rating_email_delay = fields.Integer(string="Days After Order to Send Rating Email", default=5)
+    rating_email_template_id = fields.Many2one(
+        comodel_name='mail.template',
+        domain=[('model', '=', 'sale.order')],
+        default=lambda self: (
+            self.env.ref('website_sale.mail_template_sale_order_rating', raise_if_not_found=False)
+        )
+    )
     shop_page_container = fields.Selection(
         selection=[
             ('regular', "Regular"),

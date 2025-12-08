@@ -17,10 +17,10 @@
         'security/res_groups.xml',
 
         # Record data
-        'data/data.xml',
-        'data/digest_data.xml',
-        'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
+        'data/data.xml',  # Needs mail_template_data
+        'data/digest_data.xml',  # Needs mail_template_data
+        'data/ir_cron_data.xml',
         'data/product_ribbon_data.xml',
         'data/tour.xml',
         'data/website_checkout_step_data.xml',

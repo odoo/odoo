@@ -25,6 +25,7 @@
         <record model="website" id="website.default_website">
             <field name="salesteam_id" ref="sales_team.salesteam_website_sales"/>
             <field name="salesperson_id" ref="base.user_admin"/>
+            <field name="rating_email_template_id" ref="website_sale.mail_template_sale_order_rating"/>
         </record>
 
         <record id="delivery.free_delivery_carrier" model="delivery.carrier" forcecreate="False">
