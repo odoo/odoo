@@ -130,7 +130,7 @@ class AccountChartTemplate(models.AbstractModel):
             ('id', '!=', self.env.company.account_journal_early_pay_discount_gain_account_id.id)
         ], limit=1)
         return {
-            'demo_invoice_1': {
+            self.company_xmlid('demo_invoice_1'): {
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_12',
                 'invoice_user_id': 'base.user_demo',
@@ -142,7 +142,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            'demo_invoice_2': {
+            self.company_xmlid('demo_invoice_2'): {
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_2',
                 'invoice_user_id': False,
@@ -153,7 +153,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_01', 'quantity': 20}),
                 ],
             },
-            'demo_invoice_3': {
+            self.company_xmlid('demo_invoice_3'): {
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_2',
                 'invoice_user_id': False,
@@ -164,7 +164,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            'demo_invoice_followup': {
+            self.company_xmlid('demo_invoice_followup'): {
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_2',
                 'invoice_user_id': 'base.user_demo',
@@ -176,7 +176,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            'demo_invoice_5': {
+            self.company_xmlid('demo_invoice_5'): {
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_5',
                 'invoice_user_id': 'base.user_demo',
@@ -187,7 +187,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_order_01', 'price_unit': 200, 'quantity': 10}),
                 ],
             },
-            'demo_invoice_6': {
+            self.company_xmlid('demo_invoice_6'): {
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_5',
                 'invoice_user_id': 'base.user_demo',
@@ -198,7 +198,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_order_01', 'price_unit': 100.0, 'quantity': 10}),
                 ],
             },
-            'demo_invoice_7': {
+            self.company_xmlid('demo_invoice_7'): {
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_5',
                 'invoice_user_id': 'base.user_demo',
@@ -209,7 +209,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_order_01', 'price_unit': 275, 'quantity': 1}),
                 ],
             },
-            'demo_invoice_8': {
+            self.company_xmlid('demo_invoice_8'): {
                 'move_type': 'in_invoice',
                 'partner_id': 'base.res_partner_4',
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
@@ -221,7 +221,7 @@ class AccountChartTemplate(models.AbstractModel):
                 ],
                 'message_main_attachment_id': 'ir_attachment_in_invoice_1',
             },
-            'demo_invoice_equipment_purchase': {
+            self.company_xmlid('demo_invoice_equipment_purchase'): {
                 'move_type': 'in_invoice',
                 'ref': f'INV/{(fields.Date.today() + timedelta(days=-20)).year}/0057',
                 'partner_id': 'base.res_partner_3',
@@ -233,7 +233,7 @@ class AccountChartTemplate(models.AbstractModel):
                 ],
                 'message_main_attachment_id': 'ir_attachment_in_invoice_2',
             },
-            'demo_invoice_9': {
+            self.company_xmlid('demo_invoice_9'): {
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_6',
                 'invoice_user_id': False,
@@ -243,7 +243,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_delivery_02', 'price_unit': 50.00, 'quantity': 15}),
                 ],
             },
-            'demo_invoice_10': {
+            self.company_xmlid('demo_invoice_10'): {
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_5',
                 'invoice_user_id': False,
@@ -253,7 +253,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_03', 'price_unit': 1799, 'quantity': 1}),
                 ],
             },
-            'demo_move_auto_reconcile_1': {
+            self.company_xmlid('demo_move_auto_reconcile_1'): {
                 'move_type': 'out_refund',
                 'partner_id': 'base.res_partner_12',
                 'invoice_date': one_month_ago.strftime("%Y-%m-02"),
@@ -262,7 +262,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            'demo_move_auto_reconcile_2': {
+            self.company_xmlid('demo_move_auto_reconcile_2'): {
                 'move_type': 'out_refund',
                 'partner_id': 'base.res_partner_12',
                 'invoice_date': one_month_ago.strftime("%Y-%m-03"),
@@ -271,7 +271,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_02', 'quantity': 5}),
                 ],
             },
-            'demo_move_auto_reconcile_3': {
+            self.company_xmlid('demo_move_auto_reconcile_3'): {
                 'move_type': 'in_refund',
                 'partner_id': 'base.res_partner_4',
                 'invoice_date': time.strftime('%Y-%m-01'),
@@ -282,7 +282,7 @@ class AccountChartTemplate(models.AbstractModel):
                 ],
                 'message_main_attachment_id': 'ir_attachment_in_invoice_1',
             },
-            'demo_move_auto_reconcile_4': {
+            self.company_xmlid('demo_move_auto_reconcile_4'): {
                 'move_type': 'out_refund',
                 'partner_id': 'base.res_partner_2',
                 'invoice_date': (fields.Date.today() + timedelta(days=-10)).strftime('%Y-%m-%d'),
@@ -292,7 +292,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            'demo_move_auto_reconcile_5': {
+            self.company_xmlid('demo_move_auto_reconcile_5'): {
                 'move_type': 'out_refund',
                 'partner_id': 'base.res_partner_2',
                 'invoice_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
@@ -302,7 +302,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_03', 'quantity': 5}),
                 ],
             },
-            'demo_move_auto_reconcile_6': {
+            self.company_xmlid('demo_move_auto_reconcile_6'): {
                 'move_type': 'entry',
                 'partner_id': 'base.res_partner_2',
                 'date': (fields.Date.today() + timedelta(days=-20)).strftime('%Y-%m-%d'),
@@ -312,7 +312,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'debit': 2500.0, 'credit': 0.0, 'account_id': self.ref('bank').default_account_id.id}),
                 ],
             },
-            'demo_move_auto_reconcile_7': {
+            self.company_xmlid('demo_move_auto_reconcile_7'): {
                 'move_type': 'entry',
                 'partner_id': 'base.res_partner_2',
                 'date': (fields.Date.today() + timedelta(days=-20)).strftime('%Y-%m-%d'),
