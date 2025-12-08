@@ -46,6 +46,9 @@ docker run --name odoo-debug \
   -p 5678:5678 \
   odoo-debug
 
+または下記コマンド
+docker run --name odoo-debug -p 8069:8069 -p 5678:5678 odoo-debug
+
 よく使うポート
 ポート	用途
 8069	Odoo Web UI

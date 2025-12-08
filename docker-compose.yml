@@ -1,6 +1,8 @@
+version: "3.9"
+
 # ============================================
 # Odoo 19 + PostgreSQL + debugpy（VSCodeデバッグ対応）
-# ローカル開発環境向け docker-compose.yml
+# ローカル開発用 docker-compose.yml
 # ============================================
 
 services:
@@ -16,9 +18,9 @@ services:
       POSTGRES_USER: odoo            # DB ユーザー名
       POSTGRES_PASSWORD: odoo        # DB パスワード
     ports:
-      - "5432:5432"                  # ← DBeaver や外部から接続したいので公開
+      - "5432:5432"                  # ← DBeaver 等から接続したい場合
     volumes:
-      - db-data:/var/lib/postgresql/data   # DB 永続化
+      - db-data:/var/lib/postgresql/data   # DB の永続化
     restart: unless-stopped
 
   # ---------------------------------------------------------
@@ -26,22 +28,24 @@ services:
   # ---------------------------------------------------------
   odoo:
     build:
-      context: .                     # カレントディレクトリに Dockerfile.debug を置く
-      dockerfile: Dockerfile.debug   # debugpy 用に作成した Dockerfile
-    container_name: odoo19-web
+      context: .                     # カレントディレクトリをビルドコンテキストに
+      dockerfile: Dockerfile.debug   # Dockerfile.debug を使ってビルド
+    image: odoo-debug                # イメージ名（docker run で使っていた名前と合わせた）
+    container_name: odoo-debug       # コンテナ名
     depends_on:
-      - db                           # DB 起動後に Odoo を起動
+      - db                           # 先に db を起動してから Odoo を立ち上げる
     environment:
-      HOST: db                       # odoo.conf と一致させる
-      USER: odoo
-      PASSWORD: odoo
+      HOST: db                       # Odoo から見た DB ホスト名（service名=db）
+      USER: odoo                     # Odoo が接続に使う DB ユーザー
+      PASSWORD: odoo                 # Odoo が接続に使う DB パスワード
+      ODOO_EXTRA_ADDONS: /mnt/extra-addons   # 追加アドオンのパス
     ports:
-      - "8069:8069"                  # ← Odoo のWeb（ブラウザ用）
+      - "8069:8069"                  # ← Odoo Web（ブラウザ用）
       - "5678:5678"                  # ← VSCode debugpy のポート
     volumes:
-      - odoo-data:/var/lib/odoo      # Odoo の filestore 永続化
-      - ./config:/etc/odoo           # あなたの odoo.conf をマウント
-      - ./custom_addons:/mnt/extra-addons   # カスタムモジュール（デバッグ対象）
+      - odoo-data:/var/lib/odoo              # Odoo の filestore 永続化
+      - ./config:/etc/odoo                   # あなたの odoo.conf をマウント
+      - ./custom_addons:/mnt/extra-addons    # カスタムモジュール（デバッグ対象）
     restart: unless-stopped
 
 # -------------------------------------------------------------
