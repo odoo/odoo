@@ -87,3 +87,68 @@ class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.amount_total, 90)
         self.main_pos_config.open_ui()
         self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, "test_pos_sale_loyalty_ignored_in_pos", login="accountman")
+
+    def test_sale_order_loyalty_card_can_be_used_in_pos(self):
+        """Create loyalty program & card → Confirm sale order → Verify loyalty card usable in POS"""
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env['loyalty.program'].create({
+            'name': 'Promo Code Program',
+            'program_type': 'promotion',
+            'trigger': 'with_code',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'mode': 'with_code',
+                'code': 'promocode',
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 50,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'reward_point_amount': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'per_point',
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100,
+            'taxes_id': [],
+        })
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.partner_a.id,
+            'points': 0,
+            'code': 'LOYALTY123',
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': test_product.id,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+            })]
+        })
+        sale_order.action_confirm()
+        self.assertEqual(loyalty_card.points, 1)
+        self.env['ir.config_parameter'].set_param('point_of_sale.limited_customer_count', '0')
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_sale_order_loyalty_card_can_be_used_in_pos')
+        order = self.main_pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.partner_id.id, self.partner_a.id)
+        self.assertEqual(loyalty_card.points, 2)
