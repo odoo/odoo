@@ -81,7 +81,7 @@ class AccountChartTemplate(models.AbstractModel):
         )
         return {
             # Customer invoice demo
-            'demo_invoice_1': {
+            self.company_xmlid('demo_invoice_1'): {
                 'company_id': company.id,
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_4',
@@ -95,7 +95,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_20', 'price_unit': 1950.0, 'quantity': 4}),
                 ],
             },
-            'demo_invoice_2': {
+            self.company_xmlid('demo_invoice_2'): {
                 'company_id': company.id,
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_4',
@@ -110,7 +110,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_01', 'price_unit': 4000.0, 'quantity': 5}),
                 ],
             },
-            'demo_invoice_3': {
+            self.company_xmlid('demo_invoice_3'): {
                 'company_id': company.id,
                 'move_type': 'out_invoice',
                 'partner_id': 'l10n_uy.partner_cfu',
@@ -127,7 +127,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_3', 'price_unit': 450.0, 'quantity': 2}),
                 ],
             },
-            'demo_invoice_4': {
+            self.company_xmlid('demo_invoice_4'): {
                 'company_id': company.id,
                 'move_type': 'out_invoice',
                 'partner_id': 'demo_partner_4',
@@ -144,7 +144,7 @@ class AccountChartTemplate(models.AbstractModel):
                 ],
                 'currency_id': 'base.USD',
             },
-            'demo_invoice_5': {
+            self.company_xmlid('demo_invoice_5'): {
                 'company_id': company.id,
                 'move_type': 'out_invoice',
                 'partner_id': 'res_partner_foreign',
@@ -163,7 +163,7 @@ class AccountChartTemplate(models.AbstractModel):
                 ],
                 'currency_id': 'base.USD',
             },
-            'demo_invoice_6': {
+            self.company_xmlid('demo_invoice_6'): {
                 'company_id': company.id,
                 'move_type': 'out_invoice',
                 'partner_id': 'l10n_uy.partner_cfu',
@@ -185,7 +185,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_20', 'price_unit': 1950.0, 'quantity': 4}),
                 ],
             },
-            'demo_invoice_7': {
+            self.company_xmlid('demo_invoice_7'): {
                 'company_id': company.id,
                 'move_type': 'out_invoice',
                 'partner_id': 'l10n_uy.partner_cfu',
@@ -203,7 +203,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_20', 'price_unit': 1950.0, 'quantity': 2}),
                 ],
             },
-            'demo_invoice_8': {
+            self.company_xmlid('demo_invoice_8'): {
                 'company_id': company.id,
                 'move_type': 'out_invoice',
                 'partner_id': 'demo_partner_5',
@@ -218,7 +218,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_12', 'price_unit': 120.0, 'quantity': 3}),
                 ],
             },
-            'demo_invoice_9': {
+            self.company_xmlid('demo_invoice_9'): {
                 'company_id': company.id,
                 'move_type': 'out_invoice',
                 'partner_id': 'demo_partner_4',
@@ -235,7 +235,7 @@ class AccountChartTemplate(models.AbstractModel):
             },
 
             # Supplier invoice demo
-            'demo_sup_invoice_1': {
+            self.company_xmlid('demo_sup_invoice_1'): {
                 'company_id': company.id,
                 'move_type': 'in_invoice',
                 'partner_id': 'demo_partner_5',
@@ -250,7 +250,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_27', 'price_unit': 228.0, 'quantity': 1}),
                 ],
             },
-            'demo_sup_invoice_2': {
+            self.company_xmlid('demo_sup_invoice_2'): {
                 'company_id': company.id,
                 'move_type': 'in_invoice',
                 'partner_id': 'res_partner_foreign',
@@ -266,7 +266,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_2', 'price_unit': 2584.0, 'quantity': 2}),
                 ],
             },
-            'demo_sup_invoice_3': {
+            self.company_xmlid('demo_sup_invoice_3'): {
                 'company_id': company.id,
                 'move_type': 'in_invoice',
                 'partner_id': 'demo_partner_4',
@@ -279,7 +279,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_2', 'price_unit': 1642.0, 'quantity': 8}),
                 ],
             },
-            'demo_sup_invoice_4': {
+            self.company_xmlid('demo_sup_invoice_4'): {
                 'company_id': company.id,
                 'move_type': 'in_invoice',
                 'partner_id': 'l10n_uy.partner_cfu',
@@ -292,7 +292,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_2', 'price_unit': 1642.0, 'quantity': 3}),
                 ],
             },
-            'demo_sup_invoice_5': {
+            self.company_xmlid('demo_sup_invoice_5'): {
                 'company_id': company.id,
                 'move_type': 'in_invoice',
                 'partner_id': 'res_partner_foreign',
@@ -307,7 +307,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_2', 'price_unit': 3245.0, 'quantity': 1}),
                 ],
             },
-            'demo_sup_invoice_6': {
+            self.company_xmlid('demo_sup_invoice_6'): {
                 'company_id': company.id,
                 'move_type': 'in_invoice',
                 'partner_id': 'res_partner_foreign',
@@ -322,7 +322,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_2', 'price_unit': 9584.0, 'quantity': 16}),
                 ],
             },
-            'demo_sup_invoice_7': {
+            self.company_xmlid('demo_sup_invoice_7'): {
                 'company_id': company.id,
                 'move_type': 'in_invoice',
                 'partner_id': 'demo_partner_5',
@@ -339,7 +339,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_delivery_02', 'price_unit': 4000.0, 'quantity': 1}),
                 ],
             },
-            'demo_sup_invoice_8': {
+            self.company_xmlid('demo_sup_invoice_8'): {
                 'company_id': company.id,
                 'move_type': 'in_invoice',
                 'partner_id': 'l10n_uy.partner_cfu',
@@ -356,7 +356,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.consu_delivery_03', 'price_unit': 2350.0, 'quantity': 4}),
                 ],
             },
-            'demo_sup_invoice_9': {
+            self.company_xmlid('demo_sup_invoice_9'): {
                 'company_id': company.id,
                 'move_type': 'in_invoice',
                 'partner_id': 'demo_partner_4',
@@ -372,7 +372,7 @@ class AccountChartTemplate(models.AbstractModel):
                     Command.create({'product_id': 'product.product_product_13', 'price_unit': 85.0, 'quantity': 2}),
                 ],
             },
-            'demo_sup_invoice_10': {
+            self.company_xmlid('demo_sup_invoice_10'): {
                 'company_id': company.id,
                 'move_type': 'in_invoice',
                 'partner_id': 'demo_partner_5',
@@ -408,28 +408,28 @@ class AccountChartTemplate(models.AbstractModel):
             # Account Customer Refund
 
             # Create draft refund for invoice 3
-            'demo_refund_invoice_1': {
+            self.company_xmlid('demo_refund_invoice_1'): {
                 'reason': 'Venta Cancelada',
                 'move_ids': 'demo_invoice_1',
                 'journal_id': sale_journal.id,
                 'date': time.strftime('%Y-%m') + '-01'
             },
             # Create draft refund for invoice 4
-            'demo_refund_invoice_2': {
+            self.company_xmlid('demo_refund_invoice_2'): {
                 'reason': 'Venta Cancelada',
                 'move_ids': 'demo_invoice_4',
                 'l10n_latam_document_type_id': 'l10n_uy.dc_cn_e_ticket',
                 'journal_id': sale_journal.id,
                 'date': time.strftime('%Y-%m') + '-01'
             },
-            'demo_refund_invoice_3': {
+            self.company_xmlid('demo_refund_invoice_3'): {
                 'reason': 'Venta Cancelada',
                 'move_ids': 'demo_invoice_5',
                 'l10n_latam_document_type_id': 'l10n_uy.dc_cn_e_inv_exp',
                 'journal_id': sale_journal.id,
                 'date': time.strftime('%Y-%m') + '-01'
             },
-            'demo_refund_invoice_4': {
+            self.company_xmlid('demo_refund_invoice_4'): {
                 'reason': 'Venta Cancelada',
                 'move_ids': 'demo_invoice_6',
                 'l10n_latam_document_type_id': 'l10n_uy.dc_cn_e_ticket',
@@ -438,7 +438,7 @@ class AccountChartTemplate(models.AbstractModel):
             },
 
             # Account supplier refund
-            'demo_sup_refund_invoice_3': {
+            self.company_xmlid('demo_sup_refund_invoice_3'): {
                 'reason': 'Mercadería defectuosa',
                 'l10n_latam_document_number': 'BB0123456',
                 'move_ids': 'demo_sup_invoice_1',
@@ -446,7 +446,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'journal_id': purchase_journal.id,
                 'date': time.strftime('%Y-%m') + '-01'
             },
-            'demo_sup_refund_invoice_2': {
+            self.company_xmlid('demo_sup_refund_invoice_2'): {
                 'reason': 'Venta cancelada',
                 'l10n_latam_document_number': 'BB0123457',
                 'move_ids': 'demo_sup_invoice_2',
@@ -454,7 +454,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'journal_id': purchase_journal.id,
                 'date': time.strftime('%Y-%m') + '-01'
             },
-            'demo_sup_refund_invoice_1': {
+            self.company_xmlid('demo_sup_refund_invoice_1'): {
                 'reason': 'Venta cancelada',
                 'l10n_latam_document_number': 'BB0123458',
                 'move_ids': 'demo_sup_invoice_7',
@@ -467,7 +467,7 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _l10n_uy_get_demo_data_res_partner(self, company=False):
         return {
-            'demo_partner_4': {
+            self.company_xmlid('demo_partner_4'): {
                 'name': 'Global Solutions Corp',
                 'l10n_latam_identification_type_id': 'l10n_uy.it_rut',
                 'vat': '218435730016',
@@ -477,7 +477,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'country_id': 'base.uy',
                 'email': 'info@globalsolutions.com',
             },
-            'demo_partner_5': {
+            self.company_xmlid('demo_partner_5'): {
                 'name': 'Tech Innovations S.A.',
                 'l10n_latam_identification_type_id': 'l10n_uy.it_rut',
                 'vat': '219999830019',
@@ -487,7 +487,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'country_id': 'base.uy',
                 'email': 'contact@techinnovations.com',
             },
-            'demo_partner_6': {
+            self.company_xmlid('demo_partner_6'): {
                 'name': 'CORREO URUGUAYO',
                 'l10n_latam_identification_type_id': 'l10n_uy.it_rut',
                 'vat': '214130990011',
