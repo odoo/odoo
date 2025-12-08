@@ -7,6 +7,33 @@ import { patch } from "@web/core/utils/patch";
 const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
+        this.appAsUnreadChannels = fields.One("DiscussApp", {
+            compute() {
+                return this.channel_type === "channel" && this.isUnread ? this.store.discuss : null;
+            },
+        });
+        this.categoryAsChannelWithCounter = fields.One("DiscussAppCategory", {
+            compute() {
+                return this.isDisplayInSidebar && this.importantCounter > 0
+                    ? this.discussAppCategory
+                    : null;
+            },
+        });
+        this.discussAppCategory = fields.One("DiscussAppCategory", {
+            compute() {
+                if (this.self_member_id?.is_favorite) {
+                    return this.store.discuss.favoriteCategory;
+                }
+                if (this.parent_channel_id) {
+                    return;
+                }
+                if (this.discuss_category_id) {
+                    return this.discuss_category_id.appCategory;
+                }
+                // channel_type based categorization (including overrides) comes last
+                return this._computeDiscussAppCategory();
+            },
+        });
         this.discuss_category_id = fields.One("discuss.category", {
             inverse: "channel_ids",
         });
@@ -35,6 +62,14 @@ const discussChannelPatch = {
                     .map((thread) => thread.channel);
             },
         });
+    },
+    _computeDiscussAppCategory() {
+        if (["group", "chat"].includes(this.channel_type)) {
+            return this.store.discuss.chatCategory;
+        }
+        if (this.channel_type === "channel") {
+            return this.store.discuss.channelCategory;
+        }
     },
     _computeIsDisplayInSidebar() {
         return (

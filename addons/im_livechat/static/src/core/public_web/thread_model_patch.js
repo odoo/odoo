@@ -9,21 +9,6 @@ patch(Thread.prototype, {
         super.setup(...arguments);
         this.country_id = fields.One("res.country");
     },
-    _computeDiscussAppCategory() {
-        if (this.channel?.channel_type !== "livechat") {
-            return super._computeDiscussAppCategory();
-        }
-        if (
-            this.channel.livechat_status === "need_help" &&
-            this.store.discuss.livechatLookingForHelpCategory
-        ) {
-            return this.store.discuss.livechatLookingForHelpCategory;
-        }
-        return (
-            this.channel.livechat_channel_id?.appCategory ??
-            this.channel.appAsLivechats?.defaultLivechatCategory
-        );
-    },
     get correspondents() {
         return super.correspondents.filter(
             (correspondent) => correspondent.livechat_member_type !== "bot"

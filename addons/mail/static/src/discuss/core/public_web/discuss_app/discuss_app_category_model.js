@@ -5,29 +5,25 @@ export class DiscussAppCategory extends Record {
     static id = "id";
 
     /**
-     * @param {import("models").Thread} t1
-     * @param {import("models").Thread} t2
+     * @param {import("models").DiscussChannel} c1
+     * @param {import("models").DiscussChannel} c2
      */
-    sortThreads(t1, t2) {
+    sortChannels(c1, c2) {
         if (["channels", "favorites"].includes(this.id) || this.discussCategoryAsAppCategory) {
             return (
-                (t1.displayName &&
-                    String.prototype.localeCompare.call(t1.displayName, t2.displayName)) ||
-                t2.id - t1.id
+                (c1.displayName &&
+                    String.prototype.localeCompare.call(c1.displayName, c2.displayName)) ||
+                c2.id - c1.id
             );
         }
-        return (
-            compareDatetime(t2.channel.lastInterestDt, t1.channel.lastInterestDt) || t2.id - t1.id
-        );
+        return compareDatetime(c2.lastInterestDt, c1.lastInterestDt) || c2.id - c1.id;
     }
 
     get isVisible() {
         return (
             !this.hidden &&
             (!this.hideWhenEmpty ||
-                this.threads.some(
-                    (thread) => thread.channel?.displayToSelf || thread.isLocallyPinned
-                ))
+                this.channels.some((channel) => channel.displayToSelf || channel.isLocallyPinned))
         );
     }
 
@@ -70,13 +66,15 @@ export class DiscussAppCategory extends Record {
 
     is_open = fields.Attr(true, { localStorage: true });
 
-    threads = fields.Many("mail.thread", {
-        sort(t1, t2) {
-            return this.sortThreads(t1, t2);
+    channels = fields.Many("discuss.channel", {
+        sort(c1, c2) {
+            return this.sortChannels(c1, c2);
         },
         inverse: "discussAppCategory",
     });
-    threadsWithCounter = fields.Many("mail.thread", { inverse: "categoryAsThreadWithCounter" });
+    channelsWithCounter = fields.Many("discuss.channel", {
+        inverse: "categoryAsChannelWithCounter",
+    });
 }
 
 DiscussAppCategory.register();

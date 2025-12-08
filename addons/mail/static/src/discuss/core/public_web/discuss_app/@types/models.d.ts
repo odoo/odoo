@@ -9,7 +9,7 @@ declare module "models" {
         chatCategory: DiscussAppCategory;
         computeChatCategory: () => object;
         favoriteCategory: DiscussAppCategory;
-        unreadChannels: Thread[];
+        unreadChannels: DiscussChannel[];
     }
     export interface Store {
         DiscussAppCategory: StaticMailRecord<DiscussAppCategory, typeof DiscussAppCategoryClass>;

@@ -60,7 +60,7 @@ const discussAppPatch = {
                 };
             },
         });
-        this.unreadChannels = fields.Many("mail.thread", { inverse: "appAsUnreadChannels" });
+        this.unreadChannels = fields.Many("discuss.channel", { inverse: "appAsUnreadChannels" });
     },
     computeChatCategory() {
         return {

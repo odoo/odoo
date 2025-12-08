@@ -32,8 +32,8 @@
                 </t>
             </button>
             <t t-if="actions.length and !store.discuss.isSidebarCompact" t-call="mail.DiscussSidebarCategory.actions"/>
-            <div t-if="!category.is_open and category.threadsWithCounter.length > 0" class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold" t-att-class="{ 'position-absolute o-compact': store.discuss.isSidebarCompact, 'me-1': !store.discuss.isSidebarCompact }">
-                <t t-esc="category.threadsWithCounter.length"/>
+            <div t-if="!category.is_open and category.channelsWithCounter.length > 0" class="o-mail-DiscussSidebar-badge shadow-sm badge rounded-pill o-discuss-badge fw-bold" t-att-class="{ 'position-absolute o-compact': store.discuss.isSidebarCompact, 'me-1': !store.discuss.isSidebarCompact }">
+                <t t-esc="category.channelsWithCounter.length"/>
             </div>
         </div>
     </t>

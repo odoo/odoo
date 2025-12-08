@@ -9,35 +9,6 @@ import { patch } from "@web/core/utils/patch";
 const threadPatch = {
     setup() {
         super.setup(...arguments);
-        this.appAsUnreadChannels = fields.One("DiscussApp", {
-            compute() {
-                return this.channel?.channel_type === "channel" && this.isUnread
-                    ? this.store.discuss
-                    : null;
-            },
-        });
-        this.categoryAsThreadWithCounter = fields.One("DiscussAppCategory", {
-            compute() {
-                return this.channel?.isDisplayInSidebar && this.importantCounter > 0
-                    ? this.discussAppCategory
-                    : null;
-            },
-        });
-        this.discussAppCategory = fields.One("DiscussAppCategory", {
-            compute() {
-                if (this.channel?.self_member_id?.is_favorite) {
-                    return this.store.discuss.favoriteCategory;
-                }
-                if (this.channel?.parent_channel_id) {
-                    return;
-                }
-                if (this.channel?.discuss_category_id) {
-                    return this.channel.discuss_category_id.appCategory;
-                }
-                // channel_type based categorization (including overrides) comes last
-                return this._computeDiscussAppCategory();
-            },
-        });
         this.from_message_id = fields.One("mail.message");
         this.parent_channel_id = fields.One("mail.thread", {
             onDelete() {
@@ -53,14 +24,6 @@ const threadPatch = {
         this.loadSubChannelsDone = false;
         /** @type {import("models").Thread|null} */
         this.lastSubChannelLoaded = null;
-    },
-    _computeDiscussAppCategory() {
-        if (["group", "chat"].includes(this.channel?.channel_type)) {
-            return this.store.discuss.chatCategory;
-        }
-        if (this.channel?.channel_type === "channel") {
-            return this.store.discuss.channelCategory;
-        }
     },
     get hasSubChannelFeature() {
         return ["channel", "group"].includes(this.channel?.channel_type);

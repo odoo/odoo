@@ -4,17 +4,21 @@ declare module "models" {
     export interface DiscussCategory extends DiscussCategoryClass {}
 
     export interface DiscussChannel {
+        _computeDiscussAppCategory: () => unknown;
         _computeIsDisplayInSidebar: () => boolean;
         allowedToLeaveChannelTypes: Readonly<string[]>;
         allowedToUnpinChannelTypes: Readonly<string[]>;
+        appAsUnreadChannels: DiscussApp;
         canLeave: Readonly<boolean>;
         canUnpin: Readonly<boolean>;
+        categoryAsChannelWithCounter: DiscussAppCategory;
         discuss_category_id: DiscussCategory;
+        discussAppCategory: DiscussAppCategory;
         displayToSelf: boolean;
         isDisplayInSidebar: boolean;
         notifyDescriptionToServer: (description: string) => Promise<unknown>;
         notifyMessageToUser: (message: Message) => Promise<void>;
-        subChannelsInSidebar: Thread[];
+        subChannelsInSidebar: DiscussChannel[];
     }
     export interface Message {
         linkedSubChannel: Thread;
@@ -26,11 +30,7 @@ declare module "models" {
         searchConversations: (searchValue: string) => Promise<void>;
     }
     export interface Thread {
-        _computeDiscussAppCategory: () => unknown;
-        appAsUnreadChannels: DiscussApp;
-        categoryAsThreadWithCounter: DiscussAppCategory;
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
-        discussAppCategory: DiscussAppCategory;
         from_message_id: Message;
         hasSubChannelFeature: Readonly<boolean>;
         lastSubChannelLoaded: Thread|null;

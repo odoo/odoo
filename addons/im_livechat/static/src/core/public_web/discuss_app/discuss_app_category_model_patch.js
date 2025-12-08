@@ -14,10 +14,10 @@ patch(DiscussAppCategory.prototype, {
             },
         });
     },
-    sortThreads(t1, t2) {
+    sortChannels(c1, c2) {
         if (this.eq(this.store.discuss?.livechatLookingForHelpCategory)) {
-            return compareDatetime(t1.lastInterestDt, t2.lastInterestDt) || t1.id - t2.id;
+            return compareDatetime(c1.lastInterestDt, c2.lastInterestDt) || c1.id - c2.id;
         }
-        return super.sortThreads(...arguments);
+        return super.sortChannels(...arguments);
     },
 });
