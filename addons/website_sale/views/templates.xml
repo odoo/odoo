@@ -2174,7 +2174,7 @@
                                     />
                                     <div
                                         id="product_attributes_simple"
-                                        t-if="single_value_attributes"
+                                        t-if="single_value_attributes and not is_view_active('website_sale_comparison.accordion_specs_item')"
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_specs mb-4"
                                     >
                                         <table t-attf-class="table table-sm text-muted {{'' if single_value_attributes else 'd-none'}}">
