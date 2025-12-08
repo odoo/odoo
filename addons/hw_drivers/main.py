@@ -148,6 +148,8 @@ class Manager(Thread):
         # Set scheduled actions
         schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
+        if platform.system() == 'Linux':
+            schedule.every().day.at("00:00").do(helpers.check_git_branch)
 
         # Set up the websocket connection
         ws_client = WebsocketClient(self.ws_channel)
