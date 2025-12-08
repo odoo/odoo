@@ -733,6 +733,48 @@ registry.category("web_tour.tours").add("test_confirm_coupon_programs_one_by_one
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_order_reward_product_tax_included_included", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Include", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.hasRewardLine("$ 10 on your order", "-10.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_order_reward_product_tax_included_excluded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.addOrderline("Product Include", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.hasRewardLine("$ 10 on your order", "-10.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_specific_reward_product_tax_included_included", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Include", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.hasRewardLine("$ 10 on Product Include", "-10.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_specific_reward_product_tax_included_excluded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.addOrderline("Product Include", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.hasRewardLine("$ 10 on Product Include", "-10.00"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_race_conditions_update_program", {
     steps: () =>
         [
