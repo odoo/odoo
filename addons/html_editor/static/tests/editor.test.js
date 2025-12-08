@@ -159,7 +159,7 @@ test("Convert self closing elements to opening/closing tags", async () => {
                 <t t-else="">
                     <b t-out="name"></b>
                     <span t-out="name"></span>\ufeff
-                    <a href="xyz" t-out="xyz">\ufeff\ufeff</a>\ufeff
+                    <a href="xyz" t-out="xyz">\ufeff</a>\ufeff
                     <t t-out="object.partner_id" data-oe-t-inline="true"></t>
                 </t>
                 <i t-out="ctx"></i>
