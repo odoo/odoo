@@ -4,6 +4,7 @@ import {
     edit,
     manuallyDispatchProgrammaticEvent,
     queryAll,
+    queryAllProperties,
     queryFirst,
     setInputFiles,
     waitFor,
@@ -18,6 +19,7 @@ import {
     onRpc,
     pagerNext,
     contains,
+    webModels,
 } from "@web/../tests/web_test_helpers";
 
 import { getOrigin } from "@web/core/utils/urls";
@@ -932,4 +934,25 @@ test("ImageField: syncs filename when uploading/removing", async () => {
     expect("div[name='foo'] input").toHaveValue("", {
         message: "The filename field should be cleared when the image is removed",
     });
+});
+
+test.tags("desktop");
+test("ImageField with width attribute in list", async () => {
+    const { ResCompany, ResPartner, ResUsers } = webModels;
+    defineModels([ResCompany, ResPartner, ResUsers]);
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <list>
+                <field name="document" widget="image" width="30"/>
+                <field name="foo"/>
+            </list>
+        `,
+    });
+
+    expect(".o_data_row").toHaveCount(3);
+    expect(".o_field_widget[name=document] img").toHaveCount(3);
+    expect(queryAllProperties(".o_list_table th[data-name=document]", "offsetWidth")).toEqual([39]);
 });
