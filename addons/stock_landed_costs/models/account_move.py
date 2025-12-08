@@ -53,12 +53,12 @@ class AccountMove(models.Model):
             default_vendor_bill_id=self.id
         )._get_records_action(name=self.env._("Landed Costs"), views=views)
 
-    def _update_order_line_info(self, product_id, quantity, **kwargs):
-        price_unit = super()._update_order_line_info(product_id, quantity, **kwargs)
-        move_line = self.line_ids.filtered(lambda line: line.product_id.id == product_id)
+    def _update_order_line_info(self, product, quantity, uom=False, **kwargs):
+        prices = super()._update_order_line_info(product, quantity, uom=uom, **kwargs)
+        move_line = self.line_ids.filtered(lambda line: line.product_id.id == product.id)
         if move_line:
             move_line.is_landed_costs_line = move_line.product_id.landed_cost_ok
-        return price_unit
+        return prices
 
 
 class AccountMoveLine(models.Model):

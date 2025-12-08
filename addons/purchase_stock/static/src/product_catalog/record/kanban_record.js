@@ -1,5 +1,5 @@
 import { ProductCatalogKanbanRecord } from "@product/product_catalog/kanban_record";
-import { ProductCatalogPurchaseSuggestOrderLine } from "./purchase_order_line";
+// import { ProductCatalogPurchaseSuggestOrderLine } from "./purchase_order_line";
 
 export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKanbanRecord {
     /* Hides suggest line if suggest_qty == qty in PO */
@@ -13,9 +13,9 @@ export class ProductCatalogPurchaseSuggestKanbanRecord extends ProductCatalogKan
         return classes;
     }
 
-    get orderLineComponent() {
-        return ProductCatalogPurchaseSuggestOrderLine;
-    }
+    // get orderLineComponent() {
+    //     return ProductCatalogPurchaseSuggestOrderLine;
+    // }
 
     /** Add suggested_qty or pricelist_min_qty (the greater one) if positive, otherwise add 1. */
     addProduct() {

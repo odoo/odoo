@@ -2619,7 +2619,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             }
         self.product_id.ensure_one()
         return {
-            **parent_record._get_product_price_and_data(self.product_id),
+            **parent_record._get_product_catalog_price_and_data(self.product_id),
             'quantity': sum(
                 self.mapped(
                     lambda line: line.uom_id._compute_quantity(

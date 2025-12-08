@@ -1734,19 +1734,24 @@ class SaleOrderLine(models.Model):
             {
                 'quantity': float,
                 'price': float,
+                'productUnitPrice': float (optional)
                 'readOnly': bool,
                 'uomDisplayName': String,
+                'productUomDisplayName': string
             }
         """
         if len(self) == 1:
+            price = self._get_discounted_price()
             return {
                 'quantity': self.product_uom_qty,
-                'price': self._get_discounted_price(),
+                'price': price,
+                'productUnitPrice': self.product_uom_id._compute_price(price, self.product_id.uom_id),
                 'readOnly': (
                     self.order_id._is_readonly()
                     or bool(self.combo_item_id)
                 ),
                 'uomDisplayName': self.product_uom_id.display_name,
+                'productUomDisplayName': self.product_id.uom_id.display_name,
             }
         elif self:
             self.product_id.ensure_one()

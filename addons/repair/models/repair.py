@@ -747,15 +747,9 @@ class RepairOrder(models.Model):
     def _get_product_catalog_domain(self):
         return super()._get_product_catalog_domain() & Domain('type', '=', 'consu')
 
-    def _get_product_catalog_order_data(self, products, **kwargs):
-        product_catalog = super()._get_product_catalog_order_data(products, **kwargs)
-        for product in products:
-            product_catalog[product.id] |= self._get_product_price_and_data(product)
-        return product_catalog
-
-    def _get_product_price_and_data(self, product):
-        self.ensure_one()
-        return {'price': product.list_price}
+    def _get_product_catalog_product_data(self, product, **kwargs):
+        product_data = self._get_product_catalog_price_and_data(product, price=product.lst_price)
+        return super()._get_product_catalog_product_data(product, **product_data, **kwargs)
 
     def _get_product_catalog_record_lines(self, product_ids, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['stock.move'])
@@ -769,24 +763,25 @@ class RepairOrder(models.Model):
     def _is_display_stock_in_catalog(self):
         return True
 
-    def _update_order_line_info(self, product_id, quantity, **kwargs):
-        move = self.move_ids.filtered(lambda e: e.product_id.id == product_id)
+    def _update_order_line_info(self, product, quantity, uom=False, **kwargs):
+        move = self.move_ids.filtered(lambda e: e.product_id.id == product.id)
         if move:
             if quantity != 0:
                 move.product_uom_qty = quantity
             else:
                 move.unlink()
+                return self._get_product_catalog_price_and_data(product, price=product.list_price)
         elif quantity > 0:
             move = self.env['stock.move'].create({
                 'repair_id': self.id,
                 'product_uom_qty': quantity,
-                'product_id': product_id,
+                'product_id': product.id,
                 'location_id': self.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'repair_line_type': 'add'
             })
 
-        return self.env['product.product'].browse(product_id).list_price
+        return {'price': product.list_price}
 
     # ------------------------------------------------------------
     # MAIL.THREAD

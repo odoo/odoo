@@ -1200,11 +1200,13 @@ class PurchaseOrder(models.Model):
     def _get_product_catalog_domain(self):
         return super()._get_product_catalog_domain() & Domain('purchase_ok', '=', True)
 
-    def _get_product_catalog_order_data(self, products, **kwargs):
-        res = super()._get_product_catalog_order_data(products, **kwargs)
-        for product in products:
-            res[product.id] |= self._get_product_price_and_data(product)
-        return res
+    def _get_product_catalog_product_data(self, product, **kwargs):
+        product_data = self._get_product_catalog_price_and_data(
+                product,
+                match_seller=True,
+                date=self.date_order and self.date_order.date(),
+            )
+        return super()._get_product_catalog_product_data(product, **product_data, **kwargs)
 
     def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['purchase.order.line'])
@@ -1223,46 +1225,6 @@ class PurchaseOrder(models.Model):
                 continue
             grouped_lines[line.product_id] |= line
         return grouped_lines
-
-    def _get_product_price_and_data(self, product):
-        """ Fetch the product's data used by the purchase's catalog.
-
-        :return: the product's price and, if applicable, the minimum quantity to
-                 buy and the product's packaging data.
-        :rtype: dict
-        """
-        self.ensure_one()
-        product_infos = {
-            'price': product.standard_price,
-            'uomDisplayName': product.uom_id.display_name
-        }
-        params = {'order_id': self}
-        # Check if there is a price and a minimum quantity for the order's vendor.
-        seller = product._select_seller(
-            partner_id=self.partner_id,
-            quantity=None,
-            date=self.date_order and self.date_order.date(),
-            uom_id=product.uom_id,
-            ordered_by='min_qty',
-            params=params
-        )
-        if seller:
-            product_uom = (seller.product_id or seller.product_tmpl_id).uom_id
-            price = seller.price_discounted
-            if seller.currency_id != self.currency_id:
-                price = seller.currency_id._convert(price, self.currency_id)
-            if seller.uom_id != product_uom:
-                # The discounted price is expressed in the product's UoM, not in the vendor
-                # price's UoM, so we need to convert it into to match the displayed UoM.
-                price = product_uom._compute_price(price, seller.uom_id)
-                product_infos.update(uomFactor=seller.uom_id.factor / product_uom.factor)
-            product_infos.update(
-                price=price,
-                min_qty=seller.min_qty,
-                uomDisplayName=seller.uom_id.display_name,
-            )
-
-        return product_infos
 
     def get_acknowledge_url(self):
         return self.get_portal_url(query_string='&acknowledge=True')
@@ -1327,7 +1289,7 @@ class PurchaseOrder(models.Model):
             line._update_date_planned(date)
 
     def _update_order_line_info(
-        self, product_id, quantity, *, section_id=False, child_field='order_line', **kwargs
+        self, product, quantity, uom=False, *, section_id=False, child_field='order_line', **kwargs
     ):
         """ Update purchase order line information for a given product or create
         a new one if none exists yet.
@@ -1335,39 +1297,39 @@ class PurchaseOrder(models.Model):
         :param int quantity: The quantity selected in the catalog.
         :param int section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
-                 purchase order and the quantity selected.
-        :rtype: float
+                 purchase order and the quantity selected, and the price per product unit.
+        :rtype: dict
         """
         self.ensure_one()
         pol = self.order_line.filtered(
-            lambda l: l.product_id.id == product_id
+            lambda l: l.product_id.id == product.id
             and l.get_parent_section_line().id == section_id
         )
         if pol:
             if quantity != 0:
                 pol.product_qty = quantity
             elif self.state in ['draft', 'sent']:
-                price_unit = self._get_product_price_and_data(pol.product_id)['price']
                 pol.unlink()
-                return price_unit
+                return self._get_product_catalog_price_and_data(product, match_seller=True)
             else:
                 pol.product_qty = 0
         elif quantity > 0:
             pol = self.env['purchase.order.line'].create({
                 'order_id': self.id,
-                'product_id': product_id,
+                'product_id': product.id,
                 'product_qty': quantity,
                 'sequence': self._get_new_line_sequence(child_field, section_id),
             })
             if pol.selected_seller_id:
                 # Fix the PO line's price on the seller's one.
                 seller = pol.selected_seller_id
-                price = seller.price
-                if seller.currency_id != self.currency_id:
-                    price = seller.currency_id._convert(price, self.currency_id)
+                price = seller.currency_id._convert(seller.price, self.currency_id)
                 pol.price_unit = pol.technical_price_unit = price
                 pol.discount = seller.discount
-        return pol.price_unit_discounted
+        price = price_per_product_unit = pol.price_unit_discounted
+        if pol.uom_id:  # Avoid sending an empty uom if a product is added and removed quickly
+            price_per_product_unit = pol.uom_id._compute_price(price, pol.product_id.uom_id)
+        return {'price': price, 'productUnitPrice': price_per_product_unit}
 
     def _get_default_create_section_values(self):
         """ Return the default values for creating a section line in the purchase order through

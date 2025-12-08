@@ -8,6 +8,7 @@
                 <span t-if="showPrice" t-out="price" class="o_product_catalog_price fw-bold me-4"/>
                 <span t-if="props.code" t-out="props.code" class="text-muted"/>
             </div>
+            <span t-if="displayPriceByProductUoM" class="d-flex text-muted small" t-out="`${productUnitPrice}/${props.productUomDisplayName}`"/>
         </t>
         <div 
             t-if="props.readOnly and props.warning"

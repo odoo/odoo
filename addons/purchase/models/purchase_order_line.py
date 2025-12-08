@@ -443,7 +443,6 @@ class PurchaseOrderLine(models.Model):
             elif line.selected_seller_id:
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(line.selected_seller_id.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if line.selected_seller_id else 0.0
                 price_unit = line.selected_seller_id.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
-                price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
                 line.price_unit = line.technical_price_unit = line.selected_seller_id.uom_id._compute_price(price_unit, line.uom_id)
                 line.discount = line.selected_seller_id.discount or 0.0
 
@@ -548,32 +547,35 @@ class PurchaseOrderLine(models.Model):
             {
                 'quantity': float,
                 'price': float,
+                'productUnitPrice': float (optional),
                 'readOnly': bool,
                 'uomDisplayName': String,
+                'productUomDisplayName': string
                 'packaging': dict,
                 'warning': String,
             }
         """
-        if len(self) == 1:
-            catalog_info = self.order_id._get_product_price_and_data(self.product_id)
-            catalog_info.update(
-                quantity=self.product_qty,
-                price=self.price_unit * (1 - self.discount / 100),
-                readOnly=self.order_id._is_readonly(),
-            )
-            if self.product_id.uom_id != self.uom_id:
-                catalog_info['uomDisplayName'] = self.uom_id.display_name
-            return catalog_info
-        elif self:
+        if self:
             self.product_id.ensure_one()
-            order_line = self[0]
-            catalog_info = order_line.order_id._get_product_price_and_data(order_line.product_id)
-            catalog_info['quantity'] = sum(self.mapped(
-                lambda line: line.uom_id._compute_quantity(
+            catalog_info = self[0].order_id._get_product_catalog_price_and_data(
+                self.product_id,
+                match_seller=True,
+                date=self[0].order_id.date_order and self[0].order_id.date_order.date(),
+            )
+            catalog_info.update(
+                quantity=self[0].product_qty if len(self) == 1 else
+                    sum(self.mapped(
+                    lambda line: line.uom_id._compute_quantity(
                     qty=line.product_qty,
                     to_unit=line.product_id.uom_id,
-            )))
-            catalog_info['readOnly'] = True
+                ))),
+                price=self[0].price_unit_discounted,
+                productUnitPrice=self[0].uom_id._compute_price(self[0].price_unit_discounted, self[0].product_id.uom_id),
+                readOnly=self[0].order_id._is_readonly() or len(self) > 1,
+                uomId=self[0].uom_id.id,
+                uomDisplayName=self[0].uom_id.display_name,
+                productUomDisplayName=self[0].product_id.uom_id.display_name,
+            )
             return catalog_info
         return {'quantity': 0}
 
@@ -608,7 +610,7 @@ class PurchaseOrderLine(models.Model):
     def _prepare_add_missing_fields(self, values):
         """ Deduce missing required fields from the onchange """
         res = {}
-        onchange_fields = ['name', 'price_unit', 'product_qty', 'uom_id', 'tax_ids', 'date_planned']
+        onchange_fields = ['name', 'price_unit', 'product_qty', 'uom_id', 'tax_ids', 'date_planned', 'discount']
         if values.get('order_id') and values.get('product_id') and any(f not in values for f in onchange_fields):
             line = self.new(values)
             line.onchange_product_id()

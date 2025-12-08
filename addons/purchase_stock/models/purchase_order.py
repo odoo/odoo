@@ -474,9 +474,9 @@ class PurchaseOrder(models.Model):
             )
         return super()._get_product_catalog_order_line_info(product_ids, child_field=child_field, **kwargs)
 
-    def _get_product_price_and_data(self, product):
+    def _get_product_catalog_price_and_data(self, product, **kwargs):
         """ Fetch the product's data used by the purchase's catalog."""
-        res = super()._get_product_price_and_data(product)
+        res = super()._get_product_catalog_price_and_data(product, **kwargs)
         res["suggested_qty"] = product.suggested_qty
         return res
 
