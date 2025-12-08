@@ -30,7 +30,8 @@ export class LineBreakPlugin extends Plugin {
             (node) =>
                 !node.nextSibling &&
                 !isBlock(closestElement(node)) &&
-                nextLeaf(node, closestBlock(node)),
+                nextLeaf(node, closestBlock(node)) &&
+                node.previousSibling,
         ],
     };
 

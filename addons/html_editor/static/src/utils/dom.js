@@ -10,7 +10,7 @@ import {
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
 import { childNodes, descendants } from "./dom_traversal";
-import { childNodeIndex, DIRECTIONS } from "./position";
+import { childNodeIndex, DIRECTIONS, nodeSize } from "./position";
 import {
     baseContainerGlobalSelector,
     createBaseContainer,
@@ -235,6 +235,16 @@ export function toggleClass(element, className, force) {
     element.classList.toggle(className, force);
     if (!element.className) {
         element.removeAttribute("class");
+    }
+}
+
+export function cleanEmptyAncestors(node, cursors, exclude = () => false) {
+    let currentNode = node;
+    while (currentNode && !nodeSize(currentNode) && !exclude(currentNode)) {
+        cursors?.update(callbacksForCursorUpdate.remove(currentNode));
+        const parent = currentNode.parentNode;
+        currentNode.remove();
+        currentNode = parent;
     }
 }
 
