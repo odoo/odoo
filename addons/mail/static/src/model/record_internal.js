@@ -131,6 +131,10 @@ export class RecordInternal {
                 this.fieldsSortInNeed.delete(fieldName);
             }
             const sortProxy2 = reactive(recordProxy, function sortObserver() {
+                const value = record[fieldName];
+                if (Array.isArray(value) && value.every((_, i) => !(i in value))) {
+                    return;
+                }
                 self.requestSort(record, fieldName);
             });
             this.fieldsSortProxy2.set(fieldName, sortProxy2);
