@@ -718,8 +718,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
     def test_self_billing_sending_constraints(self):
         """Test that self-billing sending constraints are properly handled."""
-        # Test that vendor bills can be sent when self-billing is activated
-        self.env.company.peppol_activate_self_billing_sending = True
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
 
         self_billing_journal = self.env['account.journal'].create({
@@ -753,10 +751,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         wizard = self.create_send_and_print(vendor_bill, default=True)
         self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)
 
-        # Test that vendor bills cannot be sent when self-billing is not activated
-        self.env.company.peppol_activate_self_billing_sending = False
-        with self.assertRaisesRegex(UserError, "You can only generate sales documents."):
-            self.create_send_and_print(vendor_bill, default=True)
+        # Test that vendor bills can be sent as soon as the format allows (bis3) and the journal is in self-billing
+        self.create_send_and_print(vendor_bill, default=True)
 
     def test_receive_self_billed_invoice_from_peppol(self):
         """Test receiving a self-billed invoice from Peppol.
