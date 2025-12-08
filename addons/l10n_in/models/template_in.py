@@ -71,7 +71,9 @@ class AccountChartTemplate(models.AbstractModel):
                 'country_group_id': 'l10n_in.inter_state_group',
             },
         }
-        if not company.parent_id:
+        if company.parent_id:
+            fiscals_data = {self.company_xmlid(k): v for k, v in fiscals_data.items()}
+        else:
             fiscals_data.update({
                 'fiscal_position_in_sez': {
                     'name': _("Special Economic Zone (SEZ)"),
