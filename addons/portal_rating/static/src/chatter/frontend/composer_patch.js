@@ -1,16 +1,20 @@
 import { Composer } from "@mail/core/common/composer";
 
-import { isMobileOS } from "@web/core/browser/feature_detection";
 import { patch } from "@web/core/utils/patch";
 import { rpc } from "@web/core/network/rpc";
 import { useState } from "@odoo/owl";
+import { isMobileOS } from "@web/core/browser/feature_detection";
+
+const MAX_STAR_RATING = 5;
+const DEFAULT_STAR_RATING = 4;
 
 patch(Composer.prototype, {
     setup() {
         super.setup(...arguments);
+        this.MAX_STAR_RATING = MAX_STAR_RATING;
         this.portalState = useState({
-            ratingValue: 4,
-            starValue: 4,
+            hoveredRatingValue: undefined,
+            ratingValue: DEFAULT_STAR_RATING,
         });
     },
 
@@ -47,30 +51,45 @@ patch(Composer.prototype, {
         return super.askDeleteFromEdit && !this.message.rating_value;
     },
 
+    get visibleRatingValue() {
+        return this.portalState.hoveredRatingValue ?? this.portalState.ratingValue;
+    },
+
     onMoveStar(ev) {
+        this.handleStar(ev, { hovered: !isMobileOS() });
+    },
+
+    handleStar(ev, { hovered } = {}) {
         const index = parseInt(ev.currentTarget.getAttribute("index"));
-        this.portalState.starValue = index + 1;
+        if (Number.isNaN(index) || index < 0 || index > MAX_STAR_RATING - 1) {
+            if (hovered) {
+                this.portalState.hoveredRatingValue = undefined;
+            }
+            return;
+        }
+        if (hovered) {
+            this.portalState.hoveredRatingValue = index + 1;
+        } else {
+            this.portalState.ratingValue = index + 1;
+        }
     },
 
-    onClickStar() {
-        this.portalState.ratingValue = this.portalState.starValue;
+    onClickStar(ev) {
+        this.handleStar(ev);
     },
 
-    onMouseLeaveStar() {
+    onMouseLeaveStar(ev) {
         if (!isMobileOS()) {
-            this.portalState.starValue = this.portalState.ratingValue;
+            this.handleStar(ev, { hovered: true });
         }
     },
 
     get postData() {
         const postData = super.postData;
         if (this.env.displayRating && !this.message) {
-            if (isMobileOS()) {
-                postData.rating_value = this.portalState.ratingValue;
-            } else {
-                postData.rating_value = this.portalState.starValue;
-            }
+            postData.rating_value = this.portalState.ratingValue;
         }
+        this.portalState.ratingValue = DEFAULT_STAR_RATING;
         return postData;
     },
 });
