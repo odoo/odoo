@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { cleanTextNode } from "@html_editor/utils/dom";
+import { cleanEmptyAncestors, cleanTextNode } from "@html_editor/utils/dom";
 import { isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
@@ -59,7 +59,11 @@ export class FeffPlugin extends Plugin {
             // Remove all FEFF within a `prepareUpdate` to make sure to make <br>
             // nodes visible if needed.
             const restoreSpaces = prepareUpdate(...leftPos(node), ...rightPos(node));
+            const parent = node.parentNode;
             cleanTextNode(node, "\ufeff", cursors);
+            if (!parent.hasAttribute("data-oe-zws-empty-inline")) {
+                cleanEmptyAncestors(parent, cursors);
+            }
             restoreSpaces();
         }
     }
