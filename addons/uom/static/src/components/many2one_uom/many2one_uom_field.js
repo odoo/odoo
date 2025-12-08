@@ -101,4 +101,20 @@ registry.category("fields").add("many2one_uom", {
             availableTypes: ["many2one"],
         },
     ],
+    fieldDependencies: ({ type, options }) => {
+        const deps = [];
+        if (options.product_field) {
+            deps.push({
+                name: options.product_field,
+                type,
+            });
+        }
+        if (options.quantity_field) {
+            deps.push({
+                name: options.quantity_field,
+                type,
+            });
+        }
+        return deps;
+    },
 });

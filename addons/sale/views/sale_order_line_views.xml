@@ -14,8 +14,7 @@
                 <field name="qty_delivered"/>
                 <field name="qty_invoiced"/>
                 <field name="qty_to_invoice"/>
-                <field name="product_id" column_invisible="True"/>  <!-- Needed for many2one_uom widget  -->
-                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom" options="{'product_field': 'product_id'}"/>
                 <field name="price_subtotal" sum="Total" widget="monetary"/>
                 <field name="currency_id" column_invisible="True"/>
             </list>
