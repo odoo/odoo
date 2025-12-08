@@ -1457,6 +1457,10 @@ class PosOrder(models.Model):
     def _prepare_pos_log(self, body):
         return body
 
+    def get_stock_reports_to_print(self):
+        self.ensure_one()
+        return self.picking_ids._get_autoprint_report_actions()
+
 
 class PosOrderLine(models.Model):
     _name = 'pos.order.line'
