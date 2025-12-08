@@ -14,6 +14,7 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
+import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
 import { useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
@@ -646,6 +647,103 @@ function getValueWithDefault(userInputValue, defaultValue, formatRawValue) {
         }
     }
     return userInputValue;
+}
+
+export function useBuilderNumberInputUnits() {
+    const comp = useComponent();
+    const env = useEnv();
+
+    /**
+     * @param {string | number} values - Values separated by spaces or a number
+     * @param {(string) => string} convertSingleValueFn - Convert a single value
+     */
+    const convertSpaceSplitValues = (values, convertSingleValueFn) => {
+        if (typeof values === "number") {
+            return convertSingleValueFn(values.toString());
+        }
+        if (values === null) {
+            return values;
+        }
+        if (!values) {
+            return "";
+        }
+        return values.trim().split(/\s+/g).map(convertSingleValueFn).join(" ");
+    };
+
+    const formatRawValue = (rawValue) =>
+        convertSpaceSplitValues(rawValue, (value) => {
+            const unit = comp.props.unit;
+            const { savedValue, savedUnit } = value.match(
+                /(?<savedValue>[\d.e+-]+)(?<savedUnit>\w*)/
+            ).groups;
+            if (savedUnit || comp.props.saveUnit) {
+                // Convert value from saveUnit to unit
+                value = convertNumericToUnit(
+                    parseFloat(savedValue),
+                    savedUnit || comp.props.saveUnit,
+                    unit,
+                    getHtmlStyle(env.getEditingElement().ownerDocument)
+                );
+            }
+            // Put *at most* 3 decimal digits
+            return parseFloat(parseFloat(value).toFixed(3)).toString();
+        });
+
+    const clampValue = (value) => {
+        if (comp.props.composable && !value && value !== 0) {
+            return value;
+        }
+        value = parseFloat(value);
+        if (value < comp.props.min) {
+            return `${comp.props.min}`;
+        }
+        if (value > comp.props.max) {
+            return `${comp.props.max}`;
+        }
+        return +value.toFixed(3);
+    };
+
+    const parseDisplayValue = (displayValue) => {
+        if (!displayValue) {
+            return displayValue;
+        }
+        if (comp.props.composable) {
+            displayValue = displayValue
+                .trim()
+                .replace(/,/g, ".")
+                .replace(/[^0-9.-\s]/g, "")
+                // Only accept "-" at the start or after a space
+                .replace(/(?<!^|\s)-/g, "");
+        }
+        displayValue =
+            displayValue.split(" ").map(clampValue.bind(this)).join(" ") || comp.props.default;
+        return convertSpaceSplitValues(displayValue, (value) => {
+            if (value === "") {
+                return value;
+            }
+            const unit = comp.props.unit;
+            const saveUnit = comp.props.saveUnit;
+            const applyWithUnit = comp.props.applyWithUnit;
+            if (unit && saveUnit) {
+                // Convert value from unit to saveUnit
+                value = convertNumericToUnit(
+                    value,
+                    unit,
+                    saveUnit,
+                    getHtmlStyle(env.getEditingElement().ownerDocument)
+                );
+            }
+            if (unit && applyWithUnit) {
+                if (saveUnit || saveUnit === "") {
+                    value = value + saveUnit;
+                } else {
+                    value = value + unit;
+                }
+            }
+            return value;
+        });
+    };
+    return { formatRawValue, parseDisplayValue, clampValue };
 }
 
 export function useInputBuilderComponent({
