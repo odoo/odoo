@@ -364,12 +364,18 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventDrop(info) {
         this.fc.api.unselect();
-        this.props.model.updateRecord(this.fcEventToRecord(info.event));
+        this.props.model.updateRecord(this.fcEventToRecord(info.event)).catch((e) => {
+            info.revert();
+            throw e;
+        });
         this.ref.el.classList.remove("o_interacting", "o_grabbing");
     }
     onEventResize(info) {
         this.fc.api.unselect();
-        this.props.model.updateRecord(this.fcEventToRecord(info.event));
+        this.props.model.updateRecord(this.fcEventToRecord(info.event)).catch((e) => {
+            info.revert();
+            throw e;
+        });
     }
     fcEventToRecord(event) {
         const { id, allDay, date, start, end } = event;
