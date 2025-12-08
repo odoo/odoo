@@ -35,7 +35,7 @@
                                                     t-att-name="entry[0]"
                                                     t-att-value="item[entry[0]]"
                                                     t-att-data-id="item._id"
-                                                    t-att-disabled="isMany2X"
+                                                    t-att-disabled="isMany2X || !props.isEditable"
                                                     t-on-input="onInput"
                                                     t-on-change="onChange"
                                             />
@@ -44,7 +44,7 @@
                                 </t>
                                 <td>
                                     <button type="button" class="btn text-danger builder_list_remove_item"
-                                            t-if="!(this.props.forbidLastItemRemoval and (items.length === 1))"
+                                            t-if="props.isEditable and !(this.props.forbidLastItemRemoval and (items.length === 1))"
                                             t-on-click="() => this.deleteItem(item._id)">
                                         <i class="fa fa-fw fa-minus" aria-hidden="true"/>
                                         <span class="visually-hidden">Delete item</span>
@@ -78,7 +78,8 @@
             </div>
             <t t-else="">
                 <div class="text-end mt-1">
-                    <button type="button" class="builder_list_add_item o-hb-btn btn btn-success px-3"
+                    <button t-if="props.isEditable" type="button"
+                            class="builder_list_add_item o-hb-btn btn btn-success px-3"
                             t-on-click="() => this.addItem()">
                         <t t-out="props.addItemTitle"/>
                     </button>
