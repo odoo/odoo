@@ -2,6 +2,7 @@ from datetime import datetime
 from itertools import product
 
 from odoo import api, fields, models, _
+from odoo.addons.mail.wizard.mail_compose_message import _reopen
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 
@@ -41,6 +42,8 @@ class ApplicantGetRefuseReason(models.TransientModel):
         compute='_compute_from_template_id', readonly=False, store=True,
         help="send emails after that date. This date is considered as being in UTC timezone."
     )
+    model = fields.Char('Related Document Model', compute='_compute_model')
+    template_name = fields.Char('Template Name')  # used when saving a new mail template
 
     @api.depends('applicant_ids')
     def _compute_applicant_without_email(self):
@@ -71,6 +74,9 @@ class ApplicantGetRefuseReason(models.TransientModel):
             self.duplicate_applicant_ids = self.env['hr.applicant'].search(self.duplicate_applicant_ids_domain)
         else:
             self.duplicate_applicant_ids = self.env['hr.applicant']
+
+    def _compute_model(self):
+        self.model = 'hr.applicant'
 
     # Overrides of mail.composer.mixin
     @api.depends('refuse_reason_id')  # fake trigger otherwise not computed in new mode
@@ -175,3 +181,56 @@ class ApplicantGetRefuseReason(models.TransientModel):
         }
 
         return mail_values
+
+    def open_template_creation_wizard(self):
+        """ hit save as template button: opens a wizard that prompts for the template's subject.
+            `create_mail_template` is called when saving the new wizard. """
+
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_id': self.env.ref('mail.mail_compose_message_view_form_template_save').id,
+            'name': _('Create a Mail Template'),
+            'res_model': 'applicant.get.refuse.reason',
+            'context': {'dialog_size': 'medium'},
+            'target': 'new',
+            'res_id': self.id,
+        }
+
+    def create_mail_template(self):
+        """ Creates a mail template with the current mail composer's fields. """
+        self.ensure_one()
+        values = self._get_template_values()
+        template = self.env['mail.template'].create(values)
+
+        if self.attachment_ids:
+            attachments = self.env['ir.attachment'].sudo().browse(self.attachment_ids.ids).filtered(
+                lambda a: a.res_model == 'applicant.get.refuse.reason' and a.create_uid.id == self._uid)
+            if attachments:
+                attachments.write({'res_model': template._name, 'res_id': template.id})
+                template.attachment_ids = self.attachment_ids
+
+        # generate the saved template
+        self.write({'template_id': template.id})
+        return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})
+
+    def _get_template_values(self):
+        if not self.model or not self.model in self.env:
+            raise UserError(_('Template creation from composer requires a valid model.'))
+        model_id = self.env['ir.model']._get_id(self.model)
+        values = {
+            'name': self.template_name or self.subject,
+            'subject': self.subject,
+            'body_html': self.body,
+            'model_id': model_id,
+            'use_default_to': True,
+            'user_id': self.env.uid,
+        }
+        return values
+
+    def cancel_save_template(self):
+        """ Restore old subject when canceling the 'save as template' action
+            as it was erased to let user give a more custom input. """
+        self.ensure_one()
+        return _reopen(self, self.id, self.model, context={**self.env.context, 'dialog_size': 'large'})

@@ -340,6 +340,28 @@ class TestRecruitment(TransactionCase):
             app_2
         )
 
+    def test_mail_template_creation_from_refuse_reason(self):
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create([{'name': 'Fired'}])
+        app_1 = self.env['hr.applicant'].create([
+            {
+                'partner_name': 'tony stank',
+                'email_from': 'tony.stank@example.com',
+            },
+        ])
+
+        applicant_get_refuse_reason = self.env['applicant.get.refuse.reason'].create([{
+            'refuse_reason_id': refuse_reason.id,
+            'applicant_ids': [app_1.id],
+            'body': "This is a test template",
+            "template_name": "refuse template"
+        }])
+        applicant_get_refuse_reason.create_mail_template()
+
+        template = self.env['mail.template'].search([('name', '=', "refuse template")], limit=1)
+        self.assertEqual(template, applicant_get_refuse_reason.template_id)
+        self.assertEqual(template.body_html, applicant_get_refuse_reason.body)
+        self.assertEqual(template.model_id.model, 'hr.applicant')
+
     def test_copy_attachments_while_creating_employee(self):
         """
         Test that attachments are copied when creating an employee from an applicant
