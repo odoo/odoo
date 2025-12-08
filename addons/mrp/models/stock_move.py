@@ -241,7 +241,8 @@ class StockMove(models.Model):
         """
         if self.env.context.get('force_manual_consumption'):
             for vals in vals_list:
-                vals['manual_consumption'] = True
+                if 'quantity' in vals:
+                    vals['manual_consumption'] = True
                 vals['picked'] = True
         mo_id_to_mo = defaultdict(lambda: self.env['mrp.production'])
         product_id_to_product = defaultdict(lambda: self.env['product.product'])
