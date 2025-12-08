@@ -1,5 +1,6 @@
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
+import { useOfflineStatus } from "@web/core/offline/offline_service";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
@@ -8,6 +9,7 @@ import { useSetupAction } from "@web/search/action_hook";
 import { ActionMenus, STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
+import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { session } from "@web/session";
@@ -46,6 +48,7 @@ export class KanbanController extends Component {
         Layout,
         KanbanRenderer,
         MultiRecordViewButton,
+        OfflineSearchBar,
         SearchBar,
         CogMenu: KanbanCogMenu,
         SelectionBox,
@@ -72,6 +75,7 @@ export class KanbanController extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialog = useService("dialog");
+        this.offlineStatus = useOfflineStatus();
         const { Model, archInfo } = this.props;
 
         class KanbanSampleModel extends Model {
@@ -318,6 +322,7 @@ export class KanbanController extends Component {
             activeIdsLimit: session.active_ids_limit,
             hooks: {
                 onRecordSaved: this.onRecordSaved.bind(this),
+                onRootLoaded: this.onRootLoaded.bind(this),
             },
         };
     }
@@ -499,6 +504,15 @@ export class KanbanController extends Component {
             );
             this.progressBarState?.updateCounts(group);
         }
+    }
+
+    onRootLoaded() {
+        this.env.bus.trigger("KANBAN_VIEW:ROOT_LOADED", {
+            actionId: this.env.config.actionId,
+            facets: this.env.searchModel.facets,
+            query: this.env.searchModel.query,
+            length: this.model.root.count,
+        });
     }
 
     onPageChangeScroll() {

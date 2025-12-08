@@ -34,6 +34,8 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
+import { useOfflineStatus } from "@web/core/offline/offline_service";
+import { OfflineSearchBar } from "@web/search/search_bar/offline_search_bar";
 
 // -----------------------------------------------------------------------------
 
@@ -45,6 +47,7 @@ export class ListController extends Component {
         ViewButton,
         MultiRecordViewButton,
         SearchBar,
+        OfflineSearchBar,
         CogMenu: ListCogMenu,
         DropdownItem,
         SelectionBox,
@@ -70,6 +73,7 @@ export class ListController extends Component {
     setup() {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
+        this.offlineStatus = useOfflineStatus();
         this.orm = useService("orm");
         this.rootRef = useRef("root");
 
@@ -223,6 +227,7 @@ export class ListController extends Component {
             multiEdit: !this.props.readonly && this.archInfo.multiEdit,
             activeIdsLimit: session.active_ids_limit,
             hooks: {
+                onRootLoaded: this.onRootLoaded.bind(this),
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
                 onWillSaveMulti: this.onWillSaveMulti.bind(this),
@@ -294,6 +299,15 @@ export class ListController extends Component {
 
     onDeleteSelectedRecords() {
         this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps);
+    }
+
+    onRootLoaded() {
+        this.env.bus.trigger("LIST_VIEW:ROOT_LOADED", {
+            actionId: this.env.config.actionId,
+            facets: this.env.searchModel.facets,
+            query: this.env.searchModel.query,
+            length: this.model.root.count,
+        });
     }
 
     /**

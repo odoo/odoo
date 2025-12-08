@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.OfflineSearchBar" t-inherit="web.SearchBar" t-inherit-mode="primary">
+        <xpath expr="//*[@t-call='web.SearchBar.Facets']" position="replace">
+            <t t-call="web.SearchBar.Facets.Offline">
+                <t t-set="facets" t-value="env.searchModel.facets"/>
+            </t>
+            <div t-if="this.canRemoveFilter()" class="o_searchview_facet rounded-2 bg-200 px-1 cursor-pointer" data-tooltip="Clear search" t-on-click="onRemoveFilter">
+                <i class="oi oi-close small"/>
+            </div>
+            <div t-elif="currentFilter" class="o_searchview_facet rounded-2 bg-200 px-1 opacity-50" data-tooltip="Can't remove that filter">
+                <i class="oi oi-close small"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_cp_searchview')]" position="attributes">
+            <attribute name="class" add="o_offline_search_bar" separator=" "/>
+        </xpath>
+        <xpath expr="//SearchBarMenu" position="replace">
+            <Dropdown menuClass="'o_search_bar_menu_offline w-100 w-md-auto mx-md-auto mt-2 py-3'"
+                  position="'bottom-end'"
+                  state="searchBarDropdownState"
+                  bottomSheet="false">
+                <button
+                    class="d-print-none btn btn-outline-secondary o-dropdown-caret rounded-start-0"
+                    data-hotkey="shift+q"
+                    title="Toggle Search Panel"
+                    data-available-offline=""
+                />
+                <t t-set-slot="content">
+                    <DropdownItem t-foreach="state.filters.slice(0, state.limit)" t-as="filter" t-key="filter.query"
+                        t-if="filter.facets.length"
+                        onSelected="() => this.onSelect(filter)"
+                        class="{
+                            'd-flex': true,
+                            'gap-1': true,
+                            'fw-bolder': filter.query === this.currentFilter?.query
+                        }">
+                        <t t-call="web.SearchBar.Facets.Offline">
+                            <t t-set="facets" t-value="filter.facets"/>
+                        </t>
+                    </DropdownItem>
+                    <DropdownItem t-if="state.filters.length > state.limit"
+                        class="'o_show_more_filters'"
+                        closingMode="'none'"
+                        onSelected.bind="onShowMoreFilters">
+                        More...
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+         </xpath>
+    </t>
+
+    <t t-name="web.SearchBar.Facets.Offline">
+        <t t-foreach="facets" t-as="facet" t-key="facet_index">
+            <div class="o_searchview_facet d-inline-flex align-items-stretch rounded-2 bg-200 text-nowrap mw-100"
+                role="listitem"
+                aria-label="search"
+                tabindex="0"
+                >
+
+                <div class="rounded-start-2 px-1 rounded-end-0 p-0"
+                    role="img"
+                    t-att-class="{
+                        'text-bg-action': facet.type == 'groupBy',
+                        'text-bg-primary': facet.type == 'field' || facet.type == 'filter',
+                        'text-bg-favourite': facet.type == 'favorite'
+                    }"
+                    >
+                    <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
+                    <small t-else="" class="px-1" t-esc="facet.title"/>
+                </div>
+
+                <div class="o_facet_values d-flex flex-wrap align-items-center px-2 rounded-end-2 text-wrap overflow-hidden">
+                    <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
+                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
+                        <small class="o_facet_value text-truncate" t-esc="facetValue" t-att-title="facet.tooltip or facetValue"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</templates>

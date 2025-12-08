@@ -12,6 +12,16 @@ export class SearchBarToggler extends Component {
     };
 }
 
+export class OfflineSearchBarToggler extends SearchBarToggler {
+    static template = "web.SearchBar.Toggler.Offline";
+    setup() {
+        this.offlineUI = useService("offline_ui");
+        const { actionId, viewType } = this.env.config;
+        this.isDisabled =
+            Object.keys(this.offlineUI.visited[actionId]?.views[viewType] || {}).length <= 1;
+    }
+}
+
 export function useSearchBarToggler() {
     const ui = useService("ui");
 
@@ -43,6 +53,7 @@ export function useSearchBarToggler() {
     return {
         state,
         component: SearchBarToggler,
+        offlineComponent: OfflineSearchBarToggler,
         get props() {
             return {
                 isSmall: state.isSmall,

@@ -1,5 +1,6 @@
 import { Component } from "@odoo/owl";
 import { AnimatedNumber } from "./animated_number";
+import { useOfflineStatus } from "@web/core/offline/offline_service";
 
 export class ColumnProgress extends Component {
     static components = {
@@ -15,6 +16,10 @@ export class ColumnProgress extends Component {
     static defaultProps = {
         onBarClicked: () => {},
     };
+
+    setup() {
+        this.offlineStatus = useOfflineStatus();
+    }
 
     async onBarClick(bar) {
         await this.props.onBarClicked(bar);

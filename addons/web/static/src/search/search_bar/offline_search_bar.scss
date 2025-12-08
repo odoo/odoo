@@ -1,0 +1,20 @@
+@include media-breakpoint-up(lg) {
+    .o_search_bar_menu_offline {
+        min-width: MIN(500px, 33%);
+    }
+}
+
+@include media-breakpoint-up(xl) {
+    .o_search_bar_menu_offline {
+        min-width: MIN(600px, 33%);
+    }
+}
+
+.o_search_bar_menu_offline {
+    .o-dropdown-item {
+        padding-left: 33px;
+    }
+    .o_show_more_filters {
+        color: $link-color;
+    }
+}

@@ -412,7 +412,9 @@ export class ControlPanel extends Component {
     isViewAvailable(view) {
         return (
             !this.offlineStatus.offline ||
-            this.offlineUI.visited[this.env.config.actionId]?.views[view.type]
+            this.offlineUI.visited[this.env.config.actionId]?.views[view.type]?.[
+                JSON.stringify(this.env.searchModel.query)
+            ]
         );
     }
 
