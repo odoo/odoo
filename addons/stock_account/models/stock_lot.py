@@ -24,7 +24,7 @@ class StockLot(models.Model):
         """Compute totals of multiple svl related values"""
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
-        at_date = self.env.context.get('to_date')
+        at_date = fields.Datetime.to_datetime(self.env.context.get('to_date'))
 
         for lot in self:
             if not lot.lot_valuated:
