@@ -15,22 +15,14 @@ from odoo.tools.intervals import Intervals
 class HrVersion(models.Model):
     _inherit = 'hr.version'
 
-    work_entry_source = fields.Selection([('calendar', 'Working Schedule')], required=True, default='calendar', tracking=True, help='''
-        Defines the source for work entries generation
+    work_entry_source = fields.Selection(string="Tracking Method", selection=[
+        ('calendar', 'Time Off'),
+    ], default=lambda self: self.env.company.sudo().work_entry_source, tracking=True, required=True, help='''
+            Defines the source for work entries generation
 
-        Working Schedule: Work entries will be generated from the working hours below.
-        Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
-        Planning: Work entries will be generated from the employee's planning. (requires Planning app)
-    ''', groups="base.group_system,hr.group_hr_manager")
-    work_entry_source_calendar_invalid = fields.Boolean(
-        compute='_compute_work_entry_source_calendar_invalid',
-        groups="hr.group_hr_manager",
-    )
-
-    @api.depends('work_entry_source', 'resource_calendar_id')
-    def _compute_work_entry_source_calendar_invalid(self):
-        for version in self:
-            version.work_entry_source_calendar_invalid = version.work_entry_source == 'calendar' and not version.resource_calendar_id
+            Working Schedule: Work entries will be generated from the working hours below.
+            Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
+        ''', groups="base.group_system,hr.group_hr_manager")
 
     # YTI Break ormcache + select country attendance entry type
     @ormcache()

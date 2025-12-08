@@ -7,7 +7,6 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     work_entry_source = fields.Selection(readonly=False, related="version_id.work_entry_source", inherited=True, groups="base.group_system,hr.group_hr_manager")
-    work_entry_source_calendar_invalid = fields.Boolean(related="version_id.work_entry_source_calendar_invalid", inherited=True, groups="hr.group_hr_manager")
     external_code = fields.Char("External Code", copy=False, help="Use this code to export your data to a third party", groups="hr.group_hr_user")
 
     # YTI TODO: Rename private method into _get_work_entries_vals()

@@ -7,3 +7,6 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     external_code = fields.Char("External Code", groups="hr.group_hr_user", copy=False, help="Use this code to export your data to a third party")
+    work_entry_source = fields.Selection(string="Tracking Method", selection=[
+        ('calendar', 'Time'),
+    ], default='calendar', required=True, groups="hr.group_hr_user")
