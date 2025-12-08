@@ -12,6 +12,7 @@ import { FavoritePreview } from "./favorite_preview";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { effect } from "@web/core/utils/reactive";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { _t } from "@web/core/l10n/translation";
 
 export class ThemeSelector extends Component {
     static template = "mass_mailing.ThemeSelector";
@@ -89,13 +90,18 @@ export class ThemeSelector extends Component {
         if (this.state.loading || !favorite) {
             return;
         }
-        const notificationAction = await this.orm.call(
-            "mailing.mailing",
-            "action_remove_favorite",
-            [favorite.id]
-        );
+        await this.orm.write("mailing.mailing", [favorite.id], { favorite: false });
         this.state.favoriteTemplates.splice(index, 1);
-        this.action.doAction(notificationAction);
+        this.action.doAction({
+            type: "ir.actions.client",
+            tag: "display_notification",
+            params: {
+                message: _t("Design removed from the templates!"),
+                next: { type: "ir.actions.act_window_close" },
+                sticky: false,
+                type: "info",
+            },
+        });
     }
 
     onSelectFavorite(html) {
