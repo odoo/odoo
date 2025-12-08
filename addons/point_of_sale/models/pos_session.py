@@ -1893,6 +1893,60 @@ class PosSession(models.Model):
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
         ])
+<<<<<<< 80d64e7b87bb9d99513cfba83da1c42efb6541b1
+||||||| 3e859fa5f1f2772b5f9e9ef9107658d18961357e
+        if product:
+            return {'product.product': product.with_context(product_context).read(product_fields, load=False)}
+
+        domain = [('barcode', 'not in', ['', False])]
+        loaded_data = self._context.get('loaded_data')
+        if loaded_data:
+            loaded_product_ids = [x['id'] for x in loaded_data['product.product']]
+            domain = AND([domain, [('product_id', 'in', [x['id'] for x in self._context.get('loaded_data')['product.product']])]]) if self._context.get('loaded_data') else []
+            domain = AND([domain, [('product_id', 'in', loaded_product_ids)]])
+        packaging_params = {
+            'search_params': {
+                'domain': domain,
+                'fields': ['name', 'barcode', 'product_id', 'qty'],
+            },
+        }
+        packaging_params['search_params']['domain'] = [['barcode', '=', barcode]]
+        packaging = self.env['product.packaging'].search(packaging_params['search_params']['domain'])
+
+        if packaging and packaging.product_id:
+            return {'product.product': packaging.product_id.with_context(product_context).read(product_fields, load=False), 'product.packaging': packaging.read(product_packaging_fields, load=False)}
+        else:
+            return {
+                'product.product': [],
+                'product.packaging': [],
+            }
+=======
+        if product and product[0].barcode == barcode:
+            return {'product.product': product.with_context(product_context).read(product_fields, load=False)}
+
+        domain = [('barcode', 'not in', ['', False])]
+        loaded_data = self._context.get('loaded_data')
+        if loaded_data:
+            loaded_product_ids = [x['id'] for x in loaded_data['product.product']]
+            domain = AND([domain, [('product_id', 'in', [x['id'] for x in self._context.get('loaded_data')['product.product']])]]) if self._context.get('loaded_data') else []
+            domain = AND([domain, [('product_id', 'in', loaded_product_ids)]])
+        packaging_params = {
+            'search_params': {
+                'domain': domain,
+                'fields': ['name', 'barcode', 'product_id', 'qty'],
+            },
+        }
+        packaging_params['search_params']['domain'] = [['barcode', '=', barcode]]
+        packaging = self.env['product.packaging'].search(packaging_params['search_params']['domain'])
+
+        if packaging and packaging.product_id:
+            return {'product.product': packaging.product_id.with_context(product_context).read(product_fields, load=False), 'product.packaging': packaging.read(product_packaging_fields, load=False)}
+        else:
+            return {
+                'product.product': [],
+                'product.packaging': [],
+            }
+>>>>>>> 66974645d6b8e6e160c1debac0c0eb7d5b318a38
 
     def get_total_discount(self):
         amount = 0
