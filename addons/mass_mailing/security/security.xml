@@ -7,5 +7,23 @@
             <field name="groups" eval="[Command.link(ref('mass_mailing.group_mass_mailing_user'))]"/>
             <field name="domain_force">[('properties_field_id', '=', user.env.ref('mass_mailing.field_mailing_contact__properties').id)]</field>
         </record>
+
+        <record id="ir_ui_view_mass_mailing_user_read_access" model="ir.rule">
+            <field name="name">ir.ui.view: mailing user</field>
+            <field name="model_id" ref="base.model_ir_ui_view"/>
+            <field name="groups" eval="[(4, ref('mass_mailing.group_mass_mailing_user'))]"/>
+            <field name="domain_force">['|', ('technical_usage', '=', 'mass_mailing'), ('key', '=', 'mass_mailing.email_designer_snippets')]</field>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_create" eval="False"/>
+        </record>
+
+        <record id="ir_ui_view_mass_mailing_user_edit_access" model="ir.rule">
+            <field name="name">ir.ui.view technical_usage: mailing user</field>
+            <field name="model_id" ref="base.model_ir_ui_view"/>
+            <field name="groups" eval="[(4, ref('mass_mailing.group_mass_mailing_user'))]"/>
+            <field name="domain_force">[('technical_usage', '=', 'mass_mailing')]</field>
+            <field name="perm_read" eval="False"/>
+        </record>
     </data>
 </odoo>

@@ -60,7 +60,7 @@ export class AddSnippetDialog extends Component {
                     this.iframeRef.el.addEventListener("load", resolve, { once: true });
                 });
             }
-
+            this.renderIframeHead();
             const iframeDocument = this.iframeRef.el.contentDocument;
             iframeDocument.body.parentElement.classList.add("o_add_snippets_preview");
             iframeDocument.body.style.setProperty("direction", localization.direction);
@@ -86,6 +86,11 @@ export class AddSnippetDialog extends Component {
             root.destroy();
         });
     }
+
+    /**
+     * Allow to insert content inside the Iframe's head
+     */
+    renderIframeHead() {}
 
     /**
      * Loads and injects the required styles into the iframe's <head>.
