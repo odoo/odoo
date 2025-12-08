@@ -942,6 +942,10 @@ export class MockURL extends URL {
 }
 
 export class MockWebSocket extends MockEventTarget {
+    static CONNECTING = 0;
+    static OPEN = 1;
+    static CLOSING = 2;
+    static CLOSED = 3;
     static publicListeners = ["close", "error", "message", "open"];
 
     /**

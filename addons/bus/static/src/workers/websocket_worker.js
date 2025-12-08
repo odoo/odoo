@@ -298,36 +298,6 @@ export class WebsocketWorker {
     }
 
     /**
-     * Determine whether or not the websocket associated to this worker
-     * is connected.
-     *
-     * @returns {boolean}
-     */
-    _isWebsocketConnected() {
-        return this.websocket && this.websocket.readyState === 1;
-    }
-
-    /**
-     * Determine whether or not the websocket associated to this worker
-     * is connecting.
-     *
-     * @returns {boolean}
-     */
-    _isWebsocketConnecting() {
-        return this.websocket && this.websocket.readyState === 0;
-    }
-
-    /**
-     * Determine whether or not the websocket associated to this worker
-     * is in the closing state.
-     *
-     * @returns {boolean}
-     */
-    _isWebsocketClosing() {
-        return this.websocket && this.websocket.readyState === 2;
-    }
-
-    /**
      * Triggered when a connection is closed. If closure was not clean ,
      * try to reconnect after indicating to the clients that the
      * connection was closed.
@@ -343,7 +313,6 @@ export class WebsocketWorker {
         this._logDebug("_onWebsocketClose", code, reason);
         this._updateState(WORKER_STATE.DISCONNECTED);
         this.lastChannelSubscription = null;
-        /** @type {{promise: Promise<void>, resolve: Function, reject: Function}} */
         this.firstSubscribeResolver = Promise.withResolvers();
         if (this.isReconnecting) {
             // Connection was not established but the close event was
@@ -452,7 +421,7 @@ export class WebsocketWorker {
     _restartConnectionCheckInterval() {
         clearInterval(this._connectionCheckInterval);
         this._connectionCheckInterval = setInterval(() => {
-            if (this._isWebsocketConnected()) {
+            if (this.websocket?.readyState === WebSocket.OPEN) {
                 this.websocket.send(new Uint8Array([0x00]));
                 this._logDebug("connection_checked");
             }
@@ -481,7 +450,7 @@ export class WebsocketWorker {
     _sendToServer(message) {
         this._logDebug("_sendToServer", message);
         const payload = JSON.stringify(message);
-        if (!this._isWebsocketConnected()) {
+        if (this.websocket?.readyState !== WebSocket.OPEN) {
             if (message["event_name"] === "subscribe") {
                 this.messageWaitQueue = this.messageWaitQueue.filter(
                     (msg) => JSON.parse(msg).event_name !== "subscribe"
@@ -512,11 +481,14 @@ export class WebsocketWorker {
      */
     _start() {
         this._logDebug("_start");
-        if (!this.active || this._isWebsocketConnected() || this._isWebsocketConnecting()) {
+        if (
+            !this.active ||
+            [WebSocket.CONNECTING, WebSocket.OPEN].includes(this.websocket?.readyState)
+        ) {
             return;
         }
         this._removeWebsocketListeners();
-        if (this._isWebsocketClosing()) {
+        if (this.websocket?.readyState === WebSocket.CLOSING) {
             // The close event didn’t trigger. Trigger manually to maintain
             // correct state and lifecycle handling.
             this._onWebsocketClose(

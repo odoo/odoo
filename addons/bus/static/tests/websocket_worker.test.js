@@ -103,18 +103,18 @@ test("disconnect event is sent when stopping the worker", async () => {
 test("check connection health during inactivity", async () => {
     const ogSocket = window.WebSocket;
     let waitingForCheck = true;
-    patchWithCleanup(window, {
-        WebSocket: function () {
-            const ws = new ogSocket(...arguments);
-            ws.send = (message) => {
-                if (waitingForCheck && message instanceof Uint8Array) {
-                    expect.step("check_connection_health_sent");
-                    waitingForCheck = false;
-                }
-            };
-            return ws;
-        },
-    });
+    const newSocket = function () {
+        const ws = new ogSocket(...arguments);
+        ws.send = (message) => {
+            if (waitingForCheck && message instanceof Uint8Array) {
+                expect.step("check_connection_health_sent");
+                waitingForCheck = false;
+            }
+        };
+        return ws;
+    };
+    Object.assign(newSocket, ogSocket);
+    patchWithCleanup(window, { WebSocket: newSocket });
     patchWithCleanup(WebsocketWorker.prototype, {
         enableCheckInterval: true,
         _restartConnectionCheckInterval() {

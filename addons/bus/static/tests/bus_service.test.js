@@ -471,7 +471,8 @@ test("show notification when version is outdated", async () => {
     await expect.waitForSteps(["Worker deactivated due to an outdated version.", "BUS:DISCONNECT"]);
     await runAllTimers();
     await waitFor(".o_notification", {
-        contains: "Save your work and refresh to get the latest updates and avoid potential issues.",
+        contains:
+            "Save your work and refresh to get the latest updates and avoid potential issues.",
     });
     await contains(".o_notification button:contains(Refresh)").click();
     await expect.waitForSteps(["reload"]);
@@ -482,18 +483,18 @@ test("subscribe message is sent first", async () => {
     // Starting the server first, the following patch would be overwritten otherwise.
     await makeMockServer();
     const ogSocket = window.WebSocket;
-    patchWithCleanup(window, {
-        WebSocket: function () {
-            const ws = new ogSocket(...arguments);
-            ws.send = (message) => {
-                const evName = JSON.parse(message).event_name;
-                if (["subscribe", "some_event", "some_other_event"].includes(evName)) {
-                    expect.step(evName);
-                }
-            };
-            return ws;
-        },
-    });
+    const newSocket = function () {
+        const ws = new ogSocket(...arguments);
+        ws.send = (message) => {
+            const evName = JSON.parse(message).event_name;
+            if (["subscribe", "some_event", "some_other_event"].includes(evName)) {
+                expect.step(evName);
+            }
+        };
+        return ws;
+    };
+    Object.assign(newSocket, ogSocket);
+    patchWithCleanup(window, { WebSocket: newSocket });
     await makeMockEnv();
     startBusService();
     await runAllTimers();
