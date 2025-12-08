@@ -168,7 +168,7 @@ const threadPatch = {
         if (this.channel?.isChatChannel && this.self_member_id?.message_unread_counter_ui) {
             return this.self_member_id.message_unread_counter_ui;
         }
-        if (this.discussAppCategory?.id === "channels") {
+        if (this.channel.discussAppCategory?.id === "channels") {
             if (this.store.settings.channel_notifications === "no_notif") {
                 return 0;
             }

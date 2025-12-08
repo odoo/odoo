@@ -11,11 +11,11 @@ const discussChannelPatch = {
             this.eq(this.store.discuss.thread?.channel)
         ) {
             if (this.store.discuss.isActive) {
-                const newThread =
-                    this.store.discuss.channelCategory.threads.find(
-                        (thread) => thread.channel.displayToSelf || thread.channel.isLocallyPinned
+                const newChannel =
+                    this.store.discuss.channelCategory.channels.find(
+                        (channel) => channel.displayToSelf || channel.isLocallyPinned
                     ) || this.store.inbox;
-                newThread.setAsDiscussThread();
+                newChannel.setAsDiscussThread();
             } else {
                 this.store.discuss.thread = undefined;
             }

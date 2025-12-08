@@ -30,9 +30,9 @@ const discussAppStaticPatch = {
                     if (!category.exists()) {
                         return;
                     }
-                    category.threads
-                        .filter((thread) => !thread.self_member_id && !thread.isLocallyPinned)
-                        .forEach((thread) => thread.delete());
+                    category.channels
+                        .filter((channel) => !channel.self_member_id && !channel.isLocallyPinned)
+                        .forEach((channel) => channel.delete());
                 };
             },
             predicate: (app) =>
