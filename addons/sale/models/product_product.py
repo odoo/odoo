@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools import float_round
 
 
@@ -41,13 +42,19 @@ class ProductProduct(models.Model):
             product.sales_count = product.uom_id.round(r.get(product.id, 0))
         return r
 
+    @api.depends_context("to_date")
     def _compute_forecasted_without_stock(self):
-        """ Substract sales not delivered from forecasted tally """
+        """ Substract sales lines not delivered from forecasted tally """
         res = super()._compute_forecasted_without_stock()
-        domain = [
-            ('order_id.state', '=', 'sale'),
-            ('product_id', 'in', self.ids),
-        ]
+        domain = Domain.AND([
+            Domain('order_id.state', '=', 'sale'),
+            Domain('product_id', 'in', self.ids),
+        ])
+        if self.env.context.get("to_date"):
+            domain = Domain.AND([
+                domain,
+                [('order_id.commitment_date', '<=', self.env.context.get("to_date"))]
+            ])
         order_lines = self.env['sale.order.line']._read_group(domain, ['product_id'], ['product_uom_qty:sum', 'qty_delivered:sum'])
         for product, qty_sold, qty_delivered in order_lines:
             res[product.id]['outgoing_qty'] = (qty_sold - qty_delivered)

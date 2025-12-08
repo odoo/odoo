@@ -577,6 +577,7 @@
                                                 widget="many2one_uom"
                                                 readonly="product_uom_readonly"
                                                 required="not display_type and not is_downpayment"/>
+                                            <widget name="simple_qty_at_date_widget"/>
                                         </div>
                                         <label for="qty_delivered" string="Delivered" invisible="parent.state != 'sale'"/>
                                         <div name="delivered_qty" invisible="parent.state != 'sale'">
@@ -729,6 +730,7 @@
                                     column_invisible="parent.state != 'sale'"
                                     readonly="qty_delivered_method != 'manual' or is_downpayment"
                                     optional="show"/>
+                                <widget name="simple_qty_at_date_widget" width="20px"/>
                                 <field
                                     name="qty_invoiced"
                                     string="Invoiced"

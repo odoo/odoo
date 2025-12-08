@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.fields import Domain
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError
 from dateutil.relativedelta import relativedelta
@@ -81,13 +82,19 @@ class ProductProduct(models.Model):
                 continue
             product.purchased_product_qty = product.uom_id.round(purchased_data.get(product.id, 0))
 
+    @api.depends_context("to_date")
     def _compute_forecasted_without_stock(self):
         """ Adds orders not receives to forecasted stock tally, """
         res = super()._compute_forecasted_without_stock()
-        domain = [
-            ('order_id.state', '=', 'purchase'),
-            ('product_id', 'in', self.ids),
-        ]
+        domain = Domain.AND([
+            Domain('order_id.state', '=', 'purchase'),
+            Domain('product_id', 'in', self.ids),
+        ])
+        if self.env.context.get("to_date"):
+            domain = Domain.AND([
+                domain,
+                Domain('order_id.date_planned', '<=', self.env.context.get("to_date"))
+            ])
         order_lines = self.env['purchase.order.line']._read_group(domain, ['product_id'], ['product_uom_qty:sum', 'qty_received:sum'])
         for product, qty_ordered, qty_received in order_lines:
             res[product.id]['incoming_qty'] = (qty_ordered - qty_received)
