@@ -40,6 +40,7 @@ export class QtyAtDatePopover extends Component {
     }
 }
 
+// TODO inherit from simple_qty_at_date_widget
 export class QtyAtDateWidget extends Component {
     static components = { Popover: QtyAtDatePopover };
     static template = "sale_stock.QtyAtDate";

@@ -47,7 +47,7 @@
             <xpath expr="//field[@name='order_line']//form//field[@name='analytic_distribution']" position="before">
                 <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location" options="{'no_create': True}"/>
             </xpath>
-            <xpath expr="//field[@name='order_line']//form//field[@name='product_uom_id']" position="after">
+            <xpath expr="//widget[@name='simple_qty_at_date_widget']" position="replace">
                 <widget name="qty_at_date_widget"/>
             </xpath>
             <xpath expr="//field[@name='order_line']//list//field[@name='analytic_distribution']" position="after">
@@ -58,7 +58,7 @@
                     options="{'no_create': True}"
                     optional="hide"/>
             </xpath>
-            <xpath expr="//field[@name='order_line']//list//field[@name='qty_delivered']" position="after">
+            <xpath expr="//widget[@name='simple_qty_at_date_widget']" position="replace">
                 <widget name="qty_at_date_widget" width="20px"/>
             </xpath>
         </field>
