@@ -136,6 +136,9 @@ export class TranslationPlugin extends Plugin {
             if (ev.target.closest(".s_table_of_content_navbar_wrap")) {
                 message = _t("Translate header in the text. Menu is generated automatically.");
             }
+            if (ev.target.closest(".o_carousel_controllers")) {
+                return;
+            }
             this.notificationService.add(message, {
                 type: "info",
                 sticky: false,

@@ -208,14 +208,14 @@ registerWebsitePreviewTour(
         {
             content: "Check that the thumbnail of the first image has not been changed",
             trigger:
-                ":iframe .s_image_gallery div.carousel-indicators button:first-child[style='background-image: url(/web/image/website.library_image_08)']",
+                ":iframe .s_image_gallery div.carousel-indicators button:first-child img[src='/web/image/website.library_image_08']",
         },
         ...clickOnSave(),
         ...clickOnEditAndWaitEditMode(),
         {
             content: "Check that the thumbnail of the new image is displayed",
             trigger:
-                ":iframe .s_image_gallery div.carousel-indicators button:nth-child(4)[style*='s_default_image']",
+                ":iframe .s_image_gallery div.carousel-indicators button:nth-child(4) img[src*='s_default_image']",
         },
         {
             content: "Select the first image in the gallery",
@@ -242,7 +242,7 @@ registerWebsitePreviewTour(
         {
             content: "Check that the thumbnail of the first image is updated",
             trigger:
-                ":iframe .s_image_gallery div.carousel-indicators button:first-child[style*='s_default_image_2']",
+                ":iframe .s_image_gallery div.carousel-indicators button:first-child img[src*='s_default_image_2']",
         },
         {
             content: "Select the second image in the gallery",
@@ -253,7 +253,7 @@ registerWebsitePreviewTour(
         {
             content: "Check that the thumbnail of the second image is an SVG",
             trigger:
-                ":iframe .s_image_gallery div.carousel-indicators button:nth-child(2)[style*='data:image/svg+xml']",
+                ":iframe .s_image_gallery div.carousel-indicators button:nth-child(2) img[src*='data:image/svg+xml']",
         },
     ]
 );

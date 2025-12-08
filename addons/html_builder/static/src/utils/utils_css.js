@@ -340,10 +340,10 @@ export function forwardToThumbnail(imgEl) {
         if (carouselInnerEl && carouselItemEl) {
             const imageIndex = [...carouselInnerEl.children].indexOf(carouselItemEl);
             const miniatureEl = carouselEl.querySelector(
-                `.carousel-indicators [data-bs-slide-to="${imageIndex}"]`
+                `.carousel-indicators [data-bs-slide-to="${imageIndex}"] img`
             );
-            if (miniatureEl && miniatureEl.style.backgroundImage) {
-                miniatureEl.style.backgroundImage = `url(${imgEl.getAttribute("src")})`;
+            if (miniatureEl) {
+                miniatureEl.setAttribute("src", imgEl.getAttribute("src"));
             }
         }
     }

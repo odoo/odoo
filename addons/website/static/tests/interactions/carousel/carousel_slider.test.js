@@ -29,9 +29,18 @@ test("carousel_slider updates min height of carousel items", async () => {
                         <span class="visually-hidden">Previous</span>
                     </button>
                     <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.library_image_08)" class="active" aria-label="Carousel indicator"/>
-                        <button type="button" style="background-image: url(/web/image/website.library_image_03)" data-bs-target="#slideshow_sample" data-bs-slide-to="1" aria-label="Carousel indicator"/>
-                        <button type="button" style="background-image: url(/web/image/website.library_image_02)" data-bs-target="#slideshow_sample" data-bs-slide-to="2" aria-label="Carousel indicator"/>
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="0" class="active">
+                            <span class="visually-hidden">Carousel indicator</span>
+                            <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_08"/>
+                        </button>
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="1">
+                            <span class="visually-hidden">Carousel indicator</span>
+                            <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_03"/>
+                        </button>
+                        <button type="button" data-bs-target="#slideshow_sample" data-bs-slide-to="2">
+                            <span class="visually-hidden">Carousel indicator</span>
+                            <img class="object-fit-cover w-100 h-100" aria-hidden="true" src="/web/image/website.library_image_02"/>
+                        </button>
                     </div>
                     <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
                         <span class="carousel-control-next-icon" aria-hidden="true"/>

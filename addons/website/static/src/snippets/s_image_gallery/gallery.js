@@ -6,7 +6,7 @@ import { Interaction } from "@web/public/interaction";
 export class Gallery extends Interaction {
     static selector = ".s_image_gallery.o_image_popup";
     dynamicContent = {
-        img: {
+        "img:not(.o_carousel_controllers img)": {
             "t-on-click": this.onClickImg,
         },
     };
