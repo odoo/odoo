@@ -9,6 +9,7 @@ import {
     MockEventTarget,
     setSyncValue,
 } from "../hoot_utils";
+import { ensureTest } from "../main_runner";
 
 /**
  * @typedef {"android" | "ios" | "linux" | "mac" | "windows"} Platform
@@ -297,6 +298,7 @@ export function cleanupNavigator() {
  * @param {PermissionState} [value]
  */
 export function mockPermission(name, value) {
+    ensureTest("mockPermission");
     if (!(name in currentPermissions)) {
         throw new TypeError(
             `The provided value '${name}' is not a valid enum value of type PermissionName`
@@ -316,6 +318,7 @@ export function mockPermission(name, value) {
  * @param {Navigator["sendBeacon"]} callback
  */
 export function mockSendBeacon(callback) {
+    ensureTest("mockSendBeacon");
     mockValues.sendBeacon = callback;
 }
 
@@ -323,6 +326,7 @@ export function mockSendBeacon(callback) {
  * @param {Platform} platform
  */
 export function mockUserAgent(platform = "linux") {
+    ensureTest("mockUserAgent");
     mockValues.userAgent = makeUserAgent(platform);
 }
 
@@ -330,5 +334,6 @@ export function mockUserAgent(platform = "linux") {
  * @param {Navigator["vibrate"]} callback
  */
 export function mockVibrate(callback) {
+    ensureTest("mockVibrate");
     mockValues.vibrate = callback;
 }
