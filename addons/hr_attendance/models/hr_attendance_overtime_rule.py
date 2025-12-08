@@ -67,6 +67,19 @@ def _last_hours_as_intervals(starting_intervals, hours):
     return Intervals(last_hours_intervals)
 
 
+def _extend_intervals_for_undertime(base_intervals, missing_hours):
+    if not base_intervals:
+        return Intervals()
+
+    last_intervals = list(base_intervals)
+    start, end, attendance = last_intervals[-1]
+
+    extended_start = start - relativedelta(hours=missing_hours)
+    last_intervals[-1] = (extended_start, end, attendance)
+
+    return Intervals(last_intervals)
+
+
 class HrAttendanceOvertimeRule(models.Model):
     _name = 'hr.attendance.overtime.rule'
     _description = "Overtime Rule"
@@ -98,7 +111,10 @@ class HrAttendanceOvertimeRule(models.Model):
     ], default='work_days')
     timing_start = fields.Float("From", default=0)
     timing_stop = fields.Float("To", default=24)
-    expected_hours_from_contract = fields.Boolean("Hours from employee schedule", default=True)
+    expected_hours_from_contract = fields.Boolean(
+        string="Hours from employee schedule",
+        default=True,
+    )
 
     resource_calendar_id = fields.Many2one(
         'resource.calendar',
@@ -340,11 +356,15 @@ class HrAttendanceOvertimeRule(models.Model):
             )
 
         quantity_intervals_by_date = defaultdict(list)
+        undertime_flag = {}
         for rule in self.filtered(lambda r: r.base_off == 'quantity').sorted(
             lambda r: {p: i for i, p in enumerate(periods)}[r.quantity_period]
         ):
             period = rule.quantity_period
+            absence_management = self._is_absence_management_enabled()
             for date in attendances_by[period]:
+                if rule.expected_hours_from_contract and attendances.employee_id.resource_calendar_id.flexible_hours:
+                    continue
                 if rule.expected_hours_from_contract:
                     expected_hours = self._get_expected_hours_from_contract(date, version_map[employee][date], period)
                 else:
@@ -352,14 +372,28 @@ class HrAttendanceOvertimeRule(models.Model):
 
                 overtime_quantity = work_hours_by[period][date] - expected_hours
                 # if overtime_quantity <= -rule.employee_tolerance and rule.undertime: make negative adjustment
-                if overtime_quantity <= 0 or overtime_quantity <= rule.employer_tolerance:
+                # Handle undertime: convert missing hours into intervals to be deducted later
+                if overtime_quantity < 0 and absence_management:
+                    success = rule._get_undertime_intervals_by_date(
+                        date,
+                        period,
+                        overtime_quantity,
+                        attendances_by,
+                        quantity_intervals_by_date,
+                        undertime_flag,
+                    )
+                    if success:
+                        continue
+                if overtime_quantity <= rule.employer_tolerance:
                     continue
                 if overtime_quantity < overtime_hours_by[period][date]:
                     for start, end, attendance in _last_hours_as_intervals(
                         starting_intervals=overtimes_by[period][date],
                         hours=overtime_quantity,
                     ):
-                        quantity_intervals_by_date[attendance.date].append((start, end, rule))
+                        date = attendance[0].date
+                        quantity_intervals_by_date[date].append((start, end, rule))
+                        undertime_flag[date, start, end] = False
                 else:
                     new_intervals = _last_hours_as_intervals(
                         starting_intervals=attendances_by[period][date],
@@ -381,13 +415,14 @@ class HrAttendanceOvertimeRule(models.Model):
                     ):
                         date = attendance[0].date
                         quantity_intervals_by_date[date].append((start, end, rule))
+                        undertime_flag[date, start, end] = False
         intervals_by_date = {}
         for date in quantity_intervals_by_date.keys() | timing_intervals_by_date.keys():
             intervals_by_date[date] = _record_overlap_intervals([
                 *timing_intervals_by_date[date],
                 *quantity_intervals_by_date[date],
             ])
-        return intervals_by_date
+        return intervals_by_date, undertime_flag
 
     def _generate_overtime_vals(self, employee, attendances, version_map):
         # * Some attendances "see each other"
@@ -398,19 +433,26 @@ class HrAttendanceOvertimeRule(models.Model):
         #   (in pratices the attendances that see each other are found in `_update_overtime`)
         # * version_map[a.employee_id][a.date] is in the map for every attendance a in attendances
         vals = []
-        for date, intervals in self._get_overtime_intervals_by_date(attendances, version_map).items():
-            vals.extend([
-                {
+        interval_map, undertime_flag = self._get_overtime_intervals_by_date(attendances, version_map)
+        for date, intervals in interval_map.items():
+            for start, stop, rules in intervals:
+                is_undertime = undertime_flag.get(
+                    (date, start, stop),
+                    False
+                )
+                duration = _time_delta_hours(stop - start)
+                if is_undertime:
+                    duration = -duration
+                vals.append({
                     'time_start': start,
                     'time_stop': stop,
-                    'duration': _time_delta_hours(stop - start),
+                    'duration': duration,
                     'employee_id': employee.id,
                     'date': date,
                     'rule_ids': rules.ids,
                     **rules._extra_overtime_vals(),
-                }
-                for start, stop, rules in intervals
-            ])
+                })
+
         return vals
 
     def _extra_overtime_vals(self):
@@ -451,3 +493,42 @@ class HrAttendanceOvertimeRule(models.Model):
                     )
                     continue
                 rule.information_display = timing_types[rule.timing_type]
+
+    def _get_undertime_intervals_by_date(self, date, period, overtime_quantity, attendances_by, quantity_intervals_by_date, undertime_flag):
+        """
+        Fallback stub method allowing safe undertime calls;
+        overridden by optional modules to apply real undertime logic.
+        """
+        return False
+
+    @api.model
+    def get_overtime_rule_form_context(self):
+        """
+        RPC helper for the web client.
+        Returns a small context dict used by the client when opening the rule form
+        from a ruleset one2many (Add a line). This avoids adding DB fields and
+        allows the client widget to know whether Absence Management is enabled
+        for the ruleset's company and provide a suitable tooltip.
+        """
+        absence_management_enabled = self._is_absence_management_enabled()
+
+        if absence_management_enabled:
+            tooltip = (
+                "The attendance can go into negative extra hours to\n"
+                "represent the missing hours compared to what is expected.\n"
+                "It will not work if the employee doesn't have a working schedule."
+            )
+        else:
+            tooltip = (
+                "This rule currently tracks overtime only.\n"
+                "To track missing hours as well,\n"
+                "please enable the Absence Management setting."
+            )
+
+        return {
+            'absence_management_enabled': absence_management_enabled,
+            'overtime_tooltip': tooltip,
+        }
+
+    def _is_absence_management_enabled(self):
+        return bool(self.env.company.absence_management)
