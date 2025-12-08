@@ -98,10 +98,12 @@ class ResCompany(models.Model):
     peppol_metadata = fields.Json(string='Peppol Metadata')
     peppol_metadata_updated_at = fields.Datetime(string='Peppol meta updated at')
 
+    # Deprecated
     peppol_activate_self_billing_sending = fields.Boolean(
         string="Activate self-billing sending",
         help="If activated, you will be able to send vendor bills as self-billed invoices via Peppol.",
     )
+    # Deprecated
     peppol_self_billing_reception_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Self-Billing reception journal',

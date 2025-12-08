@@ -22,23 +22,23 @@
                            nolabel="1"
                            required="account_peppol_proxy_state in ('sender', 'smp_registration', 'receiver')"/>
                 </group>
-                <group string="Receive your electronic invoices in Odoo" invisible="account_peppol_proxy_state != 'sender'">
-                    <div class="text-justify text-muted" colspan="2">
-                        Some service support migration keys. If this is your case you can enter your migration key below.
-                        If not, you should de-register from your current service provider and register with Odoo afterward.
-                    </div>
-                    <field name="account_peppol_migration_key"/>
-                </group>
-                <group string="Self Billing" invisible="account_peppol_proxy_state not in ('sender', 'receiver')">
-                    <field name="peppol_activate_self_billing" invisible="account_peppol_proxy_state not in ('sender', 'receiver')"/>
-                    <field name="peppol_self_billing_reception_journal_id" invisible="account_peppol_proxy_state != 'receiver'"/>
-                </group>
                 <group string="Danger zone" invisible="account_peppol_proxy_state not in ('sender', 'smp_registration', 'receiver')">
                     <button string="Remove from Peppol"
                             name="button_peppol_unregister"
                             type="object"
                             class="btn btn-danger text-nowrap"
                             confirm="This will delete your Peppol registration."/>
+                    <button string="Enable reception"
+                            name="button_peppol_register_sender_as_receiver"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="account_peppol_proxy_state != 'sender'"/>
+
+                    <button string="Disable the reception."
+                        name="button_peppol_reset_to_sender"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="account_peppol_proxy_state not in ('smp_registration', 'receiver')"/>
                 </group>
                 <footer>
                     <button string="Save" name="button_sync_form_with_peppol_proxy" type="object"
