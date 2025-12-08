@@ -45,6 +45,7 @@ up a management by affair.
     'demo': [
         'data/hr_timesheet_demo.xml',
     ],
+    'pre_init_hook': '_pre_init_hook',
     'post_init_hook': 'create_internal_project',
     'uninstall_hook': '_uninstall_hook',
     'assets': {
