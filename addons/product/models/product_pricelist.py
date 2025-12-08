@@ -167,11 +167,12 @@ class ProductPricelist(models.Model):
         return self._compute_price_rule(product, *args, compute_price=False, **kwargs)[product.id][1]
 
     def _compute_price_rule(
-        self, products, quantity, *, currency=None, uom=None, date=False, compute_price=True,
+        self, products, quantity, *, currency=None, uom=None, date=False,
+        compute_price=True, unique_template=False,
         **kwargs
     ):
-        """ Low-level method - Mono pricelist, multi products
-        Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
+        """Low-level method - Mono pricelist, multi products
+        Returns: dict{product_id: (price, suitable_rule) for the given pricelist}.
 
         Note: self and self.ensure_one()
 
@@ -202,6 +203,9 @@ class ProductPricelist(models.Model):
 
         # Fetch all rules potentially matching specified products/templates/categories and date
         rules = self._get_applicable_rules(products, date, **kwargs)
+
+        if unique_template and products._name == 'product.template':
+            rules = self._filter_rules_for_unique_template(rules, products, quantity, uom, **kwargs)
 
         results = {}
         for product in products:
@@ -262,6 +266,25 @@ class ProductPricelist(models.Model):
             '|', ('date_start', '=', False), ('date_start', '<=', date),
             '|', ('date_end', '=', False), ('date_end', '>=', date),
         ]
+
+    def _filter_rules_for_unique_template(self, rules, products, quantity, uom, **kwargs):
+        """Pre-filter rules when all the products belong to one unique template."""
+        template = products[:1].product_tmpl_id
+        product_uom = template.uom_id
+        target_uom = uom or product_uom  # If no uom is specified, fall back on the product uom
+
+        # Compute quantity in product uom because pricelist rules are specified
+        # w.r.t product default UoM (min_quantity, price_surchage, ...)
+        if target_uom != product_uom:
+            qty_in_product_uom = target_uom._compute_quantity(
+                quantity, product_uom, raise_if_failure=False
+            )
+        else:
+            qty_in_product_uom = quantity
+
+        return rules.with_context(no_discard_of_variant_rules=True).filtered(
+            lambda rule: rule._is_applicable_for(template, qty_in_product_uom)
+        ).with_context(no_discard_of_variant_rules=False)
 
     # Multi pricelists price|rule computation
     def _price_get(self, product, quantity, **kwargs):
