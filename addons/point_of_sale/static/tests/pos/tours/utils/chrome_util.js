@@ -411,3 +411,16 @@ export function waitForOrdersSync() {
         },
     ];
 }
+
+export function flushPendingOrdersSync() {
+    return [
+        {
+            trigger: "body",
+            content: "Flush pending PoS orders to the server (sync_all_orders)",
+            timeout: 15000,
+            async run() {
+                await posmodel.syncAllOrders({ force: true });
+            },
+        },
+    ];
+}

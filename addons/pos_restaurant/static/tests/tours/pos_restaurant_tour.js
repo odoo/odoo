@@ -1243,6 +1243,7 @@ registry.category("web_tour.tours").add("test_delete_line_release_table", {
             FloorScreen.clickTable("5"),
             Chrome.waitRequest(),
             negateStep(...Order.hasLine({ productName: "Coca-Cola" })),
+            Chrome.flushPendingOrdersSync(),
         ].flat(),
 });
 
