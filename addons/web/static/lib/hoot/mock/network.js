@@ -312,9 +312,14 @@ export function cleanupNetwork() {
 /** @type {typeof fetch} */
 export async function mockedFetch(input, init) {
     const strInput = String(input);
+    const isInternalUrl = R_INTERNAL_URL.test(strInput);
     if (!mockFetchFn) {
+        if (isInternalUrl) {
+            // Internal URL without mocked 'fetch': directly handled by the browser
+            return fetch(input, init);
+        }
         throw new Error(
-            `Can't make a request when fetch is not mocked.\nReceived fetch call to: "${strInput}"`
+            `Could not fetch "${strInput}": cannot make a request when fetch is not mocked`
         );
     }
     const controller = markOpen(new AbortController());
@@ -367,7 +372,7 @@ export async function mockedFetch(input, init) {
         throw error;
     }
 
-    if (isNil(result) && R_INTERNAL_URL.test(strInput)) {
+    if (isInternalUrl && isNil(result)) {
         // Internal URL without mocked result: directly handled by the browser
         return fetch(input, init);
     }
