@@ -56,7 +56,8 @@ class HrLeaveType(models.Model):
                             'icon': leave_type.sudo().icon_id.url,
                             'allows_negative': leave_type.allows_negative,
                             'max_allowed_negative': leave_type.max_allowed_negative,
-                            'overtime_deductible': True
+                            'overtime_deductible': True,
+                            'employee_company': employee.company_id.id,
                         },
                         leave_type.requires_allocation,
                         leave_type.id)
