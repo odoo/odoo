@@ -212,7 +212,9 @@ class MailRenderMixin(models.AbstractModel):
         # record info
         if 'model_description' not in template_ctx:
             template_ctx['model_description'] = self.env['ir.model']._get(context_record._name).display_name if context_record else False
-        template_ctx.setdefault('subtitles', self.env.context.get('email_notification_subtitles', [record_name]))
+        template_ctx.setdefault('subtitles',
+                                # str(s) resolves the lazy translation
+                                [str(s) for s in self.env.context.get('email_notification_subtitles', [record_name])])
         template_ctx.setdefault('subtitles_highlight_index',
                                 self.env.context.get('email_notification_subtitles_highlight_index', 0))
         # user / environment
