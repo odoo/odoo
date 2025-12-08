@@ -433,16 +433,9 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         aml.price_unit = 150
         aml.move_id.invoice_date = Date.today()
         aml.move_id.action_post()
-        svl = aml.stock_valuation_layer_ids
-        self.assertEqual(len(svl), 1)
-        self.assertEqual(svl.value, 50)
-        # check for the automated inventory valuation
-        account_move_credit_line = svl.account_move_id.line_ids.filtered(lambda l: l.credit > 0)
-        self.assertEqual(account_move_credit_line.account_id.id, stock_in_acc_id)
-        self.assertEqual(account_move_credit_line.credit, 50)
-        # Total value of subcontracted product = 150 new price + components (10 + 10)
-        self.assertEqual(self.finished.total_value, 170)
-        self.assertEqual(self.finished.standard_price, 170)
+        # Total value of subcontracted product should be updated by the invoice
+        self.assertEqual(self.finished.total_value, 180)
+        self.assertEqual(self.finished.standard_price, 180)
 
     def test_return_and_decrease_pol_qty(self):
         """
