@@ -635,7 +635,7 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('test_open_register_with_preset_takeaway')
         self.main_pos_config.write({'default_preset_id': self.preset_eat_in.id})
         cancelled_orders = self.env['pos.order'].search([('state', '=', 'cancel')], limit=3)
-        self.assertEqual(len(cancelled_orders), 1)
+        self.assertEqual(len(cancelled_orders), 2)
         orders = self.env['pos.order'].search([('state', '!=', 'cancel')], limit=3)
         self.assertEqual(len(orders), 0)
         self.start_pos_tour('test_preset_timing_restaurant')
@@ -827,8 +827,11 @@ class TestFrontend(TestFrontendCommon):
     def test_delete_line_release_table(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_delete_line_release_table')
-        order = self.pos_config.current_session_id.order_ids[0]
+        order = self.pos_config.current_session_id.order_ids[1]
+        # opening a table at end of tour created a draft order
+        last_order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.state, "cancel")
+        self.assertEqual(len(last_order.lines), 0)
 
     def test_combo_synchronisation(self):
         """This test checks that when a combo line is set as dirty, the parent combo line is also set as dirty.

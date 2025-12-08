@@ -378,5 +378,13 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         self.start_tour('/pos/ui?config_id=%d' % self.pos_config.id, 'test_pos_self_order_table_transfer', login='pos_user')
 
-        order = self.pos_config.current_session_id.order_ids[0]
-        self.assertEqual(order.self_ordering_table_id, order.table_id)
+        orders = self.pos_config.current_session_id.order_ids
+        self.assertEqual(len(orders), 2, "Expected exactly 2 orders: the transferred self-order and an empty placeholder")
+        orders_with_lines = orders.filtered(lambda o: o.lines)
+        empty_orders = orders.filtered(lambda o: not o.lines)
+        self.assertEqual(len(orders_with_lines), 1, "Expected exactly one order with lines")
+        self.assertEqual(len(empty_orders), 1, "Expected exactly one empty order")
+        self_order = orders_with_lines[0]
+        self.assertEqual(self_order.self_ordering_table_id, self_order.table_id)
+        empty_order = empty_orders[0]
+        self.assertFalse(empty_order.lines, "Empty order should have no lines")
