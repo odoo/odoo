@@ -15,6 +15,7 @@ import {
     MockEventTarget,
     setSyncValue,
 } from "../hoot_utils";
+import { ensureTest } from "../main_runner";
 
 /**
  * @typedef {ResponseInit & {
@@ -454,6 +455,7 @@ export async function mockedFetch(input, init) {
  *  });
  */
 export function mockFetch(fetchFn) {
+    ensureTest("mockFetch");
     mockFetchFn = fetchFn;
 }
 
@@ -465,6 +467,7 @@ export function mockFetch(fetchFn) {
  * @param {typeof mockWebSocketConnection} [onWebSocketConnected]
  */
 export function mockWebSocket(onWebSocketConnected) {
+    ensureTest("mockWebSocket");
     mockWebSocketConnection = onWebSocketConnected;
 }
 
@@ -483,6 +486,7 @@ export function mockWebSocket(onWebSocketConnected) {
  *  });
  */
 export function mockWorker(onWorkerConnected) {
+    ensureTest("mockWorker");
     mockWorkerConnections.push(onWorkerConnected);
 }
 
@@ -491,6 +495,17 @@ export function mockWorker(onWorkerConnected) {
  */
 export function throttleNetwork(...args) {
     getNetworkDelay = parseNetworkDelay(...args);
+}
+
+/**
+ * @param {typeof mockFetchFn} fetchFn
+ * @param {() => void} callback
+ */
+export async function withFetch(fetchFn, callback) {
+    mockFetchFn = fetchFn;
+    const result = await callback();
+    mockFetchFn = null;
+    return result;
 }
 
 export class MockBlob extends Blob {
