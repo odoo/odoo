@@ -3488,6 +3488,97 @@ class TestUi(TestPointOfSaleHttpCommon):
             self.start_pos_tour("test_confirm_coupon_programs_one_by_one", login="pos_user")
             self.assertEqual(sync_counter['count'], 6)
 
+    def test_specific_reward_product_tax_included_excluded(self):
+        """This test makes sure that the value of a reward applied on a specific product is
+        the same whether the tax is included or excluded in the product price.
+        """
+        tax_01 = self.env['account.tax'].create({
+                "name": "Tax 1",
+                "amount": 10,
+                "price_include_override": "tax_included",
+        })
+
+        product = self.env['product.product'].create({
+            "name": "Product Include",
+            "lst_price": 100,
+            "available_in_pos": True,
+            "taxes_id": [Command.set(tax_01.ids)],
+        })
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env["loyalty.program"].create(
+            {
+                "name": "Test Loyalty Program",
+                "program_type": "promotion",
+                "trigger": "with_code",
+                'pos_ok': True,
+                "rule_ids": [
+                    Command.create({"mode": "with_code", "code": "hellopromo"}),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 10,
+                        "discount_mode": "per_order",
+                        "discount_applicability": "specific",
+                        "required_points": 1,
+                        "discount_product_ids": product.ids,
+                    }),
+                ],
+            }
+        )
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_specific_reward_product_tax_included_included', login="pos_user")
+        tax_01.price_include_override = "tax_excluded"
+        # Discount should be the same even if tax mode is changed
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_specific_reward_product_tax_included_excluded', login="pos_user")
+
+    def test_order_reward_product_tax_included_excluded(self):
+        """This test makes sure that the value of a reward applied on a specific product is
+        the same whether the tax is included or excluded in the product price.
+        """
+        tax_01 = self.env['account.tax'].create({
+                "name": "Tax 1",
+                "amount": 10,
+                "price_include_override": "tax_included",
+        })
+
+        self.env['product.product'].create({
+            "name": "Product Include",
+            "lst_price": 100,
+            "available_in_pos": True,
+            "taxes_id": [Command.set(tax_01.ids)],
+        })
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.env["loyalty.program"].create(
+            {
+                "name": "Test Loyalty Program",
+                "program_type": "promotion",
+                "trigger": "with_code",
+                'pos_ok': True,
+                "rule_ids": [
+                    Command.create({"mode": "with_code", "code": "hellopromo"}),
+                ],
+                "reward_ids": [
+                    Command.create({
+                        "reward_type": "discount",
+                        "discount": 10,
+                        "discount_mode": "per_order",
+                        "discount_applicability": "order",
+                        "required_points": 1,
+                    }),
+                ],
+            }
+        )
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_order_reward_product_tax_included_included', login="pos_user")
+        tax_01.price_include_override = "tax_excluded"
+        # Discount should be the same even if tax mode is changed
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_order_reward_product_tax_included_excluded', login="pos_user")
+
     def test_race_conditions_update_program(self):
         """This test ensures that the loyalty program update are correctly applied, even if a lot of programs applies on one order."""
         product_test = self.env['product.product'].create({
