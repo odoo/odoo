@@ -3,7 +3,7 @@ import { isEmptyTextNode, isParagraphRelatedElement, isShrunkBlock, isVisible } 
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
 import { childNodes } from "./dom_traversal";
-import { childNodeIndex, DIRECTIONS } from "./position";
+import { childNodeIndex, DIRECTIONS, nodeSize } from "./position";
 import {
     baseContainerGlobalSelector,
     createBaseContainer,
@@ -222,6 +222,16 @@ export function toggleClass(node, className) {
     node.classList.toggle(className);
     if (!node.className) {
         node.removeAttribute("class");
+    }
+}
+
+export function cleanEmptyAncestors(node, cursors) {
+    let currentNode = node;
+    while (currentNode && !nodeSize(currentNode)) {
+        cursors?.update(callbacksForCursorUpdate.remove(currentNode));
+        const parent = currentNode.parentNode;
+        currentNode.remove();
+        currentNode = parent;
     }
 }
 
