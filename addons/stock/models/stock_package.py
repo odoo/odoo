@@ -165,7 +165,7 @@ class StockPackage(models.Model):
                     package.company_id = quants[0].company_id
             elif package.child_package_ids:
                 package.location_id = package.child_package_ids[0].location_id
-                if all(p.company_id == package.child_package_ids[0] for p in package.child_package_ids):
+                if all(p.company_id == package.child_package_ids[0].company_id for p in package.child_package_ids):
                     package.company_id = package.child_package_ids[0].company_id
 
     @api.depends('child_package_dest_ids')
