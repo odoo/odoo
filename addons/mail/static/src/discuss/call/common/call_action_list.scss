@@ -1,3 +1,15 @@
 .o-discuss-CallActionList-pulse {
-    animation: pulse 1s 10;
+    --pulse-spread-radius: 1.5rem;
+    animation: pulseFullScreen 1s cubic-bezier(0.4, 1, 0.6, 1) 10;
+}
+
+@keyframes pulseFullScreen {
+    from {
+        box-shadow: 0 0 0 0 var(--pulse-color-from, #{$primary});
+        border-radius: 50%;
+    }
+    to {
+        box-shadow: 0 0 7px var(--pulse-spread-radius, 2em) var(--pulse-color-to, #{rgba($primary, 0.2)});
+        border-radius: 50%;
+    }
 }
