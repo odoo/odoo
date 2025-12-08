@@ -38,6 +38,7 @@ export class BuilderList extends Component {
         defaultNewValue: { type: Object, optional: true },
         columnWidth: { optional: true },
         forbidLastItemRemoval: { type: Boolean, optional: true },
+        isEditable: { type: Boolean, optional: true },
     };
     static defaultProps = {
         addItemTitle: _t("Add"),
@@ -49,6 +50,7 @@ export class BuilderList extends Component {
         defaultNewValue: {},
         columnWidth: {},
         forbidLastItemRemoval: false,
+        isEditable: true,
     };
     static components = { BuilderComponent, SelectMenu };
 

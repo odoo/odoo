@@ -1,4 +1,9 @@
-import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import {
+    addBuilderAction,
+    addBuilderOption,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { expect, test, describe } from "@odoo/hoot";
@@ -381,4 +386,53 @@ test("can add item with string and integer ids", async () => {
         await contains(".o_select_menu_menu .o-dropdown-item").click();
     }
     expect(".we-bg-options-container .o-hb-selectMany2X-toggle").toHaveProperty("disabled");
+});
+
+test("not editable builder list option", async () => {
+    addBuilderAction({
+        customAction: class extends BuilderAction {
+            static id = "customAction";
+            getValue({ editingElement: fieldEl }) {
+                return JSON.stringify([
+                    {
+                        id: "test_1",
+                        name: "test 1",
+                        display_name: "test 1",
+                        undeletable: true,
+                        selected: true,
+                    },
+                    {
+                        id: "test_2",
+                        name: "test 2",
+                        display_name: "test 2",
+                        undeletable: true,
+                        selected: false,
+                    },
+                ]);
+            }
+        },
+    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`
+                <BuilderList
+                    action="'customAction'"
+                    addItemTitle="'Add'"
+                    itemShape="{ display_name: 'text', selected: 'boolean' }"
+                    isEditable="false"/>`;
+            static components = { BuilderList };
+            static props = ["*"];
+            setup() {
+                this.availableRecords = JSON.stringify([
+                    { id: 1, display_name: "A" },
+                    { id: 2, display_name: "B" },
+                ]);
+            }
+        }
+    );
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".we-bg-options-container .builder_list_add_item").toHaveCount(0);
+    expect(".we-bg-options-container .o-hb-input-base[disabled]").toHaveCount(2);
 });
