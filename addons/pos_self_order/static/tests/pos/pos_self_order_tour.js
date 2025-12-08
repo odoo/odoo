@@ -35,5 +35,6 @@ registry.category("web_tour.tours").add("test_pos_self_order_table_transfer", {
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
             ProductScreen.orderlinesHaveNoChange(),
+            Chrome.flushPendingOrdersSync(),
         ].flat(),
 });
