@@ -2046,3 +2046,22 @@ class TestPointOfSaleFlow(CommonPosTest):
         loaded_product_ids = [p['id'] for p in data['product.product']]
         self.assertIn(self.product_a.id, loaded_product_ids)
         self.assertIn(self.product_b.id, loaded_product_ids)
+
+    def test_filter_local_data_no_errors(self):
+        new_company = self.env['res.company'].create({
+            'name': 'New Company',
+            'country_id': self.env.company.country_id.id,
+            'currency_id': self.env.company.currency_id.id,
+        })
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'available_in_pos': True,
+            'lst_price': 200.0,
+            'company_id': new_company.id,
+        })
+        self.env.clear()
+        data = current_session.with_company(self.env.company).filter_local_data({'product.product': [product.id]})
+        self.assertIn(product.id, data['product.product'])
