@@ -191,8 +191,22 @@ class Module(models.Model):
             _logger.debug('Error when trying to fetch information for module %s', name, exc_info=True)
             return {}
 
+    @api.depends_context('lang')
     @api.depends('name', 'description')
     def _get_desc(self):
+        def _get_first_valid_index_path(module_path):
+            lang = self.env.lang or 'en_US'
+            lang_base = lang.split('_')[0]
+            index_names = [f'index_{lang_base}.html', f'index_{lang}.html', 'index.html']
+            # Exception for Spanish locales: they have two bases, es and es_419:
+            if lang_base == 'es' and lang not in ('es_ES', 'es_419'):
+                index_names.insert(1, 'index_es_419.html')
+            for index_name in index_names:
+                path = modules.check_resource_path(module_path, f'static/description/{index_name}')
+                if path:
+                    return path
+            return False
+
         def _apply_description_images(doc):
             html = lxml.html.document_fromstring(doc)
             for element, attribute, link, pos in html.iterlinks():
@@ -206,7 +220,7 @@ class Module(models.Model):
                 continue
             module_path = modules.get_module_path(module.name, display_warning=False)  # avoid to log warning for fake community module
             if module_path:
-                path = modules.check_resource_path(module_path, 'static/description/index.html')
+                path = _get_first_valid_index_path(module_path)
             if module_path and path:
                 with tools.file_open(path, 'rb') as desc_file:
                     doc = desc_file.read()
