@@ -2137,3 +2137,22 @@ class TestPackagePropagation(TestPackingCommon):
         receipt.button_validate()
         in_stock_move = receipt.move_ids.move_dest_ids
         self.assertEqual(in_stock_move.package_ids, receipt.move_ids.package_ids)
+
+    def test_package_info(self):
+        """ Checks that package's location & company are correctly computed, be it in single or multiple layers
+        """
+        pack1, pack2 = self.env['stock.package'].create([
+            {'name': 'Pack1'},
+            {'name': 'Pack2'},
+        ])
+        self.assertFalse((pack1 | pack2).location_id)
+        self.assertFalse((pack1 | pack2).company_id)
+
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack1)
+        self.assertEqual(pack1.location_id, self.stock_location)
+        self.assertEqual(pack1.company_id, self.stock_location.company_id)
+
+        pack1.parent_package_id = pack2
+        self.assertFalse(pack2.quant_ids)
+        self.assertEqual(pack2.location_id, self.stock_location)
+        self.assertEqual(pack2.company_id, self.stock_location.company_id)
