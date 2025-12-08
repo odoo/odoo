@@ -871,7 +871,11 @@ patch(PosStore.prototype, {
     },
 
     shouldCreatePendingOrder(order) {
-        return super.shouldCreatePendingOrder(order) || order.course_ids?.length > 0;
+        return (
+            super.shouldCreatePendingOrder(order) ||
+            order.course_ids?.length > 0 ||
+            Boolean(order.table_id)
+        );
     },
     setOrder(order) {
         order?.ensureCourseSelection();
