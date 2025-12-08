@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-11-19 10:18+0000\n"
+"PO-Revision-Date: 2025-12-05 10:59+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "sale_project/es/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_project
 #. odoo-python
@@ -46,7 +46,6 @@ msgstr ""
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
-#, fuzzy
 msgid "%(name)s's %(action_name)s"
 msgstr "%(action_name)s de %(name)s"
 
@@ -129,7 +128,7 @@ msgstr "<span class=\"o_stat_text\"> Tareas</span>"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Vista previa</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -150,6 +149,14 @@ msgid ""
 "the project is billable.</span>\n"
 "                </span>"
 msgstr ""
+"<span name=\"rating_status_helper\">\n"
+"                    <span invisible=\"rating_status == 'periodic'\">Se "
+"enviará una solicitud de valoración cuando una tarea alcance esta fase/"
+"etapa, siempre que el proyecto sea facturable.</span>\n"
+"                    <span invisible=\"rating_status == 'stage'\">Se enviarán "
+"solicitudes de valoración mientras la tarea permanezca en esta fase, siempre "
+"que el proyecto sea facturable.</span>\n"
+"                </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -230,7 +237,6 @@ msgstr "Cancelado"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
-#, fuzzy
 msgid "Confirm & Close"
 msgstr "Confirmar y cerrar"
 
@@ -241,6 +247,8 @@ msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
 msgstr ""
+"Al convertir esta plantilla en un proyecto normal, se desvinculará de los "
+"productos asociados."
 
 #. module: sale_project
 #. odoo-python
@@ -269,7 +277,7 @@ msgstr "Crear pedido de venta"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "Create a Project"
-msgstr ""
+msgstr "Crear un proyecto"
 
 #. module: sale_project
 #: model:ir.model,website_form_label:sale_project.model_project_task
@@ -558,7 +566,7 @@ msgstr "Nuevo elemento de pedido de venta"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
 msgid "New project"
-msgstr ""
+msgstr "Nuevo proyecto"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -685,7 +693,7 @@ msgstr "Asistente de creación de plantillas de proyecto"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_update
 msgid "Project Update"
-msgstr ""
+msgstr "Actualización del proyecto"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
@@ -711,7 +719,7 @@ msgstr "Línea de plantilla de presupuesto"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
 msgid "Role To Users"
-msgstr ""
+msgstr "Rol para usuarios"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -877,13 +885,13 @@ msgstr "Recurrencia de tareas"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_type
 msgid "Task Stage"
-msgstr ""
+msgstr "Etapa de la tarea"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__task_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__task_template_id
 msgid "Task Template"
-msgstr ""
+msgstr "Plantilla de tareas"
 
 #. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
@@ -937,6 +945,8 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed or is "
 "already linked to a project."
 msgstr ""
+"No se ha podido crear el proyecto porque el pedido de venta debe confirmarse "
+"o ya está vinculado a un proyecto."
 
 #. module: sale_project
 #. odoo-python
@@ -1025,13 +1035,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "[Project] %(task_name)s"
-msgstr ""
+msgstr "[Proyecto] %(task_name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "delivered_manual"
-msgstr "delivered_manual"
+msgstr "entregado_manual"
 
 #. module: sale_project
 #. odoo-python

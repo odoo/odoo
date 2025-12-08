@@ -234,6 +234,9 @@ export class Form extends Interaction {
                     })
                     .enable()
             );
+            // Disable virtual keyboard to fix popover display issues on small
+            // screens
+            inputEl.setAttribute("inputmode", "none");
         }
         this.datepickerInitialized = true;
     }

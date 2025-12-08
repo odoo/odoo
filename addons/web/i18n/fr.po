@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:37+0000\n"
-"PO-Revision-Date: 2025-11-28 10:56+0000\n"
+"PO-Revision-Date: 2025-12-02 14:51+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/web/fr/>\n"
 "Language: fr\n"
@@ -303,7 +303,7 @@ msgstr "3.30"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "31/01/%s"
-msgstr ""
+msgstr "31/01/%s"
 
 #. module: web
 #. odoo-javascript
@@ -484,6 +484,18 @@ msgid ""
 "Temporal mode will merge all samples.<br/>It can lead to partially invalid "
 "result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id="
+"\"profile_aggregation_mode\">\n"
+"                                        <option value=\"tabs\">Séparé "
+"(un par onglet)</option>\n"
+"                                        <option value=\"temporal\">Temporel "
+"(expérimental)</option>\n"
+"                                    </select>\n"
+"                                    <span id=\"temporal_warning\" class="
+"\"alert alert-warning\" style=\"display:none\"><b>Attention :</b> Le mode "
+"temporel fusionnera tous les échantillons.<br/>Cela peut entraîner un "
+"résultat partiellement invalide en cas de profils concurrents.<br/>À "
+"utiliser avec prudence.</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -900,7 +912,7 @@ msgstr "Ajouter une photo"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 msgid "Add Property"
-msgstr ""
+msgstr "Ajouter une propriété"
 
 #. module: web
 #. odoo-javascript
@@ -1170,12 +1182,14 @@ msgstr "Êtes-vous sûr de vouloir retirer cette action intégrée ?"
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the %(nbSelected)s selected records?"
 msgstr ""
+"Êtes-vous sûr de vouloir supprimer les %(nbSelected)s enregistrements "
+"sélectionnés ?"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/view_components/multi_selection_buttons.js:0
 msgid "Are you sure you want to delete the selected record?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer l’enregistrement sélectionné ?"
 
 #. module: web
 #. odoo-javascript
@@ -1193,7 +1207,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer cette colonne ?"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Are you sure you want to delete this property field?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir supprimer ce champ de propriété ?"
 
 #. module: web
 #. odoo-javascript
@@ -2238,7 +2252,7 @@ msgstr "Groupe personnalisé"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Custom range"
-msgstr ""
+msgstr "Plage personnalisée"
 
 #. module: web
 #. odoo-python
@@ -2617,6 +2631,8 @@ msgid ""
 "Displays or hides the seconds in the datetime value. Affect only the "
 "readable datetime format."
 msgstr ""
+"Affiche ou masque les secondes dans la valeur date-heure. N’affecte que le "
+"format date-heure lisible."
 
 #. module: web
 #. odoo-javascript
@@ -2629,6 +2645,8 @@ msgstr "Affiche ou masque l'heure dans la valeur de la date."
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Displays the date either in 31/01/%(year)s or in Jan 31, %(year)s"
 msgstr ""
+"Affiche la date soit au format 31/01/%(year)s, soit au format 31 janv. %"
+"(year)s"
 
 #. module: web
 #. odoo-javascript
@@ -2853,7 +2871,7 @@ msgstr "E-mail"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_res_users_settings__embedded_actions_config_ids
 msgid "Embedded Actions Config"
-msgstr ""
+msgstr "Configuration des actions intégrées"
 
 #. module: web
 #. odoo-javascript
@@ -3220,6 +3238,8 @@ msgid ""
 "For example, if the value is \"1\" and you enter \"+=2\", it will be updated "
 "to \"3\"."
 msgstr ""
+"Par exemple, si la valeur est \"1\" et que vous saisissez \"+=2\", elle sera "
+"mise à jour à \"3\"."
 
 #. module: web
 #. odoo-javascript
@@ -3397,6 +3417,9 @@ msgid ""
 "click the %(upload_icon)s button now to ensure your work is saved before you "
 "exit this tab."
 msgstr ""
+"Attention ! Vos modifications récentes sont trop volumineuses pour être "
+"enregistrées automatiquement. Cliquez sur le bouton %(upload_icon)s pour "
+"garantir l’enregistrement de votre travail avant de quitter cet onglet."
 
 #. module: web
 #. odoo-javascript
@@ -3577,6 +3600,8 @@ msgid ""
 "If checked, the checkboxes will be displayed in a column. Otherwise, they "
 "will be inlined."
 msgstr ""
+"Si cette option est cochée, les cases à cocher seront affichées en colonne. "
+"Sinon, elles seront affichées en ligne."
 
 #. module: web
 #. odoo-javascript
@@ -3899,18 +3924,20 @@ msgid ""
 "It will be removed for everyone using the \"%(parentName)s\" %"
 "(parentFieldLabel)s."
 msgstr ""
+"Cet élément sera supprimé pour tous les utilisateurs du/ de "
+"\"%(parentName)s\" %(parentFieldLabel)s."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "It will be removed for everyone!"
-msgstr ""
+msgstr "Cet élément sera supprimé pour tout le monde !"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 msgid "Jan 31, %s"
-msgstr ""
+msgstr "31 janv. %s"
 
 #. module: web
 #. odoo-javascript
@@ -4488,12 +4515,12 @@ msgstr "Sujet de la réunion"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory limit (in bytes)"
-msgstr ""
+msgstr "Limite mémoire (en bytes)"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "Memory profile"
-msgstr ""
+msgstr "Profil mémoire"
 
 #. module: web
 #. odoo-javascript
@@ -4654,7 +4681,7 @@ msgstr "Mois"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Month to date"
-msgstr ""
+msgstr "Depuis le début du mois"
 
 #. module: web
 #. odoo-javascript
@@ -5074,6 +5101,8 @@ msgid ""
 "Not possible to create monetary field because there is no currency on "
 "current model."
 msgstr ""
+"Impossible de créer un champ monétaire car aucune devise n’est définie sur "
+"le modèle actuel."
 
 #. module: web
 #. odoo-javascript
@@ -5761,7 +5790,7 @@ msgstr "Propriétés"
 #. module: web
 #: model:ir.model,name:web.model_properties_base_definition
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "Définition de base des propriétés"
 
 #. module: web
 #. odoo-javascript
@@ -5892,7 +5921,7 @@ msgstr "Règles sur les enregistrements"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
 msgid "Record memory"
-msgstr ""
+msgstr "Mémoire de l’enregistrement"
 
 #. module: web
 #. odoo-javascript
@@ -6528,7 +6557,7 @@ msgstr "Définir un fuseau horaire pour votre utilisateur"
 #: code:addons/web/static/src/views/fields/badge/badge_field.js:0
 #: code:addons/web/static/src/views/fields/badge_selection/list_badge_selection_field.js:0
 msgid "Set an integer field to use colors with the badge."
-msgstr ""
+msgstr "Définissez un champ entier pour utiliser des couleurs avec le badge."
 
 #. module: web
 #. odoo-javascript
@@ -7021,13 +7050,15 @@ msgstr "Le domaine ne peut pas contenir d’éléments non littéraux"
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid "The file is not an image, resizing is not possible"
-msgstr ""
+msgstr "Le fichier n’est pas une image, le redimensionnement est impossible"
 
 #. module: web
 #. odoo-python
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
 msgstr ""
+"Les ids dans %(field_name)s ne doivent pas être dupliqués : "
+"\"%(action_ids)s\""
 
 #. module: web
 #. odoo-python
@@ -7036,6 +7067,8 @@ msgid ""
 "The ids in %(field_name)s must only be integers or \"false\": “%"
 "(action_ids)s”"
 msgstr ""
+"Les ids dans %(field_name)s doivent uniquement être des entiers ou \"false\" "
+": \"%(action_ids)s\""
 
 #. module: web
 #. odoo-javascript
@@ -7052,7 +7085,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/utils/files.js:0
 msgid "The resizing of the image failed"
-msgstr ""
+msgstr "Le redimensionnement de l'image a échoué"
 
 #. module: web
 #. odoo-javascript
@@ -7089,6 +7122,8 @@ msgid ""
 "The user should have one unique embedded action setting per user setting, "
 "action and record id."
 msgstr ""
+"L’utilisateur doit avoir un paramètre d’action intégrée unique par paramètre "
+"utilisateur, action et identifiant d’enregistrement."
 
 #. module: web
 #. odoo-javascript
@@ -7288,7 +7323,7 @@ msgstr "Toggle panneau de recherche"
 #. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.xml:0
 msgid "Toggle date range mode"
-msgstr ""
+msgstr "Basculer en mode plage de dates"
 
 #. module: web
 #. odoo-javascript
@@ -7671,6 +7706,8 @@ msgid ""
 "Use the operators \"+=\", \"-=\", \"*=\" and \"/=\" to update the current "
 "value."
 msgstr ""
+"Utilisez les opérateurs +=, -=, *= et /= pour mettre à jour la valeur "
+"actuelle."
 
 #. module: web
 #. odoo-javascript
@@ -7722,7 +7759,7 @@ msgstr "Paramètres utilisateur"
 #. module: web
 #: model:ir.model,name:web.model_res_users_settings_embedded_action
 msgid "User Settings for Embedded Actions"
-msgstr ""
+msgstr "Paramètres utilisateur pour les actions intégrées"
 
 #. module: web
 #. odoo-javascript
@@ -8022,7 +8059,7 @@ msgstr "Année"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_components.js:0
 msgid "Year to date"
-msgstr ""
+msgstr "Depuis le début de l’année"
 
 #. module: web
 #. odoo-javascript
@@ -8071,7 +8108,7 @@ msgstr "Vous pouvez installer l'application depuis le menu du navigateur"
 #. odoo-python
 #: code:addons/web/models/properties_base_definition.py:0
 msgid "You can not read that field definition."
-msgstr ""
+msgstr "Vous ne pouvez pas lire cette définition de champ."
 
 #. module: web
 #. odoo-javascript
@@ -9271,7 +9308,7 @@ msgstr "scarabée"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "before"
-msgstr ""
+msgstr "avant"
 
 #. module: web
 #. odoo-javascript
@@ -12894,7 +12931,7 @@ msgstr "empanada"
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/actions/blank_component.xml:0
 msgid "empty"
-msgstr ""
+msgstr "vide"
 
 #. module: web
 #. odoo-javascript
@@ -14724,7 +14761,7 @@ msgstr "sauterelle"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "greater or equal to"
-msgstr ""
+msgstr "supérieur ou égal à"
 
 #. module: web
 #. odoo-javascript
@@ -17190,7 +17227,7 @@ msgstr "faible"
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 msgid "lower or equal to"
-msgstr ""
+msgstr "inférieur ou égal à"
 
 #. module: web
 #. odoo-javascript

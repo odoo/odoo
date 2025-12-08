@@ -10,13 +10,14 @@
 # Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-27 09:02+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"PO-Revision-Date: 2025-12-02 14:36+0000\n"
+"Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "base_automation/ro/>\n"
 "Language: ro\n"
@@ -286,7 +287,7 @@ msgstr "Întârziere"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_mode
 msgid "Delay mode"
-msgstr ""
+msgstr "Modul de întârziere"
 
 #. module: base_automation
 #. odoo-python
@@ -294,11 +295,13 @@ msgstr ""
 msgid ""
 "Delay must be positive. Set 'Delay mode' to 'Before' to negate the delay."
 msgstr ""
+"Întârzierea trebuie să fie pozitivă. Setați „Modul de întârziere” la "
+"„Înainte” pentru a anula întârzierea."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
 msgid "Delay unit"
-msgstr ""
+msgstr "Unitate de întârziere"
 
 #. module: base_automation
 #. odoo-javascript
@@ -372,7 +375,7 @@ msgstr "Urmăritori (Parteneri)"
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "Following child actions have warnings: %(children)s"
-msgstr ""
+msgstr "Următoarele acțiuni secundare au avertismente: %(children)s"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_type_icon
@@ -446,6 +449,8 @@ msgid ""
 "If renewed, update the secret URL in the third-party app that calls this "
 "webhook."
 msgstr ""
+"Dacă este reînnoit, actualizați URL-ul secret în aplicația terță parte care "
+"apelează acest webhook."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
@@ -611,12 +616,12 @@ msgstr "La arhivat"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On create"
-msgstr ""
+msgstr "La creare"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On create and edit"
-msgstr ""
+msgstr "La creare și editare"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
@@ -651,7 +656,7 @@ msgstr "Pe webhook"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__previous_domain
 msgid "Previous Domain"
-msgstr ""
+msgstr "Domeniu anterior"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
@@ -702,7 +707,7 @@ msgstr "Acțiune programată"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Secret URL"
-msgstr ""
+msgstr "URL secret"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -752,7 +757,7 @@ msgstr "Acțiune server"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Set an explicit name"
-msgstr ""
+msgstr "Setați un nume explicit"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_selection_field_id
@@ -854,6 +859,7 @@ msgstr ""
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "The scheduled action for Automation Rules seems to have vanished."
 msgstr ""
+"Acțiunea programată pentru regulile de automatizare pare să fi dispărut."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -931,6 +937,8 @@ msgstr "Utilizează Calendar"
 #: model:ir.model.fields,help:base_automation.field_base_automation__url
 msgid "Use this URL in the third-party app to call this webhook."
 msgstr ""
+"Utilizați această adresă URL în aplicația terță parte pentru a apela acest "
+"webhook."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
@@ -982,6 +990,9 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
+"Atunci când se calculează o condiție temporizată pe bază de zile, este "
+"posibil să se utilizeze un calendar pentru a calcula data pe baza zilelor "
+"lucrătoare."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
@@ -1003,7 +1014,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "When updating"
-msgstr ""
+msgstr "La actualizarea"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -1019,6 +1030,8 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_error_dialog.xml:0
 msgid "You can ask an administrator to disable or fix this automation."
 msgstr ""
+"Puteți solicita unui administrator să dezactiveze sau să remedieze această "
+"automatizare."
 
 #. module: base_automation
 #. odoo-python
@@ -1045,7 +1058,7 @@ msgstr "nicio acțiune definită..."
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 msgid "path"
-msgstr ""
+msgstr "cale"
 
 #~ msgid "Action Name"
 #~ msgstr "Nume acțiune"
