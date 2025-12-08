@@ -64,7 +64,6 @@ const {
     WebSocket,
 } = globalThis;
 const { parse: $parse, stringify: $stringify } = globalThis.JSON;
-const { revokeObjectURL: $revokeObjectURL } = URL;
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -228,7 +227,7 @@ const HEADER = {
     contentType: "Content-Type",
 };
 const R_EQUAL = /\s*=\s*/;
-const R_INTERNAL_URL = /^(data|file):/;
+const R_INTERNAL_URL = /^(blob|data):/;
 const R_SEMICOLON = /\s*;\s*/;
 
 const requestResponseMixin = {
@@ -256,8 +255,7 @@ const requestResponseMixin = {
         return this._readValue("text", true);
     },
 };
-/** @type {Map<string, Blob | MediaSource>} */
-const objectUrls = new Map();
+
 /** @type {Set<NetworkInstance>} */
 const openNetworkInstances = new Set();
 
@@ -267,8 +265,8 @@ let getNetworkDelay = null;
 let mockFetchFn = null;
 /** @type {((websocket: ServerWebSocket) => any) | null} */
 let mockWebSocketConnection = null;
-/** @type {((worker: MockSharedWorker | MockWorker) => any) | null} */
-let mockWorkerConnection = null;
+/** @type {((worker: MockSharedWorker | MockWorker) => any)[]} */
+const mockWorkerConnections = [];
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -278,7 +276,7 @@ export function cleanupNetwork() {
     // Mocked functions
     mockFetchFn = null;
     mockWebSocketConnection = null;
-    mockWorkerConnection = null;
+    mockWorkerConnections.length = 0;
 
     // Network instances
     for (const instance of openNetworkInstances) {
@@ -309,23 +307,15 @@ export function cleanupNetwork() {
 
     // Location
     mockLocation.href = DEFAULT_URL;
-
-    // Revoke and clear remaining objct URLs
-    for (const url of objectUrls.keys()) {
-        $revokeObjectURL(url);
-    }
-    objectUrls.clear();
 }
 
 /** @type {typeof fetch} */
 export async function mockedFetch(input, init) {
     const strInput = String(input);
-    if (R_INTERNAL_URL.test(strInput)) {
-        // Internal URL: directly handled by the browser
-        return fetch(input, init);
-    }
     if (!mockFetchFn) {
-        throw new Error("Can't make a request when fetch is not mocked");
+        throw new Error(
+            `Can't make a request when fetch is not mocked.\nReceived fetch call to: "${strInput}"`
+        );
     }
     const controller = markOpen(new AbortController());
 
@@ -339,7 +329,7 @@ export async function mockedFetch(input, init) {
         enumerable: false,
     });
 
-    const { logRequest, logResponse } = makeNetworkLogger(init.method, input);
+    const { logRequest, logResponse } = makeNetworkLogger(init.method, strInput);
 
     logRequest(() => {
         const readableInit = {
@@ -377,6 +367,11 @@ export async function mockedFetch(input, init) {
         throw error;
     }
 
+    if (isNil(result) && R_INTERNAL_URL.test(strInput)) {
+        // Internal URL without mocked result: directly handled by the browser
+        return fetch(input, init);
+    }
+
     // Result can be a request or the final request value
     const responseHeaders = getHeaders(result, result);
 
@@ -404,7 +399,6 @@ export async function mockedFetch(input, init) {
     // Determine the return type based on:
     // - the content type header
     // - or the type of the returned value
-
     if (responseHeaders.get(HEADER.contentType) === MIME_TYPE.json) {
         // JSON response
         const strBody = $stringify(result ?? null);
@@ -416,16 +410,6 @@ export async function mockedFetch(input, init) {
         });
         logResponse(() => [parseJsonRpcParams(strBody), response]);
         return response;
-    }
-
-    // With blob URLs: fallback to the actual registered blob object:
-    // - this will automatically set the content type & length of the headers
-    // - the response body will be the stringified content of the blob
-    if (isNil(result) && objectUrls.has(strInput)) {
-        const blob = objectUrls.get(strInput);
-        responseHeaders.set(HEADER.contentLength, blob.size);
-        responseHeaders.set(HEADER.contentType, blob.type);
-        result = getSyncValue(blob, true);
     }
 
     // Any other type
@@ -485,7 +469,7 @@ export function mockWebSocket(onWebSocketConnected) {
  *  (see {@link mockFetch});
  *  - the `onWorkerConnected` callback will be called after a worker has been created.
  *
- * @param {typeof mockWorkerConnection} [onWorkerConnected]
+ * @param {typeof mockWorkerConnections[number]} [onWorkerConnected]
  * @example
  *  mockWorker((worker) => {
  *      worker.addEventListener("message", (event) => {
@@ -494,7 +478,7 @@ export function mockWebSocket(onWebSocketConnected) {
  *  });
  */
 export function mockWorker(onWorkerConnected) {
-    mockWorkerConnection = onWorkerConnected;
+    mockWorkerConnections.push(onWorkerConnected);
 }
 
 /**
@@ -945,26 +929,15 @@ export class MockSharedWorker extends MockEventTarget {
         // First port has to be started manually
         this._messageChannel.port2.start();
 
-        mockWorkerConnection?.(this);
+        for (const onWorkerConnected of mockWorkerConnections) {
+            onWorkerConnected(this);
+        }
     }
 }
 
 export class MockURL extends URL {
     constructor(url, base) {
         super(url, base || mockLocation);
-    }
-
-    /** @type {typeof URL["createObjectURL"]} */
-    static createObjectURL(obj) {
-        const url = super.createObjectURL(obj);
-        objectUrls.set(url, obj);
-        return url;
-    }
-
-    /** @type {typeof URL["revokeObjectURL"]} */
-    static revokeObjectURL(url) {
-        objectUrls.delete(url);
-        return super.revokeObjectURL(url);
     }
 }
 
@@ -1059,8 +1032,13 @@ export class MockWorker extends MockEventTarget {
 
         this._messageChannel.port1.start();
         this._messageChannel.port2.start();
+        this._messageChannel.port1.addEventListener("message", (ev) => {
+            this.dispatchEvent(new MessageEvent("message", { data: ev.data }));
+        });
 
-        mockWorkerConnection?.(this);
+        for (const onWorkerConnected of mockWorkerConnections) {
+            onWorkerConnected(this);
+        }
     }
 
     /** @type {Worker["postMessage"]} */
@@ -1153,7 +1131,16 @@ export class MockXMLHttpRequest extends MockEventTarget {
                 headers: this._headers,
             });
             this._status = response.status;
-            this._response = getSyncValue(response, false);
+            if (response instanceof MockResponse) {
+                // Mock response: get bound value (synchronously)
+                this._response = getSyncValue(response, false);
+            } else if (response.url.startsWith("blob:")) {
+                // Actual "blob:" response: get array buffer
+                this._response = await response.arrayBuffer();
+            } else {
+                // Anything else: parse response body as text
+                this._response = await response.text();
+            }
             this.dispatchEvent(new ProgressEvent("load"));
         } catch {
             this.dispatchEvent(new ProgressEvent("error"));
@@ -1208,7 +1195,6 @@ export class ServerWebSocket extends MockEventTarget {
     /**
      * @param {WebSocket} websocket
      * @param {ReturnType<typeof makeNetworkLogger>} logger
-     * @param {ReturnType<typeof makeNetworkLogger>} logger
      */
     constructor(websocket, logger) {
         super();
@@ -1223,7 +1209,7 @@ export class ServerWebSocket extends MockEventTarget {
             this._logger.logResponse(() => ["connection closed", ev]);
         });
 
-        mockWebSocketConnection(this);
+        mockWebSocketConnection?.(this);
         this.dispatchEvent(new Event("open"));
     }
 
