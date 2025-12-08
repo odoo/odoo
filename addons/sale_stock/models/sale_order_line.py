@@ -15,16 +15,12 @@ class SaleOrderLine(models.Model):
     qty_delivered_method = fields.Selection(selection_add=[('stock_move', 'Stock Moves')])
     route_ids = fields.Many2many('stock.route', string='Routes', domain=[('sale_selectable', '=', True)], ondelete='restrict')
     move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
-    virtual_available_at_date = fields.Float(compute='_compute_qty_at_date', digits='Product Unit')
-    scheduled_date = fields.Datetime(compute='_compute_qty_at_date')
     forecast_expected_date = fields.Datetime(compute='_compute_qty_at_date')
     free_qty_today = fields.Float(compute='_compute_qty_at_date', digits='Product Unit')
-    qty_available_today = fields.Float(compute='_compute_qty_at_date')
     warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', store=True)
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
-    is_storable = fields.Boolean(related='product_id.is_storable')
     customer_lead = fields.Float(
         compute='_compute_customer_lead', store=True, readonly=False, precompute=True,
         inverse='_inverse_customer_lead')
