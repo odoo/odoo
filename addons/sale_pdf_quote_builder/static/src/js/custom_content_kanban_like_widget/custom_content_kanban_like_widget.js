@@ -26,6 +26,15 @@ export class CustomContentKanbanLikeWidget extends Component {
         useEffect((saleOrderTemplate) => {
             this.updateState();
         }, () => [this.props.record.data.sale_order_template_id]);
+
+        // Make quotation tab readonly on confirmation
+        useEffect((saleOrderState) => {
+            if (saleOrderState === 'sale') {
+                this.props.readonly = true;
+                this.props.record.save(); // trigger refresh to update form
+            }
+        }, () => [this.props.record.data.state]);
+
     }
 
     async updateState() {
@@ -79,6 +88,9 @@ export class CustomContentKanbanLikeWidget extends Component {
     }
 
     async saveProductDocument(lineId, docId, isSelected) {
+        if (this.props.readonly) {
+            return;
+        }
         const sol = this.props.record.data.order_line.records.find(
             sol => sol.resId === lineId
         );
@@ -95,6 +107,9 @@ export class CustomContentKanbanLikeWidget extends Component {
     };
 
     async saveQuotationDocument(docId, isSelected) {
+        if (this.props.readonly) {
+            return;
+        }
         if (isSelected) {
             await this.props.record.update({
                 quotation_document_ids: [
