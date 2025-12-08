@@ -74,7 +74,13 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = {
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
+<<<<<<< 73d288b1d52b6a82b3cf69fc0b281f7073820d05
     'value_label', 'data-tooltip', 'label', 'confirm-label', 'cancel-label', 'confirm-title',
+||||||| 59032b10b2658bf9a4d9708784f3535d3d974673
+    'value_label', 'data-tooltip', 'label', 'confirm-label', 'cancel-label',
+=======
+    'value_label', 'data-tooltip', 'label', 'confirm-label', 'confirm-title', 'cancel-label',
+>>>>>>> 16953228b34c947cf6de1e370cb4596b8d7abe6e
 }
 
 TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in TRANSLATED_ATTRS})
