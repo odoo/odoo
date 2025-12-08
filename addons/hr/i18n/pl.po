@@ -39,8 +39,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-13 13:11+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-12-03 14:25+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/hr/pl/>\n"
 "Language: pl\n"
@@ -50,7 +50,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: hr
 #. odoo-python
@@ -68,7 +68,7 @@ msgstr "# wiadomości do wysłania"
 #. odoo-python
 #: code:addons/hr/models/hr_job.py:0
 msgid "%s (copy)"
-msgstr "%s (kopiuj)"
+msgstr "%s (kopia)"
 
 #. module: hr
 #. odoo-python
@@ -233,7 +233,7 @@ msgstr "<i class=\"fa fa-fw me-2 fa-briefcase text-primary\" title=\"Umowa\"/>"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"Email\"/>"
+msgstr "<i class=\"fa fa-fw me-2 fa-envelope text-primary\" title=\"E-mail\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -443,7 +443,7 @@ msgstr "<span class=\"text-muted small\">Dni na otrzymanie oferty</span>"
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "<span class=\"text-muted small\">Process</span>"
-msgstr "<span class=\"text-muted small\">Przetwarzanie</span>"
+msgstr "<span class=\"text-muted small\">Przetwórz</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_consultant
@@ -716,8 +716,8 @@ msgstr "Wymagane działanie"
 msgid ""
 "Activate Remote Work to let Employees specify where they are working from."
 msgstr ""
-"Aktywuj pracę zdalną, aby umożliwić pracownikom określić skąd pracują danego "
-"dnia."
+"Aktywuj pracę zdalną, aby umożliwić pracownikom określenie skąd pracują "
+"danego dnia."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -1159,16 +1159,16 @@ msgid ""
 msgstr ""
 "Jako pracownik naszej firmy będziesz <b>współpracować z każdym działem, aby "
 "tworzyć i wdrażać\n"
-"przełomowych produktów.</b> Przyjdź do pracy w rozwijającej się firmie, "
-"która oferuje wspaniałe korzyści i możliwości rozwoju.\n"
+"przełomowe produkty</b> Przyjdź do pracy w rozwijającej się firmie, która "
+"oferuje wspaniałe korzyści i możliwości\n"
 "rozwoju i nauki u boku wybitnych liderów. Poszukujemy doświadczonego i "
 "wyróżniającego się pracownika.\n"
 "\n"
 "<br><br>Stanowisko to jest zarówno <b>kreatywne, jak i rygorystyczne</b> z "
 "natury, musisz myśleć nieszablonowo.\n"
-"Oczekujemy, że kandydat będzie proaktywny i będzie miał ducha \"zrób to\". "
-"Aby odnieść sukces,\n"
-"będziesz posiadać solidne umiejętności rozwiązywania problemów."
+"Oczekujemy, że kandydat będzie proaktywny i będzie miał ducha gotowości do "
+"działania. Aby odnieść sukces,\n"
+"musisz posiadać solidne umiejętności rozwiązywania problemów."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1234,9 +1234,8 @@ msgstr ""
 "                                zarządzania zespołami oraz prowadzenia "
 "projektów w metodyce Agile. Doskonałe umiejętności komunikacyjne będą\n"
 "                                niezbędne do przekazywania złożonych "
-"koncepcji technicznych interesariuszom oraz\n"
-"                                nietechnicznym oraz wspierania współpracy "
-"między działami."
+"koncepcji technicznych interesariuszom\n"
+"                                oraz wspierania współpracy między działami."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity_plan_template__responsible_type
@@ -2215,6 +2214,11 @@ msgid "Document"
 msgstr "Dokument"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Documents"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
 msgid "Driving License"
 msgstr "Prawo jazdy"
@@ -2386,7 +2390,7 @@ msgstr "Właściwości pracownika"
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_graph_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_pivot_view
 msgid "Employee Records"
-msgstr "Rekordy pracownika"
+msgstr "Rejestry pracownika"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount_is_percentage
@@ -2435,7 +2439,7 @@ msgstr "Rozwój pracowników jest głównym celem"
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee will be excluded from Pay Runs"
-msgstr ""
+msgstr "Pracownik zostanie wykluczony z listy płac."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
@@ -2460,7 +2464,7 @@ msgstr "Godziny pracy pracownika"
 #: model:ir.model.fields,help:hr.field_hr_employee__wage
 #: model:ir.model.fields,help:hr.field_hr_version__wage
 msgid "Employee's monthly gross wage."
-msgstr "Miesięczna kwota brutto"
+msgstr "Miesięczne wynagrodzenie brutto pracownika."
 
 #. module: hr
 #. odoo-python
@@ -2533,13 +2537,13 @@ msgstr "Data końcowa"
 #: model:ir.model.fields,help:hr.field_hr_employee__contract_date_end
 #: model:ir.model.fields,help:hr.field_hr_version__contract_date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
-msgstr "Data końcowa umowy (jeśli jest na czas określony)"
+msgstr "Data końcowa umowy (jeśli jest na czas określony)."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__trial_date_end
 #: model:ir.model.fields,help:hr.field_hr_version__trial_date_end
 msgid "End date of the trial period (if there is one)."
-msgstr "Koniec okresu próbnego (jeśli jest taki)"
+msgstr "Koniec okresu próbnego (jeśli jest taki)."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__trial_date_end
@@ -3006,7 +3010,7 @@ msgstr "Kopia karty identyfikacyjnej"
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
 #: model:ir.model.fields,help:hr.field_res_users__barcode
 msgid "ID used for employee identification."
-msgstr "nr ID używany do identyfikacji pracownika"
+msgstr "nr ID używany do identyfikacji pracownika."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__im_status
@@ -3728,6 +3732,11 @@ msgstr ""
 "sztywnych godzin pracy"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "No user linked"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3743,11 +3752,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not Employed"
 msgstr "Niezatrudniony"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Not linked to an user"
-msgstr "Niepowiązany z użytkownikiem"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -3790,7 +3794,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_employee
 msgid "Number of employees currently occupying this job position."
-msgstr "Liczba pracowników na tym stanowisku"
+msgstr "Liczba pracowników na tym stanowisku."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
@@ -3819,7 +3823,7 @@ msgstr "Liczba wiadomości z błędami przy doręczeniu"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
 msgid "Number of new employees you expect to recruit."
-msgstr "Liczba nowych pracowników do zatrudnienia"
+msgstr "Liczba nowych pracowników do zatrudnienia."
 
 #. module: hr
 #. odoo-javascript
@@ -4418,7 +4422,7 @@ msgstr "Powiązani pracownicy na podstawie adresu prywatnego"
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
 #: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Użytkownik powiązany z zasobem do zarządzania jego dostępnością"
+msgstr "Użytkownik powiązany z zasobem do zarządzania jego dostępnością."
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
@@ -4635,7 +4639,7 @@ msgstr "Wyświetlanie ikony HR"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Pokaż wszystkie rekordy, których data następnej aktywności minęła"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
@@ -5880,6 +5884,9 @@ msgstr "praca"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid "Not linked to an user"
+#~ msgstr "Niepowiązany z użytkownikiem"
 
 #~ msgid "&amp;nbsp;"
 #~ msgstr "&amp;nbsp;"

@@ -37,7 +37,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 14:14+0000\n"
+"PO-Revision-Date: 2025-12-02 14:37+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/crm/fi/>"
 "\n"
@@ -46,7 +46,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -106,7 +106,7 @@ msgstr "%s:n myyntimahdollisuus"
 #. odoo-python
 #: code:addons/crm/models/res_users.py:0
 msgid "(Team Leader)"
-msgstr ""
+msgstr "(Tiiminvetäjä)"
 
 #. module: crm
 #. odoo-javascript
@@ -781,7 +781,7 @@ msgstr "Alias-domain"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
 msgid "Alias Domain Name"
-msgstr "Alias-domain-nimi"
+msgstr "Alias-domainin nimi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
@@ -1518,7 +1518,7 @@ msgstr "Sulkemispäivä"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Päivien lukumäärä tämän resurssin viimeisimmän päivityksen jälkeen"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_interval_type__days
@@ -1528,7 +1528,7 @@ msgstr "Päivää"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Päivää erääntymisestä"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_open
@@ -1543,7 +1543,7 @@ msgstr "Päivää sulkemiseen"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "Päivää erääntymiseen"
 
 #. module: crm
 #. odoo-python
@@ -1899,6 +1899,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 20 credits for free."
 msgstr ""
+"Myyntitiimille ei ole mitään pahempaa kuin liidien puute. Onneksi voit luoda "
+"juuri sinun tarpeisiisi kohdistettuja liidejä muutamalla klikkauksella: "
+"yrityksen koko, toimiala, jne. Testataksesi ominaisuutta, tarjoamme sinulle "
+"20 krediittiä ilmaiseksi."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1987,6 +1991,10 @@ msgid ""
 "days.         Set to 0 to disable. Changing this parameter will not affect "
 "the rotting status/date of resources last updated before this change."
 msgstr ""
+"Korosta myyntimahdollisuudet, joita ei ole päivitetty näin moneen "
+"päivään.         Aseta arvoksi 0 poistaaksesi käytöstä. Tämän parametrin "
+"muuttaminen ei vaikuta vanhentumistilaan/eräpäivään resursseissa, joiden "
+"viimeisin päivitys on tehty ennen tätä muutosta."
 
 #. module: crm
 #. odoo-javascript
@@ -2968,6 +2976,8 @@ msgstr "Tietoja ei löytynyt!"
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No detours, no delays - from %(stage_name)s straight to the win! 🚀"
 msgstr ""
+"Ei kiertoteitä, ei viivästyksiä – %(stage_name)s:sta alkaen suoraan "
+"voittoon! 🚀"
 
 #. module: crm
 #. odoo-python
@@ -3069,11 +3079,13 @@ msgid ""
 "Number of leads assigned to this member in the last 24 hours (lost leads "
 "excluded)"
 msgstr ""
+"Tälle jäsenelle viimeisen 24 tunnin aikana osoitetut liidit "
+"(poislukien hävityt liidit)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Number of leads assigned to this member in the last 30 days"
-msgstr ""
+msgstr "Tälle jäsenelle viimeisen 30 päivän aikana osoitetut liidit"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
@@ -3332,7 +3344,7 @@ msgstr "Odottaa"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Phew, that took some effort — but you nailed it. Good job!"
-msgstr ""
+msgstr "Huh, se vaati hieman vaivaa — mutta onnistuit hienosti. Hyvää työtä!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
@@ -3611,7 +3623,7 @@ msgstr "Ringover VOIP-puhelin"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_rotting
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Rotting"
-msgstr ""
+msgstr "Erääntyminen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
@@ -3764,7 +3776,7 @@ msgstr "Asetukset"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Shared with all teams"
-msgstr ""
+msgstr "Jaettu kaikkien tiimien kanssa"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
@@ -4139,6 +4151,8 @@ msgid ""
 "This new lead created by %(creation_source)s was automatically assigned to "
 "team leader %(user_name)s"
 msgstr ""
+"%(creation_source)s loi uuden liidin, joka osoitettiin automaattisesti "
+"tiimin johtajalle %(user_name)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4529,19 +4543,19 @@ msgstr "Voitettu/Hävitty"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Wow, that was fast. That deal didn’t stand a chance!"
-msgstr ""
+msgstr "Vau, se oli nopeaa. Tämän sopimuksen suhteen ei ollut epäilystäkään!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yay, your first win from %(utm_source_name)s!"
-msgstr ""
+msgstr "Hienoa, ensimmäinen voittosi %(utm_source_name)s!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Yeah! Best deal out of the last 7 days for the team."
-msgstr ""
+msgstr "Kyllä! Tiimin paras sopimus viimeisen 7 päivän ajalta."
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_yearly
@@ -4582,7 +4596,7 @@ msgstr "Olet juuri parantanut omaa ennätystäsi 7 päivän ajalta."
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You just expanded the map! First win in %(country)s."
-msgstr ""
+msgstr "Laajensit juuri karttaa! Ensimmäinen voitto: %(country)s."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -4601,13 +4615,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on a winning streak. 3 deals in 3 days, congrats!"
-msgstr ""
+msgstr "Olet voittoputkessa. 3 kauppaa 3 päivässä, onnittelut!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on fire! Fifth deal won today 🔥"
-msgstr ""
+msgstr "Olet tulessa! Viides kauppa tänään 🔥"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4681,7 +4695,7 @@ msgstr "sisältää arvon"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "incoming email"
-msgstr ""
+msgstr "saapuva sähköposti"
 
 #. module: crm
 #. odoo-python

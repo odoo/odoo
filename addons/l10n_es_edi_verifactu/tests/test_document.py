@@ -3,7 +3,7 @@ from freezegun import freeze_time
 from unittest import mock
 
 from odoo import _, Command
-from odoo.exceptions import UserError, RedirectWarning
+from odoo.exceptions import UserError, RedirectWarning, AccessError
 from odoo.tests import tagged
 from odoo.tools import zeep
 from .common import TestL10nEsEdiVerifactuCommon
@@ -578,3 +578,13 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertFalse(self.company.l10n_es_edi_verifactu_next_batch_time)
         # So the cron has to be retriggered
         self.assertEqual(cron_trigger_result_dict['at'], datetime.datetime(2024, 12, 5, 0, 1, 0))
+
+    def test_verifactu_document_reading_access_right(self):
+        move = self.env['account.move'].create({})
+        self.user.group_ids = self.env.ref('base.group_user')
+        with self.assertRaises(AccessError):
+            move.with_user(self.user).read(['l10n_es_edi_verifactu_document_ids'])
+        for group in ('account.group_account_invoice', 'account.group_account_readonly'):
+            self.user.group_ids = self.env.ref(group)
+            # Should not raise an error for accounting users
+            move.with_user(self.user).read(['l10n_es_edi_verifactu_document_ids'])
