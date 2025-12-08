@@ -1014,7 +1014,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Open condition comparator select",
-            trigger: "[data-container-title='Field'] #hidden_condition_no_text_opt",
+            trigger: "[data-container-title='Field'] #hidden_condition_record_opt",
             run: "click",
         },
         {

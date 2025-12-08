@@ -176,6 +176,7 @@ export class FormOptionPlugin extends Plugin {
             SetVisibilityDependencyAction,
             SetFormCustomFieldValueListAction,
             PropertyAction,
+            SetDependencyValueListAction,
             SetCustomErrorMessageAction,
             SetDefaultErrorMessageAction,
             SetRequirementComparatorAction,
@@ -609,6 +610,7 @@ export class FormOptionPlugin extends Plugin {
         }
 
         const comparator = fieldEl.dataset.visibilityComparator;
+        const isContainsComparator = ["contains", "!contains"].includes(comparator);
         const dependencyEl = getDependencyEl(fieldEl);
         const conditionValueList = [];
         if (dependencyEl) {
@@ -629,8 +631,12 @@ export class FormOptionPlugin extends Plugin {
                         });
                     }
                     if (!inputContainerEl.dataset.visibilityCondition) {
-                        inputContainerEl.dataset.visibilityCondition =
-                            dependencyEl.querySelector("option").value;
+                        const value = dependencyEl.querySelector("option").value;
+                        if (value) {
+                            inputContainerEl.dataset.visibilityCondition = isContainsComparator
+                                ? JSON.stringify([value])
+                                : value;
+                        }
                     }
                 } else if (fieldType === "record") {
                     const model = containerEl.dataset.model;
@@ -669,8 +675,12 @@ export class FormOptionPlugin extends Plugin {
                         });
                     }
                     if (!inputContainerEl.dataset.visibilityCondition) {
-                        inputContainerEl.dataset.visibilityCondition =
-                            inputsInDependencyContainer[0].value;
+                        const value = inputsInDependencyContainer[0].value;
+                        if (value) {
+                            inputContainerEl.dataset.visibilityCondition = isContainsComparator
+                                ? JSON.stringify([value])
+                                : value;
+                        }
                     }
                 }
                 if (!inputContainerEl.dataset.visibilityComparator) {
@@ -1448,6 +1458,60 @@ export class SetFormCustomFieldValueListAction extends BuilderAction {
         return JSON.stringify(field.records);
     }
 }
+
+export class SetDependencyValueListAction extends BuilderAction {
+    static id = "setDependencyValueList";
+
+    apply({ editingElement: fieldEl, value }) {
+        const values = JSON.parse(value);
+        const selectedList = values.filter(({ selected }) => selected).map(({ name }) => name);
+        fieldEl.dataset.visibilityCondition = selectedList.length
+            ? JSON.stringify(selectedList)
+            : "";
+    }
+    getValue({ editingElement: fieldEl }) {
+        const dependencyEl = getDependencyEl(fieldEl);
+        if (!dependencyEl) {
+            return;
+        }
+        const isSelect = dependencyEl.nodeName === "SELECT";
+        const multipleInputsWrapper = dependencyEl.closest(".s_website_form_multiple");
+        let optionEls = [];
+        if (isSelect) {
+            optionEls = Array.from(dependencyEl.querySelectorAll("option"));
+        } else if (multipleInputsWrapper) {
+            optionEls = Array.from(multipleInputsWrapper.querySelectorAll(".s_website_form_input"));
+        }
+
+        const isSelected = (el) => {
+            let visibilityCondition = fieldEl.dataset.visibilityCondition;
+            try {
+                const parsed = JSON.parse(visibilityCondition);
+                // Accept parsed result only when it's NOT a string
+                if (typeof parsed !== "string") {
+                    visibilityCondition = parsed;
+                }
+            } catch {
+                // keep original value
+            }
+            if (visibilityCondition) {
+                return Array.isArray(visibilityCondition)
+                    ? visibilityCondition?.includes(el.value)
+                    : visibilityCondition === el.value;
+            }
+            return false;
+        };
+        const result = optionEls.map((el) => ({
+            id: el.value,
+            name: el.value,
+            display_name: isSelect ? el.textContent : el.labels[0]?.textContent || "",
+            undeletable: true,
+            selected: isSelected(el),
+        }));
+        return JSON.stringify(result);
+    }
+}
+
 class PropertyAction extends BuilderAction {
     static id = "property";
 
