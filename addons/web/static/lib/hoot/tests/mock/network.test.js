@@ -28,6 +28,20 @@ describe(parseUrl(import.meta.url), () => {
         expect(document.title).toBe("");
     });
 
+    test("fetch with internal URLs works without mocking fetch", async () => {
+        const blob = new Blob([JSON.stringify({ name: "coucou" })], {
+            type: "application/json",
+        });
+        const blobUrl = createObjectURL(blob);
+        const blobResponse = await fetch(blobUrl).then((res) => res.json());
+        const dataResponse = await fetch("data:text/html,<body></body>").then((res) => res.text());
+
+        expect(blobResponse).toEqual({ name: "coucou" });
+        expect(dataResponse).toBe("<body></body>");
+
+        await expect(fetch("http://some.url")).rejects.toThrow(/fetch is not mocked/);
+    });
+
     test("fetch with internal URLs should return default value", async () => {
         mockFetch(expect.step);
 
