@@ -73,7 +73,10 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
         if company.parent_id:
-            return state_specific
+            return {
+                self.company_xmlid(k): v
+                for k, v in state_specific.items()
+            }
         return {
             **state_specific,
             'fiscal_position_in_sez': {
