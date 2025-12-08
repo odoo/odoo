@@ -2,6 +2,7 @@
 
 import { on } from "@odoo/hoot-dom";
 import { MockEventTarget } from "../hoot_utils";
+import { ensureTest } from "../main_runner";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -95,6 +96,7 @@ export function cleanupAnimations() {
  * @param {boolean} [enable=false]
  */
 export function disableAnimations(enable = false) {
+    ensureTest("disableAnimations");
     allowAnimations = enable;
 }
 
@@ -105,6 +107,7 @@ export function disableAnimations(enable = false) {
  * @param {boolean} [enable=true]
  */
 export function enableTransitions(enable = true) {
+    ensureTest("enableTransitions");
     allowTransitions = enable;
     animationChangeBus.dispatchEvent(new CustomEvent("toggle-transitions"));
 }
