@@ -230,6 +230,21 @@ class ProductTemplate(models.Model):
         """
         return ['no']
 
+<<<<<<< 6a4bc16dad67e86b0b81d86252a7106a19e785d7
+||||||| c4ced4f77ca801910336c52a9694b63907138c5b
+    def _get_product_accounts(self):
+        product_accounts = super()._get_product_accounts()
+        product_accounts['downpayment'] = self.categ_id.property_account_downpayment_categ_id
+        return product_accounts
+
+=======
+    def _get_product_accounts(self):
+        product_accounts = super()._get_product_accounts()
+        product_accounts['downpayment'] = self.categ_id.property_account_downpayment_categ_id \
+            or self.env['account.account'].browse(self.env['product.category'].default_get(['property_account_downpayment_categ_id']).get('property_account_downpayment_categ_id'))
+        return product_accounts
+
+>>>>>>> 51a944b996d63d349c5fc075a93f8b7af706a9f2
     ####################################
     # Product/combo configurator hooks #
     ####################################
