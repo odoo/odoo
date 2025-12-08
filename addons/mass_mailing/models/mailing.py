@@ -580,42 +580,6 @@ class MailingMailing(models.Model):
     # ACTIONS
     # ------------------------------------------------------
 
-    def action_set_favorite(self):
-        """Add the current mailing in the favorites list."""
-        self.favorite = True
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'message': _(
-                    'Design added to the %s Templates!',
-                    ', '.join(self.mapped('mailing_model_id.name')),
-                ),
-                'next': {'type': 'ir.actions.act_window_close'},
-                'sticky': False,
-                'type': 'info',
-            }
-        }
-
-    def action_remove_favorite(self):
-        """Remove the current mailing from the favorites list."""
-        self.favorite = False
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'message': _(
-                    'Design removed from the %s Templates!',
-                    ', '.join(self.mapped('mailing_model_id.name')),
-                ),
-                'next': {'type': 'ir.actions.act_window_close'},
-                'sticky': False,
-                'type': 'info',
-            }
-        }
-
     def action_duplicate(self):
         self.ensure_one()
         if mass_mailing_copy := self.copy():

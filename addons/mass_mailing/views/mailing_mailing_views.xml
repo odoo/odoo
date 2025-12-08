@@ -73,16 +73,7 @@
                             data-hotkey="d" invisible="state != 'done'"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="k"/>
                         <button name="action_cancel" type="object" invisible="state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
-                        <button type="object"
-                            name="action_set_favorite"
-                            class="btn-secondary"
-                            invisible="favorite"
-                            string="Add to Templates"/>
-                        <button type="object"
-                            name="action_remove_favorite"
-                            class="btn-secondary"
-                            invisible="not favorite"
-                            string="Remove from Templates"/>
+                        <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" class="oe_highlight" string="Retry" data-hotkey="y"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,in_queue,sending,done"/>
                     </header>
                     <div class="alert alert-info o_mass_mailing_alert_message" role="alert"
@@ -211,13 +202,17 @@
                             </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="position-relative">
+                            <field name="favorite" class="fs-2 position-absolute" style="right: 0; top:0; line-height:0;"
+                                widget="boolean_favorite" nolabel="1" invisible="is_body_empty"/>
+                        </div>
                         <group class="o_mass_mailing_mailing_group">
                             <field name="active" invisible="1"/>
                             <field name="create_uid" invisible="1"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}"
                                 invisible="1"
                                 readonly="state != 'draft'" force_save="1"/>
-                            <field class="text-break" name="subject"
+                            <field class="text-break w-75" name="subject"
                                 options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
                                 readonly="state in ('sending', 'done')"
                                 widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>

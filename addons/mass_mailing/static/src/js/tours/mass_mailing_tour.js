@@ -64,7 +64,7 @@
         tooltipPosition: 'top',
         run: 'click',
     }, {
-        trigger: 'button[name="action_set_favorite"]',
+        trigger: 'div.o_favorite',
         content: _t('Click on this button to add this mailing to your templates.'),
         tooltipPosition: 'bottom',
         run: 'click',
