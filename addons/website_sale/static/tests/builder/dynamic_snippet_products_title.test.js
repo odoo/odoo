@@ -46,11 +46,19 @@ test("for dynamic snippet products, the numberOfElements should be 2 when title 
     ]);
 
     const snippetSelector = ":iframe .s_dynamic_snippet_products";
-    await setupWebsiteBuilderWithSnippet("s_dynamic_snippet_products");
+    const { getEditableContent } = await setupWebsiteBuilderWithSnippet(
+        "s_dynamic_snippet_products"
+    );
     expect(snippetSelector).toHaveCount(1);
     await clickAndWait(snippetSelector);
     const snippetEl = queryOne(snippetSelector);
     await checkNumberOfElements("left", "Section Title", 2, snippetEl);
     await checkNumberOfElements("container-fluid", "Content Width", 4, snippetEl);
+    const carouselEl = getEditableContent().querySelector(".carousel");
+    carouselEl.addEventListener("content_changed", () => {
+        expect.step("content_changed event received");
+    });
     await checkNumberOfElements("o_container_small", "Content Width", 2, snippetEl);
+    // Just to ensure that the event is triggerd on option change.
+    expect.verifySteps(["content_changed event received", "content_changed event received"]); // preview, apply
 });

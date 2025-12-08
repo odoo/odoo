@@ -92,6 +92,12 @@ patch(SetContainerWidthAction.prototype, {
         if (parentEl.dataset.numberOfElements !== updatedNumberOfElements) {
             parentEl.dataset.numberOfElements = updatedNumberOfElements;
         }
+        const carouselEl = editingElement.querySelector(".carousel");
+        if (carouselEl) {
+            // Ensure carousel recomputes its min-height on content-width
+            // option change
+            carouselEl.dispatchEvent(new CustomEvent("content_changed"));
+        }
     },
 });
 
