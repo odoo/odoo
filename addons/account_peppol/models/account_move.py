@@ -40,7 +40,7 @@ class AccountMove(models.Model):
         # EXTENDS 'account'
         super()._compute_display_send_button()
         for move in self:
-            if move.company_id.peppol_activate_self_billing_sending and move._is_exportable_as_self_invoice():
+            if move._is_exportable_as_self_invoice():
                 move.display_send_button = True
 
     @api.depends('state')
