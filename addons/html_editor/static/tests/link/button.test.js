@@ -394,6 +394,27 @@ describe("button edit", () => {
             '<p>this is a <a href="http://test.test/" class="btn btn-fill-primary">X[]</a></p>'
         );
     });
+
+    test("Should not remove invisible button", async () => {
+        const { el } = await setupEditor(
+            '<p><a href="http://test.test/" class="invisible btn btn-primary">a[]</a></p>',
+            {
+                styleContent: `
+                    .invisible {
+                        visibility: hidden;
+                    }
+                `,
+            }
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+
+        await contains(".o-we-linkpopover input.o_we_label_link").fill("b");
+        await click(".o_we_apply_link");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="http://test.test/" class="invisible btn btn-primary">ab[]</a></p>'
+        );
+    });
 });
 
 test("button should never contain selection placeholder", async () => {
