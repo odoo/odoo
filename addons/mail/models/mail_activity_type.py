@@ -25,7 +25,7 @@ class MailActivityType(models.Model):
         ]
 
     name = fields.Char('Name', required=True, translate=True)
-    summary = fields.Char('Default Summary', translate=True)
+    summary = fields.Char('Default Summary', translate=True, compute="_compute_summary", store=True, readonly=False)
     sequence = fields.Integer('Sequence', default=10)
     active = fields.Boolean(default=True)
     create_uid = fields.Many2one('res.users', index=True)
@@ -79,6 +79,11 @@ class MailActivityType(models.Model):
     initial_res_model = fields.Selection(selection=_get_model_selection, string='Initial model', compute="_compute_initial_res_model", store=False,
             help='Technical field to keep track of the model at the start of editing to support UX related behaviour')
     res_model_change = fields.Boolean(string="Model has change", default=False, store=False)
+
+    @api.depends('name')
+    def _compute_summary(self):
+        for record in self.filtered(lambda x: not x.summary):
+            record.summary = record.name
 
     @api.constrains('res_model')
     def _check_activity_type_res_model(self):

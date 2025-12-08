@@ -302,15 +302,15 @@ class TestActivityFlow(TestActivityCommon):
             # they must be set using defaults, see `action_feedback_schedule_next`
             ActivityForm.activity_type_id = call_activity_type
             # activity summary should be empty
-            self.assertEqual(ActivityForm.summary, "TodoSummary", "Did not erase if void on type")
+            self.assertEqual(ActivityForm.summary, False, "Summary will set to false")
 
             ActivityForm.activity_type_id = email_activity_type
             # activity summary should be replaced with email's default summary
             self.assertEqual(ActivityForm.summary, email_activity_type.summary)
 
             ActivityForm.activity_type_id = call_activity_type
-            # activity summary remains unchanged from change of activity type as call activity doesn't have default summary
-            self.assertEqual(ActivityForm.summary, email_activity_type.summary)
+            # activity summary will be changed as call type activity have the summary set to it's name by default.
+            self.assertEqual(ActivityForm.summary, call_activity_type.summary)
 
     def test_activity_type_unlink(self):
         """ Removing type should allocate activities to Todo """

@@ -109,6 +109,7 @@ class MailActivity(models.Model):
     # access
     can_write = fields.Boolean(compute='_compute_can_write') # used to hide buttons if the current user has no access
     active = fields.Boolean(default=True)
+    is_summary_edited = fields.Boolean(compute="_compute_is_summary_edited")
 
     # if model: valid res_id
     _check_res_id_is_set_if_model = models.Constraint(
@@ -181,10 +182,20 @@ class MailActivity(models.Model):
         for record in self:
             record.can_write = record in valid_records
 
+    @api.depends('summary')
+    def _compute_is_summary_edited(self):
+        for record in self:
+            if record.summary and record.summary != record.activity_type_id.summary:
+                record.is_summary_edited = True
+            else:
+                record.is_summary_edited = False
+
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
-            if self.activity_type_id.summary:
+            if not self.summary or (not self._origin and not self.is_summary_edited) \
+                or (self.activity_type_id.summary
+                and self._origin.activity_type_id.summary == self.summary):
                 self.summary = self.activity_type_id.summary
             self.date_deadline = self.activity_type_id._get_date_deadline()
             self.user_id = self.activity_type_id.default_user_id or self.env.user
