@@ -720,3 +720,24 @@ registry.category("web_tour.tours").add("test_confirm_coupon_programs_one_by_one
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_promo_code_product_tax_included", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Include", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.hasRewardLine("$ 10 on Product Include", "-10.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_promo_code_product_tax_excluded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.addOrderline("Product Include", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.hasRewardLine("$ 10 on Product Include", "-10.00"),
+        ].flat(),
+});

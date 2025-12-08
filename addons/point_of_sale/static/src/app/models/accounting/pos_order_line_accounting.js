@@ -126,6 +126,14 @@ export class PosOrderlineAccounting extends Base {
             .join(" ");
     }
 
+    get basePrice() {
+        const unitPriceWithTaxIncluded = this.unitPrices.taxes_data.reduce(
+            (acc, taxData) => acc + (taxData.price_include ? taxData.tax_amount : 0),
+            this.unitPrices.taxes_data[0]?.base_amount || this.unitPrices.total_excluded
+        );
+        return this.getQuantity() * unitPriceWithTaxIncluded * (1 - this.getDiscount() / 100);
+    }
+
     delete(record, opts = {}) {
         const order = this.order_id;
         const result = super.delete(record, opts);
