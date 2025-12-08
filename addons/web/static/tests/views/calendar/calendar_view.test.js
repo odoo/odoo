@@ -42,6 +42,7 @@ import {
     closeCwPopOver,
     displayCalendarPanel,
     expandCalendarView,
+    findEvent,
     hideCalendarPanel,
     moveEventToAllDaySlot,
     moveEventToDate,
@@ -5989,4 +5990,45 @@ test(`three calendars are rendered in the ActionSwiper on touch devices`, async 
         message: "events are displayed on the following month",
     });
     expect(".o_actionswiper_left_swipe_area .fc-daygrid-body .fc-event").toHaveText("event 5");
+});
+
+test("Revert to the previous state if updateRecord fails (onEventResize)", async () => {
+    expect.errors(1);
+    Event._records = [Event._records[1]];
+    onRpc("write", () => {
+        throw makeServerError({ type: "ValidationError" });
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="week"/>`,
+    });
+
+    const event = findEvent(2);
+    const oldInsetSize = event.parentElement.style.inset;
+    await resizeEventToTime(2, "2016-12-12 17:00:00");
+    expect(event.parentElement.style.inset).toEqual(oldInsetSize);
+    expect.verifyErrors(["RPC_ERROR: Odoo Server Error"]);
+});
+
+test("Revert to the previous state if updateRecord fails (onEventDrop)", async () => {
+    expect.errors(1);
+    Event._records = [Event._records[1]];
+    onRpc("write", () => {
+        throw makeServerError({ type: "ValidationError" });
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="week"/>`,
+    });
+
+    let event = findEvent(2);
+    const columnEvent = queryFirst(".fc-timegrid-col.fc-day[data-date='2016-12-12']");
+    await moveEventToTime(2, "2016-12-14 11:00:00");
+    event = findEvent(2);
+    expect(columnEvent.contains(event)).toBe(true, { message: "Event shouldn't move column " });
+    expect.verifyErrors(["RPC_ERROR: Odoo Server Error"]);
 });

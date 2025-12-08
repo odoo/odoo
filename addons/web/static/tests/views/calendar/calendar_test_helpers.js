@@ -597,9 +597,20 @@ export async function resizeEventToTime(eventId, dateTime) {
     const column = findDateColumn(date);
     const columnRect = queryRect(column);
 
-    await (
-        await drag(resizer)
-    ).drop(row, {
+    if (hasTouch()) {
+        const { drop } = await drag(eventEl, {
+            pointerDownDuration: TOUCH_SELECTION_THRESHOLD,
+        });
+        await waitForSelection();
+        await drop(eventEl);
+        await waitForSelection();
+    }
+
+    const { drop } = await drag(resizer, {
+        pointerDownDuration: TOUCH_SELECTION_THRESHOLD,
+    });
+    await waitForSelection();
+    await drop(row, {
         position: { x: columnRect.x, y: -1 },
         relative: true,
     });
