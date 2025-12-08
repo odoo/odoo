@@ -956,7 +956,7 @@ patch(PosOrder.prototype, {
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;
             }
-            discountablePerTax[taxKey] += line.prices.total_excluded;
+            discountablePerTax[taxKey] += line.basePrice;
         }
         return { discountable, discountablePerTax };
     },
@@ -1101,8 +1101,7 @@ patch(PosOrder.prototype, {
                 discountablePerTax[taxKey] = 0;
             }
             discountablePerTax[taxKey] +=
-                line.prices.total_excluded *
-                (remainingAmountPerLine[line.uuid] / line.prices.total_included);
+                line.basePrice * (remainingAmountPerLine[line.uuid] / line.prices.total_included);
         }
         return { discountable, discountablePerTax };
     },
