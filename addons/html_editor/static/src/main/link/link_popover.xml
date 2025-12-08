@@ -158,7 +158,7 @@
                                 <button class="o_we_discard_link btn btn-sm btn-secondary ms-1" t-on-click="props.onDiscard">Discard</button>
                             </div>
                             <div class="d-flex align-items-center gap-1">
-                                <a t-if="props.canRemove and state.url" href="#" class="o_we_remove_link text-dark" t-on-click.prevent="onClickRemove" title="Remove Link">
+                                <a t-if="props.canRemove and state.url" href="#" class="o_we_remove_link text-dark d-flex me-1" t-on-click.prevent="onClickRemove" title="Remove Link">
                                     <i class="fa fa-chain-broken"></i>
                                 </a>
                                 <button class="btn btn-sm btn-secondary" title="Advanced mode" t-att-disabled="!state.url" t-on-click="toggleAdvancedOptions">
