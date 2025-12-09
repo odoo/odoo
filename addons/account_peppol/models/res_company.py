@@ -159,6 +159,16 @@ class ResCompany(models.Model):
         if country_code not in PEPPOL_LIST or not phonenumbers.is_valid_number(phone_nbr):
             raise ValidationError(error_message)
 
+    def _reset_peppol_configuration(self):
+        """Reset all peppol configuration fields to their default value, as if not registered"""
+        self.account_peppol_proxy_state = 'not_registered'
+        self.partner_id._compute_peppol_eas()
+        self.partner_id._compute_peppol_endpoint()
+
+        # on 16.0 the constraints on account_edi_proxy_client.user prevent having multiple users of
+        # type 'peppol' for the same company even if they are archived, so we need to unlink them
+        self.account_edi_proxy_client_ids.unlink()
+
     def _check_peppol_endpoint_number(self, warning=False):
         self.ensure_one()
         peppol_dict = PEPPOL_ENDPOINT_WARNINGS if warning else PEPPOL_ENDPOINT_RULES

@@ -117,9 +117,6 @@ class AccountEdiProxyClientUser(models.Model):
                 self._renew_token()
                 self.env.cr.commit() # We do not want to lose it if in the _make_request below something goes wrong
                 return self._make_request(url, params)
-            if error_code == 'no_such_user':
-                # This error is also raised if the user didn't exchange data and someone else claimed the edi_identificaiton.
-                self.sudo().active = False
             raise AccountEdiProxyError(error_code, proxy_error['message'] or False)
 
         return response['result']

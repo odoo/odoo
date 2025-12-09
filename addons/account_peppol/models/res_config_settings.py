@@ -70,6 +70,19 @@ class ResConfigSettings(models.TransientModel):
             raise UserError(errors.get(error_code) or error_message or _('Connection error, please try again later.'))
         return response
 
+    def _peppol_deregister(self):
+        edi_user = self.account_peppol_edi_user
+        company = edi_user.company_id or self.company_id
+        if edi_user and company.account_peppol_proxy_state not in ('not_registered', 'rejected'):
+            try:
+                edi_user._make_request(f'{edi_user._get_server_url_new()}/api/peppol/1/cancel_peppol_registration')
+            except AccountEdiProxyError as e:
+                # if user no longer exists, we can consider it deregistered
+                if e.code not in ['client_gone', 'no_such_user_found']:
+                    raise
+        # even if edi proxy user doesn't exist, we still need to ensure registration_state = 'not_registered'
+        company._reset_peppol_configuration()
+
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
@@ -126,8 +139,7 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
 
         if self.account_peppol_proxy_state != 'not_registered':
-            raise UserError(
-                _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
+            raise UserError(_('Cannot register a user with a %s application', self.account_peppol_proxy_state))
 
         if not self.account_peppol_phone_number:
             raise ValidationError(_("Please enter a mobile number to verify your application."))
@@ -214,11 +226,11 @@ class ResConfigSettings(models.TransientModel):
 
     def button_cancel_peppol_registration(self):
         """
-        Sets the peppol registration to canceled
+        Sets the peppol registration to not_registered
         - If the user is active on the SMP, we can't just cancel it. They have to deregister.
-        - 'not_registered', 'rejected', 'canceled' proxy states mean that canceling the registration
+        - 'not_registered', 'rejected' proxy states mean that canceling the registration
           makes no sense, so we don't do it
-        - Calls the IAP server first before setting the state as canceled on the client side,
+        - Calls the IAP server first before setting the state as not_registered on the client side,
           in case they've been activated on the IAP side in the meantime
         """
         self.ensure_one()
@@ -230,14 +242,7 @@ class ResConfigSettings(models.TransientModel):
         if self.account_peppol_proxy_state == 'active':
             raise UserError(_("Can't cancel an active registration. Please deregister instead."))
 
-        if self.account_peppol_proxy_state in {'not_registered', 'rejected', 'canceled'}:
-            raise UserError(_(
-                "Can't cancel registration with this status: %s", self.account_peppol_proxy_state
-            ))
-
-        self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
-        self.account_peppol_proxy_state = 'not_registered'
-        self.account_peppol_edi_user.unlink()
+        self._peppol_deregister()
 
     @handle_demo
     def button_deregister_peppol_participant(self):
@@ -246,18 +251,27 @@ class ResConfigSettings(models.TransientModel):
         """
         self.ensure_one()
 
-        if self.account_peppol_proxy_state != 'active':
-            raise UserError(_(
-                "Can't deregister with this status: %s", self.account_peppol_proxy_state
-            ))
+        edi_user = self.account_peppol_edi_user
+        if not edi_user:
+            self.company_id._reset_peppol_configuration()
+            return
 
-        # fetch all documents and message statuses before unlinking the edi user
-        # so that the invoices are acknowledged
-        self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
-        self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
-        if not tools.config['test_enable'] and not modules.module.current_test:
-            self.env.cr.commit()
+        proxy_state = None
+        try:
+            # call _make_request directly because _peppol_get_participant_status()
+            # is cron-safe and swallows AccountEdiProxyError.
+            proxy_user = edi_user._make_request(f"{edi_user._get_server_url_new()}/api/peppol/1/participant_status")
+            proxy_state = proxy_user.get('peppol_state')
+        except AccountEdiProxyError as e:
+            # If user no longer exists on IAP side, don't try to fetch docs/statuses (they will fail).
+            if e.code not in ['client_gone', 'no_such_user_found']:
+                raise
+        if proxy_state == 'active':
+            # fetch all documents and message statuses before deregistration
+            # so that the invoices are acknowledged
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_message_status()
+            self.env['account_edi_proxy_client.user']._cron_peppol_get_new_documents()
+            if not tools.config['test_enable'] and not modules.module.current_test:
+                self.env.cr.commit()
 
-        self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
-        self.account_peppol_proxy_state = 'not_registered'
-        self.account_peppol_edi_user.unlink()
+        self._peppol_deregister()
