@@ -54,7 +54,7 @@ class TableObject:
         raise NotImplementedError
 
     def full_name(self, model: BaseModel) -> str:
-        assert self.name, f"The table object is not named ({self.definition})"
+        assert self.name, f"The table object is not named ({self.get_definition(model.env.registry)})"
         name = f"{model._table}_{self.name}"
         return sql.make_identifier(name)
 
@@ -74,7 +74,12 @@ class TableObject:
         raise NotImplementedError
 
     def __str__(self) -> str:
-        return f"({self.name!r}={self.definition!r}, {self.message!r})"
+        try:
+            definition = self.get_definition(None)
+        except Exception:  # noqa: BLE001
+            # cannot resolve without a registry
+            definition = '...'
+        return f"({self.name!r}={definition!r}, {self.message!r})"
 
 
 class Constraint(TableObject):
