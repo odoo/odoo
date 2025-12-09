@@ -5,14 +5,31 @@
         <field name="model">res.partner.bank</field>
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
             <field name="company_id" position="after">
                 <field name="employee_salary_amount_is_percentage" invisible="1"/>
+||||||| 57573994313988837d89329d77ab1def63a8cfdd
+            <xpath expr="//field[@name='allow_out_payment']" position="after">
+                <field name="employee_salary_amount_is_percentage" invisible="1"/>
+=======
+            <xpath expr="//field[@name='allow_out_payment']" position="after">
+>>>>>>> a995b13d828991b72e4d5d40bab397ad33e73727
                 <field name="employee_has_multiple_bank_accounts" invisible="1"/>
                 <label string="Salary Allocation" for="employee_salary_amount" 
                     invisible="not employee_has_multiple_bank_accounts" groups="hr.group_hr_user"/>
                 <div class="d-flex" invisible="not employee_has_multiple_bank_accounts" groups="hr.group_hr_user">
+<<<<<<< d98aff1232df958b925f71190b12fd23f7245c63
                     <field name="employee_salary_amount" style="max-width: 200px;"/>
                     <div invisible="not employee_salary_amount_is_percentage">%</div>
+||||||| 57573994313988837d89329d77ab1def63a8cfdd
+                    <field name="employee_salary_amount" style="max-width: 200px;"/>
+                    <div invisible="not employee_salary_amount_is_percentage">%</div>
+                    <field name="currency_id" invisible="employee_salary_amount_is_percentage" readonly="True"/>
+=======
+                    <span><field name="employee_salary_amount" style="max-width: 200px;"/></span>
+                    <span invisible="not employee_salary_amount_is_percentage">%</span>
+                    <field name="currency_id" invisible="employee_salary_amount_is_percentage" readonly="True"/>
+>>>>>>> a995b13d828991b72e4d5d40bab397ad33e73727
                 </div>
                 <field name="employee_id" invisible="not employee_id" widget="many2many_avatar_employee"/>
             </field>
