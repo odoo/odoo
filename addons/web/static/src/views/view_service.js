@@ -95,7 +95,15 @@ export const viewService = {
                 )
             );
 
-            const result = await orm.cache({ type: "disk" }).call(resModel, "get_views", [], {
+            const cache = {
+                type: "disk",
+                callback: (_, hasChanged) => {
+                    if (hasChanged) {
+                        rpcBus.trigger("CLEAR-CACHES");
+                    }
+                },
+            };
+            const result = await orm.cache(cache).call(resModel, "get_views", [], {
                 context: filteredContext,
                 views,
                 options: loadViewsOptions,

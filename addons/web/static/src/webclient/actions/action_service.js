@@ -379,14 +379,19 @@ export function makeActionManager(env, router = _router) {
             // actionRequest is an id or an xmlid
             const ctx = makeContext([user.context, context]);
             delete ctx.params;
-            const action = await rpc(
-                "/web/action/load",
-                {
-                    action_id: actionRequest,
-                    context: ctx,
+            const params = {
+                action_id: actionRequest,
+                context: ctx,
+            };
+            const cache = {
+                type: "disk",
+                callback: (_, hasChanged) => {
+                    if (hasChanged) {
+                        rpcBus.trigger("CLEAR-CACHES");
+                    }
                 },
-                { cache: { type: "disk" } }
-            );
+            };
+            const action = await rpc("/web/action/load", params, { cache });
             if (action.help) {
                 action.help = markup(action.help);
             }

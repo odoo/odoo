@@ -3,8 +3,11 @@ import { rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
 export const offlineUIService = {
-    dependencies: ["action", "offline"],
-    async start(env, { action: actionService, offline: offlineService }) {
+    dependencies: ["action", "notification", "offline"],
+    async start(
+        env,
+        { action: actionService, notification: notificationService, offline: offlineService }
+    ) {
         const KEY = "ui-items-available-offline" + (env.debug ? "-debug" : "");
         const rawValue = browser.sessionStorage.getItem(KEY);
         const visited = rawValue ? JSON.parse(rawValue) : {};
@@ -64,6 +67,8 @@ export const offlineUIService = {
                 delete visited[key];
             }
             browser.sessionStorage.removeItem(KEY);
+            // TODO: remove this
+            notificationService.add("Caches cleared!", { type: "success" });
         });
 
         return { visited };
