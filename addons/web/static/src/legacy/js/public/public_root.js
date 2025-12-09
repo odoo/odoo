@@ -1,7 +1,7 @@
 import { cookie } from "@web/core/browser/cookie";
 import publicWidget from '@web/legacy/js/public/public_widget';
 
-import lazyloader from "@web/public/lazyloader";
+import { allScriptsLoaded } from "@web/public/lazyloader";
 
 import { makeEnv, startServices } from "@web/env";
 import { getTemplate } from '@web/core/templates';
@@ -371,7 +371,7 @@ export const PublicRoot = publicWidget.Widget.extend({
  * been consumed.
  */
 export async function createPublicRoot(RootWidget) {
-    await lazyloader.allScriptsLoaded;
+    await allScriptsLoaded.promise;
     await whenReady();
     const env = makeEnv();
     await startServices(env);

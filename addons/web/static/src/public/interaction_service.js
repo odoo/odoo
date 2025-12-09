@@ -1,10 +1,10 @@
-import { registry } from "@web/core/registry";
 import { appTranslateFn } from "@web/core/l10n/translation";
-import { Interaction } from "./interaction";
+import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
+import { registerInteractionsProm, registerPageReadinessDelay } from "@web/public/lazyloader";
+import { Interaction } from "./interaction";
 import { PairSet } from "./utils";
 import { Colibri } from "./colibri";
-import lazyloader from "@web/public/lazyloader";
 
 /**
  * Website Core
@@ -29,8 +29,8 @@ import lazyloader from "@web/public/lazyloader";
 // Otherwise, with a poor connection, a user might click on a button without any
 // effect. The lazyloader also adds a loading animation on buttons.
 const interactionsStartedResolvers = Promise.withResolvers();
-lazyloader.registerInteractionsProm(interactionsStartedResolvers.promise);
-lazyloader.registerPageReadinessDelay(interactionsStartedResolvers.promise);
+registerInteractionsProm(interactionsStartedResolvers.promise);
+registerPageReadinessDelay(interactionsStartedResolvers.promise);
 
 class InteractionService {
     /**
