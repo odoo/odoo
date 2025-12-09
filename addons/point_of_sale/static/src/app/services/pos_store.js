@@ -521,7 +521,6 @@ export class PosStore extends WithLazyGetterTrap {
         });
 
         await this.processProductAttributes();
-        await this.config.cacheReceiptLogo();
     }
     cashMove() {
         this.openCashbox(_t("Cash in / out"));

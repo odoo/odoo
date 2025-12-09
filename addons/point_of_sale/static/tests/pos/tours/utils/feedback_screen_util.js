@@ -58,6 +58,8 @@ export function totalAmountContains(value) {
 export function checkTicketData(data, basic = false) {
     // data is an object like:
     // {
+    //   logo,
+    //   contact_info,
     //   total_amount,
     //   is_rounding,
     //   rounding_amount,
@@ -104,6 +106,26 @@ export function checkTicketData(data, basic = false) {
 
         if (data.total_amount) {
             ticket.querySelector(".total-amount").innerHTML.includes(data.total_amount);
+        }
+
+        if (data.logo) {
+            const img = ticket.querySelector("div[name='logo'] img");
+            if (!img) {
+                throw new Error("No logo has been found in the receipt.");
+            }
+            if (!img.src.includes(data.logo)) {
+                throw new Error(
+                    `Logo mismatch. Expected URL containing 
+                    '${data.logo.substring(0, 10)}...
+                    got '${img.src.substring(0, 10)}...'`
+                );
+            }
+        }
+
+        if (data.contact_info) {
+            if (!ticket.innerHTML.includes(data.contact_info)) {
+                throw new Error("No contact info has been found in the receipt.");
+            }
         }
 
         if (data.is_rounding || data.rounding_amount) {

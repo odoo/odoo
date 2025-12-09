@@ -44,6 +44,9 @@ export class LoginScreen extends Component {
     get backBtnName() {
         return _t("Backend");
     }
+    get logoUrl() {
+        return this.pos.config.receiptLogoUrl;
+    }
     clickBack() {
         this.pos.closePos();
     }

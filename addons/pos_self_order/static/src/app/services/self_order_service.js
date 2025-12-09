@@ -566,8 +566,6 @@ export class SelfOrder extends Reactive {
             this.ordering = true;
         }
 
-        await this.config.cacheReceiptLogo();
-
         window.addEventListener("click", (event) => {
             clearTimeout(this.idleTimout);
             this.timeoutPopup?.();

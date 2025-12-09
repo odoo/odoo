@@ -1421,6 +1421,32 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("point_of_sale.test_printed_receipt_tour")
 
+    def test_receipt_logo_config(self):
+        self.img_company_b64 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
+        self.img_custom_b64 = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mnk5+dQAwAEsgKVw6M+4wAAAABJRU5ErkJggg=='
+        company = self.main_pos_config.company_id
+        company.write({
+            'phone': '123456789',
+            'logo': self.img_company_b64,
+        })
+
+        self.start_pos_tour('point_of_sale.test_receipt_company_logo_tour')
+
+        self.main_pos_config.current_session_id.close_session_from_ui()
+        company.write({'logo': False})
+
+        self.start_pos_tour('point_of_sale.test_receipt_no_logo_tour')
+
+        self.main_pos_config.current_session_id.close_session_from_ui()
+        company.write({'logo': self.img_company_b64})
+        self.main_pos_config.write({
+            'custom_logo': self.img_custom_b64,
+            'use_custom_receipt_info': True,
+            'custom_phone': '555-999',
+        })
+
+        self.start_pos_tour('point_of_sale.test_receipt_custom_logo_tour')
+
     def test_limited_product_pricelist_loading(self):
         self.env['ir.config_parameter'].sudo().set_int('point_of_sale.limited_product_count', 1)
 

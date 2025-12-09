@@ -197,22 +197,16 @@
                         <tr>
                             <td class="text-start" t-out="company['name']" />
                             <td class="text-end">
-                                Tel. <t t-out="company['phone']" />
+                                Tel. <t t-out="config['phone']" />
                             </td>
                         </tr>
                         <tr>
-                            <td class="text-start">
-                                <t t-out="company['street']" />
-                                <t t-if="company['street2']" t-out="company['street2']" />
-                            </td>
-                            <td class="text-end" t-out="company['email']" />
+                            <td class="text-start" t-out="config['receipt_address']" />
                         </tr>
                         <tr>
-                            <td class="text-start">
-                                <t t-out="company['zip']" /> <t t-out="company['city']" />,
-                                <t t-out="extra_data['company_state_name']" />
+                            <td class="text-start" t-out="config['email']">
                             </td>
-                            <td class="text-end" t-out="company['website']" />
+                            <td class="text-end" t-out="config['website']" />
                         </tr>
                         <tr>
                             <td class="text-start" t-if="company.get('vat')" name="company_info_vat">

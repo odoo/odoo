@@ -27,6 +27,12 @@ class ResCompany(models.Model):
         string='Print',
         help="Choose how the URL to the portal will be print on the receipt.",
         required=True)
+    receipt_address = fields.Char(compute="_get_receipt_address", store=False)
+
+    @api.depends('street', 'city', 'state_id', 'zip')
+    def _get_receipt_address(self):
+        for record in self:
+            record.receipt_address = ", ".join(filter(None, [record.street, record.city, record.state_id.code, record.zip]))
 
     @api.model
     def _load_pos_data_domain(self, data, config):
