@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_holidays.HrHolidaysDateTimeField" t-inherit="web.DateTimeField" t-inherit-mode="primary">
+        <xpath expr="//*[@t-ref='start-date']" position="after">
+            <div class="bg-danger px-2">
+                <span>Start time yahan</span>
+                <input
+                            t-ref="start-period"
+                            type="text"
+                            t-att-id="props.startDateField and props.id"
+                            t-att-class="'o_input cursor-pointer user-select-none' + (props.warnFuture and isDateInTheFuture(1) ? 'text-danger' : '')"
+                            autocomplete="off"
+                            inputmode="none"
+                            t-att-placeholder="props.placeholder"
+                            t-att-data-field="endPeriodField"
+                            t-on-input="onInput"
+                            t-on-focus="() => picker.activeInput = endDateField"
+                            t-att-title="props.warnFuture and isDateInTheFuture(1) ? futureWarningMsg : ''"
+                        />
+            </div>
+        </xpath>
+        <xpath expr="//*[@t-ref='end-date']" position="after">
+            <div class="bg-info px-2">
+                <span>End time yahan</span>
+                <input
+                            t-ref="end-period"
+                            type="text"
+                            t-att-id="props.startDateField and props.id"
+                            t-att-class="'o_input cursor-pointer user-select-none' + (props.warnFuture and isDateInTheFuture(1) ? 'text-danger' : '')"
+                            autocomplete="off"
+                            inputmode="none"
+                            t-att-placeholder="props.placeholder"
+                            t-att-data-field="endPeriodField"
+                            t-on-input="onInput"
+                            t-on-focus="() => picker.activeInput = endDateField"
+                            t-att-title="props.warnFuture and isDateInTheFuture(1) ? futureWarningMsg : ''"
+                        />
+            </div>
+        </xpath>
+
+    </t>
+</templates>

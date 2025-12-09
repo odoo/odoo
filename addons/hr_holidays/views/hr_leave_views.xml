@@ -371,10 +371,10 @@
                             <div id="full_date" class="o_row">
                                 <field
                                     name="request_date_from"
-                                    widget="daterange"
+                                    widget="hr_holidays_daterange"
                                     readonly="state != 'confirm'"
                                     required="not date_from or not date_to"
-                                    options="{'end_date_field': 'request_date_to', 'always_range': '1'}"/>
+                                    options="{'end_date_field': 'request_date_to', 'always_range': '1', 'end_period_field': 'request_date_to_period'}"/>
                                 <field name="request_date_to" required="not date_from or not date_to" invisible="1"/> <!-- For Form view test-->
                                 <div>
                                     ( <field name="duration_display" readonly="1" class="w-auto"/> )
