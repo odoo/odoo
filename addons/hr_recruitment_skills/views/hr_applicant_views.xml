@@ -29,6 +29,13 @@
                             <group>
                                 <field name="matching_score" invisible="is_pool_applicant" nolabel="1" widget="skill_match_gauge_field" options="{'max_value': 100}" />
                             </group>
+                            <group>
+                                <!-- empty group to align matching and missing skills below the job position matching widget -->
+                            </group>
+                            <group>
+                                <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            </group>
                         </group>
                     </div>
                 </page>
@@ -86,6 +93,10 @@
             <xpath expr="//list" position="inside">
                 <field name="current_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide" string="Skills"/>
             </xpath>
+            <field name="priority" position="after">
+                <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+            </field>
         </field>
     </record>
 
