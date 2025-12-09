@@ -2,13 +2,12 @@
 
 {
     'name': 'France - Work Entries Time Off',
-    'countries': ['fr'],
     'summary': 'Management of leaves for part-time workers in France',
     'depends': [
         'l10n_fr_hr_holidays',
         'hr_work_entry_holidays',
     ],
-    'auto_install': ['hr_work_entry_holidays'],
+    'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
