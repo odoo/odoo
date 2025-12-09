@@ -296,12 +296,11 @@ test("cropper should not open for external image", async () => {
     await setupEditor(
         `<p>[<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">]</p>`
     );
-    await waitFor('button[name="image_transform"]');
+    await waitFor("button[name='image_crop']");
 
-    await click('button[name="image_transform"]');
+    await click("button[name='image_crop']");
     await animationFrame();
 
-    await click('.btn[name="image_crop"]');
     await waitFor(".o_notification_manager .o_notification", { timeout: 1000 });
     expect("img.o_we_cropper_img").toHaveCount(0);
 });

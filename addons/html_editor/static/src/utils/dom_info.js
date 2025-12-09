@@ -889,3 +889,40 @@ export function isRedundantElement(node) {
 
     return true;
 }
+
+/**
+ * Check if two DOMRect are overlapping.
+ *
+ * @param {DOMRect} rect1
+ * @param {DOMRect} rect2
+ * @returns {boolean}
+ */
+export function isOverlapping(rect1, rect2) {
+    return !(
+        rect1.right < rect2.left ||
+        rect1.left > rect2.right ||
+        rect1.bottom < rect2.top ||
+        rect1.top > rect2.bottom
+    );
+}
+
+/**
+ * Check if the given element is overlapping any floating image
+ * (with class `float-start`) in the document.
+ *
+ * @param {HTMLElement} element
+ * @returns {boolean}
+ */
+export function isElementOverlappingAnyFloatingImage(element) {
+    const elRect = element.getBoundingClientRect();
+
+    const images = document.querySelectorAll("img.o_we_custom_image.float-start");
+    for (const img of images) {
+        const imgRect = img.getBoundingClientRect();
+        if (isOverlapping(imgRect, elRect)) {
+            return true; // Overlaps at least one
+        }
+    }
+
+    return false;
+}

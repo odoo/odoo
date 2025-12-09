@@ -1,5 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
-import { isEditorTab, isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
+import {
+    isEditorTab,
+    isElementOverlappingAnyFloatingImage,
+    isEmptyBlock,
+    isProtected,
+} from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
 import { descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
@@ -80,7 +85,8 @@ export class HintPlugin extends Plugin {
                         nodeHint &&
                         isEmptyBlock(target) &&
                         !isProtected(target) &&
-                        !descendants(target).some(isEditorTab)
+                        !descendants(target).some(isEditorTab) &&
+                        !isElementOverlappingAnyFloatingImage(target)
                     ) {
                         this.makeHint(target, nodeHint);
                     }

@@ -1,21 +1,17 @@
 import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { isImageUrl } from "@html_editor/utils/url";
-import { ImageDescription, ImageDescriptionPopover } from "./image_description";
 import { ImageToolbarDropdown } from "./image_toolbar_dropdown";
 import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { boundariesOut } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
-import { ImageTransformButton } from "./image_transform_button";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { reactive } from "@odoo/owl";
-
-function hasShape(imagePlugin, shapeName) {
-    return () => imagePlugin.isSelectionShaped(shapeName);
-}
+import { ImageAlignSelector } from "./image_align_selector";
+import { closestElement } from "../../utils/dom_traversal";
 
 export const IMAGE_SHAPES = ["rounded", "rounded-circle", "shadow", "img-thumbnail"];
 
@@ -32,6 +28,12 @@ const IMAGE_SIZE = [
     { name: "100%", value: "100%" },
     { name: "50%", value: "50%" },
     { name: "25%", value: "25%" },
+];
+
+const IMAGE_ALIGNMENT = [
+    { name: "oi-text-inline", value: "", title: "Inline" },
+    { name: "oi-text-wrap", value: "me-1 float-start", title: "Wrap text" },
+    { name: "oi-text-break", value: "d-block", title: "Break text" },
 ];
 
 /**
@@ -132,42 +134,25 @@ export class ImagePlugin extends Plugin {
                 commandId: "previewImage",
             },
             {
-                id: "image_description",
-                description: _t("Edit media description"),
-                groupId: "image_description",
-                Component: ImageDescription,
+                id: "setImageAlignment",
+                description: _t("Set image alignment"),
+                groupId: "image_shape",
+                Component: ImageAlignSelector,
                 props: {
-                    openImageDescriptionPopover: this.openImageDescriptionPopover.bind(this),
+                    items: IMAGE_ALIGNMENT,
+                    getDisplay: () => this.imageAlignment,
+                    onSelected: (item) => {
+                        this.setImageAlignment(item.value);
+                    },
                 },
-                isAvailable: isHtmlContentSupported,
-            },
-            {
-                id: "shape_rounded",
-                groupId: "image_shape",
-                commandId: "setImageShapeRounded",
-                isActive: hasShape(this, "rounded"),
-            },
-            {
-                id: "shape_circle",
-                groupId: "image_shape",
-                commandId: "setImageShapeCircle",
-                isActive: hasShape(this, "rounded-circle"),
-            },
-            {
-                id: "shape_shadow",
-                groupId: "image_shape",
-                commandId: "setImageShapeShadow",
-                isActive: hasShape(this, "shadow"),
-            },
-            {
-                id: "shape_thumbnail",
-                groupId: "image_shape",
-                commandId: "setImageShapeThumbnail",
-                isActive: hasShape(this, "img-thumbnail"),
+                isAvailable: () =>
+                    this.dependencies.selection
+                        .getTargetedNodes()
+                        .some((node) => closestElement(node, "td, th, figure")),
             },
             {
                 id: "image_padding",
-                groupId: "image_padding",
+                groupId: "image_size",
                 description: _t("Set image padding"),
                 Component: ImageToolbarDropdown,
                 props: {
@@ -198,15 +183,6 @@ export class ImagePlugin extends Plugin {
                     isHtmlContentSupported(selection) && (this.config.allowImageResize ?? true),
             },
             {
-                id: "image_transform",
-                groupId: "image_modifiers",
-                description: _t("Transform the picture (click twice to reset transformation)"),
-                Component: ImageTransformButton,
-                props: this.getImageTransformProps(),
-                isAvailable: (selection) =>
-                    this.config.allowImageTransform && isHtmlContentSupported(selection),
-            },
-            {
                 id: "image_delete",
                 groupId: "image_delete",
                 commandId: "deleteImage",
@@ -224,6 +200,7 @@ export class ImagePlugin extends Plugin {
 
     setup() {
         this.imageSize = reactive({ displayName: "Default" });
+        this.imageAlignment = reactive({ displayIcon: "oi-text-inline" });
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (e.target.tagName === "IMG") {
                 const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
@@ -237,9 +214,6 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.fileViewer = createFileViewer();
-        this.overlay = this.dependencies.overlay.createOverlay(ImageDescriptionPopover, {
-            className: "popover",
-        });
     }
 
     destroy() {
@@ -251,7 +225,44 @@ export class ImagePlugin extends Plugin {
         if (!targetedImg) {
             return "Default";
         }
-        return targetedImg.style.width || "Default";
+        return targetedImg.style.width || `${targetedImg.naturalWidth}px`;
+    }
+
+    /**
+     * @returns {string} icon class
+     */
+    get imageAlignmentIcon() {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
+            return "oi-text-inline";
+        }
+        return (
+            IMAGE_ALIGNMENT.find((item) => {
+                if (!item.value) {
+                    return targetedImg.classList.length === 0;
+                }
+                const requiredClasses = item.value.split(" ");
+                return requiredClasses.every((cls) => targetedImg.classList.contains(cls));
+            })?.name || "oi-text-inline"
+        );
+    }
+
+    /**
+     * @param {string} alignment classes separated by space (e.g. "me-1 float-start")
+     */
+    setImageAlignment(alignment) {
+        const targetedImg = this.getTargetedImage();
+        if (!targetedImg) {
+            return;
+        }
+        targetedImg.classList.remove("me-1", "float-start", "d-block");
+        if (alignment) {
+            alignment.split(" ").forEach((cls) => targetedImg.classList.add(cls));
+        }
+        this.imageAlignment.displayIcon = IMAGE_ALIGNMENT.find(
+            (item) => item.value === alignment
+        ).name;
+        this.dependencies.history.addStep();
     }
 
     setImagePadding({ size } = {}) {
@@ -370,16 +381,6 @@ export class ImagePlugin extends Plugin {
         }
     }
 
-    updateImageDescription({ description, tooltip } = {}) {
-        const targetedImg = this.getTargetedImage();
-        if (!targetedImg) {
-            return;
-        }
-        targetedImg.setAttribute("alt", description);
-        targetedImg.setAttribute("title", tooltip);
-        this.dependencies.history.addStep();
-    }
-
     resetImageTransformation(image) {
         image.setAttribute(
             "style",
@@ -406,22 +407,6 @@ export class ImagePlugin extends Plugin {
 
     updateImageParams() {
         this.imageSize.displayName = this.imageSizeName;
-    }
-
-    openImageDescriptionPopover() {
-        const image = this.getTargetedImage();
-        if (image) {
-            this.overlay.open({
-                target: image,
-                props: {
-                    close: () => this.overlay.close(),
-                    description: this.getImageAttribute("alt"),
-                    tooltip: this.getImageAttribute("title"),
-                    onConfirm: (description, tooltip) => {
-                        this.updateImageDescription({ description, tooltip });
-                    },
-                },
-            });
-        }
+        this.imageAlignment.displayIcon = this.imageAlignmentIcon;
     }
 }
