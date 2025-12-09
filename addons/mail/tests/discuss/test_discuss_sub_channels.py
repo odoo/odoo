@@ -33,6 +33,32 @@ class TestDiscussSubChannels(HttpCase):
             sub_channel.message_post(body="Hey!")
             self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
             self.assertTrue(self_member.is_pinned)
+<<<<<<< b48d41086d7ff8ef91c6c43d37d588686d6b921a
+||||||| 6ecd271ff34313d900a0ad14b1c20679808ba9b8
+            # Unread messages: should be kept regardless of last interrest.
+            message = sub_channel.with_user(bob).message_post(body="Another message!", message_type="comment")
+            frozen_time.tick(delta=timedelta(days=3))
+            self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
+            self.assertTrue(self_member.is_pinned)
+            self_member._mark_as_read(message.id)
+            self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
+            self.assertFalse(self_member.is_pinned)
+=======
+            # Unread messages: should be kept regardless of last interrest.
+            message = sub_channel.with_user(bob).message_post(body="Another message!", message_type="comment")
+            frozen_time.tick(delta=timedelta(days=3))
+            self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
+            self.assertTrue(self_member.is_pinned)
+            self_member._mark_as_read(message.id)
+            self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
+            self.assertFalse(self_member.is_pinned)
+        # Ensure regular channels are not impacted.
+        channel = self.env["discuss.channel"].create({"name": "General"})
+        channel.channel_pin(pinned=True)
+        with freeze_time(two_days_later_dt):
+            self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
+            self.assertTrue(channel.channel_member_ids.filtered("is_self").is_pinned)
+>>>>>>> 5cf51cbbad4286f4b1d7f3e8d7471718074398db
 
     def test_02_sub_channel_members_sync_with_parent(self):
         parent = self.env["discuss.channel"].create({"name": "General"})
