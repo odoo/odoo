@@ -1,15 +1,16 @@
-import {
-    BUTTON_HANDLER_SELECTOR,
-    makeAsyncHandler,
-    makeButtonHandler,
-} from '@web/legacy/js/public/minimal_dom';
+import { BUTTON_HANDLER_SELECTOR, makeAsyncHandler, makeButtonHandler } from "@web/public/utils";
+
+// Track when interactions have started.
+const interactionsProms = [];
 
 // Track when all JS files have been lazy loaded. Will allow to unblock the
 // related DOM sections when the whole JS have been loaded and executed.
 let allScriptsLoadedResolve = null;
 const _allScriptsLoaded = new Promise(resolve => {
     allScriptsLoadedResolve = resolve;
-}).then(stopWaitingLazy);
+}).then(() => {
+    Promise.all(interactionsProms).then(stopWaitingLazy)
+});
 
 const retriggeringWaitingProms = [];
 /**
@@ -175,4 +176,5 @@ export default {
     loadScripts: _loadScripts,
     allScriptsLoaded: _allScriptsLoaded,
     registerPageReadinessDelay: retriggeringWaitingProms.push.bind(retriggeringWaitingProms),
+    registerInteractionsProm: interactionsProms.push.bind(interactionsProms),
 };
