@@ -90,6 +90,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
 
         # receiver -> not_registered.
         with self._mock_requests([
+            self._mock_participant_status('receiver'),
             self._mock_get_all_documents(),
             self._mock_cancel_peppol_registration(),
         ]):
@@ -194,6 +195,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
 
         # Disconnect from the network.
         with self._mock_requests([
+            self._mock_participant_status('sender'),
             self._mock_cancel_peppol_registration(),
         ]):
             settings.button_deregister_peppol_participant()
@@ -296,6 +298,7 @@ class TestPeppolParticipant(PeppolConnectorCommon):
         # Disconnect from the network.
         with self._mock_requests([
             self._mock_cancel_peppol_registration(),
+            self._mock_participant_status('sender'),
         ]):
             settings.button_deregister_peppol_participant()
         self.assertRecordValues(settings, [{
@@ -315,3 +318,26 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             'phone_number': False,
             'contact_email': False,
         }])
+
+    def test_deregister_with_client_gone_error(self):
+        """Test deregistration succeeds even when proxy returns client_gone error"""
+        with self._mock_requests([
+            self._mock_create_user(),
+            self._mock_lookup_participant(),
+            self._mock_register_sender(),
+        ]):
+            wizard = self.env['peppol.registration'].create({})
+            self.assertRecordValues(wizard, [{'smp_registration': True}])
+            wizard.button_register_peppol_participant()
+        with self._mock_requests([self._mock_participant_status('sender')]):
+            self.env.company.account_edi_proxy_client_ids._peppol_get_participant_status()
+        self.assertEqual(self.env.company.account_peppol_proxy_state, 'sender')
+
+        settings = self.env['res.config.settings'].create({})
+        with self._mock_requests([
+            self._mock_participant_status('sender', exists=False)
+        ]):
+            settings.button_deregister_peppol_participant()
+
+        # Should successfully deregister despite Exception
+        self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')
