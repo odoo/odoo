@@ -67,7 +67,7 @@ class StockMove(models.Model):
         for move in self:
             if move.repair_id and move.repair_id.name:
                 move.reference = move.repair_id.name
-                moves_with_reference.add(move)
+                moves_with_reference.add(move.id)
         super(StockMove, self - self.env['stock.move'].browse(moves_with_reference))._compute_reference()
 
     def copy_data(self, default=None):
