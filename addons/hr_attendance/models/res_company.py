@@ -13,7 +13,9 @@ class ResCompany(models.Model):
     def _default_company_token(self):
         return str(uuid.uuid4())
 
+    # TODO: Remove in master
     overtime_company_threshold = fields.Integer(string="Tolerance Time In Favor Of Company", default=0)
+    # TODO: Remove in master
     overtime_employee_threshold = fields.Integer(string="Tolerance Time In Favor Of Employee", default=0)
     hr_attendance_display_overtime = fields.Boolean(string="Display Extra Hours")
     attendance_kiosk_mode = fields.Selection([

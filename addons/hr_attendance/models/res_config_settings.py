@@ -6,8 +6,10 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
+    # TODO: Remove in master
     overtime_company_threshold = fields.Integer(
         string="Tolerance Time In Favor Of Company", readonly=False)
+    # TODO: Remove in master
     overtime_employee_threshold = fields.Integer(
         string="Tolerance Time In Favor Of Employee", readonly=False)
     hr_attendance_display_overtime = fields.Boolean(related='company_id.hr_attendance_display_overtime', readonly=False)
