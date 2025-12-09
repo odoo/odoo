@@ -60,21 +60,36 @@ class DiscussChannelMember(models.Model):
     @api.autovacuum
     def _gc_unpin_outdated_sub_channels(self):
         outdated_dt = fields.Datetime.now() - timedelta(days=2)
-        domain = expression.AND(
-            [
-                [
-                    ("channel_id.parent_channel_id", "!=", False),
-                    ("last_interest_dt", "<", outdated_dt),
-                ],
-                expression.OR(
-                    [
-                        [("channel_id.last_interest_dt", "=", False)],
-                        [("channel_id.last_interest_dt", "<", outdated_dt)],
-                    ]
-                ),
-            ]
+        self.env["discuss.channel"].flush_model()
+        self.env["discuss.channel.member"].flush_model()
+        self.env["mail.message"].flush_model()
+        self.env.cr.execute(
+            """
+            SELECT member.id
+              FROM discuss_channel_member member
+              JOIN discuss_channel channel
+                ON channel.id = member.channel_id
+             WHERE (
+                       member.unpin_dt IS NULL
+                    OR member.last_interest_dt >= member.unpin_dt
+                    OR channel.last_interest_dt >= member.unpin_dt
+               )
+               AND COALESCE(member.last_interest_dt, member.create_date) < %(outdated_dt)s
+               AND COALESCE(channel.last_interest_dt, channel.create_date) < %(outdated_dt)s
+               AND NOT EXISTS (
+                   SELECT 1
+                     FROM mail_message
+                    WHERE mail_message.res_id = channel.id
+                      AND mail_message.model = 'discuss.channel'
+                      AND mail_message.id >= member.new_message_separator
+                      AND mail_message.message_type NOT IN ('notification', 'user_notification')
+               )
+            """,
+            {"outdated_dt": outdated_dt},
         )
-        members = self.env["discuss.channel.member"].search(domain)
+        members = self.env["discuss.channel.member"].search(
+            [("id", "in", [row[0] for row in self.env.cr.fetchall()])],
+        )
         members.unpin_dt = fields.Datetime.now()
         for member in members:
             member._bus_send_store(
