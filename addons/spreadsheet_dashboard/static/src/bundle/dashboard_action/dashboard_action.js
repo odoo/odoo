@@ -115,8 +115,9 @@ export class SpreadsheetDashboardAction extends Component {
      * @returns {number | undefined}
      */
     getInitialActiveDashboard() {
-        if (this.props.state && this.props.state.activeDashboardId) {
-            return this.props.state.activeDashboardId;
+        const activeDashboardId = this.props.state?.dashboardLoader?.activeDashboardId;
+        if (activeDashboardId) {
+            return activeDashboardId;
         }
         const params = this.props.action.params;
         if (params && params.dashboard_id) {
