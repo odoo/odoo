@@ -20,7 +20,7 @@ class HrLeaveType(models.Model):
 
         employee = self.env['hr.employee'].browse(self.env.context.get('employee_id')).sudo()
         unspent_overtime = self.env['hr.leave']._get_deductible_employee_overtime(employee)[employee]
-        if unspent_overtime <= 0:
+        if not unspent_overtime:
             return super()._compute_display_name()
 
         overtime_leaves = self.filtered(lambda l_type: l_type.overtime_deductible and not l_type.requires_allocation)
