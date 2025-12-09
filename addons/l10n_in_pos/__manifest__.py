@@ -11,6 +11,7 @@
     'data': [
         'views/pos_order_line_views.xml',
         'views/pos_payment_method_views.xml',
+        'views/report_invoice.xml',
         'views/res_config_settings_views.xml',
         'data/pos_bill_data.xml',
     ],
