@@ -122,6 +122,7 @@ describe("getCursorDirection", () => {
                     DIRECTIONS.RIGHT
                 );
             },
+            testInBothDirections: false,
         });
     });
 
@@ -135,6 +136,7 @@ describe("getCursorDirection", () => {
                     DIRECTIONS.LEFT
                 );
             },
+            testInBothDirections: false,
         });
     });
 

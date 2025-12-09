@@ -273,9 +273,9 @@ test("should make two paragraphs (separated with whitespace) bold, then not bold
             <p>[abc</p>
             <p>def]</p>
         `,
-        stepFunction: async (editor) => {
+        stepFunction: async (editor, { assertContentEquals }) => {
             bold(editor);
-            expect(getContent(editor.editable)).toBe(`
+            assertContentEquals(`
             <p><strong>[abc</strong></p>
             <p><strong>def]</strong></p>
         `);

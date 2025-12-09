@@ -36,15 +36,6 @@ describe("to paragraph", () => {
         });
     });
 
-    test("should turn part of a heading 1 into a paragraph (2) (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<h1>]<i>a</i>b<br><br>[<br></h1>",
-            stepFunction: setTag("p"),
-            // The third line remains a h1. It wasn't visibly selected.
-            contentAfter: "<p>]<i>a</i>b</p><p><br></p><h1>[<br></h1>",
-        });
-    });
-
     test("should turn a heading 1 into a paragraph (character selected)", async () => {
         await testEditor({
             contentBefore: "<h1>a[b]c</h1>",
@@ -69,14 +60,6 @@ describe("to paragraph", () => {
         });
     });
 
-    test("should turn part of a heading 1 into several paragraphs (characters selected) (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<h1>a<br>b<br>]c<br><br>d[<br>e<br>f</h1>",
-            stepFunction: setTag("p"),
-            contentAfter: "<h1>a<br>b</h1><p>]c</p><p><br></p><p>d[</p><h1>e<br>f</h1>",
-        });
-    });
-
     test("should turn a heading 1, a paragraph and a heading 2 into three paragraphs", async () => {
         await testEditor({
             contentBefore: "<h1>a[b</h1><p>cd</p><h2>e]f</h2>",
@@ -90,14 +73,6 @@ describe("to paragraph", () => {
             contentBefore: "<h1>a<br>x<br>y[b</h1><p>cd</p><h2>e]f<br>g<br>h</h2>",
             stepFunction: setTag("p"),
             contentAfter: "<h1>a<br>x</h1><p>y[b</p><p>cd</p><p>e]f</p><h2>g<br>h</h2>",
-        });
-    });
-
-    test("should turn part of a heading 1, a paragraph and part of a heading 2 into three paragraphs (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<h1>a<br>x<br>y]b</h1><p>cd</p><h2>e[f<br>g<br>h</h2>",
-            stepFunction: setTag("p"),
-            contentAfter: "<h1>a<br>x</h1><p>y]b</p><p>cd</p><p>e[f</p><h2>g<br>h</h2>",
         });
     });
 
@@ -156,15 +131,6 @@ describe("to paragraph", () => {
         });
     });
 
-    test("should not turn a div into a paragraph (if div isn't eligible for a baseContainer), with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: `<div>]a<br>b[</div>`,
-            stepFunction: setTag("p"),
-            contentAfter: `<div><p>]a</p><p>b[</p></div>`,
-            config: { baseContainers: ["P"] },
-        });
-    });
-
     test("should not turn an unbreakable div into a paragraph", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[ab]</div>`,
@@ -178,14 +144,6 @@ describe("to paragraph", () => {
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("p"),
             contentAfter: `<div class="oe_unbreakable"><p>[a</p><p>b]</p></div>`,
-        });
-    });
-
-    test("should not turn an unbreakable div into a paragraph, with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: `<div class="oe_unbreakable">]a<br>b[</div>`,
-            stepFunction: setTag("p"),
-            contentAfter: `<div class="oe_unbreakable"><p>]a</p><p>b[</p></div>`,
         });
     });
 
@@ -221,14 +179,6 @@ describe("to paragraph", () => {
         });
     });
 
-    test("should not add paragraph tag when selection is changed to normal in list with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<ul><li><h1>]ab<br>cd[</h1></li></ul>",
-            stepFunction: setTag("p"),
-            contentAfter: `<ul><li><p>]ab<br>cd[</p></li></ul>`,
-        });
-    });
-
     test("should not add paragraph tag to normal text in list", async () => {
         await testEditor({
             contentBefore: "<ul><li>[abcd]</li></ul>",
@@ -242,14 +192,6 @@ describe("to paragraph", () => {
             contentBefore: "<ul><li>[ab<br>cd]</li></ul>",
             stepFunction: setTag("p"),
             contentAfter: `<ul><li>[ab<br>cd]</li></ul>`,
-        });
-    });
-
-    test("should not add paragraph tag to normal text in list, with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<ul><li>]ab<br>cd[</li></ul>",
-            stepFunction: setTag("p"),
-            contentAfter: `<ul><li>]ab<br>cd[</li></ul>`,
         });
     });
 
@@ -278,20 +220,6 @@ describe("to paragraph", () => {
         });
     });
 
-    test("should turn three table cells with heading 1 and line breaks to table cells with paragraphs (reversed selection)", async () => {
-        await testEditor({
-            contentBefore:
-                "<table><tbody><tr><td><h1>a<br>b<br>]c<br>d</h1></td><td><h1>e<br>f</h1></td><td><h1>g<br>h[<br>i<br>j</h1></td></tr></tbody></table>",
-            stepFunction: setTag("p"),
-            // Having selected across several table cells, the custom table
-            // selection is set over the whole cells, which means we transform
-            // every line in them and not just the ones we selected.
-            // The custom table selection is removed in cleanForSave and the selection is collapsed.
-            contentAfter:
-                "<table><tbody><tr><td><p>a</p><p>b</p><p>]c</p><p>d</p></td><td><p>e</p><p>f</p></td><td><p>g</p><p>h[</p><p>i</p><p>j</p></td></tr></tbody></table>",
-        });
-    });
-
     test("should not set the tag of non-editable elements", async () => {
         await testEditor({
             contentBefore:
@@ -308,16 +236,6 @@ describe("to paragraph", () => {
             stepFunction: setTag("p"),
             contentAfter:
                 '<h1>very<br>much</h1><p>[be</p><p>fore</p><h1 contenteditable="false">non<br>editable</h1><p>after]</p><h1>as<br>well</h1>',
-        });
-    });
-
-    test("should not set the tag of non-editable elements, with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore:
-                '<h1>very<br>much<br>]be<br>fore</h1><h1 contenteditable="false">non<br>editable</h1><h1>after[<br>as<br>well</h1>',
-            stepFunction: setTag("p"),
-            contentAfter:
-                '<h1>very<br>much</h1><p>]be</p><p>fore</p><h1 contenteditable="false">non<br>editable</h1><p>after[</p><h1>as<br>well</h1>',
         });
     });
 
@@ -404,14 +322,6 @@ describe("to heading 1", () => {
         });
     });
 
-    test("should turn part of a paragraph into several heading 1s (characters selected) (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<p>a<br>b<br>]c<br><br>d[<br>e<br>f</p>",
-            stepFunction: setTag("h1"),
-            contentAfter: "<p>a<br>b</p><h1>]c</h1><h1><br></h1><h1>d[</h1><p>e<br>f</p>",
-        });
-    });
-
     test.tags("desktop");
     test("should turn the paragraph into a heading 1 (after triple click)", async () => {
         await testEditor({
@@ -495,28 +405,11 @@ describe("to heading 1", () => {
         });
     });
 
-    test("should not turn a div into a heading 1 (if div isn't eligible for a baseContainer), with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<div>]a<br>b[</div>",
-            stepFunction: setTag("h1"),
-            contentAfter: "<div><h1>]a</h1><h1>b[</h1></div>",
-            config: { baseContainers: ["P"] },
-        });
-    });
-
     test("should not turn an unbreakable div into a heading 1, with line breaks", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("h1"),
             contentAfter: `<div class="oe_unbreakable"><h1>[a</h1><h1>b]</h1></div>`,
-        });
-    });
-
-    test("should not turn an unbreakable div into a heading 1, with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: `<div class="oe_unbreakable">]a<br>b[</div>`,
-            stepFunction: setTag("h1"),
-            contentAfter: `<div class="oe_unbreakable"><h1>]a</h1><h1>b[</h1></div>`,
         });
     });
 
@@ -542,20 +435,6 @@ describe("to heading 1", () => {
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
                 "<table><tbody><tr><td><h1>a</h1><h1>b</h1><h1>[c</h1><h1>d</h1></td><td><h1>e</h1><h1>f</h1></td><td><h1>g</h1><h1>h]</h1><h1>i</h1><h1>j</h1></td></tr></tbody></table>",
-        });
-    });
-
-    test("should turn three table cells with paragraph and line breaks to table cells with heading 1 (reversed selection)", async () => {
-        await testEditor({
-            contentBefore:
-                "<table><tbody><tr><td><p>a<br>b<br>]c<br>d</p></td><td><p>e<br>f</p></td><td><p>g<br>h[<br>i<br>j</p></td></tr></tbody></table>",
-            stepFunction: setTag("h1"),
-            // Having selected across several table cells, the custom table
-            // selection is set over the whole cells, which means we transform
-            // every line in them and not just the ones we selected.
-            // The custom table selection is removed in cleanForSave and the selection is collapsed.
-            contentAfter:
-                "<table><tbody><tr><td><h1>a</h1><h1>b</h1><h1>]c</h1><h1>d</h1></td><td><h1>e</h1><h1>f</h1></td><td><h1>g</h1><h1>h[</h1><h1>i</h1><h1>j</h1></td></tr></tbody></table>",
         });
     });
 
@@ -618,14 +497,6 @@ describe("to heading 2", () => {
         });
     });
 
-    test("should turn part of a heading 1 into several heading 2s (characters selected) (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<h1>a<br>b<br>]c<br><br>d[<br>e<br>f</h1>",
-            stepFunction: setTag("h2"),
-            contentAfter: "<h1>a<br>b</h1><h2>]c</h2><h2><br></h2><h2>d[</h2><h1>e<br>f</h1>",
-        });
-    });
-
     test("should turn a heading 1, a heading 2 and a paragraph into three headings 2", async () => {
         await testEditor({
             contentBefore: "<h1>a[b</h1><h2>cd</h2><p>e]f</p>",
@@ -639,14 +510,6 @@ describe("to heading 2", () => {
             contentBefore: "<h1>a<br>[b</h1><h2>cd</h2><p>e]<br>f</p>",
             stepFunction: setTag("h2"),
             contentAfter: "<h1>a</h1><h2>[b</h2><h2>cd</h2><h2>e]</h2><p>f</p>",
-        });
-    });
-
-    test("should turn parts of a heading 1, a heading 2 and parts of a paragraph into headings 2 (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<h1>a<br>]b</h1><h2>cd</h2><p>e[<br>f</p>",
-            stepFunction: setTag("h2"),
-            contentAfter: "<h1>a</h1><h2>]b</h2><h2>cd</h2><h2>e[</h2><p>f</p>",
         });
     });
 
@@ -675,28 +538,11 @@ describe("to heading 2", () => {
         });
     });
 
-    test("should not turn a div into a heading 2 (if div isn't eligible for a baseContainer), with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<div>]a<br>b[</div>",
-            stepFunction: setTag("h2"),
-            contentAfter: "<div><h2>]a</h2><h2>b[</h2></div>",
-            config: { baseContainers: ["P"] },
-        });
-    });
-
     test("should not turn an unbreakable div into a heading 2, with line breaks", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("h2"),
             contentAfter: `<div class="oe_unbreakable"><h2>[a</h2><h2>b]</h2></div>`,
-        });
-    });
-
-    test("should not turn an unbreakable div into a heading 2, with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: `<div class="oe_unbreakable">]a<br>b[</div>`,
-            stepFunction: setTag("h2"),
-            contentAfter: `<div class="oe_unbreakable"><h2>]a</h2><h2>b[</h2></div>`,
         });
     });
 
@@ -722,20 +568,6 @@ describe("to heading 2", () => {
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
                 "<table><tbody><tr><td><h2>a</h2><h2>b</h2><h2>[c</h2><h2>d</h2></td><td><h2>e</h2><h2>f</h2></td><td><h2>g</h2><h2>h]</h2><h2>i</h2><h2>j</h2></td></tr></tbody></table>",
-        });
-    });
-
-    test("should turn three table cells with paragraph and line breaks to table cells with heading 2 (reversed selection)", async () => {
-        await testEditor({
-            contentBefore:
-                "<table><tbody><tr><td><p>a<br>b<br>]c<br>d</p></td><td><p>e<br>f</p></td><td><p>g<br>h[<br>i<br>j</p></td></tr></tbody></table>",
-            stepFunction: setTag("h2"),
-            // Having selected across several table cells, the custom table
-            // selection is set over the whole cells, which means we transform
-            // every line in them and not just the ones we selected.
-            // The custom table selection is removed in cleanForSave and the selection is collapsed.
-            contentAfter:
-                "<table><tbody><tr><td><h2>a</h2><h2>b</h2><h2>]c</h2><h2>d</h2></td><td><h2>e</h2><h2>f</h2></td><td><h2>g</h2><h2>h[</h2><h2>i</h2><h2>j</h2></td></tr></tbody></table>",
         });
     });
 
@@ -798,14 +630,6 @@ describe("to heading 3", () => {
         });
     });
 
-    test("should turn part of a heading 1 into several heading 3s (characters selected) (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<h1>a<br>b<br>]c<br><br>d[<br>e<br>f</h1>",
-            stepFunction: setTag("h3"),
-            contentAfter: "<h1>a<br>b</h1><h3>]c</h3><h3><br></h3><h3>d[</h3><h1>e<br>f</h1>",
-        });
-    });
-
     test("should turn a heading 1, a paragraph and a heading 2 into three headings 3", async () => {
         await testEditor({
             contentBefore: "<h1>a[b</h1><p>cd</p><h2>e]f</h2>",
@@ -843,28 +667,11 @@ describe("to heading 3", () => {
         });
     });
 
-    test("should not turn a div into a heading 1 (if div isn't eligible for a baseContainer), with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<div>]a<br>b[</div>",
-            stepFunction: setTag("h3"),
-            contentAfter: "<div><h3>]a</h3><h3>b[</h3></div>",
-            config: { baseContainers: ["P"] },
-        });
-    });
-
     test("should not turn an unbreakable div into a heading 3, with line breaks", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("h3"),
             contentAfter: `<div class="oe_unbreakable"><h3>[a</h3><h3>b]</h3></div>`,
-        });
-    });
-
-    test("should not turn an unbreakable div into a heading 3, with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: `<div class="oe_unbreakable">]a<br>b[</div>`,
-            stepFunction: setTag("h3"),
-            contentAfter: `<div class="oe_unbreakable"><h3>]a</h3><h3>b[</h3></div>`,
         });
     });
 
@@ -890,20 +697,6 @@ describe("to heading 3", () => {
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
                 "<table><tbody><tr><td><h3>a</h3><h3>b</h3><h3>[c</h3><h3>d</h3></td><td><h3>e</h3><h3>f</h3></td><td><h3>g</h3><h3>h]</h3><h3>i</h3><h3>j</h3></td></tr></tbody></table>",
-        });
-    });
-
-    test("should turn three table cells with paragraph and line breaks to table cells with heading 1 (reversed selection)", async () => {
-        await testEditor({
-            contentBefore:
-                "<table><tbody><tr><td><p>a<br>b<br>]c<br>d</p></td><td><p>e<br>f</p></td><td><p>g<br>h[<br>i<br>j</p></td></tr></tbody></table>",
-            stepFunction: setTag("h3"),
-            // Having selected across several table cells, the custom table
-            // selection is set over the whole cells, which means we transform
-            // every line in them and not just the ones we selected.
-            // The custom table selection is removed in cleanForSave and the selection is collapsed.
-            contentAfter:
-                "<table><tbody><tr><td><h3>a</h3><h3>b</h3><h3>]c</h3><h3>d</h3></td><td><h3>e</h3><h3>f</h3></td><td><h3>g</h3><h3>h[</h3><h3>i</h3><h3>j</h3></td></tr></tbody></table>",
         });
     });
 
@@ -966,14 +759,6 @@ describe("to pre", () => {
         });
     });
 
-    test("should turn part of a heading 1 into several pres (characters selected) (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<h1>a<br>b<br>]c<br><br>d[<br>e<br>f</h1>",
-            stepFunction: setTag("pre"),
-            contentAfter: "<h1>a<br>b</h1><pre>]c</pre><pre><br></pre><pre>d[</pre><h1>e<br>f</h1>",
-        });
-    });
-
     test("should turn a heading 1, a pre and a paragraph into three pres", async () => {
         await testEditor({
             contentBefore: "<h1>a[b</h1><pre>cd</pre><p>e]f</p>",
@@ -987,14 +772,6 @@ describe("to pre", () => {
             contentBefore: "<h1>a<br>[b</h1><pre>cd</pre><p>e]<br>f</p>",
             stepFunction: setTag("pre"),
             contentAfter: "<h1>a</h1><pre>[b</pre><pre>cd</pre><pre>e]</pre><p>f</p>",
-        });
-    });
-
-    test("should turn parts of a heading 1, a pre and parts of a paragraph into pres (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<h1>a<br>]b</h1><pre>cd</pre><p>e[<br>f</p>",
-            stepFunction: setTag("pre"),
-            contentAfter: "<h1>a</h1><pre>]b</pre><pre>cd</pre><pre>e[</pre><p>f</p>",
         });
     });
 
@@ -1020,20 +797,6 @@ describe("to pre", () => {
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
                 "<table><tbody><tr><td><pre>a</pre><pre>b</pre><pre>[c</pre><pre>d</pre></td><td><pre>e</pre><pre>f</pre></td><td><pre>g</pre><pre>h]</pre><pre>i</pre><pre>j</pre></td></tr></tbody></table>",
-        });
-    });
-
-    test("should turn three table cells with paragraph and line breaks to table cells with pre (reversed selection)", async () => {
-        await testEditor({
-            contentBefore:
-                "<table><tbody><tr><td><p>a<br>b<br>]c<br>d</p></td><td><p>e<br>f</p></td><td><p>g<br>h[<br>i<br>j</p></td></tr></tbody></table>",
-            stepFunction: setTag("pre"),
-            // Having selected across several table cells, the custom table
-            // selection is set over the whole cells, which means we transform
-            // every line in them and not just the ones we selected.
-            // The custom table selection is removed in cleanForSave and the selection is collapsed.
-            contentAfter:
-                "<table><tbody><tr><td><pre>a</pre><pre>b</pre><pre>]c</pre><pre>d</pre></td><td><pre>e</pre><pre>f</pre></td><td><pre>g</pre><pre>h[</pre><pre>i</pre><pre>j</pre></td></tr></tbody></table>",
         });
     });
 
@@ -1137,15 +900,6 @@ describe("to blockquote", () => {
         });
     });
 
-    test("should turn part of a heading 1 into several blockquotes (characters selected) (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<h1>a<br>b<br>]c<br><br>d[<br>e<br>f</h1>",
-            stepFunction: setTag("blockquote"),
-            contentAfter:
-                "<h1>a<br>b</h1><blockquote>]c</blockquote><blockquote><br></blockquote><blockquote>d[</blockquote><h1>e<br>f</h1>",
-        });
-    });
-
     test("should turn a heading 1, a paragraph and a heading 2 into three blockquote", async () => {
         await testEditor({
             contentBefore: "<h1>a[b</h1><p>cd</p><h2>e]f</h2>",
@@ -1184,28 +938,11 @@ describe("to blockquote", () => {
         });
     });
 
-    test("should not turn a div into a heading 1 (if div isn't eligible for a baseContainer), with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: "<div>]a<br>b[</div>",
-            stepFunction: setTag("blockquote"),
-            contentAfter: "<div><blockquote>]a</blockquote><blockquote>b[</blockquote></div>",
-            config: { baseContainers: ["P"] },
-        });
-    });
-
     test("should not turn an unbreakable div into a blockquote, with line breaks", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("blockquote"),
             contentAfter: `<div class="oe_unbreakable"><blockquote>[a</blockquote><blockquote>b]</blockquote></div>`,
-        });
-    });
-
-    test("should not turn an unbreakable div into a blockquote, with line breaks (reversed selection)", async () => {
-        await testEditor({
-            contentBefore: `<div class="oe_unbreakable">]a<br>b[</div>`,
-            stepFunction: setTag("blockquote"),
-            contentAfter: `<div class="oe_unbreakable"><blockquote>]a</blockquote><blockquote>b[</blockquote></div>`,
         });
     });
 
@@ -1231,20 +968,6 @@ describe("to blockquote", () => {
             // The custom table selection is removed in cleanForSave and the selection is collapsed.
             contentAfter:
                 "<table><tbody><tr><td><blockquote>a</blockquote><blockquote>b</blockquote><blockquote>[c</blockquote><blockquote>d</blockquote></td><td><blockquote>e</blockquote><blockquote>f</blockquote></td><td><blockquote>g</blockquote><blockquote>h]</blockquote><blockquote>i</blockquote><blockquote>j</blockquote></td></tr></tbody></table>",
-        });
-    });
-
-    test("should turn three table cells with paragraph and line breaks to table cells with blockquotes (reversed selection)", async () => {
-        await testEditor({
-            contentBefore:
-                "<table><tbody><tr><td><p>a<br>b<br>]c<br>d</p></td><td><p>e<br>f</p></td><td><p>g<br>h[<br>i<br>j</p></td></tr></tbody></table>",
-            stepFunction: setTag("blockquote"),
-            // Having selected across several table cells, the custom table
-            // selection is set over the whole cells, which means we transform
-            // every line in them and not just the ones we selected.
-            // The custom table selection is removed in cleanForSave and the selection is collapsed.
-            contentAfter:
-                "<table><tbody><tr><td><blockquote>a</blockquote><blockquote>b</blockquote><blockquote>]c</blockquote><blockquote>d</blockquote></td><td><blockquote>e</blockquote><blockquote>f</blockquote></td><td><blockquote>g</blockquote><blockquote>h[</blockquote><blockquote>i</blockquote><blockquote>j</blockquote></td></tr></tbody></table>",
         });
     });
 

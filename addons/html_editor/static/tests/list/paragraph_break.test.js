@@ -886,78 +886,41 @@ describe("Selection collapsed", () => {
 });
 describe("Selection not collapsed", () => {
     test("should delete part of a list item, then split it", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<ul><li>ab[cd]ef</li></ul>",
-            stepFunction: splitBlock,
-            contentAfter: "<ul><li>ab</li><li>[]ef</li></ul>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<ul><li>ab]cd[ef</li></ul>",
             stepFunction: splitBlock,
             contentAfter: "<ul><li>ab</li><li>[]ef</li></ul>",
         });
     });
 
     test("should delete all contents of a list item, then split it", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<ul><li>[abc]</li></ul>",
             stepFunction: splitBlock,
             // JW cAfter: '<ul><li><br></li><li>[]<br></li></ul>',
             contentAfter: "<p>[]<br></p>",
         });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<ul><li>]abc[</li></ul>",
-            stepFunction: splitBlock,
-            contentAfter: "<p>[]<br></p>",
-            // JW cAfter: '<ul><li><br></li><li>[]<br></li></ul>',
-        });
     });
 
     test("should delete across two list items, then split what's left", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<ul><li>ab[cd</li><li>ef]gh</li></ul>",
-            stepFunction: splitBlock,
-            contentAfter: "<ul><li>ab</li><li>[]gh</li></ul>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<ul><li>ab]cd</li><li>ef[gh</li></ul>",
             stepFunction: splitBlock,
             contentAfter: "<ul><li>ab</li><li>[]gh</li></ul>",
         });
     });
 
     test("should delete part of a checklist item, then split it", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<ul><li>ab[cd]ef</li></ul>",
-            stepFunction: splitBlock,
-            contentAfter: "<ul><li>ab</li><li>[]ef</li></ul>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<ul><li>ab]cd[ef</li></ul>",
             stepFunction: splitBlock,
             contentAfter: "<ul><li>ab</li><li>[]ef</li></ul>",
         });
     });
 
     test("should delete all contents of a checklist item, then split it", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<ul><li>[abc]</li></ul>",
-            stepFunction: splitBlock,
-            // JW cAfter: '<ul><li><br></li><li>[]<br></li></ul>',
-            contentAfter: "<p>[]<br></p>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<ul><li>]abc[</li></ul>",
             stepFunction: splitBlock,
             // JW cAfter: '<ul><li><br></li><li>[]<br></li></ul>',
             contentAfter: "<p>[]<br></p>",

@@ -87,11 +87,13 @@ describe("Around ZWS", () => {
             contentBefore: '<p>[ab]<span class="a">\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>[ab<span class="a">\u200B</span>c]d</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>[ab<span class="a">]\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>[ab<span class="a">\u200B</span>c]d</p>',
+            testInBothDirections: false,
         });
     });
 
@@ -100,11 +102,13 @@ describe("Around ZWS", () => {
             contentBefore: '<p>a[b]<span class="a">\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>a[b<span class="a">\u200B</span>c]d</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>a[b<span class="a">]\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>a[b<span class="a">\u200B</span>c]d</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore:
@@ -112,6 +116,7 @@ describe("Around ZWS", () => {
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter:
                 '<p>a[b<span class="a">\u200B</span></p><p>]<span class="b">\u200B</span></p>',
+            testInBothDirections: false,
         });
     });
 
@@ -120,11 +125,13 @@ describe("Around ZWS", () => {
             contentBefore: '<p>ab[]<span class="a">\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">[\u200B</span>c]d</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab<span class="a">[]\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">[\u200B</span>c]d</p>',
+            testInBothDirections: false,
         });
     });
 
@@ -133,11 +140,13 @@ describe("Around ZWS", () => {
             contentBefore: '<p>ab<span class="a">\u200B[]</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b<span class="a">\u200B[</span>cd</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B</span>[]cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b<span class="a">\u200B[</span>cd</p>',
+            testInBothDirections: false,
         });
     });
 
@@ -146,11 +155,13 @@ describe("Around ZWS", () => {
             contentBefore: '<p>ab<span class="a">\u200B</span>]cd[</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b<span class="a">\u200B</span>cd[</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B]</span>cd[</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b<span class="a">\u200B</span>cd[</p>',
+            testInBothDirections: false,
         });
     });
 
@@ -159,11 +170,13 @@ describe("Around ZWS", () => {
             contentBefore: '<p>ab<span class="a">\u200B</span>]c[d</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b<span class="a">\u200B</span>c[d</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B]</span>c[d</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b<span class="a">\u200B</span>c[d</p>',
+            testInBothDirections: false,
         });
     });
 
@@ -172,21 +185,25 @@ describe("Around ZWS", () => {
             contentBefore: '<p>ab<span class="a">]\u200B[</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">\u200B</span>[c]d</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab<span class="a">]\u200B</span>[cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">\u200B</span>[c]d</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab]<span class="a">\u200B</span>[cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">\u200B</span>[c]d</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab]<span class="a">\u200B[</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">\u200B</span>[c]d</p>',
+            testInBothDirections: false,
         });
     });
 
@@ -195,11 +212,13 @@ describe("Around ZWS", () => {
             contentBefore: '<p>ab<span class="a">]\u200B</span>c[d</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">\u200B</span>c[]d</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab]<span class="a">\u200B</span>c[d</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">\u200B</span>c[]d</p>',
+            testInBothDirections: false,
         });
     });
 
@@ -208,21 +227,25 @@ describe("Around ZWS", () => {
             contentBefore: '<p>ab<span class="a">[\u200B]</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab<span class="a">[\u200B</span>]cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab[<span class="a">\u200B]</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>ab[<span class="a">\u200B</span>]cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
+            testInBothDirections: false,
         });
     });
 
@@ -231,11 +254,13 @@ describe("Around ZWS", () => {
             contentBefore: '<p>a[b<span class="a">\u200B]</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a[]b<span class="a">\u200B</span>cd</p>',
+            testInBothDirections: false,
         });
         await testEditor({
             contentBefore: '<p>a[b<span class="a">\u200B</span>]cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a[]b<span class="a">\u200B</span>cd</p>',
+            testInBothDirections: false,
         });
     });
 });
@@ -703,6 +728,7 @@ describe("Around contenteditable false elements containing contenteditable true 
                 </div>
                 <p>]mno</p>
             `),
+            testInBothDirections: false,
         });
     });
     test("should select contenteditable false element (ArrowLeft)", async () => {
@@ -730,6 +756,7 @@ describe("Around contenteditable false elements containing contenteditable true 
                 </div>
                 <p>m[no</p>
             `),
+            testInBothDirections: false,
         });
     });
     test("should select contenteditable false element (ArrowUp)", async () => {
@@ -757,6 +784,7 @@ describe("Around contenteditable false elements containing contenteditable true 
                 </div>
                 <p>mno[</p>
             `),
+            testInBothDirections: false,
         });
     });
     test("should select contenteditable false element (ArrowDown)", async () => {
@@ -784,6 +812,7 @@ describe("Around contenteditable false elements containing contenteditable true 
                 </div>
                 <p>]mno</p>
             `),
+            testInBothDirections: false,
         });
     });
 });
