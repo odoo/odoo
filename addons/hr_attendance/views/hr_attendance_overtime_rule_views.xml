@@ -26,13 +26,13 @@
                                 <span colspan="2" class="d-flex gap-1" invisible="base_off != 'quantity'">
                                     <label for="quantity_period" string="If the worked hours on a"/>
                                     <field style="width:10ch" nolabel="1" name="quantity_period"/>
-                                    <label for="expected_hours_from_contract" string="exceed"/>
+                                    <label for="expected_hours_from_contract" string="differs"/>
                                     <field class="w-auto" name="expected_hours_from_contract" nolabel="1" widget="boolean_radio" options="{
                                         'yes_label_element_id': 'expected_hours_from_contract_yes',
                                         'no_label_element_id': 'expected_hours_from_contract_no'
                                     }"/>
-                                    <template id="expected_hours_from_contract_yes">the amount defined on the contract</template>
-                                    <template id="expected_hours_from_contract_no">a specific duration</template>
+                                    <template id="expected_hours_from_contract_yes">from the amount defined on the contract</template>
+                                    <template id="expected_hours_from_contract_no">from a specific duration</template>
                                 </span>
                                 <label for="expected_hours" string="Duration to exceed:" invisible="base_off != 'quantity' or expected_hours_from_contract"/>
                                 <span name="expected_hours" class="fw-bold" invisible="base_off != 'quantity' or expected_hours_from_contract">
@@ -40,6 +40,7 @@
                                     hours
                                 </span>
                                 <field name="employer_tolerance" widget="float_time" string="With a tolerance in favor of the employer of"/>
+                                <field name="employee_tolerance" widget="float_time" string="With a tolerance in favor of the employee of"/>
                                 <!-- TIMING -->
                                 <field name="timing_type" widget="radio" string="If the employee works" invisible="base_off != 'timing'"/>
                                 <span class="fw-bold" invisible="base_off != 'timing' or timing_type not in ['work_days', 'non_work_days']">Between</span>
