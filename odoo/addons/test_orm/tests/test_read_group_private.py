@@ -1183,7 +1183,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             SELECT "test_read_group_related_inherits__base_id"."name",
                     COUNT(*)
             FROM "test_read_group_related_inherits"
-            LEFT JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
+            JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
                 ON ("test_read_group_related_inherits"."base_id" = "test_read_group_related_inherits__base_id"."id")
             GROUP BY "test_read_group_related_inherits__base_id"."name"
             ORDER BY "test_read_group_related_inherits__base_id"."name" ASC
@@ -1197,7 +1197,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             SELECT "test_read_group_related_inherits__base_id"."name",
                     SUM("test_read_group_related_inherits__base_id"."value")
             FROM "test_read_group_related_inherits"
-            LEFT JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
+            JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
                 ON ("test_read_group_related_inherits"."base_id" = "test_read_group_related_inherits__base_id"."id")
             GROUP BY "test_read_group_related_inherits__base_id"."name"
             ORDER BY "test_read_group_related_inherits__base_id"."name" ASC
@@ -1211,7 +1211,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             SELECT "test_read_group_related_inherits__base_id__foo_id"."name",
                     COUNT(*)
             FROM "test_read_group_related_inherits"
-            LEFT JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
+            JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
                 ON ("test_read_group_related_inherits"."base_id" = "test_read_group_related_inherits__base_id"."id")
             LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_inherits__base_id__foo_id"
                 ON ("test_read_group_related_inherits__base_id"."foo_id" = "test_read_group_related_inherits__base_id__foo_id"."id")

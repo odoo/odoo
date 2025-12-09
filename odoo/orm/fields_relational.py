@@ -488,16 +488,16 @@ class Many2one(_Relational):
         bypass_access = operator in ('any!', 'not any!') or self.bypass_search_access
         positive = operator in ('any', 'any!')
 
-        # Decide whether to use a LEFT JOIN
-        left_join = bypass_access and isinstance(value, Domain)
-        if left_join and not positive:
+        # Decide whether to use a LEFT JOIN or JOIN
+        use_join = bypass_access and isinstance(value, Domain)
+        if use_join and not positive:
             # For 'not any!', we get a better query with a NOT IN when we have a
             # lot of positive conditions which have a better chance to use
             # indexes.
             #   `field NOT IN (SELECT ... WHERE z = y)` better than
             #   `LEFT JOIN ... ON field = id WHERE z <> y`
             # There are some exceptions: we filter on 'id'.
-            left_join = sum(
+            use_join = sum(
                 (-1 if cond.operator in Domain.NEGATIVE_OPERATORS else 1)
                 for cond in value.iter_conditions()
             ) < 0 or any(
@@ -505,7 +505,7 @@ class Many2one(_Relational):
                 for cond in value.iter_conditions()
             )
 
-        if left_join:
+        if use_join:
             assert bypass_access
             cotable = self.join(table._sudo())
             cotable = cotable._with_model(comodel)  # reset env
@@ -547,6 +547,7 @@ class Many2one(_Relational):
         """
         model = table._model
         comodel = model.env[self.comodel_name]
+        can_be_null = self not in model.env.registry.not_null_fields
         if self.compute_sudo or self.inherited or model.env.su:
             coquery = None
         else:
@@ -559,6 +560,15 @@ class Many2one(_Relational):
         else:
             coalias = table._make_alias(f'{self.name}__{model.env.uid}', comodel)
             cotable = coquery.subselect(SQL('%s.*', coquery.table))
+        if kind == 'LEFT JOIN' and not can_be_null and not cotable:
+            # [PERF]: 'JOIN' has better performance than 'LEFT JOIN'
+            # Convert LEFT JOIN to JOIN when the required left-table reference
+            # (table[self.name]) has a Foreign Key constraint on the right
+            # table's ID, and the left table (table) is either the main query
+            # table or already connected via JOIN. See TestMany2oneJoin.
+            table_kind = table._query._joins[table._alias][0]
+            if not table_kind or table_kind == SQL('JOIN'):
+                kind = 'JOIN'
         table._query.add_join(kind, coalias, cotable, SQL(
             "%s = %s",
             table[self.name],

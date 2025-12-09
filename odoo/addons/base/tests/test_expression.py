@@ -1788,7 +1788,7 @@ class TestQueries(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
-            LEFT JOIN "res_partner" AS "res_users__partner_id" ON
+            JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE "res_users"."active" IS TRUE
             AND ("res_users"."id" IN %s AND "res_users"."partner_id" IN %s)
@@ -1944,7 +1944,7 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
-            LEFT JOIN "res_partner" AS "res_users__partner_id" ON
+            JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE "res_users__partner_id"."name" LIKE %s
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
@@ -1956,7 +1956,7 @@ class TestMany2one(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
-            LEFT JOIN "res_partner" AS "res_users__partner_id" ON
+            JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE "res_users__partner_id"."name" LIKE %s
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
@@ -2623,7 +2623,7 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "res_users"."id"
             FROM "res_users"
-            LEFT JOIN "res_partner" AS "res_users__partner_id" ON ("res_users"."partner_id" = "res_users__partner_id"."id")
+            JOIN "res_partner" AS "res_users__partner_id" ON ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE EXISTS (
                 SELECT 1 FROM "res_groups_users_rel" AS "res_users__group_ids"
                 WHERE "res_users__group_ids"."uid" = "res_users"."id" AND "res_users__group_ids"."gid" IN (
