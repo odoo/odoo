@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
-"PO-Revision-Date: 2025-11-29 18:00+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-12-06 17:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/account/"
 "ja/>\n"
@@ -3314,6 +3314,11 @@ msgid "Attachments"
 msgstr "添付"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
+msgid "Attachments Not Supported"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_activated
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_activated
 msgid "Audit Log Activated"
@@ -3859,7 +3864,8 @@ msgstr ""
 msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
-msgstr "一括請求書送信は利用できません。請求書の一括送信を有効にするには、システム管"
+msgstr ""
+"一括請求書送信は利用できません。請求書の一括送信を有効にするには、システム管"
 "理者に cron を有効化するよう依頼してください。"
 
 #. module: account
@@ -6459,6 +6465,11 @@ msgid "Display Amount"
 msgstr "金額を表示"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
+msgid "Display Attachments Widget"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
 msgid "Display Days Next Month"
 msgstr "来月の表示日"
@@ -7946,7 +7957,7 @@ msgstr "全体ロック日"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "cron設定に移動する"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -8195,6 +8206,11 @@ msgstr "水平分割サイド"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
 msgstr "オーダおよび請求書での税額計算"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "ICE:"
+msgstr "ICE:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -16730,7 +16746,7 @@ msgstr "この定期的な仕訳は当日を含めこの日付まで記帳され
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "この設定は、仕訳が作成されるとロックされます。"
 
 #. module: account
 #. odoo-python

@@ -218,6 +218,24 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         response.json = lambda: responses[url]
         return response
 
+    def test_non_xml_compatible_characters(self):
+        """
+        Test that non xml compatible characters doesn't block Peppol Invoice sending
+        """
+        move = self.create_move(self.valid_partner)
+        product_a = self._create_product(
+            name='Test\x02Product',
+            lst_price=1000.0,
+            standard_price=800.0
+        )
+        move.invoice_line_ids[0].product_id = product_a
+        move.action_post()
+
+        wizard = self.create_send_and_print(move, sending_methods=['peppol'])
+        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+        wizard.action_send_and_print()
+        self.assertEqual(self._get_mail_message(move).preview, 'The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:')
+
     def test_attachment_placeholders(self):
         move = self.create_move(self.valid_partner)
         move.action_post()

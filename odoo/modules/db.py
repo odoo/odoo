@@ -78,7 +78,10 @@ def initialize(cr):
             )
 
     # Install recursively all auto-installing modules
+    from odoo.tools import config  # noqa: PLC0415
     while True:
+        if config.get('skip_auto_install'):
+            break
         # this selects all the auto_install modules whose auto_install_required
         # deps are marked as to install
         cr.execute("""

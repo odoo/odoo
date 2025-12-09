@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
-"PO-Revision-Date: 2025-11-29 18:00+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-12-06 17:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_ubl_cii/id/>\n"
@@ -64,6 +64,11 @@ msgstr "AS2 exchange"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
 msgid "Account Move Send"
 msgstr "Kirim Account Move"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr "Pergerakkan Akun Kirim Wizard"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9923
@@ -475,7 +480,7 @@ msgstr "Indirizzo di Posta Elettronica Certificata"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Install Chorus Pro"
-msgstr ""
+msgstr "Instal Chorus Pro"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -683,6 +688,8 @@ msgstr ""
 msgid ""
 "Please install the french Chorus pro module to have all the specific rules."
 msgstr ""
+"Silakan instal modul Chorus pro Prancis untuk mendapatkan semua peraturan-"
+"peraturan spesifik."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -934,6 +941,12 @@ msgid "United Kingdom VAT"
 msgstr "PPN Britania Ryaa"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
+msgid "Unspported file type via %s"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9953
 msgid "Vatican VAT"
 msgstr "PPN Vatican"
@@ -978,11 +991,6 @@ msgstr ""
 "category code (BT-151)."
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
-msgid "Your endpoint"
-msgstr "Endpoint Anda"
-
-#. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__invoice_edi_format
 msgid "eInvoice format"
@@ -1002,6 +1010,9 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "Your endpoint"
+#~ msgstr "Endpoint Anda"
 
 #~ msgid "BIS Billing 3.0"
 #~ msgstr "BIS Billing 3.0"

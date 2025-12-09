@@ -1,16 +1,16 @@
 import logging
-import werkzeug.http
 from datetime import datetime
 from mimetypes import guess_extension
+
+import werkzeug.http
 
 from odoo import models
 from odoo.exceptions import MissingError, UserError
 from odoo.http import Stream, request
 from odoo.tools import file_open, replace_exceptions
-from odoo.tools.image import image_process, image_guess_size_from_field_name
-from odoo.tools.mimetypes import guess_mimetype, get_extension
+from odoo.tools.image import image_guess_size_from_field_name, image_process
+from odoo.tools.mimetypes import MIMETYPE_HEAD_SIZE, get_extension, guess_mimetype
 from odoo.tools.misc import verify_limited_field_access_token
-
 
 DEFAULT_PLACEHOLDER_PATH = 'web/static/img/placeholder.png'
 _logger = logging.getLogger(__name__)
@@ -131,10 +131,10 @@ class IrBinary(models.AbstractModel):
                 stream.mimetype = mimetype
             elif not stream.mimetype:
                 if stream.type == 'data':
-                    head = stream.data[:1024]
+                    head = stream.data[:MIMETYPE_HEAD_SIZE]
                 else:
                     with open(stream.path, 'rb') as file:
-                        head = file.read(1024)
+                        head = file.read(MIMETYPE_HEAD_SIZE)
                 stream.mimetype = guess_mimetype(head, default=default_mimetype)
 
             if filename:

@@ -51,12 +51,6 @@ pdfjs-download-button-label = Tải xuống
 pdfjs-bookmark-button =
     .title = Trang hiện tại (xem URL từ trang hiện tại)
 pdfjs-bookmark-button-label = Trang hiện tại
-# Used in Firefox for Android.
-pdfjs-open-in-app-button =
-    .title = Mở trong ứng dụng
-# Used in Firefox for Android.
-# Length of the translation matters since we are in a mobile context, with limited screen estate.
-pdfjs-open-in-app-button-label = Mở trong ứng dụng
 
 ##  Secondary toolbar and context menu
 
@@ -111,6 +105,14 @@ pdfjs-document-properties-button-label = Thuộc tính của tài liệu…
 pdfjs-document-properties-file-name = Tên tập tin:
 pdfjs-document-properties-file-size = Kích thước:
 # Variables:
+#   $kb (Number) - the PDF file size in kilobytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-kb = { NUMBER($kb, maximumSignificantDigits: 3) } KB ({ $b } bytes)
+# Variables:
+#   $mb (Number) - the PDF file size in megabytes
+#   $b (Number) - the PDF file size in bytes
+pdfjs-document-properties-size-mb = { NUMBER($mb, maximumSignificantDigits: 3) } MB ({ $b } bytes)
+# Variables:
 #   $size_kb (Number) - the PDF file size in kilobytes
 #   $size_b (Number) - the PDF file size in bytes
 pdfjs-document-properties-kb = { $size_kb } KB ({ $size_b } byte)
@@ -124,6 +126,9 @@ pdfjs-document-properties-subject = Chủ đề:
 pdfjs-document-properties-keywords = Từ khóa:
 pdfjs-document-properties-creation-date = Ngày tạo:
 pdfjs-document-properties-modification-date = Ngày sửa đổi:
+# Variables:
+#   $dateObj (Date) - the creation/modification date and time of the PDF file
+pdfjs-document-properties-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 # Variables:
 #   $date (Date) - the creation/modification date of the PDF file
 #   $time (Time) - the creation/modification time of the PDF file
@@ -273,6 +278,9 @@ pdfjs-annotation-date-string = { $date }, { $time }
 # Some common types are e.g.: "Check", "Text", "Comment", "Note"
 pdfjs-text-annotation-type =
     .alt = [{ $type } Chú thích]
+# Variables:
+#   $dateObj (Date) - the modification date and time of the annotation
+pdfjs-annotation-date-time-string = { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Password
 
@@ -296,8 +304,6 @@ pdfjs-editor-stamp-button-label = Thêm hoặc chỉnh sửa hình ảnh
 pdfjs-editor-highlight-button =
     .title = Đánh dấu
 pdfjs-editor-highlight-button-label = Đánh dấu
-pdfjs-highlight-floating-button =
-    .title = Đánh dấu
 pdfjs-highlight-floating-button1 =
     .title = Đánh dấu
     .aria-label = Đánh dấu
@@ -366,6 +372,22 @@ pdfjs-editor-resizer-label-bottom-right = Dưới cùng bên phải — thay đ�
 pdfjs-editor-resizer-label-bottom-middle = Ở giữa dưới cùng — thay đổi kích thước
 pdfjs-editor-resizer-label-bottom-left = Góc dưới bên trái — thay đổi kích thước
 pdfjs-editor-resizer-label-middle-left = Ở giữa bên trái — thay đổi kích thước
+pdfjs-editor-resizer-top-left =
+    .aria-label = Trên cùng bên trái — thay đổi kích thước
+pdfjs-editor-resizer-top-middle =
+    .aria-label = Trên cùng ở giữa — thay đổi kích thước
+pdfjs-editor-resizer-top-right =
+    .aria-label = Trên cùng bên phải — thay đổi kích thước
+pdfjs-editor-resizer-middle-right =
+    .aria-label = Ở giữa bên phải — thay đổi kích thước
+pdfjs-editor-resizer-bottom-right =
+    .aria-label = Dưới cùng bên phải — thay đổi kích thước
+pdfjs-editor-resizer-bottom-middle =
+    .aria-label = Ở giữa dưới cùng — thay đổi kích thước
+pdfjs-editor-resizer-bottom-left =
+    .aria-label = Góc dưới bên trái — thay đổi kích thước
+pdfjs-editor-resizer-middle-left =
+    .aria-label = Ở giữa bên trái — thay đổi kích thước
 
 ## Color picker
 
@@ -392,3 +414,60 @@ pdfjs-editor-colorpicker-red =
 pdfjs-editor-highlight-show-all-button-label = Hiện tất cả
 pdfjs-editor-highlight-show-all-button =
     .title = Hiện tất cả
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+# Modal header positioned above a text box where users can edit the alt text.
+pdfjs-editor-new-alt-text-dialog-edit-label = Chỉnh sửa văn bản thay thế (mô tả hình ảnh)
+# Modal header positioned above a text box where users can add the alt text.
+pdfjs-editor-new-alt-text-dialog-add-label = Thêm văn bản thay thế (mô tả hình ảnh)
+pdfjs-editor-new-alt-text-textarea =
+    .placeholder = Viết mô tả của bạn ở đây…
+# This text refers to the alt text box above this description. It offers a definition of alt text.
+pdfjs-editor-new-alt-text-description = Mô tả ngắn gọn dành cho người không xem được ảnh hoặc khi không thể tải ảnh.
+# This is a required legal disclaimer that refers to the automatically created text inside the alt text box above this text. It disappears if the text is edited by a human.
+pdfjs-editor-new-alt-text-disclaimer1 = Văn bản thay thế này được tạo tự động và có thể không chính xác.
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Tìm hiểu thêm
+pdfjs-editor-new-alt-text-create-automatically-button-label = Tạo văn bản thay thế tự động
+pdfjs-editor-new-alt-text-not-now-button = Không phải bây giờ
+pdfjs-editor-new-alt-text-error-title = Không thể tạo tự động văn bản thay thế
+pdfjs-editor-new-alt-text-error-description = Vui lòng viết văn bản thay thế của riêng bạn hoặc thử lại sau.
+pdfjs-editor-new-alt-text-error-close-button = Đóng
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+#   $downloadedSize (Number) - the downloaded size (in MB) of the AI model.
+#   $percent (Number) - the percentage of the downloaded size.
+pdfjs-editor-new-alt-text-ai-model-downloading-progress = Đang tải xuống mô hình AI văn bản thay thế ({ $downloadedSize } trong số { $totalSize } MB)
+    .aria-valuetext = Đang tải xuống mô hình AI văn bản thay thế ({ $downloadedSize } trong số { $totalSize } MB)
+# This is a button that users can click to edit the alt text they have already added.
+pdfjs-editor-new-alt-text-added-button-label = Đã thêm văn bản thay thế
+# This is a button that users can click to open the alt text editor and add alt text when it is not present.
+pdfjs-editor-new-alt-text-missing-button-label = Thiếu văn bản thay thế
+# This is a button that opens up the alt text modal where users should review the alt text that was automatically generated.
+pdfjs-editor-new-alt-text-to-review-button-label = Xem lại văn bản thay thế
+# "Created automatically" is a prefix that will be added to the beginning of any alt text that has been automatically generated. After the colon, the user will see/hear the actual alt text description. If the alt text has been edited by a human, this prefix will not appear.
+# Variables:
+#   $generatedAltText (String) - the generated alt-text.
+pdfjs-editor-new-alt-text-generated-alt-text-with-disclaimer = Được tạo tự động: { $generatedAltText }
+
+## Image alt-text settings
+
+pdfjs-image-alt-text-settings-button =
+    .title = Cài đặt văn bản thay thế của hình ảnh
+pdfjs-image-alt-text-settings-button-label = Cài đặt văn bản thay thế của hình ảnh
+pdfjs-editor-alt-text-settings-dialog-label = Cài đặt văn bản thay thế của hình ảnh
+pdfjs-editor-alt-text-settings-automatic-title = Văn bản thay thế tự động
+pdfjs-editor-alt-text-settings-create-model-button-label = Tạo văn bản thay thế tự động
+pdfjs-editor-alt-text-settings-create-model-description = Đề xuất mô tả giúp ích cho những người không xem được ảnh hoặc khi không thể tải ảnh.
+# Variables:
+#   $totalSize (Number) - the total size (in MB) of the AI model.
+pdfjs-editor-alt-text-settings-download-model-label = Mô hình AI văn bản khác ({ $totalSize } MB)
+pdfjs-editor-alt-text-settings-ai-model-description = Chạy cục bộ trên thiết bị của bạn để dữ liệu của bạn luôn ở chế độ riêng tư. Bắt buộc đối với văn bản thay thế tự động.
+pdfjs-editor-alt-text-settings-delete-model-button = Xóa
+pdfjs-editor-alt-text-settings-download-model-button = Tải xuống
+pdfjs-editor-alt-text-settings-downloading-model-button = Đang tải xuống…
+pdfjs-editor-alt-text-settings-editor-title = Trình soạn thảo văn bản thay thế
+pdfjs-editor-alt-text-settings-show-dialog-button-label = Hiển thị ngay trình soạn thảo văn bản thay thế khi thêm hình ảnh
+pdfjs-editor-alt-text-settings-show-dialog-description = Giúp bạn đảm bảo tất cả hình ảnh của bạn đều có văn bản thay thế.
+pdfjs-editor-alt-text-settings-close-button = Đóng

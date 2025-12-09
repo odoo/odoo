@@ -49,7 +49,7 @@ class Employee(models.Model):
         today = fields.Datetime.today()
         global_leaves_wo_calendar = defaultdict(lambda: self.env["resource.calendar.leaves"])
         global_leaves_wo_calendar.update(dict(self.env['resource.calendar.leaves']._read_group(
-            [('calendar_id', '=', False), ('date_from', '>=', today)],
+            [('calendar_id', '=', False), ('resource_id', '=', False), ('date_from', '>=', today)],
             groupby=['company_id'],
             aggregates=['id:recordset'],
         )))

@@ -48,8 +48,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:36+0000\n"
-"PO-Revision-Date: 2025-11-21 15:43+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-12-02 08:22+0000\n"
 "Last-Translator: Ana Matulin <ana@uvid.hr>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/account/"
 "hr/>\n"
@@ -59,7 +59,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -3125,6 +3125,11 @@ msgstr "Broj priloga"
 #: model:ir.model.fields,field_description:account.field_account_payment__attachment_ids
 msgid "Attachments"
 msgstr "Prilozi"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
+msgid "Attachments Not Supported"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_activated
@@ -6233,6 +6238,11 @@ msgid "Display Amount"
 msgstr "Prikaži iznos"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
+msgid "Display Attachments Widget"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
 msgid "Display Days Next Month"
 msgstr ""
@@ -7941,6 +7951,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
 msgstr "Kako se računa iznos poreza na ponudama i računima"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "ICE:"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -14078,7 +14093,7 @@ msgstr "Početni saldo"
 #: model:ir.model.fields,field_description:account.field_account_payment__state
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
 msgid "State"
-msgstr "Županija/savezna država"
+msgstr "Status"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement

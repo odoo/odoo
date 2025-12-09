@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:37+0000\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
 "PO-Revision-Date: 2025-09-15 06:06+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-18/"
@@ -230,11 +230,6 @@ msgstr "PEPPOL 취소"
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "이미 PEPPOL로 전송된 항목은 취소할 수 없습니다."
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
-msgid "Cannot receive this format"
-msgstr "이 형식을 수신할 수 없습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -496,6 +491,12 @@ msgid "Incoming Invoices Journal"
 msgstr "수신한 청구서 전표"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__invoice_sending_method
 msgid "Invoice sending"
@@ -552,19 +553,9 @@ msgid "Mobile number"
 msgstr " 휴대폰 번호"
 
 #. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
-msgid "Not on Peppol"
-msgstr "Peppol에 등록되지 않음"
-
-#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
 msgstr "등록하지 않음"
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
-msgid "Not verified yet"
-msgstr "아직 승인되지 않음"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -640,10 +631,25 @@ msgid "PEPPOL: update participant status"
 msgstr "PEPPOL: 참가자 상태 업데이트"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
+msgid "Partner cannot receive format"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "Partner doesn't have a valid Peppol configuration."
 msgstr "파트너에게 유효한 Peppol 환경설정 내역이 없습니다."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
+msgid "Partner is not on Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
+msgid "Partner is on Peppol"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -710,12 +716,6 @@ msgid "Peppol e-address (EAS)"
 msgstr "Peppol 전자 주소 (EAS)"
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_verification_state
-#: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_verification_state
-msgid "Peppol endpoint verification"
-msgstr "Peppol 엔드포인트 확인"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol error: %s"
@@ -727,6 +727,8 @@ msgid "Peppol ready invoices"
 msgstr "Peppol 준비 완료된 청구서"
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_verification_state
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_verification_state
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "Peppol status"
 msgstr "Peppol 상태"
@@ -886,6 +888,12 @@ msgid "Skipped"
 msgstr "건너뛰기"
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Some attachments could not be sent with the XML:"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode_constraint__test
 msgid "Test"
@@ -915,12 +923,6 @@ msgid "The Peppol endpoint identification number is not correct."
 msgstr "Peppol 엔드포인트 식별 번호가 올바르지 않습니다."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The document has been sent to the Peppol Access Point for processing"
-msgstr "문서 처리를 위해 Peppol 액세스 포인트로 전송되었습니다."
-
-#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "The e-invoicing network"
@@ -946,6 +948,14 @@ msgid ""
 msgstr ""
 "다음 서비스는 참가자에 등록되어 있지만 여기에서 구성할 수 없습니다. 이러한 서"
 "비스의 구성을 조정하려면 지원팀에 문의하세요."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid ""
+"The invoice has been sent to the Peppol Access Point. The following "
+"attachments were sent with the XML:"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1014,6 +1024,11 @@ msgid "Too many attempts to request an SMS code. Please try again later."
 msgstr "SMS 코드 요청 시도 횟수가 너무 많습니다. 나중에 다시 시도하세요."
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
+msgid "Unchecked"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_endpoint
@@ -1038,11 +1053,6 @@ msgid ""
 msgstr ""
 "환경 설정 매개변수를 통하여, 이 필드에서는 UI에서 선택할 수 있는 EDI 모드를 "
 "지정합니다."
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
-msgid "Valid"
-msgstr "유효"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1224,6 +1234,24 @@ msgstr "청구서 전송, 다만 이 건은"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "사용"
+
+#~ msgid "Cannot receive this format"
+#~ msgstr "이 형식을 수신할 수 없습니다."
+
+#~ msgid "Not on Peppol"
+#~ msgstr "Peppol에 등록되지 않음"
+
+#~ msgid "Not verified yet"
+#~ msgstr "아직 승인되지 않음"
+
+#~ msgid "Peppol endpoint verification"
+#~ msgstr "Peppol 엔드포인트 확인"
+
+#~ msgid "The document has been sent to the Peppol Access Point for processing"
+#~ msgstr "문서 처리를 위해 Peppol 액세스 포인트로 전송되었습니다."
+
+#~ msgid "Valid"
+#~ msgstr "유효"
 
 #~ msgid "I want to migrate my existing Peppol connection to Odoo (optional):"
 #~ msgstr "기존 Peppol 연결을 Odoo로 마이그레이션합니다 (선택 사항):"
