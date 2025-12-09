@@ -1,10 +1,12 @@
 export class PairSet {
     constructor() {
         this.map = new Map(); // map of [1] => Set<[2]>
+        this.keySet = new Set();
     }
     add(elem1, elem2) {
         if (!this.map.has(elem1)) {
             this.map.set(elem1, new Set());
+            this.keySet.add(elem1);
         }
         this.map.get(elem1).add(elem2);
     }
@@ -22,6 +24,7 @@ export class PairSet {
         s.delete(elem2);
         if (!s.size) {
             this.map.delete(elem1);
+            this.keySet.delete(elem1);
         }
     }
 }

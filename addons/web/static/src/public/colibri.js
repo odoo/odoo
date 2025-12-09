@@ -326,6 +326,9 @@ export class Colibri {
                 { cause: error }
             );
         }
+        if (!this.el.isConnected) {
+            this.core.stopInteractions(this.el);
+        }
     }
 
     destroy() {

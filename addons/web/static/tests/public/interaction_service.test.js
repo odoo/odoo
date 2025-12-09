@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
+import { queryOne, tick } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
 import { Component, xml } from "@odoo/owl";
@@ -321,5 +321,52 @@ test("does not start interaction in el if not attached", async () => {
     expect(n).toBe(0);
     span.remove();
     await core.startInteractions(span);
+    expect(n).toBe(0);
+});
+
+test("stops interactions if el is removed", async () => {
+    let n = 0;
+    class Test extends Interaction {
+        static selector = ".test";
+        start() {
+            n++;
+        }
+        destroy() {
+            n--;
+        }
+    }
+    class Test2 extends Test {
+        static selector = "span";
+    }
+    class Test3 extends Test {
+        static selector = "p";
+    }
+
+    await startInteraction([Test, Test2, Test3], `<p><span class="test"></span></p>`);
+    expect(n).toBe(3);
+    queryOne("span.test").remove();
+    await tick();
+    expect(n).toBe(1);
+});
+
+test("stops interactions if el is disconnected", async () => {
+    let n = 0;
+    class Test extends Interaction {
+        static selector = ".test";
+        start() {
+            n++;
+        }
+        destroy() {
+            n--;
+        }
+    }
+    class Test2 extends Test {
+        static selector = "span";
+    }
+
+    await startInteraction([Test, Test2], `<p><span class="test"></span></p>`);
+    expect(n).toBe(2);
+    queryOne("p").remove();
+    await tick();
     expect(n).toBe(0);
 });

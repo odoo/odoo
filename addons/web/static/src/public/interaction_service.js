@@ -43,6 +43,8 @@ class InteractionService {
         this.owlApp = null;
         this.proms = [];
         this.registry = null;
+
+        this.observeDisconnection();
     }
 
     /**
@@ -180,6 +182,26 @@ class InteractionService {
             this.isActive = false;
         }
     }
+    /**
+     * Destroy interactions when their root element is disconnected from the DOM
+     * We need to watch the whole document, otherwise we could miss an element
+     * being removed through an ancestor.
+     */
+    observeDisconnection() {
+        const mutationObserver = new MutationObserver(() => {
+            if (!this.el.isConnected) {
+                this.stopInteractions();
+                mutationObserver.disconnect();
+                return;
+            }
+            for (const el of this.activeInteractions.keySet) {
+                if (!el.isConnected) {
+                    this.stopInteractions(el);
+                }
+            }
+        });
+        mutationObserver.observe(document, { childList: true, subtree: true });
+    }
 
     /**
      * @returns { Promise } returns a promise that is resolved when all current
@@ -195,8 +217,12 @@ class InteractionService {
 registry.category("services").add("public.interactions", {
     dependencies: ["localization"],
     async start(env) {
-        // fallback if #wrapwrap is not present in the dom
-        const el = document.querySelector("#wrapwrap") || document.querySelector("body");
+        // fallback if #wrapwrap is not present in the dom. We need to focus
+        // `hoot-fixture` in tests so that the observer is properly disconnected
+        const el =
+            document.querySelector("#wrapwrap") ||
+            document.querySelector("hoot-fixture") ||
+            document.querySelector("body");
         const Interactions = registry.category("public.interactions").getAll();
         const service = new InteractionService(el, env);
         service.activate(Interactions);

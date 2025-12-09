@@ -95,7 +95,6 @@ export class ModalAttendeesRegistration extends Interaction {
             this.enableRegistrationFormSubmit();
 
             this.el.remove();
-            this.services["public.interactions"].stopInteractions(this.el);
             return;
         }
         if (this.recaptchaToken.token) {
