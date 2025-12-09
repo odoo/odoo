@@ -15,7 +15,7 @@
                         <t t-if="message.isSelfAuthored">You</t>
                         <t t-else="" t-esc="message.authorName"/>:
                     </span>
-                    <span class="text-truncate ms-1" t-out="message.bodyPreview"/>
+                    <span class="text-truncate ms-1 o-mail-messagePreview" t-out="message.bodyPreview"/>
                     <span class="flex-grow-1"/>
                     <AvatarStack t-if="!env.inMessage" containerClass="'ms-1'" personas="props.channel.channel_member_ids.map((m) => m.persona)" size="22" spacing="10" total="props.channel.member_count"/>
                     <span t-elif="props.channel.message_count" class="text-primary smaller flex-shrink-0 d-flex fw-bold align-items-center ms-1">

@@ -28,7 +28,7 @@
                         <t t-esc="message?.authorName or ''"/>
                     </t>
                     <t t-set-slot="body">
-                        <span t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
+                        <span class="o-mail-messagePreview" t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
                     </t>
                 </NotificationItem>
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>
@@ -62,7 +62,7 @@
                         <t t-if="message?.hasOnlyAttachments">
                             <t t-out="message.previewText" />
                         </t>
-                        <span t-else="" t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
+                        <span class="o-mail-messagePreview" t-else="" t-out="message?.previewText" t-att-class="{ 'opacity-75': message?.isEmpty }"/>
                     </t>
                     <t t-set-slot="icon">
                         <ImStatus t-if="thread.channel?.channel_type === 'chat' and thread.channel.correspondent" member="thread.channel.correspondent" className="'position-absolute top-100 start-100 translate-middle mt-n1 ' + (thread.channel.correspondent.isTyping ? 'ms-n2' : 'ms-n1')"/>
