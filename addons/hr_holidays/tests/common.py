@@ -61,3 +61,25 @@ class TestHrHolidaysCommon(common.TransactionCase):
 
         cls.rd_dept.write({'manager_id': cls.employee_hruser_id})
         cls.hours_per_day = cls.employee_emp.resource_id.calendar_id.hours_per_day or 8
+
+        cls.leave_type_accrual_cap = cls.env['hr.leave.type'].create({
+            'name': 'Accrual Leaves with Cap',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no',
+            'request_unit': 'day',
+        })
+        cls.accrual_plan_cap = cls.env['hr.leave.accrual.plan'].create({
+            'name': 'Accrual plan for Accrual Leaves with Cap',
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'level_ids': [(0, 0, {
+                'start_count': 0,  # Start accruing immediately
+                'start_type': 'day',
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'monthly',
+                'cap_accrued_time': True,
+                'maximum_leave': 2,
+            })],
+        })
