@@ -1171,3 +1171,7 @@ registry.category("web_tour.tours").add("test_name_preset_skip_screen", {
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("testProductScreenWhenOpeningPos", {
+    steps: () => [Dialog.confirm("Open Register"), ProductScreen.isShown()].flat(),
+});

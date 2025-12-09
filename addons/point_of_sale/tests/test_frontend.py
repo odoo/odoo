@@ -26,9 +26,10 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
     def _get_main_company(cls):
         return cls.company_data['company']
 
-    def _get_url(self, pos_config=None):
+    def _get_url(self, pos_config=None, url_extension=None):
         pos_config = pos_config or self.main_pos_config
-        return f"/pos/ui/{pos_config.id}"
+        url_extension = url_extension or ''
+        return f"/pos/ui/{pos_config.id}{url_extension}"
 
     def get_method_additional_tags(self, test_method):
         additional_tags = super().get_method_additional_tags(test_method)
@@ -38,7 +39,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         return additional_tags
 
     def start_pos_tour(self, tour_name, login="pos_user", **kwargs):
-        self.start_tour(self._get_url(pos_config=kwargs.get('pos_config')), tour_name, login=login, **kwargs)
+        self.start_tour(self._get_url(pos_config=kwargs.get('pos_config'), url_extension=kwargs.get('url_extension')), tour_name, login=login, **kwargs)
 
     @contextmanager
     def with_new_session(self, config=None, user=None):
