@@ -263,12 +263,13 @@ class PaymentTransaction(models.Model):
                     'active_model': 'payment.transaction',
                     # Consider also confirmed transactions to calculate the total authorized amount.
                     'active_ids': self.filtered(lambda tx: tx.state in ['authorized', 'done']).ids,
+                    'payment_backend_action': True,
                 },
             }
         else:
             for tx in self.filtered(lambda tx: tx.state == 'authorized'):
                 # In sudo mode because we need to be able to read on provider fields.
-                tx.sudo()._send_capture_request()
+                tx.with_context(payment_backend_action=True).sudo()._send_capture_request()
 
     def action_void(self):
         """ Check the state of the transaction and request to have them voided. """
@@ -283,7 +284,7 @@ class PaymentTransaction(models.Model):
                 lambda t: t.state == 'done' and t.operation == tx.operation
             ))
             # In sudo mode because we need to be able to read on provider fields.
-            tx.sudo()._send_void_request(amount_to_void=tx.amount - captured_amount)
+            tx.sudo().with_context(payment_backend_action=True)._send_void_request(amount_to_void=tx.amount - captured_amount)
 
     def action_refund(self, amount_to_refund=None):
         """ Check the state of the transactions and request their refund.
@@ -297,7 +298,7 @@ class PaymentTransaction(models.Model):
         payment_utils.check_rights_on_recordset(self)
         for tx in self:
             # In sudo mode because we need to be able to read on provider fields.
-            tx.sudo()._send_refund_request(amount_to_refund=amount_to_refund)
+            tx.sudo().with_context(payment_backend_action=True)._send_refund_request(amount_to_refund=amount_to_refund)
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
