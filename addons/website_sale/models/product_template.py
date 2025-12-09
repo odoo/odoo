@@ -5,6 +5,8 @@ import random
 from collections import defaultdict
 from urllib.parse import urlencode, urlparse
 
+from psycopg2 import sql
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -1159,12 +1161,12 @@ class ProductTemplate(models.Model):
         )
         prod_tmpl_ids = self.env.cr.dictfetchall()
         max_seq = self._default_website_sequence()
-        query = f"""
-            UPDATE {self._table}
+        query = sql.SQL("""
+            UPDATE {}
             SET website_sequence = p.web_seq
             FROM (VALUES %s) AS p(p_id, web_seq)
             WHERE id = p.p_id
-        """
+        """).format(sql.Identifier(self._table))
         values_args = [
             (prod_tmpl["id"], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)
         ]
