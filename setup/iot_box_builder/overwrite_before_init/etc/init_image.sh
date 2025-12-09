@@ -156,6 +156,10 @@ sed -i 's/\braspberrypi/iotbox/g' /etc/hosts
 # Prevent Wi-Fi blocking and remove man pages
 apt-get -y -qq purge rfkill man-db
 
+# add Tailscale apt repository
+curl -fsSL https://pkgs.tailscale.com/stable/raspbian/bullseye.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg > /dev/null
+curl -fsSL https://pkgs.tailscale.com/stable/raspbian/bullseye.tailscale-keyring.list | tee /etc/apt/sources.list.d/tailscale.list
+
 apt-get update
 
 # At the first start it is necessary to configure a password
@@ -225,7 +229,6 @@ systemctl disable userconfig.service
 systemctl enable labwc.service
 systemctl enable odoo.service
 systemctl enable odoo-led-manager.service
-systemctl enable odoo-ngrok.service
 
 # create dirs for ramdisks
 create_ramdisk_dir () {
