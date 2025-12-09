@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields
+import re
+from odoo import api, models, fields
+from odoo.exceptions import ValidationError
 
 
 class ResPartner(models.Model):
@@ -14,4 +16,10 @@ class ResPartner(models.Model):
                 partner.l10n_th_branch_name = ""
             else:
                 code = partner.company_registry
-                partner.l10n_th_branch_name = f"Branch {code}" if code else "Headquarter"
+                partner.l10n_th_branch_name = f"Branch {code}" if code and code != "00000" else "Headquarter"
+
+    @api.constrains('company_registry')
+    def _check_company_registry_l10n_th(self):
+        for partner in self:
+            if partner.country_code == "TH" and partner.company_registry and not re.fullmatch(r'\d{5}', partner.company_registry):
+                raise ValidationError(partner.env._("The branch Code must be exactly 5 digits."))

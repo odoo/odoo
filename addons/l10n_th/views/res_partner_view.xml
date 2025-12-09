@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_partner_form_inherit_l10n_th" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.l10n_th</field>
+            <field name="model">res.partner</field>
+            <field name="priority">14</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="company_registry" position="attributes">
+                    <attribute name="invisible" add="country_code == 'TH'" separator=" or "/>
+                </field>
+                <field name="vat" position="after">
+                    <field name="company_registry"
+                           string="Branch Code"
+                           placeholder="Empty for Head Office"
+                           invisible="parent_id or not is_company or country_code != 'TH'"
+                           help="The 5-digit branch code as registered with the Revenue Department."/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
