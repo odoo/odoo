@@ -58,13 +58,13 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
             if IS_WINDOWS:
                 return {}
             if not kwargs.get("status"):
-                system.toggle_remote_connection(kwargs.get("token", ""))
+                system.toggle_remote_debug(kwargs.get("token", ""))
                 time.sleep(1)
             return {
                 **base_response,
                 'device_identifier': None,
                 'status': 'success',
-                'result': {'enabled': system.is_ngrok_enabled()}
+                'result': {'enabled': system.is_remote_debug_enabled()}
             }
         case "reset_password":
             return {
