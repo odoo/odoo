@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_in_pos.report_invoice_document" inherit_id="l10n_in.l10n_in_report_invoice_document_inherit">
+        <xpath expr="//div[@name='l10n_in_hsn_summary']" position="attributes">
+            <attribute name="t-if">len(hsn_summary['items'])</attribute>
+        </xpath>
+    </template>
+</odoo>
