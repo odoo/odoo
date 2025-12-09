@@ -62,6 +62,7 @@ class ChannelMember(models.Model):
               FROM discuss_channel_member member
               JOIN discuss_channel channel
                 ON channel.id = member.channel_id
+               AND channel.parent_channel_id IS NOT NULL
              WHERE (
                        member.unpin_dt IS NULL
                     OR member.last_interest_dt >= member.unpin_dt
