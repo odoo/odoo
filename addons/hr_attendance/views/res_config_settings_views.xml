@@ -48,7 +48,8 @@
                         </setting>
                     </block>
                     <block title="Extra Hours" name="overtime_settings">
-                        <setting company_dependent="1">
+                        <!-- TODO: Remove the tolerance settings in master -->
+                        <setting company_dependent="1" invisible="1">
                             <div class="mt16">
                                 <label for="overtime_company_threshold" class="o_form_label">
                                     Tolerance Time In Favor Of Company
