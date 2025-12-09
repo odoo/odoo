@@ -495,3 +495,22 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             )
             notification_mail_mock.assert_called_with(self.env["mail.template"].browse(order_confirmation_mail_template_id))
             self.assertEqual(self.sale_order.state, 'sale')
+
+    def test_refund_message_author_is_logged_in_user_for_sale_order(self):
+        """Ensure that the chatter message author is the user processing the refund."""
+        self.provider.support_refund = 'full_only'
+
+        tx = self._create_transaction(
+            'redirect',
+            sale_order_ids=[self.sale_order.id],
+            state='done',
+        )
+        tx._reconcile_after_done()
+
+        with patch.object(
+            self.env.registry['mail.thread'], 'message_post', autospec=True
+        ) as message_post_mock:
+            tx.action_refund()
+            author_id = message_post_mock.call_args[1].get("author_id")
+
+        self.assertEqual(author_id, self.user.partner_id.id)
