@@ -63,12 +63,10 @@ class AccountMoveLine(models.Model):
         if original_line:
             return original_line.price_unit
 
-        if self.product_id.cost_method in ['standard', 'average']:
-            return self.product_id.standard_price
-
-        # FIFO
         moves = self._get_stock_moves()
         if not moves:
+            if self.product_id.cost_method in ['standard', 'average']:
+                return self.product_id.standard_price
             return self.product_id._run_fifo(self.quantity)
         return moves._get_price_unit()
 
