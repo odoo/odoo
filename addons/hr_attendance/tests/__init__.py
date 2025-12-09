@@ -10,3 +10,4 @@ from . import test_hr_attendance_kiosk
 from . import test_hr_attendance_rulesets
 from . import test_performance
 from . import test_hr_attendance_access_rights
+from . import test_hr_attendance_self_edit_role

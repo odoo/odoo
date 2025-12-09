@@ -19,7 +19,7 @@
         <field name="name">Self Attendance Edit</field>
         <field name="sequence">0</field>
         <field name="privilege_id" ref="res_groups_privilege_attendances"/>
-        <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_own_reader'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="comment">Grants users permission to modify their own attendance entries that are pending approval.</field>
     </record>
 
@@ -89,7 +89,11 @@
             <field name="model_id" ref="model_hr_attendance"/>
             <field name="domain_force">[
                 ('employee_id.user_id', '=', user.id),
-                ('overtime_status', '=', 'to_approve'),
+                '|',
+                ('overtime_status', '!=', 'approved'),
+                '&amp;',
+                ('overtime_status', '=', 'approved'),
+                ('employee_id.company_id.attendance_overtime_validation', '!=', 'manager_validation')
             ]</field>
             <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_own'))]"/>
             <field name="perm_create" eval="1"/>

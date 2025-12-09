@@ -146,6 +146,7 @@ class HrAttendance(models.Model):
                     check_out=format_time(self.env, attendance.check_out, time_format=None, tz=tz, lang_code=self.env.lang),
                 )
 
+    @api.depends_context('uid')
     @api.depends('employee_id')
     def _compute_is_manager(self):
         have_manager_right = self.env.user.has_group('hr_attendance.group_hr_attendance_user')
@@ -156,12 +157,14 @@ class HrAttendance(models.Model):
                 (have_officer_right and attendance.attendance_manager_id.id == self.env.user.id)
             attendance.is_own = have_own_right and attendance.employee_id.user_id == self.env.user
 
-    @api.depends('employee_id.company_id.attendance_overtime_validation', 'is_manager', 'is_own')
+    @api.depends('employee_id.company_id.attendance_overtime_validation', 'is_manager', 'is_own', 'overtime_status')
     def _compute_can_edit(self):
         for attendance in self:
-            if attendance.is_manager or \
-               (attendance.is_own and attendance.overtime_status == 'to_approve'):
+            validation = attendance.employee_id.company_id.attendance_overtime_validation
+            if attendance.is_manager:
                 attendance.can_edit = True
+            elif attendance.is_own:
+                attendance.can_edit = not (attendance.overtime_status == 'approved' and validation == 'by_manager')
             else:
                 attendance.can_edit = False
 
