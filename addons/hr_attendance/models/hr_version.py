@@ -1,6 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import api, models, fields
+
+from odoo.addons.hr.models.hr_version import format_date_abbr
 
 
 class HrVersion(models.Model):
@@ -31,6 +35,29 @@ class HrVersion(models.Model):
          default=_default_ruleset_id,
     )
 
+    def write(self, vals):
+        """Track field changes and log them to the employees"""
+        tracked_field_names = {fname for fname in self._track_get_fields() if fname in vals}
+        if tracked_field_names:
+            for version in self:
+                employee = version.employee_id
+                if not employee:
+                    continue
+                employee._track_record(
+                    version, tracked_field_names,
+                )
+                version_sudo = employee.version_id.sudo()
+                start = format_date_abbr(self.env, version_sudo.date_start) if version_sudo.date_start else False
+                end = format_date_abbr(self.env, version_sudo.date_end) if version_sudo.date_end else False
+                if start and end:
+                    msg = self.env._("Modified from %(start)s to %(end)s") % {'start': start, 'end': end}
+                elif start:
+                    msg = self.env._("Modified from %s") % (start)
+                else:
+                    msg = self.env._("Modified")
+                employee._track_set_log_message_for_target(Markup("<b>%s</b>") % msg, version)
+        return super().write(vals)
+
     @api.model
     def _get_versions_by_employee_and_date(self, employee_dates):
         # for `employee_dates` a dict[employee] -> dates
@@ -57,24 +84,3 @@ class HrVersion(models.Model):
                     version_index += 1
                 version_by_employee_and_date[employee][date] = versions[version_index]
         return version_by_employee_and_date
-
-    def action_open_version_selector(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_version_list_view_add')
-        today = fields.Date.today()
-        action['domain'] = [
-            ("ruleset_id", "=", False),
-            ("contract_date_start", "<=", today),
-            "|",
-            ("contract_date_end", "=", False),
-            ("contract_date_end", ">=", today),
-            ("employee_id", "!=", False),
-        ]
-        action['context'] = {'default_ruleset_id': self.env.context.get('default_ruleset_id', False)}
-        return action
-
-    def action_unassign_ruleset(self):
-        self.ruleset_id = False
-
-    def action_assign_ruleset(self):
-        if ruleset_id := self.env.context.get('default_ruleset_id', False):
-            self.ruleset_id = ruleset_id

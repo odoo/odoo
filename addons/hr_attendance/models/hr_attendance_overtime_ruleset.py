@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import api, fields, models
+from collections import defaultdict
 
 
 class HrAttendanceOvertimeRuleset(models.Model):
@@ -35,10 +36,17 @@ class HrAttendanceOvertimeRuleset(models.Model):
     version_ids = fields.One2many('hr.version', 'ruleset_id')
     versions_count = fields.Integer(compute="_compute_versions_count")
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get("name", False):
+                vals['name'] = self.env._("Unnamed Ruleset")
+        return super().create(vals_list)
+
     def _get_current_versions_domain(self):
         today = fields.Date.today()
         return [
-            ("ruleset_id", "in", self.ids),
+            ("date_version", "<=", today),
             ("contract_date_start", "<=", today),
             "|",
                 ("contract_date_end", "=", False),
@@ -51,11 +59,16 @@ class HrAttendanceOvertimeRuleset(models.Model):
             ruleset.rules_count = len(ruleset.rule_ids)
 
     def _compute_versions_count(self):
-        count_by_ruleset = dict(self.env['hr.version']._read_group(
-                domain=self._get_current_versions_domain(),
-                groupby=['ruleset_id'],
-                aggregates=['__count'],
-            ))
+        versions = self.env['hr.version']._read_group(
+            domain=self._get_current_versions_domain(),
+            groupby=['employee_id'],
+            aggregates=['id:recordset'],
+        )
+        count_by_ruleset = defaultdict(int)
+        for employee, recordset in versions:
+            record = recordset.sorted('date_version DESC')[0]
+            if record.ruleset_id in self:
+                count_by_ruleset[record.ruleset_id] += 1
         for ruleset in self:
             ruleset.versions_count = count_by_ruleset.get(ruleset, 0)
 
@@ -75,11 +88,34 @@ class HrAttendanceOvertimeRuleset(models.Model):
 
     def action_show_versions(self):
         self.ensure_one()
+        data = self.env['hr.version']._read_group(
+            domain=self._get_current_versions_domain(),
+            groupby=['employee_id'],
+            aggregates=['id:recordset'],
+        )
+        versions = self.env['hr.version']
+        for employee, recordset in data:
+            record = recordset.sorted('date_version DESC')[0]
+            versions |= record
         action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_version_list_view')
-        action['domain'] = self._get_current_versions_domain()
-        action['context'] = {'default_ruleset_id': self.id}
+        action['domain'] = [('id', 'in', versions.ids)]
+        action['context'] = {
+            'search_default_ruleset_id': self.id,
+            'default_ruleset_id': self.id,
+        }
         return action
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
         return [dict(vals, name=self.env._("%s (copy)", ruleset.name)) for ruleset, vals in zip(self, vals_list)]
+
+    def action_create_overtime_rule(self):
+        return {
+            'name': self.env._('Create Rule'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.attendance.overtime.rule',
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'view_id': self.env.ref('hr_attendance.hr_attendance_overtime_rule_view_form').id,
+            'target': 'new',
+        }
