@@ -453,7 +453,7 @@ class AccountMove(models.Model):
         def _group_by_section_alert(invoice_lines):
             group_by_lines = {}
             for line in invoice_lines:
-                group_key = line.account_id.sudo().l10n_in_tds_tcs_section_id
+                group_key = line.account_id.l10n_in_tds_tcs_section_id
                 if group_key and not line.company_currency_id.is_zero(line.price_total):
                     group_by_lines.setdefault(group_key, [])
                     group_by_lines[group_key].append(line)

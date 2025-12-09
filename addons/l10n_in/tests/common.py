@@ -47,6 +47,8 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             'company_id': cls.default_company.id,
         })
 
+        cls.user_internal = cls._create_new_internal_user()
+
         # === Partners === #
         cls.partner_a.write({
             'name': "Partner Intra State",

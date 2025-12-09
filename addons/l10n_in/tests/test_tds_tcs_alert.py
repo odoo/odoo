@@ -516,3 +516,10 @@ class TestTdsTcsAlert(L10nInTestInvoicingCommon):
         )
 
         self.assertEqual(move.l10n_in_warning['tds_tcs_threshold_alert']['message'], "It's advisable to collect TCS u/s 206C(1G) Remittance on this transaction.")
+
+    def test_l10n_in_section_alert_access_rights(self):
+        '''
+        Test access rights for l10n_in.section.alert model.
+        '''
+        section_alert = self.env.ref('l10n_in.tds_section_192')
+        section_alert.with_user(self.user_internal).read(['name'])
