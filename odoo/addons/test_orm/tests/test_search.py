@@ -1205,7 +1205,7 @@ class TestSearchRelated(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_related_inherits"."id"
             FROM "test_orm_related_inherits"
-            LEFT JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
+            JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
                 ON ("test_orm_related_inherits"."base_id" = "test_orm_related_inherits__base_id"."id")
             WHERE "test_orm_related_inherits__base_id"."name" IN %s
             AND "test_orm_related_inherits__base_id"."id" < %s
@@ -1217,7 +1217,7 @@ class TestSearchRelated(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_related_inherits"."id"
             FROM "test_orm_related_inherits"
-            LEFT JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
+            JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
                 ON ("test_orm_related_inherits"."base_id" = "test_orm_related_inherits__base_id"."id")
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related_inherits__base_id__foo_id"
                 ON ("test_orm_related_inherits__base_id"."foo_id" = "test_orm_related_inherits__base_id__foo_id"."id")
@@ -1233,7 +1233,7 @@ class TestSearchRelated(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_related_inherits"."id"
             FROM "test_orm_related_inherits"
-            LEFT JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
+            JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
                 ON ("test_orm_related_inherits"."base_id" = "test_orm_related_inherits__base_id"."id")
             WHERE "test_orm_related_inherits__base_id"."foo_id" IN (
                 SELECT "test_orm_related_foo"."id"
@@ -1249,7 +1249,7 @@ class TestSearchRelated(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_related_inherits"."id"
             FROM "test_orm_related_inherits"
-            LEFT JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
+            JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
                 ON ("test_orm_related_inherits"."base_id" = "test_orm_related_inherits__base_id"."id")
             LEFT JOIN "test_orm_related_foo" AS "test_orm_related_inherits__base_id__foo_id"
                 ON ("test_orm_related_inherits__base_id"."foo_id" = "test_orm_related_inherits__base_id__foo_id"."id")
@@ -1269,7 +1269,7 @@ class TestSearchRelated(TransactionCase):
         with self.assertQueries(["""
             SELECT "test_orm_related_inherits"."id"
             FROM "test_orm_related_inherits"
-            LEFT JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
+            JOIN "test_orm_related" AS "test_orm_related_inherits__base_id"
                 ON ("test_orm_related_inherits"."base_id" = "test_orm_related_inherits__base_id"."id")
             WHERE "test_orm_related_inherits__base_id"."foo_id" IN (
                 SELECT "test_orm_related_foo"."id"
@@ -1606,7 +1606,7 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_orm_payment"."id"
             FROM "test_orm_payment"
-            LEFT JOIN "test_orm_move" AS "test_orm_payment__move_id"
+            JOIN "test_orm_move" AS "test_orm_payment__move_id"
                 ON ("test_orm_payment"."move_id" = "test_orm_payment__move_id"."id")
             WHERE "test_orm_payment__move_id"."tag_repeat" > %s
             ORDER BY "test_orm_payment"."id"
@@ -1624,7 +1624,7 @@ class TestFlushSearch(TransactionCase):
         ''', '''
             SELECT "test_orm_payment"."id"
             FROM "test_orm_payment"
-            LEFT JOIN "test_orm_move" AS "test_orm_payment__move_id"
+            JOIN "test_orm_move" AS "test_orm_payment__move_id"
                 ON ("test_orm_payment"."move_id" = "test_orm_payment__move_id"."id")
             WHERE "test_orm_payment__move_id"."tag_repeat" > %s
             ORDER BY "test_orm_payment"."id"
@@ -1890,3 +1890,104 @@ class TestNonIntId(TransactionCase):
     def test_query_non_int_read_group(self):
         result = self.env['test_orm.view.str.id']._read_group([], ['name'], ['__count'])
         self.assertEqual(result, [('test', 1)])
+
+
+@tagged('at_install', '-post_install')
+class TestMany2oneJoin(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env = cls.env(context=(cls.env.context | {'active_test': False}))
+
+    def test_many2one_one_join(self):
+        # res.users.partner_id is a required field: LEFT JOIN -> JOIN
+        self.assertTrue(self.registry['res.users'].partner_id.required)
+        with self.assertQueries(["""
+            SELECT "res_users"."id"
+            FROM "res_users"
+            JOIN "res_partner" AS "res_users__partner_id"
+                ON ("res_users"."partner_id" = "res_users__partner_id"."id")
+            WHERE "res_users__partner_id"."name" LIKE %s
+            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+        """]):
+            self.env['res.users'].search([('partner_id.name', 'like', 'test')])
+
+        # res.partner.create_uid is not a required field: LEFT JOIN
+        self.assertFalse(self.registry['res.partner'].create_uid.required)
+        with self.assertQueries(["""
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            LEFT JOIN "res_users" AS "res_partner__create_uid"
+                ON ("res_partner"."create_uid" = "res_partner__create_uid"."id")
+            WHERE ("res_partner"."create_uid" IS NOT NULL AND "res_partner__create_uid"."active" IS TRUE)
+            ORDER BY "res_partner"."complete_name" ASC, "res_partner"."id" DESC
+        """]):
+            self.env['res.partner'].search([('create_uid.active', '=', True)])
+
+    def test_many2one_two_joins(self):
+        # [ir.cron] -- user_id(required) -> [res.users]: LEFT JOIN -> JOIN
+        # [res.users] -- partner_id(required) -> [res.partner]: LEFT JOIN -> JOIN
+        self.assertTrue(self.registry['ir.cron'].user_id.required)
+        self.assertTrue(self.registry['res.users'].partner_id.required)
+        with self.assertQueries(["""
+            SELECT "ir_cron"."id"
+            FROM "ir_cron"
+            JOIN "res_users" AS "ir_cron__user_id"
+                ON ("ir_cron"."user_id" = "ir_cron__user_id"."id")
+            JOIN "res_partner" AS "ir_cron__user_id__partner_id"
+                ON ("ir_cron__user_id"."partner_id" = "ir_cron__user_id__partner_id"."id")
+            WHERE "ir_cron__user_id__partner_id"."name" ILIKE %s
+            ORDER BY "ir_cron"."cron_name", "ir_cron"."id"
+        """]):
+            self.env['ir.cron'].search([('user_id.partner_id.name', 'ilike', 'test')])
+
+        # [res.users] -- partner_id(required) -> [res.partner]: LEFT JOIN -> JOIN
+        # [res.partner] -- country_id(not required) -> [res.country]: LEFT JOIN
+        self.assertTrue(self.registry['res.users'].partner_id.required)
+        self.assertFalse(self.registry['res.partner'].country_id.required)
+        with self.assertQueries(["""
+            SELECT "res_users"."id"
+            FROM "res_users"
+            JOIN "res_partner" AS "res_users__partner_id"
+                ON ("res_users"."partner_id" = "res_users__partner_id"."id")
+            LEFT JOIN "res_country" AS "res_users__partner_id__country_id"
+                ON ("res_users__partner_id"."country_id" = "res_users__partner_id__country_id"."id")
+            WHERE ("res_users__partner_id"."country_id" IS NOT NULL AND "res_users__partner_id__country_id"."name"->>%s ILIKE %s)
+            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+        """]):
+            self.env['res.users'].search([('partner_id.country_id.name', 'ilike', 'test')])
+
+        # [res.country] --create_uid(not required) -> [res.users]: LEFT JOIN
+        # [res.users] --partner_id(required) -> [res.partner]: LEFT JOIN because table is LEFT JOIN
+        self.assertFalse(self.registry['res.country'].create_uid.required)
+        self.assertTrue(self.registry['res.users'].partner_id.required)
+        with self.assertQueries(["""
+            SELECT "res_country"."id"
+            FROM "res_country"
+            LEFT JOIN "res_users" AS "res_country__create_uid"
+                ON ("res_country"."create_uid" = "res_country__create_uid"."id")
+            LEFT JOIN "res_partner" AS "res_country__create_uid__partner_id"
+                ON ("res_country__create_uid"."partner_id" = "res_country__create_uid__partner_id"."id")
+            WHERE ("res_country"."create_uid" IS NOT NULL AND "res_country__create_uid__partner_id"."name" ILIKE %s)
+            ORDER BY "res_country"."name"->>%s, "res_country"."id"
+        """]):
+            self.env['res.country'].search([('create_uid.partner_id.name', 'ilike', 'test')])
+
+        # [res.partner] --country_id(not required) -> [res.country]: LEFT JOIN
+        # [res.country] --create_uid(not required) -> [res.users]: LEFT JOIN
+        self.assertFalse(self.registry['res.partner'].country_id.required)
+        self.assertFalse(self.registry['res.country'].create_uid.required)
+        with self.assertQueries(["""
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            LEFT JOIN "res_country" AS "res_partner__country_id"
+                ON ("res_partner"."country_id" = "res_partner__country_id"."id")
+            LEFT JOIN "res_users" AS "res_partner__country_id__create_uid"
+                ON ("res_partner__country_id"."create_uid" = "res_partner__country_id__create_uid"."id")
+            WHERE ("res_partner"."country_id" IS NOT NULL AND (
+                "res_partner__country_id"."create_uid" IS NOT NULL
+                AND "res_partner__country_id__create_uid"."active" IS TRUE
+            ))
+            ORDER BY "res_partner"."complete_name" ASC, "res_partner"."id" DESC
+        """]):
+            self.env['res.partner'].search([('country_id.create_uid.active', '=', True)])
