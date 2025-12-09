@@ -5535,3 +5535,47 @@ class TestTourMrpOrder(HttpCase):
         self.assertEqual(mo.move_raw_ids.move_line_ids.quantity, 7)
         self.assertEqual(mo.move_byproduct_ids.quantity, 7)
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 1)
+
+    def test_mrp_multi_step_draft_mo_creates_component_transfer(self):
+        '''
+        Ensure a transfer to pre-prod is created for components even when the MO
+        is in draft.
+        '''
+        # Enable storage locations
+        self.env['res.config.settings'].create({'group_stock_multi_locations': True}).execute()
+        # Set WH manufacture to 2-step
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm'
+        component, final_product = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+        } for name in ['Wooden Leg', 'Table']])
+        mo = self.env['mrp.production'].create({
+            'product_id': final_product.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': warehouse.id,
+        })
+        self.assertEqual(len(mo.move_raw_ids), 0)
+        self.assertEqual(mo.state, 'draft')
+
+        self.authenticate('admin', 'admin')
+        self.opener.post(
+            url=self.base_url() + '/product/catalog/update_order_line_info',
+            json={
+                "params": {
+                    'res_model': 'mrp.production',
+                    'order_id': mo.id,
+                    'product_id': component.id,
+                    'quantity': 2,
+                    'child_field': 'move_raw_ids',
+                },
+            },
+        )
+        self.assertEqual(len(mo.move_raw_ids), 1)
+
+        mo.action_confirm()
+        component_transfer = self.env['stock.move'].search([
+            ('product_id', '=', component.id),
+            ('location_dest_id', '=', warehouse.pbm_loc_id.id)
+        ])
+        self.assertEqual(component_transfer.product_uom_qty, 2)
