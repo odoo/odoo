@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 from odoo import Command, fields
 from odoo.exceptions import UserError
@@ -6829,6 +6830,7 @@ class StockMove(TransactionCase):
         line2.quant_id = quant
         self.assertEqual(move.move_line_ids[1].quantity, 1.0)
 
+    @freeze_time("2025-10-10")
     def test_free_reservation(self):
         """ Checks that the free_reservation uses the latest move line when the picking or date are equal.
         """
