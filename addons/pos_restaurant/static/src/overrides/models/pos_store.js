@@ -368,4 +368,22 @@ patch(PosStore.prototype, {
     get showSaveOrderButton() {
         return super.showSaveOrderButton && !this.config.module_pos_restaurant;
     },
+
+    //@override
+    get unsyncedOrderCount() {
+        if (!this.config.module_pos_restaurant) {
+            return super.unsyncedOrderCount;
+        }
+        const pendingIds = new Set([...this.pendingOrder.create, ...this.pendingOrder.write]);
+
+        const unsyncedCount = this.models["pos.order"]
+            .filter(
+                (order) =>
+                    pendingIds.has(order.id) &&
+                    (order.state === "paid" || order.state === "done" || order.finalized)
+            )
+            .filter(Boolean).length;
+
+        return unsyncedCount + this.pendingOrder.delete.size;
+    },
 });
