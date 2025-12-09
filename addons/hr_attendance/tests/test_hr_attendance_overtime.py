@@ -171,10 +171,6 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertFalse(overtime, 'No overtime record should exist for that employee')
 
         checkin_am.write({'check_out': datetime(2021, 1, 4, 12, 0)})
-        # TODO naja: should work after negative works
-        # overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id), ('date', '=', date(2021, 1, 4))])
-        # self.assertTrue(overtime, 'An overtime record should be created')
-        # self.assertEqual(overtime.duration, -4)
 
         checkin_pm = self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
@@ -308,63 +304,6 @@ class TestHrAttendanceOvertime(HttpCase):
         overtime = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', self.employee.id)])
         self.assertTrue(overtime, 'Overtime entry should exist since the threshold has been lowered.')
         self.assertAlmostEqual(overtime.duration, 10 / 60, places=2, msg='Overtime should be equal to 10 minutes.')
-
-    # TODO naja: make rework after negative overtimes
-    # def test_overtime_employee_threshold(self):
-    #     self.env['hr.attendance'].create([
-    #         {
-    #             'employee_id': self.employee.id,
-    #             'check_in': datetime(2021, 1, 4, 8, 5),
-    #             'check_out': datetime(2021, 1, 4, 12, 0),
-    #         },
-    #         {
-    #             'employee_id': self.employee.id,
-    #             'check_in': datetime(2021, 1, 4, 13, 0),
-    #             'check_out': datetime(2021, 1, 4, 16, 55),
-    #         }
-    #     ])
-
-    #     overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
-    #     self.assertFalse(overtime, 'No overtime should be counted because of the threshold.')
-
-    #     self.company.write({
-    #         'overtime_employee_threshold': 4,
-    #     })
-
-    #     overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
-    #     self.assertTrue(overtime, 'Overtime entry should exist since the threshold has been lowered.')
-    #     self.assertAlmostEqual(overtime.duration, -(10 / 60), msg='Overtime should be equal to -10 minutes.')
-    #
-    # def test_overtime_both_threshold(self):
-    #     self.env['hr.attendance'].create([
-    #         {
-    #             'employee_id': self.employee.id,
-    #             'check_in': datetime(2021, 1, 4, 8, 5),
-    #             'check_out': datetime(2021, 1, 4, 12, 0),
-    #         },
-    #         {
-    #             'employee_id': self.employee.id,
-    #             'check_in': datetime(2021, 1, 4, 13, 0),
-    #             'check_out': datetime(2021, 1, 4, 17, 5),
-    #         }
-    #     ])
-    #     overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
-    #     self.assertFalse(overtime, 'No overtime should be counted because of the threshold.')
-
-    #     self.company.write({
-    #         'overtime_employee_threshold': 4,
-    #     })
-
-    #     overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
-    #     self.assertTrue(overtime, 'Overtime entry should exist since the employee threshold has been lowered.')
-    #     self.assertAlmostEqual(overtime.duration, -(5 / 60), msg='Overtime should be equal to -5 minutes.')
-
-    #     self.company.write({
-    #         'overtime_company_threshold': 4,
-    #     })
-
-    #     overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
-    #     self.assertFalse(overtime, 'Overtime entry should be unlinked since both overtime cancel each other.')
 
     def test_overtime_lunch(self):
         attendance = self.env['hr.attendance'].create({
@@ -753,10 +692,7 @@ class TestHrAttendanceOvertime(HttpCase):
             'check_in': datetime(2023, 1, 3, 12, 0),
             'check_out': datetime(2023, 1, 3, 18, 0)
         })
-        # TODO naja: logic should rework after negative logic
-        # self.assertAlmostEqual(attendance.overtime_hours, -2, 2, 'There should be -2 hours of overtime for the flexible resource.')
-        # for no negative overtime -> 0
-        self.assertAlmostEqual(attendance.overtime_hours, 0, 2, 'There should be -2 hours of overtime for the flexible resource.')
+        self.assertAlmostEqual(attendance.overtime_hours, 0, 2, 'There should be 0 hours of overtime for the flexible resource.')
 
         # 3) 10:00 - 22:00 should contain 4 hours of overtime
         attendance.write({
@@ -778,10 +714,6 @@ class TestHrAttendanceOvertime(HttpCase):
         """
         self.flexible_employee.ruleset_id = self.ruleset
 
-        # TODO naja: logic should rework after negative logic
-        # self.assertAlmostEqual(attendance.overtime_hours, -2, 2, 'There should be -2 hours of overtime for the flexible resource.')
-        # for no negative overtime -> 0
-
         # 1) 8:00 - 12:00 should contain -4 hours of overtime
         attendance_1 = self.env['hr.attendance'].create({
             'employee_id': self.flexible_employee.id,
@@ -797,7 +729,6 @@ class TestHrAttendanceOvertime(HttpCase):
             'check_out': datetime(2023, 1, 2, 15, 0)
         })
         self.assertEqual(attendance_1.overtime_hours, 0, 'There should be no overtime for the flexible resource.')
-        # self.assertAlmostEqual(attendance_2.overtime_hours, -2, 2, 'There should be -2 hours of overtime for the flexible resource.')
         self.assertAlmostEqual(attendance_2.overtime_hours, 0, 2, 'There should be 0 hours of overtime for the flexible resource.')
 
         # 3) 8:00 - 12:00, 13:00 - 15:00 and 16:00 - 18:00 should contain 0, 0 and 0 hours of overtime
@@ -911,7 +842,7 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertAlmostEqual(attendance.overtime_hours, 1, 2)
         self.assertAlmostEqual(attendance.validated_overtime_hours, 1, 2)
 
-        attendance._linked_overtimes().manual_duration = previous = 0.5
+        attendance.linked_overtime_ids.manual_duration = previous = 0.5
         self.assertNotEqual(attendance.validated_overtime_hours, attendance.overtime_hours)
 
         # Create another attendance for the same employee
