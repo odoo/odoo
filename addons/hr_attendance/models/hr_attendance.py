@@ -101,21 +101,14 @@ class HrAttendance(models.Model):
             else:
                 attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
 
-    @api.depends('overtime_hours')
+    @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_overtime_status(self):
-        mapped_overtimes = self._linked_overtimes().grouped(
-            lambda ot: (ot.employee_id, ot.date)
-        )
         for attendance in self:
-            overtimes = mapped_overtimes.get(
-                (attendance.employee_id, attendance.date),
-                self.env['hr.attendance.overtime.line'],
-            )
-            if not overtimes:
+            if not attendance.linked_overtime_ids:
                 attendance.overtime_status = False
-            elif all(overtimes.mapped(lambda ot: ot.status == 'approved')):
+            elif all(attendance.linked_overtime_ids.mapped(lambda ot: ot.status == 'approved')):
                 attendance.overtime_status = 'approved'
-            elif all(overtimes.mapped(lambda ot: ot.status == 'refused')):
+            elif all(attendance.linked_overtime_ids.mapped(lambda ot: ot.status == 'refused')):
                 attendance.overtime_status = 'refused'
             else:
                 attendance.overtime_status = 'to_approve'
@@ -125,35 +118,16 @@ class HrAttendance(models.Model):
         for attendance in self:
             attendance.overtime_hours = sum(attendance.linked_overtime_ids.mapped('manual_duration'))
 
-    @api.depends('employee_id', 'overtime_hours', 'overtime_status')
+    @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_validated_overtime_hours(self):
         for attendance in self:
             attendance.validated_overtime_hours = sum(attendance.linked_overtime_ids.filtered_domain([('status', '=', 'approved')]).mapped('manual_duration'))
 
     @api.depends('check_in', 'check_out', 'employee_id')
     def _compute_linked_overtime_ids(self):
-        closed_attendendances = self.filtered_domain([('check_out', '!=', False)])
-        if not closed_attendendances:
-            self.linked_overtime_ids = False
-            return
-
-        all_linked_overtimes = self.env['hr.attendance.overtime.line']._read_group([
-                ('employee_id', 'in', closed_attendendances.employee_id.ids),
-                ('time_start', ">=", min(closed_attendendances.mapped('check_in'))),
-                ('time_stop', "<=", max(closed_attendendances.mapped('check_out'))),
-            ],
-            groupby=['employee_id'],
-            aggregates=['id:recordset'],
-        )
-        self.linked_overtime_ids = False
-        mapped_attendances = closed_attendendances.grouped(lambda att: (att.employee_id))
-        for employee, overtimes in all_linked_overtimes:
-            attendances = mapped_attendances[employee]
-            for attendance in attendances:
-                attendance.linked_overtime_ids = overtimes.filtered_domain([
-                    ('time_start', '=', attendance.check_in),
-                    ('time_stop', '=', attendance.check_out)
-                ])
+        overtimes_by_attendance = self._linked_overtimes().grouped(lambda ot: (ot.employee_id, ot.time_start))
+        for attendance in self:
+            attendance.linked_overtime_ids = overtimes_by_attendance.get((attendance.employee_id, attendance.check_in), False)
 
     @api.depends('employee_id', 'check_in', 'check_out')
     def _compute_display_name(self):
@@ -570,7 +544,7 @@ class HrAttendance(models.Model):
 
     def _linked_overtimes(self):
         return self.env['hr.attendance.overtime.line'].search([
-            ('date', 'in', self.mapped('date')),
+            ('time_start', 'in', self.mapped('check_in')),
             ('employee_id', 'in', self.employee_id.ids),
         ])
 
