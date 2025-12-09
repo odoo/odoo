@@ -120,7 +120,7 @@ class HrAttendanceOvertimeRule(models.Model):
     )
     sequence = fields.Integer(default=10)
 
-    ruleset_id = fields.Many2one('hr.attendance.overtime.ruleset', required=True, index=True)
+    ruleset_id = fields.Many2one('hr.attendance.overtime.ruleset', required=True, index=True, ondelete="cascade", default=lambda self: self.env.context.get('active_id', None))
     company_id = fields.Many2one(related='ruleset_id.company_id')
 
     paid = fields.Boolean("Pay Extra Hours")

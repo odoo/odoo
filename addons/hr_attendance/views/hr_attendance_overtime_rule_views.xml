@@ -100,18 +100,11 @@
                     <button name="action_regenerate_overtimes"
                         class="btn"
                         string="Regenerate overtimes"
-                        icon="fa-clock-o"
                         type="object"
-                        groups="hr_attendance.group_hr_attendance_officer"
+                        groups="base.group_no_one,hr_attendance.group_hr_attendance_officer"
                         help="Regenerate overtimes for this ruleset"/>
                 </header>
                 <sheet>
-                    <header>
-                        <div class="oe_title">
-                            <label for="name" string="Ruleset Name"/>
-                            <h1><field name="name" placeholder="e.g. Legal Rules"/></h1>
-                        </div>
-                    </header>
                     <div class="oe_button_box" name="button_box">
                         <button
                             name="action_show_versions"
@@ -129,22 +122,38 @@
                             </div>
                         </button>
                     </div>
+                    <div class="oe_title">
+                        <label for="name" string="Ruleset Name"/>
+                        <h1><field name="name" placeholder="e.g. Legal Rules" required="id"/></h1>
+                    </div>
                     <group>
                         <group>
                             <field name="rate_combination_mode"/>
                         </group>
                         <group>
-                            <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company"/>
+                            <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company" placeholder="Available in all countries"/>
                         </group>
                     </group>
-                    <group colspan="4">
+                    <group>
                         <field 
-                            name="description" colspan="4"
+                            name="description"
                             placeholder="Provide a description or sources for this ruleset."/>
                     </group>
-                    <notebook colspan="4">
+                    <div class="border rounded-3 d-flex flex-column justify-content-center align-items-center mt-2 flex-1 overflow-hidden" invisible="rule_ids">
+                        <div class="o_view_nocontent" style="position: relative;">
+                            <div class="o_nocontent_help text-center">
+                                <p class="o_view_nocontent_smiling_face">
+                                    No rules on the ruleset yet. Let's create a new one
+                                </p>
+                                <button name="action_create_overtime_rule" type="object"
+                                        class="btn btn-primary"
+                                        string="Create an overtime rule"/>
+                            </div>
+                        </div>
+                    </div>
+                    <notebook colspan="4" invisible="not rule_ids">
                         <page name="overtime_rules" string="Overtime Rules">
-                            <field name="rule_ids" readonly="not id">
+                            <field name="rule_ids">
                                 <list>
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
