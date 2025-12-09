@@ -3,6 +3,7 @@
 import logging
 from collections import defaultdict
 
+from psycopg2 import sql
 from werkzeug import urls
 
 from odoo import _, api, fields, models
@@ -756,12 +757,12 @@ class ProductTemplate(models.Model):
             self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
             prod_tmpl_ids = self.env.cr.dictfetchall()
             max_seq = self._default_website_sequence()
-            query = f"""
-                UPDATE {self._table}
+            query = sql.SQL("""
+                UPDATE {}
                 SET website_sequence = p.web_seq
                 FROM (VALUES %s) AS p(p_id, web_seq)
                 WHERE id = p.p_id
-            """
+            """).format(sql.Identifier(self._table))
             values_args = [(prod_tmpl['id'], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)]
             self.env.cr.execute_values(query, values_args)
         else:

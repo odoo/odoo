@@ -3,13 +3,14 @@ import itertools
 import logging
 import random
 import re
-import psycopg2
 import typing
 from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Mapping
 from operator import itemgetter
 
+import psycopg2
+import psycopg2.sql
 from psycopg2.extras import Json
 
 from odoo import api, fields, models, tools
@@ -84,16 +85,14 @@ def query_insert(cr, table, rows):
     if isinstance(rows, Mapping):
         rows = [rows]
     cols = list(rows[0])
-    query = SQL(
-        "INSERT INTO %s (%s)",
-        SQL.identifier(table),
-        SQL(",").join(map(SQL.identifier, cols)),
-    )
-    str_query, params, _to_flush = query._sql_tuple
-    assert not params
-    str_query += " VALUES %s RETURNING id"
     params = [tuple(row[col] for col in cols) for row in rows]
-    cr.execute_values(str_query, params)
+    cr.execute_values(
+        psycopg2.sql.SQL("INSERT INTO {} ({}) VALUES %s RETURNING id").format(
+            psycopg2.sql.Identifier(table),
+            psycopg2.sql.SQL(",").join(map(psycopg2.sql.Identifier, cols)),
+        ),
+        params,
+    )
     return [row[0] for row in cr.fetchall()]
 
 
