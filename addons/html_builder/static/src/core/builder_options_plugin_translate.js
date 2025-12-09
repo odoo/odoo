@@ -12,6 +12,8 @@ export class BuilderOptionsTranslationPlugin extends Plugin {
         "updateContainers",
         "setNextTarget",
         "getBuilderOptionContext",
+        "getRemoveDisabledReason",
+        "getCloneDisabledReason",
     ];
     static dependencies = ["history"];
 
@@ -27,6 +29,8 @@ export class BuilderOptionsTranslationPlugin extends Plugin {
     }
     deactivateContainers() {}
     getTarget() {}
+    getRemoveDisabledReason() {}
+    getCloneDisabledReason() {}
     updateContainers() {}
     setNextTarget(targetEl) {
         // Store the next target to activate in the current step.
