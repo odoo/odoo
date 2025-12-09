@@ -390,3 +390,24 @@ class TestAccountMove(TestAccountMoveStockCommon):
                 {'account_id': stock_output_account.id, 'product_id': self.product_b.id},
             ]
         )
+
+    def test_invoice_with_journal_item_without_label(self):
+        """Test posting an invoice whose invoice lines have no label.
+        The 'name' field is optional on account.move.line and should be
+        handled safely when generating accounting entries.
+        """
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'name': False,
+                }),
+            ],
+        })
+        move.action_post()
+        # name should remain falsy on the invoice line
+        self.assertFalse(move.invoice_line_ids.name)
+        # ensure the invoice is posted successfully
+        self.assertEqual(move.state, 'posted')
