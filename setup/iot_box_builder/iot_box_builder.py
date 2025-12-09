@@ -113,9 +113,6 @@ class KvmIotBuilder:
             f'cd {RPI_ODOO_CLONE_DIR} && git read-tree -mu HEAD',
             f'cd {RPI_ODOO_CLONE_DIR} && git remote set-url origin https://github.com/{self.odoo_org}/odoo.git',
             f'mkdir -p {BUILD_DIR}/overwrite_before_init/usr/bin',
-            # Ngrok setup
-            f'[[ -f {BUILD_DIR}/overwrite_before_init/usr/bin/ngrok ]] || wget -nc -q {NGROK_URL} -O /tmp/ngrok.tgz',
-            f'[[ -f {BUILD_DIR}/overwrite_before_init/usr/bin/ngrok ]] || tar xvzf /tmp/ngrok.tgz -C {BUILD_DIR}/overwrite_before_init/usr/bin --remove-files',
             # System partition customization
             f'mkdir -p {BOX_MOUNT_POINT}',
             f'sudo mount -v /dev/loop0p2 {BOX_MOUNT_POINT}',

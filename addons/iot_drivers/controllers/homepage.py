@@ -248,9 +248,9 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'IoT Handlers loaded successfully',
         })
 
-    @route.iot_route('/iot_drivers/is_ngrok_enabled', type="http", linux_only=True)
-    def is_ngrok_enabled(self):
-        return json.dumps({'enabled': system.is_ngrok_enabled()})
+    @route.iot_route('/iot_drivers/is_remote_debug_enabled', type="http", linux_only=True)
+    def is_remote_debug_enabled(self):
+        return json.dumps({'enabled': system.is_remote_debug_enabled()})
 
     # ---------------------------------------------------------- #
     # POST methods                                               #
@@ -309,13 +309,13 @@ class IotBoxOwlHomePage(http.Controller):
             'password': system.generate_password(),
         }
 
-    @route.iot_route('/iot_drivers/enable_ngrok', type="jsonrpc", methods=['POST'], linux_only=True)
+    @route.iot_route('/iot_drivers/enable_remote_debug', type="jsonrpc", methods=['POST'], linux_only=True)
     def enable_remote_connection(self, auth_token):
-        return {'status': 'success' if system.toggle_remote_connection(auth_token) else 'failure'}
+        return {'status': 'success' if system.toggle_remote_debug(auth_token) else 'failure'}
 
-    @route.iot_route('/iot_drivers/disable_ngrok', type="jsonrpc", methods=['POST'], linux_only=True)
+    @route.iot_route('/iot_drivers/disable_remote_debug', type="jsonrpc", methods=['POST'], linux_only=True)
     def disable_remote_connection(self):
-        return {'status': 'success' if system.toggle_remote_connection() else 'failure'}
+        return {'status': 'success' if system.toggle_remote_debug() else 'failure'}
 
     @route.iot_route('/iot_drivers/connect_to_server', type="jsonrpc", methods=['POST'], cors='*')
     def connect_to_odoo_server(self, token):

@@ -3,6 +3,7 @@
 import configparser
 import logging
 import netifaces
+import re
 import requests
 import secrets
 import socket
@@ -212,37 +213,30 @@ def _get_system_uptime():
         return float(f.readline().split()[0])
 
 
-def is_ngrok_enabled():
-    """Check if a ngrok tunnel is active on the IoT Box"""
-    try:
-        response = requests.get("http://localhost:4040/api/tunnels", timeout=5)
-        response.raise_for_status()
-        response.json()
-        return True
-    except (requests.exceptions.RequestException, ValueError):
-        # if the request fails or the response is not valid JSON,
-        # it means ngrok is not enabled or not running
-        _logger.debug("Ngrok isn't running.", exc_info=True)
-        return False
+def is_remote_debug_enabled():
+    """Check if the tailscale connection is up on the IoT Box"""
+    p = subprocess.run(['tailscale', 'status'], check=False)
+    return p.returncode == 0
 
 
-def toggle_remote_connection(token=""):
-    """Enable/disable remote connection to the IoT Box using ngrok.
-    If the token is provided, it will set up ngrok with the
-    given authtoken, else it will disable the ngrok service.
+def toggle_remote_debug(auth_key=""):
+    """Enable/disable remote connection to the IoT Box using tailscale.
 
-    :param str token: The ngrok authtoken to use for the connection"""
-    _logger.info("Toggling remote connection with token: %s...", token[:5] if token else "<No Token>")
-    p = subprocess.run(
-        ['sudo', 'ngrok', 'config', 'add-authtoken', token, '--config', '/home/pi/ngrok.yml'],
-        check=False,
-    )
-    if p.returncode == 0:
+    :param auth_key: The auth key to use to enable remote access.
+    If empty, remote access will be disabled.
+    """
+    _logger.info("%s remote access", 'enabling' if auth_key else 'disabling')
+
+    hostname = get_conf('remote_server') or 'iotbox'
+    server_url = re.sub(r'^https?://|/|:', '', hostname + "-" + IOT_IDENTIFIER)
+    args = ['sudo', 'tailscale', 'up' if auth_key else 'logout']
+    if auth_key:
+        args.extend([f'--auth-key={auth_key}', f'--hostname={server_url}'])
+    p = subprocess.run(args, check=False)
+    if auth_key and p.returncode == 0:
+        # Tailscale stores its state in /var, we need to copy it in the root filesystem to persist after reboot
         subprocess.run(
-            ['sudo', 'systemctl', 'restart' if token else "stop", 'odoo-ngrok.service'],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            check=False,
+            ['sudo', 'cp', '-r', '/var/lib/tailscale/', '/root_bypass_ramdisks/var/lib/tailscale/'], check=False
         )
         return True
     return False
