@@ -101,8 +101,8 @@ class ResPartnerBank(models.Model):
     note = fields.Text('Notes')
     color = fields.Integer(compute='_compute_color')
 
-    _unique_number = models.Constraint(
-        'unique(sanitized_acc_number, partner_id)',
+    _unique_number = models.UniqueIndex(
+        '(sanitized_acc_number, partner_id) WHERE (active IS TRUE)',
         "The combination Account Number/Partner must be unique.",
     )
 

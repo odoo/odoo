@@ -91,7 +91,7 @@ class TestMergePartner(TransactionCase):
         self.assertTrue(self.partner1.exists(), "Destination partner should exist after merge")
         self.assertEqual(len(self.partner1.bank_ids), 1, "There should be a single bank account after merge")
         self.assertIn(self.bank1, self.partner1.bank_ids, "The original bank account of the destination partner should remain")
-        self.assertFalse(self.bank3.exists(), "The duplicate bank account should have been deleted.")
+        self.assertFalse(self.bank3.active, "The duplicate bank account should be archived.")
 
     def test_merge_partners_with_references(self):
         """ Test merging partners with references """
