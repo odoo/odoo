@@ -119,6 +119,7 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         for line in new_order.order_line:
             self.assertEqual(line.move_ids[0].date, right_date, "The expected date for the Stock Move is wrong")
 
+    @freeze_time('2025-10-10')
     def test_expected_date_with_storable_product(self):
         ''' This test ensures the expected date is computed based on only goods(consu) products.
         It's avoiding computation for non-goods products.
