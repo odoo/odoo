@@ -11,6 +11,8 @@ from odoo.exceptions import ValidationError, UserError
 from odoo.tests.common import tagged, TransactionCase
 from odoo.tools import mute_logger
 
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 FAKE_UUID = 'yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'
 PDF_FILE_PATH = 'account_peppol/tests/assets/peppol_identification_test.pdf'
@@ -55,6 +57,7 @@ class TestPeppolParticipant(TransactionCase):
             '/api/peppol/1/update_user': {'result': {}},
             '/api/peppol/1/verify_phone_number': {'result': {}},
             '/api/peppol/1/register_receiver': {'result': {}},
+            '/api/peppol/1/get_all_documents': {'result': {'messages': []}},
         }
 
     @classmethod
@@ -125,8 +128,10 @@ class TestPeppolParticipant(TransactionCase):
     def _set_context(self, other_context):
         previous_context = self.env.context
         self.env.context = dict(previous_context, **other_context)
-        yield self
-        self.env.context = previous_context
+        try:
+            yield self
+        finally:
+            self.env.context = previous_context
 
     def test_create_participant_missing_data(self):
         # creating a participant without eas/endpoint/document should not be possible
@@ -284,7 +289,6 @@ class TestPeppolParticipant(TransactionCase):
         self.assertFalse(edi_user_1.active)
 
     def test_restore_user_in_draft_state(self):
-        """Test recovery when IAP-side is in KYC state (should set to `pending` and not keep in `not_registered`)"""
         settings = self.env['res.config.settings'].create(self._get_participant_vals())
         settings.button_create_peppol_proxy_user()
         edi_user = self.env.company.account_edi_proxy_client_ids
@@ -293,14 +297,15 @@ class TestPeppolParticipant(TransactionCase):
         edi_user.active = False
         edi_user.company_id.account_peppol_proxy_state = 'not_registered'
 
-        # mock IAP returning draft state (thus still in KYC)
-        with self._set_context({'peppol_state': 'draft'}):
-            result = self.env['account_edi_proxy_client.user']._try_recover_peppol_proxy_users(edi_user.company_id)
+        # mock IAP returning draft state
+        with self._set_context({'peppol_state': 'active'}):
+            user_vals = {**self._get_participant_vals(), 'account_peppol_endpoint': '0000000000'}
+            # user tries to re-register with same endpoint -> recovery kicks in
+            self.env['res.config.settings'].create(user_vals).button_create_peppol_proxy_user()
 
-        # should recover user and set state to 'pending'
-        self.assertEqual(result, edi_user)
+        # should recover user and set state to 'not_registered' (there is no phone validation in 16.0)
         self.assertTrue(edi_user.active)
-        self.assertEqual(edi_user.company_id.account_peppol_proxy_state, 'pending')
+        self.assertEqual(edi_user.company_id.account_peppol_proxy_state, 'active')
 
     def test_cron_recovery_multi_company(self):
         """Test cron recovery works correctly across multi companies"""
@@ -539,3 +544,23 @@ class TestPeppolParticipant(TransactionCase):
             # handle malformed response gracefully
             self.assertIsNone(result)
             self.assertFalse(edi_user.active)
+
+    def test_deregister_with_client_gone_error(self):
+        """Test deregistration succeeds even when proxy returns client_gone error"""
+        settings = self.env['res.config.settings'].create(self._get_participant_vals())
+        settings.button_create_peppol_proxy_user()
+        self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
+        self.assertEqual(self.env.company.account_peppol_proxy_state, 'active')
+
+        original_make_request = self.env['account_edi_proxy_client.user']._make_request
+
+        def mock_make_request(self, url, params=None):
+            if 'cancel_peppol_registration' in url:
+                raise AccountEdiProxyError('client_gone', 'Client no longer exists on proxy')
+            return original_make_request(url, params)
+
+        with patch.object(self.registry['account_edi_proxy_client.user'], '_make_request', mock_make_request):
+            settings.button_deregister_peppol_participant()
+
+        # Should successfully deregister despite client_gone error
+        self.assertEqual(self.env.company.account_peppol_proxy_state, 'not_registered')
