@@ -8,5 +8,8 @@
                 <span t-attf-class="{{ alertClass }}" t-on-click="() => props.thread.markAsRead()">Mark as Read<i class="ms-2 fa fa-check-square"/></span>
             </span>
         </xpath>
+        <xpath expr="//Message" position="attributes">
+            <attribute name="hasActions">!msg.eq(props.thread.channel?.from_message_id)</attribute>
+        </xpath>
     </t>
 </templates>
