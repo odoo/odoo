@@ -78,3 +78,28 @@ registry.category("web_tour.tours").add("test_selected_customer_after_adding_pay
             Dialog.is("Scan to Pay"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_mixed_payments_synced", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Letter Tray", "10"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("8"),
+            PaymentScreen.selectedPaymentlineHas("Cash", "8.00"),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.clickPaymentlineDelButton("Online payment", "40.00"),
+            PaymentScreen.clickPaymentline("Cash", "8.00"),
+            PaymentScreen.clickNumpad("9"),
+            PaymentScreen.selectedPaymentlineHas("Cash", "9.00"),
+            PaymentScreen.clickPaymentMethod("Online payment"),
+            PaymentScreen.selectedPaymentlineHas("Online payment", "39.00"),
+            PaymentScreen.clickValidate(),
+            {
+                content: "Check Dialog title",
+                trigger: '.modal .modal-header:contains("Scan to Pay")',
+            }
+        ].flat(),
+});

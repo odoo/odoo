@@ -4,7 +4,7 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 
 patch(PaymentScreen.prototype, {
     async addNewPaymentLine(paymentMethod) {
-        if (paymentMethod.is_online_payment && !this.currentOrder.isSynced) {
+        if (paymentMethod.is_online_payment) {
             this.currentOrder.date_order = serializeDateTime(luxon.DateTime.now());
             this.pos.addPendingOrder([this.currentOrder.id]);
             await this.pos.syncAllOrders();

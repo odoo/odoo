@@ -337,6 +337,14 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         self.assertEqual(order.state, "draft", "The order should still be in draft state.")
         self.assertEqual(len(order.payment_ids), 0, "There should be no payment line in the order.")
 
+    def test_mixed_payments_synced(self):
+        """
+        Tests that when paying with an offline payment method, changing the price to a fraction of the
+        total price. Then paying the rest with an online method, the
+        """
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_mixed_payments_synced', login="pos_admin")
+
     @classmethod
     def tearDownClass(cls):
         # Restore company values after the tests
