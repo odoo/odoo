@@ -46,6 +46,7 @@ class HrVersion(models.Model):
         tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         index=True)
+    parent_id = fields.Many2one('hr.employee', 'Manager', index=True)
     name = fields.Char(tracking=True)
     display_name = fields.Char(compute='_compute_display_name')
     active = fields.Boolean(default=True, tracking=True)

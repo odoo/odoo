@@ -223,7 +223,7 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user"
     )
     # Direct subordinates
-    parent_id = fields.Many2one('hr.employee', 'Manager', tracking=True, index=True,
+    parent_id = fields.Many2one(readonly=False, related='version_id.parent_id', inherited=True, index=True, tracking=True, store=True,
                                 domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]")
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     child_count = fields.Integer('Direct Subordinates Count', compute='_compute_child_count',
