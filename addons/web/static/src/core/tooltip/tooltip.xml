@@ -4,7 +4,7 @@
     <t t-name="web.Tooltip">
         <div class="o-tooltip tooltip-inner d-print-none text-start">
             <t t-if="props.template" t-call="{{props.template}}" t-call-context="{ env, ...props.info }"/>
-            <span t-else="" t-esc="props.tooltip"/>
+            <span t-else="" t-esc="props.tooltip" class="o-tooltip--string"/>
         </div>
     </t>
 
