@@ -83,3 +83,28 @@ class TestTRAccountMoveSend(TestAccountMoveSendCommon):
             attachments,
             f"Found {len(attachments)} unexpected Attachment node(s) in UBL TR XML"
         )
+
+    def test_invoice_with_bank_account(self):
+        """Test invoice generation with bank account having bank_id set."""
+        bank = self.env['res.bank'].create({
+            'name': 'Test Bank',
+            'bic': 'TESTTR2A',
+            'country': self.env.ref('base.tr').id,
+        })
+        partner_bank = self.env['res.partner.bank'].create({
+            'acc_number': 'TR1234567890123456',
+            'partner_id': self.company_data['company'].partner_id.id,
+            'bank_id': bank.id,
+        })
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            partner=self.partner_tr,
+            invoice_date='2025-11-28',
+            amounts=[1000],
+            taxes=self.tax_sale_a,
+            post=True,
+        )
+        invoice.partner_bank_id = partner_bank
+        xml_content, errors = self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)
+        self.assertFalse(errors)
+        self.assertTrue(xml_content)
