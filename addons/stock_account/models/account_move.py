@@ -138,7 +138,7 @@ class AccountMove(models.Model):
 
                 # Add interim account line.
                 lines_vals_list.append({
-                    'name': line.name[:64],
+                    'name': line.name[:64] if line.name else '',
                     'move_id': move.id,
                     'partner_id': move.commercial_partner_id.id,
                     'product_id': line.product_id.id,
@@ -154,7 +154,7 @@ class AccountMove(models.Model):
 
                 # Add expense account line.
                 lines_vals_list.append({
-                    'name': line.name[:64],
+                    'name': line.name[:64] if line.name else '',
                     'move_id': move.id,
                     'partner_id': move.commercial_partner_id.id,
                     'product_id': line.product_id.id,
