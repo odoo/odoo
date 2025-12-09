@@ -147,11 +147,17 @@ def _mock_register_proxy_user(func, self, *args, **kwargs):
     return edi_user
 
 
+def _mock_peppol_deregister_participant(func, self, *args, **kwargs):
+    self.company_id._reset_peppol_configuration()
+    self.unlink()
+
+
 _demo_behaviour = {
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,  # res.partner
     '_check_peppol_participant_exists': _mock_check_peppol_participant_exists,  # res.partner
     '_register_proxy_user': _mock_register_proxy_user,  # account_edi_proxy_client.user
+    '_peppol_deregister_participant': _mock_peppol_deregister_participant,
 }
 
 # -------------------------------------------------------------------------
