@@ -5343,3 +5343,35 @@ class TestTourMrpOrder(HttpCase):
         self.assertEqual(mo.move_raw_ids.move_line_ids.quantity, 7)
         self.assertEqual(mo.move_byproduct_ids.quantity, 7)
         self.assertEqual(len(mo.move_byproduct_ids.move_line_ids), 1)
+
+    def test_mrp_multi_step_product_catalog_component_transfer(self):
+        '''
+        Ensure a transfer to pre-prod is created for components added through
+        the catalog.
+        '''
+        # Enable storage locations
+        self.env.user.write({'groups_id': [Command.link(self.env.ref('stock.group_stock_multi_locations').id)]})
+        # Set WH manufacture to 2-step
+        warehouse = self.env.ref('stock.warehouse0')
+        warehouse.manufacture_steps = 'pbm'
+        component, final_product = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+        } for name in ['Wooden Leg', 'Table']])
+        mo = self.env['mrp.production'].create({
+            'product_id': final_product.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': warehouse.id,
+        })
+        self.assertEqual(len(mo.move_raw_ids), 0)
+
+        url = f'/odoo/action-mrp.mrp_production_action/{mo.id}'
+        self.start_tour(url, 'test_mrp_multi_step_product_catalog_component_transfer', login='admin')
+        self.assertEqual(len(mo.move_raw_ids), 1)
+
+        mo.action_confirm()
+        component_transfer = self.env['stock.move'].search([
+            ('product_id', '=', component.id),
+            ('location_dest_id', '=', warehouse.pbm_loc_id.id)
+        ])
+        self.assertEqual(component_transfer.product_uom_qty, 2)
