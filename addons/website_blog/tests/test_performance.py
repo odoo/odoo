@@ -3,6 +3,8 @@
 
 from odoo.addons.website.tests.test_performance import UtilPerf
 import random
+import datetime
+from freezegun import freeze_time
 
 
 class TestBlogPerformance(UtilPerf):
@@ -35,7 +37,14 @@ class TestBlogPerformance(UtilPerf):
         } for blog in blogs])
 
     def test_10_perf_sql_blog_standard_data(self):
-        self.assertLessEqual(self._get_url_hot_query('/blog'), 10)
+        # some blog post are published at the same time the test is run meaning that they are not published.
+        # We ave multiple possibilities when _get_url_hot_query is called:
+        # - all call to /blog are executed before the publication date: 9 total queries (8)
+        # - some call to /blog are executed after the publication date: 11 total queries (10)
+        # - only the last call (considered hot) is executed after the publication date: ~40-50 queries
+        # using freezetime after the publication date ensures a consistent result
+        with freeze_time(datetime.datetime.now() + datetime.timedelta(seconds=2)):
+            self.assertLessEqual(self._get_url_hot_query('/blog'), 10)
 
     def test_20_perf_sql_blog_bigger_data_scaling(self):
         BlogPost = self.env['blog.post']
