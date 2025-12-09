@@ -12,7 +12,7 @@
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="props.media === 'microphone' ? onClickUseMicrophone : onClickUseCamera" t-out="primaryActionText"/>
-                <button class="btn btn-secondary" t-if="rtc.cameraPermission !== 'denied'" t-on-click="onClickUseMicAndCamera">Use microphone and camera</button>
+                <button class="btn btn-secondary" t-if="rtc.cameraPermission !== 'granted' and rtc.microphonePermission !== 'granted'" t-on-click="onClickUseMicAndCamera">Use microphone and camera</button>
             </t>
         </Dialog>
     </t>
