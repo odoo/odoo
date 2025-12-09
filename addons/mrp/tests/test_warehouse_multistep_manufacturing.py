@@ -869,3 +869,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         mo.action_confirm()
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(lovely_product.with_context(location_id=self.warehouse_1.lot_stock_id.id).virtual_available, 3.0)
+
+    def test_manufacture_to_resupply_unchecks_and_unlinks_warehouse(self):
+        """Unchecking Manufacture to Resupply should keep manufacture_to_resupply disabled."""
+        manufacture_route = self.warehouse_1.manufacture_pull_id.route_id
+        self.warehouse_1.manufacture_to_resupply = False
+        self.assertFalse(self.warehouse_1.manufacture_to_resupply)
+        self.assertNotIn(self.warehouse_1, manufacture_route.warehouse_ids)
