@@ -1,0 +1,482 @@
+SMART Marketplace — Odoo 18 — LLM Functional Specification
+
+## Purpose
+
+This file is an LLM-ready functional specification that lists all functionalities required to implement a production-ready multi-vendor marketplace on Odoo 18 with social commerce integrations (Facebook/Instagram, WhatsApp, TikTok, LinkedIn), delivery integration (Sha6er), payment gateways, mobile apps, analytics and operational automation.
+
+## Format
+
+This document groups features into the main layers used by developers and LLM agents: Business flows, Data models, Back-end modules & controllers, REST APIs and webhooks, Front-end / Website flows, Seller & Buyer portals, Social sync & scheduler, Delivery & logistics, Payments & payouts, Security, QA & tests, DevOps & deployment, Localization & legal.
+
+## Use
+
+Feed this file to an LLM or to a code generator (Cursor, Copilot, custom scripts) to scaffold Odoo modules, API controllers, views, security rules, automated tests and deployment manifests.
+
+---
+
+1. Business flows (user stories)
+
+---
+
+1.1 Buyer stories
+
+* Browse marketplace home, categories, search, filter (by seller, city, rating, price, shipping time).
+* View product page (seller badge, variant selection, stock, delivery estimate, social share buttons).
+* Add items from multiple sellers to a single cart; checkout supports split fulfillment.
+* Pay via online gateway (Bankily, Sedad, Stripe, PayPal) or Cash on Delivery.
+* Track order status and shipments.
+* Rate products and sellers; raise dispute/return requests.
+* Receive notifications via email, push, and WhatsApp.
+
+1.2 Seller stories
+
+* Register and complete KYC flow; upload required documents (ID, company, bank info).
+* Create/manage product listings, attributes, inventory, prices, promotions.
+* Receive orders, accept/decline, print picklists, request pickup by Sha6er.
+* View sales dashboard, payouts ledger, and product analytics.
+* Connect or disconnect social channels and schedule product posts.
+
+1.3 Admin stories (SMART)
+
+* Approve/decline sellers and product publication to marketplace and social channels.
+* Configure global commission rules (percentage, fixed, category-specific).
+* View marketplace metrics (GMV, revenue, active sellers, top products).
+* Manage global promotions, CMS pages, categories and site content.
+* Configure integrations (Payment, Sha6er, Meta, TikTok, WhatsApp Cloud, LinkedIn).
+
+2. Data model (core models & fields)
+
+---
+
+The following models extend Odoo core models and add specific marketplace tables.
+
+2.1 marketplace.seller
+
+* id: integer
+* partner_id: res.partner (user/company)
+* state: selection [draft, pending, approved, suspended, rejected]
+* kyc_documents: binary/one2many
+* commission_type: selection [percentage, fixed]
+* commission_value: float
+* payout_account_details: json
+* social_channels: json {facebook:bool, instagram:bool, whatsapp:bool, tiktok:bool, linkedin:bool}
+* rating: float
+* created_at, updated_at
+
+2.2 product.template extensions
+
+* seller_id: marketplace.seller
+* external_sku: char
+* synced_channels: json {fb:true, ig:true, wa:true, tiktok:true, ln:true}
+* social_caption_template: text
+* tiktok_video_url: char
+* availability_status: computed (in_stock, low_stock, out_of_stock)
+* shipping_weight_kg: float
+
+2.3 social.post.queue
+
+* id
+* product_id
+* seller_id
+* channel: selection [facebook, instagram, whatsapp, tiktok, linkedin]
+* status: selection [pending, scheduled, posted, failed]
+* scheduled_at: datetime
+* payload: json
+* external_post_id: char
+* attempts: integer
+
+2.4 sale.order (extended)
+
+* marketplace_order: boolean
+* seller_order_lines relation (for multi-seller split orders)
+* social_source: char (facebook_shop, instagram_checkout, etc.)
+* delivery_tracking_ids
+
+2.5 payout.batch
+
+* id
+* seller_id
+* amount
+* commission_amount
+* fee
+* status [pending, processed, paid]
+* transfer_reference
+
+2.6 delivery.signature / delivery.proof
+
+* picking_id
+* signature_image
+* photo_proof
+* otp_verified boolean
+
+2.7 integration.log
+
+* service: char
+* direction: selection [inbound,outbound]
+* payload: json
+* status
+* response
+* timestamp
+
+3. Modules to deliver (Odoo module list)
+
+---
+
+* smart_marketplace_core
+
+  * models: seller, product extensions, commission engine, vendor portal
+  * controllers: REST endpoints for app & third parties
+  * views: seller portal templates, admin views, settings
+  * security: ir.model.access.csv and rules
+
+* smart_marketplace_delivery
+
+  * integrate Sha6er REST API
+  * delivery proofs, OTP workflows, assign couriers
+
+* smart_marketplace_payout
+
+  * payout scheduler, accounting entries, bank integration
+
+* smart_social_connector
+
+  * Meta (FB/IG) commerce sync using Graph API
+  * WhatsApp Cloud API messaging & catalog
+  * TikTok business API for product posting
+  * LinkedIn marketing posts
+  * rate-limit & retry logic
+
+* smart_social_scheduler
+
+  * queue engine, cron jobs, IA caption/visual generation endpoints (pluggable)
+
+* smart_marketplace_analytics
+
+  * materialized views, aggregated metrics, dashboards
+
+* smart_marketplace_mobile_api
+
+  * lightweight REST API for Flutter apps (auth token management, pagination)
+
+* smart_marketplace_tests
+
+  * unit & integration tests (pytest/odoo tsets)
+
+4. REST APIs & Webhooks (specs)
+
+---
+
+Use JSON endpoints under /smart/api/.
+
+4.1 Auth
+
+* POST /smart/api/auth/token
+
+  * body: {username, password} -> returns JWT access token (validity configurable)
+
+4.2 Products
+
+* GET /smart/api/products
+
+  * query params: q, page, per_page, category_id, seller_id, city, price_min, price_max, in_stock
+  * response: paginated product list
+
+* GET /smart/api/products/{id}
+
+  * response: full product, seller info, shipping estimate
+
+* POST /smart/api/seller/{seller_id}/products
+
+  * requires seller token
+  * payload: product data; returns created product
+
+4.3 Cart & Checkout
+
+* POST /smart/api/cart
+
+  * body: {items:[{product_id, qty}]}
+* POST /smart/api/checkout
+
+  * body: {cart_id, billing, shipping, payment_method}
+  * returns order_id and payment redirect URL or payment status
+
+4.4 Orders
+
+* GET /smart/api/orders?status=... (for sellers or buyers)
+* GET /smart/api/orders/{id}
+
+4.5 Webhooks
+
+* POST /smart/webhook/payment (gateway callbacks)
+* POST /smart/webhook/delivery (Sha6er delivery status updates)
+* POST /smart/webhook/social (meta/tiktok post status)
+
+4.6 Social Sync
+
+* POST /smart/api/social/sync
+
+  * schedule immediate sync for chosen product and channel
+* GET /smart/api/social/post/{queue_id}/status
+
+4.7 Admin
+
+* GET /smart/api/admin/metrics
+* POST /smart/api/admin/approve_seller {seller_id}
+
+4.8 Security
+
+* All endpoints require JWT except public product listing
+* Role-based checks: admin, seller, buyer, delivery
+* Rate limit: endpoints calling external APIs should have internal throttling
+
+5. Social Commerce integration details
+
+---
+
+5.1 Meta (Facebook & Instagram Shops)
+
+* Required: Meta Business account, Catalog, Commerce Manager
+* Use Graph API endpoints to create product item entries in the catalog and link product URLs to Odoo product pages. Keep a mapping table (product_id <-> fb_item_id).
+* Sync logic: on product create/update, push product data + images + inventory. On stock change, update catalog inventory.
+* Payment flow: support redirect-to-website or enable Instagram Checkout if approved. Capture source in sale.order.social_source.
+* Handle rate limits with exponential backoff.
+
+5.2 WhatsApp Cloud API
+
+* Use WhatsApp Cloud API to send rich messages: text, image, product template, button templates.
+* Support automated messages: product publication, cart abandonment, order confirmation, tracking updates.
+* Maintain message templates approved in WhatsApp Business Manager; implement template fallback.
+
+5.3 TikTok Business API
+
+* Generate short promo videos from product images & captions (local microservice using FFmpeg or third-party AI video API).
+* Push product metadata to TikTok for catalog sync and create organic posts.
+
+5.4 LinkedIn
+
+* Use LinkedIn Marketing API for scheduled posts; useful for B2B sellers and enterprise promos.
+
+5.5 Social content generation (IA)
+
+* Provide pluggable connectors to external generative services to create captions, short texts and visuals. Store results as media assets and attach to social.post.queue entries.
+
+6. Delivery integration (Sha6er)
+
+---
+
+* API endpoints: create_shipment, assign_courier, update_status, confirm_delivery, upload_proof
+* Workflow: Seller requests pickup -> Sha6er accepts & assigns courier -> courier picks up -> pick-up scanned -> in-transit -> delivered (OTP/photo/signature) -> Odoo updates picking and sale.order status.
+* Use asynchronous webhooks to receive real-time status changes. Validate webhook source using HMAC.
+* Support multi-package shipments and partial deliveries.
+
+7. Payments & payouts
+
+---
+
+* Gateways: implement adapters for Bankily, Sedad, Stripe, PayPal, bank transfer.
+* Payment flow: authorize/capture or redirect depending on gateway.
+* Payout flow: aggregate payable balance per seller, compute commission, fees and create payout.batch records. Trigger bank transfer using banking API or manual export.
+* Refunds: Support full and partial refunds; ensure commission recalculation on refunds.
+* Accounting: create proper journal entries for orders, fees, commissions, payouts.
+
+8. Multi-seller order splitting and fulfillment
+
+---
+
+* When a buyer checks out with products from several sellers, create a parent sale.order and child seller-specific sale.orders, or use single sale.order with grouped order_lines referencing seller_id and seller_order_id.
+* Each seller-specific order creates corresponding delivery picking managed by that seller or SMART (depending on marketplace model).
+* Payments flow: capture once (platform) and hold in escrow, then release payout to seller per payout schedule after delivery confirmation and dispute window.
+
+9. UX & website flows (website_sale extension)
+
+---
+
+* Home page with featured sellers, categories, trending products.
+* Seller storefront pages with seller information, ratings, contact and product list.
+* Product page: seller selector (if product sold by multiple sellers), shipping cost estimate, delivery time, social share and "Buy now".
+* Checkout: unified cart, choose shipping addresses, split shipment preview, payment method selection.
+* Buyer portal: orders, returns, invoices, download invoices.
+* Seller portal: product manager, orders, payouts, analytics.
+
+10. Security & compliance
+
+---
+
+* Authentication: JWT with refresh tokens, OAuth support for admin integrations.
+* Authorization: ir.rule for model-level access; record rules to restrict sellers to their own products, orders, payouts.
+* Data encryption: store sensitive fields (bank details) encrypted (Odoo fields.Binary + server-side encryption) and mask in UI.
+* GDPR/local privacy: data export, data deletion, consent logging for marketing messages.
+* Webhook validation: HMAC signatures and timestamp checks.
+* PCI: minimize card data storage; rely on tokenization from payment gateways.
+
+11. Testing & QA
+
+---
+
+* Unit tests: models, computed fields, business logic (pytest-odoo).
+* Integration tests: checkout multi-seller flows, payment webhooks, delivery webhook simulations.
+* End-to-end tests: Cypress or Playwright for website flows (catalog, checkout, seller portal).
+* Load tests: JMeter or k6 to simulate product sync bursts and checkout peaks.
+* Security tests: SAST tools, dependency scanning.
+
+12. Performance & scaling
+
+---
+
+* Use caching (Redis) for read-heavy endpoints and website fragment caching.
+* Async jobs: long-running tasks (social sync, large image processing, video generation) executed via Odoo queue_job or Celery.
+* Use CDN for product images and generated media.
+* Database: partitioning strategies for extremely large catalogs, PG tuning for high-concurrency workloads.
+
+13. DevOps & deployment
+
+---
+
+* Repositories: mono-repo for Odoo custom modules, separate repo for mobile apps & microservices.
+* CI: run unit tests, linters, manifest checks; build artifacts.
+* CD: containerized Odoo in Kubernetes; use rolling updates; persistent storage for filestore.
+* Backups: daily DB backups and filestore snapshots; test restores.
+* Monitoring: Prometheus + Grafana; alerting for high error rates and failed jobs.
+
+14. Observability & analytics
+
+---
+
+* Track events: product_view, add_to_cart, checkout_start, purchase, social_click, social_conversion.
+* Integrate with BI tools: export aggregated data to data warehouse (CSV/ETL) or via connectors (e.g. Airbyte).
+* Dashboards: admin revenue, seller leaderboard, conversion funnel, social channel ROI.
+
+15. Localization & legal
+
+---
+
+* Multi-currency and multi-company support.
+* Translate website content using Odoo translations and PO files.
+* Local tax rules and VAT configuration per country; compute taxes correctly during checkout.
+* Legal pages: TOS, seller agreement, privacy, cookie policy.
+
+16. Example security rules (high-level)
+
+---
+
+* Sellers can only read/write product.template records where product.seller_id == current_seller.
+* Sellers can only view sale.order lines that reference their seller_id.
+* Admin role can operate across all models.
+* Delivery agents can update picking and add proofs.
+
+17. Sample manifest snippet (**manifest**.py)
+
+---
+
+{
+"name": "Smart Marketplace Core",
+"version": "18.0.1.0.0",
+"depends": ["website_sale", "sale_management", "stock", "account"],
+"data": [
+"security/ir.model.access.csv",
+"views/marketplace_seller_views.xml",
+"views/product_template_inherit.xml",
+"data/marketplace_data.xml",
+],
+"installable": True,
+}
+
+18. Webhook examples (payment)
+
+---
+
+* Payment gateway POST to /smart/webhook/payment
+
+  * body: {order_reference, status, transaction_id, amount, currency, signature}
+  * server validates signature and updates sale.order payment status.
+
+19. Logging & retry policies
+
+---
+
+* Log each outbound request with correlation_id.
+* Retry policy: exponential backoff with jitter for external services: 3 attempts by default; longer for social sync tasks.
+* On repeated failures, mark job as failed and notify admin.
+
+20. Automation & growth features
+
+---
+
+* Abandoned cart recovery via email and WhatsApp with product links and discount coupons.
+* Dynamic pricing promotions per seller or global.
+* Auto-bump low-stock items on marketplace home as "last chance".
+* Seller acquisition flow: onboarding email sequence, verification, training resources.
+
+21. Documentation & deliverables
+
+---
+
+* BRD and technical design document (this file is the LLM spec seed).
+* Odoo module source code (zip) for each module listed.
+* API doc (OpenAPI/Swagger) for all /smart/api endpoints.
+* Social integration setup guides (Meta, WhatsApp, TikTok, LinkedIn).
+* Deployment manifests (k8s, helm charts) and CI/CD pipelines.
+* Postman collection for API testing and webhook simulators.
+
+22. Developer checklists
+
+---
+
+* [ ] Add ir.model.access.csv for each model.
+* [ ] Implement record rules for sellers, buyers, delivery agents.
+* [ ] Create REST controllers that return JSON and respect pagination.
+* [ ] Add unit tests for commission calculation and payout logic.
+* [ ] Add integration test to simulate social sync.
+* [ ] Add cron for social scheduler and cleanup tasks.
+* [ ] Configure logging, Sentry integration and monitoring dashboards.
+
+23. Example OpenAPI small fragment (YAML snippet)
+
+---
+
+openapi: 3.0.0
+info:
+title: Smart Marketplace API
+version: 1.0.0
+paths:
+/smart/api/products:
+get:
+summary: List products
+parameters:
+- in: query
+name: q
+schema: {type: string}
+- in: query
+name: page
+schema: {type: integer, default: 1}
+responses:
+'200':
+description: OK
+
+24. Quick risk assessment
+
+---
+
+* Social APIs can change: isolate connector code and allow configuration updates without major refactor.
+* Payment compliance: avoid storing raw card data.
+* Operational complexity: ensure clear support playbooks for seller disputes and deliveries.
+
+25. Notes for LLM-assisted code generation
+
+---
+
+* Use modular approach: generate one small module at a time.
+* Prefer generating models + tests in one unit, then controllers + views.
+* When scaffolding controllers, always include input validation and role checks.
+* For social integration code, generate small wrappers that call central "SocialService" that handles rate limits and common retry logic.
+
+---
+
+End of file.
+
+This text file is ready to be used by an LLM code generator or given to developers to implement the Odoo marketplace and social commerce integrations. If you want, I can now also:
+
+1. Export this as a downloadable .txt or .md file in the canvas.
+2. Generate the **manifest**, models and controllers skeleton for the `smart_marketplace_core` module next.
+
+Tell me which of these you'd like as the next immediate artifact.
