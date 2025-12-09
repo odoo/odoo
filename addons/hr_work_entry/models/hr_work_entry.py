@@ -150,7 +150,8 @@ class HrWorkEntry(models.Model):
         undefined_type.write({'state': 'conflict'})
         conflict = self._mark_conflicting_work_entries(min(self.mapped('date')), max(self.mapped('date')))
         outside_calendar = self._mark_leaves_outside_schedule()
-        return undefined_type or conflict or outside_calendar
+        already_validated_days = self._mark_already_validated_days()
+        return undefined_type or conflict or outside_calendar or already_validated_days
 
     def _mark_conflicting_work_entries(self, start, stop):
         """
@@ -214,6 +215,24 @@ class HrWorkEntry(models.Model):
             outside_entries |= entries - overlapping_entries
         outside_entries.write({'state': 'conflict'})
         return bool(outside_entries)
+
+    def _mark_already_validated_days(self):
+        invalid_entries = self.env['hr.work.entry']
+        validated_work_entries = self.env["hr.work.entry"].search([
+            ('state', '=', 'validated'),
+            ('date', '<=', max(self.mapped('date'))),
+            ('date', '>=', min(self.mapped('date'))),
+            ('company_id', '=', self.env.company.id)
+        ])
+        validated_entries_by_employee_date = defaultdict(lambda: self.env['hr.work.entry'])
+        for entry in validated_work_entries:
+            validated_entries_by_employee_date[entry.employee_id, entry.date] += entry
+
+        for entry in self:
+            if validated_entries_by_employee_date[entry.employee_id, entry.date]:
+                invalid_entries += entry
+        invalid_entries.write({'state': 'conflict'})
+        return bool(invalid_entries)
 
     def _to_intervals(self):
         return Intervals(
