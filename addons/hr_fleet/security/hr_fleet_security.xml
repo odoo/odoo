@@ -21,6 +21,7 @@
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
             <field name="domain_force">[('vehicle_id.driver_employee_id.user_id','=',user.id)]</field>
+            <field name="active" eval="False"/>
         </record>
         <record id="fleet_rule_service_visibility_user" model="ir.rule">
             <field name="name">User can see vehicle's services from his/her corresponding employee</field>
@@ -31,6 +32,7 @@
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
             <field name="domain_force">[('vehicle_id.driver_employee_id.user_id','=',user.id)]</field>
+            <field name="active" eval="False"/>
         </record>
         <record id="fleet_rule_odometer_visibility_user" model="ir.rule">
             <field name="name">User can see vehicle's odometer from his/her corresponding employee</field>
@@ -41,6 +43,7 @@
             <field name="perm_create" eval="True"/>
             <field name="perm_unlink" eval="True"/>
             <field name="domain_force">[('vehicle_id.driver_employee_id.user_id','=',user.id)]</field>
+            <field name="active" eval="False"/>
         </record>
         <record id="fleet_rule_vehicle_visibility_user" model="ir.rule">
             <field name="name">User can see vehicles from his/her corresponding employee</field>
@@ -51,6 +54,7 @@
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
             <field name="domain_force">[('driver_employee_id.user_id','=',user.id)]</field>
+            <field name="active" eval="False"/>
         </record>
     </data>
 </odoo>
