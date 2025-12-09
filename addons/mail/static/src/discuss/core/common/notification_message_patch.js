@@ -2,7 +2,8 @@ import { NotificationMessage } from "@mail/core/common/notification_message";
 
 import { patch } from "@web/core/utils/patch";
 
-patch(NotificationMessage.prototype, {
+/** @type {NotificationMessage} */
+const notificationMessagePatch = {
     /**
      * @override
      * @param {MouseEvent} ev
@@ -14,4 +15,5 @@ patch(NotificationMessage.prototype, {
         }
         await super.onClickNotificationMessage(...arguments);
     },
-});
+};
+patch(NotificationMessage.prototype, notificationMessagePatch);

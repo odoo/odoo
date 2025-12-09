@@ -452,24 +452,6 @@ registerRoute("/discuss/channel/ping", channel_ping);
 /** @type {RouteCallback} */
 async function channel_ping(request) {}
 
-registerRoute("/discuss/channel/pinned_messages", discuss_channel_pins);
-/** @type {RouteCallback} */
-async function discuss_channel_pins(request) {
-    /** @type {import("mock_models").MailMessage} */
-    const MailMessage = this.env["mail.message"];
-
-    const { channel_id } = await parseRequestParams(request);
-    const messageIds = MailMessage.search([
-        ["model", "=", "discuss.channel"],
-        ["res_id", "=", channel_id],
-        ["pinned_at", "!=", false],
-    ]);
-    return new mailDataHelpers.Store(
-        MailMessage.browse(messageIds),
-        makeKwArgs({ for_current_user: true })
-    ).get_result();
-}
-
 registerRoute("/discuss/channel/mark_as_read", discuss_channel_mark_as_read);
 /** @type {RouteCallback} */
 async function discuss_channel_mark_as_read(request) {

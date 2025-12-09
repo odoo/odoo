@@ -2951,6 +2951,34 @@ class MailThread(models.AbstractModel):
                        for record in self]
         return self.sudo()._message_create(values_list)
 
+    def set_message_pin(self, message_id, pinned):
+        """(Un)pin a message on the thread.
+        The message must belong to the thread on which it is called.
+
+        :param message_id: id of the message to be pinned.
+        :param pinned: whether the message should be pinned or unpinned.
+        """
+        self.ensure_one()
+        message = self.env["mail.message"].search_fetch(
+            [
+                ["id", "=", message_id],
+                ["model", "=", self._name],
+                ["pinned_at", "=" if pinned else "!=", False],
+                ["res_id", "=", self.id],
+            ],
+        )
+        if not message:
+            return False
+        message.invalidate_recordset(["pinned_at"])
+        # Use SQL because by calling write method, write_date is going to be updated, but we don't
+        # want pin/unpin a message to change the write_date.
+        self.env.cr.execute(
+            "UPDATE mail_message SET pinned_at=%(pinned_at)s WHERE id=%(id)s",
+            {"pinned_at": fields.Datetime.now() if pinned else None, "id": message.id},
+        )
+        Store(bus_channel=message._bus_channel()).add(message, ["pinned_at"]).bus_send()
+        return True
+
     # ------------------------------------------------------------
     # MAIL.MESSAGE HELPERS
     # ------------------------------------------------------------
@@ -5065,6 +5093,28 @@ class MailThread(models.AbstractModel):
             self._store_message_followers_fields(res, filter_recipients=True, reset=True)
         if "display_name" in request_list:
             res.attr("display_name")
+        pinned_domain = (
+            Domain("res_id", "in", self.ids)
+            & Domain("model", "=", self._name)
+            & Domain("pinned_at", "!=", False)
+        )
+        if res.is_for_internal_users() and "has_pinned_messages" in request_list:
+            pinned_count_by_tid = defaultdict(
+                int,
+                self.env["mail.message"]._read_group(pinned_domain, ["res_id"], ["__count"]),
+            )
+            res.attr("has_pinned_messages", lambda t: pinned_count_by_tid[t.id] > 0)
+        if res.is_for_internal_users() and "pinned_messages" in request_list:
+            messages_by_tid = defaultdict(
+                self.env["mail.message"].browse,
+                self.env["mail.message"].search_fetch(pinned_domain).grouped("res_id"),
+            )
+            res.many(
+                "pinned_messages",
+                "_store_message_fields",
+                only_data=True,
+                value=lambda t: messages_by_tid[t.id],
+            )
         if "scheduledMessages" in request_list:
             domain = Domain("model", "=", self._name) & Domain("res_id", "in", self.ids)
             scheduled_messages = self.env["mail.scheduled.message"].search_fetch(domain)

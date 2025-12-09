@@ -1,6 +1,7 @@
 import { parseEmail } from "@mail/utils/common/format";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
+import { serializeDateTime } from "@web/core/l10n/dates";
 import {
     Command,
     getKwArgs,
@@ -8,6 +9,8 @@ import {
     models,
     unmakeKwArgs,
 } from "@web/../tests/web_test_helpers";
+
+const { DateTime } = luxon;
 
 export class MailThread extends models.ServerModel {
     _name = "mail.thread";
@@ -333,6 +336,34 @@ export class MailThread extends models.ServerModel {
 
     _get_customer_information(id) {
         return {};
+    }
+
+    /**
+     * @param {number} id
+     * @param {number} message_id
+     * @param {boolean} pinned
+     * @param {string} model
+     */
+    set_message_pin(id, message_id, pinned) {
+        const kwargs = getKwArgs(arguments, "id", "message_id", "pinned");
+        id = kwargs.id;
+        delete kwargs.id;
+        message_id = kwargs.message_id;
+        pinned = kwargs.pinned;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+
+        const pinned_at = pinned && serializeDateTime(DateTime.now());
+        MailMessage.write([message_id], { pinned_at });
+        const [thread] = this.read(id);
+        BusBus._sendone(
+            thread,
+            "mail.record/insert",
+            new mailDataHelpers.Store(MailMessage.browse(message_id), { pinned_at }).get_result()
+        );
     }
 
     /**
@@ -684,6 +715,20 @@ export class MailThread extends models.ServerModel {
         }
         if (fields.includes("modelName")) {
             res.modelName = this._description;
+        }
+        const pinned_domain = [
+            ["model", "=", this._name],
+            ["res_id", "=", thread.id],
+            ["pinned_at", "!=", false],
+        ];
+        if (request_list.includes("has_pinned_messages")) {
+            res["hasPinnedMessages"] = this.env["mail.message"]._filter(pinned_domain).length > 0;
+        }
+        if (request_list.includes("pinned_messages")) {
+            store.add(
+                this.env["mail.message"].browse(this.env["mail.message"].search(pinned_domain)),
+                makeKwArgs({ for_current_user: true })
+            );
         }
         if (request_list.includes("suggestedRecipients")) {
             res["suggestedRecipients"] = MailThread._message_get_suggested_recipients.call(this, [

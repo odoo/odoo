@@ -89,7 +89,6 @@ class DiscussChannel(models.Model):
     parent_channel_id = fields.Many2one("discuss.channel", help="Parent channel", ondelete="cascade", index=True, bypass_search_access=True, readonly=True)
     sub_channel_ids = fields.One2many("discuss.channel", "parent_channel_id", string="Sub Channels", readonly=True)
     from_message_id = fields.Many2one("mail.message", help="The message the channel was created from.", readonly=True)
-    pinned_message_ids = fields.One2many('mail.message', 'res_id', domain=[('model', '=', 'discuss.channel'), ('pinned_at', '!=', False)], string='Pinned Messages')
     sfu_channel_uuid = fields.Char(groups="base.group_system")
     sfu_server_url = fields.Char(groups="base.group_system")
     rtc_session_ids = fields.One2many('discuss.channel.rtc.session', 'channel_id', groups="base.group_system")
@@ -1080,29 +1079,8 @@ class DiscussChannel(models.Model):
     # ------------------------------------------------------------
 
     def set_message_pin(self, message_id, pinned):
-        """ (Un)pin a message on the channel and send a notification to the
-        members.
-        :param message_id: id of the message to be pinned.
-        :param pinned: whether the message should be pinned or unpinned.
-        """
-        self.ensure_one()
-        message_to_update = self.env['mail.message'].search([
-            ['id', '=', message_id],
-            ['model', '=', 'discuss.channel'],
-            ['res_id', '=', self.id],
-            ['pinned_at', '=' if pinned else '!=', False]
-        ])
-        if not message_to_update:
-            return
-        message_to_update.flush_recordset(['pinned_at'])
-        # Use SQL because by calling write method, write_date is going to be updated, but we don't want pin/unpin
-        # a message changes the write_date
-        self.env.cr.execute("UPDATE mail_message SET pinned_at=%s WHERE id=%s",
-                            (fields.Datetime.now() if pinned else None, message_to_update.id))
-        message_to_update.invalidate_recordset(['pinned_at'])
-
-        Store(bus_channel=self).add(message_to_update, ["pinned_at"]).bus_send()
-        if pinned:
+        result = super().set_message_pin(message_id, pinned)
+        if pinned and result:
             notification_text = '''
                 <div data-oe-type="pin" class="o_mail_notification">
                     %(user_pinned_a_message_to_this_channel)s
@@ -1117,6 +1095,7 @@ class DiscussChannel(models.Model):
                 'see_all_pins': _('See all pinned messages.'),
             }
             self.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
+        return result
 
     def _find_or_create_member_for_self(self):
         self.ensure_one()

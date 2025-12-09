@@ -1,6 +1,7 @@
 import { ScheduledMessage } from "@mail/chatter/web/scheduled_message";
 import { Activity } from "@mail/core/web/activity";
 import { AttachmentList } from "@mail/core/common/attachment_list";
+import { MessageCardList } from "@mail/core/common/message_card_list";
 import { Chatter } from "@mail/chatter/web_portal/chatter";
 import { FollowerList } from "@mail/core/web/follower_list";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
@@ -34,6 +35,7 @@ Object.assign(Chatter.components, {
     Dropdown,
     FileUploader,
     FollowerList,
+    MessageCardList,
     RecipientsInput,
     ScheduledMessage,
     SearchMessageInput,
@@ -73,7 +75,7 @@ Object.assign(Chatter.defaultProps, {
  * @typedef {Object} Props
  * @property {function} [close]
  */
-patch(Chatter.prototype, {
+const chatterPatch = {
     setup() {
         this.messageHighlight = useMessageScrolling();
         super.setup(...arguments);
@@ -87,6 +89,7 @@ patch(Chatter.prototype, {
             isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
+            showPinnedMessages: false,
             showScheduledMessages: true,
         });
         this.messageSearch = useMessageSearch();
@@ -255,7 +258,11 @@ patch(Chatter.prototype, {
     get followingText() {
         return _t("Following");
     },
-
+    get hasPinnedMessages() {
+        return (
+            this.state.thread?.has_pinned_messages || this.state.thread?.pinnedMessages?.length > 0
+        );
+    },
     /**
      * @returns {boolean}
      */
@@ -274,6 +281,7 @@ patch(Chatter.prototype, {
             "attachments",
             "contact_fields",
             "followers",
+            "has_pinned_messages",
             "scheduledMessages",
             "suggestedRecipients",
         ];
@@ -348,7 +356,12 @@ patch(Chatter.prototype, {
             return false;
         }
     },
-
+    onClickPinnedMessages() {
+        this.state.showPinnedMessages = !this.state.showPinnedMessages;
+        if (this.state.showPinnedMessages) {
+            this.state.thread?.fetchPinnedMessages();
+        }
+    },
     onClickSearch() {
         this.state.composerType = false;
         this.state.isSearchOpen = !this.state.isSearchOpen;
@@ -467,4 +480,5 @@ patch(Chatter.prototype, {
     popoutAttachment() {
         this.attachmentPopout.popout();
     },
-});
+};
+patch(Chatter.prototype, chatterPatch);

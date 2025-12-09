@@ -123,15 +123,6 @@ class ChannelController(http.Controller):
         store = Store().add(messages, "_store_message_fields")
         return {**res, "data": store.get_result(), "messages": messages.ids}
 
-    @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
-    @add_guest_to_context
-    def discuss_channel_pins(self, channel_id):
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
-        if not channel:
-            raise NotFound()
-        messages = channel.pinned_message_ids.sorted(key="pinned_at", reverse=True)
-        return Store().add(messages, "_store_message_fields").get_result()
-
     @http.route("/discuss/channel/mark_as_read", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def discuss_channel_mark_as_read(self, channel_id, last_message_id):

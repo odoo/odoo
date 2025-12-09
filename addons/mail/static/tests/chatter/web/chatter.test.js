@@ -60,6 +60,7 @@ test("simple chatter on a record", async () => {
                         "attachments",
                         "contact_fields",
                         "followers",
+                        "has_pinned_messages",
                         "scheduledMessages",
                         "suggestedRecipients",
                     ],
