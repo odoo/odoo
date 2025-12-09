@@ -136,6 +136,11 @@ def _mock_create_connection(func, self, *args, **kwargs):
     return edi_user
 
 
+def _mock_peppol_deregister_participant(func, self, *args, **kwargs):
+    self.company_id._reset_peppol_configuration()
+    self.unlink()
+
+
 def _mock_can_connect(func, self, *args, **kwargs):
     return {
         'auth_required': False,
@@ -148,6 +153,7 @@ _demo_behaviour = {
     '_check_peppol_participant_exists': _mock_check_peppol_participant_exists,  # res.partner
     '_create_connection': _mock_create_connection,  # peppol.registration
     '_can_connect': _mock_can_connect,  # peppol.registration
+    '_peppol_deregister_participant': _mock_peppol_deregister_participant,  # account_edi_proxy_client.user
 }
 
 # -------------------------------------------------------------------------
