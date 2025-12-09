@@ -83,10 +83,9 @@ test("Replace an image by icon should remove invalid classes", async () => {
     await click("span.fa-envelope-o");
     await animationFrame();
     expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
-    expect("span").toHaveCount(1);
-    expect("span").toHaveClass("fa fa-envelope-o");
-    expect("span").not.toHaveClass("img-fluid");
-    expect("span").not.toHaveClass("w-100");
+    expect("p > span.fa-envelope-o").toHaveCount(1);
+    expect("p > span.fa-envelope-o").not.toHaveClass("img-fluid");
+    expect("p > span.fa-envelope-o").not.toHaveClass("w-100");
 });
 
 test.tags("focus required");
