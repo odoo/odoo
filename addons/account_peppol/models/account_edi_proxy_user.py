@@ -93,29 +93,20 @@ class AccountEdiProxyClientUser(models.Model):
             return
 
         try:
-            with self.env.cr.savepoint():
-                # fetch state from IAP and update user if relevant
-                # _peppol_get_participant_status ignores errors, and here we want to know if it failed
-                # _make_request_peppol won't commit on no_such_user error because it only does so if account_peppol_migration_key is set
-                proxy_user = user._make_request(f"{user._get_server_url()}/api/peppol/1/participant_status")
+            # fetch state from IAP and update user if relevant
+            # _peppol_get_participant_status ignores errors, and here we want to know if it failed
+            # _make_request_peppol won't commit on no_such_user error
+            proxy_user = user._make_request(f"{user._get_server_url()}/api/peppol/1/participant_status")
 
-                state_map = {
-                    'active': 'active',
-                    'verified': 'pending',
-                    'rejected': 'rejected',
-                    'canceled': 'canceled',
-                    # IAP-side is still draft (needs phone confirmation)
-                    # set to not_verified to match normal registration flow
-                    'draft': 'not_verified'
-                }
+            state_map = {'active': 'active', 'verified': 'pending', 'rejected': 'rejected'}
 
-                if proxy_user.get('peppol_state') in state_map:
-                    user.company_id.account_peppol_proxy_state = state_map[proxy_user['peppol_state']]
-                    user.active = True
-                else:
-                    # NOTE: this shouldn't happen, but if it does, we will have refreshed the token
-                    # but as it's an unknown state, there is not much we can do with that information
-                    return
+            if proxy_user.get('peppol_state') in state_map:
+                user.company_id.account_peppol_proxy_state = state_map[proxy_user['peppol_state']]
+                user.active = True
+            else:
+                # NOTE: this shouldn't happen, but if it does, we will have refreshed the token
+                # but as it's an unknown state, there is not much we can do with that information
+                return
         except AccountEdiProxyError as e:
             _logger.info("Tried unsuccessfully to recover EDI proxy user id=%s (%s)", user.id, e)
         else:
@@ -302,15 +293,25 @@ class AccountEdiProxyClientUser(models.Model):
                 proxy_user = edi_user._make_request(
                     f"{edi_user._get_server_url()}/api/peppol/1/participant_status")
             except AccountEdiProxyError as e:
-                _logger.error('Error while updating Peppol participant status: %s', e)
+                if e.code == 'client_gone':
+                    # reset the connection if it was archived/deleted on IAP side
+                    edi_user.sudo().company_id._reset_peppol_configuration()
+                else:
+                    # don't auto-deregister users on any other errors to avoid settings client-side to states
+                    # that are not recoverable without user action if an error on IAP side ever occurs
+                    _logger.error('Error while updating Peppol participant status: %s', e)
                 continue
 
-            state_map = {
+            local_state = {
+                'draft': 'not_registered',
                 'active': 'active',
                 'verified': 'pending',
                 'rejected': 'rejected',
-                'canceled': 'canceled',
-            }
+            }.get(proxy_user.get('peppol_state'))
 
-            if proxy_user['peppol_state'] in state_map:
-                edi_user.company_id.account_peppol_proxy_state = state_map[proxy_user['peppol_state']]
+            if local_state == 'not_registered':
+                edi_user.sudo().company_id._reset_peppol_configuration()
+            elif local_state:
+                edi_user.company_id.account_peppol_proxy_state = local_state
+            else:
+                _logger.warning("Received unknown Peppol state '%s' for EDI proxy user id=%s", proxy_user.get('peppol_state'), edi_user.id)
