@@ -195,3 +195,16 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         invoice.action_post()
 
         return invoice
+
+    def _mock_zeep_registration_operation_single_accept_no_wait(self):
+        # Note: The real result is of type 'odoo.tools.zeep.client.SerialProxy'; here it is a dict
+        zeep_response_dict = json.loads(self._read_file('l10n_es_edi_verifactu/tests/responses/batch_single_accepted_registration.json'))
+        self.env.company.sudo().l10n_es_edi_verifactu_next_batch_time = False  # to not get blocked by the wait time
+
+        def _mock_register_accept(*args, **kwargs):
+            document_id_factura = args[1][0]['RegistroAlta']['IDFactura']
+            response_id_factura = zeep_response_dict['RespuestaLinea'][0]['IDFactura']
+            response_id_factura.update(document_id_factura)
+            return zeep_response_dict
+
+        return self._mock_get_zeep_operation(registration_return_value=_mock_register_accept)
