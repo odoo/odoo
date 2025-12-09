@@ -46,6 +46,12 @@ class TestDiscussSubChannels(HttpCase):
             self_member._mark_as_read(message.id)
             self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
             self.assertFalse(self_member.is_pinned)
+        # Ensure regular channels are not impacted.
+        channel = self.env["discuss.channel"].create({"name": "General"})
+        channel.channel_pin(pinned=True)
+        with freeze_time(two_days_later_dt):
+            self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
+            self.assertTrue(channel.channel_member_ids.filtered("is_self").is_pinned)
 
     def test_02_sub_channel_members_sync_with_parent(self):
         parent = self.env["discuss.channel"].create({"name": "General"})
