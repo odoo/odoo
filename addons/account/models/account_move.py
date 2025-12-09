@@ -1055,14 +1055,10 @@ class AccountMove(models.Model):
             return (currency_priority, not bank.allow_out_payment)
 
         for move in self:
-            if (
+            if move.is_inbound() and (
                 payment_method := (
                     move.preferred_payment_method_line_id
-                    or (
-                        move.bank_partner_id.property_inbound_payment_method_line_id
-                        if move.is_inbound()
-                        else move.bank_partner_id.property_outbound_payment_method_line_id
-                    )
+                    or move.bank_partner_id.property_inbound_payment_method_line_id
                 )
             ) and payment_method.journal_id:
                 move.partner_bank_id = payment_method.journal_id.bank_account_id
