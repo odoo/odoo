@@ -514,7 +514,7 @@ class AccountBankStatementLine(models.Model):
 
     def _get_default_amls_matching_domain(self):
         self.ensure_one()
-        all_reconcilable_account_ids = self.env['account.account'].search([
+        all_reconcilable_account_ids = self.env['account.account'].sudo().search([
             ("company_ids", "child_of", self.company_id.root_id.id),
             ('reconcile', '=', True),
         ]).ids
