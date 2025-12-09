@@ -129,6 +129,21 @@ class TestAccountPayment(AccountPaymentCommon):
             msg="The refunds count should only consider transactions with operation 'refund'."
         )
 
+    def test_refund_message_author_is_logged_in_user(self):
+        """Ensure that the chatter message author is the user processing the refund."""
+        self.provider.support_refund = 'full_only'
+
+        tx = self._create_transaction('redirect', state='done')
+        tx._post_process()
+
+        with patch.object(
+            self.env.registry['account.payment'], 'message_post', autospec=True
+        ) as message_post_mock:
+            tx.action_refund()
+            author_id = message_post_mock.call_args[1].get("author_id")
+
+        self.assertEqual(author_id, self.user.partner_id.id)
+
     def test_action_post_calls_send_payment_request_only_once(self):
         payment_token = self._create_token()
         payment_without_token = self.env['account.payment'].create({
