@@ -846,7 +846,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('type')
     def compute_is_storable(self):
-        self.filtered(lambda t: t.type != 'consu' and t.is_storable).is_storable = False
+        self.filtered(lambda t: t.type != 'consu' and t.is_storable).write({"is_storable": False})
 
     @api.depends('lot_sequence_id', 'lot_sequence_id.prefix')
     def _compute_serial_prefix_format(self):
