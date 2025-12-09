@@ -129,7 +129,7 @@ export class MovePlugin extends Plugin {
             if (previousSiblingEl) {
                 const direction = isVertical ? "up" : reverseButtons ? "right" : "left";
                 const button = {
-                    class: `fa fa-fw fa-angle-${direction}`,
+                    class: `fa fa-fw fw-bolder fa-angle-${direction}`,
                     title: isVertical
                         ? _t("Move up")
                         : this.isEditableRTL
@@ -143,7 +143,7 @@ export class MovePlugin extends Plugin {
             if (nextSiblingEl) {
                 const direction = isVertical ? "down" : reverseButtons ? "left" : "right";
                 const button = {
-                    class: `fa fa-fw fa-angle-${direction}`,
+                    class: `fa fa-fw fw-bolder fa-angle-${direction}`,
                     title: isVertical
                         ? _t("Move down")
                         : this.isEditableRTL
