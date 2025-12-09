@@ -2658,6 +2658,11 @@ export class PosStore extends WithLazyGetterTrap {
         return makeAwaitable(this.env.services.dialog, ScaleScreen);
     }
 
+    // Used to override inside `pos_blackbox_be` and `pos_urban_piper`
+    async _fetchUrbanpiperOrderCount(order_id) {
+        return;
+    }
+
     selectEmptyOrder() {
         const emptyOrders = this.models["pos.order"].filter(
             (order) =>
