@@ -31,7 +31,7 @@ import odoo.release
 import odoo.sql_db
 import odoo.tools
 from odoo.exceptions import AccessDenied, UserError
-from odoo.tools import SQL, osutil
+from odoo.tools import SQL, config, osutil
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.misc import exec_pg_environ, find_pg_tool
 from odoo.tools.sql import quoted_identifier
@@ -313,8 +313,17 @@ class DatabaseExists(UserError, ValueError):
 
 
 def _create_empty_database(db_name: str) -> None:
-    db = odoo.sql_db.db_connect('postgres')
-    with closing(db.cursor()) as cr:
+    db_system_name = config['db_system']
+    try:
+        sys_cr = odoo.sql_db.db_connect(db_system_name).cursor()
+    except psycopg2.errors.OperationalError:
+        # If we use the `db_name` as the system database and we are trying to
+        # create it, try to use postgres as the system database.
+        if db_system_name == 'postgres' or db_system_name != db_name:
+            raise
+        _logger.info("Defaulting to 'postgres' system database for database creation")
+        sys_cr = odoo.sql_db.db_connect('postgres').cursor()
+    with closing(sys_cr) as cr:
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
                    (db_name,), log_exceptions=False)
         if cr.fetchall():
@@ -457,7 +466,7 @@ def duplicate(
         raise ValueError(e)
     _logger.info("Duplicate database `%s` to `%s`.", db_original_name, db_name)
     odoo.sql_db.close_db(db_original_name)
-    db = odoo.sql_db.db_connect('postgres')
+    db = odoo.sql_db.db_connect(config['db_system'])
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
         cr._cnx.autocommit = True
@@ -487,7 +496,7 @@ def _drop_conn(cr: Cursor, db_name: str) -> None:
     Try to terminate all other connections that might prevent dropping
     the database.
     """
-    assert cr.dbname == 'postgres'
+    assert cr.dbname == config['db_system']
     assert cr._cnx.autocommit
     with suppress(psycopg2.Error):
         cr.execute("""
@@ -503,7 +512,7 @@ def drop(db_name: str) -> None:
     odoo.modules.registry.Registry.delete(db_name)
     odoo.sql_db.close_db(db_name)
 
-    db = odoo.sql_db.db_connect('postgres')
+    db = odoo.sql_db.db_connect(config['db_system'])
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
         cr._cnx.autocommit = True
@@ -647,7 +656,7 @@ def rename(
     odoo.modules.registry.Registry.delete(old_name)
     odoo.sql_db.close_db(old_name)
 
-    db = odoo.sql_db.db_connect('postgres')
+    db = odoo.sql_db.db_connect(config['db_system'])
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
         cr._cnx.autocommit = True
@@ -680,8 +689,8 @@ def list_dbs(*, force=False):
         return sorted(odoo.tools.config['db_name'])
 
     chosen_template = odoo.tools.config['db_template']
-    templates_list = tuple({'postgres', chosen_template})
-    db = odoo.sql_db.db_connect('postgres')
+    ignore_templates_list = tuple({'postgres', chosen_template})
+    db = odoo.sql_db.db_connect(config['db_system'])
     with closing(db.cursor()) as cr:
         try:
             cr.execute("""
@@ -696,7 +705,7 @@ def list_dbs(*, force=False):
                    AND datallowconn
                    AND datname NOT IN %s
               ORDER BY datname
-            """, (templates_list,))
+            """, (ignore_templates_list,))
             return [name for (name,) in cr.fetchall()]
         except psycopg2.Error:
             _logger.exception("Listing databases failed:")
