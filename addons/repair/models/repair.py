@@ -575,13 +575,6 @@ class RepairOrder(models.Model):
         """
         if self.filtered(lambda repair: repair.state != 'under_repair'):
             raise UserError(_("Repair must be under repair in order to end reparation."))
-        partial_moves = set()
-        picked_moves = set()
-        for move in self.move_ids:
-            if move.product_uom.compare(move.quantity, move.product_uom_qty) < 0:
-                partial_moves.add(move.id)
-            if move.picked:
-                picked_moves.add(move.id)
         return self.action_repair_done()
 
     def action_repair_start(self):
