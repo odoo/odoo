@@ -767,7 +767,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('type')
     def compute_is_storable(self):
-        self.filtered(lambda t: t.type != 'consu' and t.is_storable).is_storable = False
+        self.filtered(lambda t: t.type != 'consu' and t.is_storable).write({"is_storable": False})
 
     @api.depends('is_storable')
     def _compute_show_qty_status_button(self):
