@@ -27,22 +27,25 @@ export class X2ManyImageField extends ImageField {
      * standard behavior of opening file input box in order to update a record.
      */
     onFileEdit(ev) {
+        this.dialog.add(CustomMediaDialog, this.mediaDialogProps);
+    }
+
+    get mediaDialogProps() {
         const isVideo = "VIDEOS" in this.props.visibleTabs && this.props.record.data.video_url;
         let mediaEl;
         if (isVideo) {
             mediaEl = document.createElement("img");
             mediaEl.dataset.src = this.props.record.data.video_url;
         }
-        this.dialog.add(CustomMediaDialog, {
+        return {
             visibleTabs: this.props.visibleTabs,
             media: mediaEl,
             activeTab: isVideo ? "VIDEOS" : "IMAGES",
             save: (el) => {}, // Simple rebound to fake its execution
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
-        });
+        };
     }
-
     async onImageSave(attachment) {
         await save(this.env, {
             attachments: attachment,

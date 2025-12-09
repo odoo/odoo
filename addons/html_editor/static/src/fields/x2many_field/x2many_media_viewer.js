@@ -25,13 +25,17 @@ export class X2ManyMediaViewer extends X2ManyField {
     }
 
     addMedia() {
-        this.dialogs.add(CustomMediaDialog, {
+        this.dialogs.add(CustomMediaDialog, this.mediaDialogProps);
+    }
+
+    get mediaDialogProps() {
+        return {
             save: (el) => {}, // Simple rebound to fake its execution
             multiImages: true,
             visibleTabs: ["IMAGES", "VIDEOS"],
             imageSave: this.onImageSave.bind(this),
             videoSave: this.onVideoSave.bind(this),
-        });
+        };
     }
 
     onVideoSave(videoInfo) {

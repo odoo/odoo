@@ -226,6 +226,7 @@ export class MediaPlugin extends Plugin {
         const mediaDialogClosedPromise = this.dependencies.dialog.addDialog(MediaDialog, {
             resModel,
             resId,
+            field,
             useMediaLibrary: !!(
                 field &&
                 ((resModel === "ir.ui.view" && field === "arch") || type === "html")

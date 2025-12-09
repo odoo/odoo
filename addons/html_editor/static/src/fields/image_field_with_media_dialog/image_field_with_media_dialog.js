@@ -14,12 +14,16 @@ export class ImageFieldWithMediaDialog extends ImageField {
     }
 
     onFileEdit(ev) {
-        this.dialog.add(CustomMediaDialog, {
+        this.dialog.add(CustomMediaDialog, this.mediaDialogProps);
+    }
+
+    get mediaDialogProps() {
+        return {
             visibleTabs: ["IMAGES"],
             activeTab: "IMAGES",
             save: (el) => {}, // Simple rebound to fake its execution
             imageSave: this.onImageSave.bind(this),
-        });
+        };
     }
 
     async onImageSave(attachment) {

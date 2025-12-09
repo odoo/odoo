@@ -330,7 +330,7 @@ export class ProductReplaceMainImageAction extends BaseProductPageAction {
         this.dependencies.media.openMediaDialog({
             multiImages: false,
             visibleTabs: ["IMAGES"],
-            node: productDetailMainEl,
+            node: image,
             save: (imgEl, selectedMedia) => {
                 const attachment = selectedMedia[0];
                 if (["image/gif", "image/svg+xml"].includes(attachment.mimetype)) {
