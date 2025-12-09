@@ -164,7 +164,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _get_address_node(self, vals):
         partner = vals['partner']
-        model = vals.get('model', 'res.partner')
+        model = partner._name
         country = partner['country' if model == 'res.bank' else 'country_id']
         state = partner['state' if model == 'res.bank' else 'state_id']
 
