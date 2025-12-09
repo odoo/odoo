@@ -9,7 +9,6 @@ import { patch } from "@web/core/utils/patch";
 const threadPatch = {
     setup() {
         super.setup(...arguments);
-        this.from_message_id = fields.One("mail.message");
         this.parent_channel_id = fields.One("mail.thread", {
             onDelete() {
                 this.delete();
@@ -29,7 +28,7 @@ const threadPatch = {
         return ["channel", "group"].includes(this.channel?.channel_type);
     },
     get isEmpty() {
-        return !this.from_message_id && super.isEmpty;
+        return !this.channel?.from_message_id && super.isEmpty;
     },
     /**
      * @param {Object} [param0={}]

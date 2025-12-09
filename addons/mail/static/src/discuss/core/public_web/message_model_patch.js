@@ -5,6 +5,6 @@ import { patch } from "@web/core/utils/patch";
 patch(Message.prototype, {
     setup() {
         super.setup(...arguments);
-        this.linkedSubChannel = fields.One("mail.thread", { inverse: "from_message_id" });
+        this.linkedSubChannel = fields.One("discuss.channel", { inverse: "from_message_id" });
     },
 });

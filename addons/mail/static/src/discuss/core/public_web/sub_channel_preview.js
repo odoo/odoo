@@ -10,7 +10,7 @@ const { DateTime } = luxon;
 export class SubChannelPreview extends Component {
     static components = { AvatarStack };
     static template = "mail.SubChannelPreview";
-    static props = ["class?", "onClick?", "thread"];
+    static props = ["class?", "onClick?", "channel"];
 
     dateText(message) {
         if (isToday(message.datetime)) {
@@ -19,8 +19,8 @@ export class SubChannelPreview extends Component {
         return message.datetime?.toLocaleString(DateTime.DATE_MED);
     }
 
-    get thread() {
-        return this.props.thread;
+    get channel() {
+        return this.props.channel;
     }
 
     onClick() {
@@ -28,9 +28,9 @@ export class SubChannelPreview extends Component {
     }
 
     get messageCountText() {
-        if (this.thread.channel.message_count === 1) {
+        if (this.channel.message_count === 1) {
             return _t("1 Message");
         }
-        return _t("%(count)s Messages", { count: this.thread.channel.message_count });
+        return _t("%(count)s Messages", { count: this.channel.message_count });
     }
 }

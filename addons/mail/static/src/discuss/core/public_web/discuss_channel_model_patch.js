@@ -50,6 +50,7 @@ const discussChannelPatch = {
                 this.onPinStateUpdated();
             },
         });
+        this.from_message_id = fields.One("mail.message");
         this.isDisplayInSidebar = fields.Attr(false, {
             compute() {
                 return this._computeIsDisplayInSidebar();
