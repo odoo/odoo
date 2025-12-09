@@ -51,12 +51,16 @@ export class BuilderSlidingPanel extends Component {
             isAvailable: () => !this.slidingPanelRef.el.classList.contains("d-none"),
         });
         onWillUnmount(() => {
+            clearTimeout(this.updateDisplayTimeout);
             this.slidingPanelRef.el.remove();
         });
     }
 
     updateDisplay(className) {
         const slidingPanelEl = this.slidingPanelRef.el;
+        if (!slidingPanelEl) {
+            return;
+        }
         slidingPanelEl.classList.remove(
             "d-none",
             "d-block",
@@ -68,14 +72,14 @@ export class BuilderSlidingPanel extends Component {
 
     showSlidingPanel() {
         this.updateDisplay("hb-panel-slide-in");
-        setTimeout(() => this.updateDisplay("d-block"), 200);
+        this.updateDisplayTimeout = setTimeout(() => this.updateDisplay("d-block"), 200);
     }
 
     hideSlidingPanel() {
         this.updateDisplay("hb-panel-slide-out");
         // We set a timeout slightly shorter than 200 because some flicker may
         // happen otherwise.
-        setTimeout(() => {
+        this.updateDisplayTimeout = setTimeout(() => {
             this.updateDisplay("d-none");
             this.openButtonRef.el.focus();
         }, 180);
