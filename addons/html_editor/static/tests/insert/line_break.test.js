@@ -318,47 +318,24 @@ describe("Selection collapsed", () => {
 
 describe("Selection not collapsed", () => {
     test("should delete the first half of a paragraph, then insert a <br>", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<p>[ab]cd</p>",
-            stepFunction: insertLineBreak,
-            contentAfter: "<p><br>[]cd</p>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<p>]ab[cd</p>",
             stepFunction: insertLineBreak,
             contentAfter: "<p><br>[]cd</p>",
         });
     });
 
     test("should delete part of a paragraph, then insert a <br>", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<p>a[bc]d</p>",
-            stepFunction: insertLineBreak,
-            contentAfter: "<p>a<br>[]d</p>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<p>a]bc[d</p>",
             stepFunction: insertLineBreak,
             contentAfter: "<p>a<br>[]d</p>",
         });
     });
 
     test("should delete the last half of a paragraph, then insert a line break (2 <br>)", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<p>ab[cd]</p>",
-            stepFunction: insertLineBreak,
-            // the second <br> is needed to make the first one
-            // visible.
-            contentAfter: "<p>ab<br>[]<br></p>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<p>ab]cd[</p>",
             stepFunction: insertLineBreak,
             // the second <br> is needed to make the first one
             // visible.
@@ -367,15 +344,8 @@ describe("Selection not collapsed", () => {
     });
 
     test("should delete all contents of a paragraph, then insert a line break", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<p>[abcd]</p>",
-            stepFunction: insertLineBreak,
-            contentAfter: "<p><br>[]<br></p>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<p>]abcd[</p>",
             stepFunction: insertLineBreak,
             contentAfter: "<p><br>[]<br></p>",
         });
@@ -383,8 +353,7 @@ describe("Selection not collapsed", () => {
 });
 
 describe("table", () => {
-    test("should remove all contents of an anchor td and insert a line break on forward selection", async () => {
-        // Forward selection
+    test("should remove all contents of an anchor td and insert a line break", async () => {
         await testEditor({
             contentBefore: `
                 <table>
@@ -417,18 +386,19 @@ describe("table", () => {
                         </tr>
                     </tbody>
                 </table>`,
+            testInBothDirections: false,
         });
     });
-    test("should remove all contents of an anchor td and insert a line break on backward selection", async () => {
-        // Backward selection
+
+    test("should remove all contents of an anchor td and insert a line break (reversed selection)", async () => {
         await testEditor({
             contentBefore: `
                 <table>
                     <tbody>
                         <tr>
-                            <td><p>]ab</p></td>
+                            <td><p>]abc</p><p>def</p></td>
                             <td><p>abcd</p></td>
-                            <td><p>abc</p><p>def[</p></td>
+                            <td><p>ab[</p></td>
                         </tr>
                         <tr>
                             <td><p><br></p></td>
@@ -442,7 +412,7 @@ describe("table", () => {
                 <table>
                     <tbody>
                         <tr>
-                            <td><p>ab</p></td>
+                            <td><p>abc</p><p>def</p></td>
                             <td><p>abcd</p></td>
                             <td><p><br>[]<br></p></td>
                         </tr>
@@ -453,6 +423,7 @@ describe("table", () => {
                         </tr>
                     </tbody>
                 </table>`,
+            testInBothDirections: false,
         });
     });
 });

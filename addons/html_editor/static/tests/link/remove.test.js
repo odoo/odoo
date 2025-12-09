@@ -322,20 +322,42 @@ describe("range not collapsed", () => {
             await testEditor({
                 contentBefore:
                     '<p>a<a class="oe_unremovable" href="http://test.test">[b</a>c<a href="http://test.test">d</a>e<a class="oe_unremovable" href="http://test.test">f]</a></p>',
-                /** @param {import("@html_editor/plugin").Editor} editor */
                 stepFunction: (editor) => {
-                    const selection = editor.shared.selection.getEditableSelection();
+                    const { anchorNode, focusNode } =
+                        editor.shared.selection.getEditableSelection();
                     // extends selection to contain the feffs
-                    editor.shared.selection.setSelection({
-                        anchorNode: selection.anchorNode.previousSibling,
+                    setSelection({
+                        anchorNode: anchorNode.previousSibling,
                         anchorOffset: 0,
-                        focusNode: selection.focusNode.nextSibling,
+                        focusNode: focusNode.nextSibling,
                         focusOffset: 1,
                     });
                     unlinkByCommand(editor);
                 },
                 contentAfter:
                     '<p>a<a class="oe_unremovable" href="http://test.test">[b</a>cde<a class="oe_unremovable" href="http://test.test">f]</a></p>',
+                testInBothDirections: false,
+            });
+        });
+        test("should not remove unremovable links when fully selected (including feff) with other links (reversed selection)", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p>a<a class="oe_unremovable" href="http://test.test">]b</a>c<a href="http://test.test">d</a>e<a class="oe_unremovable" href="http://test.test">f[</a></p>',
+                stepFunction: (editor) => {
+                    const { anchorNode, focusNode } =
+                        editor.shared.selection.getEditableSelection();
+                    // extends selection to contain the feffs
+                    setSelection({
+                        anchorNode: anchorNode.nextSibling,
+                        anchorOffset: 1,
+                        focusNode: focusNode.previousSibling,
+                        focusOffset: 0,
+                    });
+                    unlinkByCommand(editor);
+                },
+                contentAfter:
+                    '<p>a<a class="oe_unremovable" href="http://test.test">]b</a>cde<a class="oe_unremovable" href="http://test.test">f[</a></p>',
+                testInBothDirections: false,
             });
         });
     });

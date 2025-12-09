@@ -659,60 +659,32 @@ describe("Selection collapsed", () => {
 
 describe("Selection not collapsed", () => {
     test("should delete the first half of a paragraph, then split it", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<p>[ab]cd</p>",
-            stepFunction: splitBlock,
-            contentAfter: "<p><br></p><p>[]cd</p>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<p>]ab[cd</p>",
             stepFunction: splitBlock,
             contentAfter: "<p><br></p><p>[]cd</p>",
         });
     });
 
     test("should delete part of a paragraph, then split it", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<p>a[bc]d</p>",
-            stepFunction: splitBlock,
-            contentAfter: "<p>a</p><p>[]d</p>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<p>a]bc[d</p>",
             stepFunction: splitBlock,
             contentAfter: "<p>a</p><p>[]d</p>",
         });
     });
 
     test("should delete the last half of a paragraph, then split it", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<p>ab[cd]</p>",
-            stepFunction: splitBlock,
-            contentAfter: "<p>ab</p><p>[]<br></p>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<p>ab]cd[</p>",
             stepFunction: splitBlock,
             contentAfter: "<p>ab</p><p>[]<br></p>",
         });
     });
 
     test("should delete all contents of a paragraph, then split it", async () => {
-        // Forward selection
         await testEditor({
             contentBefore: "<p>[abcd]</p>",
-            stepFunction: splitBlock,
-            contentAfter: "<p><br></p><p>[]<br></p>",
-        });
-        // Backward selection
-        await testEditor({
-            contentBefore: "<p>]abcd[</p>",
             stepFunction: splitBlock,
             contentAfter: "<p><br></p><p>[]<br></p>",
         });
@@ -730,8 +702,7 @@ describe("Selection not collapsed", () => {
 });
 
 describe("Table", () => {
-    test("should remove all contents of an anchor td and split paragraph on forward selection", async () => {
-        // Forward selection
+    test("should remove all contents of an anchor td and split paragraph", async () => {
         await testEditor({
             contentBefore: `
                 <table>
@@ -764,18 +735,18 @@ describe("Table", () => {
                         </tr>
                     </tbody>
                 </table>`,
+            testInBothDirections: false,
         });
     });
-    test("should remove all contents of an anchor td and split paragraph on backward selection", async () => {
-        // Backward selection
+    test("should remove all contents of an anchor td and split paragraph (reversed selection)", async () => {
         await testEditor({
             contentBefore: `
                 <table>
                     <tbody>
                         <tr>
-                            <td><p>]ab</p></td>
+                            <td><p>]abc</p><p>def</p></td>
                             <td><p>abcd</p></td>
-                            <td><p>abc</p><p>def[</p></td>
+                            <td><p>ab[</p></td>
                         </tr>
                         <tr>
                             <td><p><br></p></td>
@@ -789,7 +760,7 @@ describe("Table", () => {
                 <table>
                     <tbody>
                         <tr>
-                            <td><p>ab</p></td>
+                            <td><p>abc</p><p>def</p></td>
                             <td><p>abcd</p></td>
                             <td><p><br></p><p>[]<br></p></td>
                         </tr>
@@ -800,6 +771,7 @@ describe("Table", () => {
                         </tr>
                     </tbody>
                 </table>`,
+            testInBothDirections: false,
         });
     });
     test("remove selected text and insert paragraph tag within a table cell and enter key is pressed", async () => {

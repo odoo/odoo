@@ -134,9 +134,9 @@ test("should make two paragraphs (separated with whitespace) underline, then not
             <p>[abc</p>
             <p>def]</p>
         `,
-        stepFunction: async (editor) => {
+        stepFunction: async (editor, { assertContentEquals }) => {
             underline(editor);
-            expect(getContent(editor.editable)).toBe(`
+            assertContentEquals(`
             <p><u>[abc</u></p>
             <p><u>def]</u></p>
         `);

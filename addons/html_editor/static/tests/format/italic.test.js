@@ -136,9 +136,9 @@ test("should make two paragraphs (separated with whitespace) italic, then not it
             <p>[abc</p>
             <p>def]</p>
         `,
-        stepFunction: async (editor) => {
+        stepFunction: async (editor, { assertContentEquals }) => {
             italic(editor);
-            expect(getContent(editor.editable)).toBe(`
+            assertContentEquals(`
             <p><em>[abc</em></p>
             <p><em>def]</em></p>
         `);

@@ -502,27 +502,11 @@ describe("Range not collapsed", () => {
             });
         });
 
-        test("should turn a multi-line paragraph into a list with multiple items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<p>]a<br>b<br>c<br>d<br>e[</p>",
-                stepFunction: toggleUnorderedList,
-                contentAfter: "<ul><li>]a</li><li>b</li><li>c</li><li>d</li><li>e[</li></ul>",
-            });
-        });
-
         test("should turn the first few lines of a paragraph into a list with multiple items", async () => {
             await testEditor({
                 contentBefore: "<p>[a<br>b<br>c]<br>d<br>e</p>",
                 stepFunction: toggleUnorderedList,
                 contentAfter: "<ul><li>[a</li><li>b</li><li>c]</li></ul><p>d<br>e</p>",
-            });
-        });
-
-        test("should turn the first few lines of a paragraph into a list with multiple items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<p>]a<br>b<br>c[<br>d<br>e</p>",
-                stepFunction: toggleUnorderedList,
-                contentAfter: "<ul><li>]a</li><li>b</li><li>c[</li></ul><p>d<br>e</p>",
             });
         });
 
@@ -534,27 +518,11 @@ describe("Range not collapsed", () => {
             });
         });
 
-        test("should turn the middle few lines of a paragraph into a list with multiple items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<p>a<br>]b<br>c<br>d[<br>e</p>",
-                stepFunction: toggleUnorderedList,
-                contentAfter: "<p>a</p><ul><li>]b</li><li>c</li><li>d[</li></ul><p>e</p>",
-            });
-        });
-
         test("should turn a last few lines of a paragraph into a list with multiple items", async () => {
             await testEditor({
                 contentBefore: "<p>a<br>b<br>[c<br>d<br>e]</p>",
                 stepFunction: toggleUnorderedList,
                 contentAfter: "<p>a<br>b</p><ul><li>[c</li><li>d</li><li>e]</li></ul>",
-            });
-        });
-
-        test("should turn a last few lines of a paragraph into a list with multiple items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<p>a<br>b<br>]c<br>d<br>e[</p>",
-                stepFunction: toggleUnorderedList,
-                contentAfter: "<p>a<br>b</p><ul><li>]c</li><li>d</li><li>e[</li></ul>",
             });
         });
 
@@ -575,30 +543,12 @@ describe("Range not collapsed", () => {
             });
         });
 
-        test("should turn a multi-line heading into a list with multiple items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<p>xy</p><h1>AB]a<br>b<br>c<br>d<br>e[FG</h1>",
-                stepFunction: toggleUnorderedList,
-                contentAfter:
-                    "<p>xy</p><ul><li><h1>AB]a</h1></li><li><h1>b</h1></li><li><h1>c</h1></li><li><h1>d</h1></li><li><h1>e[FG</h1></li></ul>",
-            });
-        });
-
         test("should turn the first few lines of a heading into a list with multiple items", async () => {
             await testEditor({
                 contentBefore: "<p>xy</p><h1>AB[a<br>b<br>c]<br>d<br>e</h1>",
                 stepFunction: toggleUnorderedList,
                 contentAfter:
                     "<p>xy</p><ul><li><h1>AB[a</h1></li><li><h1>b</h1></li><li><h1>c]</h1></li></ul><h1>d<br>e</h1>",
-            });
-        });
-
-        test("should turn the first few lines of a heading into a list with multiple items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<p>xy</p><h1>AB]a<br>b<br>c[<br>d<br>e</h1>",
-                stepFunction: toggleUnorderedList,
-                contentAfter:
-                    "<p>xy</p><ul><li><h1>AB]a</h1></li><li><h1>b</h1></li><li><h1>c[</h1></li></ul><h1>d<br>e</h1>",
             });
         });
 
@@ -611,30 +561,12 @@ describe("Range not collapsed", () => {
             });
         });
 
-        test("should turn the middle few lines of a heading into a list with multiple items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<p>xy</p><h1>a<br>AB]b<br>c<br>d[EF<br>e</h1>",
-                stepFunction: toggleUnorderedList,
-                contentAfter:
-                    "<p>xy</p><h1>a</h1><ul><li><h1>AB]b</h1></li><li><h1>c</h1></li><li><h1>d[EF</h1></li></ul><h1>e</h1>",
-            });
-        });
-
         test("should turn a last few lines of a heading into a list with multiple items", async () => {
             await testEditor({
                 contentBefore: "<p>xy</p><h1>a<br>b<br>AB[c<br>d<br>e]EF</h1>",
                 stepFunction: toggleUnorderedList,
                 contentAfter:
                     "<p>xy</p><h1>a<br>b</h1><ul><li><h1>AB[c</h1></li><li><h1>d</h1></li><li><h1>e]EF</h1></li></ul>",
-            });
-        });
-
-        test("should turn a last few lines of a heading into a list with multiple items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<p>xy</p><h1>a<br>b<br>AB]c<br>d<br>e[EF</h1>",
-                stepFunction: toggleUnorderedList,
-                contentAfter:
-                    "<p>xy</p><h1>a<br>b</h1><ul><li><h1>AB]c</h1></li><li><h1>d</h1></li><li><h1>e[EF</h1></li></ul>",
             });
         });
 
@@ -655,15 +587,6 @@ describe("Range not collapsed", () => {
             });
         });
 
-        test("should turn four lines over two paragraphs into a list with four items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<p>ab</p><p>c<br>d]e<br>f</p><p>g<br>h[i<br>j</p>",
-                stepFunction: toggleUnorderedList,
-                contentAfter:
-                    "<p>ab</p><p>c</p><ul><li>d]e</li><li>f</li><li>g</li><li>h[i</li></ul><p>j</p>",
-            });
-        });
-
         test("should turn two paragraphs in a div into a list with two items", async () => {
             await testEditor({
                 contentBefore: "<div><p>ab[cd</p><p>ef]gh</p></div>",
@@ -678,15 +601,6 @@ describe("Range not collapsed", () => {
                 stepFunction: toggleUnorderedList,
                 contentAfter:
                     "<div><p>a</p><ul><li>b[c</li><li>d</li><li>e</li><li>f]g</li></ul><p>h</p></div>",
-            });
-        });
-
-        test("should turn four lines over two paragraphs in a div into a list with four items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<div><p>a<br>b]c<br>d</p><p>e<br>f[g<br>h</p></div>",
-                stepFunction: toggleUnorderedList,
-                contentAfter:
-                    "<div><p>a</p><ul><li>b]c</li><li>d</li><li>e</li><li>f[g</li></ul><p>h</p></div>",
             });
         });
 
@@ -706,14 +620,6 @@ describe("Range not collapsed", () => {
             });
         });
 
-        test("should turn two lines of a paragraph and a list item into three list items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<p>a<br>x]b<br>y</p><ul><li>c[d</li><li>ef</li></ul>",
-                stepFunction: toggleUnorderedList,
-                contentAfter: "<p>a</p><ul><li>x]b</li><li>y</li><li>c[d</li><li>ef</li></ul>",
-            });
-        });
-
         test("should turn two lines of a paragraph and two lines of a list item into four list items", async () => {
             // TODO: is this what we want?
             await testEditor({
@@ -721,16 +627,6 @@ describe("Range not collapsed", () => {
                 stepFunction: toggleUnorderedList,
                 contentAfter:
                     "<p>a</p><ul><li>x[b</li><li>y</li><li>c<br>z]d<br>A</li><li>ef</li></ul>",
-            });
-        });
-
-        test("should turn two lines of a paragraph and two lines of a list item into four list items (reversed selection)", async () => {
-            // TODO: is this what we want?
-            await testEditor({
-                contentBefore: "<p>a<br>x]b<br>y</p><ul><li>c<br>z[d<br>A</li><li>ef</li></ul>",
-                stepFunction: toggleUnorderedList,
-                contentAfter:
-                    "<p>a</p><ul><li>x]b</li><li>y</li><li>c<br>z[d<br>A</li><li>ef</li></ul>",
             });
         });
 
@@ -750,27 +646,11 @@ describe("Range not collapsed", () => {
             });
         });
 
-        test("should turn a list item and two lines of a paragraph into three list items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<ul><li>ab</li><li>c]d</li></ul><p>e<br>x[f<br>g</p>",
-                stepFunction: toggleUnorderedList,
-                contentAfter: "<ul><li>ab</li><li>c]d</li><li>e</li><li>x[f</li></ul><p>g</p>",
-            });
-        });
-
         test("should turn two lines of a list item and two lines of a paragraph into three list items", async () => {
             await testEditor({
                 contentBefore: "<ul><li>ab</li><li>c[d<br>A</li></ul><p>e<br>x]f<br>g</p>",
                 stepFunction: toggleUnorderedList,
                 contentAfter: "<ul><li>ab</li><li>c[d<br>A</li><li>e</li><li>x]f</li></ul><p>g</p>",
-            });
-        });
-
-        test("should turn two lines of a list item and two lines of a paragraph into three list items (reversed selection)", async () => {
-            await testEditor({
-                contentBefore: "<ul><li>ab</li><li>c]d<br>A</li></ul><p>e<br>x[f<br>g</p>",
-                stepFunction: toggleUnorderedList,
-                contentAfter: "<ul><li>ab</li><li>c]d<br>A</li><li>e</li><li>x[f</li></ul><p>g</p>",
             });
         });
 
