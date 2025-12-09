@@ -415,16 +415,27 @@ class Cursor(BaseCursor):
         if isinstance(query, SQL):
             assert params is None, "Unexpected parameters for SQL query object"
             query, params, _fields = query._sql_tuple
-        elif params and not isinstance(params, (tuple, list, dict)):
-            # psycopg2's TypeError is not clear if you mess up the params
-            raise ValueError(f"SQL query parameters should be a tuple, list or dict; got {params!r}")
+        else:
+            if isinstance(query, str):
+                warnings.warn(
+                    "Use odoo.tools.sql.SQL, not string queries",
+                    category=PendingDeprecationWarning,
+                    stacklevel=2,
+                )
+            if params and not isinstance(params, (tuple, list, dict)):
+                # psycopg2's TypeError is not clear if you mess up the params
+                raise ValueError(f"SQL query parameters should be a tuple, list or dict; got {params!r}")
 
         start = real_time()
         try:
             self._obj.execute(query, params)
         except Exception as e:
             if log_exceptions:
-                _logger.error("bad query: %s\nERROR: %s", self._obj.query or query, e)
+                _logger.error(
+                    "bad query: %s\nERROR: %s",
+                    self._obj.query.decode() if self._obj.query else query,
+                    e,
+                )
             raise
         finally:
             delay = real_time() - start

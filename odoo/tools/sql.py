@@ -94,12 +94,12 @@ class SQL(metaclass=_SQLMeta):
         ...
 
     @typing.overload
-    def __new__(cls: type[SQL], code: typing.LiteralString | SQL, /, *args, to_flush: Field | Iterable[Field] | None = None, **kw) -> LiteralSQL:
+    def __new__(cls: type[SQL], code: typing.LiteralString, /, *args, to_flush: Field | Iterable[Field] | None = None, **kw) -> LiteralSQL:
         ...
 
     def __new__(cls, *a, **kw):
         if cls is SQL:
-            cls = LiteralSQL  # noqa: PLW0642
+            return object.__new__(LiteralSQL)
         return object.__new__(cls)
 
     _sql_tuple: tuple[str, tuple, tuple[Field, ...]]
@@ -121,16 +121,27 @@ class LiteralSQL(SQL):
     __slots__ = ('__sql_tuple',)
     __sql_tuple: tuple[str, tuple, tuple[Field, ...]]
 
-    def __init__(self, code: typing.LiteralString | SQL = "", /, *args, to_flush: Field | Iterable[Field] | None = None, **kwargs):
-        if isinstance(code, SQL):
-            if args or kwargs or to_flush:
-                raise TypeError("SQL() unexpected arguments when code has type SQL")
-            self.__sql_tuple = code._sql_tuple
-            return
-
+    def __init__(self, code: typing.LiteralString = "", /, *args, to_flush: Field | Iterable[Field] | None = None, **kwargs):
         # validate the format of code and parameters
         if args and kwargs:
             raise TypeError("SQL() takes either positional arguments, or named arguments")
+
+        # fast paths
+        match code:
+            case "":
+                if args or kwargs or to_flush:
+                    raise TypeError("unexpected arguments for empty code")
+                self.__sql_tuple = "", (), ()
+                return
+            case "%s" if len(args) == 1 and isinstance(args[0], SQL):
+                c, p, f = args[0]._sql_tuple
+                self.__sql_tuple = c, p, to_flush or f
+                return
+            case SQL():
+                if args or kwargs or to_flush:
+                    raise TypeError("SQL() unexpected arguments when code has type SQL")
+                self.__sql_tuple = code._sql_tuple
+                return
 
         if kwargs:
             code, args = named_to_positional_printf(code, kwargs)
