@@ -4,12 +4,11 @@ import json
 import logging
 import psycopg2
 
-import odoo.api
 import odoo.exceptions
-import odoo.modules.registry
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.tools import config
 from odoo.tools.misc import hmac
 from odoo.tools.translate import _, LazyTranslate
 from .utils import (
@@ -179,7 +178,7 @@ class Home(http.Controller):
         status = 200
         if db_server_status:
             try:
-                odoo.sql_db.db_connect('postgres').cursor().close()
+                odoo.sql_db.db_connect(config['db_system']).cursor().close()
                 health_info['db_server_status'] = True
             except psycopg2.Error:
                 health_info['db_server_status'] = False

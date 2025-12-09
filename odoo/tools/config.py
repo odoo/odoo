@@ -381,6 +381,8 @@ class configmanager:
                          help="specify the maximum number of physical connections to PostgreSQL specifically for the gevent worker")
         group.add_option("--db-template", dest="db_template", my_default="template0", env_name='PGDATABASE_TEMPLATE',
                          help="specify a custom database template to create a new database")
+        group.add_option("--db-system", dest="db_system", my_default="postgres", env_name='PGDATABASE_SYSTEM',
+                         help="specify the database for shared system operations like bus and maintenance")
         parser.add_option_group(group)
 
         # i18n Group

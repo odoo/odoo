@@ -9,7 +9,7 @@ import odoo
 from odoo.modules.registry import Registry
 from odoo.sql_db import close_db, db_connect
 from odoo.tests import HOST, BaseCase, Like, get_db_name, tagged
-from odoo.tools import mute_logger, reset_cached_properties, SQL
+from odoo.tools import config, mute_logger, reset_cached_properties, SQL
 from odoo.tools.urls import urljoin
 
 
@@ -31,14 +31,14 @@ The other "what could go wrong" I can think about:
 
 def duplicate_db(db_source, db_dest):
     query = SQL("CREATE DATABASE %s ENCODING 'unicode' TEMPLATE %s", SQL.identifier(db_dest), SQL.identifier(db_source))
-    with closing(db_connect('postgres').cursor()) as cr:
+    with closing(db_connect(config['db_system']).cursor()) as cr:
         cr._cnx.autocommit = True
         cr.execute(query)
 
 
 def drop_db(db):
     query = SQL("DROP DATABASE IF EXISTS %s", SQL.identifier(db))
-    with closing(db_connect('postgres').cursor()) as cr:
+    with closing(db_connect(config['db_system']).cursor()) as cr:
         cr._cnx.autocommit = True
         cr.execute(query)
 
@@ -53,7 +53,7 @@ class TestHttpRegistry(BaseCase):
 
         # make sure there are always many databases, to break monodb
         cls._db_list = cls.startClassPatcher(patch('odoo.http.db_list'))
-        cls._db_list.return_value = ['postgres', get_db_name()]
+        cls._db_list.return_value = [config['db_system'], get_db_name()]
         cls.startClassPatcher(patch('odoo.http.db_filter',
             side_effect=lambda dbs, host=None: [db for db in dbs if db in cls._db_list()]))
 

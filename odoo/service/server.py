@@ -565,7 +565,7 @@ class ThreadedServer(CommonServer):
                     thread.start_time = None
 
         while True:
-            conn = sql_db.db_connect('postgres')
+            conn = sql_db.db_connect(config['db_system'])
             with contextlib.closing(conn.cursor()) as cr:
                 _run_cron(cr)
                 cr._cnx.close()
@@ -1443,7 +1443,7 @@ class WorkerCron(Worker):
         if self.multi.socket:
             self.multi.socket.close()
 
-        dbconn = sql_db.db_connect('postgres')
+        dbconn = sql_db.db_connect(config['db_system'])
         self.dbcursor = dbconn.cursor()
         # LISTEN / NOTIFY doesn't work in recovery mode
         self.dbcursor.execute("SELECT pg_is_in_recovery()")
