@@ -641,16 +641,20 @@ class TestRepair(TestRepairCommon):
         repair_order._action_repair_confirm()
         move = repair_order.move_ids[0]
         self.assertEqual(repair_order.name, "PT1/00001")
+        self.assertEqual(move.reference, "PT1/00001")
         self.assertEqual(move.location_id, stock_location_1)
         self.assertEqual(move.quantity, 0.0)
         repair_order.picking_type_id = picking_type_2
         self.assertEqual(repair_order.name, "PT2/00001")
+        self.assertEqual(move.reference, "PT2/00001")
         self.assertEqual(move.location_id, stock_location_2)
         self.assertEqual(move.quantity, 1.0)
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
+        self.assertEqual(move.reference, "PT1/00002")
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
+        self.assertEqual(move.reference, "PT1/00002")
 
     def test_repair_components_lots_show_in_invoice(self):
         """
