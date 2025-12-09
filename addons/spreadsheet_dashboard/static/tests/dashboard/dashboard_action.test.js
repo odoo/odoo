@@ -187,6 +187,14 @@ test("Last selected spreadsheet is kept when go back from breadcrumb", async fun
         },
     };
     const serverData = getServerData(spreadsheetData);
+    serverData.models["spreadsheet.dashboard"].records.push({
+        id: 790,
+        name: "Second dashboard",
+        json_data: JSON.stringify(spreadsheetData),
+        spreadsheet_data: JSON.stringify(spreadsheetData),
+        dashboard_group_id: 1,
+    });
+    serverData.models["spreadsheet.dashboard.group"].records[0].published_dashboard_ids.push(790);
     await createSpreadsheetDashboard({ serverData });
     await contains(".o_search_panel li:last-child").click();
     await contains(".o-dashboard-clickable-cell").click();
