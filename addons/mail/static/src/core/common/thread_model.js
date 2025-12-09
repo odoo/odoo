@@ -53,6 +53,12 @@ export class Thread extends Record {
 
     autofocus = 0;
     create_uid = fields.One("res.users");
+    /**
+     * Server-side value used in chatter to determine if the thread has pinned messages without
+     * having to load them all. Dynamic value should count "pinnedMessages" instead.
+     * @type {boolean}
+     **/
+    has_pinned_messages;
     /** @type {number} */
     id;
     /** @type {string} */
@@ -235,6 +241,23 @@ export class Thread extends Record {
             this.composerDisabledonUpdate();
         },
     });
+    pinnedMessages = fields.Many("mail.message", {
+        inverse: "threadAsPinned",
+        sort: (m1, m2) => {
+            if (m1.pinned_at === m2.pinned_at) {
+                return m2.id - m1.id;
+            }
+            return m1.pinned_at < m2.pinned_at ? 1 : -1;
+        },
+    });
+
+    async fetchPinnedMessages() {
+        await this.store.fetchStoreData("mail.thread", {
+            thread_model: this.model,
+            thread_id: this.id,
+            request_list: ["pinned_messages"],
+        });
+    }
 
     get accessRestrictedToGroupText() {
         if (!this.group_public_id?.full_name) {
@@ -634,6 +657,40 @@ export class Thread extends Record {
         }
     }
 
+    messagePin(message) {
+        this.setMessagePin(message, true).then(() => {
+            const closeFn = this.store.env.services.notification.add(_t("Message pinned"), {
+                buttons: [
+                    {
+                        name: _t("Undo"),
+                        onClick: () => {
+                            this.messageUnpin(message);
+                            closeFn();
+                        },
+                    },
+                ],
+                type: "success",
+            });
+        });
+    }
+
+    messageUnpin(message) {
+        this.setMessagePin(message, false).then(() => {
+            const closeFn = this.store.env.services.notification.add(_t("Message unpinned"), {
+                buttons: [
+                    {
+                        name: _t("Undo"),
+                        onClick: () => {
+                            this.messagePin(message);
+                            closeFn();
+                        },
+                    },
+                ],
+                type: "success",
+            });
+        });
+    }
+
     /** @param {import("models").Message} message */
     onNewSelfMessage(message) {}
 
@@ -736,6 +793,13 @@ export class Thread extends Record {
         await this.store.env.services.orm.call("ir.attachment", "register_as_main_attachment", [
             this.message_main_attachment_id.id,
         ]);
+    }
+
+    async setMessagePin(message, pinned) {
+        await this.store.env.services.orm.call(this.model, "set_message_pin", [this.id], {
+            message_id: message.id,
+            pinned,
+        });
     }
 
     /**

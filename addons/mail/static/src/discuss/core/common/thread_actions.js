@@ -5,8 +5,9 @@ import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation"
 import { ChannelMemberList } from "@mail/discuss/core/common/channel_member_list";
 import { DeleteThreadDialog } from "@mail/discuss/core/common/delete_thread_dialog";
 import { NotificationSettings } from "@mail/discuss/core/common/notification_settings";
+import { PinnedMessagesPanel } from "@mail/discuss/core/common/pinned_messages_panel";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, useChildSubEnv, xml } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -22,6 +23,31 @@ class ChannelActionDialog extends Component {
     `;
 }
 
+registerThreadAction("pinned-messages", {
+    actionPanelComponent: PinnedMessagesPanel,
+    actionPanelComponentProps: ({ channel }) => ({ channel }),
+    actionPanelOuterClass: "o-discuss-PinnedMessagesPanel bg-inherit",
+    condition: ({ channel, owner }) =>
+        channel &&
+        (!owner.props.chatWindow || owner.props.chatWindow.isOpen) &&
+        !owner.isDiscussSidebarChannelActions,
+    icon: "fa fa-fw fa-thumb-tack",
+    name: ({ action }) => (action.isActive ? _t("Hide Pinned Messages") : _t("Pinned Messages")),
+    sequence: 20,
+    sequenceGroup: 10,
+    setup() {
+        useChildSubEnv({
+            pinMenu: {
+                open: () => this.actionPanelOpen(),
+                close: () => {
+                    if (this.isActive) {
+                        this.actionPanelClose();
+                    }
+                },
+            },
+        });
+    },
+});
 registerThreadAction("add-to-favorites", {
     /**
      * @param {Object} param0

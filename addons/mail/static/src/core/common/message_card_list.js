@@ -62,6 +62,10 @@ export class MessageCardList extends Component {
         await this.env.messageHighlight?.highlightMessage(message, this.props.thread);
     }
 
+    onClickUnpin(message) {
+        (message.channel_id || message.thread)?.messageUnpin(message);
+    }
+
     get emptyText() {
         return this.props.emptyText ?? _t("No messages found");
     }

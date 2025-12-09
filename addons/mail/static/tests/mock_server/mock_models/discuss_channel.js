@@ -915,15 +915,12 @@ export class DiscussChannel extends models.ServerModel {
         message_id = kwargs.message_id;
         pinned = kwargs.pinned;
 
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
-        /** @type {import("mock_models").MailMessage} */
-        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").MailThread} */
+        const MailThread = this.env["mail.thread"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
 
-        const pinned_at = pinned && serializeDateTime(DateTime.now());
-        MailMessage.write([message_id], { pinned_at });
+        MailThread.set_message_pin.call(this, id, message_id, pinned);
         const [partner] = ResPartner.read(this.env.user.partner_id);
         const notification = `<div data-oe-type="pin" class="o_mail_notification">
                 ${partner.display_name} pinned a
@@ -937,12 +934,6 @@ export class DiscussChannel extends models.ServerModel {
                 message_type: "notification",
                 subtype_xmlid: "mail.mt_comment",
             })
-        );
-        const [channel] = this.read(id);
-        BusBus._sendone(
-            channel,
-            "mail.record/insert",
-            new mailDataHelpers.Store(MailMessage.browse(message_id), { pinned_at }).get_result()
         );
     }
 

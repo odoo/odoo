@@ -144,6 +144,12 @@ export class Message extends Record {
             }
         },
     });
+    threadAsPinned = fields.One("mail.thread", {
+        compute() {
+            return this.pinned_at ? this.thread : undefined;
+        },
+        inverse: "pinnedMessages",
+    });
     scheduledDatetime = fields.Datetime();
     onlyEmojis = fields.Attr(false, {
         compute() {
@@ -156,6 +162,7 @@ export class Message extends Record {
             );
         },
     });
+    pinned_at = fields.Datetime();
     /** @type {string} */
     subject;
     /** @type {Object[]} */

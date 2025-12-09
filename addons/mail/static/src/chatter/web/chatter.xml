@@ -30,6 +30,9 @@
                 <button class="btn btn-link text-action px-1" aria-label="Search Messages" title="Search Messages" t-on-click="onClickSearch">
                     <i class="oi oi-search fa-fw" role="img"/>
                 </button>
+                <button t-if="hasPinnedMessages" class="btn btn-link text-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="onClickPinnedMessages">
+                    <i class="fa fa-fw fa-thumb-tack" role="img"/>
+                </button>
                 <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="popoutAttachment">
                     <i class="fa fa-window-restore fa-fw" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
@@ -91,6 +94,16 @@
                                 </button>
                             </t>
                         </FileUploader>
+                    </div>
+                </div>
+                <div t-if="state.showPinnedMessages and hasPinnedMessages" class="o-mail-pinnedMessages bg-inherit">
+                    <div class="d-flex align-items-center">
+                        <hr class="flex-grow-1"/>
+                        <span class="p-3 fw-bold">Pinned Messages</span>
+                        <hr class="flex-grow-1"/>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <MessageCardList messages="state.thread.pinnedMessages" thread="state.thread" mode="'pin'"/>
                     </div>
                 </div>
                 <SearchMessageResult t-if="messageSearch.searching or messageSearch.searched" thread="state.thread"  messageSearch="messageSearch" onClickJump.bind="closeSearch"/>

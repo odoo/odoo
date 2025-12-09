@@ -15,29 +15,25 @@ export class PinnedMessagesPanel extends Component {
         MessageCardList,
         ActionPanel,
     };
-    static props = ["thread", "className?"];
+    static props = ["channel", "className?"];
     static template = "discuss.PinnedMessagesPanel";
 
     setup() {
         super.setup();
         onWillStart(() => {
-            this.props.thread.fetchPinnedMessages();
+            this.props.channel.fetchPinnedMessages();
         });
         onWillUpdateProps((nextProps) => {
-            if (nextProps.thread.notEq(this.props.thread)) {
-                nextProps.thread.fetchPinnedMessages();
+            if (nextProps.channel.notEq(this.props.channel)) {
+                nextProps.channel.fetchPinnedMessages();
             }
         });
     }
 
     /**
-     * Get the message to display when nothing is pinned on this thread.
+     * Get the message to display when nothing is pinned on this channel.
      */
     get emptyText() {
-        if (this.props.thread.channel?.channel_type === "channel") {
-            return _t("This channel doesn't have any pinned messages.");
-        } else {
-            return _t("This conversation doesn't have any pinned messages.");
-        }
+        return _t("This channel doesn't have any pinned messages.");
     }
 }

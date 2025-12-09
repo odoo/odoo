@@ -9,7 +9,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
-import { pointerDown } from "@odoo/hoot-dom";
+import { pointerDown, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 import { serverState } from "@web/../tests/web_test_helpers";
 
@@ -117,10 +117,14 @@ test("Do not show translate action if message body is empty", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 3 });
-    expect("button[title='Expand']").toHaveCount(0);
-    expect(".o-mail-Message:eq(0) [title='Translate']").toHaveCount(1);
-    expect(".o-mail-Message:eq(1) [title='Translate']").toHaveCount(0);
-    expect(".o-mail-Message:eq(2) [title='Translate']").toHaveCount(0);
+    await click(".o-mail-Message:eq(0) button[title='Expand']");
+    await waitFor("[title='Pin']");
+    await waitFor("[title='Translate']:count(1)");
+    await click(".o-mail-Message:eq(0) button[title='Expand']");
+    await waitForNone(".o-mail-Message:eq(1) button[title='Expand']");
+    await click(".o-mail-Message:eq(2) button[title='Expand']");
+    await waitFor("[title='Pin']");
+    await waitFor("[title='Translate']:count(1)"); // only 1, from first message
 });
 
 test.tags("mobile");

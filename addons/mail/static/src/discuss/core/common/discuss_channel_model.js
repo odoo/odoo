@@ -1,4 +1,7 @@
+import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { fields, Record } from "@mail/model/export";
+
+import { _t } from "@web/core/l10n/translation";
 import { Deferred } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { compareDatetime, effectWithCleanup } from "@mail/utils/common/misc";
@@ -241,6 +244,8 @@ export class DiscussChannel extends Record {
             );
         },
     });
+    /** @type {"loaded"|"loading"|"error"|undefined} */
+    pinnedMessagesState = undefined;
     thread = fields.One("mail.thread", {
         compute() {
             return { id: this.id, model: "discuss.channel" };
@@ -290,10 +295,55 @@ export class DiscussChannel extends Record {
         this.store.insert(data);
     }
 
+    async fetchPinnedMessages() {
+        if (["loaded", "loading"].includes(this.pinnedMessagesState)) {
+            return;
+        }
+        this.pinnedMessagesState = "loading";
+        try {
+            await this.thread.fetchPinnedMessages();
+        } catch (e) {
+            this.pinnedMessagesState = "error";
+            throw e;
+        }
+        this.pinnedMessagesState = "loaded";
+    }
+
     async markAsFetched() {
         await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
             [this.id],
         ]);
+    }
+
+    messagePin(message) {
+        this.store.env.services.dialog.add(MessageConfirmDialog, {
+            confirmText: _t("Yeah, pin it!"),
+            message,
+            prompt: _t("You sure want this message pinned to %(conversation)s forever and ever?", {
+                conversation: this.prefix + this.displayName,
+            }),
+            size: "md",
+            title: _t("Pin It"),
+            onConfirm: () => {
+                this.setMessagePin(message, true);
+            },
+        });
+    }
+
+    messageUnpin(message) {
+        this.store.env.services.dialog.add(MessageConfirmDialog, {
+            confirmColor: "btn-danger",
+            confirmText: _t("Yes, remove it please"),
+            message,
+            prompt: _t(
+                "Well, nothing lasts forever, but are you sure you want to unpin this message?"
+            ),
+            size: "md",
+            title: _t("Unpin Message"),
+            onConfirm: () => {
+                this.setMessagePin(message, false);
+            },
+        });
     }
 
     onPinStateUpdated() {}
