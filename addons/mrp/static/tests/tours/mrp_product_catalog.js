@@ -45,3 +45,34 @@ registry.category("web_tour.tours").add('test_mrp_production_product_catalog', {
             trigger: 'div.o_field_widget:contains("WH/MO/")',
         },
 ]});
+
+registry.category("web_tour.tours").add('test_mrp_multi_step_product_catalog_component_transfer', {
+    steps: () => [
+        {
+            trigger: 'button[name=action_add_from_catalog_raw]',
+            run: "click",
+        },
+        {
+            trigger: '.o_searchview_input',
+            run: 'edit Wooden Leg',
+        },
+        {
+            trigger: '.o_searchview_input',
+            run: 'press Enter',
+        },
+        {
+            trigger: '.o_kanban_record:contains(Wooden Leg)',
+            run: "click",
+        },
+        {
+            trigger: '.o_kanban_record:contains(Wooden Leg)',
+            run: "click",
+        },
+        {
+            trigger: 'button:contains("Back to Production")',
+            run: "click",
+        },
+        {
+            trigger: 'div.o_field_widget:contains("WH/MO/")',
+        },
+]});
