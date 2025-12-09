@@ -2894,8 +2894,47 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
 
+<<<<<<< 4fc6855f7b1452a8f971d126bb7dda22930894be
     weighProduct() {
         return makeAwaitable(this.env.services.dialog, ScaleScreen);
+||||||| cd11ab069393b68a4ab5c7302b59564dc9fd91a1
+    selectEmptyOrder() {
+        const emptyOrders = this.models["pos.order"].filter(
+            (order) =>
+                order.isEmpty() &&
+                !order.finalized &&
+                order.payment_ids.length === 0 &&
+                !order.partner_id &&
+                order.pricelist_id?.id === this.config.pricelist_id?.id &&
+                order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
+        );
+        if (emptyOrders.length > 0) {
+            this.setOrder(emptyOrders[0]);
+            return;
+        }
+        this.addNewOrder();
+=======
+    // Used to override inside `pos_blackbox_be` and `pos_urban_piper`
+    async _fetchUrbanpiperOrderCount(order_id) {
+        return;
+    }
+
+    selectEmptyOrder() {
+        const emptyOrders = this.models["pos.order"].filter(
+            (order) =>
+                order.isEmpty() &&
+                !order.finalized &&
+                order.payment_ids.length === 0 &&
+                !order.partner_id &&
+                order.pricelist_id?.id === this.config.pricelist_id?.id &&
+                order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
+        );
+        if (emptyOrders.length > 0) {
+            this.setOrder(emptyOrders[0]);
+            return;
+        }
+        this.addNewOrder();
+>>>>>>> c8c4eb5f902db8a5884005f6333149879769fcad
     }
 
     async isSessionDeleted() {
