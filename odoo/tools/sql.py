@@ -116,6 +116,23 @@ class SQL(metaclass=_SQLMeta):
     def __bool__(self):
         return bool(self._sql_tuple[0])
 
+    def join(self, args: Iterable) -> SQL:
+        """ Join SQL objects or parameters with ``self`` as a separator. """
+        match list(args):
+            case []:
+                return SQL()
+            case [SQL() as arg]:
+                return arg
+            case args:
+                code, params, to_flush = self._sql_tuple
+                if not params:
+                    return SQL(code.join(("%s",) * len(args)), *args, to_flush=to_flush)
+                # general case: alternate args with self
+                items = [self] * (len(args) * 2 - 1)
+                for index, arg in enumerate(args):
+                    items[index * 2] = arg
+                return SQL("%s" * len(items), *items, to_flush=to_flush)
+
 
 class LiteralSQL(SQL):
     __slots__ = ('__sql_tuple',)
@@ -187,23 +204,6 @@ class LiteralSQL(SQL):
     def __repr__(self):
         code, params, _ = self.__sql_tuple
         return f"SQL({', '.join(map(repr, [code, *params]))})"
-
-    def join(self, args: Iterable) -> SQL:
-        """ Join SQL objects or parameters with ``self`` as a separator. """
-        args = list(args)
-        # optimizations for special cases
-        if len(args) == 0:
-            return SQL()
-        if len(args) == 1 and isinstance(args[0], SQL):
-            return args[0]
-        code, params, to_flush = self.__sql_tuple
-        if not params:
-            return SQL(code.join(("%s",) * len(args)), *args, to_flush=to_flush)
-        # general case: alternate args with self
-        items = [self] * (len(args) * 2 - 1)
-        for index, arg in enumerate(args):
-            items[index * 2] = arg
-        return SQL("%s" * len(items), *items)
 
 
 def existing_tables(cr, tablenames):

@@ -2,6 +2,7 @@ from odoo import fields, models, api, _
 from odoo.fields import Domain
 from odoo.exceptions import UserError
 from odoo.models import Query
+from odoo.tools import sql
 
 COMPANY_OFFSET = 10000
 
@@ -14,7 +15,7 @@ class AccountCodeMapping(models.Model):
     _name = 'account.code.mapping'
     _description = "Mapping of account codes per company"
     _auto = False
-    _table_query = '0'
+    _table_query = sql.SQL('0')
 
     account_id = fields.Many2one(
         comodel_name='account.account',

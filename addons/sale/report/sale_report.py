@@ -3,6 +3,7 @@
 from odoo import api, fields, models
 
 from odoo.addons.sale.models.sale_order import SALE_ORDER_STATE
+from odoo.tools import SQL
 
 
 class SaleReport(models.Model):
@@ -90,10 +91,11 @@ class SaleReport(models.Model):
     currency_id = fields.Many2one(comodel_name='res.currency', readonly=True)
 
     def _with_sale(self):
-        return ""
+        return SQL("")
 
     def _select_sale(self):
-        select_ = f"""
+        select_ = SQL(
+            """
             MIN(l.id) AS id,
             l.product_id AS product_id,
             l.invoice_status AS line_invoice_status,
@@ -103,31 +105,11 @@ class SaleReport(models.Model):
             CASE WHEN l.product_id IS NOT NULL THEN SUM((l.product_uom_qty - l.qty_delivered) * u.factor / u2.factor) ELSE 0 END AS qty_to_deliver,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_invoiced * u.factor / u2.factor) ELSE 0 END AS qty_invoiced,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(l.qty_to_invoice * u.factor / u2.factor) ELSE 0 END AS qty_to_invoice,
-            CASE WHEN l.product_id IS NOT NULL THEN AVG(l.price_unit
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
-                ) ELSE 0
-            END AS price_unit,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_total
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
-                ) ELSE 0
-            END AS price_total,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_subtotal
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
-                ) ELSE 0
-            END AS price_subtotal,
-            CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM(l.untaxed_amount_to_invoice
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
-                ) ELSE 0
-            END AS untaxed_amount_to_invoice,
-            CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM(l.untaxed_amount_invoiced
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
-                ) ELSE 0
-            END AS untaxed_amount_invoiced,
+            CASE WHEN l.product_id IS NOT NULL THEN AVG(l.price_unit %(rate_conv)s ) ELSE 0 END AS price_unit,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_total %(rate_conv)s ) ELSE 0 END AS price_total,
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_subtotal %(rate_conv)s ) ELSE 0 END AS price_subtotal,
+            CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM(l.untaxed_amount_to_invoice %(rate_conv)s ) ELSE 0 END AS untaxed_amount_to_invoice,
+            CASE WHEN l.product_id IS NOT NULL OR l.is_downpayment THEN SUM(l.untaxed_amount_invoiced %(rate_conv)s ) ELSE 0 END AS untaxed_amount_invoiced,
             COUNT(*) AS nbr,
             s.name AS name,
             s.date_order AS date,
@@ -151,24 +133,23 @@ class SaleReport(models.Model):
             CASE WHEN l.product_id IS NOT NULL THEN SUM(p.weight * l.product_uom_qty * u.factor / u2.factor) ELSE 0 END AS weight,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(p.volume * l.product_uom_qty * u.factor / u2.factor) ELSE 0 END AS volume,
             l.discount AS discount,
-            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_unit * l.product_uom_qty * l.discount / 100.0
-                / {self._case_value_or_one('s.currency_rate')}
-                * {self._case_value_or_one('account_currency_table.rate')}
-                ) ELSE 0
-            END AS discount_amount,
-            {self.env.company.currency_id.id} AS currency_id,
-            concat('sale.order', ',', s.id) AS order_reference"""
-
-        additional_fields_info = self._select_additional_fields()
-        template = """,
-            %s AS %s"""
-        for fname, query_info in additional_fields_info.items():
-            select_ += template % (query_info, fname)
+            CASE WHEN l.product_id IS NOT NULL THEN SUM(l.price_unit * l.product_uom_qty * l.discount / 100.0 %(rate_conv)s ) ELSE 0 END AS discount_amount,
+            %(currency_id)s AS currency_id,
+            concat('sale.order', ',', s.id) AS order_reference
+            %(additional_fields)s""",
+            rate_conv=SQL("/ %s * %s", self._case_value_or_one(SQL.identifier('s', 'currency_rate')), self._case_value_or_one(SQL.identifier('account_currency_table', 'rate'))),
+            currency_id=self.env.company.currency_id.id,
+            additional_fields=SQL().join(
+                SQL(""",
+            %s AS %s""", query_info, SQL.identifier(fname))
+                for fname, query_info in self._select_additional_fields().items()
+            )
+        )
 
         return select_
 
     def _case_value_or_one(self, value):
-        return f"""CASE COALESCE({value}, 0) WHEN 0 THEN 1.0 ELSE {value} END"""
+        return SQL("CASE COALESCE(%s, 0) WHEN 0 THEN 1.0 ELSE %s END", value, value)
 
     def _select_additional_fields(self):
         """Hook to return additional fields SQL specification for select part of the table query.
@@ -180,8 +161,7 @@ class SaleReport(models.Model):
 
     def _from_sale(self):
         currency_table = self.env['res.currency']._get_simple_currency_table(self.env.companies)
-        currency_table = self.env.cr.mogrify(currency_table).decode(self.env.cr.connection.encoding)
-        return f"""
+        return SQL("""
             sale_order_line l
             LEFT JOIN sale_order s ON s.id=l.order_id
             JOIN res_partner partner ON s.partner_id = partner.id
@@ -189,15 +169,15 @@ class SaleReport(models.Model):
             LEFT JOIN product_template t ON p.product_tmpl_id=t.id
             LEFT JOIN uom_uom u ON u.id=l.product_uom_id
             LEFT JOIN uom_uom u2 ON u2.id=t.uom_id
-            JOIN {currency_table} ON account_currency_table.company_id = s.company_id
-            """
+            JOIN %(currency_table)s ON account_currency_table.company_id = s.company_id
+            """, currency_table=currency_table)
 
     def _where_sale(self):
-        return """
-            l.display_type IS NULL"""
+        return SQL("""
+            l.display_type IS NULL""")
 
     def _group_by_sale(self):
-        return """
+        return SQL("""
             l.product_id,
             l.order_id,
             l.price_unit,
@@ -225,18 +205,19 @@ class SaleReport(models.Model):
             l.is_downpayment,
             l.discount,
             s.id,
-            account_currency_table.rate"""
+            account_currency_table.rate""")
 
     def _query(self):
-        with_ = self._with_sale()
-        return f"""
-            {"WITH" + with_ + "(" if with_ else ""}
-            SELECT {self._select_sale()}
-            FROM {self._from_sale()}
-            WHERE {self._where_sale()}
-            GROUP BY {self._group_by_sale()}
-            {")" if with_ else ""}
-        """
+        query = SQL(
+            "SELECT %s FROM %s WHERE %s GROUP BY %s",
+            self._select_sale(),
+            self._from_sale(),
+            self._where_sale(),
+            self._group_by_sale(),
+        )
+        if with_ := self._with_sale():
+            return SQL("WITH %s ( %s )", with_, query)
+        return query
 
     @property
     def _table_query(self):

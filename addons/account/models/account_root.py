@@ -4,13 +4,14 @@ from itertools import accumulate
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.models import Query
+from odoo.tools import sql
 
 
 class AccountRoot(models.Model):
     _name = 'account.root'
     _description = 'Account codes first 2 digits'
     _auto = False
-    _table_query = '0'
+    _table_query = sql.SQL('0')
 
     name = fields.Char(compute='_compute_root')
     parent_id = fields.Many2one('account.root', compute='_compute_root')

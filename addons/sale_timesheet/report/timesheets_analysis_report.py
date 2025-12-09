@@ -4,6 +4,7 @@
 from odoo import fields, models, api
 
 from odoo.addons.sale_timesheet.models.hr_timesheet import TIMESHEET_INVOICE_TYPES
+from odoo.tools import SQL
 
 
 class TimesheetsAnalysisReport(models.Model):
@@ -20,18 +21,18 @@ class TimesheetsAnalysisReport(models.Model):
 
     @property
     def _table_query(self):
-        return """
+        return SQL("""
             SELECT A.*,
                 (timesheet_revenues + A.amount) AS margin,
                 (A.unit_amount - billable_time) AS non_billable_time
             FROM (
                 %s %s %s
             ) A
-        """ % (self._select(), self._from(), self._where())
+        """, self._select(), self._from(), self._where())
 
     @api.model
     def _select(self):
-        return super()._select() + """,
+        return SQL("""%s,
             A.order_id AS order_id,
             A.so_line AS so_line,
             A.timesheet_invoice_type AS timesheet_invoice_type,
@@ -44,14 +45,14 @@ class TimesheetsAnalysisReport(models.Model):
                 ELSE A.unit_amount * SOL.price_unit / sol_product_uom.factor * a_product_uom.factor
             END AS timesheet_revenues,
             CASE WHEN A.order_id IS NULL THEN 0 ELSE A.unit_amount END AS billable_time
-        """
+        """, super()._select())
 
     @api.model
     def _from(self):
-        return super()._from() + """
+        return SQL("""%s
             LEFT JOIN sale_order_line SOL ON A.so_line = SOL.id
             LEFT JOIN uom_uom sol_product_uom ON sol_product_uom.id = SOL.product_uom_id
             INNER JOIN uom_uom a_product_uom ON a_product_uom.id = A.product_uom_id
             LEFT JOIN product_product P ON P.id = SOL.product_id
             LEFT JOIN product_template T ON T.id = P.product_tmpl_id
-        """
+        """, super()._from())
