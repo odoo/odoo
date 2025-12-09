@@ -955,9 +955,10 @@ const CONTAINER_STYLE_MAP = {
     w125: { width: "125px" }, // width of popper + 1/2 target
 };
 
-function getRepositionTest(from, to, containerStyleChanges) {
+function getRepositionTest(from, to, containerStyleChanges, extendedFlipping = false) {
     return async () => {
         const TestComp = getTestComponent({
+            extendedFlipping,
             position: from,
             onPositioned: (el, { direction, variant }) => {
                 expect.step(`${direction}-${variant}`);
@@ -1113,6 +1114,87 @@ test(
     getRepositionTest("right-end", "left-end", "right top")
 );
 test("reposition from right-end to right", getRepositionTest("right-end", "left-end", "right"));
+// Reposition with all flipping directions allowed
+test(
+    "extended reposition from top-start to slimfit bottom",
+    getRepositionTest("top-start", "center-start", "slimfit bottom", true)
+);
+test(
+    "extended reposition from top-start to right",
+    getRepositionTest("top-start", "left-start", "right", true)
+);
+test(
+    "extended reposition from top-middle to slimfit bottom",
+    getRepositionTest("top-middle", "center-middle", "slimfit bottom", true)
+);
+test(
+    "extended reposition from top-end to left",
+    getRepositionTest("top-end", "right-end", "left", true)
+);
+test(
+    "extended reposition from top-end to slimfit bottom",
+    getRepositionTest("top-end", "center-end", "slimfit bottom", true)
+);
+test(
+    "extended reposition from left-start to slimfit top",
+    getRepositionTest("left-start", "center-start", "slimfit top", true)
+);
+test(
+    "extended reposition from left-start to bottom",
+    getRepositionTest("left-start", "top-start", "bottom", true)
+);
+test(
+    "extended reposition from left-middle to slimfit bottom",
+    getRepositionTest("left-middle", "center-middle", "slimfit bottom", true)
+);
+test(
+    "extended reposition from left-end to top",
+    getRepositionTest("left-end", "bottom-end", "top", true)
+);
+test(
+    "extended reposition from left-end to slimfit bottom",
+    getRepositionTest("left-end", "center-end", "slimfit bottom", true)
+);
+test(
+    "extended reposition from bottom-start to slimfit top",
+    getRepositionTest("bottom-start", "center-start", "slimfit top", true)
+);
+test(
+    "extended reposition from bottom-start to right",
+    getRepositionTest("bottom-start", "left-start", "right", true)
+);
+test(
+    "extended reposition from bottom-middle to slimfit top",
+    getRepositionTest("bottom-middle", "center-middle", "slimfit top", true)
+);
+test(
+    "extended reposition from bottom-end to left",
+    getRepositionTest("bottom-end", "right-end", "left", true)
+);
+test(
+    "extended reposition from bottom-end to slimfit top",
+    getRepositionTest("bottom-end", "center-end", "slimfit top", true)
+);
+test(
+    "extended reposition from right-start to slimfit top",
+    getRepositionTest("right-start", "center-start", "slimfit top", true)
+);
+test(
+    "extended reposition from right-start to bottom",
+    getRepositionTest("right-start", "top-start", "bottom", true)
+);
+test(
+    "extended reposition from right-middle to slimfit bottom",
+    getRepositionTest("right-middle", "center-middle", "slimfit bottom", true)
+);
+test(
+    "extended reposition from right-end to top",
+    getRepositionTest("right-end", "bottom-end", "top", true)
+);
+test(
+    "extended reposition from right-end to slimfit bottom",
+    getRepositionTest("right-end", "center-end", "slimfit bottom", true)
+);
 
 function getFittingTest(position, styleAttribute) {
     return async () => {
