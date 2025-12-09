@@ -145,7 +145,10 @@ class BlackBoxDriver(SerialDriver):
         self.data['value'] = self._box_id()
 
     @classmethod
-    def _parse_blackbox_response(cls, response):
+    def _parse_blackbox_response(cls, response: str | dict):
+        if isinstance(response, dict):
+            return response
+
         error_code = response[4:10]
         error_message = errors.get(error_code[:3])
 
@@ -198,12 +201,12 @@ class BlackBoxDriver(SerialDriver):
         return responses
 
     def _register_receipt_web(self, data):
-        self._register_receipt(data['high_level_message'])
+        response = self._register_receipt(data['high_level_message'])
 
         self.send_blackbox_response({
             'order_id': data['id'],
             'device_identifier': self.device_identifier,
-            'blackbox_response': self.data['result'],
+            'blackbox_response': response,
             'iot_mac': system.IOT_IDENTIFIER
         })
 
@@ -211,20 +214,16 @@ class BlackBoxDriver(SerialDriver):
         data = data.get('high_level_message', data)
 
         if data.get('clock'):
-            blackbox_response = self._send_to_blackbox('I', data, self._connection)
+            self._send_to_blackbox('I', data, self._connection)
 
         blackbox_response = self._send_to_blackbox('H', data, self._connection)
-        if blackbox_response:
-            return self._parse_blackbox_response(blackbox_response)
-        return None
+        return self._parse_blackbox_response(blackbox_response)
 
     def _register_pin(self, data):
         data = data.get('high_level_message', data)
 
         blackbox_response = self._send_to_blackbox("P", data, self._connection)
-        if blackbox_response:
-            return self._parse_blackbox_response(blackbox_response)
-        return None
+        return self._parse_blackbox_response(blackbox_response)
 
     def _send_to_blackbox(self, request_type: str, data: dict, connection: serial.Serial) -> str | dict:
         """Sends a message to and wait for a response from the blackbox.
