@@ -322,7 +322,7 @@ function createFakeDataTransfer(files) {
  * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then clicks on it.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {ContainsOptions} [options] forwarded to `contains`
  * @param {boolean} [options.shiftKey]
  */
@@ -336,7 +336,7 @@ export async function click(selector, options = {}) {
  * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then dragenters `files` on it.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {Object[]} files
  * @param {ContainsOptions} [options] forwarded to `contains`
  */
@@ -348,7 +348,7 @@ export async function dragenterFiles(selector, files, options) {
  * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then dragovers `files` on it.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {Object[]} files
  * @param {ContainsOptions} [options] forwarded to `contains`
  */
@@ -360,7 +360,7 @@ export async function dragoverFiles(selector, files, options) {
  * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then drops `files` on it.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {Object[]} files
  * @param {ContainsOptions} [options] forwarded to `contains`
  */
@@ -372,7 +372,7 @@ export async function dropFiles(selector, files, options) {
  * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then inputs `files` on it.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {Object[]} files
  * @param {ContainsOptions} [options] forwarded to `contains`
  */
@@ -384,7 +384,7 @@ export async function inputFiles(selector, files, options) {
  * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then pastes `files` on it.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {Object[]} files
  * @param {ContainsOptions} [options] forwarded to `contains`
  */
@@ -396,7 +396,7 @@ export async function pasteFiles(selector, files, options) {
  * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then focuses on it.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {ContainsOptions} [options] forwarded to `contains`
  */
 export async function focus(selector, options) {
@@ -407,7 +407,7 @@ export async function focus(selector, options) {
  * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then inserts the given `content`.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {string} content
  * @param {ContainsOptions} [options] forwarded to `contains`
  * @param {boolean} [options.replace=false]
@@ -423,7 +423,7 @@ export async function insertText(selector, content, options = {}) {
  * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then sets its `scrollTop` to the given value.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {number|"bottom"} scrollTop
  * @param {ContainsOptions} [options] forwarded to `contains`
  */
@@ -435,7 +435,7 @@ export async function scroll(selector, scrollTop, options) {
  * Waits until exactly one element matching the given `selector` is present in
  * `options.target` and then triggers `event` on it.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {(import("@web/../tests/helpers/utils").EventType|[import("@web/../tests/helpers/utils").EventType, EventInit])[]} events
  * @param {ContainsOptions} [options] forwarded to `contains`
  */
@@ -534,7 +534,7 @@ afterEach(() => (hasUsedContainsPositively = false));
 class Contains {
     timeoutCount = 0;
     /**
-     * @param {string} selector
+     * @param {import("@odoo/hoot-dom").Target} selector
      * @param {ContainsOptions} [options={}]
      */
     constructor(selector, options = {}) {
@@ -603,13 +603,14 @@ class Contains {
     setTickTimeout() {
         this.timer = setTimeout(() => {
             this.timeoutCount++;
-            const res = this.runOnce(`Timeout of ${this.timeoutCount * 0.1} seconds`, {
-                crashOnFail: this.timeoutCount > 29,
-            });
+            const res = this.runOnce(
+                `Timeout of ${(this.timeoutCount * this.tickTimeoutDelay) / 1000} seconds`,
+                { crashOnFail: this.timeoutCount >= 3000 / this.tickTimeoutDelay }
+            );
             if (!res) {
                 this.setTickTimeout();
             }
-        }, 100);
+        }, this.tickTimeoutDelay);
     }
 
     /**
@@ -630,6 +631,10 @@ class Contains {
         this.onFocus = () => this.runOnce("after focus");
         this.onScroll = () => this.runOnce("after scroll");
         if (!this.runOnce("immediately")) {
+            const hasValue =
+                this.options.value !== undefined ||
+                (typeof this.selector === "string" && this.selector.includes(":value"));
+            this.tickTimeoutDelay = hasValue ? 500 : 3000;
             this.setTickTimeout();
             this.observer = new MutationObserver((mutations) => {
                 try {
@@ -959,7 +964,7 @@ class Contains {
  * Waits until `count` elements matching the given `selector` are present in
  * `options.target`.
  *
- * @param {string} selector
+ * @param {import("@odoo/hoot-dom").Target} selector
  * @param {ContainsOptions} [options]
  * @returns {Promise}
  */
