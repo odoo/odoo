@@ -354,6 +354,33 @@
                                 <setting string="Early Receipt Printing" help="Allow to print receipt before payment" id="iface_printbill">
                                     <field name="pos_iface_printbill"/>
                                 </setting>
+                                <setting id="pos_contact_info" help="Fill in if your shop has different info from your company">
+                                    <field name="pos_use_custom_receipt_info" />
+                                    <field name="custom_phone_placeholder" invisible="1"/>
+                                    <field name="custom_email_placeholder" invisible="1"/>
+                                    <field name="custom_website_placeholder" invisible="1"/>
+                                    <field name="custom_address_placeholder" invisible="1"/>
+                                    <div class="content-group row">
+                                        <label for="pos_custom_phone" class="col-lg-3 o_light_label" string="Phone" invisible="pos_use_custom_receipt_info in [False,'']"/>
+                                        <field name="pos_custom_phone" options="{'placeholder_field': 'custom_phone_placeholder'}" invisible="pos_use_custom_receipt_info in [False,'']"/>
+                                    </div>
+                                    <div class="content-group row">
+                                        <label for="pos_custom_email" class="col-lg-3 o_light_label" string="Email" invisible="pos_use_custom_receipt_info in [False,'']"/>
+                                        <field name="pos_custom_email" options="{'placeholder_field': 'custom_email_placeholder'}" invisible="pos_use_custom_receipt_info in [False,'']"/>
+                                    </div>
+                                    <div class="content-group row">
+                                        <label for="pos_custom_website" class="col-lg-3 o_light_label" string="Website" invisible="pos_use_custom_receipt_info in [False,'']"/>
+                                        <field name="pos_custom_website" options="{'placeholder_field': 'custom_website_placeholder'}" invisible="pos_use_custom_receipt_info in [False,'']"/>
+                                    </div>
+                                    <div class="content-group row">
+                                        <label for="pos_custom_receipt_address" class="col-lg-3 o_light_label" string="Address" invisible="pos_use_custom_receipt_info in [False,'']"/>
+                                        <field name="pos_custom_receipt_address" options="{'placeholder_field': 'custom_address_placeholder'}" invisible="pos_use_custom_receipt_info in [False,'']"/>
+                                    </div>
+                                    <div class="content-group row">
+                                        <label for="pos_custom_logo" class="col-lg-3 o_light_label" string="Logo" invisible="pos_use_custom_receipt_info in [False,'']"/>
+                                        <field name="pos_custom_logo" invisible="pos_use_custom_receipt_info in [False,'']" filename="pos_custom_logo_name" options="{'accepted_file_extensions': '.jpg,.jpeg,.png,.webp,.svg,.ico,.bmp,.svf,.tif,.tiff'}"/>
+                                    </div>
+                                </setting>
                             </block>
 
                             <block title="Payment Terminals" help="Those settings are common to all PoS." id="pos_payment_terminals_section">

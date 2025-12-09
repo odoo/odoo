@@ -14,7 +14,7 @@
                     <t t-esc="this.pos.config.name"/>
                 </div>
                 <div t-attf-class="screen-login-logo {{ ui.isSmall ? 'mx-auto' : 'd-flex justify-content-end w-50'}}">
-                    <img t-attf-src="/web/image?model=res.company&amp;id={{pos.company.id}}&amp;field=logo" alt="Logo"/>
+                    <img t-attf-src="{{ this.logoUrl }}" alt="Logo"/>
                 </div>
             </div>
             <div t-if="ui.isSmall" class="fs-1 fw-bold mt-4 d-flex justify-content-center fade-effect">

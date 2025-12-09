@@ -198,6 +198,18 @@ class PosConfig(models.Model):
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
+    use_custom_receipt_info = fields.Boolean(string="Customise info", default=False, help="Fill in if your shop does not have the same info as your company")
+    custom_email = fields.Char(string="Email", readonly=False)
+    email = fields.Char(string="Receipt email", compute="_compute_custom_info", store=True, readonly=False)
+    custom_website = fields.Char(string="Website", readonly=False)
+    website = fields.Char(string="Receipt website", compute="_compute_custom_info", store=True, readonly=False)
+    custom_receipt_address = fields.Char(string="Address", readonly=False)
+    receipt_address = fields.Char(string="Receipt address", compute="_compute_custom_info", store=True, readonly=False)
+    custom_logo_name = fields.Char(string='Logo Name')
+    custom_logo = fields.Image(string="Logo", readonly=False)
+    logo = fields.Image(string="Receipt logo", compute="_compute_custom_info", store=True, readonly=False)
+    custom_phone = fields.Char(string="Phone Nb", readonly=False)
+    phone = fields.Char(string="Receipt phone", compute="_compute_custom_info", store=True, readonly=False)
     use_fast_payment = fields.Boolean('Fast Payment Validation', help="Enable fast payment methods to validate orders on the product screen.")
     fast_payment_method_ids = fields.Many2many(
         'pos.payment.method', string='Fast Payment Methods', compute="_compute_fast_payment_method_ids", relation='pos_payment_method_config_fast_validation_relation',
@@ -298,6 +310,14 @@ class PosConfig(models.Model):
             record['pricelist_id'] = False
         record['_IS_VAT'] = self.env.company.country_id.id in self.env.ref("base.europe").country_ids.ids
         return read_records
+
+    @api.depends('custom_logo', 'custom_phone', 'custom_receipt_address', 'custom_email', 'custom_website', 'company_id', 'use_custom_receipt_info',
+                 'company_id.logo', 'company_id.phone', 'company_id.street', 'company_id.city', 'company_id.state_id', 'company_id.zip', 'company_id.email', 'company_id.website')
+    def _compute_custom_info(self):
+        fields = ['logo', 'phone', 'receipt_address', 'email', 'website']
+        for config in self:
+            for field in fields:
+                config[field] = config[f'custom_{field}'] if config.use_custom_receipt_info and config[f'custom_{field}'] else config.company_id[field]
 
     @api.depends('payment_method_ids')
     def _compute_fast_payment_method_ids(self):

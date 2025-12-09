@@ -99,7 +99,7 @@ export class GeneratePrinterData {
             payments: this.generatePaymentData(),
             image: {
                 invoice_qr_code: useQrCode ? this.generateQrCode(url) : false,
-                logo: this.order.config.uiState.receiptLogoDataUrl,
+                logo: this.order.config.receiptLogoUrl,
             },
             conditions: {
                 basic_receipt: this.basicReceipt,

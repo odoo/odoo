@@ -129,7 +129,7 @@ class PosOrderReceipt(models.AbstractModel):
 
         use_qr_code = self.company_id.point_of_sale_ticket_portal_url_display_mode != 'url'
         company = self.company_id
-        company_logo = 'data:image/png;base64,' + base64.b64encode(base64.b64decode(company.logo)).decode('utf-8')
+        config_logo = 'data:image/png;base64,' + base64.b64encode(base64.b64decode(self.config_id.logo)).decode('utf-8')
         qr_code_value = f"{self.env.company.get_base_url()}/pos/ticket?order_uuid={self.uuid}"
 
         return {
@@ -141,7 +141,7 @@ class PosOrderReceipt(models.AbstractModel):
             'lines': self._order_receipt_generate_line_data(),
             'payments': self._order_receipt_generate_payment_data(),
             'image': {
-                'logo': company_logo,
+                'logo': config_logo,
                 'invoice_qr_code': self._order_receipt_generate_qr_code(qr_code_value) if use_qr_code else False,
             },
             'conditions': {

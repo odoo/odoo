@@ -304,6 +304,48 @@ registry.category("web_tour.tours").add("point_of_sale.test_printed_receipt_tour
         ].flat(),
 });
 
+const getReceiptLogoSteps = (expectedData) =>
+    [
+        Chrome.startPoS(),
+        Dialog.confirm("Open Register"),
+        ProductScreen.addOrderline("Desk Pad", "1", "5"),
+        ProductScreen.clickPayButton(),
+        PaymentScreen.clickPaymentMethod("Bank"),
+        PaymentScreen.clickValidate(),
+        FeedbackScreen.isShown(),
+        FeedbackScreen.checkTicketData(
+            {
+                logo: expectedData.logo,
+                contact_info: expectedData.contact_info,
+            },
+            false
+        ),
+    ].flat();
+
+registry.category("web_tour.tours").add("point_of_sale.test_receipt_company_logo_tour", {
+    steps: () =>
+        getReceiptLogoSteps({
+            logo: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+            contact_info: "123456789",
+        }),
+});
+
+registry.category("web_tour.tours").add("point_of_sale.test_receipt_no_logo_tour", {
+    steps: () =>
+        getReceiptLogoSteps({
+            logo: false,
+            contact_info: "123456789",
+        }),
+});
+
+registry.category("web_tour.tours").add("point_of_sale.test_receipt_custom_logo_tour", {
+    steps: () =>
+        getReceiptLogoSteps({
+            logo: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mnk5+dQAwAEsgKVw6M+4wAAAABJRU5ErkJggg==",
+            contact_info: "555-999",
+        }),
+});
+
 registry.category("web_tour.tours").add("test_auto_validate_force_done", {
     steps: () =>
         [
