@@ -117,7 +117,7 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         move.action_post()
         self.partner_a.vat = 'SOMETHING'
         self.partner_b.vat = 'DIFFERENT'
-        with self.assertRaisesRegex(UserError, "different Tax ID"):
+        with self.assertRaisesRegex(UserError, f"different {self.partner_a.vat_label}"):
             self.partner_a.parent_id = self.partner_b
 
     def test_manually_write_partner_id_empty_string_vs_False(self):
