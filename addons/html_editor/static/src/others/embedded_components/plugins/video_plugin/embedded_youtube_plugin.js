@@ -1,4 +1,4 @@
-import { YoutubePlugin } from "@html_editor/main/youtube_plugin";
+import { YoutubePlugin } from "@html_editor/main/media/video/youtube_plugin";
 import { EmbeddedVideoSelector } from "./video_selector_dialog/embedded_video_selector";
 
 export class EmbeddedYoutubePlugin extends YoutubePlugin {
