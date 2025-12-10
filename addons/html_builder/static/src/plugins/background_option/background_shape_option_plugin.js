@@ -81,11 +81,13 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         "getComputedConnectionsColors",
         "handleBgColorUpdated",
         "isShapeEligibleForComputation",
+        "getShapeSrc",
+        "getShapeStylePosition",
     ];
     setup() {
-        // TODO: update shapeBackgroundImagePerClass if a stylesheet value
-        // changes.
-        this.shapeBackgroundImagePerClass = {};
+        // TODO: update shapeStyles if a stylesheet value changes.
+        this.shapeStyles = {};
+        const keywordMap = { top: 0, left: 0, center: 50, bottom: 100, right: 100 };
         for (const styleSheet of this.document.styleSheets) {
             if (styleSheet.href && new URL(styleSheet.href).host !== location.host) {
                 // In some browsers, if a stylesheet is loaded from a different
@@ -94,8 +96,11 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             }
             for (const rule of [...styleSheet.cssRules]) {
                 if (rule.selectorText && rule.selectorText.startsWith(".o_we_shape.")) {
-                    this.shapeBackgroundImagePerClass[rule.selectorText] =
-                        rule.style.backgroundImage;
+                    const bgPositions = rule.style.backgroundPosition.split(" ");
+                    this.shapeStyles[rule.selectorText] = {
+                        bgImage: rule.style.backgroundImage,
+                        bgPosition: bgPositions.map((bgPosition) => keywordMap[bgPosition]),
+                    };
                 }
             }
         }
@@ -256,7 +261,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             // Apply custom image, flip, speed
             shapeContainerEl.style.setProperty(
                 "background-image",
-                `url("${this.getShapeSrc(editingElement)}")`
+                `url("${this.getShapeSrc(this.getShapeData(editingElement))}")`
             );
             shapeContainerEl.style.backgroundPosition = "";
 
@@ -265,8 +270,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
                     .backgroundPosition.split(" ")
                     .map(parseFloat);
 
-                xPos = flip.includes("x") ? -xPos + 100 : xPos;
-                yPos = flip.includes("y") ? -yPos + 100 : yPos;
+                [xPos, yPos] = this.computeFlipPos(xPos, yPos, flip);
 
                 shapeContainerEl.style.backgroundPosition = `${xPos}% ${yPos}%`;
             }
@@ -363,10 +367,8 @@ export class BackgroundShapeOptionPlugin extends Plugin {
     /**
      * Returns the src of the shape corresponding to the current parameters.
      *
-     * @param {HTMLElement} editingElement
      */
-    getShapeSrc(editingElement) {
-        const { shape, colors, flip, shapeAnimationSpeed } = this.getShapeData(editingElement);
+    getShapeSrc({ shape, colors, flip, shapeAnimationSpeed }) {
         if (!shape) {
             return "";
         }
@@ -387,9 +389,30 @@ export class BackgroundShapeOptionPlugin extends Plugin {
      * @param {String} shapeId
      */
     getShapeStyleUrl(shapeId) {
-        const shapeClassName = `o_${shapeId.replace(/\//g, "_")}`;
         // Match current palette
-        return this.shapeBackgroundImagePerClass[`.o_we_shape.${shapeClassName}`];
+        if (!shapeId) {
+            return "";
+        }
+        return this.shapeStyles[this.convertShapeIdForStyleSearch(shapeId)]?.bgImage;
+    }
+    getShapeStylePosition(shapeId, flip) {
+        if (!shapeId) {
+            return "";
+        }
+        const [xPos, yPos] = this.shapeStyles[this.convertShapeIdForStyleSearch(shapeId)]
+            ?.bgPosition || [50, 50];
+        return this.computeFlipPos(xPos, yPos, flip);
+    }
+    computeFlipPos(xPos, yPos, flip) {
+        if (!flip) {
+            return [xPos, yPos];
+        }
+        const xFlip = flip.includes("x") ? -xPos + 100 : xPos;
+        const yFlip = flip.includes("y") ? -yPos + 100 : yPos;
+        return [xFlip, yFlip];
+    }
+    convertShapeIdForStyleSearch(shapeId) {
+        return `.o_we_shape.o_${shapeId.replace(/\//g, "_")}`;
     }
     /**
      * Inserts or removes the given container at the right position in the
