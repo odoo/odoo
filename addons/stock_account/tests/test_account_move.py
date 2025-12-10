@@ -277,19 +277,22 @@ class TestAccountMove(TestStockValuationCommon):
         receipts.action_confirm()
         receipt_done.button_validate()
         # Check that the purchase, sale and tax lock dates do not impose any restrictions
-        lock_date_setting = self.env['account.change.lock.date'].create({
+        self.env.company.write({
             'sale_lock_date': lock_date,
             'purchase_lock_date': lock_date,
             'tax_lock_date': lock_date,
         })
-        lock_date_setting.change_lock_date()
         # Receipts can be backdated
         receipt.scheduled_date = prior_to_lock_date
         receipt_done.date_done = prior_to_lock_date
 
         # Check that the fiscal year lock date imposes restrictions
-        lock_date_setting.fiscalyear_lock_date = lock_date
-        lock_date_setting.change_lock_date()
+        self.env.company.write({
+            'sale_lock_date': False,
+            'purchase_lock_date': False,
+            'tax_lock_date': False,
+            'fiscalyear_lock_date': lock_date,
+        })
         # Receipts can not be backdated prior to lock date
         receipt.scheduled_date = post_to_lock_date
         receipt_done.date_done = post_to_lock_date
@@ -299,11 +302,10 @@ class TestAccountMove(TestStockValuationCommon):
             receipt_done.date_done = prior_to_lock_date
 
         # Check that the hard lock date imposes restrictions
-        lock_date_setting.write({
+        self.env.company.write({
             'fiscalyear_lock_date': False,
             'hard_lock_date': lock_date,
         })
-        lock_date_setting.change_lock_date()
         # Receipts can not be backdated prior to lock date
         receipt.scheduled_date = post_to_lock_date
         receipt_done.date_done = post_to_lock_date

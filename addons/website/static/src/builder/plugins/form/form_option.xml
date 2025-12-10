@@ -149,7 +149,7 @@
         <BuilderNumberInput unit.translate="rows" saveUnit="''" step="1" attributeAction="'rows'" default="3"/>
     </BuilderRow>
     <BuilderRow label.translate="Label">
-        <BuilderTextInput action="'setLabelText'"/>
+        <BuilderTextInput action="'setLabelText'" default="domState.fieldTranslatedName"/>
     </BuilderRow>
     <BuilderRow label.translate="Position" level="1">
         <BuilderButtonGroup action="'selectLabelPosition'">

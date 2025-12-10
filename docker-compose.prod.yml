@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+  # ======================================================================
+  # PostgreSQL（本番用 DB）
+  # ----------------------------------------------------------------------
+  # ・開発と同様だが、本番なので restart=always
+  # ・ボリュームも prod 用に分離して安全に扱う
+  # ======================================================================
+  db:
+    image: postgres:16
+    container_name: odoo19-db-prod
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: odoo
+    volumes:
+      - db-data-prod:/var/lib/postgresql/data
+
+    # DB 起動状態を確認し、Odoo の立ち上げ順序を保証
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d odoo"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+    restart: always
+
+  # ======================================================================
+  # Odoo（本番用 Web サーバ）
+  # ----------------------------------------------------------------------
+  # ・debugpy や --dev=all は OFF（パフォーマンス最適化）
+  # ・設定ファイルと custom_addons は read-only でマウント
+  #   → 本番環境の安全性を高める
+  # ・本番用 Dockerfile (Dockerfile.prod) を利用
+  # ======================================================================
+  odoo:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: odoo19-web-prod
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    environment:
+      HOST: db
+      USER: odoo
+      PASSWORD: odoo
+      ODOO_EXTRA_ADDONS: /mnt/extra-addons
+
+    ports:
+      - "8069:8069"    # 本番公開ポート（Cloud Run/Fargate の内部でも可）
+
+    volumes:
+      # Odoo データ永続化（本番用）
+      - odoo-data-prod:/var/lib/odoo
+      # 設定ファイルを本番では変更されないよう read-only でマウント
+      - ./config:/etc/odoo:ro
+      # カスタムアドオンも read-only 化（本番では編集不可にする）
+      - ./custom_addons:/mnt/extra-addons:ro
+
+    restart: always
+
+    # AWS ECS/Fargate や Docker Swarm でも使える追加制御
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: "2.0"
+    #       memory: "4g"
+
+# ======================================================================
+# 本番用ボリューム（開発と分離し安全に扱う）
+# ======================================================================
+volumes:
+  db-data-prod:
+  odoo-data-prod:

@@ -10,6 +10,48 @@ function tryParseJSON(jsonString) {
     }
 }
 
+async function tryFetch(input) {
+    try {
+        const response = await fetch(input);
+        let responseJson;
+        try {
+            responseJson = await response.json();
+        } catch (err) {
+            throw new DocAPIError ({
+                name: "Invalid JSON Response",
+                status: response.status,
+                traceback: err,
+            });
+        }
+        if (!response.ok) {
+            throw new DocAPIError ({
+                name: response.status === 500
+                    ? "Internal Server Error"
+                    : `HTTP $(response.status)`,
+                status: response.status,
+                traceback: responseJson.debug,
+            });
+        }
+        return responseJson;
+    } catch(err) {
+        if (err instanceof DocAPIError) throw err;
+        throw new DocAPIError({
+            name: "Network Error",
+            status: null,
+            traceback: err,
+        });
+    }
+}
+
+class DocAPIError extends Error {
+    constructor({ name, status, traceback } = {}) {
+        super(name);
+        this.name = name;
+        this.status = status ?? null;
+        this.traceback = traceback ?? null;
+    }
+}
+
 export class ModelStore extends Reactive {
     constructor() {
         super();
@@ -33,8 +75,9 @@ export class ModelStore extends Reactive {
     async loadModels() {
         try {
             console.info("Loading Models...");
-            const response = await fetch("/doc/index.json");
-            const { models } = await response.json();
+            const response = await tryFetch(`/doc/index.json`);
+
+            const { models } = response;
             console.info("Models List Loaded", models);
 
             models.sort((a, b) => a.model.localeCompare(b.model));
@@ -71,24 +114,22 @@ export class ModelStore extends Reactive {
     }
 
     async loadModel(modelId) {
-        let model = null;
         try {
-            const response = await fetch(`/doc/${modelId}.json`);
-            model = await response.json();
+            const model = await tryFetch(`/doc/${modelId}.json`);
+
+            if (model.doc) {
+                model.doc = markup(model.doc);
+            }
+
+            Object.values(model.methods).forEach((method) => {
+                method.doc = method.doc ? markup(method.doc) : null;
+            });
+
+            console.info("Model Loaded: ", model);
+            return model;
         } catch (e) {
-            throw e;
+            this.error = e;
         }
-
-        if (model.doc) {
-            model.doc = markup(model.doc);
-        }
-
-        Object.values(model.methods).forEach((method) => {
-            method.doc = method.doc ? markup(method.doc) : null;
-        });
-
-        console.info("Model Loaded: ", model);
-        return model;
     }
 
     getBasicModelData(modelId) {

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- 従業員向け機能のルートメニュー -->
+        <menuitem id="menu_employee_portal_root" name="従業員ポータル" sequence="10"/>
+
+        <!-- 掲示板メニュー：投稿とカテゴリ（カテゴリは管理者のみ） -->
+        <menuitem id="menu_employee_board" name="掲示板" parent="menu_employee_portal_root" sequence="10" action="action_employee_board_post"/>
+        <menuitem id="menu_employee_board_category" name="掲示カテゴリ" parent="menu_employee_portal_root" sequence="20" action="action_employee_board_category" groups="employee_portal.group_employee_portal_manager"/>
+
+        <!-- タスクメニュー：自分用／全件／テンプレート -->
+        <menuitem id="menu_employee_tasks" name="タスク" parent="menu_employee_portal_root" sequence="30"/>
+        <menuitem id="menu_employee_task_mine" name="マイタスク" parent="menu_employee_tasks" action="action_employee_task_mine" sequence="10"/>
+        <menuitem id="menu_employee_task_all" name="全タスク" parent="menu_employee_tasks" action="action_employee_task_all" sequence="20" groups="employee_portal.group_employee_portal_manager"/>
+        <menuitem id="menu_employee_task_templates" name="タスクテンプレート" parent="menu_employee_tasks" action="action_employee_task_template" sequence="30" groups="employee_portal.group_employee_portal_manager"/>
+    </data>
+</odoo>

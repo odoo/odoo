@@ -37,14 +37,15 @@ class HrLeaveType(models.Model):
         deductible_time_off_types = self.env['hr.leave.type'].search([
             ('overtime_deductible', '=', True),
             ('requires_allocation', '=', False)])
+        unspent_overtime = self.env['hr.leave']._get_deductible_employee_overtime(employees)
         for employee in employees:
             for leave_type in deductible_time_off_types:
                 if leave_type in self and employee.sudo().total_overtime > 0:
                     lt_info = (
                         leave_type.name,
                         {
-                            'remaining_leaves': 0,
-                            'virtual_remaining_leaves': employee.sudo().total_overtime,
+                            'remaining_leaves': unspent_overtime[employee],
+                            'virtual_remaining_leaves': unspent_overtime[employee],
                             'max_leaves': 0,
                             'leaves_taken': 0,
                             'virtual_leaves_taken': 0,

@@ -65,12 +65,22 @@ test("from the discuss app", async () => {
     ]);
     await start();
     await openDiscuss();
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat:has(:text('HR')) .fa-circle[title='You have joined this live chat channel']"
+    );
     await click("[title='Leave HR']", {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
     });
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat:has(:text('HR')) .fa-circle[title='You have joined this live chat channel']",
+        { count: 0 }
+    );
     await click("[title='Join HR']", {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
     });
+    await contains(
+        ".o-mail-DiscussSidebarCategory-livechat:has(:text('HR')) .fa-circle[title='You have joined this live chat channel']"
+    );
     await click("[title='Chat Actions']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "guest_1" }],
     });

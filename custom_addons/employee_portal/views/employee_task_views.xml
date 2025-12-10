@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- タスクテンプレート：一覧ビュー。発生頻度や対象会社を確認 -->
+        <record id="view_employee_task_template_tree" model="ir.ui.view">
+            <field name="name">employee.task.template.tree</field>
+            <field name="model">employee.task.template</field>
+            <field name="arch" type="xml">
+                <list string="タスクテンプレート">
+                    <field name="name"/>
+                    <field name="frequency"/>
+                    <field name="weekday"/>
+                    <field name="month_day"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- タスクテンプレート：フォームビュー。従業員の割当や頻度設定を編集 -->
+        <record id="view_employee_task_template_form" model="ir.ui.view">
+            <field name="name">employee.task.template.form</field>
+            <field name="model">employee.task.template</field>
+            <field name="arch" type="xml">
+                <form string="タスクテンプレート">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="frequency"/>
+                            <field name="weekday"/>
+                            <field name="month_day"/>
+                            <field name="employee_ids" widget="many2many_tags"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- タスク：Kanbanビュー。Odoo 19 仕様の card テンプレートを使用 -->
+        <record id="view_employee_task_kanban" model="ir.ui.view">
+            <field name="name">employee.task.kanban</field>
+            <field name="model">employee.task</field>
+            <field name="arch" type="xml">
+                <kanban string="タスク" default_group_by="status">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="status"/>
+                    <field name="company_id"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_global_click o_kanban_record">
+                                <div class="fw-bold" t-esc="record.name.value"/>
+                                <div class="small text-muted" t-esc="record.date.value"/>
+                                <div class="small" t-esc="record.employee_id.value"/>
+                                <div class="small" t-esc="record.status.value"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- タスク：一覧ビュー。ステータスやテンプレートを俯瞰 -->
+        <record id="view_employee_task_tree" model="ir.ui.view">
+            <field name="name">employee.task.tree</field>
+            <field name="model">employee.task</field>
+            <field name="arch" type="xml">
+                <list string="タスク">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="date"/>
+                    <field name="deadline"/>
+                    <field name="status"/>
+                    <field name="template_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- タスク：フォームビュー。手動完了ボタン付き -->
+        <record id="view_employee_task_form" model="ir.ui.view">
+            <field name="name">employee.task.form</field>
+            <field name="model">employee.task</field>
+            <field name="arch" type="xml">
+                <form string="タスク">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="employee_id"/>
+                            <field name="date"/>
+                            <field name="deadline"/>
+                            <field name="status"/>
+                            <field name="template_id"/>
+                            <field name="board_post_id"/>
+                            <field name="note"/>
+                        </group>
+                        <footer>
+                            <button name="action_mark_done" type="object" string="Mark Done" class="btn-primary" modifiers="{&quot;invisible&quot;: [[&quot;status&quot;, &quot;=&quot;, &quot;done&quot;]]}"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- タスクテンプレート：検索ビュー -->
+        <record id="view_employee_task_template_search" model="ir.ui.view">
+            <field name="name">employee.task.template.search</field>
+            <field name="model">employee.task.template</field>
+            <field name="arch" type="xml">
+                <search string="タスクテンプレート">
+                    <field name="name"/>
+                    <field name="frequency"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- タスク：検索ビュー -->
+        <record id="view_employee_task_search" model="ir.ui.view">
+            <field name="name">employee.task.search</field>
+            <field name="model">employee.task</field>
+            <field name="arch" type="xml">
+                <search string="タスク">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="status"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- タスクテンプレート：アクション -->
+        <record id="action_employee_task_template" model="ir.actions.act_window">
+            <field name="name">タスクテンプレート</field>
+            <field name="res_model">employee.task.template</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="employee_portal.view_employee_task_template_search"/>
+        </record>
+
+        <!-- タスク：全件アクション -->
+        <record id="action_employee_task_all" model="ir.actions.act_window">
+            <field name="name">全タスク</field>
+            <field name="res_model">employee.task</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="employee_portal.view_employee_task_search"/>
+        </record>
+
+        <!-- タスク：自分のタスクのみを表示するアクション -->
+        <record id="action_employee_task_mine" model="ir.actions.act_window">
+            <field name="name">マイタスク</field>
+            <field name="res_model">employee.task</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="domain">[("employee_id.user_id", "=", uid)]</field>
+            <field name="search_view_id" ref="employee_portal.view_employee_task_search"/>
+        </record>
+    </data>
+</odoo>

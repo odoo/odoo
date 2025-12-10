@@ -22,7 +22,7 @@
             <t t-call="mail.DiscussSidebarCategory.main"/>
             <t t-set-slot="content">
                 <div class="overflow-hidden d-flex flex-column" t-ref="floating">
-                    <span class="fw-bold text-uppercase o-xsmaller user-select-none text-muted" t-esc="category.name"/>
+                    <span class="fw-bold text-uppercase o-xsmaller user-select-none text-muted" t-ref="floatingCategoryName" t-esc="category.name"/>
                     <t t-call="mail.DiscussSidebarCategory.actions"/>
                 </div>
             </t>
@@ -43,12 +43,8 @@
                 <t t-else="">
                     <span t-if="store.channels.status === 'fetching'" class="o-visible-short-delay"><i class="o-mail-DiscussSidebarCategory-icon o-xxsmaller fa fa-fw fa-circle-o-notch fa-spin opacity-50 o-mt-0_5"/></span>
                     <i t-else="" class="o-mail-DiscussSidebarCategory-icon o-xsmaller fa-fw position-absolute ms-n3 align-self-center o-mt-0_5" t-att-class="category.open ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
-                    <span class="o-mail-DiscussSidebarCategory-title text-break smaller"
-                        t-att-class="{
-                            'fs-bold': category.open,
-                        }"
-                    >
-                        <t t-esc="category.name"/>
+                    <span class="o-mail-DiscussSidebarCategory-title text-break smaller d-flex align-items-center" t-att-class="{ 'fs-bold': category.open }">
+                        <t name="titleText" t-esc="category.name"/>
                     </span>
                 </t>
             </button>

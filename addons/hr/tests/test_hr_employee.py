@@ -10,6 +10,7 @@ from odoo.tests import Form, users, new_test_user, HttpCase, tagged, Transaction
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tools import mute_logger
 from odoo.exceptions import ValidationError
+from psycopg2.errors import NotNullViolation
 
 class TestHrEmployee(TestHrCommon):
 
@@ -84,6 +85,38 @@ class TestHrEmployee(TestHrCommon):
         employee_form.work_email = 'raoul@example.com'
         employee = employee_form.save()
         self.assertEqual(employee.tz, _tz)
+
+    def test_employee_timezone(self):
+        self.res_users_hr_officer.tz = "Africa/Cairo"
+        Employee = self.env['hr.employee'].with_user(self.res_users_hr_officer)
+        employee_form = Form(Employee)
+        employee_form.user_id = self.res_users_hr_officer
+        employee_form.name = 'Youssef Ahmed'
+        employee_form.work_email = 'yoahm@example.com'
+        employee = employee_form.save()
+
+        # validate timezone sync between employee & user
+        self.assertEqual(employee.tz, self.res_users_hr_officer.tz)
+
+        # validate that we can change timezone on user
+        self.res_users_hr_officer.tz = "Europe/Brussels"
+        self.assertEqual(self.res_users_hr_officer.tz, employee.tz)
+
+        # validate that we can change timezone on employee
+        employee.tz = "Europe/London"
+        self.assertEqual(self.res_users_hr_officer.tz, employee.tz)
+
+        # Check False value on employee
+        with mute_logger('odoo.sql_db'), self.assertRaises(NotNullViolation):
+            employee.tz = False
+
+        # Check False value on user
+        with mute_logger('odoo.sql_db'), self.assertRaises(NotNullViolation):
+            self.res_users_hr_officer.tz = False
+
+        # Check None value on user's calendar
+        with mute_logger('odoo.sql_db'), self.assertRaises(NotNullViolation):
+            self.res_users_hr_officer.company_id.resource_calendar_id.write({'tz': None})
 
     def test_employee_from_user(self):
         _tz = 'Pacific/Apia'
