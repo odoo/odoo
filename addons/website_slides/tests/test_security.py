@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
-from odoo import http
-from odoo.addons.base.tests.test_mimetypes import PNG
+from odoo.addons.base.tests.files import PNG_B64
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import AccessError
@@ -333,7 +332,7 @@ class TestAccessHttp(common.SlidesCase, HttpCase):
                 'channel_id': self.channel.id,
                 'slide_category': 'infographic',
                 'is_published': True,
-                'binary_content': PNG,
+                'binary_content': PNG_B64,
                 'is_preview': True,
             },
             {
@@ -361,7 +360,7 @@ class TestAccessHttp(common.SlidesCase, HttpCase):
                 if can_read:
                     self.assertEqual(
                         base64.b64encode(response.content),
-                        PNG,
+                        PNG_B64,
                         f'{user.login} must be able to see the slide image',
                     )
                 else:

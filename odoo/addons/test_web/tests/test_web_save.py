@@ -1,11 +1,9 @@
+from odoo.addons.base.tests.files import JPG_B64, SVG_B64
 from odoo.tests.common import tagged, TransactionCase
-
-from odoo.addons.base.tests.test_mimetypes import JPG, SVG
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebSave(TransactionCase):
-
     def test_web_save_create(self):
         ''' Test the web_save method on a new record. '''
         # Create a new record, without unity specification (it should return only the id)
@@ -40,38 +38,38 @@ class TestWebSave(TransactionCase):
 
     def test_web_save_computed_stored_binary(self):
         [result] = self.env['test_orm.binary_svg'].web_save(
-            {'name': 'test', 'image_wo_attachment': SVG},
+            {'name': 'test', 'image_wo_attachment': SVG_B64},
             {'image_wo_attachment': {}, 'image_wo_attachment_related': {}},
         )
-        self.assertEqual(result['image_wo_attachment'], '400 bytes')  # From PostgreSQL
-        self.assertEqual(result['image_wo_attachment_related'], b'400.00 bytes')  # From human_size
+        self.assertEqual(result['image_wo_attachment'], '432 bytes')  # From PostgreSQL
+        self.assertEqual(result['image_wo_attachment_related'], b'432.00 bytes')  # From human_size
 
         # check cache values
         record = self.env['test_orm.binary_svg'].browse(result['id'])
-        self.assertEqual(record.image_wo_attachment, SVG)
+        self.assertEqual(record.image_wo_attachment, SVG_B64)
         self.assertEqual(record.image_wo_attachment, record.image_wo_attachment_related)
 
         # check database values
         self.env.invalidate_all()
-        self.assertEqual(record.image_wo_attachment, SVG)
+        self.assertEqual(record.image_wo_attachment, SVG_B64)
         self.assertEqual(record.image_wo_attachment, record.image_wo_attachment_related)
 
         # check web_save() on existing record
         self.env.invalidate_all()
         [result] = record.web_save(
-            {'image_wo_attachment': JPG},
+            {'image_wo_attachment': JPG_B64},
             {'image_wo_attachment': {}, 'image_wo_attachment_related': {}},
         )
-        self.assertEqual(result['image_wo_attachment'], '727 bytes')  # From PostgreSQL
-        self.assertEqual(result['image_wo_attachment_related'], b'727.00 bytes')  # From human_size
+        self.assertEqual(result['image_wo_attachment'], '39 kB')  # From PostgreSQL
+        self.assertEqual(result['image_wo_attachment_related'], b'39.30 Kb')  # From human_size
 
         # check cache values
-        self.assertEqual(record.image_wo_attachment, JPG.encode())
+        self.assertEqual(record.image_wo_attachment, JPG_B64)
         self.assertEqual(record.image_wo_attachment, record.image_wo_attachment_related)
 
         # check database values
         self.env.invalidate_all()
-        self.assertEqual(record.image_wo_attachment, JPG.encode())
+        self.assertEqual(record.image_wo_attachment, JPG_B64)
         self.assertEqual(record.image_wo_attachment, record.image_wo_attachment_related)
 
     def test_web_save_multi(self):

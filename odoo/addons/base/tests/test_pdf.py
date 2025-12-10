@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.files import PDF_RAW
 from odoo.tests.common import tagged, TransactionCase
 from odoo.tools import pdf
-from odoo.tools.misc import file_open
 from odoo.tools.pdf import reshape_text
 import io
 
@@ -14,7 +14,7 @@ class TestPdf(TransactionCase):
 
     def setUp(self):
         super().setUp()
-        self.file = file_open('base/tests/minimal.pdf', 'rb').read()
+        self.file = PDF_RAW
         self.minimal_reader_buffer = io.BytesIO(self.file)
         self.minimal_pdf_reader = pdf.OdooPdfFileReader(self.minimal_reader_buffer)
 
@@ -79,7 +79,7 @@ class TestPdf(TransactionCase):
         merged_reader_buffer.close()
 
     def test_branded_file_writer(self):
-        # It's not easy to create a PDF with PyPDF2, so instead we copy minimal.pdf with our custom pdf writer
+        # It's not easy to create a PDF with PyPDF2, so instead we copy PDF with our custom pdf writer
         pdf_writer = pdf.PdfFileWriter()  # BrandedFileWriter
         pdf_writer.cloneReaderDocumentRoot(self.minimal_pdf_reader)
         writer_buffer = io.BytesIO()

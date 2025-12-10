@@ -1,16 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import logging
 
 from dateutil.relativedelta import relativedelta
 
 from odoo import http, tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.base.tests.files import JPG_RAW, JPG_B64, PDF_B64
 from odoo.addons.gamification.tests.common import HttpCaseGamification
 from odoo.fields import Command, Datetime
 from odoo.tools import mute_logger
-from odoo.tools.misc import file_open
 import unittest
 
 _logger = logging.getLogger(__name__)
@@ -32,10 +31,6 @@ class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
                 <img class="ms-3 img img-fluid" style="max-height: 72px;" src="/gamification/static/img/rank_misc_mug.png"/>
             </div>"""
 
-        # Load pdf and img contents
-        pdf_content = base64.b64encode(file_open('website_slides/static/src/img/presentation.pdf', "rb").read())
-        img_content = base64.b64encode(file_open('website_slides/static/src/img/slide_demo_gardening_1.jpg', "rb").read())
-
         self.channel = self.env['slide.channel'].create({
             'name': 'Basics of Gardening - Test',
             'user_id': self.env.ref('base.user_admin').id,
@@ -50,26 +45,26 @@ class TestUICommon(HttpCaseGamification, HttpCaseWithUserPortal):
                 (0, 0, {
                     'name': 'Gardening: The Know-How',
                     'sequence': 1,
-                    'binary_content': pdf_content,
+                    'binary_content': PDF_B64,
                     'slide_category': 'document',
                     'is_published': True,
                     'is_preview': True,
                 }), (0, 0, {
                     'name': 'Home Gardening',
                     'sequence': 2,
-                    'image_1920': img_content,
+                    'image_1920': JPG_B64,
                     'slide_category': 'infographic',
                     'is_published': True,
                 }), (0, 0, {
                     'name': 'Mighty Carrots',
                     'sequence': 3,
-                    'image_1920': img_content,
+                    'image_1920': JPG_B64,
                     'slide_category': 'infographic',
                     'is_published': True,
                 }), (0, 0, {
                     'name': 'How to Grow and Harvest The Best Strawberries | Basics',
                     'sequence': 4,
-                    'binary_content': pdf_content,
+                    'binary_content': PDF_B64,
                     'slide_category': 'document',
                     'is_published': True,
                 }), (0, 0, {
@@ -260,9 +255,7 @@ class TestUiPublisher(HttpCaseGamification):
     def fetch_proxy(self, url):
         if url.endswith('ThreeTimeAKCGoldWinnerPembrookeWelshCorgi.jpg'):
             _logger.info('External chrome request during tests: Sending dummy image for %s', url)
-            with file_open('base/tests/odoo.jpg', 'rb') as f:
-                content = f.read()
-            return self.make_fetch_proxy_response(content)
+            return self.make_fetch_proxy_response(JPG_RAW)
         return super().fetch_proxy(url)
 
     def test_course_publisher_elearning_manager(self):
