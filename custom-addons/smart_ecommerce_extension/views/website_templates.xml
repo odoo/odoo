@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- PRODUCT PAGE ENHANCEMENTS -->
+    <!-- ============================================================ -->
+    
+    <!-- Add Brand, Model and Stock Status to Product Page -->
+    <template id="product_brand_model" inherit_id="website_sale.product" name="Product Brand &amp; Model">
+        <xpath expr="//h1[@itemprop='name']" position="after">
+            <div t-if="product.brand or product.product_model" class="product-brand-model mb-2">
+                <span t-if="product.brand" class="badge text-bg-secondary me-1">
+                    <t t-esc="product.brand"/>
+                </span>
+                <span t-if="product.product_model" class="text-muted">
+                    Model: <t t-esc="product.product_model"/>
+                </span>
+            </div>
+            <!-- Stock Badge -->
+            <div class="mb-2">
+                <span t-if="product.availability_status == 'in_stock'" 
+                      class="badge text-bg-success">
+                    <i class="fa fa-check me-1"/> In Stock
+                </span>
+                <span t-elif="product.availability_status == 'low_stock'" 
+                      class="badge text-bg-warning">
+                    <i class="fa fa-exclamation-triangle me-1"/> Low Stock
+                </span>
+                <span t-elif="product.availability_status == 'out_of_stock'" 
+                      class="badge text-bg-danger">
+                    <i class="fa fa-times me-1"/> Out of Stock
+                </span>
+            </div>
+        </xpath>
+    </template>
+    
+    <!-- Add Specifications and Video to Product Page -->
+    <template id="product_specifications_video" inherit_id="website_sale.product" name="Specifications &amp; Video">
+        <xpath expr="//div[@id='product_full_description']" position="after">
+            <!-- Specifications -->
+            <div t-if="product.specifications" class="mt-4">
+                <h4 class="border-bottom pb-2">
+                    <i class="fa fa-list-ul me-2"/>Specifications
+                </h4>
+                <div class="smart-specifications" t-out="product.specifications"/>
+            </div>
+            <!-- Video -->
+            <div t-if="product.video_url" class="mt-4 smart-product-video">
+                <h4 class="border-bottom pb-2">
+                    <i class="fa fa-play-circle me-2"/>Product Video
+                </h4>
+                <div class="ratio ratio-16x9">
+                    <iframe t-att-src="product.get_video_embed_url()"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen="allowfullscreen"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

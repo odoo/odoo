@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default Delivery Zones for Mauritania -->
+        
+        <record id="delivery_zone_nouakchott_central" model="delivery.zone">
+            <field name="name">Nouakchott Central</field>
+            <field name="sequence">1</field>
+            <field name="city_ids">Nouakchott, Tevragh-Zeina, Ksar, Sebkha, El Mina, Teyarett, Toujounine, Arafat, Dar Naim, Riyadh</field>
+            <field name="base_price">500</field>
+            <field name="extra_price_per_kg">100</field>
+            <field name="base_weight_kg">2.0</field>
+            <field name="estimated_days">1</field>
+            <field name="min_delivery_days">1</field>
+            <field name="max_delivery_days">2</field>
+            <field name="max_weight_kg">50</field>
+            <field name="free_delivery_threshold">10000</field>
+        </record>
+        
+        <record id="delivery_zone_nouakchott_suburbs" model="delivery.zone">
+            <field name="name">Nouakchott Suburbs</field>
+            <field name="sequence">2</field>
+            <field name="city_ids">PK, Tarhil, Bouhdida, Tensweylim, Dar El Beida</field>
+            <field name="base_price">800</field>
+            <field name="extra_price_per_kg">150</field>
+            <field name="base_weight_kg">2.0</field>
+            <field name="estimated_days">2</field>
+            <field name="min_delivery_days">1</field>
+            <field name="max_delivery_days">3</field>
+            <field name="max_weight_kg">30</field>
+            <field name="free_delivery_threshold">15000</field>
+        </record>
+        
+        <record id="delivery_zone_major_cities" model="delivery.zone">
+            <field name="name">Major Cities</field>
+            <field name="sequence">3</field>
+            <field name="city_ids">Nouadhibou, Atar, Kiffa, Kaedi, Nema, Rosso, Zouerate, Akjoujt</field>
+            <field name="base_price">1500</field>
+            <field name="extra_price_per_kg">200</field>
+            <field name="base_weight_kg">1.0</field>
+            <field name="estimated_days">4</field>
+            <field name="min_delivery_days">3</field>
+            <field name="max_delivery_days">6</field>
+            <field name="max_weight_kg">20</field>
+            <field name="free_delivery_threshold">25000</field>
+        </record>
+        
+        <record id="delivery_zone_interior" model="delivery.zone">
+            <field name="name">Interior Regions</field>
+            <field name="sequence">4</field>
+            <field name="city_ids">Aioun, Tidjikja, Selibaby, Boutilimit, Moudjeria, Aleg, Timbedra, Kobeni, Maghama</field>
+            <field name="base_price">2500</field>
+            <field name="extra_price_per_kg">300</field>
+            <field name="base_weight_kg">1.0</field>
+            <field name="estimated_days">6</field>
+            <field name="min_delivery_days">5</field>
+            <field name="max_delivery_days">10</field>
+            <field name="max_weight_kg">15</field>
+            <field name="free_delivery_threshold">50000</field>
+        </record>
+    </data>
+</odoo>
+

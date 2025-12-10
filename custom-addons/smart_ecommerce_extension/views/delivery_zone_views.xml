@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Delivery Zone Form View -->
+    <record id="delivery_zone_form_view" model="ir.ui.view">
+        <field name="name">delivery.zone.form</field>
+        <field name="model">delivery.zone</field>
+        <field name="arch" type="xml">
+            <form string="Delivery Zone">
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name" string="Zone Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g., Nouakchott Urban"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Coverage">
+                            <field name="city_ids" widget="text" placeholder="Nouakchott, Tevragh-Zeina, Ksar, Sebkha, El Mina"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Pricing">
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="base_price"/>
+                            <field name="base_weight_kg"/>
+                            <field name="extra_price_per_kg"/>
+                            <field name="free_delivery_threshold"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Delivery Time">
+                            <field name="min_delivery_days"/>
+                            <field name="estimated_days"/>
+                            <field name="max_delivery_days"/>
+                        </group>
+                        <group string="Restrictions">
+                            <field name="max_weight_kg"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes" name="notes">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Cities Format:</strong> Enter city names separated by commas.
+                                The system will match cities case-insensitively.
+                                <br/>
+                                <strong>Pricing Formula:</strong> 
+                                Total = Base Price + (Weight - Base Weight) × Extra Price per Kg
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Delivery Zone List View -->
+    <record id="delivery_zone_tree_view" model="ir.ui.view">
+        <field name="name">delivery.zone.list</field>
+        <field name="model">delivery.zone</field>
+        <field name="arch" type="xml">
+            <list string="Delivery Zones">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="city_ids" widget="text"/>
+                <field name="base_price" widget="monetary"/>
+                <field name="extra_price_per_kg" widget="monetary"/>
+                <field name="estimated_days"/>
+                <field name="free_delivery_threshold" widget="monetary" optional="show"/>
+                <field name="max_weight_kg" optional="hide"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Delivery Zone Search View -->
+    <record id="delivery_zone_search_view" model="ir.ui.view">
+        <field name="name">delivery.zone.search</field>
+        <field name="model">delivery.zone</field>
+        <field name="arch" type="xml">
+            <search string="Search Delivery Zones">
+                <field name="name"/>
+                <field name="city_ids"/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Free Delivery Available" name="filter_free" domain="[('free_delivery_threshold', '>', 0)]"/>
+                <separator/>
+                <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Delivery Zone Action -->
+    <record id="delivery_zone_action" model="ir.actions.act_window">
+        <field name="name">Delivery Zones</field>
+        <field name="res_model">delivery.zone</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first delivery zone
+            </p>
+            <p>
+                Define zones with cities, base prices, and weight-based pricing rules.
+                Zones are automatically matched based on customer shipping address.
+            </p>
+        </field>
+    </record>
+</odoo>
+

@@ -2,4 +2,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import marketplace_payout_batch
-
+from . import marketplace_seller

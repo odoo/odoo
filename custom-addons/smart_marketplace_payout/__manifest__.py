@@ -21,13 +21,14 @@ This module handles:
         'account',
     ],
     'data': [
+        # Security first
         'security/ir.model.access.csv',
+        # Data
         'data/ir_sequence_data.xml',
+        # Views
         'views/marketplace_payout_views.xml',
-        'data/ir_cron_data.xml',
     ],
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
 }
-

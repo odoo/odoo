@@ -8,9 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='category_id']" position="after">
                 <field name="is_marketplace_seller" widget="boolean_toggle"/>
-                <field name="marketplace_seller_id" attrs="{'invisible': [('is_marketplace_seller', '=', False)]}" options="{'no_create': True}"/>
             </xpath>
         </field>
     </record>
 </odoo>
-

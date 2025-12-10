@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Payout Batch Tree View -->
-    <record id="view_marketplace_payout_batch_tree" model="ir.ui.view">
-        <field name="name">marketplace.payout.batch.tree</field>
+    <!-- Payout Batch List View -->
+    <record id="view_marketplace_payout_batch_list" model="ir.ui.view">
+        <field name="name">marketplace.payout.batch.list</field>
         <field name="model">marketplace.payout.batch</field>
         <field name="arch" type="xml">
-            <tree string="Payout Batches" decoration-success="status == 'paid'" decoration-info="status == 'processed'">
+            <list string="Payout Batches" decoration-success="status == 'paid'" decoration-info="status == 'processed'">
                 <field name="name"/>
                 <field name="seller_id"/>
                 <field name="date_from"/>
@@ -14,7 +14,7 @@
                 <field name="commission_amount" widget="monetary"/>
                 <field name="net_amount" widget="monetary"/>
                 <field name="status" widget="badge" decoration-success="status == 'paid'" decoration-info="status == 'processed'" decoration-warning="status == 'pending'" decoration-danger="status == 'failed'"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -42,19 +42,18 @@
                             <field name="commission_amount" widget="monetary" readonly="1"/>
                             <field name="fee"/>
                             <field name="net_amount" widget="monetary" readonly="1"/>
-                            <field name="status"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Orders" name="orders">
                             <field name="order_ids" nolabel="1">
-                                <tree>
+                                <list>
                                     <field name="name"/>
                                     <field name="date_order"/>
                                     <field name="amount_total" widget="monetary"/>
                                     <field name="commission_amount" widget="monetary"/>
                                     <field name="state" widget="badge"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         <page string="Transfer" name="transfer">
@@ -83,7 +82,21 @@
     <record id="action_marketplace_payout_batch" model="ir.actions.act_window">
         <field name="name">Payout Batches</field>
         <field name="res_model">marketplace.payout.batch</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Extend Seller Form to add Payout button -->
+    <record id="view_marketplace_seller_form_payout" model="ir.ui.view">
+        <field name="name">marketplace.seller.form.payout</field>
+        <field name="model">marketplace.seller</field>
+        <field name="inherit_id" ref="smart_marketplace_core.view_marketplace_seller_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_payouts" type="object" class="oe_stat_button" icon="fa-money">
+                    <field name="total_payouts" widget="statinfo" string="Payouts"/>
+                </button>
+            </xpath>
+        </field>
     </record>
 
     <!-- Menu -->

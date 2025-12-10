@@ -25,10 +25,8 @@ This module integrates with Sha6er delivery service:
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
         'views/marketplace_delivery_views.xml',
-        'data/ir_cron_data.xml',
     ],
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
 }
-

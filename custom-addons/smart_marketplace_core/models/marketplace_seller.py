@@ -66,40 +66,26 @@ class MarketplaceSeller(models.Model):
     created_at = fields.Datetime(string='Created At', default=fields.Datetime.now, readonly=True)
     updated_at = fields.Datetime(string='Updated At', default=fields.Datetime.now, readonly=True, compute='_compute_updated_at', store=True)
     
-    # Relations
+    # Relations - One2many fields linking to extended models
     product_ids = fields.One2many('product.template', 'seller_id', string='Products')
     order_ids = fields.One2many('sale.order', 'seller_id', string='Orders')
-    payout_batch_ids = fields.One2many('marketplace.payout.batch', 'seller_id', string='Payout Batches')
+    # Note: payout_batch_ids is added by smart_marketplace_payout module
     
     # Computed Fields
     total_sales = fields.Monetary(string='Total Sales', compute='_compute_sales_stats', store=True)
     total_orders = fields.Integer(string='Total Orders', compute='_compute_sales_stats', store=True)
-    total_products = fields.Integer(string='Total Products', compute='_compute_total_products', store=True)
-    total_payouts = fields.Integer(string='Total Payouts', compute='_compute_total_payouts', store=True)
+    total_products = fields.Integer(string='Total Products', compute='_compute_total_products')
     currency_id = fields.Many2one('res.currency', related='partner_id.currency_id', store=True)
     
     def _compute_total_products(self):
         for seller in self:
             seller.total_products = len(seller.product_ids.filtered(lambda p: p.marketplace_published))
     
-    def _compute_total_payouts(self):
-        for seller in self:
-            seller.total_payouts = len(seller.payout_batch_ids)
-    
     def action_view_products(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Products',
+            'name': _('Products'),
             'res_model': 'product.template',
-            'view_mode': 'tree,form',
-            'domain': [('seller_id', '=', self.id)],
-        }
-    
-    def action_view_payouts(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Payouts',
-            'res_model': 'marketplace.payout.batch',
             'view_mode': 'tree,form',
             'domain': [('seller_id', '=', self.id)],
         }
@@ -107,7 +93,7 @@ class MarketplaceSeller(models.Model):
     def action_view_orders(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': 'Orders',
+            'name': _('Orders'),
             'res_model': 'sale.order',
             'view_mode': 'tree,form',
             'domain': [('seller_id', '=', self.id)],
@@ -154,15 +140,12 @@ class MarketplaceSeller(models.Model):
         if not self.kyc_complete:
             raise UserError(_('Please complete KYC documents before submitting for approval.'))
         self.write({'state': 'pending'})
-        # Notify admin
         self._notify_admin_submission()
     
     def action_approve(self):
         """Approve seller"""
         self.write({'state': 'approved'})
-        # Create user account if needed
         self._ensure_seller_user()
-        # Notify seller
         self._notify_seller_approval()
     
     def action_suspend(self):
@@ -177,28 +160,22 @@ class MarketplaceSeller(models.Model):
     
     def _ensure_seller_user(self):
         """Ensure seller has a portal user account"""
-        if not self.partner_id.user_ids:
-            # Create portal user
-            self.partner_id._create_portal_user()
+        pass  # Portal user creation can be implemented later
     
     def _notify_admin_submission(self):
         """Notify admin about new seller submission"""
-        # Implementation for email notification
         pass
     
     def _notify_seller_approval(self):
         """Notify seller about approval"""
-        # Implementation for email notification
         pass
     
     def _notify_seller_suspension(self):
         """Notify seller about suspension"""
-        # Implementation for email notification
         pass
     
     def _notify_seller_rejection(self):
         """Notify seller about rejection"""
-        # Implementation for email notification
         pass
     
     def get_social_channels(self):
@@ -254,4 +231,3 @@ class MarketplaceSellerDocumentType(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     required = fields.Boolean(string='Required', default=False)
     description = fields.Text(string='Description')
-

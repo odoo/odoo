@@ -4,7 +4,7 @@
         <!-- Cron job to generate payouts monthly -->
         <record id="ir_cron_generate_payouts" model="ir.cron">
             <field name="name">Generate Marketplace Payouts</field>
-            <field name="model_id" ref="model_marketplace_payout_batch"/>
+            <field name="model_id" ref="smart_marketplace_payout.model_marketplace_payout_batch"/>
             <field name="state">code</field>
             <field name="code">model.cron_generate_payouts()</field>
             <field name="interval_number">1</field>
@@ -14,4 +14,3 @@
         </record>
     </data>
 </odoo>
-

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Delivery Zone Rules -->
+        
+        <!-- Public users can only read active delivery zones -->
+        <record id="delivery_zone_public_read" model="ir.rule">
+            <field name="name">Delivery Zone: Public Read Active</field>
+            <field name="model_id" ref="model_delivery_zone"/>
+            <field name="domain_force">[('active', '=', True)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        
+        <!-- Portal users can read active delivery zones -->
+        <record id="delivery_zone_portal_read" model="ir.rule">
+            <field name="name">Delivery Zone: Portal Read Active</field>
+            <field name="model_id" ref="model_delivery_zone"/>
+            <field name="domain_force">[('active', '=', True)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        
+        <!-- Internal users can read all delivery zones -->
+        <record id="delivery_zone_user_read" model="ir.rule">
+            <field name="name">Delivery Zone: User Read All</field>
+            <field name="model_id" ref="model_delivery_zone"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+    </data>
+</odoo>
+

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Sha6er Shipment Tree View -->
-    <record id="view_sha6er_shipment_tree" model="ir.ui.view">
-        <field name="name">sha6er.shipment.tree</field>
+    <!-- Sha6er Shipment List View -->
+    <record id="view_sha6er_shipment_list" model="ir.ui.view">
+        <field name="name">sha6er.shipment.list</field>
         <field name="model">sha6er.shipment</field>
         <field name="arch" type="xml">
-            <tree string="Sha6er Shipments" decoration-success="sha6er_status == 'delivered'">
+            <list string="Sha6er Shipments" decoration-success="sha6er_status == 'delivered'">
                 <field name="name"/>
                 <field name="picking_id"/>
                 <field name="order_id"/>
@@ -13,7 +13,7 @@
                 <field name="sha6er_status" widget="badge"/>
                 <field name="courier_name"/>
                 <field name="delivery_date"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -67,7 +67,7 @@
     <record id="action_sha6er_shipment" model="ir.actions.act_window">
         <field name="name">Sha6er Shipments</field>
         <field name="res_model">sha6er.shipment</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <!-- Extend Stock Picking Form -->

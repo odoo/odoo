@@ -6,37 +6,46 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <!-- Add marketplace fields after partner_id -->
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="marketplace_order" invisible="1"/>
                 <field name="seller_id" invisible="not marketplace_order" options="{'no_create': True}"/>
                 <field name="social_source" invisible="not marketplace_order"/>
             </xpath>
-            <xpath expr="//field[@name='amount_total']" position="after">
-                <field name="commission_amount" widget="monetary" invisible="not marketplace_order"/>
-                <field name="seller_amount" widget="monetary" invisible="not marketplace_order"/>
+            
+            <!-- Add a marketplace page in notebook -->
+            <xpath expr="//page[@name='other_information']" position="after">
+                <page string="Marketplace" name="marketplace_info" invisible="not marketplace_order">
+                    <group>
+                        <group string="Commission">
+                            <field name="commission_amount" widget="monetary"/>
+                            <field name="seller_amount" widget="monetary"/>
+                        </group>
+                        <group string="Order Relations">
+                            <field name="parent_order_id" readonly="1"/>
+                            <field name="child_order_ids" readonly="1" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                </page>
             </xpath>
-            <xpath expr="//page[@name='other_information']" position="inside">
-                <group string="Marketplace" name="marketplace_group" invisible="not marketplace_order">
-                    <field name="parent_order_id" readonly="1"/>
-                    <field name="child_order_ids" readonly="1"/>
-                </group>
-            </xpath>
+            
+            <!-- Add split button in header -->
             <xpath expr="//header" position="inside">
                 <button name="action_split_by_seller" string="Split by Seller" type="object" class="oe_highlight" invisible="not marketplace_order or child_order_ids" groups="sales_team.group_sale_manager"/>
             </xpath>
         </field>
     </record>
 
-    <!-- Extend Sale Order Tree View -->
-    <record id="sale_order_tree_view_marketplace" model="ir.ui.view">
-        <field name="name">sale.order.tree.marketplace</field>
+    <!-- Extend Sale Order List View -->
+    <record id="sale_order_list_view_marketplace" model="ir.ui.view">
+        <field name="name">sale.order.list.marketplace</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_quotation_tree"/>
         <field name="arch" type="xml">
-            <field name="partner_id" position="after">
-                <field name="seller_id" optional="show"/>
-                <field name="marketplace_order" widget="boolean_toggle" optional="show"/>
-            </field>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="seller_id" optional="hide"/>
+                <field name="marketplace_order" widget="boolean_toggle" optional="hide"/>
+            </xpath>
         </field>
     </record>
 </odoo>

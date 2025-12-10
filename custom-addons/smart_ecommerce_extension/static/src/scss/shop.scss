@@ -1,0 +1,289 @@
+/* ============================================================
+   SMART eCommerce Extension - Shop Styles
+   ============================================================ */
+
+/* ----------------------------------------
+   Product Card Hover Effect
+   ---------------------------------------- */
+.smart-product-image-wrapper {
+    overflow: hidden;
+    
+    .smart-hover-image {
+        opacity: 0;
+        transition: opacity 0.35s ease-in-out;
+        z-index: 1;
+    }
+    
+    &:hover .smart-hover-image {
+        opacity: 1;
+    }
+    
+    // Primary image fade on hover
+    img:first-child {
+        transition: opacity 0.35s ease-in-out;
+    }
+    
+    &:hover img:first-child {
+        opacity: 0.15;
+    }
+}
+
+/* ----------------------------------------
+   Stock Badge Styling
+   ---------------------------------------- */
+.smart-stock-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    
+    &.text-bg-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+    }
+    
+    &.text-bg-warning {
+        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%) !important;
+        color: #212529 !important;
+    }
+    
+    &.text-bg-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+    }
+}
+
+/* ----------------------------------------
+   Product Brand Display
+   ---------------------------------------- */
+.product-brand-model {
+    .badge {
+        font-weight: 500;
+        letter-spacing: 0.3px;
+    }
+}
+
+/* ----------------------------------------
+   Delivery Estimate Box
+   ---------------------------------------- */
+.smart-delivery-estimate {
+    border: none;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-left: 4px solid var(--o-enterprise-action-color, #714B67);
+    
+    .fa-truck {
+        animation: truck-drive 2s ease-in-out infinite;
+    }
+    
+    .delivery-date-text {
+        color: var(--o-enterprise-action-color, #714B67);
+    }
+}
+
+@keyframes truck-drive {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(4px); }
+}
+
+/* ----------------------------------------
+   Specifications Section
+   ---------------------------------------- */
+.smart-specifications {
+    table {
+        width: 100%;
+        margin-bottom: 1rem;
+        
+        th, td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        th {
+            width: 40%;
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f1f3f4;
+        }
+    }
+    
+    ul, ol {
+        padding-left: 1.5rem;
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+    }
+}
+
+/* ----------------------------------------
+   Product Video Section
+   ---------------------------------------- */
+.smart-product-video {
+    .ratio {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* ----------------------------------------
+   Active Filters Display
+   ---------------------------------------- */
+.smart-active-filters {
+    .badge {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .fa-times {
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        &:hover .fa-times {
+            opacity: 1;
+        }
+    }
+}
+
+/* ----------------------------------------
+   Cart Delivery Info
+   ---------------------------------------- */
+.smart-cart-delivery {
+    border: none;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-radius: 8px;
+    
+    .card-title {
+        color: #1565c0;
+        font-weight: 600;
+    }
+    
+    hr {
+        border-color: rgba(21, 101, 192, 0.2);
+    }
+}
+
+/* ----------------------------------------
+   Filter Sidebar Enhancements
+   ---------------------------------------- */
+.accordion-item {
+    .accordion-button {
+        font-size: 0.9rem;
+        padding: 0.75rem 1rem;
+        
+        &:not(.collapsed) {
+            background-color: rgba(113, 75, 103, 0.05);
+            color: var(--o-enterprise-action-color, #714B67);
+        }
+        
+        &:focus {
+            box-shadow: none;
+            border-color: transparent;
+        }
+    }
+    
+    .accordion-body {
+        padding: 0.75rem 1rem;
+        
+        ul li a {
+            display: block;
+            padding: 0.25rem 0;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.2s;
+            
+            &:hover {
+                color: var(--o-enterprise-action-color, #714B67);
+                padding-left: 0.5rem;
+            }
+        }
+    }
+}
+
+/* ----------------------------------------
+   Price Range Filter
+   ---------------------------------------- */
+#collapse_price_range {
+    .form-control {
+        border-radius: 4px;
+        
+        &:focus {
+            border-color: var(--o-enterprise-action-color, #714B67);
+            box-shadow: 0 0 0 0.2rem rgba(113, 75, 103, 0.15);
+        }
+    }
+    
+    .btn-primary {
+        background-color: var(--o-enterprise-action-color, #714B67);
+        border-color: var(--o-enterprise-action-color, #714B67);
+        
+        &:hover {
+            background-color: darken(#714B67, 10%);
+        }
+    }
+}
+
+/* ----------------------------------------
+   Responsive Adjustments
+   ---------------------------------------- */
+@media (max-width: 768px) {
+    .smart-stock-badge {
+        font-size: 0.6rem;
+        padding: 0.25rem 0.4rem;
+    }
+    
+    .smart-delivery-estimate {
+        .fa-truck {
+            font-size: 1.2rem;
+        }
+    }
+    
+    .smart-active-filters {
+        .badge {
+            font-size: 0.7rem;
+            margin-bottom: 0.25rem;
+        }
+    }
+}
+
+/* ----------------------------------------
+   Dark Mode Support (if website has dark theme)
+   ---------------------------------------- */
+[data-bs-theme="dark"] {
+    .smart-delivery-estimate {
+        background: linear-gradient(135deg, #2d3436 0%, #1e272e 100%);
+        
+        .text-muted {
+            color: #adb5bd !important;
+        }
+    }
+    
+    .smart-cart-delivery {
+        background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        
+        .card-title {
+            color: #90caf9;
+        }
+    }
+    
+    .smart-specifications {
+        table {
+            th {
+                background-color: #343a40;
+            }
+            
+            tr:hover {
+                background-color: #495057;
+            }
+        }
+    }
+}
+

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Demo Products with eCommerce Extension Fields -->
+        
+        <!-- Samsung Galaxy Phone -->
+        <record id="demo_product_samsung_s24" model="product.template">
+            <field name="name">Samsung Galaxy S24 Ultra</field>
+            <field name="type">product</field>
+            <field name="list_price">45000</field>
+            <field name="brand">Samsung</field>
+            <field name="product_model">SM-S928B</field>
+            <field name="shipping_weight_kg">0.35</field>
+            <field name="estimated_delivery_days">2</field>
+            <field name="low_stock_threshold">5</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="specifications"><![CDATA[
+                <table class="table table-striped">
+                    <tr><th>Display</th><td>6.8" Dynamic AMOLED 2X, 3088x1440</td></tr>
+                    <tr><th>Processor</th><td>Snapdragon 8 Gen 3</td></tr>
+                    <tr><th>RAM</th><td>12GB</td></tr>
+                    <tr><th>Storage</th><td>256GB / 512GB / 1TB</td></tr>
+                    <tr><th>Battery</th><td>5000mAh, 45W Fast Charging</td></tr>
+                    <tr><th>Camera</th><td>200MP Main + 12MP Ultra Wide + 50MP Telephoto + 10MP Periscope</td></tr>
+                    <tr><th>S Pen</th><td>Included</td></tr>
+                </table>
+            ]]></field>
+            <field name="video_url">https://www.youtube.com/watch?v=example</field>
+        </record>
+        
+        <!-- iPhone -->
+        <record id="demo_product_iphone_15" model="product.template">
+            <field name="name">iPhone 15 Pro Max</field>
+            <field name="type">product</field>
+            <field name="list_price">52000</field>
+            <field name="brand">Apple</field>
+            <field name="product_model">A3106</field>
+            <field name="shipping_weight_kg">0.22</field>
+            <field name="estimated_delivery_days">2</field>
+            <field name="low_stock_threshold">3</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="specifications"><![CDATA[
+                <table class="table table-striped">
+                    <tr><th>Display</th><td>6.7" Super Retina XDR, ProMotion</td></tr>
+                    <tr><th>Chip</th><td>A17 Pro</td></tr>
+                    <tr><th>Storage</th><td>256GB / 512GB / 1TB</td></tr>
+                    <tr><th>Battery</th><td>All-day battery life</td></tr>
+                    <tr><th>Camera</th><td>48MP Main + 12MP Ultra Wide + 12MP Telephoto 5x</td></tr>
+                    <tr><th>Material</th><td>Titanium</td></tr>
+                </table>
+            ]]></field>
+        </record>
+        
+        <!-- Xiaomi -->
+        <record id="demo_product_xiaomi_14" model="product.template">
+            <field name="name">Xiaomi 14 Ultra</field>
+            <field name="type">product</field>
+            <field name="list_price">38000</field>
+            <field name="brand">Xiaomi</field>
+            <field name="product_model">2405CPX3DG</field>
+            <field name="shipping_weight_kg">0.28</field>
+            <field name="estimated_delivery_days">3</field>
+            <field name="low_stock_threshold">5</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="specifications"><![CDATA[
+                <table class="table table-striped">
+                    <tr><th>Display</th><td>6.73" LTPO AMOLED, 3200x1440</td></tr>
+                    <tr><th>Processor</th><td>Snapdragon 8 Gen 3</td></tr>
+                    <tr><th>RAM</th><td>16GB</td></tr>
+                    <tr><th>Storage</th><td>512GB</td></tr>
+                    <tr><th>Battery</th><td>5000mAh, 90W Fast Charging</td></tr>
+                    <tr><th>Camera</th><td>Leica Quad Camera System</td></tr>
+                </table>
+            ]]></field>
+        </record>
+        
+        <!-- Laptop -->
+        <record id="demo_product_macbook_m3" model="product.template">
+            <field name="name">MacBook Pro 16" M3 Max</field>
+            <field name="type">product</field>
+            <field name="list_price">180000</field>
+            <field name="brand">Apple</field>
+            <field name="product_model">MRW73LL/A</field>
+            <field name="shipping_weight_kg">2.14</field>
+            <field name="estimated_delivery_days">4</field>
+            <field name="low_stock_threshold">2</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="specifications"><![CDATA[
+                <table class="table table-striped">
+                    <tr><th>Chip</th><td>Apple M3 Max</td></tr>
+                    <tr><th>CPU</th><td>14-core (10 performance + 4 efficiency)</td></tr>
+                    <tr><th>GPU</th><td>30-core</td></tr>
+                    <tr><th>RAM</th><td>36GB Unified Memory</td></tr>
+                    <tr><th>Storage</th><td>1TB SSD</td></tr>
+                    <tr><th>Display</th><td>16.2" Liquid Retina XDR</td></tr>
+                    <tr><th>Battery</th><td>Up to 22 hours</td></tr>
+                </table>
+            ]]></field>
+        </record>
+        
+        <!-- Headphones -->
+        <record id="demo_product_airpods_max" model="product.template">
+            <field name="name">AirPods Max</field>
+            <field name="type">product</field>
+            <field name="list_price">25000</field>
+            <field name="brand">Apple</field>
+            <field name="product_model">MGYH3AM/A</field>
+            <field name="shipping_weight_kg">0.38</field>
+            <field name="estimated_delivery_days">2</field>
+            <field name="low_stock_threshold">10</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="specifications"><![CDATA[
+                <ul>
+                    <li>Active Noise Cancellation</li>
+                    <li>Transparency Mode</li>
+                    <li>Spatial Audio with dynamic head tracking</li>
+                    <li>Computational audio with Apple H1 chip</li>
+                    <li>Up to 20 hours of listening time</li>
+                    <li>Premium aluminum and stainless steel</li>
+                </ul>
+            ]]></field>
+        </record>
+        
+        <!-- Traditional Clothing -->
+        <record id="demo_product_boubou_homme" model="product.template">
+            <field name="name">Boubou Traditionnel Homme - Premium</field>
+            <field name="type">product</field>
+            <field name="list_price">15000</field>
+            <field name="brand">Artisanat Mauritanien</field>
+            <field name="product_model">BTH-001</field>
+            <field name="shipping_weight_kg">0.8</field>
+            <field name="estimated_delivery_days">3</field>
+            <field name="low_stock_threshold">5</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="specifications"><![CDATA[
+                <table class="table table-striped">
+                    <tr><th>Tissu</th><td>Bazin Riche - 100% Coton</td></tr>
+                    <tr><th>Broderie</th><td>Fait main</td></tr>
+                    <tr><th>Couleurs</th><td>Blanc, Bleu, Beige</td></tr>
+                    <tr><th>Tailles</th><td>S, M, L, XL, XXL</td></tr>
+                    <tr><th>Origine</th><td>Mauritanie</td></tr>
+                    <tr><th>Entretien</th><td>Lavage à la main recommandé</td></tr>
+                </table>
+            ]]></field>
+        </record>
+    </data>
+</odoo>
+

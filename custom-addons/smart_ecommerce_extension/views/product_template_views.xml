@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Template Form View Extension -->
+    <record id="product_template_form_view_ecommerce" model="ir.ui.view">
+        <field name="name">product.template.form.ecommerce.extension</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <!-- Add new page for eCommerce Extension fields -->
+            <xpath expr="//page[@name='sales']" position="after">
+                <page string="eCommerce Extension" name="ecommerce_extension">
+                    <group>
+                        <group string="Brand &amp; Model">
+                            <field name="brand"/>
+                            <field name="product_model"/>
+                        </group>
+                        <group string="Media">
+                            <field name="video_url" placeholder="https://youtube.com/watch?v=..."/>
+                            <field name="image_hover" widget="image" options="{'size': [128, 128]}"/>
+                        </group>
+                    </group>
+                    <group string="Specifications">
+                        <field name="specifications" widget="html" colspan="2"/>
+                    </group>
+                    <group>
+                        <group string="Stock Settings">
+                            <field name="low_stock_threshold"/>
+                            <field name="availability_status" readonly="1"/>
+                        </group>
+                        <group string="Shipping">
+                            <field name="shipping_weight_kg"/>
+                            <field name="estimated_delivery_days"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Template Tree View Extension -->
+    <record id="product_template_tree_view_ecommerce" model="ir.ui.view">
+        <field name="name">product.template.tree.ecommerce.extension</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="brand" optional="show"/>
+                <field name="availability_status" widget="badge" 
+                       decoration-success="availability_status == 'in_stock'"
+                       decoration-warning="availability_status == 'low_stock'"
+                       decoration-danger="availability_status == 'out_of_stock'"
+                       optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Template Search View Extension -->
+    <record id="product_template_search_view_ecommerce" model="ir.ui.view">
+        <field name="name">product.template.search.ecommerce.extension</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="brand"/>
+            </xpath>
+            <xpath expr="//filter[@name='filter_to_sell']" position="after">
+                <separator/>
+                <filter string="In Stock" name="filter_in_stock" domain="[('availability_status', '=', 'in_stock')]"/>
+                <filter string="Low Stock" name="filter_low_stock" domain="[('availability_status', '=', 'low_stock')]"/>
+                <filter string="Out of Stock" name="filter_out_of_stock" domain="[('availability_status', '=', 'out_of_stock')]"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Brand" name="group_by_brand" context="{'group_by': 'brand'}"/>
+                <filter string="Availability" name="group_by_availability" context="{'group_by': 'availability_status'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Product Template Kanban View Extension -->
+    <record id="product_template_kanban_view_ecommerce" model="ir.ui.view">
+        <field name="name">product.template.kanban.ecommerce.extension</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <!-- Add fields to kanban -->
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="brand"/>
+                <field name="availability_status"/>
+            </xpath>
+            <!-- Add brand and availability after the name field in the template -->
+            <xpath expr="//t[@t-name='card']//field[@name='name']" position="after">
+                <div t-if="record.brand.raw_value" class="text-muted small">
+                    <t t-esc="record.brand.value"/>
+                </div>
+                <div class="mt-1">
+                    <span t-if="record.availability_status.raw_value == 'in_stock'" 
+                          class="badge text-bg-success">In Stock</span>
+                    <span t-elif="record.availability_status.raw_value == 'low_stock'" 
+                          class="badge text-bg-warning">Low Stock</span>
+                    <span t-elif="record.availability_status.raw_value == 'out_of_stock'" 
+                          class="badge text-bg-danger">Out of Stock</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu items for SMART eCommerce Extension -->
+    
+    <!-- Root menu under Website -->
+    <menuitem 
+        id="menu_ecommerce_extension_root"
+        name="eCommerce Extension"
+        parent="website.menu_website_configuration"
+        sequence="50"/>
+    
+    <!-- Delivery Zones menu -->
+    <menuitem 
+        id="menu_delivery_zones"
+        name="Delivery Zones"
+        parent="menu_ecommerce_extension_root"
+        action="delivery_zone_action"
+        sequence="10"/>
+    
+    <!-- Alternative: Delivery Zones under Inventory/Delivery -->
+    <menuitem 
+        id="menu_delivery_zones_stock"
+        name="Delivery Zones"
+        parent="stock.menu_stock_config_settings"
+        action="delivery_zone_action"
+        sequence="50"
+        groups="stock.group_stock_manager"/>
+</odoo>
+

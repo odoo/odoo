@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_delivery_zone_public,delivery.zone.public,model_delivery_zone,,1,0,0,0
+access_delivery_zone_user,delivery.zone.user,model_delivery_zone,base.group_user,1,0,0,0
+access_delivery_zone_sale_user,delivery.zone.sale.user,model_delivery_zone,sales_team.group_sale_salesman,1,1,0,0
+access_delivery_zone_manager,delivery.zone.manager,model_delivery_zone,sales_team.group_sale_manager,1,1,1,1
+access_delivery_zone_stock_manager,delivery.zone.stock.manager,model_delivery_zone,stock.group_stock_manager,1,1,1,1
+

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Marketplace Seller Tree View -->
-    <record id="view_marketplace_seller_tree" model="ir.ui.view">
-        <field name="name">marketplace.seller.tree</field>
+    <!-- Marketplace Seller List View -->
+    <record id="view_marketplace_seller_list" model="ir.ui.view">
+        <field name="name">marketplace.seller.list</field>
         <field name="model">marketplace.seller</field>
         <field name="arch" type="xml">
-            <tree string="Sellers" decoration-success="state == 'approved'" decoration-muted="state == 'suspended'">
+            <list string="Sellers" decoration-success="state == 'approved'" decoration-muted="state == 'suspended'">
                 <field name="name"/>
                 <field name="partner_id"/>
                 <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-info="state == 'pending'" decoration-warning="state == 'suspended'" decoration-danger="state == 'rejected'"/>
@@ -13,7 +13,7 @@
                 <field name="total_sales" widget="monetary"/>
                 <field name="total_orders"/>
                 <field name="active" widget="boolean_toggle"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -38,9 +38,7 @@
                         <button name="action_view_products" type="object" class="oe_stat_button" icon="fa-cube">
                             <field name="total_products" widget="statinfo" string="Products"/>
                         </button>
-                        <button name="action_view_payouts" type="object" class="oe_stat_button" icon="fa-money">
-                            <field name="total_payouts" widget="statinfo" string="Payouts"/>
-                        </button>
+                        <!-- Payout button added by smart_marketplace_payout module -->
                     </div>
                     <group>
                         <group>
@@ -70,12 +68,12 @@
                         </page>
                         <page string="KYC Documents" name="kyc_documents">
                             <field name="kyc_documents" nolabel="1">
-                                <tree>
+                                <list>
                                     <field name="name"/>
                                     <field name="document_type_id"/>
                                     <field name="upload_date"/>
                                     <field name="state" widget="badge"/>
-                                </tree>
+                                </list>
                                 <form>
                                     <group>
                                         <field name="name"/>
@@ -133,7 +131,7 @@
     <record id="action_marketplace_seller" model="ir.actions.act_window">
         <field name="name">Marketplace Sellers</field>
         <field name="res_model">marketplace.seller</field>
-        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_mode">list,form,kanban</field>
         <field name="context">{'search_default_active': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

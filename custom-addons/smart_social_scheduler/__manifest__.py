@@ -23,10 +23,8 @@ This module handles:
     'data': [
         'security/ir.model.access.csv',
         'views/social_post_queue_views.xml',
-        'data/ir_cron_data.xml',
     ],
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
 }
-

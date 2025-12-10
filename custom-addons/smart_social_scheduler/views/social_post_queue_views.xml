@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Social Post Queue Tree View -->
-    <record id="view_social_post_queue_tree" model="ir.ui.view">
-        <field name="name">social.post.queue.tree</field>
+    <!-- Social Post Queue List View -->
+    <record id="view_social_post_queue_list" model="ir.ui.view">
+        <field name="name">social.post.queue.list</field>
         <field name="model">social.post.queue</field>
         <field name="arch" type="xml">
-            <tree string="Social Posts" decoration-success="status == 'posted'" decoration-danger="status == 'failed'">
+            <list string="Social Posts" decoration-success="status == 'posted'" decoration-danger="status == 'failed'">
                 <field name="name"/>
                 <field name="product_id"/>
                 <field name="seller_id"/>
@@ -14,7 +14,7 @@
                 <field name="scheduled_at"/>
                 <field name="posted_at"/>
                 <field name="attempts"/>
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -91,7 +91,7 @@
     <record id="action_social_post_queue" model="ir.actions.act_window">
         <field name="name">Social Post Queue</field>
         <field name="res_model">social.post.queue</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{'search_default_pending': 1}</field>
     </record>
 
