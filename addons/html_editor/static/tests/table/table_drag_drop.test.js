@@ -477,7 +477,7 @@ test("undo/redo should work correctly after dragging and dropping a row", async 
     const { el, editor } = await setupEditor(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <table class="table table-bordered o_table m-4">
                 <tbody>
                     <tr><td class="a">[]1</td></tr>
                     <tr><td class="b">2</td></tr>
@@ -517,14 +517,14 @@ test("undo/redo should work correctly after dragging and dropping a row", async 
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <table class="table table-bordered o_table m-4">
                 <tbody>
                     <tr><td class="b">2</td></tr>
                     <tr class=""><td class="c">3</td></tr>
                     <tr><td class="a">[]1</td></tr>
                 </tbody>
             </table>
-            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <p data-selection-placeholder="" style="margin: -13px 0px 12px;"><br></p>
         `)
     );
     // Undo the drag and drop
@@ -532,14 +532,14 @@ test("undo/redo should work correctly after dragging and dropping a row", async 
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <table class="table table-bordered o_table m-4">
                 <tbody>
                     <tr><td class="a">[]1</td></tr>
                     <tr><td class="b">2</td></tr>
                     <tr><td class="c">3</td></tr>
                 </tbody>
             </table>
-            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <p data-selection-placeholder="" style="margin: -13px 0px 12px;"><br></p>
         `)
     );
     // Redo the drag and drop
@@ -547,14 +547,14 @@ test("undo/redo should work correctly after dragging and dropping a row", async 
     expect(getContent(el)).toBe(
         unformat(`
             <p><br></p>
-            <table class="table table-bordered o_table">
+            <table class="table table-bordered o_table m-4">
                 <tbody>
                     <tr><td class="b">2</td></tr>
                     <tr><td class="c">3</td></tr>
                     <tr><td class="a">[]1</td></tr>
                 </tbody>
             </table>
-            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            <p data-selection-placeholder="" style="margin: -13px 0px 12px;"><br></p>
         `)
     );
 });
