@@ -8,6 +8,7 @@ import { withSequence } from "@html_editor/utils/resource";
  * @property { VisibilityPlugin['toggleTargetVisibility'] } toggleTargetVisibility
  * @property { VisibilityPlugin['onOptionVisibilityUpdate'] } onOptionVisibilityUpdate
  * @property { VisibilityPlugin['hideElement'] } hideElement
+ * @property { VisibilityPlugin['getInvisibleElements'] } getInvisibleElements
  */
 
 /**
@@ -27,6 +28,7 @@ export class VisibilityPlugin extends Plugin {
         "toggleTargetVisibility",
         "onOptionVisibilityUpdate",
         "hideElement",
+        "getInvisibleElements",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -209,6 +211,14 @@ export class VisibilityPlugin extends Plugin {
         this.dependencies.builderOptions.deactivateContainers();
         this.config.updateInvisibleElementsPanel();
         this.dependencies.disableSnippets.disableUndroppableSnippets();
+    }
+    getInvisibleElements() {
+        const invisibleSelector = `.o_snippet_invisible, ${
+            this.config.isMobileView(this.editable)
+                ? ".o_snippet_mobile_invisible"
+                : ".o_snippet_desktop_invisible"
+        }`;
+        return [...this.editable.querySelectorAll(invisibleSelector)];
     }
 }
 

@@ -14,7 +14,12 @@ import { closestElement, selectElements } from "@html_editor/utils/dom_traversal
  */
 
 /**
- * @typedef {((arg: { removedEl: HTMLElement, nextTargetEl: HTMLElement }) => void)[]} on_removed_handlers
+ * @typedef {((arg: {
+ *      removedEl: HTMLElement,
+ *      nextTargetEl: HTMLElement,
+ *      originPreviousEl: HTMLElement | undefined,
+ *      originNextEl: HTMLElement | undefined
+ * }) => void)[]} on_removed_handlers
  * @typedef {((toRemoveEl: HTMLElement) => void)[]} on_will_remove_handlers
  *
  * @typedef {((el: HTMLElement) => boolean)[]} empty_node_predicates
@@ -107,8 +112,15 @@ export class RemovePlugin extends Plugin {
         const optionTargetEls = this.getOptionsContainersElements().filter((targetEl) =>
             targetEl.contains(toRemoveEl)
         );
+        const originPreviousEl = toRemoveEl.previousElementSibling;
+        const originNextEl = toRemoveEl.nextElementSibling;
         const nextTargetEl = this.removeCurrentTarget(toRemoveEl, optionTargetEls);
-        this.dispatchTo("on_removed_handlers", { removedEl: toRemoveEl, nextTargetEl });
+        this.dispatchTo("on_removed_handlers", {
+            removedEl: toRemoveEl,
+            nextTargetEl,
+            originPreviousEl,
+            originNextEl,
+        });
         if (updateContainers) {
             this.dependencies.builderOptions.setNextTarget(nextTargetEl);
         }
