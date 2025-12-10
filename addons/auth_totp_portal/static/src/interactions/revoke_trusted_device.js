@@ -5,7 +5,7 @@ import { handleCheckIdentity } from "@portal/interactions/portal_security";
 
 export class RevokeTrustedDevice extends Interaction {
     static selector = "#totp_wizard_view + * .fa.fa-trash.text-danger";
-    dynamiContent = {
+    dynamicContent = {
         _root: { "t-on-click.prevent": this.onClick },
     };
 

@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { escape } from "@web/core/utils/strings";
 import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@html_builder/utils/utils_css";
 import { isSmallInteger } from "@html_builder/utils/utils";
@@ -122,7 +123,7 @@ export function renderField(field, resetId = false) {
     if (!field.id) {
         field.id = generateHTMLId();
     }
-    const params = { field: { ...field } };
+    const params = { field: { ...field }, defaultName: escape(field.string || _t("Field")) };
     if (["url", "email", "tel"].includes(field.type)) {
         params.field.inputType = field.type;
     }
@@ -272,7 +273,7 @@ export function setActiveProperties(fieldEl, field) {
     );
     const fileInputEl = fieldEl.querySelector("input[type=file]");
     const description = fieldEl.querySelector(".s_website_form_field_description");
-    field.placeholder = input && input.placeholder;
+    field.placeholder = input?.placeholder || "";
     if (input) {
         // textarea value has no attribute,  date/datetime timestamp property is formated
         field.value = input.getAttribute("value") || input.value;

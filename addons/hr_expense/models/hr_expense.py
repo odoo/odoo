@@ -1119,11 +1119,16 @@ class HrExpense(models.Model):
                 raise UserError(_("You can not submit an expense without a category."))
             if not expense.manager_id:
                 expense.sudo().manager_id = expense._get_default_responsible_for_approval()
-        expenses_autovalidated = self.filtered(lambda expense: not expense.manager_id and not expense.employee_id.expense_manager_id)
+        expenses_autovalidated = self.filtered(lambda expense: expense._can_be_autovalidated())
         (self - expenses_autovalidated).approval_state = 'submitted'
         if expenses_autovalidated:  # Note, this will and should bypass the duplicate check. May be changed later
             expenses_autovalidated._do_approve(check=False)
         self.sudo().update_activities_and_mails()
+
+    def _can_be_autovalidated(self):
+        """ Check whether the given expenses can be auto-validated (no approver) """
+        self.ensure_one()
+        return (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
 
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
@@ -1414,7 +1419,7 @@ class HrExpense(models.Model):
             expense.write({
                 'approval_state': 'approved',
                 'manager_id': self.env.user.id,
-                'approval_date': fields.Date.context_today(expense),
+                'approval_date': fields.Datetime().now(),
             })
         self.update_activities_and_mails()
 

@@ -983,17 +983,22 @@ class ResPartner(models.Model):
 
     def create_company(self):
         self.ensure_one()
-        if self.company_name:
-            # Create parent company
-            values = dict(name=self.company_name, is_company=True, vat=self.vat)
-            values.update(self._convert_fields_to_values(self._address_fields()))
-            new_company = self.create(values)
+        if (new_company := self._create_contact_parent_company()):
             # Set new company as my parent
             self.write({
                 'parent_id': new_company.id,
                 'child_ids': [Command.update(partner_id, dict(parent_id=new_company.id)) for partner_id in self.child_ids.ids]
             })
         return True
+
+    def _create_contact_parent_company(self):
+        self.ensure_one()
+        if self.company_name:
+            # Create parent company
+            values = dict(name=self.company_name, is_company=True, vat=self.vat)
+            values.update(self._convert_fields_to_values(self._address_fields()))
+            return self.create(values)
+        return self.browse()
 
     def open_commercial_entity(self):
         """ Utility method used to add an "Open Company" button in partner views """

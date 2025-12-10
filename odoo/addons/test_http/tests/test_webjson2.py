@@ -80,7 +80,7 @@ class TestHttpWebJson_2(TestHttpBase):
         res = self.db_url_open(
             # application/x-www-form-urlencoded
             '/json/2/res.users/search',
-            data={"domain": []},
+            data=r"bad content type",
             headers=self.bearer_header,
         )
         self.assertEqual(res.text, Like("""
