@@ -1,11 +1,11 @@
-import { Component } from "@odoo/owl";
-import { registry } from "@web/core/registry";
-import {
-    Many2ManyTagsAvatarField,
-    many2ManyTagsAvatarField,
-} from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
-import { useSpecialData } from "@web/views/fields/relational_utils";
+import { AvatarTag } from "@web/core/tags_list/avatar_tag";
 import { ConnectionLostError } from "@web/core/network/rpc";
+import {
+    Many2ManyTagsAvatarUserField,
+    many2ManyTagsAvatarUserField,
+} from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
+import { registry } from "@web/core/registry";
+import { useSpecialData } from "@web/views/fields/relational_utils";
 
 const ICON_BY_STATUS = {
     accepted: "fa-check",
@@ -13,16 +13,21 @@ const ICON_BY_STATUS = {
     tentative: "fa-question",
 };
 
-export class AttendeeTag extends Component {
+export class AttendeeTag extends AvatarTag {
     static template = "calendar.AttendeeTag";
-    static props = ["imageUrl", "isUnavailable?", "noEmail?", "onDelete?", "status?", "text", "tooltip"];
+    static props = {
+        ...AvatarTag.props,
+        isUnavailable: { type: Boolean, optional: true },
+        noEmail: { type: Boolean, optional: true },
+        status: { type: String, optional: true },
+    };
 
     get statusIcon() {
         return ICON_BY_STATUS[this.props.status];
     }
 }
 
-export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
+export class Many2ManyAttendee extends Many2ManyTagsAvatarUserField {
     static template = "calendar.Many2ManyAttendee";
     static components = {
         ...super.components,
@@ -56,6 +61,7 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
             text: tag.text,
             tooltip: tag.tooltip,
             imageUrl: tag.imageUrl,
+            onAvatarClick: tag.onAvatarClick,
             onDelete: tag.onDelete,
         };
 
@@ -103,7 +109,7 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
 }
 
 export const many2ManyAttendee = {
-    ...many2ManyTagsAvatarField,
+    ...many2ManyTagsAvatarUserField,
     component: Many2ManyAttendee,
     additionalClasses: ["o_field_many2many_tags_avatar", "w-100"],
 };
