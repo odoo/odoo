@@ -28,6 +28,8 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @typedef {Object} ToolbarGroup
  * @property {string} id
  * @property {string[]} [namespaces]
+ * @property {boolean} [isPatch]
+ * @property { (ToolbarComponentItem) => string[] } [getNamespaces]
  *
  *
  * @typedef {ToolbarCommandItem | ToolbarComponentItem} ToolbarItem
@@ -190,7 +192,8 @@ export class ToolbarPlugin extends Plugin {
 
     setup() {
         const groupIds = new Set();
-        for (const group of this.getResource("toolbar_groups")) {
+        const groups = this.getResource("toolbar_groups").filter((group) => !group.isPatch);
+        for (const group of groups) {
             if (groupIds.has(group.id)) {
                 throw new Error(`Duplicate toolbar group id: ${group.id}`);
             }
@@ -308,7 +311,24 @@ export class ToolbarPlugin extends Plugin {
     getButtonGroups() {
         const buttons = this.getButtons();
         /** @type {ToolbarGroup[]} */
-        const groups = this.getResource("toolbar_groups");
+        const { groups, groupPatches } = Object.groupBy(
+            this.getResource("toolbar_groups"),
+            (group) => (group.isPatch ? "groupPatches" : "groups")
+        );
+        const patchesPerId = Object.groupBy(groupPatches || [], (patch) => patch.id);
+        function getPatchNamespaces(button) {
+            const namespaces = [];
+            const patches = patchesPerId[button.groupId] || [];
+            for (const patch of patches) {
+                if (patch.getNamespaces) {
+                    namespaces.push(...patch.getNamespaces(button));
+                }
+                if (patch.namespaces) {
+                    namespaces.push(...patch.namespaces);
+                }
+            }
+            return namespaces;
+        }
 
         return groups.map((group) => ({
             ...omit(group, "namespaces"),
@@ -316,7 +336,10 @@ export class ToolbarPlugin extends Plugin {
                 .filter((button) => button.groupId === group.id)
                 .map((button) => ({
                     ...button,
-                    namespaces: button.namespaces || group.namespaces || ["expanded"],
+                    namespaces: [
+                        ...(button.namespaces || group.namespaces || ["expanded"]),
+                        ...getPatchNamespaces(button),
+                    ],
                 })),
         }));
     }
@@ -386,8 +409,8 @@ export class ToolbarPlugin extends Plugin {
             return;
         }
 
-        if (currentNamespace === "compact" && this.isToolbarExpanded) {
-            currentNamespace = "expanded";
+        if (currentNamespace?.endsWith("compact") && this.isToolbarExpanded) {
+            currentNamespace = currentNamespace.replace("compact", "expanded");
         }
 
         if (currentNamespace) {
