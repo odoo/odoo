@@ -14,7 +14,8 @@ from odoo import api, fields, models, _, Command, SUPERUSER_ID
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
+from odoo.fields import Domain
+from odoo.tools import SQL, format_datetime
 from odoo.tools.misc import OrderedSet, format_date, groupby as tools_groupby, topological_sort
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
@@ -845,14 +846,23 @@ class MrpProduction(models.Model):
     def _search_is_delayed(self, operator, value):
         if operator not in ('in', 'not in'):
             return NotImplemented
-        sub_query = self._search([
-            ('state', 'in', ['confirmed', 'progress', 'to_close']),
-            ('date_deadline', '!=', False),
-            '|',
-                ('date_deadline', '<', self._field_to_sql('mrp_production', 'date_finished')),
-                ('date_deadline', '<', fields.Datetime.now())
-        ])
-        return [('id', operator, sub_query)]
+        delayed_productions = (
+            Domain([
+                ('state', 'in', ['confirmed', 'progress', 'to_close']),
+                ('date_deadline', '!=', False),
+            ])
+            & (
+                Domain.custom(
+                    to_sql=lambda model, alias, query: SQL(
+                        "%s < %s",
+                        SQL.identifier(alias, 'date_deadline'),
+                        SQL.identifier(alias, 'date_finished'),
+                    )
+                )
+                | Domain('date_deadline', '<', fields.Datetime.now())
+            )
+        )
+        return [('id', operator, delayed_productions)]
 
     @api.depends('delay_alert_date', 'state', 'date_deadline', 'date_finished')
     def _compute_is_delayed(self):
