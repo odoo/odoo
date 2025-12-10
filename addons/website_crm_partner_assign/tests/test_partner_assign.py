@@ -249,6 +249,18 @@ class TestPartnerLeadPortal(TestCrmCommon):
             'partner_id': test_partner.id,
         })
 
+        update_values = {
+            'expected_revenue': 9999.0,
+            'probability': 50.0,
+            'priority': '2',
+            'date_deadline': False,
+            'activity_date_deadline': False,
+            'activity_type_id': False,
+            'activity_summary': False,
+        }
+        opportunity.with_user(self.user_portal).update_lead_portal(update_values)
+        self.assertEqual(opportunity.expected_revenue, 9999.0, "Portal user should be able to update revenue or other details via portal method")
+
         email_2 = 'test_partner_updated@test.com'
         opportunity.with_user(self.user_portal).update_contact_details_from_portal({
             'email_from': email_2,

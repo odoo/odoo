@@ -126,6 +126,8 @@ class Database(http.Controller):
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             odoo.service.db.check_super(master_pwd)
+            if name not in http.db_list():
+                raise Exception("Database %r is not known" % name)
             ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
             filename = "%s_%s.%s" % (name, ts, backup_format)
             headers = [
