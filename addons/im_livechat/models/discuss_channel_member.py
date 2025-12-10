@@ -88,6 +88,8 @@ class DiscussChannelMember(models.Model):
             member.agent_expertise_ids = member.livechat_member_history_ids.agent_expertise_ids
 
     def _create_or_update_history(self, values_by_member):
+        if self.channel_id.livechat_end_dt:
+            return
         members_without_history = self.filtered(lambda m: not m.livechat_member_history_ids)
         history_domain = Domain.OR(
             [

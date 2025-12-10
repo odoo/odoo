@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.exceptions import ValidationError
 from odoo.tests.common import new_test_user
@@ -7,9 +8,10 @@ from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 
 
 class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCase):
-    def test_get_session_create_history(self):
+    def test_history_modified_only_for_active_livechat(self):
         john = self._create_operator("fr_FR")
         bob = self._create_operator("fr_FR")
+        michel = self._create_operator("fr_FR")
         livechat_channel = self.env["im_livechat.channel"].create(
             {
                 "name": "Livechat Channel",
@@ -41,6 +43,9 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
             ).livechat_member_type,
             "agent",
         )
+        channel.livechat_end_dt = fields.Datetime.now()
+        channel.add_members(partner_ids=michel.partner_id.ids)
+        self.assertEqual(len(channel.channel_member_ids.livechat_member_history_ids), 3)
 
     def test_get_session_create_history_with_bot(self):
         john = self._create_operator("fr_FR")
@@ -125,6 +130,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
 
     def test_update_history_on_second_join(self):
         john = self._create_operator("fr_FR")
+        bob = self._create_operator("fr_FR")
         livechat_channel = self.env["im_livechat.channel"].create(
             {"name": "Livechat Channel", "user_ids": [john.id]},
         )
@@ -139,6 +145,8 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
         john_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == john.partner_id)
         self.assertEqual(og_history.livechat_member_type, "agent")
         self.assertEqual(og_history.member_id, john_member)
+        # Add another agent so the channel stays active and the history can be updated.
+        channel.add_members(partner_ids=bob.partner_id.ids)
         channel.with_user(john).action_unfollow()
         john_history = channel.channel_member_ids.livechat_member_history_ids.filtered(
             lambda m: m.partner_id == john.partner_id
