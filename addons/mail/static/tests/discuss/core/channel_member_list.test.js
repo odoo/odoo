@@ -102,8 +102,9 @@ test("chat with member should be opened after clicking on channel member", async
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-discuss-ChannelMember.cursor-pointer", { text: "Demo" });
+    await click(".o-discuss-ChannelMember:has(:text('Demo')).cursor-pointer");
     await contains(".o_avatar_card .o_card_user_infos", { text: "Demo" });
+    await click(".o-discuss-ChannelMember:has(:text('Demo')).o-active");
     await click(".o_avatar_card button", { text: "Send message" });
     await contains(".o-mail-AutoresizeInput[title='Demo']");
 });
