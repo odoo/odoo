@@ -13,13 +13,14 @@ import { fileTypeMagicWordMap } from "@web/views/fields/image/image_field";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
-import { TOUCH_SELECTION_THRESHOLD, getFormattedValue } from "../utils";
-import { KANBAN_CARD_ATTRIBUTE, KANBAN_MENU_ATTRIBUTE } from "./kanban_arch_parser";
-import { KanbanCompiler } from "./kanban_compiler";
-import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
-import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
+import { getFormattedValue } from "@web/views/utils";
+import { KANBAN_CARD_ATTRIBUTE, KANBAN_MENU_ATTRIBUTE } from "@web/views/kanban/kanban_arch_parser";
+import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
+import { KanbanCoverImageDialog } from "@web/views/kanban/kanban_cover_image_dialog";
+import { KanbanDropdownMenuWrapper } from "@web/views/kanban/kanban_dropdown_menu_wrapper";
 
 import { Component, onWillUpdateProps, useRef, useState } from "@odoo/owl";
+import { TOUCH_DELAY } from "@web/core/utils/timing";
 
 const { COLORS } = ColorList;
 
@@ -181,7 +182,7 @@ export class KanbanRecord extends Component {
     static template = "web.KanbanRecord";
 
     setup() {
-        this.LONG_TOUCH_THRESHOLD = this.props.canResequence ? 600 : TOUCH_SELECTION_THRESHOLD;
+        this.LONG_TOUCH_THRESHOLD = this.props.canResequence ? 600 : TOUCH_DELAY;
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.action = useService("action");
         this.dialog = useService("dialog");

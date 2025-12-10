@@ -14,11 +14,11 @@ import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relationa
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import {
-    TOUCH_SELECTION_THRESHOLD,
     computeAggregatedValue,
     getClassNameFromDecoration,
     getFormattedValue,
 } from "@web/views/utils";
+import { TOUCH_DELAY } from "@web/core/utils/timing";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
@@ -2209,7 +2209,7 @@ export class ListRenderer extends Component {
             this.longTouchTimer = browser.setTimeout(() => {
                 this.toggleRecordSelection(record);
                 this.resetLongTouchTimer();
-            }, TOUCH_SELECTION_THRESHOLD);
+            }, TOUCH_DELAY);
         }
     }
 
@@ -2218,7 +2218,7 @@ export class ListRenderer extends Component {
      */
     onRowTouchEnd(_record) {
         const elapsedTime = Date.now() - this.touchStartMs;
-        if (elapsedTime < TOUCH_SELECTION_THRESHOLD) {
+        if (elapsedTime < TOUCH_DELAY) {
             this.resetLongTouchTimer();
         }
     }

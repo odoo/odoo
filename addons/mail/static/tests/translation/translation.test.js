@@ -1,4 +1,4 @@
-import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
+import { TOUCH_DELAY } from "@web/core/utils/timing";
 import {
     click,
     contains,
@@ -144,7 +144,7 @@ test("Toggle message translation on mobile", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message");
     await pointerDown(".o-mail-Message");
-    await advanceTime(LONG_PRESS_DELAY);
+    await advanceTime(TOUCH_DELAY);
     await click("button:contains('Translate')");
     await contains(".o-mail-Message-body", {
         text: "To bad weather, good face.(Translated from: Spanish)",

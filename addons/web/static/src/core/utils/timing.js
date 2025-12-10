@@ -1,6 +1,8 @@
 import { browser } from "@web/core/browser/browser";
 import { onWillUnmount, useComponent } from "@odoo/owl";
 
+export const TOUCH_DELAY = 400;
+
 /**
  * Creates a batched version of a callback so that all calls to it in the same
  * time frame will only call the original callback once.

@@ -1,5 +1,5 @@
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
-import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
+import { TOUCH_DELAY } from "@web/core/utils/timing";
 import { CalendarCommonRenderer } from "./calendar_common/calendar_common_renderer";
 import { CalendarYearRenderer } from "./calendar_year/calendar_year_renderer";
 
@@ -52,7 +52,7 @@ export class CalendarRenderer extends Component {
             onLeftSwipe: this.getSwiperProps("next"),
             onRightSwipe: this.getSwiperProps("previous"),
             animationType: "forwards",
-            enabledDuration: TOUCH_SELECTION_THRESHOLD
+            enabledDuration: TOUCH_DELAY,
         };
     }
     getSwiperProps(direction) {

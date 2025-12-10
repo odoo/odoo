@@ -20,7 +20,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
+import { TOUCH_DELAY } from "@web/core/utils/timing";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, leave, pointerDown, press, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { advanceTime, mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
@@ -215,7 +215,7 @@ test("Can add reaction to a message on an ipad", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await pointerDown(".o-mail-Message");
-    await advanceTime(LONG_PRESS_DELAY);
+    await advanceTime(TOUCH_DELAY);
     await click("button:contains('Add a Reaction')");
     await click(".o-EmojiPicker-content .o-Emoji:contains('😀')");
     await contains(".o-mail-MessageReaction:contains('😀 1')");

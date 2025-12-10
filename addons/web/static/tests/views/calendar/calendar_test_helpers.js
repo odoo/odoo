@@ -7,7 +7,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { createElement } from "@web/core/utils/xml";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { Field } from "@web/views/fields/field";
-import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
+import { TOUCH_DELAY } from "@web/core/utils/timing";
 
 export const DEFAULT_DATE = luxon.DateTime.local(2021, 7, 16, 8, 0, 0, 0);
 
@@ -238,7 +238,7 @@ function instantScrollTo(element) {
 
 async function waitForSelection() {
     if (hasTouch()) {
-        await advanceTime(TOUCH_SELECTION_THRESHOLD);
+        await advanceTime(TOUCH_DELAY);
     }
     await animationFrame();
 };
@@ -395,7 +395,7 @@ export async function selectTimeRange(startDateTime, endDateTime) {
     const optionStart = {
         relative: true,
         position: { y: 1, x: startColumnRect.left },
-        pointerDownDuration: TOUCH_SELECTION_THRESHOLD,
+        pointerDownDuration: TOUCH_DELAY,
     };
 
     await hover(startRow, optionStart);
@@ -424,7 +424,7 @@ export async function selectDateRange(startDate, endDate) {
     await hover(startCell);
     await animationFrame();
 
-    const { moveTo, drop } = await drag(startCell, {pointerDownDuration: TOUCH_SELECTION_THRESHOLD});
+    const { moveTo, drop } = await drag(startCell, { pointerDownDuration: TOUCH_DELAY });
     await waitForSelection();
 
     await moveTo(endCell);
@@ -448,7 +448,7 @@ export async function selectAllDayRange(startDate, endDate) {
     await hover(start);
     await animationFrame();
 
-    const { drop } = await drag(start, {pointerDownDuration: TOUCH_SELECTION_THRESHOLD});
+    const { drop } = await drag(start, { pointerDownDuration: TOUCH_DELAY });
     await waitForSelection();
 
     await drop(end);
@@ -476,7 +476,7 @@ export async function moveEventToDate(eventId, date, options) {
     await hover(eventEl);
     await animationFrame();
 
-    const { drop, moveTo } = await drag(eventEl, {pointerDownDuration: TOUCH_SELECTION_THRESHOLD});
+    const { drop, moveTo } = await drag(eventEl, { pointerDownDuration: TOUCH_DELAY });
     await waitForSelection();
 
     await moveTo(cell);
@@ -510,7 +510,7 @@ export async function moveEventToTime(eventId, dateTime) {
     const { drop, moveTo } = await drag(eventEl, {
         position: { y: 1 },
         relative: true,
-        pointerDownDuration: TOUCH_SELECTION_THRESHOLD
+        pointerDownDuration: TOUCH_DELAY,
     });
     await waitForSelection();
 
@@ -554,7 +554,7 @@ export async function moveEventToAllDaySlot(eventId, date) {
     const { drop, moveTo } = await drag(eventEl, {
         position: { y: 1 },
         relative: true,
-        pointerDownDuration: TOUCH_SELECTION_THRESHOLD
+        pointerDownDuration: TOUCH_DELAY,
     });
     await waitForSelection();
 
@@ -599,7 +599,7 @@ export async function resizeEventToTime(eventId, dateTime) {
 
     if (hasTouch()) {
         const { drop } = await drag(eventEl, {
-            pointerDownDuration: TOUCH_SELECTION_THRESHOLD,
+            pointerDownDuration: TOUCH_DELAY,
         });
         await waitForSelection();
         await drop(eventEl);
@@ -607,7 +607,7 @@ export async function resizeEventToTime(eventId, dateTime) {
     }
 
     const { drop } = await drag(resizer, {
-        pointerDownDuration: TOUCH_SELECTION_THRESHOLD,
+        pointerDownDuration: TOUCH_DELAY,
     });
     await waitForSelection();
     await drop(row, {

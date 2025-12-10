@@ -20,6 +20,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { TOUCH_DELAY } from "@web/core/utils/timing";
 
 export function useLazyExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -615,8 +616,6 @@ export const useMovable = makeDraggableHook({
     },
 });
 
-export const LONG_PRESS_DELAY = 400;
-
 /**
  * Subscribes to long press events on the element matching the given ref name.
  * It internally prevents false positives caused by scroll gestures.
@@ -650,7 +649,7 @@ export function useLongPress(refName, { action, predicate = () => true } = {}) {
             timer = setTimeout(() => {
                 action();
                 reset();
-            }, LONG_PRESS_DELAY);
+            }, TOUCH_DELAY);
         }
     );
     useLazyExternalListener(

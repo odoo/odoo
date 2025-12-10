@@ -17,7 +17,7 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
+import { TOUCH_DELAY } from "@web/core/utils/timing";
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
 import { Deferred, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
@@ -109,12 +109,12 @@ test("Can edit message comment in chatter (mobile)", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { text: "original message" });
     await pointerDown(".o-mail-Message", { contains: "original message" });
-    await advanceTime(LONG_PRESS_DELAY);
+    await advanceTime(TOUCH_DELAY);
     await click("button", { text: "Edit" });
     await click("button", { text: "Discard editing" });
     await contains(".o-mail-Message", { text: "original message" });
     await pointerDown(".o-mail-Message", { contains: "original message" });
-    await advanceTime(LONG_PRESS_DELAY);
+    await advanceTime(TOUCH_DELAY);
     await click("button", { text: "Edit" });
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click("button[title='Save editing']");

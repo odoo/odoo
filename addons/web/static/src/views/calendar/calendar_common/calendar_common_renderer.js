@@ -4,14 +4,13 @@ import { localization } from "@web/core/l10n/localization";
 import { is24HourFormat } from "@web/core/l10n/time";
 import { useBus } from "@web/core/utils/hooks";
 import { renderToFragment, renderToString } from "@web/core/utils/render";
-import { useDebounced } from "@web/core/utils/timing";
+import { TOUCH_DELAY, useDebounced } from "@web/core/utils/timing";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
 import { convertRecordToEvent, getColor } from "@web/views/calendar/utils";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { useSquareSelection } from "@web/views/calendar/hooks/square_selection_hook";
-import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 
 import { Component, useEffect, useRef } from "@odoo/owl";
 
@@ -123,7 +122,7 @@ export class CalendarCommonRenderer extends Component {
             eventResizableFromStart: true,
             eventResize: this.onEventResize,
             eventResizeStart: this.onEventResizeStart,
-            longPressDelay: TOUCH_SELECTION_THRESHOLD,
+            longPressDelay: TOUCH_DELAY,
             moreLinkClick: this.onEventLimitClick,
             select: this.onSelect,
             selectAllow: this.isSelectionAllowed,

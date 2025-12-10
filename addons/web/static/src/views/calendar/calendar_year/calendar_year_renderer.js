@@ -5,7 +5,7 @@ import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_h
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 import { CalendarYearPopover } from "@web/views/calendar/calendar_year/calendar_year_popover";
-import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
+import { TOUCH_DELAY } from "@web/core/utils/timing";
 
 import { Component, useEffect, useRef } from "@odoo/owl";
 
@@ -62,7 +62,7 @@ export class CalendarYearRenderer extends Component {
             eventClassNames: this.eventClassNames,
             eventDidMount: this.onEventDidMount,
             eventResizableFromStart: true,
-            longPressDelay: TOUCH_SELECTION_THRESHOLD,
+            longPressDelay: TOUCH_DELAY,
             select: this.onSelect,
             selectMinDistance: 5, // needed to not trigger select when click
             selectMirror: true,

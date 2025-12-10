@@ -1,9 +1,9 @@
 import { clamp } from "@web/core/utils/numbers";
 import { omit } from "@web/core/utils/objects";
 import { closestScrollableX, closestScrollableY } from "@web/core/utils/scrolling";
-import { setRecurringAnimationFrame } from "@web/core/utils/timing";
-import { browser } from "../browser/browser";
-import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection";
+import { setRecurringAnimationFrame, TOUCH_DELAY } from "@web/core/utils/timing";
+import { browser } from "@web/core/browser/browser";
+import { hasTouch, isBrowserFirefox, isIOS } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {ReturnType<typeof makeCleanupManager>} CleanupManager
@@ -111,7 +111,7 @@ const DEFAULT_DEFAULT_PARAMS = {
     },
     delay: 0,
     tolerance: 10,
-    touchDelay: 300,
+    touchDelay: TOUCH_DELAY,
 };
 const LEFT_CLICK = 0;
 const MANDATORY_PARAMS = ["ref"];
