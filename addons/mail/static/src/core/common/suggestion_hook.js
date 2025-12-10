@@ -212,7 +212,7 @@ export class UseSuggestion {
         if (this.comp.composerService.htmlEnabled) {
             let inlineElement;
             if (option.partner) {
-                inlineElement = generatePartnerMentionElement(option.partner);
+                inlineElement = generatePartnerMentionElement(option.partner, this.thread);
             } else if (option.isSpecial) {
                 inlineElement = generateSpecialMentionElement(option.label);
             } else if (option.role) {
