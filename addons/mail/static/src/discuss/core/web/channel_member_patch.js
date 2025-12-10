@@ -7,14 +7,16 @@ import { patch } from "@web/core/utils/patch";
 patch(ChannelMember.prototype, {
     setup() {
         super.setup(...arguments);
+        this.state.isAvatarCardOpen = false;
         this.avatarCard = usePopover(AvatarCardPopover, {
             arrow: false,
+            onClose: () => (this.state.isAvatarCardOpen = false),
             popoverClass: "mx-2",
             position: "right-start",
         });
     },
     get attClass() {
-        return { ...super.attClass, "o-active": this.avatarCard.isOpen };
+        return { ...super.attClass, "o-active": this.state.isAvatarCardOpen };
     },
     onClickAvatar(ev) {
         if (!this.canOpenChat) {
@@ -25,6 +27,7 @@ patch(ChannelMember.prototype, {
                 id: this.member.partner_id.main_user_id?.id,
                 channelMember: this.member,
             });
+            this.state.isAvatarCardOpen = true;
         }
     },
 });

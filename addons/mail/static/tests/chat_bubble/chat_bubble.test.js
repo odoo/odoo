@@ -173,9 +173,11 @@ test("Hover on chat bubble shows chat name + last message preview", async () => 
     setupChatHub({ folded: [marcChannelId, demoChannelId] });
     await start();
     await hover(".o-mail-ChatBubble[name='Marc']");
+    await contains(".o-mail-ChatBubble[name='Marc'].o-active");
     await contains(".o-mail-ChatBubble-preview", { text: "MarcHello!" });
     await leave();
     await contains(".o-mail-ChatBubble-preview", { count: 0 });
+    await contains(".o-mail-ChatBubble[name='Marc']:not(.o-active)");
     await hover(".o-mail-ChatBubble[name='Demo']");
     await contains(".o-mail-ChatBubble-preview", { text: "Demo" });
     await leave();
