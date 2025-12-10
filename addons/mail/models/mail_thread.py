@@ -367,8 +367,7 @@ class MailThread(models.AbstractModel):
                 # if we have a subtype, post message to notify users from _message_auto_subscribe
                 thread.sudo().message_post(
                     subtype_id=subtype.id, author_id=self.env.user.partner_id.id,
-                    # summary="o_mail_notification" is used to hide the message body in the front-end
-                    body=Markup('<div summary="o_mail_notification"><p>%s</p></div>') % thread._creation_message()
+                    body=Markup('<div><p>%s</p></div>') % thread._creation_message()
                 )
             if threads_no_subtype:
                 bodies = dict(
