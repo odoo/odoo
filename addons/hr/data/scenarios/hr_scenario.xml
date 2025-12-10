@@ -80,8 +80,6 @@
             <field name="name">Emma Granger</field>
             <field name="email">granger@mycompany.example.com</field>
             <field name="image_1920" type="base64" file="hr/static/img/employee_awa-image.jpg"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="company_name">My Company</field>
             <field name="street">260 Broadway</field>
             <field name="city">New York</field>
             <field name="state_id"  model="res.country.state" search="[('code','=','NY')]"/>
@@ -95,8 +93,6 @@
             <field name="name">Michael Williams</field>
             <field name="email">williams@mycompany.example.com</field>
             <field name="image_1920" type="base64" file="hr/static/img/partner_root-image.jpg"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="company_name">My Company</field>
             <field name="street">260 RoadStreet</field>
             <field name="city">New York</field>
             <field name="state_id"  model="res.country.state" search="[('code','=','NY')]"/>
@@ -110,8 +106,6 @@
             <field name="name">Simon Jones</field>
             <field name="email">jones@mycompany.example.com</field>
             <field name="image_1920" type="base64" file="hr/static/img/employee_qdp-image.png"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="company_name">My Company</field>
             <field name="street">260 Broadway</field>
             <field name="city">New York</field>
             <field name="state_id"  model="res.country.state" search="[('code','=','NY')]"/>
@@ -136,7 +130,6 @@
             <field name="department_id" ref="hr.dep_administration"/>
             <field name="job_id" ref="job_ceo"/>
             <field name="job_title">Chief Executive Officer</field>
-            <field name="company_id" ref="base.main_company"/>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_demo')])]"/>
             <field name="image_1920" type="base64" file="hr/static/img/partner_root-image.jpg"/>
             <field name="work_phone">(555)-768-6230</field>
@@ -157,7 +150,6 @@
             <field name="work_email">granger@mycompany.example.com</field>
             <field name="job_id" ref="job_consultant"/>
             <field name="job_title">Consultant</field>
-            <field name="company_id" ref="base.main_company"/>
             <field name="category_ids" eval="[Command.set([ref('employee_category_5'), ref('employee_category_demo')])]"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_awa-image.jpg"/>
             <field name="work_phone">(555)-768-6230</field>
@@ -179,7 +171,6 @@
             <field name="work_email">jones@mycompany.example.com</field>
             <field name="job_id" ref="job_developer"/>
             <field name="job_title">Experienced Developer</field>
-            <field name="company_id" ref="base.main_company"/>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_demo')])]"/>
             <field name="image_1920" type="base64" file="hr/static/img/employee_qdp-image.png"/>
             <field name="work_phone">(555)-768-6230</field>
