@@ -51,7 +51,8 @@ patch(Thread.prototype, {
     get showCorrespondentCountry() {
         if (this.channel?.channel_type === "livechat") {
             return (
-                this.livechat_operator_id?.eq(this.store.self) && Boolean(this.correspondentCountry)
+                this.correspondent?.livechat_member_type === "visitor" &&
+                Boolean(this.correspondentCountry)
             );
         }
         return super.showCorrespondentCountry;
