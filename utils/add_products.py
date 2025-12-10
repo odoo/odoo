@@ -72,7 +72,9 @@ def main():
                     try:
                         qty_per_pkg = float(clean_row.get('quantity_per_package', 0))
                         pkg_price = float(clean_row.get('package_price', 0))
+                        sales_price = float(clean_row.get('sales_price', 0))
                         weight = float(clean_row.get('bottle_weight', 0))
+                        is_storable = float(clean_row.get('is_storable', 0))
                     except ValueError:
                         _logger.warning(f"Skipping invalid row (number error): {name}")
                         continue
@@ -95,9 +97,11 @@ def main():
                     # --- Create Product ---
                     vals = {
                         'name': name,
-                        'list_price': unit_price, # Sale price per unit
+                        'standard_price': unit_price, # cost price per unit
+                        'list_price': sales_price, # Sale price per unit
                         'weight': weight,
-                        'type': 'consu', # 'consu' = Storable Product
+                        'type': 'consu',
+                        'is_storable': is_storable,
                     }
 
                     print(f"Creating producto: {vals}\n")
