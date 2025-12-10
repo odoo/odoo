@@ -25,7 +25,7 @@ export class SurveySessionLeaderboard extends Interaction {
             // See also this.showQuestionScores
             return {
                 transition: "width 1s ease-out",
-                width: `max(calc(calc(100% - ${this.BAR_RESERVED_WIDTH_REM}rem) * ${barEl.dataset.widthRatio}), ${this.BAR_QUEST_MIN_WIDTH_REM}rem)`,
+                width: `calc(calc(100% - ${this.BAR_RESERVED_WIDTH_REM}rem) * ${barEl.dataset.widthRatio})`,
             };
         }
         return {};
@@ -33,9 +33,7 @@ export class SurveySessionLeaderboard extends Interaction {
 
     setup() {
         this.fadeInOutTime = 400;
-        this.BAR_QUEST_MIN_WIDTH_REM = 3.7;
-        // Score width + margin + Bar score min width (css) + BAR_QUEST_MIN_WIDTH_REM + margin + nickname width
-        this.BAR_RESERVED_WIDTH_REM = 6.5 + 1 + 3.7 + this.BAR_QUEST_MIN_WIDTH_REM + 1 + 7.5;
+        this.BAR_RESERVED_WIDTH_REM = 25;
         this.BAR_HEIGHT = "3.8rem";
         this.surveyAccessToken = this.el.closest(
             ".o_survey_session_manage"
@@ -94,14 +92,17 @@ export class SurveySessionLeaderboard extends Interaction {
                             ".o_survey_session_leaderboard_bar"
                         ).style.backgroundColor = `${rgb}99`;
                         item.querySelector(
+                            ".o_survey_session_leaderboard_bar_landmark"
+                        ).style.backgroundColor = `${rgb}99`;
+                        item.querySelector(
                             ".o_survey_session_leaderboard_bar_question"
                         ).style.backgroundColor = `${rgb}FF`;
                     });
                 fadeIn(this.el, this.fadeInOutTime, async () => {
                     if (ev.detail.isScoredQuestion) {
-                        await this.waitFor(this.showQuestionScores());
+                        await this._waitForAnimation(() => this.showQuestionScores(), 300, 1400);
                         this.updateAutoScrollStyle();
-                        await this._waitForAnimation(() => this.sumScores(), 1400, 500);
+                        await this._waitForAnimation(() => this.sumScores(), 500, 500);
                         await this._waitForAnimation(() => this.animatePositionLabels(), 1200);
                         await this._waitForAnimation(() => this.reorderScores(), 1000);
                         this.leaderboardAnimationPhase = null;
@@ -220,7 +221,7 @@ export class SurveySessionLeaderboard extends Interaction {
             if (currentPosition !== newPosition) {
                 const offset = newPosition > currentPosition ? 2 : -2;
                 await this._waitForAnimation(() => this.moveTo(item, newPosition, offset), 300);
-                item.style.transition = "top ease-in-out .1s";
+                item.style.transition = "top ease-in-out .25s";
                 await this._waitForAnimation(() => this.moveTo(item, newPosition, offset * -0.3), 100);
                 await this._waitForAnimation(() => this.moveTo(item, newPosition, 0), 0);
             }
@@ -263,34 +264,16 @@ export class SurveySessionLeaderboard extends Interaction {
      * @private
      */
     async showQuestionScores() {
-        let animationDone;
-        const animationPromise = new Promise(function (resolve) {
-            animationDone = resolve;
-        });
-        this.waitForTimeout(() => {
-            this.leaderboardAnimationPhase = "showQuestionScores";
-            this.el
-                .querySelectorAll(".o_survey_session_leaderboard_bar_question")
-                .forEach((barEl) => {
-                    const scoreEl = barEl.querySelector(
-                        ".o_survey_session_leaderboard_bar_question_score"
-                    );
-                    scoreEl.textContent = "0 p";
-                    const questionScore = parseInt(barEl.dataset.questionScore);
-                    if (questionScore && questionScore > 0) {
-                        let increment = parseInt(barEl.dataset.maxQuestionScore / 40);
-                        if (!increment || increment === 0) {
-                            increment = 1;
-                        }
-                        scoreEl.textContent = "+ 0 p";
-                        this.waitForTimeout(() => {
-                            this.animateScoreCounter(scoreEl, 0, questionScore, increment, true);
-                        }, 400);
-                    }
-                    this.waitForTimeout(animationDone, 1400);
-                });
-        }, 300);
-        return animationPromise;
+        this.leaderboardAnimationPhase = "showQuestionScores";
+        this.el
+            .querySelectorAll(".o_survey_session_leaderboard_item")
+            .forEach((itemEl) => {
+                const scoreEl = itemEl.querySelector(
+                    ".o_survey_session_leaderboard_bar_question_score"
+                );
+                const questionScore = parseInt(itemEl.dataset.questionScore);
+                scoreEl.textContent = `+ ${questionScore || 0} p`;
+            });
     }
 
     /**
