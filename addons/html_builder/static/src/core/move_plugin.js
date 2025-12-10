@@ -19,6 +19,10 @@ import { localization } from "@web/core/l10n/localization";
  *     noScroll?: boolean;
  * }[]} is_movable_selector
  */
+/**
+ * @typedef {((arg: { movedEl: HTMLElement, siblingEl: HTMLElement }) => void)[]} on_moved_handlers
+ * Called after an element was moved.
+ */
 export class MovePlugin extends Plugin {
     static id = "move";
     static dependencies = ["visibility"];

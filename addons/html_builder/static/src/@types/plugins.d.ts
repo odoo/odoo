@@ -25,7 +25,7 @@ declare module "plugins" {
     import { snippet_preview_dialog_bundles, snippet_preview_dialog_stylesheets_handlers } from "@html_builder/snippets/add_snippet_dialog";
     import { background_shape_target_providers } from "@html_builder/plugins/background_option/background_shape_option_plugin";
     import { mark_color_level_selector_params } from "@html_builder/plugins/background_option/background_option_plugin";
-    import { is_movable_selector } from "@html_builder/core/move_plugin";
+    import { is_movable_selector, on_move_handlers } from "@html_builder/core/move_plugin";
     import { content_editable_selectors, content_not_editable_selectors } from "@html_builder/core/builder_content_editable_plugin";
     import { builder_actions, BuilderActionsShared } from "@html_builder/core/builder_actions_plugin";
     import { so_content_addition_selector, so_snippet_addition_selector } from "@html_builder/core/dropzone_selector_plugin";
@@ -79,6 +79,7 @@ declare module "plugins" {
         on_element_out_dropzone_handlers: on_element_out_dropzone_handlers;
         on_element_over_dropzone_handlers: on_element_over_dropzone_handlers;
         on_mobile_preview_clicked: on_mobile_preview_clicked;
+        on_moved_handlers: on_moved_handlers;
         on_prepare_drag_handlers: on_prepare_drag_handlers;
         on_removed_handlers: on_removed_handlers;
         on_restore_containers_handlers: on_restore_containers_handlers;
