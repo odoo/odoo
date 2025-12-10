@@ -55,7 +55,10 @@ export function usePosition(refName, getTarget, options = {}) {
         }
         const repositionOptions = omit(options, "onPositioned");
         const solution = reposition(ref.el, targetEl, repositionOptions);
-        options.position = `${solution.direction}-${solution.variant}`; // memorize last position
+        // Don't memorize center position because it's a fallback that we don't want to keep if possible
+        if (solution.direction !== "center") {
+            options.position = `${solution.direction}-${solution.variant}`; // memorize last position
+        }
         options.onPositioned?.(ref.el, solution);
     };
 

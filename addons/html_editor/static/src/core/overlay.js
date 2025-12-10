@@ -10,6 +10,7 @@ import {
 } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
+import { getIFrame } from "@web/core/position/utils";
 import { useActiveElement } from "@web/core/ui/ui_service";
 
 export class EditorOverlay extends Component {
@@ -181,27 +182,28 @@ export class EditorOverlay extends Component {
         if (!scrollContainer) {
             return true;
         }
+        const canFlip = this.props.positionOptions?.flip ?? true;
         const scrollContainerRect = scrollContainer.getBoundingClientRect();
-        const top = Math.max(scrollContainerRect.top, 0);
-        const bottom = top + scrollContainerRect.height;
+        let top = Math.max(scrollContainerRect.top, 0);
+        let bottom = top + Math.min(scrollContainerRect.height, window.innerHeight);
+        if (canFlip) {
+            // Don't show the overlay when the selection is out of the screen
+            const target = this.props.target || this.getSelectionTarget();
+            if (target.ownerDocument !== window.top.document) {
+                const iframe = getIFrame(overlayElement, target);
+                const iframeRect = iframe.getBoundingClientRect();
+                top -= iframeRect.top;
+                bottom -= iframeRect.top;
+            }
+            const targetRect = target.getBoundingClientRect();
+            return targetRect.bottom >= top && targetRect.top < bottom;
+        }
         const overflowsTop = solution.top < top;
         const overflowsBottom = solution.top + overlayElement.offsetHeight > bottom;
-        const canFlip = this.props.positionOptions?.flip ?? true;
-        if (overflowsTop) {
-            if (overflowsBottom) {
-                // Overlay is bigger than the cointainer. Hiding it would make
+        if (overflowsTop || overflowsBottom) {
+            if (overflowsTop && overflowsBottom) {
+                // Overlay is bigger than the container. Hiding it would make
                 // it always invisible.
-                return true;
-            }
-            if (solution.direction === "top" && canFlip) {
-                // Scrolling down will make overlay eventually flip and no longer overflow
-                return true;
-            }
-            return false;
-        }
-        if (overflowsBottom) {
-            if (solution.direction === "bottom" && canFlip) {
-                // Scrolling up will make overlay eventually flip and no longer overflow
                 return true;
             }
             return false;
