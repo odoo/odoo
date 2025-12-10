@@ -1,0 +1,3773 @@
+openapi: 3.0.3
+info:
+  title: SMART Marketplace API
+  description: |
+    Complete REST API specification for SMART Marketplace mobile applications.
+    
+    This API serves both:
+    - **Buyer App**: For customers browsing products, placing orders, and tracking deliveries
+    - **Seller App**: For vendors managing products, orders, and payouts
+    
+    ## Authentication
+    All authenticated endpoints require a Bearer token in the Authorization header.
+    Obtain tokens via `/auth/login` or `/auth/register` endpoints.
+    
+    ## Rate Limiting
+    - Public endpoints: 100 requests/minute
+    - Authenticated endpoints: 300 requests/minute
+    
+    ## Response Format
+    All responses follow this structure:
+    ```json
+    {
+      "success": true,
+      "data": {...},
+      "message": "Operation successful",
+      "pagination": {...}  // Only for list endpoints
+    }
+    ```
+    
+    ## Error Codes
+    - 400: Bad Request - Invalid input
+    - 401: Unauthorized - Invalid or missing token
+    - 403: Forbidden - Insufficient permissions
+    - 404: Not Found - Resource doesn't exist
+    - 422: Validation Error - Input validation failed
+    - 500: Server Error - Internal error
+    
+  version: 1.0.0
+  contact:
+    name: SMART Marketplace API Support
+    email: api-support@smartmarketplace.com
+    url: https://smartmarketplace.com/api-docs
+  license:
+    name: LGPL-3.0
+    url: https://www.gnu.org/licenses/lgpl-3.0.html
+
+servers:
+  - url: https://api.smartmarketplace.com/v1
+    description: Production server
+  - url: https://staging-api.smartmarketplace.com/v1
+    description: Staging server
+  - url: http://localhost:8068/smart/api
+    description: Local development server
+
+tags:
+  # Buyer App Tags
+  - name: Authentication
+    description: User authentication and registration
+  - name: Products
+    description: Product catalog operations
+  - name: Categories
+    description: Product categories
+  - name: Cart
+    description: Shopping cart management
+  - name: Checkout
+    description: Order checkout process
+  - name: Orders (Buyer)
+    description: Customer order management
+  - name: User Profile
+    description: User account management
+  - name: Wishlist
+    description: Product wishlist
+  - name: Delivery
+    description: Delivery zones and calculations
+  - name: Reviews
+    description: Product reviews and ratings
+  # Seller App Tags
+  - name: Seller Authentication
+    description: Seller registration and KYC
+  - name: Seller Products
+    description: Seller product management
+  - name: Seller Orders
+    description: Seller order fulfillment
+  - name: Seller Dashboard
+    description: Seller analytics and statistics
+  - name: Seller Payouts
+    description: Seller earnings and payouts
+  - name: Seller Profile
+    description: Seller account management
+
+paths:
+  # ============================================================
+  # AUTHENTICATION ENDPOINTS
+  # ============================================================
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticate user and receive access token
+      operationId: userLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: User registration
+      description: Register a new customer account
+      operationId: userRegister
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      description: Get a new access token using refresh token
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /auth/password/reset:
+    post:
+      tags:
+        - Authentication
+      summary: Request password reset
+      description: Send password reset email
+      operationId: requestPasswordReset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Reset email sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /auth/password/confirm:
+    post:
+      tags:
+        - Authentication
+      summary: Confirm password reset
+      description: Set new password using reset token
+      operationId: confirmPasswordReset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - new_password
+              properties:
+                token:
+                  type: string
+                new_password:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Password reset successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: User logout
+      description: Invalidate current session
+      operationId: userLogout
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  # ============================================================
+  # PRODUCT ENDPOINTS (BUYER)
+  # ============================================================
+  /products:
+    get:
+      tags:
+        - Products
+      summary: List products
+      description: Get paginated list of products with filters
+      operationId: listProducts
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: category_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by category ID
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Search term for product name/description
+        - name: brand
+          in: query
+          schema:
+            type: string
+          description: Filter by brand
+        - name: min_price
+          in: query
+          schema:
+            type: number
+            format: float
+          description: Minimum price filter
+        - name: max_price
+          in: query
+          schema:
+            type: number
+            format: float
+          description: Maximum price filter
+        - name: availability
+          in: query
+          schema:
+            type: string
+            enum: [in_stock, low_stock, out_of_stock]
+          description: Filter by availability status
+        - name: seller_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by seller ID
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [price_asc, price_desc, name_asc, name_desc, newest, bestseller, rating]
+            default: newest
+          description: Sort order
+      responses:
+        '200':
+          description: Products list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductListItem'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Get product details
+      description: Get detailed information about a specific product
+      operationId: getProduct
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/ProductDetail'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /products/{id}/reviews:
+    get:
+      tags:
+        - Reviews
+      summary: Get product reviews
+      description: Get paginated reviews for a product
+      operationId: getProductReviews
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: rating
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+          description: Filter by rating
+      responses:
+        '200':
+          description: Reviews list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      tags:
+        - Reviews
+      summary: Add product review
+      description: Submit a review for a purchased product
+      operationId: addProductReview
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewRequest'
+      responses:
+        '201':
+          description: Review added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Review'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /products/featured:
+    get:
+      tags:
+        - Products
+      summary: Get featured products
+      description: Get list of featured/promoted products
+      operationId: getFeaturedProducts
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Featured products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductListItem'
+
+  /products/bestsellers:
+    get:
+      tags:
+        - Products
+      summary: Get bestselling products
+      description: Get list of bestselling products
+      operationId: getBestsellers
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: category_id
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Bestselling products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductListItem'
+
+  # ============================================================
+  # CATEGORY ENDPOINTS
+  # ============================================================
+  /categories:
+    get:
+      tags:
+        - Categories
+      summary: List categories
+      description: Get hierarchical list of product categories
+      operationId: listCategories
+      parameters:
+        - name: parent_id
+          in: query
+          schema:
+            type: integer
+          description: Filter by parent category (null for root categories)
+        - name: include_children
+          in: query
+          schema:
+            type: boolean
+            default: true
+          description: Include child categories
+      responses:
+        '200':
+          description: Categories list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+
+  /categories/{id}:
+    get:
+      tags:
+        - Categories
+      summary: Get category details
+      description: Get details of a specific category
+      operationId: getCategory
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Category details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Category'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /categories/{id}/products:
+    get:
+      tags:
+        - Categories
+      summary: Get products in category
+      description: Get products belonging to a category
+      operationId: getCategoryProducts
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: include_subcategories
+          in: query
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Products in category
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProductListItem'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  # ============================================================
+  # CART ENDPOINTS
+  # ============================================================
+  /cart:
+    get:
+      tags:
+        - Cart
+      summary: Get cart
+      description: Get current shopping cart contents
+      operationId: getCart
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Cart contents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Cart'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+    post:
+      tags:
+        - Cart
+      summary: Add item to cart
+      description: Add a product to the shopping cart
+      operationId: addToCart
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartAddRequest'
+      responses:
+        '200':
+          description: Item added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Cart'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+    delete:
+      tags:
+        - Cart
+      summary: Clear cart
+      description: Remove all items from cart
+      operationId: clearCart
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Cart cleared
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /cart/items/{item_id}:
+    put:
+      tags:
+        - Cart
+      summary: Update cart item
+      description: Update quantity of a cart item
+      operationId: updateCartItem
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quantity
+              properties:
+                quantity:
+                  type: integer
+                  minimum: 1
+      responses:
+        '200':
+          description: Item updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Cart'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+    delete:
+      tags:
+        - Cart
+      summary: Remove cart item
+      description: Remove an item from the cart
+      operationId: removeCartItem
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: item_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Item removed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Cart'
+
+  /cart/apply-coupon:
+    post:
+      tags:
+        - Cart
+      summary: Apply coupon
+      description: Apply a discount coupon to the cart
+      operationId: applyCoupon
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - code
+              properties:
+                code:
+                  type: string
+      responses:
+        '200':
+          description: Coupon applied
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Cart'
+        '422':
+          description: Invalid coupon
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # ============================================================
+  # CHECKOUT ENDPOINTS
+  # ============================================================
+  /checkout:
+    post:
+      tags:
+        - Checkout
+      summary: Create order
+      description: Process checkout and create order
+      operationId: checkout
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+      responses:
+        '201':
+          description: Order created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Order'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+
+  /checkout/validate:
+    post:
+      tags:
+        - Checkout
+      summary: Validate checkout
+      description: Validate cart and checkout details before payment
+      operationId: validateCheckout
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      valid:
+                        type: boolean
+                      errors:
+                        type: array
+                        items:
+                          type: string
+                      summary:
+                        $ref: '#/components/schemas/OrderSummary'
+
+  /checkout/payment/initiate:
+    post:
+      tags:
+        - Checkout
+      summary: Initiate payment
+      description: Start payment process for an order
+      operationId: initiatePayment
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - order_id
+                - payment_method
+              properties:
+                order_id:
+                  type: integer
+                payment_method:
+                  type: string
+                  enum: [bankily, sedad, cash_on_delivery]
+                return_url:
+                  type: string
+                  format: uri
+      responses:
+        '200':
+          description: Payment initiated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      payment_url:
+                        type: string
+                        format: uri
+                      transaction_id:
+                        type: string
+                      expires_at:
+                        type: string
+                        format: date-time
+
+  /checkout/payment/callback:
+    post:
+      tags:
+        - Checkout
+      summary: Payment callback
+      description: Webhook endpoint for payment gateway callbacks
+      operationId: paymentCallback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transaction_id:
+                  type: string
+                status:
+                  type: string
+                signature:
+                  type: string
+      responses:
+        '200':
+          description: Callback processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  # ============================================================
+  # ORDERS ENDPOINTS (BUYER)
+  # ============================================================
+  /orders:
+    get:
+      tags:
+        - Orders (Buyer)
+      summary: List orders
+      description: Get paginated list of customer orders
+      operationId: listOrders
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, pending, confirmed, processing, shipped, delivered, cancelled]
+      responses:
+        '200':
+          description: Orders list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrderListItem'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /orders/{id}:
+    get:
+      tags:
+        - Orders (Buyer)
+      summary: Get order details
+      description: Get detailed information about an order
+      operationId: getOrder
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Order'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+
+  /orders/{id}/cancel:
+    post:
+      tags:
+        - Orders (Buyer)
+      summary: Cancel order
+      description: Request cancellation of an order
+      operationId: cancelOrder
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Order cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '422':
+          description: Cannot cancel order
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /orders/{id}/tracking:
+    get:
+      tags:
+        - Orders (Buyer)
+      summary: Get order tracking
+      description: Get shipment tracking information
+      operationId: getOrderTracking
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tracking information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/TrackingInfo'
+
+  /orders/{id}/reorder:
+    post:
+      tags:
+        - Orders (Buyer)
+      summary: Reorder
+      description: Add items from a previous order to cart
+      operationId: reorder
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Items added to cart
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Cart'
+
+  # ============================================================
+  # USER PROFILE ENDPOINTS
+  # ============================================================
+  /user/profile:
+    get:
+      tags:
+        - User Profile
+      summary: Get profile
+      description: Get current user profile
+      operationId: getProfile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/UserProfile'
+
+    put:
+      tags:
+        - User Profile
+      summary: Update profile
+      description: Update user profile information
+      operationId: updateProfile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileUpdate'
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/UserProfile'
+
+  /user/profile/avatar:
+    post:
+      tags:
+        - User Profile
+      summary: Upload avatar
+      description: Upload profile picture
+      operationId: uploadAvatar
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Avatar uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      avatar_url:
+                        type: string
+                        format: uri
+
+  /user/addresses:
+    get:
+      tags:
+        - User Profile
+      summary: List addresses
+      description: Get user's saved addresses
+      operationId: listAddresses
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Addresses list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Address'
+
+    post:
+      tags:
+        - User Profile
+      summary: Add address
+      description: Add a new delivery address
+      operationId: addAddress
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressRequest'
+      responses:
+        '201':
+          description: Address added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Address'
+
+  /user/addresses/{id}:
+    put:
+      tags:
+        - User Profile
+      summary: Update address
+      description: Update an existing address
+      operationId: updateAddress
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressRequest'
+      responses:
+        '200':
+          description: Address updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Address'
+
+    delete:
+      tags:
+        - User Profile
+      summary: Delete address
+      description: Remove a saved address
+      operationId: deleteAddress
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Address deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /user/password:
+    put:
+      tags:
+        - User Profile
+      summary: Change password
+      description: Update user password
+      operationId: changePassword
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - current_password
+                - new_password
+              properties:
+                current_password:
+                  type: string
+                new_password:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Password changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  # ============================================================
+  # WISHLIST ENDPOINTS
+  # ============================================================
+  /wishlist:
+    get:
+      tags:
+        - Wishlist
+      summary: Get wishlist
+      description: Get user's product wishlist
+      operationId: getWishlist
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Wishlist items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WishlistItem'
+
+    post:
+      tags:
+        - Wishlist
+      summary: Add to wishlist
+      description: Add a product to wishlist
+      operationId: addToWishlist
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - product_id
+              properties:
+                product_id:
+                  type: integer
+      responses:
+        '201':
+          description: Added to wishlist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /wishlist/{product_id}:
+    delete:
+      tags:
+        - Wishlist
+      summary: Remove from wishlist
+      description: Remove a product from wishlist
+      operationId: removeFromWishlist
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: product_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Removed from wishlist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  # ============================================================
+  # DELIVERY ENDPOINTS
+  # ============================================================
+  /delivery/zones:
+    get:
+      tags:
+        - Delivery
+      summary: List delivery zones
+      description: Get available delivery zones
+      operationId: listDeliveryZones
+      responses:
+        '200':
+          description: Delivery zones
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeliveryZone'
+
+  /delivery/calculate:
+    post:
+      tags:
+        - Delivery
+      summary: Calculate delivery cost
+      description: Calculate delivery cost based on zone and cart
+      operationId: calculateDelivery
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - zone_id
+              properties:
+                zone_id:
+                  type: integer
+                weight:
+                  type: number
+                  format: float
+      responses:
+        '200':
+          description: Delivery calculation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      zone_id:
+                        type: integer
+                      zone_name:
+                        type: string
+                      base_price:
+                        type: number
+                        format: float
+                      weight_charge:
+                        type: number
+                        format: float
+                      total_price:
+                        type: number
+                        format: float
+                      estimated_days:
+                        type: integer
+                      estimated_date:
+                        type: string
+                        format: date
+                      free_delivery:
+                        type: boolean
+
+  /delivery/estimate:
+    get:
+      tags:
+        - Delivery
+      summary: Get delivery estimate
+      description: Get estimated delivery date for a product
+      operationId: getDeliveryEstimate
+      parameters:
+        - name: product_id
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: city
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delivery estimate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      estimated_date:
+                        type: string
+                        format: date
+                      min_days:
+                        type: integer
+                      max_days:
+                        type: integer
+
+  # ============================================================
+  # SELLER AUTHENTICATION ENDPOINTS
+  # ============================================================
+  /seller/auth/register:
+    post:
+      tags:
+        - Seller Authentication
+      summary: Register as seller
+      description: Apply to become a marketplace seller
+      operationId: sellerRegister
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellerRegisterRequest'
+      responses:
+        '201':
+          description: Application submitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      seller_id:
+                        type: integer
+                      status:
+                        type: string
+                        enum: [pending, approved, rejected]
+                      message:
+                        type: string
+
+  /seller/auth/login:
+    post:
+      tags:
+        - Seller Authentication
+      summary: Seller login
+      description: Authenticate seller and receive access token
+      operationId: sellerLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/AuthResponse'
+                  - type: object
+                    properties:
+                      data:
+                        properties:
+                          seller:
+                            $ref: '#/components/schemas/SellerProfile'
+
+  /seller/kyc/submit:
+    post:
+      tags:
+        - Seller Authentication
+      summary: Submit KYC documents
+      description: Upload KYC verification documents
+      operationId: submitKYC
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - document_type
+                - document_file
+              properties:
+                document_type:
+                  type: string
+                  enum: [id_card, business_license, tax_certificate, bank_statement]
+                document_file:
+                  type: string
+                  format: binary
+                document_number:
+                  type: string
+                expiry_date:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Document uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      document_id:
+                        type: integer
+                      status:
+                        type: string
+
+  /seller/kyc/status:
+    get:
+      tags:
+        - Seller Authentication
+      summary: Get KYC status
+      description: Check current KYC verification status
+      operationId: getKYCStatus
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: KYC status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      kyc_status:
+                        type: string
+                        enum: [pending, approved, rejected, incomplete]
+                      documents:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                            status:
+                              type: string
+                            submitted_at:
+                              type: string
+                              format: date-time
+                            rejection_reason:
+                              type: string
+
+  # ============================================================
+  # SELLER PRODUCTS ENDPOINTS
+  # ============================================================
+  /seller/products:
+    get:
+      tags:
+        - Seller Products
+      summary: List seller products
+      description: Get seller's product inventory
+      operationId: listSellerProducts
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, pending, approved, rejected, archived]
+        - name: category_id
+          in: query
+          schema:
+            type: integer
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Seller products
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SellerProduct'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      tags:
+        - Seller Products
+      summary: Create product
+      description: Add a new product to inventory
+      operationId: createSellerProduct
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellerProductRequest'
+      responses:
+        '201':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/SellerProduct'
+
+  /seller/products/{id}:
+    get:
+      tags:
+        - Seller Products
+      summary: Get seller product
+      description: Get details of a seller's product
+      operationId: getSellerProduct
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/SellerProduct'
+
+    put:
+      tags:
+        - Seller Products
+      summary: Update product
+      description: Update an existing product
+      operationId: updateSellerProduct
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellerProductRequest'
+      responses:
+        '200':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/SellerProduct'
+
+    delete:
+      tags:
+        - Seller Products
+      summary: Delete product
+      description: Remove a product from inventory
+      operationId: deleteSellerProduct
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Product deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /seller/products/{id}/images:
+    post:
+      tags:
+        - Seller Products
+      summary: Upload product images
+      description: Upload images for a product
+      operationId: uploadProductImages
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  maxItems: 10
+      responses:
+        '200':
+          description: Images uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        url:
+                          type: string
+                          format: uri
+
+  /seller/products/{id}/stock:
+    put:
+      tags:
+        - Seller Products
+      summary: Update stock
+      description: Update product stock quantity
+      operationId: updateProductStock
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - quantity
+              properties:
+                quantity:
+                  type: number
+                  format: float
+                operation:
+                  type: string
+                  enum: [set, add, subtract]
+                  default: set
+      responses:
+        '200':
+          description: Stock updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      product_id:
+                        type: integer
+                      new_quantity:
+                        type: number
+                        format: float
+                      availability_status:
+                        type: string
+
+  /seller/products/bulk-update:
+    post:
+      tags:
+        - Seller Products
+      summary: Bulk update products
+      description: Update multiple products at once
+      operationId: bulkUpdateProducts
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - product_ids
+                - updates
+              properties:
+                product_ids:
+                  type: array
+                  items:
+                    type: integer
+                updates:
+                  type: object
+                  properties:
+                    is_published:
+                      type: boolean
+                    price_change_percent:
+                      type: number
+                    category_id:
+                      type: integer
+      responses:
+        '200':
+          description: Products updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      updated_count:
+                        type: integer
+
+  # ============================================================
+  # SELLER ORDERS ENDPOINTS
+  # ============================================================
+  /seller/orders:
+    get:
+      tags:
+        - Seller Orders
+      summary: List seller orders
+      description: Get orders containing seller's products
+      operationId: listSellerOrders
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, confirmed, processing, shipped, delivered, cancelled]
+        - name: date_from
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Seller orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SellerOrder'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /seller/orders/{id}:
+    get:
+      tags:
+        - Seller Orders
+      summary: Get seller order details
+      description: Get detailed information about an order
+      operationId: getSellerOrder
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/SellerOrder'
+
+  /seller/orders/{id}/status:
+    put:
+      tags:
+        - Seller Orders
+      summary: Update order status
+      description: Update the status of an order
+      operationId: updateOrderStatus
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  type: string
+                  enum: [confirmed, processing, ready_for_pickup, shipped]
+                note:
+                  type: string
+      responses:
+        '200':
+          description: Status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /seller/orders/{id}/ship:
+    post:
+      tags:
+        - Seller Orders
+      summary: Mark as shipped
+      description: Mark order as shipped and add tracking info
+      operationId: shipOrder
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                carrier:
+                  type: string
+                tracking_number:
+                  type: string
+                estimated_delivery:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Order shipped
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /seller/orders/{id}/print:
+    get:
+      tags:
+        - Seller Orders
+      summary: Print order
+      description: Get printable order invoice/packing slip
+      operationId: printOrder
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [invoice, packing_slip]
+            default: invoice
+      responses:
+        '200':
+          description: PDF document
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+
+  # ============================================================
+  # SELLER DASHBOARD ENDPOINTS
+  # ============================================================
+  /seller/dashboard:
+    get:
+      tags:
+        - Seller Dashboard
+      summary: Get dashboard data
+      description: Get seller dashboard overview
+      operationId: getSellerDashboard
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/SellerDashboard'
+
+  /seller/dashboard/sales:
+    get:
+      tags:
+        - Seller Dashboard
+      summary: Get sales statistics
+      description: Get detailed sales statistics
+      operationId: getSalesStats
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [today, week, month, year, custom]
+            default: month
+        - name: date_from
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: date_to
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Sales statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      total_sales:
+                        type: number
+                        format: float
+                      total_orders:
+                        type: integer
+                      average_order_value:
+                        type: number
+                        format: float
+                      sales_by_day:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            date:
+                              type: string
+                              format: date
+                            sales:
+                              type: number
+                              format: float
+                            orders:
+                              type: integer
+                      top_products:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            product_id:
+                              type: integer
+                            product_name:
+                              type: string
+                            quantity_sold:
+                              type: integer
+                            revenue:
+                              type: number
+                              format: float
+
+  /seller/dashboard/notifications:
+    get:
+      tags:
+        - Seller Dashboard
+      summary: Get notifications
+      description: Get seller notifications
+      operationId: getSellerNotifications
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: unread_only
+          in: query
+          schema:
+            type: boolean
+            default: false
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  # ============================================================
+  # SELLER PAYOUTS ENDPOINTS
+  # ============================================================
+  /seller/payouts:
+    get:
+      tags:
+        - Seller Payouts
+      summary: List payouts
+      description: Get seller payout history
+      operationId: listPayouts
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, processing, completed, failed]
+      responses:
+        '200':
+          description: Payouts list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Payout'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /seller/payouts/balance:
+    get:
+      tags:
+        - Seller Payouts
+      summary: Get balance
+      description: Get current available and pending balance
+      operationId: getBalance
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Balance info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      available_balance:
+                        type: number
+                        format: float
+                      pending_balance:
+                        type: number
+                        format: float
+                      total_earned:
+                        type: number
+                        format: float
+                      total_paid:
+                        type: number
+                        format: float
+                      currency:
+                        type: string
+
+  /seller/payouts/request:
+    post:
+      tags:
+        - Seller Payouts
+      summary: Request payout
+      description: Request withdrawal of available balance
+      operationId: requestPayout
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - payout_method
+              properties:
+                amount:
+                  type: number
+                  format: float
+                payout_method:
+                  type: string
+                  enum: [bank_transfer, mobile_money]
+                bank_account_id:
+                  type: integer
+      responses:
+        '201':
+          description: Payout requested
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Payout'
+
+  /seller/payouts/accounts:
+    get:
+      tags:
+        - Seller Payouts
+      summary: List payout accounts
+      description: Get saved payout accounts
+      operationId: listPayoutAccounts
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Payout accounts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PayoutAccount'
+
+    post:
+      tags:
+        - Seller Payouts
+      summary: Add payout account
+      description: Add a new payout account
+      operationId: addPayoutAccount
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayoutAccountRequest'
+      responses:
+        '201':
+          description: Account added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/PayoutAccount'
+
+  # ============================================================
+  # SELLER PROFILE ENDPOINTS
+  # ============================================================
+  /seller/profile:
+    get:
+      tags:
+        - Seller Profile
+      summary: Get seller profile
+      description: Get current seller profile
+      operationId: getSellerProfile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Seller profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/SellerProfile'
+
+    put:
+      tags:
+        - Seller Profile
+      summary: Update seller profile
+      description: Update seller profile information
+      operationId: updateSellerProfile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SellerProfileUpdate'
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/SellerProfile'
+
+  /seller/profile/store:
+    put:
+      tags:
+        - Seller Profile
+      summary: Update store settings
+      description: Update seller's store configuration
+      operationId: updateStoreSettings
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                store_name:
+                  type: string
+                store_description:
+                  type: string
+                store_logo:
+                  type: string
+                  format: uri
+                store_banner:
+                  type: string
+                  format: uri
+                return_policy:
+                  type: string
+                shipping_policy:
+                  type: string
+      responses:
+        '200':
+          description: Store settings updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /seller/reviews:
+    get:
+      tags:
+        - Seller Profile
+      summary: Get seller reviews
+      description: Get reviews for seller's products
+      operationId: getSellerReviews
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+        - name: rating
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+        - name: responded
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Reviews list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SellerReview'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /seller/reviews/{id}/respond:
+    post:
+      tags:
+        - Seller Profile
+      summary: Respond to review
+      description: Post a response to a customer review
+      operationId: respondToReview
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - response
+              properties:
+                response:
+                  type: string
+                  maxLength: 1000
+      responses:
+        '200':
+          description: Response posted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+# ============================================================
+# COMPONENTS
+# ============================================================
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from login endpoint
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+      description: Page number for pagination
+    LimitParam:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 100
+      description: Number of items per page
+
+  responses:
+    UnauthorizedError:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationErrorResponse'
+
+  schemas:
+    # ============================================================
+    # Common Schemas
+    # ============================================================
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Operation successful
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: validation_error
+            message:
+              type: string
+            fields:
+              type: object
+              additionalProperties:
+                type: array
+                items:
+                  type: string
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total_items:
+          type: integer
+        total_pages:
+          type: integer
+        has_next:
+          type: boolean
+        has_prev:
+          type: boolean
+
+    # ============================================================
+    # Authentication Schemas
+    # ============================================================
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          minLength: 6
+        device_token:
+          type: string
+          description: FCM token for push notifications
+
+    RegisterRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - phone
+      properties:
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        phone:
+          type: string
+          example: "+22212345678"
+        device_token:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+            token_type:
+              type: string
+              example: Bearer
+            expires_in:
+              type: integer
+              description: Token expiry in seconds
+            user:
+              $ref: '#/components/schemas/UserProfile'
+
+    # ============================================================
+    # User Schemas
+    # ============================================================
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+        is_seller:
+          type: boolean
+
+    UserProfileUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        language:
+          type: string
+          enum: [en, fr, ar]
+
+    Address:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          description: Address label (Home, Office, etc.)
+        recipient_name:
+          type: string
+        phone:
+          type: string
+        street:
+          type: string
+        street2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country_id:
+          type: integer
+        country_name:
+          type: string
+        is_default:
+          type: boolean
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+
+    AddressRequest:
+      type: object
+      required:
+        - recipient_name
+        - phone
+        - street
+        - city
+      properties:
+        name:
+          type: string
+        recipient_name:
+          type: string
+        phone:
+          type: string
+        street:
+          type: string
+        street2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip:
+          type: string
+        country_id:
+          type: integer
+        is_default:
+          type: boolean
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+
+    # ============================================================
+    # Product Schemas
+    # ============================================================
+    ProductListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        brand:
+          type: string
+        price:
+          type: number
+          format: float
+        compare_price:
+          type: number
+          format: float
+          description: Original price before discount
+        discount_percent:
+          type: number
+          format: float
+        currency:
+          type: string
+        image_url:
+          type: string
+          format: uri
+        availability_status:
+          type: string
+          enum: [in_stock, low_stock, out_of_stock]
+        rating:
+          type: number
+          format: float
+        review_count:
+          type: integer
+        seller:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+        category:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+
+    ProductDetail:
+      allOf:
+        - $ref: '#/components/schemas/ProductListItem'
+        - type: object
+          properties:
+            description:
+              type: string
+            short_description:
+              type: string
+            specifications:
+              type: string
+              description: HTML specifications
+            model:
+              type: string
+            sku:
+              type: string
+            barcode:
+              type: string
+            weight:
+              type: number
+              format: float
+            images:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  url:
+                    type: string
+                    format: uri
+                  thumbnail_url:
+                    type: string
+                    format: uri
+            video_url:
+              type: string
+              format: uri
+            quantity_available:
+              type: number
+              format: float
+            minimum_order_quantity:
+              type: integer
+            estimated_delivery_days:
+              type: integer
+            categories:
+              type: array
+              items:
+                $ref: '#/components/schemas/Category'
+            attributes:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  value:
+                    type: string
+            variants:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  price:
+                    type: number
+                    format: float
+                  sku:
+                    type: string
+                  attributes:
+                    type: object
+            related_products:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductListItem'
+
+    # ============================================================
+    # Category Schemas
+    # ============================================================
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        image_url:
+          type: string
+          format: uri
+        parent_id:
+          type: integer
+        product_count:
+          type: integer
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+
+    # ============================================================
+    # Cart Schemas
+    # ============================================================
+    Cart:
+      type: object
+      properties:
+        id:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItem'
+        subtotal:
+          type: number
+          format: float
+        discount:
+          type: number
+          format: float
+        delivery_charge:
+          type: number
+          format: float
+        tax:
+          type: number
+          format: float
+        total:
+          type: number
+          format: float
+        currency:
+          type: string
+        coupon_code:
+          type: string
+        item_count:
+          type: integer
+
+    CartItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        product_id:
+          type: integer
+        product_name:
+          type: string
+        product_image:
+          type: string
+          format: uri
+        variant_id:
+          type: integer
+        variant_name:
+          type: string
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+          format: float
+        subtotal:
+          type: number
+          format: float
+        seller:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+
+    CartAddRequest:
+      type: object
+      required:
+        - product_id
+        - quantity
+      properties:
+        product_id:
+          type: integer
+        variant_id:
+          type: integer
+        quantity:
+          type: integer
+          minimum: 1
+          default: 1
+
+    # ============================================================
+    # Checkout Schemas
+    # ============================================================
+    CheckoutRequest:
+      type: object
+      required:
+        - shipping_address_id
+        - delivery_zone_id
+        - payment_method
+      properties:
+        shipping_address_id:
+          type: integer
+        billing_address_id:
+          type: integer
+        delivery_zone_id:
+          type: integer
+        payment_method:
+          type: string
+          enum: [bankily, sedad, cash_on_delivery]
+        notes:
+          type: string
+        coupon_code:
+          type: string
+
+    OrderSummary:
+      type: object
+      properties:
+        subtotal:
+          type: number
+          format: float
+        discount:
+          type: number
+          format: float
+        delivery_charge:
+          type: number
+          format: float
+        tax:
+          type: number
+          format: float
+        total:
+          type: number
+          format: float
+        currency:
+          type: string
+        estimated_delivery:
+          type: string
+          format: date
+
+    # ============================================================
+    # Order Schemas
+    # ============================================================
+    OrderListItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_number:
+          type: string
+        status:
+          type: string
+          enum: [draft, pending, confirmed, processing, shipped, delivered, cancelled]
+        total:
+          type: number
+          format: float
+        currency:
+          type: string
+        item_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        first_item_image:
+          type: string
+          format: uri
+
+    Order:
+      allOf:
+        - $ref: '#/components/schemas/OrderListItem'
+        - type: object
+          properties:
+            items:
+              type: array
+              items:
+                $ref: '#/components/schemas/OrderItem'
+            subtotal:
+              type: number
+              format: float
+            discount:
+              type: number
+              format: float
+            delivery_charge:
+              type: number
+              format: float
+            tax:
+              type: number
+              format: float
+            payment_method:
+              type: string
+            payment_status:
+              type: string
+              enum: [pending, paid, failed, refunded]
+            shipping_address:
+              $ref: '#/components/schemas/Address'
+            delivery_zone:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+            estimated_delivery:
+              type: string
+              format: date
+            delivered_at:
+              type: string
+              format: date-time
+            notes:
+              type: string
+            timeline:
+              type: array
+              items:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+                  note:
+                    type: string
+
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        product_id:
+          type: integer
+        product_name:
+          type: string
+        product_image:
+          type: string
+          format: uri
+        variant_name:
+          type: string
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+          format: float
+        subtotal:
+          type: number
+          format: float
+        seller:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+
+    TrackingInfo:
+      type: object
+      properties:
+        order_id:
+          type: integer
+        carrier:
+          type: string
+        tracking_number:
+          type: string
+        tracking_url:
+          type: string
+          format: uri
+        status:
+          type: string
+        estimated_delivery:
+          type: string
+          format: date
+        events:
+          type: array
+          items:
+            type: object
+            properties:
+              timestamp:
+                type: string
+                format: date-time
+              status:
+                type: string
+              location:
+                type: string
+              description:
+                type: string
+
+    # ============================================================
+    # Review Schemas
+    # ============================================================
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        title:
+          type: string
+        comment:
+          type: string
+        author:
+          type: object
+          properties:
+            name:
+              type: string
+            avatar_url:
+              type: string
+              format: uri
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+        created_at:
+          type: string
+          format: date-time
+        helpful_count:
+          type: integer
+        seller_response:
+          type: object
+          properties:
+            response:
+              type: string
+            responded_at:
+              type: string
+              format: date-time
+
+    ReviewRequest:
+      type: object
+      required:
+        - rating
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        title:
+          type: string
+          maxLength: 100
+        comment:
+          type: string
+          maxLength: 2000
+        images:
+          type: array
+          items:
+            type: string
+            format: uri
+          maxItems: 5
+
+    # ============================================================
+    # Wishlist Schemas
+    # ============================================================
+    WishlistItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        product:
+          $ref: '#/components/schemas/ProductListItem'
+        added_at:
+          type: string
+          format: date-time
+
+    # ============================================================
+    # Delivery Schemas
+    # ============================================================
+    DeliveryZone:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        cities:
+          type: array
+          items:
+            type: string
+        base_price:
+          type: number
+          format: float
+        price_per_kg:
+          type: number
+          format: float
+        estimated_days:
+          type: integer
+        free_delivery_threshold:
+          type: number
+          format: float
+        currency:
+          type: string
+
+    # ============================================================
+    # Seller Schemas
+    # ============================================================
+    SellerRegisterRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - phone
+        - business_name
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        phone:
+          type: string
+        business_name:
+          type: string
+        business_type:
+          type: string
+          enum: [individual, company]
+        tax_id:
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressRequest'
+
+    SellerProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        business_name:
+          type: string
+        business_type:
+          type: string
+        store_name:
+          type: string
+        store_description:
+          type: string
+        store_logo:
+          type: string
+          format: uri
+        store_banner:
+          type: string
+          format: uri
+        status:
+          type: string
+          enum: [pending, approved, suspended, rejected]
+        kyc_status:
+          type: string
+          enum: [pending, approved, rejected, incomplete]
+        commission_rate:
+          type: number
+          format: float
+        rating:
+          type: number
+          format: float
+        review_count:
+          type: integer
+        product_count:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+
+    SellerProfileUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        business_name:
+          type: string
+
+    SellerProduct:
+      allOf:
+        - $ref: '#/components/schemas/ProductDetail'
+        - type: object
+          properties:
+            status:
+              type: string
+              enum: [draft, pending, approved, rejected, archived]
+            rejection_reason:
+              type: string
+            is_published:
+              type: boolean
+            views:
+              type: integer
+            sales_count:
+              type: integer
+            revenue:
+              type: number
+              format: float
+
+    SellerProductRequest:
+      type: object
+      required:
+        - name
+        - price
+        - category_id
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        short_description:
+          type: string
+        specifications:
+          type: string
+        price:
+          type: number
+          format: float
+        compare_price:
+          type: number
+          format: float
+        cost_price:
+          type: number
+          format: float
+        sku:
+          type: string
+        barcode:
+          type: string
+        brand:
+          type: string
+        model:
+          type: string
+        weight:
+          type: number
+          format: float
+        category_id:
+          type: integer
+        quantity:
+          type: number
+          format: float
+        low_stock_threshold:
+          type: integer
+          default: 5
+        is_published:
+          type: boolean
+          default: false
+        video_url:
+          type: string
+          format: uri
+        attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                type: string
+
+    SellerOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_number:
+          type: string
+        status:
+          type: string
+        customer:
+          type: object
+          properties:
+            name:
+              type: string
+            phone:
+              type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        subtotal:
+          type: number
+          format: float
+        commission:
+          type: number
+          format: float
+        net_amount:
+          type: number
+          format: float
+        shipping_address:
+          $ref: '#/components/schemas/Address'
+        created_at:
+          type: string
+          format: date-time
+        payment_status:
+          type: string
+
+    SellerDashboard:
+      type: object
+      properties:
+        total_sales:
+          type: number
+          format: float
+        total_orders:
+          type: integer
+        pending_orders:
+          type: integer
+        total_products:
+          type: integer
+        low_stock_products:
+          type: integer
+        available_balance:
+          type: number
+          format: float
+        pending_balance:
+          type: number
+          format: float
+        rating:
+          type: number
+          format: float
+        review_count:
+          type: integer
+        recent_orders:
+          type: array
+          items:
+            $ref: '#/components/schemas/SellerOrder'
+        sales_chart:
+          type: array
+          items:
+            type: object
+            properties:
+              date:
+                type: string
+                format: date
+              sales:
+                type: number
+                format: float
+
+    SellerReview:
+      allOf:
+        - $ref: '#/components/schemas/Review'
+        - type: object
+          properties:
+            product:
+              type: object
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                image_url:
+                  type: string
+                  format: uri
+            order_id:
+              type: integer
+
+    # ============================================================
+    # Payout Schemas
+    # ============================================================
+    Payout:
+      type: object
+      properties:
+        id:
+          type: integer
+        reference:
+          type: string
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        payout_method:
+          type: string
+        account_details:
+          type: string
+        requested_at:
+          type: string
+          format: date-time
+        processed_at:
+          type: string
+          format: date-time
+        failure_reason:
+          type: string
+
+    PayoutAccount:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [bank_account, mobile_money]
+        name:
+          type: string
+        account_number:
+          type: string
+        bank_name:
+          type: string
+        is_default:
+          type: boolean
+
+    PayoutAccountRequest:
+      type: object
+      required:
+        - type
+        - account_number
+      properties:
+        type:
+          type: string
+          enum: [bank_account, mobile_money]
+        name:
+          type: string
+        account_number:
+          type: string
+        bank_name:
+          type: string
+        bank_code:
+          type: string
+        is_default:
+          type: boolean
+
+    # ============================================================
+    # Notification Schemas
+    # ============================================================
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [order, product, payout, system, review]
+        title:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+        is_read:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+

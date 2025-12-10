@@ -1,0 +1,825 @@
+{
+  "info": {
+    "name": "SMART Marketplace API",
+    "description": "Complete API collection for SMART Marketplace mobile applications",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8068/smart/api",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"device_token\": \"fcm_token_here\"\n}"
+            },
+            "url": "{{base_url}}/auth/login"
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"+22212345678\"\n}"
+            },
+            "url": "{{base_url}}/auth/register"
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"your_refresh_token\"\n}"
+            },
+            "url": "{{base_url}}/auth/refresh"
+          }
+        },
+        {
+          "name": "Password Reset Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}"
+            },
+            "url": "{{base_url}}/auth/password/reset"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/products?page=1&limit=20&sort=newest",
+              "host": ["{{base_url}}"],
+              "path": ["products"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"},
+                {"key": "category_id", "value": "", "disabled": true},
+                {"key": "search", "value": "", "disabled": true},
+                {"key": "brand", "value": "", "disabled": true},
+                {"key": "min_price", "value": "", "disabled": true},
+                {"key": "max_price", "value": "", "disabled": true},
+                {"key": "availability", "value": "", "disabled": true},
+                {"key": "sort", "value": "newest"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product Details",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/products/1"
+          }
+        },
+        {
+          "name": "Get Product Reviews",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/products/1/reviews?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["products", "1", "reviews"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "10"},
+                {"key": "rating", "value": "", "disabled": true}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Add Product Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"title\": \"Great product!\",\n  \"comment\": \"Very satisfied with this purchase.\"\n}"
+            },
+            "url": "{{base_url}}/products/1/reviews"
+          }
+        },
+        {
+          "name": "Get Featured Products",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/products/featured?limit=10"
+          }
+        },
+        {
+          "name": "Get Bestsellers",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/products/bestsellers?limit=10"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/categories?include_children=true"
+          }
+        },
+        {
+          "name": "Get Category Details",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/categories/1"
+          }
+        },
+        {
+          "name": "Get Category Products",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/categories/1/products?page=1&limit=20"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/cart"
+          }
+        },
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": 1,\n  \"quantity\": 2,\n  \"variant_id\": null\n}"
+            },
+            "url": "{{base_url}}/cart"
+          }
+        },
+        {
+          "name": "Update Cart Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 3\n}"
+            },
+            "url": "{{base_url}}/cart/items/1"
+          }
+        },
+        {
+          "name": "Remove Cart Item",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/cart/items/1"
+          }
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/cart"
+          }
+        },
+        {
+          "name": "Apply Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"DISCOUNT10\"\n}"
+            },
+            "url": "{{base_url}}/cart/apply-coupon"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Checkout",
+      "item": [
+        {
+          "name": "Validate Checkout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shipping_address_id\": 1,\n  \"delivery_zone_id\": 1,\n  \"payment_method\": \"cash_on_delivery\"\n}"
+            },
+            "url": "{{base_url}}/checkout/validate"
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shipping_address_id\": 1,\n  \"delivery_zone_id\": 1,\n  \"payment_method\": \"cash_on_delivery\",\n  \"notes\": \"Please call before delivery\"\n}"
+            },
+            "url": "{{base_url}}/checkout"
+          }
+        },
+        {
+          "name": "Initiate Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": 1,\n  \"payment_method\": \"bankily\",\n  \"return_url\": \"myapp://payment-callback\"\n}"
+            },
+            "url": "{{base_url}}/checkout/payment/initiate"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders (Buyer)",
+      "item": [
+        {
+          "name": "List Orders",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/orders?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Get Order Details",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/orders/1"
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Changed my mind\"\n}"
+            },
+            "url": "{{base_url}}/orders/1/cancel"
+          }
+        },
+        {
+          "name": "Get Tracking Info",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/orders/1/tracking"
+          }
+        },
+        {
+          "name": "Reorder",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/orders/1/reorder"
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Profile",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/user/profile"
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe Updated\",\n  \"phone\": \"+22212345678\",\n  \"language\": \"fr\"\n}"
+            },
+            "url": "{{base_url}}/user/profile"
+          }
+        },
+        {
+          "name": "List Addresses",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/user/addresses"
+          }
+        },
+        {
+          "name": "Add Address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Home\",\n  \"recipient_name\": \"John Doe\",\n  \"phone\": \"+22212345678\",\n  \"street\": \"123 Main St\",\n  \"city\": \"Nouakchott\",\n  \"is_default\": true\n}"
+            },
+            "url": "{{base_url}}/user/addresses"
+          }
+        },
+        {
+          "name": "Update Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Office\",\n  \"street\": \"456 Business Ave\"\n}"
+            },
+            "url": "{{base_url}}/user/addresses/1"
+          }
+        },
+        {
+          "name": "Delete Address",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/user/addresses/1"
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"oldpassword123\",\n  \"new_password\": \"newpassword456\"\n}"
+            },
+            "url": "{{base_url}}/user/password"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wishlist",
+      "item": [
+        {
+          "name": "Get Wishlist",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/wishlist"
+          }
+        },
+        {
+          "name": "Add to Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_id\": 1\n}"
+            },
+            "url": "{{base_url}}/wishlist"
+          }
+        },
+        {
+          "name": "Remove from Wishlist",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/wishlist/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delivery",
+      "item": [
+        {
+          "name": "List Delivery Zones",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/delivery/zones"
+          }
+        },
+        {
+          "name": "Calculate Delivery",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zone_id\": 1,\n  \"weight\": 2.5\n}"
+            },
+            "url": "{{base_url}}/delivery/calculate"
+          }
+        },
+        {
+          "name": "Get Delivery Estimate",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/delivery/estimate?product_id=1&city=Nouakchott"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seller - Authentication",
+      "item": [
+        {
+          "name": "Register as Seller",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Seller Name\",\n  \"email\": \"seller@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"+22212345678\",\n  \"business_name\": \"My Store\",\n  \"business_type\": \"individual\"\n}"
+            },
+            "url": "{{base_url}}/seller/auth/register"
+          }
+        },
+        {
+          "name": "Seller Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"seller@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": "{{base_url}}/seller/auth/login"
+          }
+        },
+        {
+          "name": "Get KYC Status",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/kyc/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seller - Products",
+      "item": [
+        {
+          "name": "List Seller Products",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/products?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Product\",\n  \"description\": \"Product description\",\n  \"price\": 99.99,\n  \"category_id\": 1,\n  \"quantity\": 100,\n  \"brand\": \"My Brand\",\n  \"sku\": \"SKU-001\",\n  \"is_published\": false\n}"
+            },
+            "url": "{{base_url}}/seller/products"
+          }
+        },
+        {
+          "name": "Get Seller Product",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/products/1"
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Product Name\",\n  \"price\": 89.99,\n  \"is_published\": true\n}"
+            },
+            "url": "{{base_url}}/seller/products/1"
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/seller/products/1"
+          }
+        },
+        {
+          "name": "Update Stock",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 50,\n  \"operation\": \"set\"\n}"
+            },
+            "url": "{{base_url}}/seller/products/1/stock"
+          }
+        },
+        {
+          "name": "Bulk Update Products",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_ids\": [1, 2, 3],\n  \"updates\": {\n    \"is_published\": true,\n    \"price_change_percent\": -10\n  }\n}"
+            },
+            "url": "{{base_url}}/seller/products/bulk-update"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seller - Orders",
+      "item": [
+        {
+          "name": "List Seller Orders",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/orders?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Get Seller Order",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/orders/1"
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"processing\",\n  \"note\": \"Preparing order for shipment\"\n}"
+            },
+            "url": "{{base_url}}/seller/orders/1/status"
+          }
+        },
+        {
+          "name": "Ship Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"carrier\": \"Sha6er\",\n  \"tracking_number\": \"SH123456789\",\n  \"estimated_delivery\": \"2025-12-20\"\n}"
+            },
+            "url": "{{base_url}}/seller/orders/1/ship"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seller - Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/dashboard"
+          }
+        },
+        {
+          "name": "Get Sales Statistics",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/dashboard/sales?period=month"
+          }
+        },
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/dashboard/notifications?unread_only=true"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seller - Payouts",
+      "item": [
+        {
+          "name": "Get Balance",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/payouts/balance"
+          }
+        },
+        {
+          "name": "List Payouts",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/payouts?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Request Payout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 500.00,\n  \"payout_method\": \"bank_transfer\",\n  \"bank_account_id\": 1\n}"
+            },
+            "url": "{{base_url}}/seller/payouts/request"
+          }
+        },
+        {
+          "name": "List Payout Accounts",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/payouts/accounts"
+          }
+        },
+        {
+          "name": "Add Payout Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"bank_account\",\n  \"name\": \"My Bank Account\",\n  \"account_number\": \"1234567890\",\n  \"bank_name\": \"Bank of Mauritania\",\n  \"is_default\": true\n}"
+            },
+            "url": "{{base_url}}/seller/payouts/accounts"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Seller - Profile",
+      "item": [
+        {
+          "name": "Get Seller Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/profile"
+          }
+        },
+        {
+          "name": "Update Seller Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Seller Name\",\n  \"phone\": \"+22212345678\",\n  \"business_name\": \"Updated Store Name\"\n}"
+            },
+            "url": "{{base_url}}/seller/profile"
+          }
+        },
+        {
+          "name": "Update Store Settings",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"store_name\": \"My Amazing Store\",\n  \"store_description\": \"The best products at the best prices\",\n  \"return_policy\": \"30 day return policy\",\n  \"shipping_policy\": \"Free shipping on orders over 1000 MRU\"\n}"
+            },
+            "url": "{{base_url}}/seller/profile/store"
+          }
+        },
+        {
+          "name": "Get Seller Reviews",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/seller/reviews?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Respond to Review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"response\": \"Thank you for your feedback! We appreciate your business.\"\n}"
+            },
+            "url": "{{base_url}}/seller/reviews/1/respond"
+          }
+        }
+      ]
+    }
+  ]
+}
+
