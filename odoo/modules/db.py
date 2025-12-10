@@ -77,11 +77,14 @@ def initialize(cr):
                 (id, d, d in (info['auto_install'] or ()))
             )
 
-    # Install recursively all auto-installing modules
     from odoo.tools import config  # noqa: PLC0415
+    if config.get('skip_auto_install'):
+        # even if skip_auto_install is enabled we still want to have base
+        cr.execute("""UPDATE ir_module_module SET state='to install' WHERE name = 'base'""")
+        return
+
+    # Install recursively all auto-installing module
     while True:
-        if config.get('skip_auto_install'):
-            break
         # this selects all the auto_install modules whose auto_install_required
         # deps are marked as to install
         cr.execute("""
