@@ -416,6 +416,22 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         self.company_id.peppol_external_provider = None
         self.unlink()
 
+    def _peppol_deregister_participant_to_sender(self):
+        self.ensure_one()
+
+        if self.company_id.account_peppol_proxy_state == 'receiver':
+            # fetch all documents and message statuses before unlinking the edi user
+            # so that the invoices are acknowledged
+            self._cron_peppol_get_message_status()
+            self._cron_peppol_get_new_documents()
+            if not modules.module.current_test:
+                self.env.cr.commit()
+
+        self._call_peppol_proxy(endpoint='/api/peppol/1/unregister_to_sender')
+
+        self.company_id.account_peppol_proxy_state = 'sender'
+        self.company_id.account_peppol_migration_key = False
+
     @api.model
     def _peppol_auto_register_services(self, module):
         """Register new document types for all recipient users.
