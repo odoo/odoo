@@ -12,12 +12,15 @@ export const busLogsService = {
     start(env, { bus_service, worker_service }) {
         const state = reactive({
             enabled: JSON.parse(localStorage.getItem("bus_log_menu.enabled")),
-            toggleLogging() {
-                state.enabled = !state.enabled;
-                if (bus_service.isActive) {
-                    bus_service.setLoggingEnabled(state.enabled);
-                }
-                localStorage.setItem("bus_log_menu.enabled", state.enabled);
+            enableLogging() {
+                state.enabled = true;
+                bus_service.setLoggingEnabled(true);
+                localStorage.setItem("bus_log_menu.enabled", true);
+            },
+            disableLogging() {
+                state.enabled = false;
+                bus_service.setLoggingEnabled(false);
+                localStorage.setItem("bus_log_menu.enabled", false);
             },
         });
         browser.addEventListener("storage", ({ key, newValue }) => {
@@ -29,8 +32,8 @@ export const busLogsService = {
             bus_service.setLoggingEnabled(state.enabled);
         });
         odoo.busLogging = {
-            stop: () => state.enabled && state.toggleLogging(),
-            start: () => !state.enabled && state.toggleLogging(),
+            stop: () => state.disableLogging(),
+            start: () => state.enableLogging(),
             download: () => bus_service.downloadLogs(),
         };
         if (state.enabled) {

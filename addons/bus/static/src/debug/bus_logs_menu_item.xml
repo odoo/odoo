@@ -4,7 +4,7 @@
         <DropdownItem>
             <div class="d-flex align-items-center justify-content-between" style="padding-left: 12px;">
                 <div class="form-check form-switch">
-                    <label class="form-check-label" t-on-click.prevent.stop="onClickToggle">
+                    <label class="form-check-label" t-on-click.prevent.stop="busLogsService.enabled ? busLogsService.disableLogging : busLogsService.enableLogging">
                         Enable Bus Logging <input class="form-check-input" t-att-checked="busLogsService.enabled" type="checkbox"/>
                     </label>
                 </div>
