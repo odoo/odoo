@@ -1523,8 +1523,8 @@ def preload_registries(dbnames):
                     from odoo.tests import loader  # noqa: PLC0415
                     t0 = time.time()
                     t0_sql = sql_db.sql_counter
-                    module_names = (registry.updated_modules if update_module else
-                                    sorted(registry._init_modules))
+                    module_names = sorted(registry.updated_modules if update_module else
+                                    registry._init_modules)
                     _logger.info("Starting post tests")
                     tests_before = registry._assertion_report.testsRun
                     post_install_suite = loader.make_suite(module_names, 'post_install')
