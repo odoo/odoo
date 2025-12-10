@@ -311,7 +311,7 @@ class ProductTemplate(models.Model):
         self._check_is_special_product()
 
     def _ensure_unused_in_pos(self):
-        open_pos_sessions = self.env['pos.session'].search([('state', '!=', 'closed')])
+        open_pos_sessions = self.env['pos.session'].sudo().search([('state', '!=', 'closed')])
         used_products = open_pos_sessions.order_ids.filtered(lambda o: o.state == "draft").lines.product_id.product_tmpl_id
         if used_products & self:
             raise UserError(_(
@@ -320,7 +320,7 @@ class ProductTemplate(models.Model):
             ))
 
     def _check_is_special_product(self):
-        special_products = self.env['pos.config']._get_special_products().product_tmpl_id
+        special_products = self.env['pos.config'].sudo()._get_special_products().product_tmpl_id
         for product in self:
             if product in special_products:
                 raise UserError(_("You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."))
