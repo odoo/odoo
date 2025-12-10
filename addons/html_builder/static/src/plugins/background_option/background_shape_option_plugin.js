@@ -26,12 +26,27 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             FlipShapeAction,
             SetBgAnimationSpeedAction,
             BackgroundShapeColorAction,
+            handleBgColorChangedAction,
         },
         background_shape_target_providers: withSequence(5, (editingElement) =>
             editingElement.querySelector(":scope > .o_we_bg_filter")
         ),
         content_not_editable_selectors: ".o_we_shape",
         system_node_selectors: ".o_we_shape",
+        on_removed_handlers: ({ nextTargetEl }) => {
+            this.handleBgColorChanged(nextTargetEl);
+        },
+        on_moved_handlers: ({ movedEl, siblingEl }) => {
+            this.handleBgColorChanged(movedEl);
+            this.handleBgColorChanged(siblingEl);
+        },
+        on_snippet_dropped_handlers: ({ snippetEl }) => {
+            this.handleBgColorChanged(snippetEl);
+        },
+        on_cloned_handlers: ({ cloneEl, originalEl }) => {
+            this.handleBgColorChanged(cloneEl);
+            this.handleBgColorChanged(originalEl);
+        },
     };
     static shared = [
         "getShapeStyleUrl",
@@ -41,6 +56,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         "getImplicitColors",
         "applyShape",
         "createShapeContainer",
+        "handleBgColorChanged",
     ];
     setup() {
         // TODO: update shapeBackgroundImagePerClass if a stylesheet value
@@ -335,6 +351,40 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         return this.backgroundShapesById;
     }
     /**
+     * Handles a background color change on an element and updates Connections
+     * shapes accordingly.
+     * Also used when a snippet is cloned/moved/dropped/removed to updates the
+     * surrounding shapes.
+     *
+     * @param {HTMLElement} editingElement Element whose background color has changed.
+     * @param {String} newColor Newly selected background color (raw value or color combination).
+     */
+    handleBgColorChanged(editingElement, newColor = "") {
+        if (newColor) {
+            const isColorCombination = /^o_cc[12345]$/.test(newColor);
+            if (isColorCombination) {
+                const style = getHtmlStyle(this.document);
+                const colorNumber = newColor.substring(4);
+                newColor = getCSSVariableValue(`o-cc${colorNumber}-bg`, style).toLowerCase();
+            }
+        }
+        const { shape } = this.getShapeData(editingElement);
+        if (shape.includes("html_builder/Connections/")) {
+            this.applyShape(editingElement, () => ({
+                colors: this.getComputedConnectionsColors(editingElement, shape),
+            }));
+        }
+        const elements = this.getNeighborShape(editingElement);
+        for (const element of elements) {
+            const { shape } = this.getShapeData(element);
+            if (shape.includes("html_builder/Connections/")) {
+                this.applyShape(element, () => ({
+                    colors: this.getComputedConnectionsColors(element, shape, newColor),
+                }));
+            }
+        }
+    }
+    /**
      * Returns the actual background visible for an element.
      *
      * @param {HTMLElement} curEl
@@ -359,20 +409,26 @@ export class BackgroundShapeOptionPlugin extends Plugin {
      * @param {HTMLElement} editingElement Element for which the color has to be
      * computed.
      * @param {String} shapeName identifier of the selected shape.
+     * @param {String} neighborElBgColor Color that's gonna be applied on the neighbor element.
      */
-    getComputedConnectionsColors(editingElement, shapeName) {
+    getComputedConnectionsColors(editingElement, shapeName, neighborElBgColor = "") {
         if (!shapeName.includes("html_builder/Connections/")) {
             return {};
         }
         const selectedBackgroundUrl = this.getShapeStyleUrl(shapeName);
         const defaultColors = this.getShapeDefaultColors(selectedBackgroundUrl);
         const defaultKey = Object.keys(defaultColors)[0];
-        const targetRect = editingElement.getBoundingClientRect();
-        const shapeData = this.getShapeData(editingElement);
-        const x = targetRect.left + targetRect.width / 2;
-        const y = shapeData.flip.includes("y") ? targetRect.top - 1 : targetRect.bottom + 1;
-        const neighborEl = this.getBackgroundElementFromPoint(x, y);
-        const neighborElHexColor = rgbToHex(getComputedStyle(neighborEl).backgroundColor);
+        let neighborElHexColor;
+        if (!neighborElBgColor) {
+            const targetRect = editingElement.getBoundingClientRect();
+            const shapeData = this.getShapeData(editingElement);
+            const x = targetRect.left + targetRect.width / 2;
+            const y = shapeData.flip.includes("y") ? targetRect.top - 1 : targetRect.bottom + 1;
+            const neighborEl = this.getBackgroundElementFromPoint(x, y);
+            neighborElHexColor = rgbToHex(getComputedStyle(neighborEl).backgroundColor);
+        } else {
+            neighborElHexColor = rgbToHex(neighborElBgColor);
+        }
         const curBgHexColor = this.getEffectiveBackgroundColor(editingElement);
 
         return {
@@ -547,6 +603,87 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         );
         return element || this.editable.ownerDocument.querySelector("body");
     }
+    /**
+     * Returns all elements containing a shape inside the closest parent snippet.
+     *
+     * Starting from the given element, this method climbs up to the highest
+     * parent snippet (`[data-snippet]`) and collects all elements that directly
+     * contain a `.o_we_shape` within that snippet.
+     *
+     * @param {HTMLElement} element Starting element.
+     * @returns {HTMLElement[]} List of elements containing a shape.
+     */
+    findElementsWithShape(element) {
+        if (!element || element.tagName === "BODY") {
+            return [];
+        }
+        let next;
+        while ((next = element.parentElement?.closest("[data-snippet]"))) {
+            element = next;
+        }
+        const allShapeEls = [...element.querySelectorAll(".o_we_shape")].map(
+            (el) => el.parentElement
+        );
+        return allShapeEls;
+    }
+    /**
+     * Checks whether a shape element is a direct neighbor of the edited element.
+     *
+     * A shape is considered a neighbor if the point just above or below it
+     * (depending on its vertical flip) overlaps the edited element.
+     *
+     * @param {HTMLElement} editingElement Element being edited.
+     * @param {HTMLElement} targetShapeEl Shape element to test.
+     * @returns {Boolean} Whether the shape is a neighbor of the edited element.
+     */
+    isShapeNeighbor(editingElement, targetShapeEl) {
+        const targetRect = targetShapeEl.getBoundingClientRect();
+        const shapeData = this.getShapeData(targetShapeEl);
+        const x = targetRect.left + targetRect.width / 2;
+        const y = shapeData.flip.includes("y") ? targetRect.top - 1 : targetRect.bottom + 1;
+        return this.getElementsFromPoint(x, y).includes(editingElement);
+    }
+    /**
+     * Returns the neighboring shape elements of a given element.
+     *
+     * Neighbors can be searched:
+     * - above ("top"), below ("bottom"), inside the same snippet ("inner")
+     * If no direction is specified, all neighboring shapes (top, bottom, and
+     * inner) are returned.
+     *
+     * @param {HTMLElement} editingElement Element for which neighbors are requested.
+     * @param {"top"|"bottom"|"inner"} direction Direction in which to look for neighbors.
+     * @returns {HTMLElement[]} List of neighboring shape elements.
+     */
+    getNeighborShape(editingElement, direction) {
+        const targetRect = editingElement.getBoundingClientRect();
+        const x = targetRect.left + targetRect.width / 2;
+        let y;
+        switch (direction) {
+            case "top":
+                y = targetRect.top - 1;
+                break;
+            case "bottom":
+                y = targetRect.bottom + 1;
+                break;
+            case "inner": {
+                const innerElements = this.findElementsWithShape(editingElement);
+                return innerElements.filter((el) => this.isShapeNeighbor(editingElement, el));
+            }
+            default: {
+                const topNeighbors = this.getNeighborShape(editingElement, "top");
+                const bottomNeighbors = this.getNeighborShape(editingElement, "bottom");
+                const innerNeighbors = this.getNeighborShape(editingElement, "inner");
+                return [...topNeighbors, ...bottomNeighbors, ...innerNeighbors];
+            }
+        }
+        const elements = this.getElementsFromPoint(x, y);
+        // There might be more than one shape next to the current snippet
+        // (e.g. big box) So we need to get all the shape to refresh them all
+        const element = elements.find((el) => el.querySelector(":scope > .o_we_shape"));
+        const shapeElements = this.findElementsWithShape(element);
+        return shapeElements.filter((el) => this.isShapeNeighbor(editingElement, el));
+    }
 }
 
 class BaseAnimationAction extends BuilderAction {
@@ -558,6 +695,7 @@ class BaseAnimationAction extends BuilderAction {
         this.getImplicitColors = this.dependencies.backgroundShapeOption.getImplicitColors;
         this.getBackgroundShapes = this.dependencies.backgroundShapeOption.getBackgroundShapes;
         this.createShapeContainer = this.dependencies.backgroundShapeOption.createShapeContainer;
+        this.handleBgColorChanged = this.dependencies.backgroundShapeOption.handleBgColorChanged;
     }
 }
 class SetBackgroundShapeAction extends BaseAnimationAction {
@@ -660,6 +798,12 @@ class BackgroundShapeColorAction extends BaseAnimationAction {
             const newColors = Object.assign(previousColors, { [colorName]: newColor });
             return { colors: newColors };
         });
+    }
+}
+class handleBgColorChangedAction extends BaseAnimationAction {
+    static id = "handleBgColorChanged";
+    apply({ editingElement, value }) {
+        this.handleBgColorChanged(editingElement, value);
     }
 }
 

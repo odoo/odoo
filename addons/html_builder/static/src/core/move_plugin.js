@@ -262,6 +262,7 @@ export class MovePlugin extends Plugin {
                 this.overlayTarget
             );
         }
+        this.dispatchTo("on_moved_handlers", { movedEl: this.overlayTarget, siblingEl });
 
         // Scroll to the element.
         if (!this.noScroll && !isElementInViewport(this.overlayTarget)) {

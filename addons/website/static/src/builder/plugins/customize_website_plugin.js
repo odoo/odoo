@@ -889,7 +889,7 @@ export class CustomizeWebsiteVariableAction extends BuilderAction {
 
 export class CustomizeWebsiteColorAction extends BuilderAction {
     static id = "customizeWebsiteColor";
-    static dependencies = ["customizeWebsite"];
+    static dependencies = ["customizeWebsite", "backgroundShapeOption"];
     setup() {
         this.preview = false;
         this.dependencies.customizeWebsite.withCustomHistory(this);
@@ -912,6 +912,7 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
         return getCSSVariableValue(color, style);
     }
     async apply({
+        editingElement,
         params: { mainParam: color, colorType, gradientColor, combinationColor, nullValue },
         value,
     }) {
@@ -946,6 +947,13 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
                 { [color]: value },
                 { colorType, combinationColor, resetCcOnEmpty: true, nullValue }
             );
+        }
+        if (["menu-custom", "footer-custom"].includes(color)) {
+            if (color === "menu-custom") {
+                this.document.querySelector("main").style.paddingTop = "";
+                this.document.querySelector("header").style.transform = "";
+            }
+            this.dependencies.backgroundShapeOption.handleBgColorChanged(editingElement, value);
         }
         setBuilderCSSVariables(getHtmlStyle(this.document));
     }
