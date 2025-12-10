@@ -1751,17 +1751,31 @@ class HrExpense(models.Model):
         return account
 
     def _get_expense_account_destination(self):
-        self.ensure_one()
-        if self.payment_mode == 'company_account':
-            account_dest = self.payment_method_line_id.payment_account_id or self._get_outstanding_account_id()
-        else:
-            if not self.employee_id.sudo().work_contact_id:
-                raise UserError(
-                    _("No work contact found for the employee %(name)s, please configure one.", name=self.employee_id.name)
-                )
-            partner = self.employee_id.sudo().work_contact_id.with_company(self.company_id)
-            account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
-        return account_dest.id
+        # account.move used to allow having several expenses with payment_mode = 'company_account'.
+        # This method needs to support processing several expenses to allow reconciliation of old account.move.line
+        ids = set()
+        for expense in self:
+            if expense.payment_mode == 'company_account':
+                account_dest = expense.payment_method_line_id.payment_account_id or expense._get_outstanding_account_id()
+            elif not expense.employee_id.sudo().work_contact_id:
+                raise UserError(self.env._(
+                    "No work contact found for the employee %(name)s, please configure one.",
+                    name=expense.employee_id.name,
+                ))
+            else:
+                partner = expense.employee_id.sudo().work_contact_id.with_company(expense.company_id)
+                account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
+            ids.add(account_dest.id)
+
+        # mimics <account.account>.id
+        if not ids:
+            return False
+        if len(ids) > 1:
+            raise UserError(self.env._(
+                "The following expenses payment method leads to several accounts payable and this isn't supported:\n%(expenses)s",
+                expenses=self.browse(ids),
+            ))
+        return ids.pop()
 
     def _get_outstanding_account_id(self):
         account_ref = 'account_journal_payment_debit_account_id' if self.payment_method_line_id.payment_type == 'inbound' else 'account_journal_payment_credit_account_id'
