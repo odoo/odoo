@@ -27,7 +27,7 @@ const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/
  * @param {import("models").Persona[]} validMentions.partners
  * @returns {Promise<string|ReturnType<markup>>}
  */
-export function prettifyMessageText(rawBody, { validMentions = [] } = {}) {
+export function prettifyMessageText(rawBody, { validMentions = {}, thread } = {}) {
     if (rawBody instanceof markup().constructor) {
         // markup is already "pretty"
         return rawBody;
@@ -43,7 +43,7 @@ export function prettifyMessageText(rawBody, { validMentions = [] } = {}) {
     // linkification a bit everywhere. Ideally we want to keep the content
     // as text internally and only make html enrichment at display time but
     // the current design makes this quite hard to do.
-    body = generateMentionsLinks(body, validMentions);
+    body = generateMentionsLinks(body, { ...validMentions, thread });
     body = parseAndTransform(body, addLink);
     return body;
 }
@@ -189,13 +189,16 @@ function generateMentionElement({ className, id, model, text }) {
     return link;
 }
 
-/** @param {import("models").ResPartner} partner */
-export function generatePartnerMentionElement(partner) {
+/**
+ * @param {import("models").ResPartner} partner
+ * @param {import("models").Thread} thread
+ */
+export function generatePartnerMentionElement(partner, thread) {
     return generateMentionElement({
         className: "o_mail_redirect",
         id: partner.id,
         model: "res.partner",
-        text: `@${partner.name}`,
+        text: `@${thread?.getPersonaName(partner) ?? partner.name}`,
     });
 }
 
@@ -234,21 +237,25 @@ export function generateThreadMentionElement(thread) {
 }
 
 /**
- * @param body {string|ReturnType<markup>}
- * @param validRecords {Object}
- * @param validRecords.partners {Array}
+ * @param {string|ReturnType<markup>} body
+ * @param {Object} param1
+ * @param {import("models").ResPartner[]} param1.partners
+ * @param {import("models").ResRole[]} param1.roles
+ * @param {import("models").Thread[]} param1.threads
+ * @param {string[]} param1.specialMentions
+ * @param {import("models").Thread} param1.thread
  * @return {ReturnType<markup>}
  */
 function generateMentionsLinks(
     body,
-    { partners = [], roles = [], threads = [], specialMentions = [] }
+    { partners = [], roles = [], threads = [], specialMentions = [], thread }
 ) {
     const mentions = [];
     for (const partner of partners) {
         const placeholder = `@-mention-partner-${partner.id}`;
-        const text = `@${partner.name}`;
+        const text = `@${thread?.getPersonaName(partner) ?? partner.name}`;
         mentions.push({
-            link: generatePartnerMentionElement(partner),
+            link: generatePartnerMentionElement(partner, thread),
             placeholder,
         });
         body = htmlReplace(body, text, placeholder);
