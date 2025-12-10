@@ -7,7 +7,7 @@
             <!-- Employee is on time off and he is not connected -->
             <i t-if="employee?.hr_icon_display === 'presence_holiday_absent'" class="fa fa-fw fa-plane text-warning me-1" title="On Time Off" role="img" aria-label="On Time Off"/>
         </xpath>
-        <xpath expr="//span[hasclass('o-mail-avatar-card-name')]" position="after">
+        <xpath expr="//div[hasclass('o-mail-avatar-card-name-actions')]" position="after">
             <span t-if="outOfOfficeDateEndText" class="text-warning me-1 small fw-bold" t-esc="outOfOfficeDateEndText"/>
         </xpath>
     </t>
