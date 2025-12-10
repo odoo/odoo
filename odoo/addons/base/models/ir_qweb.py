@@ -676,7 +676,7 @@ class IrQweb(models.Model):
     """
     _name = 'ir.qweb'
     _description = 'Templates'
-    _inherit = ['ir.ui.view']
+    _inherit = 'ir.ui.view'
 
     type = fields.Selection([('qweb', 'Qweb')], string='View Type', default="qweb")
 

@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, fields
 from odoo.tools import is_html_empty, lazy
 
 
 class IrQweb(models.AbstractModel):
     _inherit = "ir.qweb"
+
+    customize_show = fields.Boolean("Show As Optional Inherit", default=False)
 
     def _prepare_frontend_environment(self, values):
         """ Returns ir.qweb with context and update values with portal specific
