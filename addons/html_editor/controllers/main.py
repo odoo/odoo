@@ -1,3 +1,4 @@
+import binascii
 import contextlib
 import re
 import uuid
@@ -383,6 +384,36 @@ class HTML_Editor(http.Controller):
         self._clean_context()
         attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
+
+    @http.route(["/web_editor/attachment/find_existing_from_data", "/html_editor/attachment/find_existing_from_data"], type="jsonrpc", auth="user", methods=["POST"], website=True)
+    def find_existing_from_data(self, data):
+        """Return an existing image attachment matching the given base64 data.
+        """
+        self._clean_context()
+        if not data:
+            return False
+        if data.startswith("data:"):
+            data = data.split(",", 1)[-1]
+        try:
+            raw_data = b64decode(data)
+        except binascii.Error:
+            return False
+
+        mimetype = guess_mimetype(raw_data)
+        if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
+            return False
+
+        IrAttachment = request.env["ir.attachment"]
+        checksum = IrAttachment._compute_checksum(raw_data)
+        attachment = IrAttachment.search(
+            [
+                ("checksum", "=", checksum),
+                ("mimetype", "=", mimetype),
+                ("type", "!=", "url"),
+            ],
+            limit=1,
+        )
+        return attachment._get_media_info() if attachment else False
 
     @http.route(['/web_editor/attachment/add_url', '/html_editor/attachment/add_url'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):

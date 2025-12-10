@@ -80,6 +80,31 @@ export class CustomizeWebsitePlugin extends Plugin {
         save_handlers: this.onSave.bind(this),
     };
 
+    setup() {
+        // Some websites since 18.4 could have a base64 body backgrounds,
+        // this resolve them to an existing attachment URL.
+        this.normalizeBodyBackgroundImage();
+    }
+
+    async normalizeBodyBackgroundImage() {
+        const bodyImage = this.getWebsiteVariableValue("body-image");
+        if (!bodyImage?.startsWith("data:image/")) {
+            return;
+        }
+        try {
+            const attachment = await rpc("/html_editor/attachment/find_existing_from_data", {
+                data: bodyImage,
+            });
+            if (attachment?.image_src && !this.isDestroyed) {
+                await this.customizeWebsiteVariables({
+                    "body-image": `'${attachment.image_src}'`,
+                });
+            }
+        } catch {
+            // Leave the b64 value untouched if resolution fails.
+        }
+    }
+
     async onSave() {
         if (this.viewsToEnableOnSave.size || this.viewsToDisableOnSave.size) {
             await rpc("/website/theme_customize_data", {
@@ -505,8 +530,14 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
             });
         } else {
             const imageEl = historyImageSrc || (await getAction("replaceBgImage").load({ el }));
-            if (imageEl) {
-                imageSrc = imageEl.src;
+            if (imageEl && imageEl != NO_IMAGE_SELECTION) {
+                if (typeof imageEl === "string") {
+                    imageSrc = imageEl;
+                } else {
+                    imageSrc = imageEl.dataset?.originalSrc || imageEl.getAttribute("src") || "";
+                }
+            }
+            if (imageSrc) {
                 await this.dependencies.customizeWebsite.customizeWebsiteVariables({
                     "body-image-type": `'${value}'`,
                     "body-image": `'${imageSrc}'`,
