@@ -1591,6 +1591,20 @@ class AccountMove(models.Model):
             sign=self.direction_sign,
         )
 
+    def _get_base_amls(self):
+        """ Get the base lines to be used for the taxes computation.
+
+        :return: A recordset of account.move.line.
+        """
+        self.ensure_one()
+        is_invoice = self.is_invoice(include_receipts=True)
+
+        if self.id or not is_invoice:
+            base_amls = self.line_ids.filtered(lambda line: line.display_type == 'product')
+        else:
+            base_amls = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        return base_amls
+
     def _get_rounded_base_and_tax_lines(self, round_from_tax_lines=True):
         """ Small helper to extract the base and tax lines for the taxes computation from the current move.
         The move could be stored or not and could have some features generating extra journal items acting as
@@ -1602,12 +1616,8 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         AccountTax = self.env['account.tax']
-        is_invoice = self.is_invoice(include_receipts=True)
 
-        if self.id or not is_invoice:
-            base_amls = self.line_ids.filtered(lambda line: line.display_type == 'product')
-        else:
-            base_amls = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        base_amls = self._get_base_amls()
         base_lines = [self._prepare_product_base_line_for_taxes_computation(line) for line in base_amls]
 
         tax_lines = []
