@@ -94,8 +94,16 @@ export class RemovePlugin extends Plugin {
             childrenEls.length === 1 &&
             childrenEls[0].matches("figcaption");
 
+        // Consider a .s_popup element as empty if it only contains the
+        // .s_popup_close element.
+        const popupModalChildrenEls = [...(el.querySelector(".modal-content")?.children ?? [])];
+        const isEmptyPopup =
+            el.matches(".s_popup") &&
+            popupModalChildrenEls.every((child) => child.matches(".s_popup_close"));
+
         const isEmpty =
             isEmptyFigureEl ||
+            isEmptyPopup ||
             (el.textContent.trim() === "" &&
                 childrenEls.every((el) =>
                     // Consider layout-only elements (like bg-shapes) as empty
