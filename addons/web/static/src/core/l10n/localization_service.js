@@ -103,6 +103,7 @@ export const localizationService = {
                 break;
             }
         }
+        localization.locale = locale;
         localization.code = jsToPyLocale(locale);
         return localization;
     },

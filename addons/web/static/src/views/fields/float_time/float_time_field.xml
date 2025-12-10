@@ -2,8 +2,22 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web.FloatTimeField">
-        <span t-if="props.readonly" t-esc="formattedValue" />
-        <input t-else="" t-att-id="props.id" t-att-type="props.inputType" t-ref="numpadDecimal" class="o_input" autocomplete="off" />
+        <time t-if="props.readonly" t-esc="formattedValue" />
+        <input t-else="" 
+            t-att-id="props.id" 
+            t-att-type="props.inputType" 
+            t-ref="numpadDecimal" 
+            t-on-focus="() => this.openPopover()"
+            t-on-focusout="() => this.closePopover()"
+            t-on-input="(ev) => this.onValueChange(ev)"
+            class="o_input" 
+            autocomplete="off" />
+    </t>
+    
+    <t t-name="web.DurationPopover">
+        <div class="o_duration_popover p-1">
+            <time t-esc="props.state.formattedResult" />
+        </div>
     </t>
 
 </templates>

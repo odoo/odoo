@@ -64,7 +64,7 @@
                     <field name="livechat_lang_id" optional="show"/>
                     <field name="livechat_expertise_ids" string="Expertise" widget="many2many_tags" optional="show"/>
                     <field name="livechat_channel_id" optional="hide"/>
-                    <field name="duration" widget="float_time" options="{'displaySeconds': True}" optional="show"/>
+                    <field name="duration" widget="float_time" optional="show"/>
                     <field name="message_count" string="Messages" optional="show"/>
                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
@@ -85,7 +85,7 @@
                                 <div class="d-flex flex-column">
                                     <field class="fw-bolder" name="livechat_customer_history_ids" widget="im_livechat.one2many_names"/>
                                     <span class="fw-bold">Date: <field name="create_date" class="fw-normal"/></span>
-                                    <span class="fw-bold">Duration: <field class="d-inline fw-normal" name="duration" widget="float_time" options="{'displaySeconds': True}"/></span>
+                                    <span class="fw-bold">Duration: <field class="d-inline fw-normal" name="duration" widget="float_time"/></span>
                                     <span class="fw-bold">Messages: <field name="message_count" class="fw-normal"/></span>
                                     <field name="livechat_failure" invisible="1"/>
                                     <field name="livechat_is_escalated" invisible="1"/>

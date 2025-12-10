@@ -1,4 +1,5 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
+import { clearMemoizeCaches } from "@web/core/utils/functions";
 import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { localization } from "@web/core/l10n/localization";
@@ -10,6 +11,7 @@ import {
     parseMonetary,
     parsePercentage,
 } from "@web/views/fields/parsers";
+import { parseDuration } from "../../../src/views/fields/parsers";
 
 beforeEach(makeMockEnv);
 
@@ -174,4 +176,35 @@ test("parseMonetary", () => {
     expect(parseMonetary("=1.000,00 + 11.121,00")).toBe(12121);
     expect(parseMonetary("=1000,00 + 11122,00")).toBe(12122);
     expect(parseMonetary("=1000 + 11123")).toBe(12123);
+});
+
+test("parseDuration", () => {
+    expect(parseDuration("1")).toEqual({ hours: 1, minutes: 0, seconds: 0 });
+    expect(parseDuration("1:")).toEqual({ hours: 1, minutes: 0, seconds: 0 });
+    expect(parseDuration("1:25")).toEqual({ hours: 1, minutes: 25, seconds: 0 });
+    expect(parseDuration("1:25", "minutes")).toEqual({ hours: 0, minutes: 1, seconds: 25 });
+    expect(parseDuration("1:25:30")).toEqual({ hours: 1, minutes: 25, seconds: 30 });
+    expect(parseDuration("-1:30:20")).toEqual({ hours: -1, minutes: -30, seconds: -20 });
+
+    expect(parseDuration("1h 30m 45s")).toEqual({ hours: 1, minutes: 30, seconds: 45 });
+    expect(parseDuration("1h 45s")).toEqual({ hours: 1, minutes: 0, seconds: 45 });
+    expect(parseDuration("25s 30m 1h")).toEqual({ hours: 1, minutes: 30, seconds: 25 });
+    expect(parseDuration("25s 40s 55s")).toEqual({ hours: 0, minutes: 0, seconds: 25 });
+    expect(parseDuration("1h30")).toEqual({ hours: 1, minutes: 30, seconds: 0 });
+    expect(parseDuration("-1h 30m 20s")).toEqual({ hours: -1, minutes: -30, seconds: -20 });
+
+    expect(parseDuration("qwerwqer")).toEqual({ hours: 0, minutes: 0, seconds: 0 });
+
+    clearMemoizeCaches();
+    localization.locale = "fr-FR";
+    expect(parseDuration("2h 5m 30s")).toEqual({ hours: 2, minutes: 5, seconds: 30 });
+    expect(parseDuration("2h 5min 30s")).toEqual({ hours: 2, minutes: 5, seconds: 30 });
+
+    clearMemoizeCaches();
+    localization.locale = "zh-CN";
+    expect(parseDuration("2小时 5分钟 30秒")).toEqual({ hours: 2, minutes: 5, seconds: 30 });
+
+    clearMemoizeCaches();
+    localization.locale = "ar-SY";
+    expect(parseDuration("٢ س ٥ د ٣٠ ث")).toEqual({ hours: 2, minutes: 5, seconds: 30 });
 });
