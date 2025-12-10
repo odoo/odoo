@@ -3,7 +3,7 @@
 
 from collections import defaultdict, OrderedDict
 
-from odoo import _, api, models
+from odoo import _, api, Command, models
 from odoo.tools import float_compare, float_is_zero, format_date
 
 
@@ -255,6 +255,7 @@ class ReportStockReport_Reception(models.AbstractModel):
         for i, k in enumerate(out_to_new_out.keys()):
             out_to_new_out[k] = new_outs[i]
 
+        allocated_ins = self.env['stock.move']
         for out, qty_to_link, ins in zip(outs, qtys, in_ids):
             potential_ins = self.env['stock.move'].browse(ins)
             if out.id in out_to_new_out:
@@ -290,6 +291,10 @@ class ReportStockReport_Reception(models.AbstractModel):
 
                 linked_qty = min(move_quantity, qty_to_link)
                 in_move.move_dest_ids |= out
+                if allocation_location := in_move.picking_type_id.default_allocation_id:
+                    in_move.allocation_location_id = allocation_location
+                    if in_move.location_final_id == in_move.location_dest_id:
+                        allocated_ins |= in_move
                 self._action_assign(in_move, out)
                 out.procure_method = 'make_to_order'
                 quantity_remaining -= linked_qty
@@ -297,6 +302,7 @@ class ReportStockReport_Reception(models.AbstractModel):
                 if out.product_id.uom_id.is_zero(qty_to_link):
                     break  # we have satistfied the qty_to_link
 
+        allocated_ins._apply_allocation_location()
         (outs | new_outs)._recompute_state()
 
         # always try to auto-assign to prevent another move from reserving the quant if incoming move is done
@@ -319,6 +325,32 @@ class ReportStockReport_Reception(models.AbstractModel):
             in_move.move_dest_ids -= out
             self._action_unassign(in_move, out)
             amount_unassigned += min(qty, move_quantity)
+            if in_move.allocation_location_id and in_move.location_dest_id == in_move.allocation_location_id:
+                out.location_id = out.picking_id.location_id
+                non_allocated_in_move = in_move._get_similar_sibling_move(allocated=False)
+                if in_move.product_uom.compare(qty, move_quantity) >= 0:
+                    in_move.location_dest_id = in_move.picking_id.location_dest_id or in_move.production_id.location_dest_id
+                    in_move.allocation_location_id = False
+                    if non_allocated_in_move:
+                        in_move._merge_moves()
+                        non_allocated_in_move._do_unreserve()
+                        non_allocated_in_move._action_assign()
+                    continue
+                if non_allocated_in_move:
+                    non_allocated_in_move.product_uom_qty += qty
+                    in_move.product_uom_qty -= qty
+                else:
+                    new_in = in_move._split(qty)
+                    new_in[0].update({
+                        'allocation_location_id': False,
+                        'location_dest_id': in_move.picking_id.location_dest_id.id,
+                        'move_dest_ids': [Command.clear()],
+                    })
+                    in_move._do_unreserve()
+                    in_move._action_assign()
+                    new_in_move = self.env['stock.move'].create(new_in)
+                    new_in_move.write({'state': 'confirmed'})
+                    new_in_move._action_assign()
             if out.product_id.uom_id.compare(qty, amount_unassigned) <= 0:
                 break
         if out.move_orig_ids and out.state != 'done':

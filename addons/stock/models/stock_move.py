@@ -91,6 +91,7 @@ class StockMove(models.Model):
         bypass_search_access=True, index=True, check_company=True)
     location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
     location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
+    allocation_location_id = fields.Many2one('stock.location', 'Allocation Location')
     partner_id = fields.Many2one(
         'res.partner', 'Destination Address ',
         help="Optional address where goods are to be delivered, specifically used for allotment",
@@ -829,6 +830,47 @@ Please change the quantity done or the rounding precision in your settings.""",
             self._set_references()
         return res
 
+    def _get_similar_sibling_move(self, allocated=True):
+        self.ensure_one()
+        if self.picking_id:
+            return self.picking_id.move_ids.filtered(lambda m: m.product_id == self.product_id and m.id != self.id and bool(m.allocation_location_id) == allocated)
+        return False
+
+    def _apply_allocation_location(self):
+        new_in_vals = []
+        for move in self:
+            allocated_qty = sum(move.move_dest_ids.mapped('product_qty'))
+            allocated_location_id = move.allocation_location_id
+            if not allocated_qty or not allocated_location_id:
+                continue
+            move.move_dest_ids.location_id = allocated_location_id
+            allocated_in_move = move._get_similar_sibling_move(allocated=True)
+            if move.product_uom.compare(allocated_qty, move.product_uom_qty) >= 0:
+                move.location_dest_id = allocated_location_id
+                if allocated_in_move:
+                    allocated_in_move._merge_moves(merge_into=move)
+                continue
+            if allocated_in_move:
+                allocated_in_move.product_uom_qty += allocated_qty
+                allocated_in_move.move_dest_ids |= move.move_dest_ids
+                move.move_dest_ids = [Command.clear()]
+                move.product_uom_qty -= allocated_qty
+            else:
+                new_move_vals = move._split(allocated_qty)
+                new_move_vals[0].update({
+                    'location_dest_id': allocated_location_id.id,
+                    'move_dest_ids': [Command.set(move.move_dest_ids.ids)],
+                })
+                move.allocation_location_id = False
+                move.move_dest_ids = [Command.clear()]
+                move._do_unreserve()
+                move._action_assign()
+                new_in_vals.extend(new_move_vals)
+        if new_in_vals:
+            new_ins = self.env['stock.move'].create(new_in_vals)
+            new_ins.write({'state': 'confirmed'})
+            new_ins._action_assign()
+
     def _update_orderpoints(self):
         """ Manually mark the relevant orderpoints for re-computation.
         This allows us to only recompute the qty_to_order for the orderpoints in the relevant warehouse(s),
@@ -1155,9 +1197,12 @@ Please change the quantity done or the rounding precision in your settings.""",
                 })
 
             # Make sure it is not returning the return
+            last_step = False
             if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
                 new_move = rule._run_push(move) or new_move
                 if new_move:
+                    if rule.location_dest_id == new_move.location_final_id:
+                        last_step = True
                     new_moves.append(new_move)
 
             move_to_propagate_ids = set()
@@ -1174,6 +1219,8 @@ Please change the quantity done or the rounding precision in your settings.""",
         new_moves = self.env['stock.move'].concat(*new_moves)
         new_moves = new_moves.sudo()._action_confirm()
 
+        if last_step:
+            new_moves._apply_allocation_location()
         return new_moves
 
     def _merge_moves_fields(self):

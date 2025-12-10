@@ -269,6 +269,7 @@ class StockRule(models.Model):
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_dest_id.id,
             'location_final_id': final_location_id,
+            'allocation_location_id': move_to_copy.allocation_location_id.id,
             'rule_id': self.id,
             'date': new_date,
             'date_deadline': move_to_copy.date_deadline,

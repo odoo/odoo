@@ -60,14 +60,16 @@ class MrpProduction(models.Model):
         super()._cal_price(consumed_moves)
 
         work_center_cost = 0
-        finished_move = self.move_finished_ids.filtered(
+        finished_moves = self.move_finished_ids.filtered(
             lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity > 0)
-        if finished_move:
-            finished_move.ensure_one()
+        if finished_moves:
+            product = finished_moves[0].product_id
+            finished_moves_qty = sum(finished_moves.mapped('quantity'))
+            finished_moves_product_uom = product.uom_id
             for work_order in self.workorder_ids:
                 work_center_cost += work_order._cal_cost()
-            quantity = finished_move.uom_id._compute_quantity(
-                finished_move.quantity, finished_move.product_id.uom_id)
+            quantity = finished_moves[0].uom_id._compute_quantity(
+                finished_moves_qty, finished_moves_product_uom)
             extra_cost = self.extra_cost * quantity
 
             total_cost = sum(move.value for move in consumed_moves) + work_center_cost + extra_cost
@@ -79,8 +81,8 @@ class MrpProduction(models.Model):
                 byproduct_cost_share += byproduct.cost_share
                 if byproduct.product_id.cost_method in ('fifo', 'average'):
                     byproduct.price_unit = total_cost * byproduct.cost_share / 100 / byproduct.uom_id._compute_quantity(byproduct.quantity, byproduct.product_id.uom_id)
-            if finished_move.product_id.cost_method in ('fifo', 'average'):
-                finished_move.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / quantity
+            if product.cost_method in ('fifo', 'average'):
+                finished_moves.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / quantity
         return True
 
     def _get_backorder_mo_vals(self):
