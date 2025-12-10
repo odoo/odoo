@@ -1,8 +1,10 @@
 """Module to manage odoo code upgrades using git"""
 
 import logging
+import re
 import requests
 import subprocess
+import sys
 from odoo.addons.iot_drivers.tools.helpers import (
     odoo_restart,
     path_file,
@@ -60,10 +62,19 @@ def get_db_branch(server_url):
         _logger.exception('Could not reach configured server to get the Odoo version')
         return None
     try:
-        return response.json()['result']['server_serie'].replace('~', '-')
+        db_branch = response.json()['result']['server_serie'].replace('~', '-')
     except ValueError:
         _logger.exception('Could not load JSON data: Received data is not valid JSON.\nContent:\n%s', response.content)
         return None
+
+    if sys.version_info >= (3, 12):
+        return db_branch
+    # For Python 3.11, version 19.1+ is not compatible, so we force 19.0
+    bad_version = re.match(r"(saas-)?(2\d.\d)|(19.[1-9])", db_branch)
+    if bad_version:
+        _logger.warning("Database is using incompatible version %s, using 19.0 instead", db_branch)
+        return "19.0"
+    return db_branch
 
 
 @toggleable
