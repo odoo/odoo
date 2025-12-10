@@ -106,6 +106,31 @@ test("Toolbar should not overflow scroll container", async () => {
 });
 
 test.tags("desktop");
+test("Local overlay containers are cleaned when editor is destroyed", async () => {
+    class LocalOverlayTestPlugin extends Plugin {
+        static id = "localOverlayTest";
+        static dependencies = ["localOverlay"];
+
+        setup() {
+            this.dependencies.localOverlay.makeLocalOverlay("test-overlay");
+        }
+    }
+
+    const { editor } = await setupEditor("<p>text</p>", {
+        config: {
+            Plugins: [...MAIN_PLUGINS, LocalOverlayTestPlugin],
+        },
+    });
+
+    expect("[data-oe-local-overlay-id='test-overlay']").toHaveCount(1);
+
+    editor.destroy();
+    await animationFrame();
+
+    expect("[data-oe-local-overlay-id='test-overlay']").toHaveCount(0);
+});
+
+test.tags("desktop");
 test("Toolbar should be visible after scroll bar is added", async () => {
     await mountView({
         type: "form",
