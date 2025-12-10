@@ -9,24 +9,20 @@
         </xpath>
     </t>
 
-    <t t-name="calendar.AttendeeTag">
-        <span class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100 opacity-trigger-hover" tabindex="-1" t-att-data-tooltip="this.props.tooltip" t-att-aria-label="this.props.tooltip">
+    <t t-name="calendar.AttendeeTag" t-inherit="web.AvatarTag" t-inherit-mode="primary">
+        <xpath expr="//img[hasclass('o_avatar')]" position="replace">
             <div class="o_attendee_tags_list">
-                <img class="o_avatar o_m2m_avatar position-relative rounded" t-att-src="this.props.imageUrl"/>
+                <img class="o_avatar o_m2m_avatar position-relative rounded" t-att-src="this.props.imageUrl" t-on-click="this.onAvatarClick"/>
                 <div t-if="this.statusIcon" class="attendee_tag_status fa fa-fw rounded-circle" t-att-class="this.statusIcon" t-attf-class="o_attendee_status_{{this.props.status}}"/>
             </div>
-            <div class="o_tag_badge_text position-relative ms-1" t-out="this.props.text"/>
-            <div t-if="this.props.isUnavailable" data-tooltip="unavailable" class="ms-1">
+        </xpath>
+        <xpath expr="//div[hasclass('o_tag_badge_text')]" position="after">
+            <div t-if="this.props.isUnavailable" data-tooltip="Unavailable" class="ms-1">
                 <i class="fa fa-moon-o position-relative" role="img"/>
             </div>
-            <div t-if="this.props.noEmail" data-tooltip="no email" class="ms-1">
+            <div t-if="this.props.noEmail" data-tooltip="No email" class="ms-1">
                 <i class="fa fa-exclamation-triangle position-relative" role="img"/>
             </div>
-            <t t-if="this.props.onDelete">
-                <a class="o_delete d-flex align-items-center opacity-100-hover btn btn-link position-relative py-0 px-1 text-danger opacity-0" href="#" tabindex="0" aria-label="Delete" data-tooltip="Delete" t-on-click.stop.prevent="() => this.props.onDelete()">
-                    <i class="oi oi-close align-text-top"/>
-                </a>
-            </t>
-        </span>
+        </xpath>
     </t>
 </templates>
