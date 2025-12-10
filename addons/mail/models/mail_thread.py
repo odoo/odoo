@@ -3052,7 +3052,7 @@ class MailThread(models.AbstractModel):
         :rtype: str
         """
         self.ensure_one()
-        return self.display_name
+        return textwrap.shorten(self.display_name or '', width=100, placeholder="...")
 
     def _message_create(self, values_list):
         """ Low-level helper to create mail.message records. It is mainly used
