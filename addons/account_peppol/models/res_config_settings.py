@@ -115,6 +115,14 @@ class ResConfigSettings(models.TransientModel):
             self.account_peppol_edi_user._peppol_deregister_participant()
         return True
 
+    def button_peppol_reset_to_sender(self):
+        """Reset the participant back to sender and deregister it from the SMP"""
+        self.ensure_one()
+
+        if self.account_peppol_edi_user:
+            self.account_peppol_edi_user._peppol_deregister_participant_to_sender()
+        return True
+
     # Note: Deprecated; the button is permanently invisible.
     # Disabling services can lead to complicance issues and is not necessary
     # since all existing services should just work.

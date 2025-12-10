@@ -105,6 +105,10 @@ class PeppolSettingsButtons extends Component {
         }
     }
 
+    async deregisterToSender() {
+        await this._callConfigMethod("button_peppol_reset_to_sender");
+    }
+
     async updateDetails() {
         // avoid making users click save on the settings
         // and then clicking the update button
