@@ -75,7 +75,9 @@ export function isBlock(node) {
         style = node.ownerDocument.defaultView.getComputedStyle(node);
         computedStyles.set(node, style);
     }
-    if (style.display) {
+    // In case the node has display `none` we don't know what is its display
+    // so we check its tagName in `blockTagNames`
+    if (style.display && style.display !== "none") {
         return !style.display.includes("inline") && style.display !== "contents";
     }
     return blockTagNames.includes(tagName);
