@@ -123,7 +123,7 @@ class MailingContactImport(models.TransientModel):
 
         return {
             'type': 'ir.actions.client',
-            'tag': 'import',
+            'tag': 'action_import_mailing_contacts',
             'name': _('Import Mailing Contacts'),
             'params': {
                 'context': self.env.context,
