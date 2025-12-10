@@ -1,102 +1,352 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- ============================================================ -->
-    <!-- SHOP PAGE - SMART CATEGORIES DISPLAY -->
+    <!-- HOMEPAGE - RESPONSIVE CATEGORY FILTERS -->
     <!-- ============================================================ -->
     
-    <!-- Add Categories Section to Shop Page (Above Products) -->
-    <template id="shop_categories_section" inherit_id="website_sale.products" name="SMART Categories Section">
-        <xpath expr="//div[@id='products_grid']" position="before">
-            <!-- Categories Display Section -->
-            <div class="smart-categories-section mb-4 d-none d-lg-block">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header" style="background: linear-gradient(135deg, #714B67 0%, #9B6A8F 100%);">
-                        <h5 class="mb-0 text-white">
-                            <i class="fa fa-th-list me-2"/>Shop by Category
+    <!-- Homepage Categories Section -->
+    <template id="homepage_categories" inherit_id="website.homepage" name="Homepage Categories">
+        <xpath expr="//div[@id='wrap']" position="inside">
+            <t t-set="categories" t-value="request.env['product.public.category'].sudo().search([('parent_id', '=', False)])"/>
+            
+            <!-- Hero Section with Categories -->
+            <section class="smart-homepage-categories py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                <div class="container">
+                    <!-- Section Header -->
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold" style="color:rgb(75, 113, 95);">
+                            <i class="fa fa-th-large me-2"/>Shop by Category
+                        </h2>
+                        <p class="text-muted">Browse our wide selection of products</p>
+                    </div>
+                    
+                    <!-- Categories Grid -->
+                    <div class="row g-3 justify-content-center">
+                        <!-- All Products Card -->
+                        <div class="col-6 col-md-4 col-lg-2">
+                            <a href="/shop" class="card smart-category-card h-100 text-decoration-none border-0 shadow-sm">
+                                <div class="card-body text-center py-4">
+                                    <i class="fa fa-shopping-bag fa-3x mb-3" style="color: #714B67;"/>
+                                    <h6 class="card-title mb-0">All Products</h6>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- Category Cards -->
+                        <t t-foreach="categories[:5]" t-as="cat">
+                            <div class="col-6 col-md-4 col-lg-2">
+                                <a t-att-href="'/shop/category/%s' % slug(cat)" class="card smart-category-card h-100 text-decoration-none border-0 shadow-sm">
+                                    <div class="card-body text-center py-4">
+                                        <t t-if="cat.image_128">
+                                            <img t-att-src="image_data_uri(cat.image_128)" 
+                                                 class="rounded-circle mb-3" 
+                                                 style="width: 64px; height: 64px; object-fit: cover;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <i class="fa fa-folder-open fa-3x mb-3" style="color: #714B67;"/>
+                                        </t>
+                                        <h6 class="card-title mb-1"><t t-esc="cat.name"/></h6>
+                                        <span class="badge bg-secondary"><t t-esc="len(cat.product_tmpl_ids)"/> items</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </t>
+                    </div>
+                    
+                    <!-- View All Categories Link -->
+                    <div t-if="len(categories) > 5" class="text-center mt-4">
+                        <a href="/shop" class="btn btn-outline-primary">
+                            View All Categories <i class="fa fa-arrow-right ms-2"/>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Quick Links -->
+            <section class="smart-quick-links py-4">
+                <div class="container">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="/shop?availability=in_stock" class="card bg-success text-white text-decoration-none h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <i class="fa fa-check-circle fa-2x me-3"/>
+                                    <div>
+                                        <h6 class="mb-0">In Stock</h6>
+                                        <small>Available now</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/shop?order=create_date+desc" class="card bg-info text-white text-decoration-none h-100">
+                                <div class="card-body d-flex align-items-center">
+                                    <i class="fa fa-star fa-2x me-3"/>
+                                    <div>
+                                        <h6 class="mb-0">New Arrivals</h6>
+                                        <small>Latest products</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/shop" class="card text-decoration-none h-100" style="background: linear-gradient(135deg, #714B67 0%, #9B6A8F 100%); color: white;">
+                                <div class="card-body d-flex align-items-center">
+                                    <i class="fa fa-percent fa-2x me-3"/>
+                                    <div>
+                                        <h6 class="mb-0">Special Offers</h6>
+                                        <small>Best deals</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </xpath>
+    </template>
+    
+    <!-- ============================================================ -->
+    <!-- SHOP PAGE - SMART FILTERS (Adds to existing aside if present, otherwise creates one) -->
+    <!-- ============================================================ -->
+    
+    <!-- Mobile Filter Button (above the main row) -->
+    <template id="shop_mobile_filter_button" inherit_id="website_sale.products" name="SMART Mobile Filter Button">
+        <xpath expr="//div[hasclass('o_wsale_products_main_row')]" position="before">
+            <!-- Mobile Filter Toggle Button -->
+            <div class="d-lg-none mb-3 px-3">
+                <button class="btn btn-outline-primary w-100" type="button" 
+                        data-bs-toggle="offcanvas" data-bs-target="#smartMobileFilters" 
+                        aria-controls="smartMobileFilters">
+                    <i class="fa fa-filter me-2"/>Filters &amp; Categories
+                </button>
+            </div>
+            
+            <!-- Mobile Offcanvas Filters -->
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="smartMobileFilters" aria-labelledby="smartMobileFiltersLabel">
+                <div class="offcanvas-header" style="background: linear-gradient(135deg, #714B67 0%, #9B6A8F 100%);">
+                    <h5 class="offcanvas-title text-white" id="smartMobileFiltersLabel">
+                        <i class="fa fa-filter me-2"/>Filters
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"/>
+                </div>
+                <div class="offcanvas-body">
+                    <!-- Categories -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold border-bottom pb-2" style="color: #714B67;">
+                            <i class="fa fa-th-list me-2"/>Categories
+                        </h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="/shop" t-attf-class="btn btn-sm #{'btn-primary' if not category else 'btn-outline-secondary'}">
+                                <i class="fa fa-home me-1"/>All
+                            </a>
+                            <t t-foreach="categories" t-as="c">
+                                <a t-att-href="keep('/shop/category/%s' % slug(c), category=0)" 
+                                   t-attf-class="btn btn-sm #{'btn-primary' if category and category.id == c.id else 'btn-outline-secondary'}">
+                                    <t t-esc="c.name"/>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                    
+                    <!-- Availability -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold border-bottom pb-2" style="color: #714B67;">
+                            <i class="fa fa-check-circle me-2"/>Availability
+                        </h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a t-att-href="keep(availability='')" 
+                               t-attf-class="btn btn-sm #{'btn-secondary' if not selected_availability else 'btn-outline-secondary'}">All</a>
+                            <a t-att-href="keep(availability='in_stock')" 
+                               t-attf-class="btn btn-sm #{'btn-success' if selected_availability == 'in_stock' else 'btn-outline-success'}">
+                                <i class="fa fa-check me-1"/>In Stock
+                            </a>
+                            <a t-att-href="keep(availability='low_stock')" 
+                               t-attf-class="btn btn-sm #{'btn-warning' if selected_availability == 'low_stock' else 'btn-outline-warning'}">
+                                <i class="fa fa-exclamation-triangle me-1"/>Low Stock
+                            </a>
+                            <a t-att-href="keep(availability='out_of_stock')" 
+                               t-attf-class="btn btn-sm #{'btn-danger' if selected_availability == 'out_of_stock' else 'btn-outline-danger'}">
+                                <i class="fa fa-times me-1"/>Out of Stock
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Brand Filter -->
+                    <t t-if="brands">
+                        <div class="mb-4">
+                            <h6 class="fw-bold border-bottom pb-2" style="color: #714B67;">
+                                <i class="fa fa-tag me-2"/>Brand
+                            </h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a t-att-href="keep(brand='')" 
+                                   t-attf-class="btn btn-sm #{'btn-secondary' if not selected_brand else 'btn-outline-secondary'}">All</a>
+                                <t t-foreach="brands" t-as="b">
+                                    <a t-att-href="keep(brand=b)" 
+                                       t-attf-class="btn btn-sm #{'btn-primary' if selected_brand == b else 'btn-outline-primary'}">
+                                        <t t-esc="b"/>
+                                    </a>
+                                </t>
+                            </div>
+                        </div>
+                    </t>
+                    
+                    <!-- Price Range -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold border-bottom pb-2" style="color: #714B67;">
+                            <i class="fa fa-money me-2"/>Price Range
+                        </h6>
+                        <form method="get" class="row g-2">
+                            <div class="col-5">
+                                <input type="number" class="form-control form-control-sm" name="price_min" placeholder="Min" t-att-value="selected_price_min"/>
+                            </div>
+                            <div class="col-2 text-center align-self-center">-</div>
+                            <div class="col-5">
+                                <input type="number" class="form-control form-control-sm" name="price_max" placeholder="Max" t-att-value="selected_price_max"/>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">
+                                    <i class="fa fa-search me-1"/>Apply
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Clear Filters -->
+                    <div t-if="category or selected_brand or selected_availability" class="mt-4">
+                        <a href="/shop" class="btn btn-outline-danger w-100">
+                            <i class="fa fa-times me-1"/>Clear All Filters
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Active Filters Display -->
+            <div t-if="category or selected_brand or selected_availability or selected_price_min or selected_price_max" 
+                 class="px-3 mb-3">
+                <div class="d-flex flex-wrap gap-2 align-items-center p-2 bg-light rounded">
+                    <span class="text-muted small fw-bold">Active:</span>
+                    <t t-if="category">
+                        <a href="/shop" class="badge bg-primary text-decoration-none">
+                            <t t-esc="category.name"/> <i class="fa fa-times ms-1"/>
+                        </a>
+                    </t>
+                    <t t-if="selected_brand">
+                        <a t-att-href="keep(brand='')" class="badge bg-info text-decoration-none">
+                            <t t-esc="selected_brand"/> <i class="fa fa-times ms-1"/>
+                        </a>
+                    </t>
+                    <t t-if="selected_availability">
+                        <a t-att-href="keep(availability='')" class="badge bg-success text-decoration-none">
+                            <t t-esc="selected_availability.replace('_', ' ').title()"/> <i class="fa fa-times ms-1"/>
+                        </a>
+                    </t>
+                    <a href="/shop" class="badge bg-danger text-decoration-none ms-auto">
+                        <i class="fa fa-refresh me-1"/>Reset
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    
+    <!-- Desktop Filter Sidebar (in the existing aside element) -->
+    <template id="shop_desktop_filters" inherit_id="website_sale.products" name="SMART Desktop Filters">
+        <xpath expr="//aside[@id='products_grid_before']//div[hasclass('o_wsale_products_grid_before_rail')]" position="inside">
+            <!-- SMART Additional Filters -->
+            <div class="smart-extra-filters mt-4 pt-3 border-top">
+                <!-- Availability Filter -->
+                <div class="mb-4">
+                    <h6 class="fw-bold small mb-3" style="color: #714B67;">
+                        <i class="fa fa-check-circle me-2"/>Availability
+                    </h6>
+                    <div class="d-flex flex-column gap-1">
+                        <a t-att-href="keep(availability='')" 
+                           t-attf-class="small text-decoration-none #{'fw-bold text-primary' if not selected_availability else 'text-dark'}">
+                            <i class="fa fa-circle-o me-1"/> All
+                        </a>
+                        <a t-att-href="keep(availability='in_stock')" 
+                           t-attf-class="small text-decoration-none #{'fw-bold text-success' if selected_availability == 'in_stock' else 'text-success'}">
+                            <i class="fa fa-check me-1"/> In Stock
+                        </a>
+                        <a t-att-href="keep(availability='low_stock')" 
+                           t-attf-class="small text-decoration-none #{'fw-bold text-warning' if selected_availability == 'low_stock' else 'text-warning'}">
+                            <i class="fa fa-exclamation-triangle me-1"/> Low Stock
+                        </a>
+                        <a t-att-href="keep(availability='out_of_stock')" 
+                           t-attf-class="small text-decoration-none #{'fw-bold text-danger' if selected_availability == 'out_of_stock' else 'text-danger'}">
+                            <i class="fa fa-times me-1"/> Out of Stock
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Brand Filter -->
+                <t t-if="brands">
+                    <div class="mb-4">
+                        <h6 class="fw-bold small mb-3" style="color: #714B67;">
+                            <i class="fa fa-tag me-2"/>Brand
+                        </h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            <a t-att-href="keep(brand='')" 
+                               t-attf-class="badge text-decoration-none #{'bg-secondary' if not selected_brand else 'bg-light text-dark border'}">
+                                All
+                            </a>
+                            <t t-foreach="brands" t-as="b">
+                                <a t-att-href="keep(brand=b)" 
+                                   t-attf-class="badge text-decoration-none #{'bg-primary' if selected_brand == b else 'bg-light text-dark border'}">
+                                    <t t-esc="b"/>
+                                </a>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </template>
+    
+    <!-- ============================================================ -->
+    <!-- CHECKOUT - DELIVERY ZONE SELECTION -->
+    <!-- ============================================================ -->
+    
+    <template id="checkout_delivery_zone" inherit_id="website_sale.checkout" name="Checkout Delivery Zone">
+        <xpath expr="//div[@id='shop_checkout']" position="inside">
+            <t t-set="delivery_zones" t-value="request.env['delivery.zone'].sudo().search([('active', '=', True)])"/>
+            
+            <div t-if="delivery_zones" class="smart-delivery-zone-section mt-4 mb-4">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fa fa-truck me-2"/>Select Delivery Zone
                         </h5>
                     </div>
                     <div class="card-body">
-                        <div class="row g-3">
-                            <!-- All Products -->
-                            <div class="col-md-2 col-sm-4 col-6">
-                                <a href="/shop" t-attf-class="text-decoration-none d-flex flex-column align-items-center p-2 rounded #{'bg-primary text-white' if not category else 'bg-light text-dark hover-shadow'}">
-                                    <i class="fa fa-home fa-2x mb-2"/>
-                                    <span class="small text-center">All Products</span>
-                                </a>
-                            </div>
-                            <!-- Category Cards -->
-                            <t t-foreach="categories" t-as="c">
-                                <div class="col-md-2 col-sm-4 col-6">
-                                    <a t-att-href="keep('/shop/category/%s' % slug(c), category=0)" 
-                                       t-attf-class="text-decoration-none d-flex flex-column align-items-center p-2 rounded #{'bg-primary text-white' if category and category.id == c.id else 'bg-light text-dark hover-shadow'}">
-                                        <t t-if="c.image_128">
-                                            <img t-att-src="image_data_uri(c.image_128)" 
-                                                 class="rounded mb-2" style="width: 48px; height: 48px; object-fit: cover;"/>
-                                        </t>
-                                        <t t-else="">
-                                            <i class="fa fa-folder fa-2x mb-2"/>
-                                        </t>
-                                        <span class="small text-center"><t t-esc="c.name"/></span>
-                                        <span class="badge bg-secondary mt-1" t-esc="len(c.product_tmpl_ids)"/>
-                                    </a>
+                        <p class="text-muted mb-3">
+                            Choose your delivery zone to see accurate delivery costs and estimated delivery times.
+                        </p>
+                        
+                        <div class="delivery-zone-options">
+                            <t t-foreach="delivery_zones" t-as="zone">
+                                <div class="form-check delivery-zone-option mb-3 p-3 border rounded"
+                                     t-att-data-zone-id="zone.id">
+                                    <input class="form-check-input delivery-zone-radio" type="radio" 
+                                           name="delivery_zone_id" t-att-id="'zone_%s' % zone.id"
+                                           t-att-value="zone.id"
+                                           t-att-checked="order.delivery_zone_id.id == zone.id"/>
+                                    <label class="form-check-label w-100" t-att-for="'zone_%s' % zone.id">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <strong><t t-esc="zone.name"/></strong>
+                                                <div class="text-muted small">
+                                                    <i class="fa fa-clock-o me-1"/>Est: <t t-esc="zone.estimated_days"/> days
+                                                </div>
+                                            </div>
+                                            <span class="badge bg-success fs-6">
+                                                <t t-esc="zone.base_price" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
+                                            </span>
+                                        </div>
+                                    </label>
                                 </div>
                             </t>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Mobile Categories Dropdown -->
-            <div class="smart-categories-mobile d-lg-none mb-3">
-                <div class="dropdown w-100">
-                    <button class="btn btn-outline-primary dropdown-toggle w-100 d-flex justify-content-between align-items-center" 
-                            type="button" id="smartMobileCategoriesDropdown" 
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        <span>
-                            <i class="fa fa-th-list me-2"/>
-                            <t t-if="category" t-esc="category.name"/>
-                            <t t-else="">All Categories</t>
-                        </span>
-                        <i class="fa fa-chevron-down"/>
-                    </button>
-                    <ul class="dropdown-menu w-100 shadow" aria-labelledby="smartMobileCategoriesDropdown">
-                        <li>
-                            <a class="dropdown-item d-flex justify-content-between" href="/shop">
-                                <span><i class="fa fa-home me-2"/>All Products</span>
-                            </a>
-                        </li>
-                        <li><hr class="dropdown-divider"/></li>
-                        <t t-foreach="categories" t-as="c">
-                            <li>
-                                <a class="dropdown-item d-flex justify-content-between" 
-                                   t-att-href="keep('/shop/category/%s' % slug(c), category=0)">
-                                    <span><t t-esc="c.name"/></span>
-                                    <span class="badge bg-secondary"><t t-esc="len(c.product_tmpl_ids)"/></span>
-                                </a>
-                            </li>
-                        </t>
-                    </ul>
-                </div>
-            </div>
-            
-            <!-- Filter Badges Row -->
-            <div t-if="selected_brand or selected_availability" class="smart-active-filters mb-3 d-flex flex-wrap gap-2 align-items-center">
-                <span class="text-muted small">Active filters:</span>
-                <t t-if="selected_brand">
-                    <a t-att-href="keep(brand='')" class="badge bg-primary text-decoration-none">
-                        Brand: <t t-esc="selected_brand"/>
-                        <i class="fa fa-times ms-1"/>
-                    </a>
-                </t>
-                <t t-if="selected_availability">
-                    <a t-att-href="keep(availability='')" class="badge bg-info text-decoration-none">
-                        <t t-esc="selected_availability.replace('_', ' ').title()"/>
-                        <i class="fa fa-times ms-1"/>
-                    </a>
-                </t>
-                <a t-att-href="keep(brand='', availability='')" class="badge bg-danger text-decoration-none">
-                    Clear All <i class="fa fa-times ms-1"/>
-                </a>
             </div>
         </xpath>
     </template>
@@ -105,69 +355,48 @@
     <!-- PRODUCT PAGE ENHANCEMENTS -->
     <!-- ============================================================ -->
     
-    <!-- Add Brand, Model and Stock Status to Product Page -->
     <template id="product_brand_model" inherit_id="website_sale.product" name="Product Brand &amp; Model">
         <xpath expr="//h1[@itemprop='name']" position="after">
             <div t-if="product.brand or product.product_model" class="product-brand-model mb-2">
-                <span t-if="product.brand" class="badge text-bg-secondary me-1">
-                    <t t-esc="product.brand"/>
-                </span>
-                <span t-if="product.product_model" class="text-muted">
-                    Model: <t t-esc="product.product_model"/>
-                </span>
+                <span t-if="product.brand" class="badge text-bg-secondary me-1"><t t-esc="product.brand"/></span>
+                <span t-if="product.product_model" class="text-muted">Model: <t t-esc="product.product_model"/></span>
             </div>
-            <!-- Stock Badge -->
             <div class="mb-2">
-                <span t-if="product.availability_status == 'in_stock'" 
-                      class="badge text-bg-success">
+                <span t-if="product.availability_status == 'in_stock'" class="badge text-bg-success">
                     <i class="fa fa-check me-1"/> In Stock
                 </span>
-                <span t-elif="product.availability_status == 'low_stock'" 
-                      class="badge text-bg-warning">
+                <span t-elif="product.availability_status == 'low_stock'" class="badge text-bg-warning">
                     <i class="fa fa-exclamation-triangle me-1"/> Low Stock
                 </span>
-                <span t-elif="product.availability_status == 'out_of_stock'" 
-                      class="badge text-bg-danger">
+                <span t-elif="product.availability_status == 'out_of_stock'" class="badge text-bg-danger">
                     <i class="fa fa-times me-1"/> Out of Stock
                 </span>
             </div>
         </xpath>
     </template>
     
-    <!-- Add Specifications and Video to Product Page -->
     <template id="product_specifications_video" inherit_id="website_sale.product" name="Specifications &amp; Video">
         <xpath expr="//div[@id='product_full_description']" position="after">
-            <!-- Specifications -->
             <div t-if="product.specifications" class="mt-4">
-                <h4 class="border-bottom pb-2">
-                    <i class="fa fa-list-ul me-2"/>Specifications
-                </h4>
+                <h4 class="border-bottom pb-2"><i class="fa fa-list-ul me-2"/>Specifications</h4>
                 <div class="smart-specifications" t-out="product.specifications"/>
             </div>
-            <!-- Video -->
             <div t-if="product.video_url" class="mt-4 smart-product-video">
-                <h4 class="border-bottom pb-2">
-                    <i class="fa fa-play-circle me-2"/>Product Video
-                </h4>
+                <h4 class="border-bottom pb-2"><i class="fa fa-play-circle me-2"/>Product Video</h4>
                 <div class="ratio ratio-16x9">
-                    <iframe t-att-src="product.get_video_embed_url()"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen="allowfullscreen"/>
+                    <iframe t-att-src="product.get_video_embed_url()" frameborder="0" allowfullscreen="allowfullscreen"/>
                 </div>
             </div>
         </xpath>
     </template>
     
     <!-- ============================================================ -->
-    <!-- ORDER CONFIRMATION PAGE ENHANCEMENTS -->
+    <!-- ORDER CONFIRMATION PAGE -->
     <!-- ============================================================ -->
     
-    <!-- Add delivery info to confirmation page -->
     <template id="order_confirmation_delivery" inherit_id="website_sale.confirmation" name="Order Confirmation Delivery Info">
         <xpath expr="//div[@id='oe_structure_website_sale_confirmation_1']" position="before">
-            <!-- Order Success Message Enhancement -->
-            <div class="smart-order-success alert alert-success d-flex align-items-center mt-3" role="alert">
+            <div class="alert alert-success d-flex align-items-center mt-3">
                 <i class="fa fa-check-circle fa-2x me-3 text-success"/>
                 <div>
                     <strong>Your order has been confirmed!</strong>
@@ -175,12 +404,9 @@
                 </div>
             </div>
             
-            <!-- Delivery Zone Info if available -->
             <div t-if="order.delivery_zone_id" class="card mt-3 border-info">
                 <div class="card-body">
-                    <h5 class="card-title">
-                        <i class="fa fa-truck me-2 text-info"/>Delivery Information
-                    </h5>
+                    <h5 class="card-title"><i class="fa fa-truck me-2 text-info"/>Delivery Information</h5>
                     <div class="row">
                         <div class="col-md-6">
                             <p class="mb-1"><strong>Delivery Zone:</strong> <t t-esc="order.delivery_zone_id.name"/></p>
@@ -193,10 +419,6 @@
                             <p class="mb-1" t-if="order.computed_delivery_price">
                                 <strong>Delivery Cost:</strong> 
                                 <t t-esc="order.computed_delivery_price" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
-                            </p>
-                            <p class="mb-1" t-if="order.total_shipping_weight">
-                                <strong>Package Weight:</strong> 
-                                <t t-esc="order.total_shipping_weight"/> kg
                             </p>
                         </div>
                     </div>

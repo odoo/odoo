@@ -167,6 +167,104 @@ publicWidget.registry.SmartStockBadge = publicWidget.Widget.extend({
     }
 });
 
+// Delivery Zone Selection in Checkout
+publicWidget.registry.SmartDeliveryZoneSelector = publicWidget.Widget.extend({
+    selector: '.smart-delivery-zone-section',
+    events: {
+        'change .delivery-zone-radio': '_onZoneChange',
+    },
+    
+    start: function () {
+        var self = this;
+        // Initialize with current selection
+        var $checked = this.$('.delivery-zone-radio:checked');
+        if ($checked.length) {
+            this._updateZoneInfo($checked);
+        }
+        return this._super.apply(this, arguments);
+    },
+    
+    _onZoneChange: function (ev) {
+        var self = this;
+        var $radio = $(ev.currentTarget);
+        var zoneId = $radio.val();
+        
+        // Update visual selection
+        this.$('.delivery-zone-option').removeClass('border-primary bg-light');
+        $radio.closest('.delivery-zone-option').addClass('border-primary bg-light');
+        
+        // Update info display
+        this._updateZoneInfo($radio);
+        
+        // Send to server
+        jsonrpc('/shop/set_delivery_zone', {
+            zone_id: parseInt(zoneId)
+        }).then(function (result) {
+            if (result.success) {
+                // Update any displayed delivery cost
+                if (result.delivery_price !== undefined) {
+                    self.$('#selected_zone_price').text(result.delivery_price_formatted || result.delivery_price);
+                }
+                // Optionally reload to update totals
+                // window.location.reload();
+            }
+        }).catch(function (error) {
+            console.error('Failed to set delivery zone:', error);
+        });
+    },
+    
+    _updateZoneInfo: function ($radio) {
+        var $option = $radio.closest('.delivery-zone-option');
+        var zoneName = $option.find('strong').first().text();
+        var zonePrice = $option.data('zone-price');
+        var zoneDays = $option.data('zone-days');
+        
+        this.$('#delivery_zone_info').removeClass('d-none');
+        this.$('#selected_zone_name').text(zoneName);
+        this.$('#selected_zone_price').text(zonePrice);
+        this.$('#selected_zone_days').text(zoneDays);
+    }
+});
+
+// Cart Delivery Zone Dropdown
+publicWidget.registry.SmartCartDeliveryZone = publicWidget.Widget.extend({
+    selector: '.smart-cart-delivery-zone',
+    events: {
+        'change .delivery-zone-select': '_onZoneSelect',
+    },
+    
+    _onZoneSelect: function (ev) {
+        var zoneId = $(ev.currentTarget).val();
+        if (zoneId) {
+            jsonrpc('/shop/set_delivery_zone', {
+                zone_id: parseInt(zoneId)
+            }).then(function (result) {
+                if (result.success) {
+                    // Reload page to update cart totals
+                    window.location.reload();
+                }
+            });
+        }
+    }
+});
+
+// Homepage Category Cards Hover Effect
+publicWidget.registry.SmartCategoryCard = publicWidget.Widget.extend({
+    selector: '.smart-category-card, .smart-category-card-mobile',
+    events: {
+        'mouseenter': '_onMouseEnter',
+        'mouseleave': '_onMouseLeave',
+    },
+    
+    _onMouseEnter: function () {
+        this.$el.addClass('shadow-lg').css('transform', 'translateY(-5px)');
+    },
+    
+    _onMouseLeave: function () {
+        this.$el.removeClass('shadow-lg').css('transform', 'translateY(0)');
+    }
+});
+
 // Add CSS animation dynamically
 var style = document.createElement('style');
 style.textContent = `
@@ -177,6 +275,20 @@ style.textContent = `
     .animate-pulse {
         animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
+    .smart-category-card, .smart-category-card-mobile {
+        transition: all 0.3s ease;
+    }
+    .delivery-zone-option {
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .delivery-zone-option:hover {
+        border-color: #714B67 !important;
+        background-color: #f8f9fa;
+    }
+    .delivery-zone-option.border-primary {
+        border-width: 2px !important;
+    }
 `;
 document.head.appendChild(style);
 
@@ -186,5 +298,8 @@ export default {
     SmartPriceRangeFilter: publicWidget.registry.SmartPriceRangeFilter,
     SmartCitySelector: publicWidget.registry.SmartCitySelector,
     SmartStockBadge: publicWidget.registry.SmartStockBadge,
+    SmartDeliveryZoneSelector: publicWidget.registry.SmartDeliveryZoneSelector,
+    SmartCartDeliveryZone: publicWidget.registry.SmartCartDeliveryZone,
+    SmartCategoryCard: publicWidget.registry.SmartCategoryCard,
 };
 

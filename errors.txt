@@ -1,10 +1,50 @@
-UncaughtPromiseError
+RPC_ERROR
 
-Uncaught Promise > View types not defined tree found in act_window action 648
+Odoo Server Error
 
-Occured on localhost:8068 on 2025-12-10 12:12:22 GMT
+Occured on localhost:8068 on model product.template on 2025-12-10 16:00:30 GMT
 
-Error: View types not defined tree found in act_window action 648
-    at _executeActWindowAction (http://localhost:8068/web/assets/2/f56ae03/web.assets_web.min.js:10085:26)
-    at Object.doAction (http://localhost:8068/web/assets/2/f56ae03/web.assets_web.min.js:10110:8)
-    at async Object.selectMenu (http://localhost:8068/web/assets/2/f56ae03/web.assets_web.min.js:10309:1)
+Traceback (most recent call last):
+  File "/Users/abdelkader/odoo-dev/odoo/odoo/http.py", line 2166, in _transactioning
+    return service_model.retrying(func, env=self.env)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abdelkader/odoo-dev/odoo/odoo/service/model.py", line 156, in retrying
+    result = func()
+  File "/Users/abdelkader/odoo-dev/odoo/odoo/http.py", line 2133, in _serve_ir_http
+    response = self.dispatcher.dispatch(rule.endpoint, args)
+  File "/Users/abdelkader/odoo-dev/odoo/odoo/http.py", line 2381, in dispatch
+    result = self.request.registry['ir.http']._dispatch(endpoint)
+  File "/Users/abdelkader/odoo-dev/odoo/odoo/addons/base/models/ir_http.py", line 333, in _dispatch
+    result = endpoint(**request.params)
+  File "/Users/abdelkader/odoo-dev/odoo/odoo/http.py", line 754, in route_wrapper
+    result = endpoint(self, *args, **params_ok)
+  File "/Users/abdelkader/odoo-dev/odoo/addons/web/controllers/dataset.py", line 36, in call_kw
+    return call_kw(request.env[model], method, args, kwargs)
+  File "/Users/abdelkader/odoo-dev/odoo/odoo/api.py", line 535, in call_kw
+    result = getattr(recs, name)(*args, **kwargs)
+  File "/Users/abdelkader/odoo-dev/odoo/addons/web/models/models.py", line 165, in web_read
+    for vals in co_records.web_read(field_spec['fields'])
+                ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abdelkader/odoo-dev/odoo/addons/web/models/models.py", line 86, in web_read
+    values_list: list[dict] = self.read(fields_to_read, load=None)
+                              ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/abdelkader/odoo-dev/odoo/odoo/models.py", line 3857, in read
+    self._origin.fetch(fields)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/Users/abdelkader/odoo-dev/odoo/odoo/models.py", line 4133, in fetch
+    fields_to_fetch = self._determine_fields_to_fetch(field_names, ignore_when_in_cache=True)
+  File "/Users/abdelkader/odoo-dev/odoo/odoo/models.py", line 4187, in _determine_fields_to_fetch
+    raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+ValueError: Invalid field 'color' on model 'product.public.category'
+
+The above server error caused the following client error:
+OwlError: An error occured in the owl lifecycle (see this Error's "cause" property)
+    Error: An error occured in the owl lifecycle (see this Error's "cause" property)
+        at handleError (http://localhost:8068/web/assets/2/f56ae03/web.assets_web.min.js:972:101)
+        at App.handleError (http://localhost:8068/web/assets/2/f56ae03/web.assets_web.min.js:1630:29)
+        at ComponentNode.initiateRender (http://localhost:8068/web/assets/2/f56ae03/web.assets_web.min.js:1064:19)
+
+Caused by: RPC_ERROR: Odoo Server Error
+    RPC_ERROR
+        at makeErrorFromResponse (http://localhost:8068/web/assets/2/f56ae03/web.assets_web.min.js:3165:165)
+        at XMLHttpRequest.<anonymous> (http://localhost:8068/web/assets/2/f56ae03/web.assets_web.min.js:3170:13)

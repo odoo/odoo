@@ -165,3 +165,71 @@ class WebsiteSaleExtension(WebsiteSale):
             'zone': zone_info,
         }
 
+    @http.route('/shop/set_delivery_zone', type='json', auth='public', website=True)
+    def set_delivery_zone(self, zone_id=None, **kwargs):
+        """AJAX endpoint to set the delivery zone for the current cart"""
+        if not zone_id:
+            return {'success': False, 'error': 'Zone ID required'}
+        
+        order = request.website.sale_get_order()
+        if not order:
+            return {'success': False, 'error': 'No active cart found'}
+        
+        zone = request.env['delivery.zone'].sudo().browse(int(zone_id))
+        if not zone.exists():
+            return {'success': False, 'error': 'Delivery zone not found'}
+        
+        try:
+            # Update the order's delivery zone
+            order.sudo().write({
+                'delivery_zone_id': zone.id,
+            })
+            
+            # Compute delivery price
+            delivery_price = zone.compute_delivery_price(
+                order.total_shipping_weight or 1.0,
+                order.amount_untaxed
+            )
+            
+            # Format price for display
+            currency = order.currency_id
+            delivery_price_formatted = f"{currency.symbol}{delivery_price:.2f}"
+            
+            _logger.info(
+                f"Delivery zone set for order {order.name}: "
+                f"Zone={zone.name}, Price={delivery_price}"
+            )
+            
+            return {
+                'success': True,
+                'zone_id': zone.id,
+                'zone_name': zone.name,
+                'delivery_price': delivery_price,
+                'delivery_price_formatted': delivery_price_formatted,
+                'estimated_days': zone.estimated_days,
+            }
+        except Exception as e:
+            _logger.error(f"Failed to set delivery zone: {str(e)}")
+            return {'success': False, 'error': str(e)}
+
+    @http.route('/shop/get_delivery_zones', type='json', auth='public', website=True)
+    def get_delivery_zones(self, **kwargs):
+        """AJAX endpoint to get available delivery zones"""
+        zones = request.env['delivery.zone'].sudo().search([('active', '=', True)])
+        
+        order = request.website.sale_get_order()
+        currency = order.currency_id if order else request.env.company.currency_id
+        
+        return {
+            'zones': [{
+                'id': zone.id,
+                'name': zone.name,
+                'base_price': zone.base_price,
+                'base_price_formatted': f"{currency.symbol}{zone.base_price:.2f}",
+                'estimated_days': zone.estimated_days,
+                'free_threshold': zone.free_delivery_threshold,
+                'cities': zone.cities or '',
+            } for zone in zones],
+            'selected_zone_id': order.delivery_zone_id.id if order and order.delivery_zone_id else None,
+        }
+

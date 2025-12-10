@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- ============================================================ -->
+    <!-- SMART ECOMMERCE - PRODUCT TEMPLATE VIEWS -->
+    <!-- ============================================================ -->
+    
     <!-- Product Template Form View Extension -->
     <record id="product_template_form_view_ecommerce" model="ir.ui.view">
         <field name="name">product.template.form.ecommerce.extension</field>
@@ -7,13 +11,22 @@
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="priority">20</field>
         <field name="arch" type="xml">
+            <!-- Make public category required when product is saleable -->
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="public_categ_ids" widget="many2many_tags" 
+                       string="Website Categories" 
+                       placeholder="Select categories..."
+                       options="{'color_field': 'color'}"
+                       required="sale_ok"/>
+            </xpath>
+            
             <!-- Add new page for eCommerce Extension fields -->
             <xpath expr="//page[@name='sales']" position="after">
                 <page string="eCommerce Extension" name="ecommerce_extension">
                     <group>
                         <group string="Brand &amp; Model">
-                            <field name="brand"/>
-                            <field name="product_model"/>
+                            <field name="brand" placeholder="e.g., Samsung, Apple, Nike"/>
+                            <field name="product_model" placeholder="e.g., Galaxy S23, iPhone 15"/>
                         </group>
                         <group string="Media">
                             <field name="video_url" placeholder="https://youtube.com/watch?v=..."/>
@@ -21,12 +34,15 @@
                         </group>
                     </group>
                     <group string="Specifications">
-                        <field name="specifications" widget="html" colspan="2"/>
+                        <field name="specifications" widget="html" colspan="2" placeholder="Enter product specifications..."/>
                     </group>
                     <group>
                         <group string="Stock Settings">
                             <field name="low_stock_threshold"/>
-                            <field name="availability_status" readonly="1"/>
+                            <field name="availability_status" readonly="1" widget="badge"
+                                   decoration-success="availability_status == 'in_stock'"
+                                   decoration-warning="availability_status == 'low_stock'"
+                                   decoration-danger="availability_status == 'out_of_stock'"/>
                         </group>
                         <group string="Shipping">
                             <field name="shipping_weight_kg"/>
@@ -46,6 +62,7 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="after">
+                <field name="public_categ_ids" widget="many2many_tags" string="Categories" optional="show"/>
                 <field name="brand" optional="show"/>
                 <field name="availability_status" widget="badge" 
                        decoration-success="availability_status == 'in_stock'"
@@ -64,17 +81,25 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="brand"/>
+                <field name="brand" string="Brand"/>
+                <field name="public_categ_ids" string="Website Category"/>
             </xpath>
             <xpath expr="//filter[@name='filter_to_sell']" position="after">
                 <separator/>
                 <filter string="In Stock" name="filter_in_stock" domain="[('availability_status', '=', 'in_stock')]"/>
                 <filter string="Low Stock" name="filter_low_stock" domain="[('availability_status', '=', 'low_stock')]"/>
                 <filter string="Out of Stock" name="filter_out_of_stock" domain="[('availability_status', '=', 'out_of_stock')]"/>
+                <separator/>
+                <filter string="Published" name="filter_published" domain="[('is_published', '=', True)]"/>
+                <filter string="Unpublished" name="filter_unpublished" domain="[('is_published', '=', False)]"/>
+                <separator/>
+                <filter string="Has Video" name="filter_has_video" domain="[('video_url', '!=', False)]"/>
+                <filter string="Has Specifications" name="filter_has_specs" domain="[('specifications', '!=', False)]"/>
             </xpath>
             <xpath expr="//group" position="inside">
                 <filter string="Brand" name="group_by_brand" context="{'group_by': 'brand'}"/>
                 <filter string="Availability" name="group_by_availability" context="{'group_by': 'availability_status'}"/>
+                <filter string="Website Category" name="group_by_public_categ" context="{'group_by': 'public_categ_ids'}"/>
             </xpath>
         </field>
     </record>
@@ -90,11 +115,15 @@
             <xpath expr="//field[@name='categ_id']" position="after">
                 <field name="brand"/>
                 <field name="availability_status"/>
+                <field name="public_categ_ids"/>
             </xpath>
             <!-- Add brand and availability after the name field in the template -->
             <xpath expr="//t[@t-name='card']//field[@name='name']" position="after">
                 <div t-if="record.brand.raw_value" class="text-muted small">
-                    <t t-esc="record.brand.value"/>
+                    <i class="fa fa-tag me-1"/><t t-esc="record.brand.value"/>
+                </div>
+                <div t-if="record.public_categ_ids.raw_value.length" class="text-muted small">
+                    <field name="public_categ_ids" widget="many2many_tags"/>
                 </div>
                 <div class="mt-1">
                     <span t-if="record.availability_status.raw_value == 'in_stock'" 
@@ -107,5 +136,110 @@
             </xpath>
         </field>
     </record>
+    
+    <!-- ============================================================ -->
+    <!-- SMART ECOMMERCE SPECIFIC PRODUCT VIEWS -->
+    <!-- ============================================================ -->
+    
+    <!-- Smart eCommerce Product List View -->
+    <record id="view_smart_product_template_list" model="ir.ui.view">
+        <field name="name">product.template.list.smart.ecommerce</field>
+        <field name="model">product.template</field>
+        <field name="priority">5</field>
+        <field name="arch" type="xml">
+            <list string="Products" default_order="name">
+                <field name="name"/>
+                <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
+                <field name="brand" optional="show"/>
+                <field name="list_price" string="Price"/>
+                <field name="qty_available" string="Qty On Hand"/>
+                <field name="availability_status" widget="badge" 
+                       decoration-success="availability_status == 'in_stock'"
+                       decoration-warning="availability_status == 'low_stock'"
+                       decoration-danger="availability_status == 'out_of_stock'"/>
+                <field name="is_published" widget="boolean_toggle" string="Published"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Smart eCommerce Product Kanban View -->
+    <record id="view_smart_product_template_kanban" model="ir.ui.view">
+        <field name="name">product.template.kanban.smart.ecommerce</field>
+        <field name="model">product.template</field>
+        <field name="priority">5</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="availability_status" class="o_kanban_mobile">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="default_code"/>
+                <field name="list_price"/>
+                <field name="qty_available"/>
+                <field name="brand"/>
+                <field name="availability_status"/>
+                <field name="public_categ_ids"/>
+                <field name="is_published"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="image_128" widget="image" options="{'size': [100, 100]}"/>
+                        <div class="ms-2 flex-grow-1">
+                            <field name="name" class="fw-bold"/>
+                            <div t-if="record.brand.raw_value" class="text-muted small">
+                                <i class="fa fa-tag"/> <t t-esc="record.brand.value"/>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="fw-bold text-primary">
+                                    <field name="list_price" widget="monetary"/>
+                                </span>
+                                <span t-if="record.availability_status.raw_value == 'in_stock'" 
+                                      class="badge text-bg-success">In Stock</span>
+                                <span t-elif="record.availability_status.raw_value == 'low_stock'" 
+                                      class="badge text-bg-warning">Low Stock</span>
+                                <span t-elif="record.availability_status.raw_value == 'out_of_stock'" 
+                                      class="badge text-bg-danger">Out of Stock</span>
+                            </div>
+                            <div class="mt-1">
+                                <field name="public_categ_ids" widget="many2many_tags"/>
+                            </div>
+                            <div class="mt-1 text-muted small">
+                                Qty: <field name="qty_available"/>
+                                <span t-if="!record.is_published.raw_value" class="badge text-bg-secondary ms-2">Unpublished</span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    
+    <!-- Smart eCommerce Product Search View -->
+    <record id="view_smart_product_template_search" model="ir.ui.view">
+        <field name="name">product.template.search.smart.ecommerce</field>
+        <field name="model">product.template</field>
+        <field name="priority">5</field>
+        <field name="arch" type="xml">
+            <search string="Products">
+                <field name="name" string="Product" filter_domain="['|', '|', ('default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
+                <field name="brand"/>
+                <field name="public_categ_ids" string="Category"/>
+                <field name="categ_id" string="Internal Category"/>
+                <separator/>
+                <filter string="Can be Sold" name="filter_to_sell" domain="[('sale_ok', '=', True)]"/>
+                <filter string="Published" name="filter_published" domain="[('is_published', '=', True)]"/>
+                <filter string="Unpublished" name="filter_unpublished" domain="[('is_published', '=', False)]"/>
+                <separator/>
+                <filter string="In Stock" name="filter_in_stock" domain="[('availability_status', '=', 'in_stock')]"/>
+                <filter string="Low Stock" name="filter_low_stock" domain="[('availability_status', '=', 'low_stock')]"/>
+                <filter string="Out of Stock" name="filter_out_of_stock" domain="[('availability_status', '=', 'out_of_stock')]"/>
+                <separator/>
+                <filter string="Has Video" name="filter_has_video" domain="[('video_url', '!=', False)]"/>
+                <filter string="Has Brand" name="filter_has_brand" domain="[('brand', '!=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="group_by_public_categ" context="{'group_by': 'public_categ_ids'}"/>
+                    <filter string="Brand" name="group_by_brand" context="{'group_by': 'brand'}"/>
+                    <filter string="Availability" name="group_by_availability" context="{'group_by': 'availability_status'}"/>
+                    <filter string="Internal Category" name="group_by_categ" context="{'group_by': 'categ_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 </odoo>
-

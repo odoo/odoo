@@ -1,15 +1,365 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Menu items for SMART eCommerce Extension -->
+    <!-- ============================================================ -->
+    <!-- SMART ECOMMERCE - MAIN APPLICATION MENU -->
+    <!-- ============================================================ -->
     
-    <!-- Root menu under Website -->
+    <!-- Root Menu - Main App -->
+    <menuitem 
+        id="menu_smart_ecommerce_root"
+        name="SMART eCommerce"
+        web_icon="smart_ecommerce_extension,static/description/icon.svg"
+        sequence="25"/>
+    
+    <!-- ============================================================ -->
+    <!-- PRODUCTS SECTION -->
+    <!-- ============================================================ -->
+    
+    <menuitem 
+        id="menu_smart_products"
+        name="Products"
+        parent="menu_smart_ecommerce_root"
+        sequence="10"/>
+    
+    <!-- All Products Action -->
+    <record id="action_smart_products" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('sale_ok', '=', True)]</field>
+        <field name="context">{
+            'default_sale_ok': True,
+            'default_type': 'product',
+            'search_default_filter_to_sell': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first product!
+            </p>
+            <p>
+                Add products to sell on your SMART eCommerce website.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem 
+        id="menu_smart_products_all"
+        name="All Products"
+        parent="menu_smart_products"
+        action="action_smart_products"
+        sequence="10"/>
+    
+    <!-- Products by Availability Actions -->
+    <record id="action_products_in_stock" model="ir.actions.act_window">
+        <field name="name">In Stock Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('sale_ok', '=', True), ('availability_status', '=', 'in_stock')]</field>
+        <field name="context">{'default_sale_ok': True, 'default_type': 'product'}</field>
+    </record>
+    
+    <record id="action_products_low_stock" model="ir.actions.act_window">
+        <field name="name">Low Stock Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('sale_ok', '=', True), ('availability_status', '=', 'low_stock')]</field>
+        <field name="context">{'default_sale_ok': True, 'default_type': 'product'}</field>
+    </record>
+    
+    <record id="action_products_out_of_stock" model="ir.actions.act_window">
+        <field name="name">Out of Stock Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('sale_ok', '=', True), ('availability_status', '=', 'out_of_stock')]</field>
+        <field name="context">{'default_sale_ok': True, 'default_type': 'product'}</field>
+    </record>
+    
+    <menuitem 
+        id="menu_products_in_stock"
+        name="In Stock"
+        parent="menu_smart_products"
+        action="action_products_in_stock"
+        sequence="20"/>
+    
+    <menuitem 
+        id="menu_products_low_stock"
+        name="Low Stock"
+        parent="menu_smart_products"
+        action="action_products_low_stock"
+        sequence="30"/>
+    
+    <menuitem 
+        id="menu_products_out_of_stock"
+        name="Out of Stock"
+        parent="menu_smart_products"
+        action="action_products_out_of_stock"
+        sequence="40"/>
+    
+    <!-- ============================================================ -->
+    <!-- CATEGORIES SECTION -->
+    <!-- ============================================================ -->
+    
+    <menuitem 
+        id="menu_smart_categories"
+        name="Categories"
+        parent="menu_smart_ecommerce_root"
+        sequence="20"/>
+    
+    <!-- Product Categories Action -->
+    <record id="action_smart_product_categories" model="ir.actions.act_window">
+        <field name="name">Product Categories</field>
+        <field name="res_model">product.public.category</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create product categories!
+            </p>
+            <p>
+                Categories help organize your products and make it easier for customers to browse your shop.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Product Categories List View -->
+    <record id="view_product_public_category_list" model="ir.ui.view">
+        <field name="name">product.public.category.list.smart</field>
+        <field name="model">product.public.category</field>
+        <field name="arch" type="xml">
+            <list string="Categories" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="parent_id"/>
+                <field name="product_tmpl_ids" widget="many2many_tags" string="Products"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Product Categories Form View -->
+    <record id="view_product_public_category_form" model="ir.ui.view">
+        <field name="name">product.public.category.form.smart</field>
+        <field name="model">product.public.category</field>
+        <field name="arch" type="xml">
+            <form string="Category">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_smart_products)d" type="action" class="oe_stat_button" icon="fa-cubes">
+                            <field name="product_tmpl_ids" widget="statinfo" string="Products"/>
+                        </button>
+                    </div>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Category Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="parent_id"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="website_description" widget="html"/>
+                        </page>
+                        <page string="Products" name="products">
+                            <field name="product_tmpl_ids">
+                                <list string="Products">
+                                    <field name="name"/>
+                                    <field name="list_price"/>
+                                    <field name="qty_available"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <menuitem 
+        id="menu_smart_product_categories"
+        name="Product Categories"
+        parent="menu_smart_categories"
+        action="action_smart_product_categories"
+        sequence="10"/>
+    
+    <!-- Internal Categories (for accounting/inventory) -->
+    <record id="action_smart_internal_categories" model="ir.actions.act_window">
+        <field name="name">Internal Categories</field>
+        <field name="res_model">product.category</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create internal product categories!
+            </p>
+            <p>
+                Internal categories are used for inventory and accounting purposes.
+            </p>
+        </field>
+    </record>
+    
+    <menuitem 
+        id="menu_smart_internal_categories"
+        name="Internal Categories"
+        parent="menu_smart_categories"
+        action="action_smart_internal_categories"
+        sequence="20"/>
+    
+    <!-- ============================================================ -->
+    <!-- ORDERS SECTION -->
+    <!-- ============================================================ -->
+    
+    <menuitem 
+        id="menu_smart_orders"
+        name="Orders"
+        parent="menu_smart_ecommerce_root"
+        sequence="30"/>
+    
+    <!-- My Orders Action (Website Orders for current user) -->
+    <record id="action_smart_my_orders" model="ir.actions.act_window">
+        <field name="name">My Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,kanban,form,calendar,pivot,graph</field>
+        <field name="domain">[('website_id', '!=', False)]</field>
+        <field name="context">{
+            'search_default_my_orders': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No website orders yet!
+            </p>
+            <p>
+                Orders placed through your website will appear here.
+            </p>
+        </field>
+    </record>
+    
+    <!-- All Website Orders Action -->
+    <record id="action_smart_all_website_orders" model="ir.actions.act_window">
+        <field name="name">All Website Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,kanban,form,calendar,pivot,graph</field>
+        <field name="domain">[('website_id', '!=', False)]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No website orders yet!
+            </p>
+            <p>
+                All orders placed through your website will appear here.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Orders by Status Actions -->
+    <record id="action_smart_orders_quotation" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('website_id', '!=', False), ('state', 'in', ['draft', 'sent'])]</field>
+        <field name="context">{}</field>
+    </record>
+    
+    <record id="action_smart_orders_confirmed" model="ir.actions.act_window">
+        <field name="name">Confirmed Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('website_id', '!=', False), ('state', '=', 'sale')]</field>
+        <field name="context">{}</field>
+    </record>
+    
+    <record id="action_smart_orders_to_deliver" model="ir.actions.act_window">
+        <field name="name">To Deliver</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('website_id', '!=', False), ('state', '=', 'sale'), ('delivery_status', '!=', 'full')]</field>
+        <field name="context">{}</field>
+    </record>
+    
+    <menuitem 
+        id="menu_smart_my_orders"
+        name="My Orders"
+        parent="menu_smart_orders"
+        action="action_smart_my_orders"
+        sequence="10"/>
+    
+    <menuitem 
+        id="menu_smart_all_orders"
+        name="All Website Orders"
+        parent="menu_smart_orders"
+        action="action_smart_all_website_orders"
+        sequence="20"/>
+    
+    <menuitem 
+        id="menu_smart_orders_quotation"
+        name="Quotations"
+        parent="menu_smart_orders"
+        action="action_smart_orders_quotation"
+        sequence="30"/>
+    
+    <menuitem 
+        id="menu_smart_orders_confirmed"
+        name="Confirmed Orders"
+        parent="menu_smart_orders"
+        action="action_smart_orders_confirmed"
+        sequence="40"/>
+    
+    <menuitem 
+        id="menu_smart_orders_to_deliver"
+        name="To Deliver"
+        parent="menu_smart_orders"
+        action="action_smart_orders_to_deliver"
+        sequence="50"/>
+    
+    <!-- ============================================================ -->
+    <!-- DELIVERY SECTION -->
+    <!-- ============================================================ -->
+    
+    <menuitem 
+        id="menu_smart_delivery"
+        name="Delivery"
+        parent="menu_smart_ecommerce_root"
+        sequence="40"/>
+    
+    <menuitem 
+        id="menu_smart_delivery_zones"
+        name="Delivery Zones"
+        parent="menu_smart_delivery"
+        action="delivery_zone_action"
+        sequence="10"/>
+    
+    <!-- ============================================================ -->
+    <!-- CONFIGURATION SECTION -->
+    <!-- ============================================================ -->
+    
+    <menuitem 
+        id="menu_smart_configuration"
+        name="Configuration"
+        parent="menu_smart_ecommerce_root"
+        sequence="90"/>
+    
+    <menuitem 
+        id="menu_smart_config_delivery_zones"
+        name="Delivery Zones"
+        parent="menu_smart_configuration"
+        action="delivery_zone_action"
+        sequence="10"/>
+    
+    <!-- ============================================================ -->
+    <!-- LEGACY MENUS (keep for backward compatibility) -->
+    <!-- ============================================================ -->
+    
+    <!-- Root menu under Website (legacy) -->
     <menuitem 
         id="menu_ecommerce_extension_root"
         name="eCommerce Extension"
         parent="website.menu_website_configuration"
         sequence="50"/>
     
-    <!-- Delivery Zones menu -->
+    <!-- Delivery Zones menu (legacy) -->
     <menuitem 
         id="menu_delivery_zones"
         name="Delivery Zones"
@@ -26,4 +376,3 @@
         sequence="50"
         groups="stock.group_stock_manager"/>
 </odoo>
-

@@ -82,8 +82,9 @@ Features:
         ],
     },
     'installable': True,
-    'application': False,
+    'application': True,
     'auto_install': False,
     'license': 'LGPL-3',
+    'icon': '/smart_ecommerce_extension/static/description/icon.svg',
 }
 

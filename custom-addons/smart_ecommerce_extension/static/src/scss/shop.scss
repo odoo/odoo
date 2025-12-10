@@ -439,6 +439,318 @@
 }
 
 /* ----------------------------------------
+   Filter Sidebar
+   ---------------------------------------- */
+.smart-filter-sidebar {
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        border-bottom: none;
+    }
+    
+    .filter-section {
+        h6 {
+            font-size: 0.9rem;
+        }
+        
+        .form-check-input {
+            cursor: pointer;
+            
+            &:checked {
+                background-color: #714B67;
+                border-color: #714B67;
+            }
+            
+            &:focus {
+                box-shadow: 0 0 0 0.25rem rgba(113, 75, 103, 0.25);
+            }
+        }
+        
+        .form-check-label {
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .badge {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+        
+        ul li a {
+            padding: 0.25rem 0;
+            transition: all 0.2s ease;
+            
+            &:hover {
+                color: #714B67 !important;
+                padding-left: 0.25rem;
+            }
+        }
+    }
+    
+    .form-control {
+        border-radius: 6px;
+        
+        &:focus {
+            border-color: #714B67;
+            box-shadow: 0 0 0 0.2rem rgba(113, 75, 103, 0.15);
+        }
+    }
+    
+    .btn-primary {
+        background-color: #714B67;
+        border-color: #714B67;
+        
+        &:hover {
+            background-color: darken(#714B67, 10%);
+        }
+    }
+}
+
+/* Mobile Filters */
+#smartMobileFilters {
+    .card {
+        border-radius: 12px;
+    }
+    
+    .btn {
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Active Filters Bar */
+.smart-active-filters {
+    border-radius: 8px;
+    
+    .badge {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 20px;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        i.fa-times {
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        &:hover i.fa-times {
+            opacity: 1;
+        }
+    }
+}
+
+/* ----------------------------------------
+   Homepage Categories Section
+   ---------------------------------------- */
+.smart-homepage-categories {
+    .smart-category-card {
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        
+        &:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(113, 75, 103, 0.2) !important;
+        }
+        
+        .card-body {
+            background: white;
+        }
+        
+        .smart-category-icon {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(113, 75, 103, 0.1) 0%, rgba(155, 106, 143, 0.1) 100%);
+        }
+        
+        .card-title {
+            color: #333;
+            font-weight: 600;
+        }
+    }
+    
+    .smart-category-card-mobile {
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .card-body {
+            background: white;
+        }
+    }
+}
+
+.smart-quick-links {
+    .card {
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+        }
+        
+        .card-body {
+            padding: 1rem 1.25rem;
+        }
+    }
+}
+
+/* ----------------------------------------
+   Delivery Zone Selection
+   ---------------------------------------- */
+.smart-delivery-zone-section {
+    .card-header {
+        background: linear-gradient(135deg, #714B67 0%, #9B6A8F 100%) !important;
+    }
+    
+    .delivery-zone-option {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            border-color: #714B67 !important;
+            background-color: rgba(113, 75, 103, 0.05);
+        }
+        
+        &.selected, &:has(.form-check-input:checked) {
+            border-color: #714B67 !important;
+            border-width: 2px;
+            background-color: rgba(113, 75, 103, 0.08);
+        }
+        
+        .form-check-input {
+            cursor: pointer;
+            
+            &:checked {
+                background-color: #714B67;
+                border-color: #714B67;
+            }
+            
+            &:focus {
+                box-shadow: 0 0 0 0.25rem rgba(113, 75, 103, 0.25);
+            }
+        }
+    }
+}
+
+.smart-cart-delivery-zone {
+    .delivery-zone-select {
+        border-color: #714B67;
+        
+        &:focus {
+            border-color: #714B67;
+            box-shadow: 0 0 0 0.25rem rgba(113, 75, 103, 0.25);
+        }
+    }
+}
+
+/* ----------------------------------------
+   Tablet Categories (Horizontal Scroll)
+   ---------------------------------------- */
+.smart-tablet-categories {
+    .btn {
+        white-space: nowrap;
+        
+        &.btn-primary {
+            background-color: #714B67;
+            border-color: #714B67;
+        }
+        
+        &.btn-outline-primary {
+            color: #714B67;
+            border-color: #714B67;
+            
+            &:hover {
+                background-color: #714B67;
+                color: white;
+            }
+        }
+    }
+    
+    // Custom scrollbar for horizontal scroll
+    &::-webkit-scrollbar {
+        height: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 2px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #714B67;
+        border-radius: 2px;
+    }
+}
+
+/* ----------------------------------------
+   Responsive Adjustments for Homepage
+   ---------------------------------------- */
+@media (max-width: 576px) {
+    .smart-homepage-categories {
+        .smart-category-card-mobile {
+            .card-body {
+                padding: 0.75rem;
+            }
+            
+            img {
+                width: 32px !important;
+                height: 32px !important;
+            }
+            
+            i.fa-2x {
+                font-size: 1.5rem;
+            }
+        }
+    }
+    
+    .smart-quick-links {
+        .card-body {
+            padding: 0.75rem !important;
+            
+            i.fa-2x {
+                font-size: 1.25rem;
+            }
+            
+            h6 {
+                font-size: 0.875rem;
+            }
+        }
+    }
+    
+    .smart-delivery-zone-section {
+        .delivery-zone-option {
+            padding: 0.75rem !important;
+            
+            .badge {
+                font-size: 0.75rem;
+            }
+        }
+    }
+}
+
+/* ----------------------------------------
    Dark Mode Support (if website has dark theme)
    ---------------------------------------- */
 [data-bs-theme="dark"] {
@@ -489,6 +801,35 @@
                 &:hover {
                     color: #9B6A8F;
                 }
+            }
+        }
+    }
+    
+    .smart-homepage-categories {
+        background: linear-gradient(135deg, #1e272e 0%, #2d3436 100%) !important;
+        
+        .smart-category-card, .smart-category-card-mobile {
+            .card-body {
+                background: #2d3436;
+            }
+            
+            .card-title {
+                color: #f8f9fa;
+            }
+        }
+    }
+    
+    .smart-delivery-zone-section {
+        .card-body {
+            background: #2d3436;
+        }
+        
+        .delivery-zone-option {
+            background: #1e272e;
+            border-color: #495057 !important;
+            
+            &:hover {
+                background: #2d3436;
             }
         }
     }

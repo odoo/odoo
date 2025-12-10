@@ -46,16 +46,27 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
                 <separator/>
+                <filter string="My Orders" name="my_orders" 
+                        domain="[('user_id', '=', uid)]"
+                        help="Orders assigned to me"/>
                 <filter string="Website Orders" name="website_orders" 
                         domain="[('website_id', '!=', False)]"
                         help="Orders placed through the website"/>
                 <filter string="Manual Orders" name="manual_orders" 
                         domain="[('website_id', '=', False)]"
                         help="Orders created manually"/>
+                <separator/>
+                <filter string="Quotations" name="quotations" 
+                        domain="[('state', 'in', ['draft', 'sent'])]"/>
+                <filter string="Sales Orders" name="sales_orders" 
+                        domain="[('state', '=', 'sale')]"/>
+                <filter string="Done" name="done_orders" 
+                        domain="[('state', '=', 'done')]"/>
             </xpath>
             <xpath expr="//group" position="inside">
                 <filter string="Website" name="group_website" context="{'group_by': 'website_id'}"/>
                 <filter string="Delivery Zone" name="group_delivery_zone" context="{'group_by': 'delivery_zone_id'}"/>
+                <filter string="Order Status" name="group_state" context="{'group_by': 'state'}"/>
             </xpath>
         </field>
     </record>
@@ -108,6 +119,117 @@
         parent="sale.sale_order_menu"
         action="action_website_orders"
         sequence="5"/>
+    
+    <!-- ============================================================ -->
+    <!-- SMART ECOMMERCE - ORDERS SPECIFIC VIEWS -->
+    <!-- ============================================================ -->
+    
+    <!-- Smart eCommerce Orders List View -->
+    <record id="view_smart_ecommerce_order_list" model="ir.ui.view">
+        <field name="name">sale.order.list.smart.ecommerce</field>
+        <field name="model">sale.order</field>
+        <field name="priority">5</field>
+        <field name="arch" type="xml">
+            <list string="Orders" default_order="date_order desc" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                <field name="name" string="Order #"/>
+                <field name="date_order" string="Date"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="website_id" string="Source"/>
+                <field name="user_id" string="Salesperson" widget="many2one_avatar_user"/>
+                <field name="delivery_zone_id" string="Delivery Zone" optional="show"/>
+                <field name="estimated_delivery_date" string="Est. Delivery" optional="show"/>
+                <field name="amount_total" string="Total" sum="Total"/>
+                <field name="state" string="Status" widget="badge" 
+                       decoration-success="state == 'sale'" 
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'sent'"
+                       decoration-muted="state == 'cancel'"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Smart eCommerce Orders Kanban View -->
+    <record id="view_smart_ecommerce_order_kanban" model="ir.ui.view">
+        <field name="name">sale.order.kanban.smart.ecommerce</field>
+        <field name="model">sale.order</field>
+        <field name="priority">5</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_mobile">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="date_order"/>
+                <field name="partner_id"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+                <field name="website_id"/>
+                <field name="user_id"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'sent': 'warning', 'sale': 'success', 'done': 'secondary', 'cancel': 'danger'}}"/>
+                            </div>
+                            <div class="text-muted small">
+                                <field name="date_order" widget="date"/>
+                            </div>
+                            <div class="mt-2">
+                                <strong><field name="partner_id"/></strong>
+                            </div>
+                            <div t-if="record.website_id.raw_value" class="text-muted small">
+                                <i class="fa fa-globe"/> <field name="website_id"/>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="fw-bold text-primary">
+                                    <field name="amount_total" widget="monetary"/>
+                                </span>
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    
+    <!-- Smart eCommerce Orders Search View -->
+    <record id="view_smart_ecommerce_order_search" model="ir.ui.view">
+        <field name="name">sale.order.search.smart.ecommerce</field>
+        <field name="model">sale.order</field>
+        <field name="priority">5</field>
+        <field name="arch" type="xml">
+            <search string="Orders">
+                <field name="name" string="Order" filter_domain="['|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self)]"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="user_id" string="Salesperson"/>
+                <field name="website_id" string="Website"/>
+                <field name="delivery_zone_id" string="Delivery Zone"/>
+                <separator/>
+                <filter string="My Orders" name="my_orders" domain="[('user_id', '=', uid)]"/>
+                <filter string="Website Orders" name="website_orders" domain="[('website_id', '!=', False)]"/>
+                <separator/>
+                <filter string="Quotations" name="quotations" domain="[('state', 'in', ['draft', 'sent'])]"/>
+                <filter string="Sales Orders" name="sales_orders" domain="[('state', '=', 'sale')]"/>
+                <filter string="Done" name="done_orders" domain="[('state', '=', 'done')]"/>
+                <filter string="Cancelled" name="cancelled_orders" domain="[('state', '=', 'cancel')]"/>
+                <separator/>
+                <filter string="Today" name="today" domain="[('date_order', '&gt;=', context_today().strftime('%%Y-%%m-%%d')), ('date_order', '&lt;', (context_today() + datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="This Week" name="this_week" domain="[('date_order', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="This Month" name="this_month" domain="[('date_order', '&gt;=', context_today().strftime('%%Y-%%m-01'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="group_by_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Salesperson" name="group_by_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Website" name="group_by_website" context="{'group_by': 'website_id'}"/>
+                    <filter string="Delivery Zone" name="group_by_delivery_zone" context="{'group_by': 'delivery_zone_id'}"/>
+                    <filter string="Order Date" name="group_by_date" context="{'group_by': 'date_order:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
     
 </odoo>
 
