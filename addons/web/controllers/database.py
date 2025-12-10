@@ -160,7 +160,6 @@ class Database(http.Controller):
         try:
             verify_access(master_pwd)
             odoo.modules.db.create(
-                master_pwd,
                 name,
                 demo=str2bool(post.get('demo', False)),
                 user_login=post['login'],
@@ -190,7 +189,6 @@ class Database(http.Controller):
         try:
             verify_access(master_pwd)
             odoo.modules.db.duplicate(
-                master_pwd,
                 name,
                 new_name,
                 neutralize_database=str2bool(neutralize_database),
@@ -206,7 +204,7 @@ class Database(http.Controller):
     def drop(self, master_pwd, name):
         try:
             verify_access(master_pwd)
-            odoo.modules.db.drop(master_pwd, name)
+            odoo.modules.db.drop(name)
             if request.session.db == name:
                 request.session.logout()
             return request.redirect('/web/database/manager')
@@ -231,6 +229,7 @@ class Database(http.Controller):
             ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
             return send_file(
                 dump_file,
+                request.httprequest.environ,
                 mimetype=('application/zip' if backup_format == 'zip'
                      else 'application/octet-stream'),
                 as_attachment=True,
@@ -249,7 +248,7 @@ class Database(http.Controller):
             verify_access(master_pwd)
             with tempfile.NamedTemporaryFile(delete=False) as data_file:
                 backup_file.save(data_file)
-            odoo.modules.db.restore_db(
+            odoo.modules.db.restore(
                 name,
                 data_file.name,
                 copy=str2bool(copy),

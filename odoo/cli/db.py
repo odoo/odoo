@@ -23,7 +23,7 @@ Target database {db_name} exists, aborting.
 \tuse `--force` to delete the existing database anyway."""
 
 
-def _exit_if_exists(self, db_name, *, drop_instead):
+def _exit_if_exists(db_name, *, drop_instead):
     if not db.exist(db_name):
         pass
     elif drop_instead:
