@@ -49,16 +49,35 @@
                     name="action_view_sales"
                     type="object"
                     icon="fa-signal"
-                    help="Sold in the last 365 days"
+                    help="Sold in the last 365 days. Outgoing represents confirmed sales orders not delivered, or partially delivered"
                     groups="sales_team.group_sale_salesman"
                     invisible="not sale_ok">
-                    <div class="o_field_widget o_stat_info">
+                    <div class="o_field_widget o_stat_info" invisible="is_storable == True">
                         <span class="o_stat_value d-flex gap-1">
                             <field name="sales_count" widget="statinfo" nolabel="1" class="oe_inline" options="{'hide_trailing_zeros': true}"/>
                             <field name="uom_name" class="oe_inline" groups="uom.group_uom"/>
                         </span>
                         <span class="o_stat_text">Sold</span>
                     </div>
+                    <div class="d-flex flex-row gap-1 ms-1" invisible="is_storable == False">
+                        <div class="o_field_widget o_stat_info flex-column align-items-end gap-1">
+                            <span class="o_stat_value d-flex gap-1">
+                                <field name="sales_count" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
+                            </span>
+                            <span class="o_stat_value d-flex gap-1">
+                                <field name="outgoing_qty" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
+                            </span>
+                        </div>
+                        <div class="o_field_widget o_stat_info flex-column align-items-start gap-1">
+                            <span class="o_stat_value">
+                                <field name="uom_name" widget="statinfo" nolabel="1" groups="uom.group_uom"/>
+                                <span groups="!uom.group_uom">Sold</span>
+                            </span>
+                            <span class="o_stat_value text-muted">
+                                Outgoing
+                            </span>
+                        </div>
+                     </div>
                 </button>
             </div>
         </field>
@@ -73,16 +92,35 @@
                 <button class="oe_stat_button"
                     name="action_view_sales"
                     type="object" icon="fa-signal"
-                    help="Sold in the last 365 days"
+                    help="Sold in the last 365 days. Outgoing represents confirmed sales orders not delivered, or partially delivered"
                     groups="sales_team.group_sale_salesman"
                     invisible="not sale_ok">
-                    <div class="o_field_widget o_stat_info">
+                    <div class="o_field_widget o_stat_info" invisible="is_storable == True">
                         <span class="o_stat_value d-flex gap-1">
                             <field name="sales_count" widget="statinfo" nolabel="1" class="oe_inline" options="{'hide_trailing_zeros': true}"/>
                             <field name="uom_name" class="oe_inline" groups="uom.group_uom"/>
                         </span>
                         <span class="o_stat_text">Sold</span>
                     </div>
+                    <div class="d-flex flex-row gap-1 ms-1" invisible="is_storable == False">
+                        <div class="o_field_widget o_stat_info flex-column align-items-end gap-1">
+                            <span class="o_stat_value d-flex gap-1">
+                                <field name="sales_count" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
+                            </span>
+                            <span class="o_stat_value d-flex gap-1">
+                                <field name="outgoing_qty" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
+                            </span>
+                        </div>
+                        <div class="o_field_widget o_stat_info flex-column align-items-start gap-1">
+                            <span class="o_stat_value">
+                                <field name="uom_name" widget="statinfo" nolabel="1" groups="uom.group_uom"/>
+                                <span groups="!uom.group_uom">Sold</span>
+                            </span>
+                            <span class="o_stat_value text-muted">
+                                Outgoing
+                            </span>
+                        </div>
+                     </div>
                 </button>
             </button>
         </field>

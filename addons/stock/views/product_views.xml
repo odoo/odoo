@@ -120,9 +120,15 @@
             <field name="arch" type="xml">
                 <field name="uom_id" position="before">
                     <field name="show_on_hand_qty_status_button" column_invisible="True" groups="stock.group_stock_user"/>
-                    <field name="qty_available" invisible="not show_on_hand_qty_status_button" string="On Hand" optional="show" decoration-danger="qty_available &lt; 0" groups="stock.group_stock_user" sum="Total On Hand"/>
-                    <field name="virtual_available" invisible="not show_on_hand_qty_status_button" string="Forecasted" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1" groups="stock.group_stock_user" sum="Total Forecasted"/>
                 </field>
+                <xpath expr="//field[@name='qty_available']" position="attributes">
+                    <attribute name="invisible">not show_on_hand_qty_status_button</attribute>
+                    <attribute name="groups">stock.group_stock_user</attribute>
+                </xpath>
+                <xpath expr="//field[@name='virtual_available']" position="attributes">
+                    <attribute name="invisible">not show_on_hand_qty_status_button</attribute>
+                    <attribute name="groups">stock.group_stock_user</attribute>
+                </xpath>
                 <field name="default_code" position="after">
                     <field name="responsible_id" widget="many2one_avatar_user" optional="hide" groups="stock.group_stock_user"/>
                 </field>
@@ -258,7 +264,7 @@
                 <xpath expr="//kanban" position="inside">
                     <field name="show_on_hand_qty_status_button" groups="stock.group_stock_user"/>
                 </xpath>
-                <xpath expr="//field[@name='product_properties']" position="before">
+                <xpath expr="//span[@name='on_hand_qty_kanban']" position="replace">
                     <div groups="stock.group_stock_user" t-if="record.show_on_hand_qty_status_button.raw_value">
                         On hand: <field name="qty_available"/> <field name="uom_id" groups="uom.group_uom"/>
                     </div>

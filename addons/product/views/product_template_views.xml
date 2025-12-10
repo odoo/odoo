@@ -19,6 +19,8 @@
                     groups="base.group_multi_company" optional="hide"/>
                 <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id'}" optional="show" decoration-muted="not sale_ok"/>
                 <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}" optional="show" readonly="1"/>
+                <field name="qty_available" string="On Hand" decoration-danger="qty_available &lt; 0" optional="show" sum="Total On Hand" readonly="1"/>
+                <field name="virtual_available" string="Forecasted" decoration-danger="virtual_available &lt; 0" optional="show" decoration-bf="1" sum="Total Forecasted" readonly="1"/>
                 <field name="categ_id" optional="hide"/>
                 <field name="type" optional="hide" readonly="1"/>
                 <field name="uom_id" readonly="1" optional="show" groups="uom.group_uom"/>
@@ -133,6 +135,7 @@
                 <field name="currency_id"/>
                 <field name="activity_state"/>
                 <field name="categ_id"/>
+                <field name="is_storable" invisible="1"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="card" class="flex-row">
@@ -153,6 +156,9 @@
                                 Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             </span>
                             <field name="product_properties" widget="properties"/>
+                            <span name="on_hand_qty_kanban" t-if="record.is_storable.raw_value">
+                                On hand: <field name="qty_available"/> <field name="uom_id" groups="uom.group_uom"/>
+                            </span>
                         </main>
                         <aside>
                             <field
