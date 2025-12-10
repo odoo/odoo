@@ -6631,3 +6631,56 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(picking.move_line_ids.lot_id, lot2)
         picking.button_validate()
         self.assertEqual(picking.move_ids.lot_ids, lot2)
+
+    def test_delivery_slip_aggregated_lines_with_canceled_move_and_packaging(self):
+        """
+        Ensure that the delivery slip report correctly aggregates product quantities
+        when a picking contains both a completed move and a canceled move that uses
+        packaging units.
+        - two products are ordered in packaging (e.g., 1 pack of 6)
+        - the picking is split, causing one move to be fulfilled and the other canceled
+        - the canceled move still contributes packaging information (ordered quantity)
+        The report must not crash and must return consistent aggregated values.
+        """
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        # upodate the quantity of product A
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 6)
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.picking_type_out.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 1,
+                    'product_uom': pack_of_6.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+                Command.create({
+                    'product_id': self.productB.id,
+                    'product_uom_qty': 1,
+                    'product_uom': pack_of_6.id,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+            ],
+        })
+        picking.action_confirm()
+        self.assertEqual(picking.move_ids.mapped('quantity'), [1.0, 0])
+        picking.action_split_transfer()
+        backorder = picking.backorder_ids
+        backorder.action_cancel()
+        picking.button_validate()
+        self.assertEqual(backorder.state, 'cancel')
+        self.assertEqual(picking.state, 'done')
+        aggregate_values = picking.move_line_ids._get_aggregated_product_quantities()
+        self.assertEqual(len(aggregate_values), 2)
+        aggregate_val_1 = aggregate_values[f'{self.productA.id}_{self.productA.name}__{pack_of_6.id}_{pack_of_6.id}']
+        aggregate_val_2 = aggregate_values[f'{self.productB.id}_{self.productB.name}__{pack_of_6.id}_{pack_of_6.id}']
+        self.assertEqual(aggregate_val_1['qty_ordered'], 1.0)
+        self.assertEqual(aggregate_val_1['quantity'], 1.0)
+        self.assertEqual(aggregate_val_1['packaging_qty_ordered'], 1.0)
+        self.assertEqual(aggregate_val_2['qty_ordered'], 1.0)
+        self.assertEqual(aggregate_val_2['quantity'], 0)
+        self.assertEqual(aggregate_val_2['packaging_qty_ordered'], 0.0)
