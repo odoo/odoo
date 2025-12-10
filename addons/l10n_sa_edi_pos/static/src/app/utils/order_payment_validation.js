@@ -10,7 +10,7 @@ patch(OrderPaymentValidation.prototype, {
         this.dialog = this.pos.env.services.dialog;
     },
     async finalizeValidation() {
-        await super.finalizeValidation(...arguments);
+        const potentialValidationError = await super.finalizeValidation(...arguments);
 
         // note: isSACompany guarantees order.is_to_invoice()
         if (
@@ -39,5 +39,6 @@ patch(OrderPaymentValidation.prototype, {
                 body: message,
             });
         }
+        return potentialValidationError;
     },
 });
