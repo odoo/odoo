@@ -6,7 +6,7 @@ patch(MessagingMenu.prototype, {
     /** @override */
     markAsRead(thread) {
         super.markAsRead(...arguments);
-        if (thread.model === "discuss.channel") {
+        if (thread.channel) {
             thread.markAsRead();
         }
     },

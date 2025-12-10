@@ -72,7 +72,7 @@ registerComposerAction("send-message", {
     name: ({ composer, owner }) =>
         composer.message
             ? _t("Save editing")
-            : composer.targetThread?.model === "discuss.channel"
+            : composer.targetThread?.channel
             ? _t("Send")
             : owner.props.type === "note"
             ? _t("Log")

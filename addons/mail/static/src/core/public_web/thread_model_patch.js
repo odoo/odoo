@@ -57,7 +57,7 @@ patch(Thread.prototype, {
         if (this.eq(this.store.discuss.thread)) {
             router.replaceState({ active_id: undefined });
         }
-        if (this.model === "discuss.channel" && this.self_member_id?.is_pinned !== false) {
+        if (this.channel && this.self_member_id?.is_pinned !== false) {
             await this.store.env.services.orm.silent.call(
                 "discuss.channel",
                 "channel_pin",

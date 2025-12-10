@@ -90,7 +90,7 @@ const threadPatch = {
     /** @override */
     async checkReadAccess() {
         const res = await super.checkReadAccess();
-        if (!res && this.model === "discuss.channel") {
+        if (!res && this.channel) {
             // channel is assumed to be readable if its channel_type is known
             return this.channel.channel_type;
         }
@@ -139,7 +139,7 @@ const threadPatch = {
             }
             return formatList(nameParts);
         }
-        if (this.model === "discuss.channel" && this.name) {
+        if (this.channel && this.name) {
             return this.name;
         }
         return super.displayName;
@@ -246,7 +246,7 @@ const threadPatch = {
     },
     /** @override */
     open(options) {
-        if (this.model === "discuss.channel") {
+        if (this.channel) {
             const res = this.channel.openChannel();
             if (res) {
                 return res;
@@ -259,7 +259,7 @@ const threadPatch = {
     /** @param {string} body */
     async post(body) {
         const textContent = createElementWithContent("div", body).textContent.trim();
-        if (this.model === "discuss.channel" && textContent.startsWith("/")) {
+        if (this.channel && textContent.startsWith("/")) {
             const [firstWord] = textContent.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
             if (

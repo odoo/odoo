@@ -83,7 +83,7 @@ registerMessageAction("reply-to", {
         if (["discuss.channel", "mail.box"].includes(thread.model)) {
             composer.replyToMessage = message;
         }
-        if (thread.model === "discuss.channel") {
+        if (thread.channel) {
             return;
         }
         if (!message.isSelfAuthored && message.model !== "discuss.channel") {

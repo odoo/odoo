@@ -821,7 +821,7 @@ export class Composer extends Component {
         const postThread = toRaw(this.thread);
         const post = postThread.post.bind(postThread, value, postData, extraData);
         let message;
-        if (postThread.model === "discuss.channel") {
+        if (postThread.channel) {
             // feature of (optimistic) temp message
             post();
         } else {

@@ -287,7 +287,7 @@ export class Message extends Record {
     }
 
     get isHighlightedFromMention() {
-        return this.isSelfMentioned && this.thread?.model === "discuss.channel";
+        return this.isSelfMentioned && Boolean(this.thread?.channel);
     }
 
     isSelfAuthored = fields.Attr(false, {
@@ -303,7 +303,7 @@ export class Message extends Record {
     }
 
     get isNotification() {
-        return this.message_type === "notification" && this.thread?.model === "discuss.channel";
+        return this.message_type === "notification" && this.thread?.channel;
     }
 
     get isSubjectSimilarToThreadName() {

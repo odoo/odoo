@@ -48,7 +48,7 @@ const StorePatch = {
     },
     onLinkFollowed(fromThread) {
         super.onLinkFollowed(...arguments);
-        if (!this.env.isSmall && fromThread?.model === "discuss.channel") {
+        if (!this.env.isSmall && fromThread?.channel) {
             fromThread.open({ focus: false });
         }
     },

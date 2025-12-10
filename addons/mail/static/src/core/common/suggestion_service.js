@@ -89,14 +89,12 @@ export class SuggestionService {
      */
     async fetchPartnersRoles(term, thread, { abortSignal } = {}) {
         const kwargs = { search: term };
-        if (thread?.model === "discuss.channel") {
+        if (thread?.channel) {
             kwargs.channel_id = thread.id;
         }
         const data = await this.makeOrmCall(
             "res.partner",
-            thread?.model === "discuss.channel"
-                ? "get_mention_suggestions_from_channel"
-                : "get_mention_suggestions",
+            thread?.channel ? "get_mention_suggestions_from_channel" : "get_mention_suggestions",
             [],
             kwargs,
             { abortSignal }

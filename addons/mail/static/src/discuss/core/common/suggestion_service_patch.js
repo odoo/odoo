@@ -10,13 +10,13 @@ const commandRegistry = registry.category("discuss.channel_commands");
 const suggestionServicePatch = {
     getSupportedDelimiters(thread, env) {
         const res = super.getSupportedDelimiters(...arguments);
-        return thread?.model === "discuss.channel" ? [...res, ["/", 0]] : res;
+        return thread?.channel ? [...res, ["/", 0]] : res;
     },
     /**
      * @override
      */
     isSuggestionValid(partner, thread) {
-        if (thread?.model === "discuss.channel" && partner.eq(this.store.odoobot)) {
+        if (thread?.channel && partner.eq(this.store.odoobot)) {
             return true;
         }
         return super.isSuggestionValid(...arguments);
