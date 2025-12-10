@@ -560,10 +560,10 @@ class configmanager:
             # (mostly once this warning is bumped to DeprecationWarning proper)
             if setup_logging is None:
                 warnings.warn(
-                    "As of Odoo 18, it's recommended to specify whether"
-                    " you want Odoo to setup its own logging (or want to"
-                    " handle it yourself)",
-                    category=PendingDeprecationWarning,
+                    "As of Odoo 20, it is strongly recommended to specify"
+                    " whether you want Odoo to setup its own logging (or want"
+                    " to handle it yourself)",
+                    category=DeprecationWarning,
                     stacklevel=2,
                 )
         self._warn_deprecated_options()
