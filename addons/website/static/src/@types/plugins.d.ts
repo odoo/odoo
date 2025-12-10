@@ -25,7 +25,7 @@ declare module "plugins" {
     import { WebsiteParallaxShared } from "@website/builder/plugins/options/parallax_option_plugin";
     import { searchbar_option_display_items, searchbar_option_order_by_items } from "@website/builder/plugins/options/searchbar_option_plugin";
     import { SocialMediaOptionShared } from "@website/builder/plugins/options/social_media_option_plugin";
-    import { visibility_selector_parameters } from "@website/builder/plugins/options/visibility_option_plugin";
+    import { on_visibility_toggled_handlers, visibility_selector_parameters } from "@website/builder/plugins/options/visibility_option_plugin";
     import { WebsitePageConfigOptionShared } from "@website/builder/plugins/options/website_page_config_option_plugin";
     import { PopupVisibilityShared } from "@website/builder/plugins/popup_visibility_plugin";
     import { SwitchableViewsShared } from "@website/builder/plugins/switchable_views_plugin";
@@ -77,6 +77,7 @@ declare module "plugins" {
         dynamic_snippet_template_updated: dynamic_snippet_template_updated;
         get_gallery_items_handlers: get_gallery_items_handlers;
         mark_translatable_nodes: mark_translatable_nodes;
+        on_visibility_toggled_handlers: on_visibility_toggled_handlers;
         remove_hover_effect_handlers: remove_hover_effect_handlers;
         reorder_items_handlers: reorder_items_handlers;
         set_hover_effect_handlers: set_hover_effect_handlers;
