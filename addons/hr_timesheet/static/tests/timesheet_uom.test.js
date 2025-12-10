@@ -20,7 +20,7 @@ test("hr.timesheet (form): FloatTimeField is used when current company uom uses 
         resModel: "account.analytic.line",
         resId: 1,
     });
-    expect('div[name="unit_amount"] input').toHaveValue("01:00", {
+    expect('div[name="unit_amount"] input').toHaveValue("1h", {
         message: "unit_amount should be displayed as time",
     });
 });
@@ -32,7 +32,7 @@ test("hr.timesheet (form): FloatTimeField is not dependent of timesheet_uom_fact
         resModel: "account.analytic.line",
         resId: 1,
     });
-    expect('div[name="unit_amount"] input').toHaveValue("01:00", {
+    expect('div[name="unit_amount"] input').toHaveValue("1h", {
         message: "timesheet_uom_factor shouldn't be taken into account",
     });
 });

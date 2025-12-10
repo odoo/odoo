@@ -19,6 +19,7 @@ import {
     formatX2many,
     formatDate,
     formatDateTime,
+    formatDuration,
 } from "@web/views/fields/formatters";
 
 const { DateTime } = luxon;
@@ -33,6 +34,7 @@ beforeEach(() => {
         decimalPoint: ".",
         thousandsSep: ",",
         grouping: [3, 0],
+        locale: "en-US",
     });
 });
 
@@ -54,23 +56,23 @@ test("formatFloatTime", () => {
     expect(formatFloatTime(3.5)).toBe("03:30");
     expect(formatFloatTime(0.25)).toBe("00:15");
     expect(formatFloatTime(0.58)).toBe("00:35");
-    expect(formatFloatTime(2 / 60, { displaySeconds: true })).toBe("00:02:00");
-    expect(formatFloatTime(2 / 60 + 1 / 3600, { displaySeconds: true })).toBe("00:02:01");
-    expect(formatFloatTime(2 / 60 + 2 / 3600, { displaySeconds: true })).toBe("00:02:02");
-    expect(formatFloatTime(2 / 60 + 3 / 3600, { displaySeconds: true })).toBe("00:02:03");
-    expect(formatFloatTime(0.25, { displaySeconds: true })).toBe("00:15:00");
-    expect(formatFloatTime(0.25 + 15 / 3600, { displaySeconds: true })).toBe("00:15:15");
-    expect(formatFloatTime(0.25 + 45 / 3600, { displaySeconds: true })).toBe("00:15:45");
-    expect(formatFloatTime(56 / 3600, { displaySeconds: true })).toBe("00:00:56");
+    expect(formatFloatTime(2 / 60, { showSeconds: true })).toBe("00:02:00");
+    expect(formatFloatTime(2 / 60 + 1 / 3600, { showSeconds: true })).toBe("00:02:01");
+    expect(formatFloatTime(2 / 60 + 2 / 3600, { showSeconds: true })).toBe("00:02:02");
+    expect(formatFloatTime(2 / 60 + 3 / 3600, { showSeconds: true })).toBe("00:02:03");
+    expect(formatFloatTime(0.25, { showSeconds: true })).toBe("00:15:00");
+    expect(formatFloatTime(0.25 + 15 / 3600, { showSeconds: true })).toBe("00:15:15");
+    expect(formatFloatTime(0.25 + 45 / 3600, { showSeconds: true })).toBe("00:15:45");
+    expect(formatFloatTime(56 / 3600, { showSeconds: true })).toBe("00:00:56");
     expect(formatFloatTime(-0.5)).toBe("-00:30");
 
     const options = { noLeadingZeroHour: true };
     expect(formatFloatTime(2, options)).toBe("2:00");
     expect(formatFloatTime(3.5, options)).toBe("3:30");
-    expect(formatFloatTime(3.5, { ...options, displaySeconds: true })).toBe("3:30:00");
-    expect(formatFloatTime(3.5 + 15 / 3600, { ...options, displaySeconds: true })).toBe("3:30:15");
-    expect(formatFloatTime(3.5 + 45 / 3600, { ...options, displaySeconds: true })).toBe("3:30:45");
-    expect(formatFloatTime(56 / 3600, { ...options, displaySeconds: true })).toBe("0:00:56");
+    expect(formatFloatTime(3.5, { ...options, showSeconds: true })).toBe("3:30:00");
+    expect(formatFloatTime(3.5 + 15 / 3600, { ...options, showSeconds: true })).toBe("3:30:15");
+    expect(formatFloatTime(3.5 + 45 / 3600, { ...options, showSeconds: true })).toBe("3:30:45");
+    expect(formatFloatTime(56 / 3600, { ...options, showSeconds: true })).toBe("0:00:56");
     expect(formatFloatTime(-0.5, options)).toBe("-0:30");
 });
 
@@ -232,4 +234,59 @@ test("formatDateTime", () => {
     expect(formatDateTime(DateTime.fromObject({ day: 22, month: 1, hour: 10, minute: 30 }))).toBe(
         "Jan 22, 10:30 AM"
     );
+});
+
+test("formatDuration", () => {
+    expect(formatDuration({ hours: 2 })).toBe("2h");
+    expect(formatDuration({ hours: 3.5 })).toBe("3h 30m");
+    expect(formatDuration({ hours: 0.25 })).toBe("0h 15m");
+    expect(formatDuration({ minutes: 35 })).toBe("0h 35m");
+    expect(formatDuration({ minutes: 35 }, { unit: "minutes" })).toBe("35m");
+    expect(formatDuration({ hours: 2, seconds: 15 })).toBe("2h 0m 15s");
+    expect(formatDuration({ seconds: 15 })).toBe("0h 0m 15s");
+    expect(formatDuration({ hours: 2 }, { unit: "seconds" })).toBe("2h 0m 0s");
+    expect(formatDuration({ minutes: 2, seconds: 15 })).toBe("0h 2m 15s");
+    expect(formatDuration({ seconds: 135 }, { showSeconds: false })).toBe("0h 2m");
+    expect(formatDuration({ minutes: 2, seconds: 15 }, { showSeconds: false, unit: "minutes" })).toBe("2m");
+    expect(formatDuration({ minutes: -30 })).toBe("-0h 30m");
+    expect(formatDuration({ minutes: -30 }, { unit: "minutes" })).toBe("-30m");
+
+    const options = { numeric: true };
+    expect(formatDuration({ hours: 3.5 }, options)).toBe("3:30:00");
+    expect(formatDuration({ hours: 3, seconds: 30 }, options)).toBe("3:00:30");
+    expect(formatDuration({ minutes: 3, seconds: 30 }, {...options, unit: "minutes"})).toBe("0:03:30");
+    expect(formatDuration({ hours: 0.25 }, options)).toBe("0:15:00");
+    expect(formatDuration({ minutes: 35 }, options)).toBe("0:35:00");
+    expect(formatDuration({ minutes: 2, seconds: 15 }, options)).toBe("0:02:15");
+    expect(formatDuration({ seconds: 135 }, { ...options, showSeconds: false })).toBe("0:02");
+    expect(formatDuration({ minutes: -30 }, options)).toBe("-0:30:00");
+    expect(formatDuration({ hours: -0.5 }, { ...options, showSeconds: false })).toBe("-0:30");
+});
+
+test("formatDuration special cases", () => {
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("2h 5m 30s");
+
+    localization.locale = "fr-FR";
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("2h 5min 30s");
+
+    localization.locale = "zh-CN";
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("2小时 5分钟 30秒");
+    expect(formatDuration({ minutes: 120 })).toBe("2小时");
+
+    localization.locale = "ar-SY";
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("٢س ٥د ٣٠ث");
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 }, { numeric: true })).toBe(
+        "2:05:30"
+    );
+    expect(formatDuration({ minutes: 120 })).toBe("٢س");
+
+    localization.locale = "th-TH";
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("2ชม. 5นาที 30วิ");
+    expect(formatDuration({ minutes: 120 })).toBe("2ชม.");
+    expect(formatDuration({ seconds: 30 }, { unit: "seconds" })).toBe("30วิ");
+
+    localization.locale = "hi-IN";
+    expect(formatDuration({ hours: 2, minutes: 5, seconds: 30 })).toBe("2घं 5मि 30से");
+    expect(formatDuration({ minutes: 120 })).toBe("2घं");
+    expect(formatDuration({ seconds: 30 }, { unit: "seconds" })).toBe("30से");
 });

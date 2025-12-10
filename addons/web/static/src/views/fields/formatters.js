@@ -17,6 +17,7 @@ import { exprToBoolean } from "@web/core/utils/strings";
 
 import { markup } from "@odoo/owl";
 import { formatCurrency } from "@web/core/currency";
+import { normalizeTimeStr } from "@web/core/l10n/time";
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -183,10 +184,84 @@ formatFloatFactor.extractOptions = ({ attrs, options }) => ({
  * we sometimes want to display something like 1:45 instead of 1.75, or 0:15
  * instead of 0.25.
  *
+ * @param {import("./parsers").Duration} value
+ * @param {Object} [options]
+ * @param {boolean} [options.showSeconds] if true, format like 1h 30m 20s otherwise, format like 1h 30m
+ * @param {boolean} [options.numeric] if true, show the duration in the format set on the language
+ * @param {import("./parsers").UnitOfTime} [options.unit="hours"] The unit of mesure for the duration
+ * @returns {string}
+ */
+export function formatDuration(value, options = {}) {
+    if (value === false) {
+        return "";
+    }
+
+    options.unit = options.unit || "hours";
+
+    let seconds = (value.hours || 0) * 3600 + (value.minutes || 0) * 60 + (value.seconds || 0);
+    let isNegative;
+
+    if (seconds < 0) {
+        isNegative = true;
+        seconds = Math.abs(seconds);
+    }
+
+    const duration = {
+        hours: parseInt(seconds / 3600, 10),
+        minutes: parseInt((seconds % 3600) / 60, 10),
+        seconds: parseInt(seconds % 60, 10),
+    };
+
+    let durationParts = new Intl.DurationFormat(l10n.locale, {
+        style: options.numeric ? "digital" : "narrow",
+        hoursDisplay: options.unit === "hours" || options.numeric ? "always" : "auto",
+        minutesDisplay: "always",
+        secondsDisplay: options.unit === "seconds" || options.numeric ? "always" : "auto",
+    })
+        .formatToParts(duration)
+        .filter((d) => d.unit !== "second" || options.showSeconds !== false)
+        .filter((d) => d.type !== "literal");
+
+    let formattedValue = "";
+    if (options.numeric) {
+        formattedValue = durationParts
+            .filter((f) => f.type === "integer")
+            .map((f) => normalizeTimeStr(f.value))
+            .join(":");
+    } else {
+        if (
+            duration.minutes === 0 &&
+            options.unit !== "minutes" &&
+            ((duration.hours === 0 && options.unit !== "hours") ||
+                (duration.seconds === 0 && options.unit !== "seconds"))
+        ) {
+            durationParts = durationParts.filter((d) => d.unit !== "minute");
+        }
+        durationParts.forEach((d) => {
+            formattedValue += d.value;
+            if (d.type === "unit") {
+                formattedValue += " ";
+            }
+        });
+        formattedValue = formattedValue.trim();
+    }
+
+    return `${isNegative ? "-" : ""}${formattedValue}`;
+}
+formatDuration.extractOptions = ({ options }) => ({
+    showSeconds: options.show_seconds,
+    numeric: options.numeric,
+});
+
+/**
+ * Returns a string representing a time value, from a float.  The idea is that
+ * we sometimes want to display something like 1:45 instead of 1.75, or 0:15
+ * instead of 0.25.
+ *
  * @param {number | false} value
  * @param {Object} [options]
  * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30 otherwise, format like 01:30
- * @param {boolean} [options.displaySeconds] if true, format like ?1:30:00 otherwise, format like ?1:30
+ * @param {boolean} [options.showSeconds] if true, format like ?1:30:00 otherwise, format like ?1:30
  * @returns {string}
  */
 export function formatFloatTime(value, options = {}) {
@@ -201,7 +276,7 @@ export function formatFloatTime(value, options = {}) {
     // Although looking quite overkill, the following lines ensures that we do
     // not have float issues while still considering that 59s is 00:00.
     let min = milliSecLeft / 60000;
-    if (options.displaySeconds) {
+    if (options.showSeconds) {
         min = Math.floor(min);
     } else {
         min = Math.round(min);
@@ -215,13 +290,13 @@ export function formatFloatTime(value, options = {}) {
         hour = String(hour).padStart(2, "0");
     }
     let sec = "";
-    if (options.displaySeconds) {
+    if (options.showSeconds) {
         sec = ":" + String(Math.floor((milliSecLeft % 60000) / 1000)).padStart(2, "0");
     }
     return `${isNegative ? "-" : ""}${hour}:${min}${sec}`;
 }
 formatFloatTime.extractOptions = ({ options }) => ({
-    displaySeconds: options.displaySeconds,
+    showSeconds: options.show_seconds,
 });
 
 /**

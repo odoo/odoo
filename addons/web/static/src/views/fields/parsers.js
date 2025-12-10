@@ -4,6 +4,16 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { ArithmeticOperation } from "@web/model/relational_model/operation";
+import { durationUnitsRegex, normalizeTimeStr } from "../../core/l10n/time";
+
+/**
+ * @typedef Duration
+ * @property {number} hours
+ * @property {number} minutes
+ * @property {number} seconds
+ *
+ * @typedef {"hours"|"minutes"|"seconds"} UnitOfTime
+ */
 
 // -----------------------------------------------------------------------------
 // Helpers
@@ -116,6 +126,111 @@ export function parseFloatTime(value) {
     const hours = parseInteger(values[0]);
     const minutes = parseInteger(values[1]);
     return sign * (hours + minutes / 60);
+}
+
+/**
+ *
+ * Parse a string of a duration to float value based on unit
+ * e.g.: 1h 30m in hours would be 1.5 
+ * 
+ * @param {string} value
+ * @param {UnitOfTime} unit
+ */
+export function parseFloatDuration(value, unit) {
+    const duration = parseDuration(value, unit);
+
+    if (unit === "hours") {
+        return duration.hours + duration.minutes / 60 + duration.seconds / 3600;
+    } else if (unit === "minutes") {
+        return duration.hours * 60 + duration.minutes + duration.seconds / 60;
+    } else {
+        return duration.hours * 3600 + duration.minutes * 60 + duration.seconds;
+    }
+}
+
+/**
+ *
+ * Parse a string into object Duration. The string can take 3 formats.
+ * - A single number that will be interpreted as the given unit.
+ * - Numeric format as hh:mm:ss
+ * - Human format as 12h 30m 45s (depends of the local)
+ *
+ * @param {string} value
+ * @param {UnitOfTime} unit
+ * @return {Duration}
+ */
+export function parseDuration(value, unit = "hours") {
+    let isNegative;
+    const duration = {
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+    };
+
+    if (!value) {
+        return duration;
+    }
+
+    if (value[0] === "-") {
+        isNegative = true;
+        value = value.substring(1);
+    }
+
+    value = value.replaceAll(" ", "");
+    value = value
+        .replaceAll(localization.decimalPoint, ".")
+        .replaceAll(localization.thousandsSep, "");
+
+    // Single number
+    if (!isNaN(value)) {
+        duration[unit] = Number(value);
+        value = "";
+    }
+
+    // 12:30:45 format
+    else if (value.match(/\d+:\d*(:\d*)?/)) {
+        const result = value.split(":");
+        let unitFound = result.length === 3;
+        let i = 0;
+        for (const key of Object.keys(duration)) {
+            if (!unitFound && key === unit) {
+                unitFound = true;
+            }
+
+            if (unitFound) {
+                duration[key] = parseInt(result[i], 10) || 0;
+                i++;
+            }
+        }
+        value = "";
+    }
+
+    // 12h 30m 45s format
+    else {
+        const regexTimes = durationUnitsRegex();
+
+        value = normalizeTimeStr(value, true);
+        let temp;
+        if ((temp = value.match(regexTimes.hours))) {
+            duration.hours = parseInt(temp[1], 10);
+            value = value.replace(regexTimes.hours, "");
+        }
+        if ((temp = value.match(regexTimes.minutes) || value.match(/^(\d+$)/))) {
+            duration.minutes = parseInt(temp[1], 10);
+            value = value.replace(/^\d+$/, "");
+            value = value.replace(regexTimes.minutes, "");
+        }
+        if ((temp = value.match(regexTimes.seconds) || value.match(/^(\d+)$/))) {
+            duration.seconds = parseInt(temp[1], 10);
+        }
+    }
+
+    if (isNegative) {
+        duration.hours = -duration.hours;
+        duration.minutes = -duration.minutes;
+        duration.seconds = -duration.seconds;
+    }
+    return duration;
 }
 
 /**
