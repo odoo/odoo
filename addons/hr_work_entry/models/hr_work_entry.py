@@ -49,8 +49,8 @@ class HrWorkEntry(models.Model):
         default=lambda self: self.env.company)
     conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
-    country_id = fields.Many2one('res.country', related='employee_id.company_id.country_id')
     amount_rate = fields.Float("Pay rate")
+    country_id = fields.Many2one('res.country', related='employee_id.company_id.country_id', search='_search_country_id')
 
     # FROM 7s by query to 2ms (with 2.6 millions entries)
     _contract_date_start_stop_idx = models.Index("(version_id, date) WHERE state IN ('draft', 'validated')")
@@ -344,3 +344,6 @@ class HrWorkEntry(models.Model):
             raise UserError(self.env._("This work entry was created manually and has no source attendance."))
         action.update(self._get_source_action_values())
         return action
+
+    def _search_country_id(self, operator, value):
+        return [('employee_id.company_id.partner_id.country_id', operator, value)]
