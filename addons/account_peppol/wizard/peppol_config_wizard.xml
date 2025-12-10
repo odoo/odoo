@@ -51,6 +51,18 @@
                             type="object"
                             class="btn btn-danger text-nowrap"
                             confirm="This will delete your Peppol registration."/>
+
+                        <button string="Enable reception"
+                                name="button_peppol_register_sender_as_receiver"
+                                type="object"
+                                class="btn-secondary"
+                                invisible="account_peppol_proxy_state != 'sender'"/>
+
+                        <button string="Disable the reception."
+                            name="button_peppol_reset_to_sender"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="account_peppol_proxy_state not in ('smp_registration', 'receiver')"/>
                 </group>
                 <footer>
                     <button string="Save" name="button_sync_form_with_peppol_proxy" type="object"
