@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { isBrowserChrome, isMobileOS } from "@web/core/browser/feature_detection";
+import { isBrowserChrome, isBrowserFirefox, isMobileOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 
@@ -73,6 +73,9 @@ export const barcodeService = {
                 // E.g. when using browser built-in autocomplete on an input.
                 // See https://stackoverflow.com/questions/59534586/google-chrome-fires-keydown-event-when-form-autocomplete
                 return;
+            }
+            if (ev.key === "/" && isBrowserFirefox()) {
+                ev.preventDefault();
             }
             // Ignore 'Shift', 'Escape', 'Backspace', 'Insert', 'Delete', 'Home', 'End', Arrow*, F*, Page*, ...
             // meta is often used for UX purpose (like shortcuts)
