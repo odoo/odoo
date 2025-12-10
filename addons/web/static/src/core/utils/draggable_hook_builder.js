@@ -752,12 +752,9 @@ export function makeDraggableHook(hookParams) {
                             }
                         }
                     }
-
+                    ctx.current.initialPosition = { ...ctx.pointer };
+                    willStartDrag(target);
                     ctx.current.timeout = browser.setTimeout(() => {
-                        ctx.current.initialPosition = { ...ctx.pointer };
-
-                        willStartDrag(target);
-
                         const { x: px, y: py } = ctx.pointer;
                         const { x, y, width, height } = dom.getRect(ctx.current.element);
                         if (px < x || x + width < px || py < y || y + height < py) {
