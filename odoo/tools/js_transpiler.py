@@ -621,7 +621,7 @@ def convert_unnamed_relative_import(content):
         // after
         require("some/path")
     """
-    repl = r"require(\g<path>)"
+    repl = r"\g<space>require(\g<path>)"
     return IMPORT_UNNAMED_RELATIVE_RE.sub(repl, content)
 
 

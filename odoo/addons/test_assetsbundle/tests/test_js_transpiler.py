@@ -522,3 +522,24 @@ return __exports;
 """
 
         self.assertEqual(result, expected_result)
+
+    def test_14_unnamed_import(self):
+        input_content = """
+// first line
+
+import "@test_assetsbundle/some_file";
+"""
+
+        result = transpile_javascript("/test_assetsbundle/static/src/a.js", input_content)
+        expected_result = """odoo.define('@test_assetsbundle/a', ['@test_assetsbundle/some_file'], function (require) {
+'use strict';
+let __exports = {};
+
+// first line
+
+require("@test_assetsbundle/some_file");
+
+return __exports;
+});
+"""
+        self.assertEqual(result, expected_result)
