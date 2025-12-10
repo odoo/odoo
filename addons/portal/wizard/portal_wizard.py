@@ -163,14 +163,16 @@ class PortalWizardUser(models.TransientModel):
         return self.action_refresh_modal()
 
     def action_revoke_access(self):
-        """Archive the portal user of the partner.
+        """Remove the user of the partner from the portal group.
 
-        User is kept in `group_portal` as `group_public` should only be
-        used for automated tasks and guest interactions.
+        If the user was only in the portal group, we archive it.
         """
         self.ensure_one()
         if not self.is_portal:
             raise UserError(_('The partner "%s" has no portal access or is internal.', self.partner_id.name))
+
+        group_portal = self.env.ref('base.group_portal')
+        group_public = self.env.ref('base.group_public')
 
         self._update_partner_email()
 
@@ -179,8 +181,9 @@ class PortalWizardUser(models.TransientModel):
 
         user_sudo = self.user_id.sudo()
 
+        # remove the user from the portal group
         if user_sudo and user_sudo._is_portal():
-            user_sudo.write({'active': False})
+            user_sudo.write({'groups_id': [(3, group_portal.id), (4, group_public.id)], 'active': False})
 
         return self.action_refresh_modal()
 
