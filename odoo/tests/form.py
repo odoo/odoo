@@ -581,13 +581,6 @@ class Form:
         self._env.clear()  # discard cache and pending recomputations
 
         if w := result.get('warning'):
-            _logger.getChild('onchange').runbot(
-                "%r.onchange(..., %r, ...) -> %s(%r)",
-                record,
-                field_names,
-                w.__class__,
-                w,
-            )
             if isinstance(w, collections.abc.Mapping) and w.keys() >= {'title', 'message'}:
                 _logger.getChild('onchange').warning("%(title)s %(message)s", w)
             else:
