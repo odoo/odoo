@@ -1,3 +1,4 @@
+import binascii
 import contextlib
 import re
 import uuid
@@ -349,6 +350,32 @@ class HTML_Editor(http.Controller):
         self._clean_context()
         attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
+
+    @http.route(["/html_editor/attachment/find_existing_or_add_from_data"], type="jsonrpc", auth="user", methods=["POST"], website=True)
+    def find_existing_or_add_from_data(self, data):
+        """
+        Return an existing image attachment matching the given base64 data.
+        If no matching attachment have been found, create a new attachment.
+        """
+        self._clean_context()
+        if not data:
+            return False
+        data_b64 = data.split(",", 1)[-1] if data.startswith("data:") else data
+        try:
+            raw_data = b64decode(data_b64)
+        except (binascii.Error, ValueError):
+            return False
+
+        ir_attachment = request.env["ir.attachment"]
+        checksum = ir_attachment._compute_checksum(raw_data)
+        attachment = ir_attachment.search([("checksum", "=", checksum)], limit=1)
+        if attachment:
+            return attachment._get_media_info()
+
+        new_attachment = self.add_data(name=None, data=data_b64, is_image=True)
+        if isinstance(new_attachment, dict) and not new_attachment.get("error"):
+            return new_attachment
+        return False
 
     @http.route(['/web_editor/attachment/add_url', '/html_editor/attachment/add_url'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):

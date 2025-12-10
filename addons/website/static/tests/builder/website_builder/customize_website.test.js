@@ -430,16 +430,24 @@ test("theme background image is properly set", async () => {
     const base64Image =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
         "A".repeat(1000);
+    const attachmentSrc = "/web/image/test";
+
+    const getHistoryImage = () => {
+        const img = document.createElement("img");
+        img.src = base64Image;
+        img.dataset.originalSrc = attachmentSrc;
+        return img;
+    };
 
     // Using historyImageSrc to avoid mocking the gallery dialog
     patchWithCleanup(CustomizeBodyBgTypeAction.prototype, {
         async load(editingElement) {
-            editingElement.historyImageSrc = { src: base64Image };
+            editingElement.historyImageSrc = getHistoryImage();
             super.load(editingElement);
         },
         apply(params) {
             params.loadResult = {
-                imageSrc: base64Image,
+                imageSrc: attachmentSrc,
                 oldImageSrc: "",
                 oldValue: "'image'",
             };
@@ -451,7 +459,7 @@ test("theme background image is properly set", async () => {
         _name = "web_editor.assets";
         make_scss_customization(location, changes) {
             expect(
-                changes["body-image"].includes(base64Image) &&
+                changes["body-image"].includes(attachmentSrc) &&
                     changes["body-image-type"].includes("image")
             ).toBe(true);
             expect.step("scss_customization");
@@ -573,4 +581,41 @@ test("BuilderButton with action “templatePreviewableWebsiteConfig”", async (
 
     await contains("[data-action-param*='test_template_2']").click();
     expect.verifySteps(["theme_customize_data"]);
+});
+
+test("base64 body background is normalized to attachment url on load", async () => {
+    const base64Bg =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
+        "A".repeat(1000);
+
+    class WebEditorAssets extends models.Model {
+        _name = "web_editor.assets";
+        make_scss_customization(location, changes) {
+            expect.step(`${location} ${JSON.stringify(changes)}`);
+        }
+    }
+    defineModels([WebEditorAssets]);
+
+    onRpc("/html_editor/attachment/find_existing_or_add_from_data", async (request) => {
+        const { params } = await request.json();
+        expect(params.data).toBe(base64Bg);
+        expect.step("lookup existing");
+        return { image_src: "/web/image/test" };
+    });
+    onRpc("/website/theme_customize_bundle_reload", () => {
+        expect.step("asset reload");
+        return "";
+    });
+
+    await setupWebsiteBuilder("<div>content</div>", {
+        loadIframeBundles: true,
+        styleContent: `:root { --body-image: '${base64Bg}'; }`,
+    });
+
+    await animationFrame();
+    expect.verifySteps([
+        "lookup existing",
+        '/website/static/src/scss/options/user_values.scss {"body-image":"\'/web/image/test\'"}',
+        "asset reload",
+    ]);
 });
