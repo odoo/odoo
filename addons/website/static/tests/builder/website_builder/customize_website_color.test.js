@@ -131,16 +131,20 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
         '/website/static/src/scss/options/user_values.scss {"test-gradient":"NULL"}',
         "asset reload",
     ]);
-    def = new Deferred();
+
     await contains('.o-snippets-tabs button[data-name="theme"]').click();
     await contains('.o_theme_tab div[data-label="Color Presets"] button').click();
     await contains('div[id^="builder_collapse_content_"] button').click();
     await contains('div[data-label="Background"] .o_we_color_preview').click();
     await contains(".o-hb-colorpicker .custom-tab").click();
     await contains(".o_color_picker_inputs input.o_hex_input").edit("#77FF006E");
-    await def;
-    expect.verifySteps([
+    // When writing "#77FF006E" in the input, a first call is made when the
+    // input value is "#77FF00" and another when it becomes "#77FF006E"
+    await expect.waitForSteps([
         '/website/static/src/scss/options/colors/user_color_palette.scss {"o-cc1-bg":"#77FF00"}',
+        '/website/static/src/scss/options/user_values.scss {"o-cc1-bg-gradient":"null"}',
+        "asset reload",
+        '/website/static/src/scss/options/colors/user_color_palette.scss {"o-cc1-bg":"#77FF006E"}',
         '/website/static/src/scss/options/user_values.scss {"o-cc1-bg-gradient":"null"}',
         "asset reload",
     ]);
