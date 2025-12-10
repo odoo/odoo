@@ -101,9 +101,9 @@ export class SurveySessionLeaderboard extends Interaction {
                     if (ev.detail.isScoredQuestion) {
                         await this.waitFor(this.showQuestionScores());
                         this.updateAutoScrollStyle();
-                        await this.waitFor(this.sumScores());
-                        await this.waitFor(this.animatePositionLabels());
-                        await this.waitFor(this.reorderScores());
+                        await this._waitForAnimation(() => this.sumScores(), 1400, 500);
+                        await this._waitForAnimation(() => this.animatePositionLabels(), 1200);
+                        await this._waitForAnimation(() => this.reorderScores(), 1000);
                         this.leaderboardAnimationPhase = null;
                     }
                 });
@@ -130,7 +130,7 @@ export class SurveySessionLeaderboard extends Interaction {
      * @param {Integer} currentScore the currently displayed score
      * @param {Integer} totalScore to total score to animate to
      * @param {Integer} increment the base increment of each animation iteration
-     * @param {Boolean} plusSign wether or not we add a "+" before the score
+     * @param {Boolean} plusSign whether or not we add a "+" before the score
      * @private
      */
     animateScoreCounter(scoreEl, currentScore, totalScore, increment, plusSign) {
@@ -153,47 +153,49 @@ export class SurveySessionLeaderboard extends Interaction {
         }, 25);
     }
 
-    animatePositionLabels() {
-        let animationDone;
-        const animationPromise = new Promise(function (resolve) {
-            animationDone = resolve;
-        });
+    /**
+     * Return a promise resolving after the callback returns, with optional delays before and after calling it.
+     *
+     * @param {Function} callback
+     * @param {Number} delayBefore Delay before animation, in milliseconds
+     * @param {Number} delayAfter Delay after animation started before resolving, in milliseconds
+     * @return {Promise<void>}
+     */
+    _waitForAnimation(callback, delayBefore, delayAfter = 0) {
+        const { promise, resolve } = Promise.withResolvers();
         this.waitForTimeout(() => {
-            this.el.querySelectorAll(".o_survey_session_leaderboard_item").forEach((item) => {
-                const currentPosition = parseInt(item.dataset.currentPosition) + 1;
-                const newPosition = parseInt(item.dataset.newPosition) + 1;
-                if (currentPosition !== newPosition) {
-                    const increment = newPosition > currentPosition ? 1 : -1;
-                    this.animatePositionLabel(
-                        item.querySelector(".o_survey_session_leaderboard_position"),
-                        currentPosition,
-                        newPosition,
-                        increment
-                    );
-                }
-            });
-            animationDone();
-        }, 1200);
-        return animationPromise;
+            callback();
+            this.waitForTimeout(resolve, delayAfter);
+        }, delayBefore);
+        return promise;
+    }
+
+    animatePositionLabels() {
+        this.el.querySelectorAll(".o_survey_session_leaderboard_item").forEach((item) => {
+            const currentPosition = parseInt(item.dataset.currentPosition) + 1;
+            const newPosition = parseInt(item.dataset.newPosition) + 1;
+            if (currentPosition !== newPosition) {
+                const increment = newPosition > currentPosition ? 1 : -1;
+                this.animatePositionLabel(
+                    item.querySelector(".o_survey_session_leaderboard_position"),
+                    currentPosition,
+                    newPosition,
+                    increment
+                );
+            }
+        });
     }
 
     /**
      * Helper to move a score bar from its current position in the leaderboard
      * to a new position.
      *
-     * @param {Element} scoreEl the score bar to move
+     * @param {HTMLElement} scoreEl the score bar to move
      * @param {Integer} position the new position in the leaderboard
      * @param {Integer} offset an offset in 'rem'
-     * @param {Integer} timeout time to wait while moving before resolving the promise
      */
-    animateMoveTo(scoreEl, position, offset, timeout) {
-        let animationDone;
-        const animationPromise = new Promise(function (resolve) {
-            animationDone = resolve;
-        });
+    moveTo(scoreEl, position, offset) {
         scoreEl.style.top = `calc(calc(${this.BAR_HEIGHT} * ${position}) + ${offset}rem)`;
-        this.waitForTimeout(animationDone, timeout);
-        return animationPromise;
     }
 
     /**
@@ -211,26 +213,22 @@ export class SurveySessionLeaderboard extends Interaction {
      * @private
      */
     async reorderScores() {
-        let animationDone;
-        const animationPromise = new Promise(function (resolve) {
-            animationDone = resolve;
-        });
-        this.waitForTimeout(() => {
-            this.leaderboardAnimationPhase = "reorderScores";
-            this.el.querySelectorAll(".o_survey_session_leaderboard_item").forEach(async (item) => {
-                const currentPosition = parseInt(item.dataset.currentPosition);
-                const newPosition = parseInt(item.dataset.newPosition);
-                if (currentPosition !== newPosition) {
-                    const offset = newPosition > currentPosition ? 2 : -2;
-                    await this.waitFor(this.animateMoveTo(item, newPosition, offset, 300));
-                    item.style.transition = "top ease-in-out .1s";
-                    await this.waitFor(this.animateMoveTo(item, newPosition, offset * -0.3, 100));
-                    await this.waitFor(this.animateMoveTo(item, newPosition, 0, 0));
-                    animationDone();
-                }
-            });
-        }, 1000);
-        return animationPromise;
+        this.leaderboardAnimationPhase = "reorderScores";
+        const reorderItem = async (item) => {
+            const currentPosition = parseInt(item.dataset.currentPosition);
+            const newPosition = parseInt(item.dataset.newPosition);
+            if (currentPosition !== newPosition) {
+                const offset = newPosition > currentPosition ? 2 : -2;
+                await this._waitForAnimation(() => this.moveTo(item, newPosition, offset), 300);
+                item.style.transition = "top ease-in-out .1s";
+                await this._waitForAnimation(() => this.moveTo(item, newPosition, offset * -0.3), 100);
+                await this._waitForAnimation(() => this.moveTo(item, newPosition, 0), 0);
+            }
+        }
+        const itemPromises = [];
+        this.el.querySelectorAll(".o_survey_session_leaderboard_item")
+            .forEach((item) => itemPromises.push(reorderItem(item)));
+        await Promise.all(itemPromises);
     }
 
     /**
@@ -303,35 +301,26 @@ export class SurveySessionLeaderboard extends Interaction {
      * @private
      */
     async sumScores() {
-        let animationDone;
-        const animationPromise = new Promise(function (resolve) {
-            animationDone = resolve;
+        this.leaderboardAnimationPhase = "sumScores";
+        this.el.querySelectorAll(".o_survey_session_leaderboard_item").forEach((item) => {
+            const currentScore = parseInt(item.dataset.currentScore);
+            const updatedScore = parseInt(item.dataset.updatedScore);
+            let increment = parseInt(item.dataset.maxQuestionScore) / 40;
+            if (!increment || increment === 0) {
+                increment = 1;
+            }
+            this.animateScoreCounter(
+                item.querySelector(".o_survey_session_leaderboard_score"),
+                currentScore,
+                updatedScore,
+                increment,
+                false
+            );
+            fadeOut(
+                item.querySelector(".o_survey_session_leaderboard_bar_question_score"),
+                500
+            );
         });
-        this.waitForTimeout(() => {
-            this.leaderboardAnimationPhase = "sumScores";
-            this.el.querySelectorAll(".o_survey_session_leaderboard_item").forEach((item) => {
-                const currentScore = parseInt(item.dataset.currentScore);
-                const updatedScore = parseInt(item.dataset.updatedScore);
-                let increment = parseInt(item.dataset.maxQuestionScore) / 40;
-                if (!increment || increment === 0) {
-                    increment = 1;
-                }
-                this.animateScoreCounter(
-                    item.querySelector(".o_survey_session_leaderboard_score"),
-                    currentScore,
-                    updatedScore,
-                    increment,
-                    false
-                );
-                fadeOut(
-                    item.querySelector(".o_survey_session_leaderboard_bar_question_score"),
-                    500
-                );
-                this.waitForTimeout(animationDone, 500);
-            });
-        }, 1400);
-
-        return animationPromise;
     }
 }
 
