@@ -620,3 +620,51 @@ test("Connections shape do not update if it is inside an invisible element", asy
     shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
     expect(shapeData.colors.c5).toBe(HEX_GREEN);
 });
+
+test("Previewed shape has the correct color when no shape is applied", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
+        <section id="section1" data-snippet="s_snippet">
+            Section 1
+        </section>
+        <section id="section2" style="background-color: ${RGB_BLUE};" data-snippet="s_snippet">
+            Section 2
+        </section>
+    `,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains(":iframe #section1").click();
+    await contains("[data-label='Shape'] button").click();
+    await waitSidebarUpdated();
+    expect(getComputedStyle(queryOne(".o_html_builder_Connections_01")).backgroundImage).toInclude(
+        encodeURIComponent(HEX_BLUE)
+    );
+});
+
+test("Previewed shape has the correct color and flip when a shape is applied", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
+        `
+        <section id="section1" style="background-color: ${RGB_BLUE};" data-snippet="s_snippet">
+                Section 1
+            </section>
+        <section id="section2" data-snippet="s_snippet"
+                    data-oe-shape-data='{"shape":"html_builder/Connections/01","colors":{"c5":"${RGB_BLUE}"},"flip":["x", "y"],"showOnMobile":false,"shapeAnimationSpeed":"0", "selectedColor":false}'>
+                <div class="o_we_shape o_html_builder_Connections_01"></div>
+            Section 2
+        </section>
+    `,
+        {
+            loadIframeBundles: true,
+        }
+    );
+    await contains(":iframe #section2").click();
+    await contains("[data-label='Shape'] button").click();
+    await waitSidebarUpdated();
+    const shapePreviewStyle = getComputedStyle(
+        queryOne(".o_html_builder_Connections_01")
+    ).backgroundImage;
+    expect(shapePreviewStyle).toInclude(encodeURIComponent(HEX_BLUE));
+    expect(shapePreviewStyle).toInclude("flip=xy");
+});
