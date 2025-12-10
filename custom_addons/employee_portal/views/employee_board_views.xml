@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Categories -->
+        <record id="view_employee_board_category_tree" model="ir.ui.view">
+            <field name="name">employee.board.category.tree</field>
+            <field name="model">employee.board.category</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="sequence"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_employee_board_category_form" model="ir.ui.view">
+            <field name="name">employee.board.category.form</field>
+            <field name="model">employee.board.category</field>
+            <field name="arch" type="xml">
+                <form string="Category">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Posts -->
+        <record id="view_employee_board_post_kanban" model="ir.ui.view">
+            <field name="name">employee.board.post.kanban</field>
+            <field name="model">employee.board.post</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="category_id">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="publish_from"/>
+                    <field name="publish_to"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_kanban_record">
+                                <strong t-esc="record.name.value"/>
+                                <div class="text-muted" t-esc="record.type.value"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_employee_board_post_tree" model="ir.ui.view">
+            <field name="name">employee.board.post.tree</field>
+            <field name="model">employee.board.post</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="type"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="publish_from"/>
+                    <field name="publish_to"/>
+                    <field name="is_pinned"/>
+                    <field name="active"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_employee_board_post_form" model="ir.ui.view">
+            <field name="name">employee.board.post.form</field>
+            <field name="model">employee.board.post</field>
+            <field name="arch" type="xml">
+                <form string="Board Post">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="category_id"/>
+                            <field name="type"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="publish_from"/>
+                            <field name="publish_to"/>
+                            <field name="is_pinned"/>
+                            <field name="active"/>
+                        </group>
+                        <notebook>
+                            <page string="Content">
+                                <field name="body_html" widget="html"/>
+                            </page>
+                            <page string="Followers">
+                                <field name="message_follower_ids" widget="mail_followers"/>
+                                <field name="activity_ids" widget="mail_activity"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search -->
+        <record id="view_employee_board_post_search" model="ir.ui.view">
+            <field name="name">employee.board.post.search</field>
+            <field name="model">employee.board.post</field>
+            <field name="arch" type="xml">
+                <search string="Board Posts">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="type"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_employee_board_category" model="ir.actions.act_window">
+            <field name="name">Board Categories</field>
+            <field name="res_model">employee.board.category</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="action_employee_board_post" model="ir.actions.act_window">
+            <field name="name">Board Posts</field>
+            <field name="res_model">employee.board.post</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="employee_portal.view_employee_board_post_search"/>
+        </record>
+    </data>
+</odoo>
