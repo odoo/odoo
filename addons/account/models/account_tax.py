@@ -3366,16 +3366,15 @@ class AccountTax(models.Model):
         new_tax_details_list = self._split_tax_details(base_line, company, target_factors)
 
         # Split 'base_line'.
-        new_base_lines = []
-        for (_index, factor), new_tax_details, target_factor in zip(factors, new_tax_details_list, target_factors):
+        new_base_lines = [None] * len(factors)
+        for (index, factor), new_tax_details, target_factor in zip(factors, new_tax_details_list, target_factors):
             kwargs = {
                 'price_unit': factor * base_line['price_unit'],
                 'tax_details': new_tax_details,
             }
             if populate_function:
                 populate_function(base_line, target_factor, kwargs)
-            new_base_line = self._prepare_base_line_for_taxes_computation(base_line, **kwargs)
-            new_base_lines.append(new_base_line)
+            new_base_lines[index] = self._prepare_base_line_for_taxes_computation(base_line, **kwargs)
         return new_base_lines
 
     @api.model
