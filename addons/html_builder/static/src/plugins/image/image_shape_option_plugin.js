@@ -130,7 +130,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         const getData = (propName) =>
             propName in newDataset ? newDataset[propName] : img.dataset[propName];
         const combinedDataset = { ...img.dataset, ...newDataset };
-        const previousShapeId = this.getDefaultShapeId(img.dataset);
+        const previousShapeId = img.dataset.shape || this.getDefaultShapeId(img.dataset);
         const shapeId = combinedDataset.shape || this.getDefaultShapeId(combinedDataset);
         // todo: should we reset some data if shapeName is not defined?
         if (!shapeId) {
