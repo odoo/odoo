@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Cron job to update shipment statuses -->
+        <record id="ir_cron_update_sha6er_shipments" model="ir.cron">
+            <field name="name">Update Sha6er Shipment Statuses</field>
+            <field name="model_id" ref="model_sha6er_shipment"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_update_shipments()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>
+

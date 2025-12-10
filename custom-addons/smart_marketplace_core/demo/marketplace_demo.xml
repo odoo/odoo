@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Sellers -->
+        <record id="demo_seller_1" model="marketplace.seller">
+            <field name="name">Demo Seller One</field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="state">approved</field>
+            <field name="commission_type">percentage</field>
+            <field name="commission_value">10.0</field>
+            <field name="social_channels">{"facebook": true, "instagram": true, "whatsapp": false, "tiktok": false, "linkedin": false}</field>
+        </record>
+
+        <record id="demo_seller_2" model="marketplace.seller">
+            <field name="name">Demo Seller Two</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="state">approved</field>
+            <field name="commission_type">percentage</field>
+            <field name="commission_value">15.0</field>
+            <field name="social_channels">{"facebook": true, "instagram": false, "whatsapp": true, "tiktok": false, "linkedin": false}</field>
+        </record>
+    </data>
+</odoo>
+

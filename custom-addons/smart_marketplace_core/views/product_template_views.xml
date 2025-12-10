@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Product Template Form View -->
+    <record id="product_template_form_view_marketplace" model="ir.ui.view">
+        <field name="name">product.template.form.marketplace</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field name="seller_id" options="{'no_create': True}"/>
+            </xpath>
+            <xpath expr="//page[@name='general_information']" position="inside">
+                <group string="Marketplace" name="marketplace_group">
+                    <field name="external_sku"/>
+                    <field name="marketplace_published" widget="boolean_toggle"/>
+                    <field name="marketplace_approved" widget="boolean_toggle" readonly="1"/>
+                    <field name="availability_status" readonly="1"/>
+                    <field name="shipping_weight_kg"/>
+                    <field name="low_stock_threshold"/>
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Social Commerce" name="social_commerce">
+                    <group>
+                        <group>
+                            <field name="social_caption_template" widget="text"/>
+                            <field name="tiktok_video_url"/>
+                        </group>
+                        <group>
+                            <field name="synced_channels" widget="text"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend Product Template Tree View -->
+    <record id="product_template_tree_view_marketplace" model="ir.ui.view">
+        <field name="name">product.template.tree.marketplace</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="list_price" position="after">
+                <field name="seller_id" optional="show"/>
+                <field name="marketplace_published" widget="boolean_toggle" optional="show"/>
+                <field name="availability_status" optional="show"/>
+            </field>
+        </field>
+    </record>
+</odoo>

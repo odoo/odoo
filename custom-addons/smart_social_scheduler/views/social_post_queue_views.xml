@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Social Post Queue Tree View -->
+    <record id="view_social_post_queue_tree" model="ir.ui.view">
+        <field name="name">social.post.queue.tree</field>
+        <field name="model">social.post.queue</field>
+        <field name="arch" type="xml">
+            <tree string="Social Posts" decoration-success="status == 'posted'" decoration-danger="status == 'failed'">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="seller_id"/>
+                <field name="channel" widget="badge"/>
+                <field name="status" widget="badge" decoration-success="status == 'posted'" decoration-info="status == 'scheduled'" decoration-warning="status == 'pending'" decoration-danger="status == 'failed'"/>
+                <field name="scheduled_at"/>
+                <field name="posted_at"/>
+                <field name="attempts"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Social Post Queue Form View -->
+    <record id="view_social_post_queue_form" model="ir.ui.view">
+        <field name="name">social.post.queue.form</field>
+        <field name="model">social.post.queue</field>
+        <field name="arch" type="xml">
+            <form string="Social Post">
+                <header>
+                    <button name="action_post_now" string="Post Now" type="object" class="oe_highlight" invisible="status == 'posted'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="pending,scheduled,posted"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id" options="{'no_create': True}"/>
+                            <field name="seller_id" readonly="1"/>
+                            <field name="channel"/>
+                        </group>
+                        <group>
+                            <field name="scheduled_at"/>
+                            <field name="posted_at" readonly="1"/>
+                            <field name="attempts" readonly="1"/>
+                            <field name="external_post_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content" name="content">
+                            <group>
+                                <field name="caption" nolabel="1" placeholder="Post caption..."/>
+                            </group>
+                            <group>
+                                <field name="image_url"/>
+                                <field name="video_url"/>
+                            </group>
+                        </page>
+                        <page string="Payload" name="payload">
+                            <field name="payload" widget="text" nolabel="1"/>
+                        </page>
+                        <page string="Error" name="error" invisible="status != 'failed'">
+                            <field name="error_message" widget="text" nolabel="1" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Social Post Queue Search View -->
+    <record id="view_social_post_queue_search" model="ir.ui.view">
+        <field name="name">social.post.queue.search</field>
+        <field name="model">social.post.queue</field>
+        <field name="arch" type="xml">
+            <search string="Search Social Posts">
+                <field name="product_id"/>
+                <field name="seller_id"/>
+                <field name="channel"/>
+                <filter string="Pending" name="pending" domain="[('status', '=', 'pending')]"/>
+                <filter string="Scheduled" name="scheduled" domain="[('status', '=', 'scheduled')]"/>
+                <filter string="Posted" name="posted" domain="[('status', '=', 'posted')]"/>
+                <filter string="Failed" name="failed" domain="[('status', '=', 'failed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Channel" name="group_channel" context="{'group_by': 'channel'}"/>
+                    <filter string="Seller" name="group_seller" context="{'group_by': 'seller_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Social Post Queue Action -->
+    <record id="action_social_post_queue" model="ir.actions.act_window">
+        <field name="name">Social Post Queue</field>
+        <field name="res_model">social.post.queue</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_pending': 1}</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_social_scheduler" name="Social Posts" parent="smart_marketplace_core.menu_marketplace_root" action="action_social_post_queue" sequence="50" groups="sales_team.group_sale_manager"/>
+</odoo>

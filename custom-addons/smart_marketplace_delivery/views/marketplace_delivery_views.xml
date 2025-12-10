@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sha6er Shipment Tree View -->
+    <record id="view_sha6er_shipment_tree" model="ir.ui.view">
+        <field name="name">sha6er.shipment.tree</field>
+        <field name="model">sha6er.shipment</field>
+        <field name="arch" type="xml">
+            <tree string="Sha6er Shipments" decoration-success="sha6er_status == 'delivered'">
+                <field name="name"/>
+                <field name="picking_id"/>
+                <field name="order_id"/>
+                <field name="sha6er_tracking_number"/>
+                <field name="sha6er_status" widget="badge"/>
+                <field name="courier_name"/>
+                <field name="delivery_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Sha6er Shipment Form View -->
+    <record id="view_sha6er_shipment_form" model="ir.ui.view">
+        <field name="name">sha6er.shipment.form</field>
+        <field name="model">sha6er.shipment</field>
+        <field name="arch" type="xml">
+            <form string="Sha6er Shipment">
+                <header>
+                    <button name="action_create_shipment" string="Create in Sha6er" type="object" class="oe_highlight" invisible="sha6er_shipment_id"/>
+                    <button name="action_update_status" string="Update Status" type="object" invisible="not sha6er_shipment_id"/>
+                    <field name="sha6er_status" widget="statusbar" statusbar_visible="pending,accepted,assigned,picked_up,in_transit,delivered"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="picking_id" options="{'no_create': True}"/>
+                            <field name="order_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="sha6er_shipment_id" readonly="1"/>
+                            <field name="sha6er_tracking_number" readonly="1"/>
+                            <field name="courier_name" readonly="1"/>
+                            <field name="pickup_date" readonly="1"/>
+                            <field name="delivery_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Delivery Proofs" name="proofs">
+                            <group>
+                                <group>
+                                    <field name="signature_image" widget="image"/>
+                                    <field name="photo_proof" widget="image"/>
+                                </group>
+                                <group>
+                                    <field name="otp_verified" readonly="1"/>
+                                    <field name="otp_code" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Sha6er Shipment Action -->
+    <record id="action_sha6er_shipment" model="ir.actions.act_window">
+        <field name="name">Sha6er Shipments</field>
+        <field name="res_model">sha6er.shipment</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Extend Stock Picking Form -->
+    <record id="stock_picking_form_view_sha6er" model="ir.ui.view">
+        <field name="name">stock.picking.form.sha6er</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_create_sha6er_shipment" string="Create Sha6er Shipment" type="object" class="oe_highlight" invisible="sha6er_shipment_count > 0" groups="sales_team.group_sale_manager"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <field name="sha6er_shipment_count" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_marketplace_delivery" name="Sha6er Shipments" parent="smart_marketplace_core.menu_marketplace_root" action="action_sha6er_shipment" sequence="40" groups="sales_team.group_sale_manager"/>
+</odoo>

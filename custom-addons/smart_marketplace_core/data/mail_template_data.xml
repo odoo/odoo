@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Seller Approval Email Template -->
+        <record id="email_template_seller_approved" model="mail.template">
+            <field name="name">Seller Approved</field>
+            <field name="model_id" ref="model_marketplace_seller"/>
+            <field name="subject">Your Seller Account Has Been Approved</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Dear ${object.name},</p>
+                    <p>Congratulations! Your seller account has been approved.</p>
+                    <p>You can now start listing your products on our marketplace.</p>
+                    <p>Best regards,<br/>SMART Marketplace Team</p>
+                </div>
+            </field>
+        </record>
+
+        <!-- Seller Rejection Email Template -->
+        <record id="email_template_seller_rejected" model="mail.template">
+            <field name="name">Seller Rejected</field>
+            <field name="model_id" ref="model_marketplace_seller"/>
+            <field name="subject">Seller Account Application Status</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Dear ${object.name},</p>
+                    <p>We regret to inform you that your seller account application has been rejected.</p>
+                    <p>Please contact support for more information.</p>
+                    <p>Best regards,<br/>SMART Marketplace Team</p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>
+

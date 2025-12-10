@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Partner Form View -->
+    <record id="res_partner_form_view_marketplace" model="ir.ui.view">
+        <field name="name">res.partner.form.marketplace</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="is_marketplace_seller" widget="boolean_toggle"/>
+                <field name="marketplace_seller_id" attrs="{'invisible': [('is_marketplace_seller', '=', False)]}" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Payout Batch Tree View -->
+    <record id="view_marketplace_payout_batch_tree" model="ir.ui.view">
+        <field name="name">marketplace.payout.batch.tree</field>
+        <field name="model">marketplace.payout.batch</field>
+        <field name="arch" type="xml">
+            <tree string="Payout Batches" decoration-success="status == 'paid'" decoration-info="status == 'processed'">
+                <field name="name"/>
+                <field name="seller_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="amount" widget="monetary"/>
+                <field name="commission_amount" widget="monetary"/>
+                <field name="net_amount" widget="monetary"/>
+                <field name="status" widget="badge" decoration-success="status == 'paid'" decoration-info="status == 'processed'" decoration-warning="status == 'pending'" decoration-danger="status == 'failed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Payout Batch Form View -->
+    <record id="view_marketplace_payout_batch_form" model="ir.ui.view">
+        <field name="name">marketplace.payout.batch.form</field>
+        <field name="model">marketplace.payout.batch</field>
+        <field name="arch" type="xml">
+            <form string="Payout Batch">
+                <header>
+                    <button name="action_process" string="Process" type="object" class="oe_highlight" invisible="status != 'pending'" groups="sales_team.group_sale_manager"/>
+                    <button name="action_mark_paid" string="Mark as Paid" type="object" class="oe_highlight" invisible="status != 'processed'" groups="sales_team.group_sale_manager"/>
+                    <field name="status" widget="statusbar" statusbar_visible="pending,processed,paid"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" readonly="1"/>
+                            <field name="seller_id" options="{'no_create': True}"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group>
+                            <field name="amount" widget="monetary" readonly="1"/>
+                            <field name="commission_amount" widget="monetary" readonly="1"/>
+                            <field name="fee"/>
+                            <field name="net_amount" widget="monetary" readonly="1"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Orders" name="orders">
+                            <field name="order_ids" nolabel="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="date_order"/>
+                                    <field name="amount_total" widget="monetary"/>
+                                    <field name="commission_amount" widget="monetary"/>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Transfer" name="transfer">
+                            <group>
+                                <group>
+                                    <field name="transfer_method"/>
+                                    <field name="transfer_reference"/>
+                                    <field name="transfer_date"/>
+                                </group>
+                                <group>
+                                    <field name="move_id" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Payout Batch Action -->
+    <record id="action_marketplace_payout_batch" model="ir.actions.act_window">
+        <field name="name">Payout Batches</field>
+        <field name="res_model">marketplace.payout.batch</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_marketplace_payout" name="Payouts" parent="smart_marketplace_core.menu_marketplace_root" action="action_marketplace_payout_batch" sequence="30" groups="sales_team.group_sale_manager"/>
+</odoo>

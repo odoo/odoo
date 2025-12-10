@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Sellers can only access their own seller record -->
+        <record id="marketplace_seller_rule_portal" model="ir.rule">
+            <field name="name">Marketplace Seller: Portal Access</field>
+            <field name="model_id" ref="model_marketplace_seller"/>
+            <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+        <!-- Sellers can only access their own documents -->
+        <record id="marketplace_seller_document_rule_portal" model="ir.rule">
+            <field name="name">Marketplace Seller Document: Portal Access</field>
+            <field name="model_id" ref="model_marketplace_seller_document"/>
+            <field name="domain_force">[('seller_id.partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+        <!-- Sellers can only see their own products -->
+        <record id="product_template_seller_rule" model="ir.rule">
+            <field name="name">Product Template: Seller Access</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="domain_force">['|', ('seller_id', '=', False), ('seller_id.partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+        <!-- Sellers can only see their own orders -->
+        <record id="sale_order_seller_rule" model="ir.rule">
+            <field name="name">Sale Order: Seller Access</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="domain_force">['|', ('seller_id', '=', False), ('seller_id.partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+    </data>
+</odoo>
+
