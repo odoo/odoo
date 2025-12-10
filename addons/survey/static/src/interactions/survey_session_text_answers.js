@@ -2,7 +2,7 @@ import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { Interaction } from "@web/public/interaction";
-import SESSION_CHART_COLORS from "@survey/interactions/survey_session_colors";
+import { D3_COLORS } from "@survey/interactions/utils";
 const { DateTime } = luxon;
 
 export class SurveySessionTextAnswers extends Interaction {
@@ -46,7 +46,7 @@ export class SurveySessionTextAnswers extends Interaction {
                 }
                 const textAnswerEl = renderToElement("survey.survey_session_text_answer", {
                     value: textValue,
-                    borderColor: `rgb(${SESSION_CHART_COLORS[this.answerIds.length % 10]})`,
+                    borderColor: D3_COLORS[this.answerIds.length % 10],
                 });
                 this.insert(textAnswerEl, this.el);
                 const spanWidth = textAnswerEl.querySelector("span").offsetWidth;

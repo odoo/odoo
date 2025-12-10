@@ -1,7 +1,7 @@
 /* global ChartDataLabels */
 
 import { loadJS } from "@web/core/assets";
-import SESSION_CHART_COLORS from "@survey/interactions/survey_session_colors";
+import { D3_COLORS } from "@survey/interactions/utils";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 
@@ -88,7 +88,7 @@ export class SurveySessionChart extends Interaction {
      * Custom bar chart configuration for our survey session use case.
      *
      * Quick summary of enabled features:
-     * - background_color is one of the 10 custom colors from SESSION_CHART_COLORS
+     * - background_color is one of the 10 colors from D3_COLORS
      *   (see getBackgroundColor for details)
      * - The ticks are bigger and bolded to be able to see them better on a big screen (projector)
      * - We don't use tooltips to keep it as simple as possible
@@ -291,11 +291,11 @@ export class SurveySessionChart extends Interaction {
     }
 
     /**
-     * Custom method that returns a color from SESSION_CHART_COLORS.
+     * Custom method that returns a color from D3_COLORS.
      * It loops through the ten values and assign them sequentially.
      *
      * We have a special mechanic when the host shows the answers of a question.
-     * Wrong answers are "faded out" using a 0.3 opacity.
+     * Wrong answers are "faded out" using a 0.2 opacity.
      *
      * @param {Object} metaData
      * @param {Integer} metaData.dataIndex the index of the label, matching the index of the answer
@@ -304,11 +304,11 @@ export class SurveySessionChart extends Interaction {
     getBackgroundColor(metaData) {
         const opacity =
             this.showAnswers && this.hasCorrectAnswers && !this.isValidAnswer(metaData.dataIndex)
-                ? "0.2"
-                : "0.8";
-        // If metaData.dataIndex is greater than SESSION_CHART_COLORS.length, it should start from the beginning
-        const rgb = SESSION_CHART_COLORS[metaData.dataIndex % SESSION_CHART_COLORS.length];
-        return `rgba(${rgb},${opacity})`;
+                ? "33" // 20% of 255 in HEX
+                : "cc"; // 80%
+        // If metaData.dataIndex is greater than D3_COLORS.length, it should start from the beginning
+        const rgb = D3_COLORS[metaData.dataIndex % D3_COLORS.length];
+        return `${rgb}${opacity}`;
     }
 
     /**
