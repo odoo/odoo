@@ -954,6 +954,8 @@ class StockMoveLine(models.Model):
                 aggregated_move_lines[line_key] = {
                     **aggregated_properties,
                     'quantity': False,
+                    'packaging_quantity': 0,
+                    'packaging_qty_ordered': 0,
                     'qty_ordered': qty_ordered,
                     'product': empty_move.product_id,
                 }
