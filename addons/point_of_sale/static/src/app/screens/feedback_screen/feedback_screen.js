@@ -48,7 +48,7 @@ export class FeedbackScreen extends Component {
                         this.state.loading = false;
                         if (this.isAutoSkip && !this.ignoreTimeout) {
                             this.state.timeout = setTimeout(() => {
-                                this.pos.orderDone(this.currentOrder);
+                                this.goNext();
                             }, this.pos.feedbackScreenAutoSkipDelay);
                         }
                     }
@@ -112,7 +112,13 @@ export class FeedbackScreen extends Component {
     }
 
     goNext() {
-        this.pos.orderDone(this.currentOrder);
+        this.currentOrder.setScreenData({ name: "" });
+        if (!this.pos.config.module_pos_restaurant) {
+            this.pos.selectedOrderUuid = this.pos.getEmptyOrder().uuid;
+        }
+        this.pos.searchProductWord = "";
+        const nextPage = this.pos.defaultPage;
+        this.pos.navigate(nextPage.page, nextPage.params);
     }
 
     get canSendReceipt() {
