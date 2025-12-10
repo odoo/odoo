@@ -26,7 +26,16 @@ patch(Composer.prototype, {
                 if (!withMessageFields || !showSubjectInSmallComposer) {
                     return;
                 }
-                if (suggestedSubject !== defaultSubject && inputEl) {
+                let defaultSubjectStart = defaultSubject;
+                if (defaultSubjectStart && defaultSubjectStart.slice(-3) === "...") {
+                    defaultSubjectStart = defaultSubjectStart.slice(0, -3);
+                }
+                if (
+                    defaultSubjectStart &&
+                    suggestedSubject &&
+                    !suggestedSubject.startsWith(defaultSubjectStart) &&
+                    inputEl
+                ) {
                     inputEl.value = suggestedSubject;
                 }
             },
