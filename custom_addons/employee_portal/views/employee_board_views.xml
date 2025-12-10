@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <!-- Categories -->
+        <!-- 掲示板カテゴリの一覧ビュー。名称と並び順のみを管理 -->
         <record id="view_employee_board_category_tree" model="ir.ui.view">
             <field name="name">employee.board.category.tree</field>
             <field name="model">employee.board.category</field>
             <field name="arch" type="xml">
-                <list>
+                <list string="掲示カテゴリ">
                     <field name="name"/>
                     <field name="sequence"/>
                 </list>
             </field>
         </record>
 
+        <!-- 掲示板カテゴリのフォームビュー -->
         <record id="view_employee_board_category_form" model="ir.ui.view">
             <field name="name">employee.board.category.form</field>
             <field name="model">employee.board.category</field>
             <field name="arch" type="xml">
-                <form string="Category">
+                <form string="掲示カテゴリ">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -28,12 +29,12 @@
             </field>
         </record>
 
-        <!-- Posts -->
+        <!-- 掲示板投稿のKanban。Odoo 19 仕様の card テンプレートを使用 -->
         <record id="view_employee_board_post_kanban" model="ir.ui.view">
             <field name="name">employee.board.post.kanban</field>
             <field name="model">employee.board.post</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="category_id">
+                <kanban string="掲示板" default_group_by="category_id">
                     <field name="name"/>
                     <field name="type"/>
                     <field name="publish_from"/>
@@ -50,11 +51,12 @@
             </field>
         </record>
 
+        <!-- 掲示板投稿のリストビュー。会社情報はマルチカンパニーでのみ表示 -->
         <record id="view_employee_board_post_tree" model="ir.ui.view">
             <field name="name">employee.board.post.tree</field>
             <field name="model">employee.board.post</field>
             <field name="arch" type="xml">
-                <list>
+                <list string="掲示板">
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="type"/>
@@ -67,11 +69,12 @@
             </field>
         </record>
 
+        <!-- 掲示板投稿のフォームビュー。本文とフォロワータブを含む -->
         <record id="view_employee_board_post_form" model="ir.ui.view">
             <field name="name">employee.board.post.form</field>
             <field name="model">employee.board.post</field>
             <field name="arch" type="xml">
-                <form string="Board Post">
+                <form string="掲示板投稿">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -97,12 +100,12 @@
             </field>
         </record>
 
-        <!-- Search -->
+        <!-- 掲示板投稿の検索ビュー -->
         <record id="view_employee_board_post_search" model="ir.ui.view">
             <field name="name">employee.board.post.search</field>
             <field name="model">employee.board.post</field>
             <field name="arch" type="xml">
-                <search string="Board Posts">
+                <search string="掲示板">
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="type"/>
@@ -110,15 +113,16 @@
             </field>
         </record>
 
-        <!-- Actions -->
+        <!-- カテゴリ用アクション -->
         <record id="action_employee_board_category" model="ir.actions.act_window">
-            <field name="name">Board Categories</field>
+            <field name="name">掲示カテゴリ</field>
             <field name="res_model">employee.board.category</field>
             <field name="view_mode">list,form</field>
         </record>
 
+        <!-- 投稿用アクション（kanban/list/formを提供） -->
         <record id="action_employee_board_post" model="ir.actions.act_window">
-            <field name="name">Board Posts</field>
+            <field name="name">掲示板</field>
             <field name="res_model">employee.board.post</field>
             <field name="view_mode">kanban,list,form</field>
             <field name="search_view_id" ref="employee_portal.view_employee_board_post_search"/>

@@ -1,5 +1,5 @@
 {
-    "name": "Employee Portal",
+    "name": "従業員ポータル",
     "summary": "Employee board and task management",
     "version": "19.0.1.0.0",
     "category": "Human Resources",
