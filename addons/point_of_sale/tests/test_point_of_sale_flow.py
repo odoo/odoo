@@ -2099,3 +2099,38 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.env.clear()
         data = current_session.with_company(self.env.company).filter_local_data({'product.product': [product.id]})
         self.assertIn(product.id, data['product.product'])
+
+    def test_string_sequence_number(self):
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        current_session.config_id.order_seq_id.prefix = '/AA'
+        current_session.config_id.order_seq_id.suffix = '1.B'
+        product_order = {
+            'amount_paid': 750,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'amount_total': 750,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'lines': [[0, 0, {
+                'price_unit': 750.0,
+                'product_id': self.product.id,
+                'price_subtotal': 750.0,
+                'price_subtotal_incl': 750.0,
+                'tax_ids': [[6, False, []]],
+                'qty': 1,
+            }]],
+            'name': 'Order 12345-123-1234',
+            'partner_id': False,
+            'session_id': current_session.id,
+            'payment_ids': [[0, 0, {
+                'amount': 750,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.bank_payment_method.id
+            }]],
+            'uuid': '12345-123-1234',
+            'user_id': self.env.uid,
+            'to_invoice': False}
+
+        self.env['pos.order'].sync_from_ui([product_order])
+        order = self.env['pos.order'].search([])
+        self.assertEqual(order.name, f"/AA - {order.pos_reference.split('-')[-1]} - 1.B")
