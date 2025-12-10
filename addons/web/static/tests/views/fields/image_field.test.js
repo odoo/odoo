@@ -878,3 +878,58 @@ test("convert image to webp", async () => {
     );
     await setFiles(imageFile);
 });
+
+test("ImageField: syncs filename when uploading/removing", async () => {
+    Partner._records[0].document = false;
+    Partner._records[0].foo = "";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="document" widget="image" filename="foo"/>
+                <field name="foo"/>
+            </form>
+        `,
+    });
+
+    expect("div[name='foo'] input").toHaveValue("", {
+        message: "Filename should initially be empty",
+    });
+
+    const file = new File(
+        [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
+        "new_avatar.png",
+        { type: "image/png" }
+    );
+
+    // Upload file
+    await click(".o_select_file_button");
+    await setInputFiles(file);
+    await runAllTimers();
+    await animationFrame();
+
+    expect("div[name='document'] img").toHaveAttribute(
+        "data-src",
+        `data:image/png;base64,${MY_IMAGE}`,
+        { message: "The image data should be set" }
+    );
+    expect("div[name='foo'] input").toHaveValue("new_avatar.png", {
+        message: "The filename field (foo) should be updated with the uploaded file's name",
+    });
+
+    // 4. Remove file
+    await click(".o_clear_file_button");
+    await animationFrame();
+
+    expect("div[name='document'] img").toHaveAttribute(
+        "data-src",
+        "/web/static/img/placeholder.png",
+        { message: "The image should be reset to placeholder" }
+    );
+    expect("div[name='foo'] input").toHaveValue("", {
+        message: "The filename field should be cleared when the image is removed",
+    });
+});

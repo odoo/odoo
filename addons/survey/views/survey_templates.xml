@@ -448,10 +448,9 @@
                     </label>
                 </t>
             </div>
-            <div t-if="question.scale_min_label or question.scale_mid_label or question.scale_max_label"
+            <div t-if="question.scale_min_label or question.scale_max_label"
                  class="d-flex justify-content-between text-primary">
                 <div class="text-start" t-out="question.scale_min_label"/>
-                <div class="text-center" t-out="question.scale_mid_label"/>
                 <div class="text-end" t-out="question.scale_max_label"/>
             </div>
         </div>

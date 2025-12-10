@@ -156,7 +156,7 @@
                     </group>
 
                     <group>
-                        <field name="activity_type_id" required="1" widget="selection_badge_icons" iconField="icon" nolabel="1"/>
+                        <field name="activity_type_id" required="1" widget="selection_badge_icons" options="{'related_icon_field': 'icon'}" nolabel="1"/>
                         <field name="summary" placeholder="e.g. Discuss Proposal" class="fs-3 pb-2"/>
                         <group>
                             <field name="date_deadline"/>
@@ -211,7 +211,7 @@
                     <field name="display_name" invisible="1"/>
                     <group>
                         <field name="activity_type_id" required="1"
-                        widget="selection_badge_icons" iconField="icon" nolabel="1"/>
+                        widget="selection_badge_icons" options="{'related_icon_field': 'icon'}" nolabel="1"/>
                         <field name="summary" placeholder="e.g. Discuss proposal"/>
                         <group>
                             <field name="date_deadline"/>
