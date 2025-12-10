@@ -165,10 +165,8 @@ class ProductProduct(models.Model):
                 product.total_value = product._run_avco(at_date=at_date)[1] * qty_available / total_qty_available
             else:
                 product.total_value = product.with_context(warehouse_id=False)._run_fifo(total_qty_available, at_date=at_date) * qty_available / total_qty_available
-            if product.company_currency_id.is_zero(product.total_value):
-                product.avg_cost = product._get_standard_price_at_date()
-            else:
-                product.avg_cost = product.total_value / qty_available if not product.uom_id.is_zero(qty_available) else product._get_standard_price_at_date()
+
+            product.avg_cost = product.total_value / qty_available if not product.uom_id.is_zero(qty_available) else 0
 
     @api.model_create_multi
     def create(self, vals_list):
