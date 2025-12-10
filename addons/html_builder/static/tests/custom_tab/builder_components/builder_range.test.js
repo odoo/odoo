@@ -68,32 +68,63 @@ test("range input should step up or down with arrow keys", async () => {
     });
     addBuilderOption(
         class extends BaseOptionComponent {
-            static selector = ".test-options-target";
+            static selector = ".test-integer-step";
             static template = xml`<BuilderRange action="'customAction'" step="2" displayRangeValue="true"/>`;
         }
     );
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-fractional-step";
+            static template = xml`<BuilderRange action="'customAction'" step="0.15" displayRangeValue="true"/>`;
+        }
+    );
     await setupHTMLBuilder(`
-        <div class="test-options-target">10</div>
+        <div class="test-integer-step">10</div>
+        <div class="test-fractional-step">14.85</div>
     `);
-    await contains(":iframe .test-options-target").click();
+
+    // Test integer steps
+    await contains(":iframe .test-integer-step").click();
     // Simulate ArrowUp
     await contains(".options-container input").keyDown("ArrowUp");
-    expect(":iframe .test-options-target").toHaveInnerHTML("12");
+    expect(":iframe .test-integer-step").toHaveInnerHTML("12");
     // Simulate ArrowRight
     await contains(".options-container input").keyDown("ArrowRight");
-    expect(":iframe .test-options-target").toHaveInnerHTML("14");
+    expect(":iframe .test-integer-step").toHaveInnerHTML("14");
     // Simulate ArrowDown
     await contains(".options-container input").keyDown("ArrowDown");
-    expect(":iframe .test-options-target").toHaveInnerHTML("12");
+    expect(":iframe .test-integer-step").toHaveInnerHTML("12");
     // Simulate ArrowLeft
     await contains(".options-container input").keyDown("ArrowLeft");
-    expect(":iframe .test-options-target").toHaveInnerHTML("10");
-
+    expect(":iframe .test-integer-step").toHaveInnerHTML("10");
+    // Verify steps
     expect.verifySteps([
         "customAction 12",
         "customAction 14",
         "customAction 12",
         "customAction 10",
+    ]);
+
+    // Test fractional steps
+    await contains(":iframe .test-fractional-step").click();
+    // Simulate ArrowUp
+    await contains(".options-container input").keyDown("ArrowUp");
+    expect(":iframe .test-fractional-step").toHaveInnerHTML("15");
+    // Simulate ArrowRight
+    await contains(".options-container input").keyDown("ArrowRight");
+    expect(":iframe .test-fractional-step").toHaveInnerHTML("15.15");
+    // Simulate ArrowDown
+    await contains(".options-container input").keyDown("ArrowDown");
+    expect(":iframe .test-fractional-step").toHaveInnerHTML("15");
+    // Simulate ArrowLeft
+    await contains(".options-container input").keyDown("ArrowLeft");
+    expect(":iframe .test-fractional-step").toHaveInnerHTML("14.85");
+    // Verify steps
+    expect.verifySteps([
+        "customAction 15",
+        "customAction 15.15",
+        "customAction 15",
+        "customAction 14.85",
     ]);
 });
 
