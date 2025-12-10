@@ -23,15 +23,6 @@ patch(ThreadAction.prototype, {
     },
 });
 
-patch(threadActionsRegistry.get("invite-people"), {
-    condition({ channel }) {
-        if (channel?.channel_type === "livechat") {
-            return super.condition(...arguments) && !channel.livechat_end_dt;
-        }
-        return super.condition(...arguments);
-    },
-});
-
 patch(threadActionsRegistry.get("notification-settings"), {
     condition({ channel }) {
         if (channel?.channel_type === "livechat") {

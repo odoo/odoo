@@ -104,6 +104,10 @@ export class ChannelInvitation extends Component {
         return _t("Search people to invite");
     }
 
+    get showPartnersToInvite() {
+        return this.store.self_user;
+    }
+
     async fetchPartnersToInvite() {
         const results = await this.sequential(() =>
             this.orm.call("res.partner", "search_for_channel_invite", [
@@ -223,6 +227,10 @@ export class ChannelInvitation extends Component {
         this.state.selectedEmails = [];
         this.state.selectedPartners = [];
         this.props.close?.();
+    }
+
+    get invitationTitle() {
+        return _t("Invite People");
     }
 
     get invitationButtonText() {

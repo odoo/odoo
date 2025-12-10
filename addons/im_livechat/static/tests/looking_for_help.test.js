@@ -156,6 +156,7 @@ test("Show join button when help is required and self is not a member", async ()
 
 test("Show notification when joining a channel that already received help", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { group_ids: [serverState.groupLivechatId] });
     const bobPartnerId = pyEnv["res.partner"].create({
         name: "bob",
         user_ids: [Command.create({ name: "bob" })],
@@ -180,7 +181,10 @@ test("Show notification when joining a channel that already received help", asyn
 
 test("Hide 'help already received' notification when channel is not visible", async () => {
     const pyEnv = await startServer();
-    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    pyEnv["res.users"].write(serverState.userId, {
+        notification_type: "inbox",
+        group_ids: [serverState.groupLivechatId],
+    });
     const bobPartnerId = pyEnv["res.partner"].create({
         name: "bob",
         user_ids: [Command.create({ name: "bob" })],
