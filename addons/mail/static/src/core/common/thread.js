@@ -71,6 +71,7 @@ export class Thread extends Component {
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
         this.onScroll = this.onScroll.bind(this);
+        this.onWheel = this.onWheel.bind(this);
         this.messageRefs = reactive(useChildRefs(), () => this.scrollToHighlighted());
         this.store = useService("mail.store");
         this.ui = useService("ui");
@@ -374,10 +375,12 @@ export class Thread extends Component {
             (el, mountedAndLoaded) => {
                 if (el && mountedAndLoaded) {
                     el.addEventListener("scroll", this.onScroll);
+                    el.addEventListener("wheel", this.onWheel);
                     observer.observe(el);
                     return () => {
                         observer.unobserve(el);
                         el.removeEventListener("scroll", this.onScroll);
+                        el.removeEventListener("wheel", this.onWheel);
                     };
                 }
             },
@@ -564,6 +567,13 @@ export class Thread extends Component {
                   this.scrollableRef.el.clientHeight <
                   30
             : this.scrollableRef.el.scrollTop < 30;
+    }
+
+    onWheel(ev) {
+        if (this.messageSelection._data.size) {
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
     }
 
     onScroll() {
