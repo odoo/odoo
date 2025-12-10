@@ -390,7 +390,7 @@ class AccountJournal(models.Model):
                 existing_method_lines = journal.inbound_payment_method_line_ids
                 default_methods = journal._default_inbound_payment_methods()
                 for pay_method in default_methods:
-                    payment_account = existing_method_lines.filtered(lambda m: m.payment_method_id == pay_method).payment_account_id
+                    payment_account = existing_method_lines.filtered(lambda m: m.payment_method_id == pay_method)[:1].payment_account_id
                     pay_method_line_ids_commands += [
                         Command.create({
                             'name': pay_method.name,
@@ -412,7 +412,7 @@ class AccountJournal(models.Model):
                 existing_method_lines = journal.outbound_payment_method_line_ids
                 default_methods = journal._default_outbound_payment_methods()
                 for pay_method in default_methods:
-                    payment_account = existing_method_lines.filtered(lambda m: m.payment_method_id == pay_method).payment_account_id
+                    payment_account = existing_method_lines.filtered(lambda m: m.payment_method_id == pay_method)[:1].payment_account_id
                     pay_method_line_ids_commands += [
                         Command.create({
                             'name': pay_method.name,

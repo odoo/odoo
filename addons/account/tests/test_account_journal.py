@@ -454,7 +454,7 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         outbound_method_lines = bank_journal.outbound_payment_method_line_ids
         outbound_method_lines_names = outbound_method_lines.mapped('name')
         outbound_method_lines[0].payment_account_id = outstanding_payment_account
-        new_outbound_payment_line = outbound_method_lines[0].copy({'payment_account_id': outstanding_payment_account.id})
+        new_outbound_payment_line = outbound_method_lines[0].copy({'payment_account_id': self.company_data['default_account_deferred_expense'].id})
         bank_journal.outbound_payment_method_line_ids = [Command.link(new_outbound_payment_line.id)]
 
         # Set currency_id to trigger the compute of {in,out}bound_payment_method_line_ids
