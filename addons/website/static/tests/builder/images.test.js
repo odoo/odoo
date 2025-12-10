@@ -14,6 +14,7 @@ import {
     setInputRange,
 } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { IMAGE_MIMETYPES } from "@html_editor/main/media/media_dialog/file_selector";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -64,6 +65,40 @@ test("Double click on image and replace it", async () => {
     expect(".o_select_media_dialog").toHaveCount(0);
     expect(":iframe img").toHaveClass("o_modified_image_to_save");
     expect(".options-container[data-container-title='Image']").toHaveCount(1);
+});
+
+test("media dialog requests website logo attachments", async () => {
+    onRpc("ir.attachment", "search_read", ({ kwargs = {} }) => {
+        expect(kwargs.domain.slice(0, 8)).toEqual([
+            "|",
+            "&",
+            ["res_model", "=", "website"],
+            "&",
+            ["res_id", "=", 1],
+            "&",
+            ["res_field", "=", false],
+            ["mimetype", "in", IMAGE_MIMETYPES],
+        ]);
+        return [
+            {
+                id: 1,
+                name: "logo",
+                mimetype: "image/png",
+                image_src: "/web/image/website/1/logo",
+                access_token: false,
+                public: true,
+            },
+        ];
+    });
+
+    await setupWebsiteBuilder(`<div><img class=a_nice_img src='${dummyBase64Img}'></div>`);
+    await dblclick(":iframe img.a_nice_img");
+    await waitFor(".o_select_media_dialog");
+
+    expect(".o_select_media_dialog .o_existing_attachment_cell img").toHaveAttribute(
+        "data-src",
+        "/web/image/website/1/logo?height=256"
+    );
 });
 
 test("simple click on Image", async () => {
