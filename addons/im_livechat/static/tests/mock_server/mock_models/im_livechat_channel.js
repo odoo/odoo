@@ -51,14 +51,14 @@ export class LivechatChannel extends models.ServerModel {
         const MailGuest = this.env["mail.guest"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
-        const agent = operator_info['agent']
+        const agent = operator_info["agent"];
 
         const membersToAdd = [
             Command.create({
-                unpin_dt: "2021-01-01 12:00:00",
                 last_interest_dt: "2021-01-01 10:00:00",
                 livechat_member_type: "agent",
                 partner_id: agent.partner_id,
+                unpin_dt: "2021-01-01 12:00:00",
             }),
         ];
         const guest = ResUsers._is_public(this.env.uid) && MailGuest._get_guest_from_context();

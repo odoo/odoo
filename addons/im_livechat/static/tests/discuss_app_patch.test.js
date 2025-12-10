@@ -152,8 +152,8 @@ test("open visitor's partner profile if visitor has one", async () => {
     const livechatPartner = pyEnv["res.partner"].create({ name: "Joel Willis" });
     const channel = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: livechatPartner }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ partner_id: livechatPartner, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
         livechat_operator_id: serverState.partnerId,

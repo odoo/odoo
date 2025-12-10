@@ -29,14 +29,14 @@ test("shows language, country and recent page views", async () => {
         { page_id: page2, visitor_id: visitorId, visit_datetime: "2025-07-16 10:20:20" },
     ]);
     const guestId = pyEnv["mail.guest"].create({ name: `Visitor #${visitorId}` });
+    // Do not add agent to the channel to ensure information is properly
+    // displayed, even when the agent is not a member.
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         country_id,
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
         livechat_visitor_id: visitorId,
     });
     await start();

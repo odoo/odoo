@@ -9,8 +9,10 @@ registerThreadAction("livechat-info", {
     actionPanelComponent: LivechatChannelInfoList,
     actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
-    condition: ({ channel, owner }) =>
-        channel?.channel_type === "livechat" && !owner.isDiscussSidebarChannelActions,
+    condition: ({ channel, owner, store }) =>
+        channel?.channel_type === "livechat" &&
+        store.self_user?.share === false &&
+        !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-info",
     name: _t("Information"),
     sequence: 10,
@@ -20,8 +22,11 @@ registerThreadAction("livechat-status", {
     actionPanelComponent: LivechatChannelInfoList,
     actionPanelComponentProps: ({ thread }) => ({ thread }),
     actionPanelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
-    condition: ({ channel, owner }) =>
-        channel?.channel_type === "livechat" && !channel.livechat_end_dt && !owner.isDiscussContent,
+    condition: ({ channel, store, owner }) =>
+        channel?.channel_type === "livechat" &&
+        store.self_user?.share === false &&
+        !channel.livechat_end_dt &&
+        !owner.isDiscussContent,
     dropdown: true,
     dropdownMenuClass: "p-0",
     dropdownTemplate: "im_livechat.LivechatStatusSelection",
