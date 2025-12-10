@@ -36,7 +36,7 @@ class Cloc(Command):
         if opt.database:
             if ',' in opt.database:
                 sys.exit("-d/--database has multiple databases, please provide a single one")
-            config.parse_config(['-d', opt.database] + unknown)
+            config.parse_config(['-d', opt.database] + unknown, setup_logging=True)
             c.count_database(config['db_name'][0])
         if opt.path:
             for i in opt.path:
