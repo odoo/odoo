@@ -3,10 +3,10 @@
 
     <t t-name="html_builder.BuilderListDialog">
         <Dialog contentClass="'o_bl_dialog'" title.translate="Manage Records" size="'lg'">
-            <input type="search" class="form-control" placeholder="Search" t-on-input="onSearch" />
-            <div class="row w-100">
-                <div class="o_left_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap">
-                    <div class="d-flex justify-content-between align-items-center mt-3">
+            <input type="search" class="form-control mb-3" placeholder="Search" t-on-input="onSearch" />
+            <div class="w-100 d-flex flex-row gap-3 ">
+                <div class="o_left_panel w-100 h-100 d-flex flex-column flex-nowrap">
+                    <div class="d-flex justify-content-between align-items-center">
                         <h4 class="m-0">Excluded records</h4>
                         <button class="btn btn-sm btn-link p-0" t-on-click="includeAll">
                             <i class="fa fa-plus me-1" />Include all</button>
@@ -24,8 +24,8 @@
                         </t>
                     </div>
                 </div>
-                <div class="o_right_panel col-12 col-md-6 h-100 d-flex flex-column flex-nowrap mt-3 mt-md-0">
-                    <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="o_right_panel w-100 h-100 d-flex flex-column flex-nowrap">
+                    <div class="d-flex justify-content-between align-items-center">
                         <h4 class="m-0">Included records</h4>
                         <button class="btn btn-sm btn-link p-0" t-on-click="excludeAll">
                             <i class="fa fa-minus me-1" />Exclude all</button>
