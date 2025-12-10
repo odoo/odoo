@@ -1286,8 +1286,7 @@ class AccountMove(models.Model):
         percentage = None
         if not extra_info['simplified']:
             percentage = get_float(element, './/AliquotaIVA')
-            if price_unit := get_float(element, './/PrezzoUnitario'):
-                move_line.price_unit = price_unit
+            move_line.price_unit = get_float(element, './/PrezzoUnitario')
 
             # This tax is supposed to be 23% but applied to only a portion (50% or 20%) of the base amount
             # It's implemented as -11.5% (for 50% base) or -4.6% (for 20% base) instead of -23%
