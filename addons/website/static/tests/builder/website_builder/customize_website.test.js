@@ -16,6 +16,7 @@ import {
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { CustomizeBodyBgTypeAction } from "@website/builder/plugins/customize_website_plugin";
 import { renderToString } from "@web/core/utils/render";
+import { dummyBase64Img } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -427,19 +428,16 @@ test("No rpc call if “previewableWebsiteConfig” action is undone", async () 
 });
 
 test("theme background image is properly set", async () => {
-    const base64Image =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
-        "A".repeat(1000);
-
+    const attachmentSrc = "/web/image/test";
     // Using historyImageSrc to avoid mocking the gallery dialog
     patchWithCleanup(CustomizeBodyBgTypeAction.prototype, {
         async load(editingElement) {
-            editingElement.historyImageSrc = { src: base64Image };
+            editingElement.historyImageSrc = attachmentSrc;
             super.load(editingElement);
         },
         apply(params) {
             params.loadResult = {
-                imageSrc: base64Image,
+                imageSrc: attachmentSrc,
                 oldImageSrc: "",
                 oldValue: "'image'",
             };
@@ -451,7 +449,7 @@ test("theme background image is properly set", async () => {
         _name = "web_editor.assets";
         make_scss_customization(location, changes) {
             expect(
-                changes["body-image"].includes(base64Image) &&
+                changes["body-image"].includes(attachmentSrc) &&
                     changes["body-image-type"].includes("image")
             ).toBe(true);
             expect.step("scss_customization");
@@ -478,6 +476,60 @@ test("theme background image is properly set", async () => {
     ).click();
     await animationFrame();
     await expect.verifySteps(["scss_customization", "bundle_reload"]);
+});
+
+test("normalizeBodyBackgroundImage converts body-image variable before save", async () => {
+    const base64Image = dummyBase64Img;
+    const base64Data = base64Image.split("base64,")[1];
+    const attachmentSrc = "/web/image/test";
+    let scssChanges;
+
+    onRpc("/html_editor/attachment/add_data", async (request) => {
+        const { params } = await request.json();
+        expect(params.data).toBe(base64Data);
+        expect(params.is_image).toBe(true);
+        expect.step("attachment_add_data");
+        return { image_src: attachmentSrc };
+    });
+
+    class WebEditorAssets extends models.Model {
+        _name = "web_editor.assets";
+        make_scss_customization(location, changes) {
+            scssChanges = changes;
+            expect(location).toBe("/website/static/src/scss/options/user_values.scss");
+            expect(scssChanges["body-image"]).toBe(`'${attachmentSrc}'`);
+            expect(scssChanges["body-image-type"]).toBe("'image'");
+            expect.step("scss_customization");
+        }
+    }
+    defineModels([WebEditorAssets]);
+
+    onRpc("/website/theme_customize_bundle_reload", async () => {
+        expect.step("bundle_reload");
+        return {};
+    });
+
+    onRpc("ir.ui.view", "save", () => {
+        expect.step("websiteSave");
+        return true;
+    });
+
+    const { getEditor } = await setupWebsiteBuilder("<div>content</div>", {
+        styleContent: `
+            :root {
+                --body-image: '${base64Image}';
+            }
+        `,
+    });
+
+    getEditor().editable.querySelector("#wrap").classList.add("o_dirty");
+    await contains(".o-snippets-top-actions [data-action='save']").click();
+    await expect.waitForSteps([
+        "attachment_add_data",
+        "scss_customization",
+        "bundle_reload",
+        "websiteSave",
+    ]);
 });
 
 test("BuilderButton with action “templatePreviewableWebsiteConfig”", async () => {
