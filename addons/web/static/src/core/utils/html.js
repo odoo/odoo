@@ -220,6 +220,7 @@ export function isHtmlEmpty(content = "") {
  *      \`text\` => Put the text in a rounded badge (bg-primary).
  *      \n => Insert a breakline.
  *      \t => Insert 4 spaces.
+ *      \v => Align what follow to right.
  *
  * @param {string|ReturnType<markup>} text
  * @returns {string|ReturnType<markup>} the formatted text
@@ -229,6 +230,18 @@ export function odoomark(text) {
         [/\n/g, () => markup`<br/>`],
         [/\t/g, () => markup`<span style="margin-left: 2em"></span>`],
         [
+            /\v(.*)/g,
+            (_, content) => {
+                /**
+                 * markup: text is a Markup object (either escaped inside htmlReplace or
+                 * flagged safe), `content` is directly coming from this value,
+                 * and the regex doesn't do anything crazy to unescape it.
+                 */
+                content = markup(content);
+                return markup`<span class="float-end ms-3">${content}</span>`;
+            },
+        ],
+        [
             /\*\*(.+?)\*\*/g,
             (_, bold) => {
                 /**
@@ -236,7 +249,7 @@ export function odoomark(text) {
                  * flagged safe), `bold` is directly coming from this value,
                  * and the regex doesn't do anything crazy to unescape it.
                  */
-                markup(bold);
+                bold = markup(bold);
                 return markup`<b>${bold}</b>`;
             },
         ],

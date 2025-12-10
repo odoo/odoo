@@ -343,4 +343,8 @@ test("odoomark", () => {
     expect(odoomark("test\ntest2").toString()).toBe("test<br/>test2");
     expect(odoomark("<p>**test**</p>").toString()).toBe("&lt;p&gt;<b>test</b>&lt;/p&gt;");
     expect(odoomark(markup`<p>**test**</p>`).toString()).toBe("<p><b>test</b></p>");
+
+    expect(odoomark("test\vtest2 test2").toString()).toBe(
+        'test<span class="float-end ms-3">test2 test2</span>'
+    );
 });
