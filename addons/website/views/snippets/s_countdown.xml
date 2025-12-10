@@ -4,7 +4,7 @@
 <template id="s_countdown" name="Countdown">
     <section class="s_countdown pt48 pb48"
         data-display="dhms" data-end-action="nothing" data-size="175"
-        t-att-data-end-time="datetime.datetime.now().timestamp() + 228307"
+        t-att-data-end-time="60 * round(datetime.datetime.now().timestamp() / 60) + 228300"
         data-layout="circle" data-layout-background="none"
         data-progress-bar-style="surrounded" data-progress-bar-weight="thin"
         data-text-color="o-color-1" data-layout-background-color="400" data-progress-bar-color="o-color-1">
