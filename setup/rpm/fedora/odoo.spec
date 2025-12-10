@@ -1,15 +1,19 @@
-%global name odoo
 %global __requires_exclude ^.*odoo/addons/mail/static/scripts/odoo-mailgate.py$
 
+%global forgeurl https://github.com/odoo/odoo
+%global branch 19.0.0
+
+%forgemeta
+
+
+Name: odoo
 Summary: Odoo Server
-Name: %{name}
-Version: %{version}
-Release: %{release}
-Source0: %{name}-%{version}.tar.gz
+Version: 19.0.0
+Release: 1%{?dist}
+URL: %{forgeurl}
+Source0: %{forgesource}
 License: LGPL-3
 Group: Development/Libraries
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Prefix: %{_prefix}
 BuildArch: noarch
 Vendor: Odoo S.A. <info@odoo.com>
 
@@ -91,8 +95,6 @@ BuildRequires: python3-vobject
 BuildRequires: python3-xlwt
 BuildRequires: python3-zeep
 
-Url: https://www.odoo.com
-
 %description
 Odoo is a complete ERP and CRM. The main features are accounting (analytic
 and financial), stock management, sales and purchases management, tasks
@@ -104,7 +106,7 @@ customizable reports, and XML-RPC interfaces.
 %pyproject_buildrequires
 
 %prep
-%autosetup
+%forgesetup
 
 %build
 %pyproject_wheel
@@ -113,7 +115,7 @@ customizable reports, and XML-RPC interfaces.
 %pyproject_install
 
 %post
-#!/bin/sh
+#!/usr/bin/bash
 
 set -e
 
@@ -187,5 +189,6 @@ EOF
 %exclude %{python3_sitelib}/setup/odoo
 
 %changelog
-* %{build_date} Christophe Monniez <moc@odoo.com> - %{version}-%{release}
-- Latest updates
+* Wed Dec 10 2025 Rénich Bon Ćirić <renich@evalinux.com> - 19.0.0-1
+- Made the SPEC standard format.
+- Implemented SCM support.
