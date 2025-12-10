@@ -6983,7 +6983,7 @@ class AccountMove(models.Model):
         if not self.is_invoice(include_receipts=True):
             return super()._creation_message()
         return {
-            'out_invoice': _('Invoice Created'),
+            'out_invoice': '',
             'out_refund': _('Credit Note Created'),
             'in_invoice': _('Vendor Bill Created'),
             'in_refund': _('Refund Created'),
