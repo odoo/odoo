@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- CART ABANDONMENT DETECTION CRON JOB -->
+    <!-- ============================================================ -->
+    
+    <record id="cron_detect_abandoned_carts" model="ir.cron">
+        <field name="name">SMART eCommerce: Detect Abandoned Carts</field>
+        <field name="model_id" ref="model_cart_abandonment"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_detect_abandoned_carts(hours_threshold=24)</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="active">True</field>
+    </record>
+    
+    <!-- ============================================================ -->
+    <!-- CART RECOVERY EMAIL CRON JOB -->
+    <!-- ============================================================ -->
+    
+    <record id="cron_send_recovery_emails" model="ir.cron">
+        <field name="name">SMART eCommerce: Send Cart Recovery Emails</field>
+        <field name="model_id" ref="model_cart_abandonment"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_send_recovery_emails(hours_after_abandonment=4, limit=50)</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">hours</field>
+        <field name="active">False</field>
+    </record>
+    
+    <!-- ============================================================ -->
+    <!-- CART RECOVERY EMAIL TEMPLATE -->
+    <!-- ============================================================ -->
+    
+    <record id="cart_recovery_email_template" model="mail.template">
+        <field name="name">Cart Recovery Email</field>
+        <field name="model_id" ref="model_cart_abandonment"/>
+        <field name="subject">Don't forget your items! Complete your order at {{ object.company_id.name }}</field>
+        <field name="email_from">{{ object.company_id.email or user.email }}</field>
+        <field name="email_to">{{ object.partner_id.email }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-family: Arial, Helvetica, sans-serif; background-color: #f4f4f4;">
+    <table style="width: 100%; border-collapse: collapse; background-color: #f4f4f4; padding: 40px 0;">
+        <tr>
+            <td align="center" style="padding: 40px 0;">
+                <table style="width: 600px; background-color: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #714B67 0%, #9B6A8F 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+                            <h1 style="color: white; margin: 0; font-size: 24px;">You left something behind!</h1>
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <p style="color: #333; font-size: 16px; line-height: 1.6;">
+                                Hi <strong t-out="object.partner_id.name or 'there'">Customer</strong>,
+                            </p>
+                            <p style="color: #666; font-size: 15px; line-height: 1.6;">
+                                We noticed you have items waiting in your shopping cart. Don't let them get away!
+                            </p>
+                            
+                            <!-- Cart Summary -->
+                            <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 25px 0;">
+                                <h3 style="color: #714B67; margin: 0 0 15px 0; font-size: 18px;">Your Cart</h3>
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="color: #666; padding: 8px 0;">Items:</td>
+                                        <td style="text-align: right; color: #333; font-weight: bold;" t-out="object.item_count">3</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #666; padding: 8px 0; border-top: 1px solid #e0e0e0;">Total Value:</td>
+                                        <td style="text-align: right; color: #714B67; font-size: 20px; font-weight: bold; border-top: 1px solid #e0e0e0;" t-out="'%.2f %s' % (object.cart_value, object.currency_id.symbol)">$150.00</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <div style="text-align: center; margin: 30px 0;">
+                                <a t-att-href="'/shop/cart'" 
+                                   style="display: inline-block; background: linear-gradient(135deg, #714B67 0%, #9B6A8F 100%); color: white; text-decoration: none; padding: 15px 40px; border-radius: 50px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 15px rgba(113, 75, 103, 0.3);">
+                                    Complete My Order →
+                                </a>
+                            </div>
+                            
+                            <p style="color: #888; font-size: 13px; text-align: center; margin-top: 30px;">
+                                This cart will be saved for a limited time. Don't miss out!
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f8f9fa; padding: 20px 30px; text-align: center; border-radius: 0 0 8px 8px;">
+                            <p style="color: #888; font-size: 12px; margin: 0;">
+                                Need help? Contact us at <a t-att-href="'mailto:' + (object.company_id.email or '')" style="color: #714B67;" t-out="object.company_id.email or 'support@example.com'">support@example.com</a>
+                            </p>
+                            <p style="color: #aaa; font-size: 11px; margin: 10px 0 0 0;">
+                                © <span t-out="object.company_id.name">Company Name</span>. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+        </field>
+        <field name="auto_delete">False</field>
+    </record>
+    
+</odoo>
+

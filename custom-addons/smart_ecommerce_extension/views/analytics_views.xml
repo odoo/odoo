@@ -1,0 +1,600 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- E-COMMERCE ANALYTICS DASHBOARD -->
+    <!-- ============================================================ -->
+    
+    <!-- Main Analytics Dashboard View (Pivot) -->
+    <record id="view_ecommerce_analytics_pivot" model="ir.ui.view">
+        <field name="name">ecommerce.analytics.pivot</field>
+        <field name="model">ecommerce.analytics</field>
+        <field name="arch" type="xml">
+            <pivot string="E-commerce Analytics" sample="1">
+                <field name="date" type="row" interval="month"/>
+                <field name="total_orders" type="measure"/>
+                <field name="confirmed_orders" type="measure"/>
+                <field name="total_revenue" type="measure"/>
+                <field name="avg_order_value" type="measure"/>
+                <field name="unique_customers" type="measure"/>
+                <field name="products_sold" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    
+    <!-- Main Analytics Dashboard View (Graph) -->
+    <record id="view_ecommerce_analytics_graph" model="ir.ui.view">
+        <field name="name">ecommerce.analytics.graph</field>
+        <field name="model">ecommerce.analytics</field>
+        <field name="arch" type="xml">
+            <graph string="E-commerce Analytics" type="line" sample="1">
+                <field name="date" type="row"/>
+                <field name="total_revenue" type="measure"/>
+                <field name="total_orders" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Main Analytics Dashboard View (Tree) -->
+    <record id="view_ecommerce_analytics_tree" model="ir.ui.view">
+        <field name="name">ecommerce.analytics.list</field>
+        <field name="model">ecommerce.analytics</field>
+        <field name="arch" type="xml">
+            <list string="E-commerce Analytics" decoration-success="confirmed_orders > 0">
+                <field name="date"/>
+                <field name="total_orders"/>
+                <field name="confirmed_orders"/>
+                <field name="cancelled_orders"/>
+                <field name="total_revenue" sum="Total Revenue"/>
+                <field name="avg_order_value"/>
+                <field name="unique_customers"/>
+                <field name="products_sold" sum="Total Products"/>
+                <field name="total_delivery_revenue" sum="Delivery Revenue"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Main Analytics Search View -->
+    <record id="view_ecommerce_analytics_search" model="ir.ui.view">
+        <field name="name">ecommerce.analytics.search</field>
+        <field name="model">ecommerce.analytics</field>
+        <field name="arch" type="xml">
+            <search string="Search Analytics">
+                <field name="date"/>
+                <field name="company_id"/>
+                <filter string="Today" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week" name="this_week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                <filter string="Last 30 Days" name="last_30_days" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Has Revenue" name="has_revenue" domain="[('total_revenue', '>', 0)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Day" name="group_day" context="{'group_by': 'date:day'}"/>
+                    <filter string="Week" name="group_week" context="{'group_by': 'date:week'}"/>
+                    <filter string="Month" name="group_month" context="{'group_by': 'date:month'}"/>
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Main Analytics Action -->
+    <record id="action_ecommerce_analytics" model="ir.actions.act_window">
+        <field name="name">Analytics Dashboard</field>
+        <field name="res_model">ecommerce.analytics</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="context">{'search_default_last_30_days': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No analytics data yet
+            </p>
+            <p>
+                Your e-commerce analytics will appear here once you have sales data.
+            </p>
+        </field>
+    </record>
+    
+    <!-- ============================================================ -->
+    <!-- DAILY SALES REPORT -->
+    <!-- ============================================================ -->
+    
+    <record id="view_daily_sales_tree" model="ir.ui.view">
+        <field name="name">daily.sales.report.list</field>
+        <field name="model">daily.sales.report</field>
+        <field name="arch" type="xml">
+            <list string="Daily Sales Report" 
+                  decoration-success="revenue_growth_pct > 0" 
+                  decoration-danger="revenue_growth_pct &lt; 0">
+                <field name="date"/>
+                <field name="day_of_week"/>
+                <field name="total_orders"/>
+                <field name="confirmed_orders"/>
+                <field name="draft_orders"/>
+                <field name="cancelled_orders"/>
+                <field name="gross_revenue" sum="Total Gross"/>
+                <field name="net_revenue" sum="Total Net"/>
+                <field name="total_tax" sum="Total Tax"/>
+                <field name="delivery_revenue" sum="Delivery Total"/>
+                <field name="avg_order_value"/>
+                <field name="avg_items_per_order"/>
+                <field name="unique_customers"/>
+                <field name="revenue_growth_pct" string="Growth %" widget="percentage"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    
+    <record id="view_daily_sales_pivot" model="ir.ui.view">
+        <field name="name">daily.sales.report.pivot</field>
+        <field name="model">daily.sales.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Daily Sales" sample="1">
+                <field name="date" type="row" interval="day"/>
+                <field name="gross_revenue" type="measure"/>
+                <field name="total_orders" type="measure"/>
+                <field name="avg_order_value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    
+    <record id="view_daily_sales_graph" model="ir.ui.view">
+        <field name="name">daily.sales.report.graph</field>
+        <field name="model">daily.sales.report</field>
+        <field name="arch" type="xml">
+            <graph string="Daily Sales" type="bar" sample="1">
+                <field name="date" type="row"/>
+                <field name="gross_revenue" type="measure"/>
+                <field name="total_orders" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <record id="view_daily_sales_search" model="ir.ui.view">
+        <field name="name">daily.sales.report.search</field>
+        <field name="model">daily.sales.report</field>
+        <field name="arch" type="xml">
+            <search string="Search Daily Sales">
+                <field name="date"/>
+                <field name="day_of_week"/>
+                <filter string="Today" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="This Week" name="this_week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                <filter string="Last 30 Days" name="last_30_days" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Positive Growth" name="positive_growth" domain="[('revenue_growth_pct', '>', 0)]"/>
+                <filter string="Has Orders" name="has_orders" domain="[('confirmed_orders', '>', 0)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Day" name="group_day" context="{'group_by': 'date:day'}"/>
+                    <filter string="Week" name="group_week" context="{'group_by': 'date:week'}"/>
+                    <filter string="Month" name="group_month" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <record id="action_daily_sales_report" model="ir.actions.act_window">
+        <field name="name">Daily Sales Report</field>
+        <field name="res_model">daily.sales.report</field>
+        <field name="view_mode">list,graph,pivot</field>
+        <field name="context">{'search_default_last_30_days': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No sales data yet
+            </p>
+            <p>
+                Daily sales reports will appear here once you have orders.
+            </p>
+        </field>
+    </record>
+    
+    <!-- ============================================================ -->
+    <!-- TOP SELLING PRODUCTS -->
+    <!-- ============================================================ -->
+    
+    <record id="view_top_products_tree" model="ir.ui.view">
+        <field name="name">top.selling.product.list</field>
+        <field name="model">top.selling.product</field>
+        <field name="arch" type="xml">
+            <list string="Top Selling Products" decoration-success="revenue_share_pct >= 10">
+                <field name="product_name"/>
+                <field name="brand"/>
+                <field name="category_id"/>
+                <field name="total_quantity" sum="Total Qty"/>
+                <field name="total_revenue" sum="Total Revenue"/>
+                <field name="total_orders"/>
+                <field name="avg_price"/>
+                <field name="revenue_share_pct" string="Share %" widget="percentage"/>
+                <field name="first_sale_date"/>
+                <field name="last_sale_date"/>
+                <field name="days_since_launch"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    
+    <record id="view_top_products_pivot" model="ir.ui.view">
+        <field name="name">top.selling.product.pivot</field>
+        <field name="model">top.selling.product</field>
+        <field name="arch" type="xml">
+            <pivot string="Top Products Analysis" sample="1">
+                <field name="category_id" type="row"/>
+                <field name="brand" type="col"/>
+                <field name="total_revenue" type="measure"/>
+                <field name="total_quantity" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    
+    <record id="view_top_products_graph" model="ir.ui.view">
+        <field name="name">top.selling.product.graph</field>
+        <field name="model">top.selling.product</field>
+        <field name="arch" type="xml">
+            <graph string="Top Products" type="bar" sample="1">
+                <field name="product_name" type="row"/>
+                <field name="total_revenue" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <record id="view_top_products_search" model="ir.ui.view">
+        <field name="name">top.selling.product.search</field>
+        <field name="model">top.selling.product</field>
+        <field name="arch" type="xml">
+            <search string="Search Top Products">
+                <field name="product_name"/>
+                <field name="brand"/>
+                <field name="category_id"/>
+                <filter string="High Revenue (&gt; 10%)" name="high_revenue" domain="[('revenue_share_pct', '>=', 10)]"/>
+                <filter string="Has Brand" name="has_brand" domain="[('brand', '!=', False)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="group_category" context="{'group_by': 'category_id'}"/>
+                    <filter string="Brand" name="group_brand" context="{'group_by': 'brand'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <record id="action_top_selling_products" model="ir.actions.act_window">
+        <field name="name">Top Products</field>
+        <field name="res_model">top.selling.product</field>
+        <field name="view_mode">list,graph,pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No product sales yet
+            </p>
+            <p>
+                Top selling products will appear here once you have confirmed orders.
+            </p>
+        </field>
+    </record>
+    
+    <!-- ============================================================ -->
+    <!-- TOP SELLERS (CUSTOMERS) -->
+    <!-- ============================================================ -->
+    
+    <record id="view_top_sellers_tree" model="ir.ui.view">
+        <field name="name">top.seller.list</field>
+        <field name="model">top.seller</field>
+        <field name="arch" type="xml">
+            <list string="Top Customers" 
+                  decoration-bf="customer_tier == 'vip'"
+                  decoration-success="customer_tier in ('vip', 'gold')">
+                <field name="partner_name"/>
+                <field name="partner_email"/>
+                <field name="partner_city"/>
+                <field name="customer_tier" widget="badge" 
+                       decoration-danger="customer_tier == 'new'"
+                       decoration-warning="customer_tier == 'bronze'"
+                       decoration-info="customer_tier == 'silver'"
+                       decoration-success="customer_tier == 'gold'"
+                       decoration-primary="customer_tier == 'vip'"/>
+                <field name="total_orders"/>
+                <field name="confirmed_orders"/>
+                <field name="total_spent" sum="Total"/>
+                <field name="avg_order_value"/>
+                <field name="total_products"/>
+                <field name="first_order_date"/>
+                <field name="last_order_date"/>
+                <field name="days_as_customer"/>
+                <field name="avg_days_between_orders"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    
+    <record id="view_top_sellers_pivot" model="ir.ui.view">
+        <field name="name">top.seller.pivot</field>
+        <field name="model">top.seller</field>
+        <field name="arch" type="xml">
+            <pivot string="Customer Analysis" sample="1">
+                <field name="customer_tier" type="row"/>
+                <field name="partner_country_id" type="col"/>
+                <field name="total_spent" type="measure"/>
+                <field name="total_orders" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    
+    <record id="view_top_sellers_graph" model="ir.ui.view">
+        <field name="name">top.seller.graph</field>
+        <field name="model">top.seller</field>
+        <field name="arch" type="xml">
+            <graph string="Top Customers" type="pie" sample="1">
+                <field name="customer_tier" type="row"/>
+                <field name="total_spent" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <record id="view_top_sellers_search" model="ir.ui.view">
+        <field name="name">top.seller.search</field>
+        <field name="model">top.seller</field>
+        <field name="arch" type="xml">
+            <search string="Search Customers">
+                <field name="partner_name"/>
+                <field name="partner_email"/>
+                <field name="partner_city"/>
+                <filter string="VIP" name="vip" domain="[('customer_tier', '=', 'vip')]"/>
+                <filter string="Gold" name="gold" domain="[('customer_tier', '=', 'gold')]"/>
+                <filter string="Silver" name="silver" domain="[('customer_tier', '=', 'silver')]"/>
+                <filter string="Bronze" name="bronze" domain="[('customer_tier', '=', 'bronze')]"/>
+                <filter string="New" name="new" domain="[('customer_tier', '=', 'new')]"/>
+                <separator/>
+                <filter string="Repeat Customers" name="repeat" domain="[('confirmed_orders', '&gt;', 1)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Tier" name="group_tier" context="{'group_by': 'customer_tier'}"/>
+                    <filter string="City" name="group_city" context="{'group_by': 'partner_city'}"/>
+                    <filter string="Country" name="group_country" context="{'group_by': 'partner_country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <record id="action_top_sellers" model="ir.actions.act_window">
+        <field name="name">Top Customers</field>
+        <field name="res_model">top.seller</field>
+        <field name="view_mode">list,graph,pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No customer data yet
+            </p>
+            <p>
+                Top customers will appear here once you have orders.
+            </p>
+        </field>
+    </record>
+    
+    <!-- ============================================================ -->
+    <!-- CART ABANDONMENT -->
+    <!-- ============================================================ -->
+    
+    <!-- Cart Abandonment Form View -->
+    <record id="view_cart_abandonment_form" model="ir.ui.view">
+        <field name="name">cart.abandonment.form</field>
+        <field name="model">cart.abandonment</field>
+        <field name="arch" type="xml">
+            <form string="Cart Abandonment">
+                <header>
+                    <button name="action_send_recovery_email" type="object" 
+                            string="Send Recovery Email" class="btn-primary"
+                            invisible="state != 'abandoned' or recovery_email_sent"/>
+                    <button name="action_mark_recovered" type="object" 
+                            string="Mark as Recovered" class="btn-success"
+                            invisible="state not in ('abandoned', 'notified')"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="abandoned,notified,recovered"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Cart Information">
+                            <field name="order_id"/>
+                            <field name="partner_id"/>
+                            <field name="cart_value"/>
+                            <field name="item_count"/>
+                            <field name="abandoned_at"/>
+                            <field name="abandonment_stage"/>
+                        </group>
+                        <group string="Recovery Status">
+                            <field name="recovery_email_sent"/>
+                            <field name="recovery_email_date"/>
+                            <field name="recovered_order_id"/>
+                            <field name="recovered_at"/>
+                        </group>
+                    </group>
+                    <group string="Age">
+                        <field name="hours_since_creation"/>
+                        <field name="days_since_creation"/>
+                    </group>
+                    <notebook>
+                        <page string="Products in Cart" name="products">
+                            <field name="product_ids" widget="many2many_tags"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Cart Abandonment Tree View -->
+    <record id="view_cart_abandonment_tree" model="ir.ui.view">
+        <field name="name">cart.abandonment.list</field>
+        <field name="model">cart.abandonment</field>
+        <field name="arch" type="xml">
+            <list string="Cart Abandonments" 
+                  decoration-danger="state == 'expired'"
+                  decoration-success="state == 'recovered'"
+                  decoration-warning="state == 'notified'">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="cart_value" sum="Total Abandoned"/>
+                <field name="item_count"/>
+                <field name="abandoned_at"/>
+                <field name="hours_since_creation" string="Hours"/>
+                <field name="abandonment_stage"/>
+                <field name="state" widget="badge"
+                       decoration-danger="state == 'expired'"
+                       decoration-success="state == 'recovered'"
+                       decoration-warning="state == 'notified'"
+                       decoration-info="state == 'abandoned'"/>
+                <field name="recovery_email_sent"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Cart Abandonment Search View -->
+    <record id="view_cart_abandonment_search" model="ir.ui.view">
+        <field name="name">cart.abandonment.search</field>
+        <field name="model">cart.abandonment</field>
+        <field name="arch" type="xml">
+            <search string="Search Abandoned Carts">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter string="Abandoned" name="abandoned" domain="[('state', '=', 'abandoned')]"/>
+                <filter string="Notified" name="notified" domain="[('state', '=', 'notified')]"/>
+                <filter string="Recovered" name="recovered" domain="[('state', '=', 'recovered')]"/>
+                <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
+                <separator/>
+                <filter string="Email Not Sent" name="not_notified" domain="[('recovery_email_sent', '=', False)]"/>
+                <filter string="High Value (&gt; 100)" name="high_value" domain="[('cart_value', '>', 100)]"/>
+                <separator/>
+                <filter string="Last 24h" name="last_24h" domain="[('abandoned_at', '&gt;=', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 7 days" name="last_7days" domain="[('abandoned_at', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Stage" name="group_stage" context="{'group_by': 'abandonment_stage'}"/>
+                    <filter string="Customer" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Cart Abandonment Action -->
+    <record id="action_cart_abandonment" model="ir.actions.act_window">
+        <field name="name">Abandoned Carts</field>
+        <field name="res_model">cart.abandonment</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_abandoned': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No abandoned carts detected
+            </p>
+            <p>
+                Abandoned carts will be tracked automatically. Run the detection cron job to identify them.
+            </p>
+        </field>
+    </record>
+    
+    <!-- ============================================================ -->
+    <!-- CART ABANDONMENT REPORT (Analytics) -->
+    <!-- ============================================================ -->
+    
+    <record id="view_cart_abandonment_report_tree" model="ir.ui.view">
+        <field name="name">cart.abandonment.report.list</field>
+        <field name="model">cart.abandonment.report</field>
+        <field name="arch" type="xml">
+            <list string="Cart Abandonment Report" 
+                  decoration-danger="abandonment_rate > 70"
+                  decoration-success="recovery_rate > 20">
+                <field name="date"/>
+                <field name="total_carts"/>
+                <field name="converted_carts"/>
+                <field name="abandoned_carts"/>
+                <field name="recovered_carts"/>
+                <field name="total_abandoned_value" sum="Total Abandoned"/>
+                <field name="recovered_value" sum="Total Recovered"/>
+                <field name="avg_abandoned_value"/>
+                <field name="abandonment_rate" string="Aband. %" widget="percentage"/>
+                <field name="recovery_rate" string="Recov. %" widget="percentage"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    
+    <record id="view_cart_abandonment_report_graph" model="ir.ui.view">
+        <field name="name">cart.abandonment.report.graph</field>
+        <field name="model">cart.abandonment.report</field>
+        <field name="arch" type="xml">
+            <graph string="Cart Abandonment Trends" type="line" sample="1">
+                <field name="date" type="row"/>
+                <field name="abandonment_rate" type="measure"/>
+                <field name="recovery_rate" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <record id="view_cart_abandonment_report_search" model="ir.ui.view">
+        <field name="name">cart.abandonment.report.search</field>
+        <field name="model">cart.abandonment.report</field>
+        <field name="arch" type="xml">
+            <search string="Search Cart Reports">
+                <field name="date"/>
+                <filter string="Last 7 Days" name="last_7days" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Last 30 Days" name="last_30days" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="High Abandonment (&gt;70%)" name="high_abandonment" domain="[('abandonment_rate', '>', 70)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Day" name="group_day" context="{'group_by': 'date:day'}"/>
+                    <filter string="Week" name="group_week" context="{'group_by': 'date:week'}"/>
+                    <filter string="Month" name="group_month" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <record id="action_cart_abandonment_report" model="ir.actions.act_window">
+        <field name="name">Cart Abandonment Analytics</field>
+        <field name="res_model">cart.abandonment.report</field>
+        <field name="view_mode">list,graph</field>
+        <field name="context">{'search_default_last_30days': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No cart data yet
+            </p>
+            <p>
+                Cart abandonment analytics will appear here once you have cart activity.
+            </p>
+        </field>
+    </record>
+    
+    <!-- ============================================================ -->
+    <!-- ANALYTICS WIZARD -->
+    <!-- ============================================================ -->
+    
+    <record id="view_analytics_wizard_form" model="ir.ui.view">
+        <field name="name">analytics.report.wizard.form</field>
+        <field name="model">analytics.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Report">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="report_type"/>
+                        <field name="company_id"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generate_report" string="Generate Report" 
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <record id="action_analytics_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Analytics Report</field>
+        <field name="res_model">analytics.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    
+</odoo>
+

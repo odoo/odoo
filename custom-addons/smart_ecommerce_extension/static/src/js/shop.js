@@ -1,11 +1,125 @@
 /** @odoo-module **/
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import { jsonrpc } from "@web/core/network/rpc_service";
+import { rpc } from "@web/core/network/rpc";
 
 /**
  * SMART eCommerce Extension - Shop JavaScript
  */
+
+// Delivery Zone Selection in Checkout
+publicWidget.registry.SmartDeliveryZoneSelector = publicWidget.Widget.extend({
+    selector: '.smart-delivery-zone-section',
+    events: {
+        'change .delivery-zone-radio': '_onZoneChange',
+        'click .delivery-zone-option': '_onZoneOptionClick',
+    },
+    
+    start: function () {
+        var self = this;
+        // Initialize with current selection
+        var $checked = this.$('.delivery-zone-radio:checked');
+        if ($checked.length) {
+            this._updateZoneInfo($checked);
+            $checked.closest('.delivery-zone-option').addClass('border-primary bg-light');
+        }
+        return this._super.apply(this, arguments);
+    },
+    
+    _onZoneOptionClick: function (ev) {
+        // IMPORTANT: Stop propagation to prevent Odoo checkout.js _changeAddress handler
+        // from trying to call /shop/update_address without partner_id
+        ev.stopPropagation();
+        ev.preventDefault();
+        
+        // Allow clicking on the entire zone card to select it
+        // Skip if click was on the radio itself
+        if ($(ev.target).hasClass('delivery-zone-radio')) {
+            return;
+        }
+        var $option = $(ev.currentTarget);
+        var $radio = $option.find('.delivery-zone-radio');
+        if (!$radio.is(':checked')) {
+            $radio.prop('checked', true).trigger('change');
+        }
+    },
+    
+    _onZoneChange: function (ev) {
+        // Stop propagation to prevent triggering Odoo checkout address change handlers
+        ev.stopPropagation();
+        
+        var self = this;
+        var $radio = $(ev.currentTarget);
+        var zoneId = $radio.val();
+        
+        // Update visual selection
+        this.$('.delivery-zone-option').removeClass('border-primary bg-light');
+        $radio.closest('.delivery-zone-option').addClass('border-primary bg-light');
+        
+        // Update info display
+        this._updateZoneInfo($radio);
+        
+        // Send to server via JSON RPC
+        rpc('/shop/set_delivery_zone', {
+            zone_id: parseInt(zoneId)
+        }).then(function (result) {
+            if (result.success) {
+                // Update any displayed delivery cost
+                if (result.delivery_price !== undefined) {
+                    self.$('#selected_zone_price').text(result.delivery_price_formatted || result.delivery_price);
+                    // Update the cart summary if it exists
+                    var $deliveryCost = $('[data-delivery-cost]');
+                    if ($deliveryCost.length) {
+                        $deliveryCost.text(result.delivery_price_formatted || result.delivery_price);
+                    }
+                }
+                // Show success message
+                self._showMessage('Delivery zone updated successfully', 'success');
+            } else {
+                self._showMessage(result.error || 'Failed to update delivery zone', 'error');
+            }
+        }).catch(function (error) {
+            console.error('Failed to set delivery zone:', error);
+            self._showMessage('Failed to update delivery zone', 'error');
+        });
+    },
+    
+    _updateZoneInfo: function ($radio) {
+        var $option = $radio.closest('.delivery-zone-option');
+        var zoneName = $option.data('zone-name') || $option.find('strong').first().text();
+        var zonePrice = $option.data('zone-price');
+        var zoneDays = $option.data('zone-days');
+        
+        this.$('#delivery_zone_info').removeClass('d-none');
+        this.$('#selected_zone_name').text(zoneName);
+        if (zonePrice) {
+            this.$('#selected_zone_price').text(zonePrice);
+        }
+        if (zoneDays) {
+            this.$('#selected_zone_days').text(zoneDays);
+        }
+    },
+    
+    _showMessage: function (message, type) {
+        // Remove any existing alerts
+        this.$('.alert-smart').remove();
+        
+        var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+        var $alert = $('<div class="alert ' + alertClass + ' alert-dismissible fade show mt-2 alert-smart" role="alert">' +
+            message +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
+            '</div>');
+        
+        this.$('.delivery-zone-options').after($alert);
+        
+        // Auto-dismiss after 3 seconds
+        setTimeout(function () {
+            $alert.fadeOut(function () {
+                $(this).remove();
+            });
+        }, 3000);
+    }
+});
 
 // Delivery Estimate Widget
 publicWidget.registry.SmartDeliveryEstimate = publicWidget.Widget.extend({
@@ -25,7 +139,7 @@ publicWidget.registry.SmartDeliveryEstimate = publicWidget.Widget.extend({
         var city = this._getUserCity();
         
         // Fetch delivery estimate
-        jsonrpc('/shop/delivery_estimate', {
+        rpc('/shop/delivery_estimate', {
             product_id: productId,
             city: city
         }).then(function (result) {
@@ -91,69 +205,6 @@ publicWidget.registry.SmartProductCardHover = publicWidget.Widget.extend({
     }
 });
 
-// Price Range Filter Enhancement
-publicWidget.registry.SmartPriceRangeFilter = publicWidget.Widget.extend({
-    selector: '#collapse_price_range',
-    events: {
-        'input input[name="price_min"]': '_onPriceInput',
-        'input input[name="price_max"]': '_onPriceInput',
-    },
-    
-    _onPriceInput: function (ev) {
-        var $input = $(ev.currentTarget);
-        var value = parseFloat($input.val()) || 0;
-        var min = parseFloat($input.attr('min')) || 0;
-        var max = parseFloat($input.attr('max')) || Infinity;
-        
-        // Clamp value
-        if (value < min) $input.val(min);
-        if (value > max) $input.val(max);
-        
-        // Update visual feedback
-        this._updatePriceDisplay();
-    },
-    
-    _updatePriceDisplay: function () {
-        var minVal = this.$('input[name="price_min"]').val() || '0';
-        var maxVal = this.$('input[name="price_max"]').val() || '∞';
-        
-        // Could update a display element here
-        console.log('Price range: ' + minVal + ' - ' + maxVal);
-    }
-});
-
-// City Selection for Delivery Estimate
-publicWidget.registry.SmartCitySelector = publicWidget.Widget.extend({
-    selector: '.smart-city-selector',
-    events: {
-        'change select': '_onCityChange',
-    },
-    
-    _onCityChange: function (ev) {
-        var city = $(ev.currentTarget).val();
-        if (city) {
-            sessionStorage.setItem('smart_delivery_city', city);
-            
-            // Refresh delivery estimates on page
-            $('.delivery-date-text').each(function () {
-                var $el = $(this);
-                var productId = $el.data('product-id');
-                if (productId) {
-                    $el.text('Updating...');
-                    jsonrpc('/shop/delivery_estimate', {
-                        product_id: productId,
-                        city: city
-                    }).then(function (result) {
-                        if (result.estimate) {
-                            $el.text(result.estimate.formatted);
-                        }
-                    });
-                }
-            });
-        }
-    }
-});
-
 // Stock Badge Animation
 publicWidget.registry.SmartStockBadge = publicWidget.Widget.extend({
     selector: '.smart-stock-badge',
@@ -167,65 +218,6 @@ publicWidget.registry.SmartStockBadge = publicWidget.Widget.extend({
     }
 });
 
-// Delivery Zone Selection in Checkout
-publicWidget.registry.SmartDeliveryZoneSelector = publicWidget.Widget.extend({
-    selector: '.smart-delivery-zone-section',
-    events: {
-        'change .delivery-zone-radio': '_onZoneChange',
-    },
-    
-    start: function () {
-        var self = this;
-        // Initialize with current selection
-        var $checked = this.$('.delivery-zone-radio:checked');
-        if ($checked.length) {
-            this._updateZoneInfo($checked);
-        }
-        return this._super.apply(this, arguments);
-    },
-    
-    _onZoneChange: function (ev) {
-        var self = this;
-        var $radio = $(ev.currentTarget);
-        var zoneId = $radio.val();
-        
-        // Update visual selection
-        this.$('.delivery-zone-option').removeClass('border-primary bg-light');
-        $radio.closest('.delivery-zone-option').addClass('border-primary bg-light');
-        
-        // Update info display
-        this._updateZoneInfo($radio);
-        
-        // Send to server
-        jsonrpc('/shop/set_delivery_zone', {
-            zone_id: parseInt(zoneId)
-        }).then(function (result) {
-            if (result.success) {
-                // Update any displayed delivery cost
-                if (result.delivery_price !== undefined) {
-                    self.$('#selected_zone_price').text(result.delivery_price_formatted || result.delivery_price);
-                }
-                // Optionally reload to update totals
-                // window.location.reload();
-            }
-        }).catch(function (error) {
-            console.error('Failed to set delivery zone:', error);
-        });
-    },
-    
-    _updateZoneInfo: function ($radio) {
-        var $option = $radio.closest('.delivery-zone-option');
-        var zoneName = $option.find('strong').first().text();
-        var zonePrice = $option.data('zone-price');
-        var zoneDays = $option.data('zone-days');
-        
-        this.$('#delivery_zone_info').removeClass('d-none');
-        this.$('#selected_zone_name').text(zoneName);
-        this.$('#selected_zone_price').text(zonePrice);
-        this.$('#selected_zone_days').text(zoneDays);
-    }
-});
-
 // Cart Delivery Zone Dropdown
 publicWidget.registry.SmartCartDeliveryZone = publicWidget.Widget.extend({
     selector: '.smart-cart-delivery-zone',
@@ -236,7 +228,7 @@ publicWidget.registry.SmartCartDeliveryZone = publicWidget.Widget.extend({
     _onZoneSelect: function (ev) {
         var zoneId = $(ev.currentTarget).val();
         if (zoneId) {
-            jsonrpc('/shop/set_delivery_zone', {
+            rpc('/shop/set_delivery_zone', {
                 zone_id: parseInt(zoneId)
             }).then(function (result) {
                 if (result.success) {
@@ -288,18 +280,16 @@ style.textContent = `
     }
     .delivery-zone-option.border-primary {
         border-width: 2px !important;
+        border-color: #714B67 !important;
     }
 `;
 document.head.appendChild(style);
 
 export default {
+    SmartDeliveryZoneSelector: publicWidget.registry.SmartDeliveryZoneSelector,
     SmartDeliveryEstimate: publicWidget.registry.SmartDeliveryEstimate,
     SmartProductCardHover: publicWidget.registry.SmartProductCardHover,
-    SmartPriceRangeFilter: publicWidget.registry.SmartPriceRangeFilter,
-    SmartCitySelector: publicWidget.registry.SmartCitySelector,
     SmartStockBadge: publicWidget.registry.SmartStockBadge,
-    SmartDeliveryZoneSelector: publicWidget.registry.SmartDeliveryZoneSelector,
     SmartCartDeliveryZone: publicWidget.registry.SmartCartDeliveryZone,
     SmartCategoryCard: publicWidget.registry.SmartCategoryCard,
 };
-

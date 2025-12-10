@@ -332,6 +332,77 @@
         sequence="10"/>
     
     <!-- ============================================================ -->
+    <!-- ANALYTICS & REPORTING SECTION -->
+    <!-- ============================================================ -->
+    
+    <menuitem 
+        id="menu_smart_analytics"
+        name="Analytics"
+        parent="menu_smart_ecommerce_root"
+        sequence="50"/>
+    
+    <!-- Analytics Dashboard -->
+    <menuitem 
+        id="menu_smart_analytics_dashboard"
+        name="Dashboard"
+        parent="menu_smart_analytics"
+        action="action_ecommerce_analytics"
+        sequence="10"/>
+    
+    <!-- Daily Sales Report -->
+    <menuitem 
+        id="menu_smart_daily_sales"
+        name="Daily Sales"
+        parent="menu_smart_analytics"
+        action="action_daily_sales_report"
+        sequence="20"/>
+    
+    <!-- Top Products -->
+    <menuitem 
+        id="menu_smart_top_products"
+        name="Top Products"
+        parent="menu_smart_analytics"
+        action="action_top_selling_products"
+        sequence="30"/>
+    
+    <!-- Top Customers -->
+    <menuitem 
+        id="menu_smart_top_customers"
+        name="Top Customers"
+        parent="menu_smart_analytics"
+        action="action_top_sellers"
+        sequence="40"/>
+    
+    <!-- Cart Abandonment -->
+    <menuitem 
+        id="menu_smart_cart_abandonment"
+        name="Cart Abandonment"
+        parent="menu_smart_analytics"
+        sequence="50"/>
+    
+    <menuitem 
+        id="menu_smart_abandoned_carts"
+        name="Abandoned Carts"
+        parent="menu_smart_cart_abandonment"
+        action="action_cart_abandonment"
+        sequence="10"/>
+    
+    <menuitem 
+        id="menu_smart_cart_abandonment_analytics"
+        name="Abandonment Analytics"
+        parent="menu_smart_cart_abandonment"
+        action="action_cart_abandonment_report"
+        sequence="20"/>
+    
+    <!-- Report Generator Wizard -->
+    <menuitem 
+        id="menu_smart_report_wizard"
+        name="Generate Report"
+        parent="menu_smart_analytics"
+        action="action_analytics_wizard"
+        sequence="90"/>
+    
+    <!-- ============================================================ -->
     <!-- CONFIGURATION SECTION -->
     <!-- ============================================================ -->
     

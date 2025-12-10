@@ -62,11 +62,14 @@ Features:
         
         # Data
         'data/delivery_zone_data.xml',
+        'data/analytics_cron.xml',
+        'data/cart_abandonment_sequence.xml',
         
         # Views (Backend)
         'views/product_template_views.xml',
         'views/delivery_zone_views.xml',
         'views/sale_order_views.xml',
+        'views/analytics_views.xml',
         'views/menus.xml',
         
         # Website Templates

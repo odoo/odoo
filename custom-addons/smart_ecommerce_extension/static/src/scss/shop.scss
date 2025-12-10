@@ -620,8 +620,23 @@
    Delivery Zone Selection
    ---------------------------------------- */
 .smart-delivery-zone-section {
-    .card-header {
-        background: linear-gradient(135deg, #714B67 0%, #9B6A8F 100%) !important;
+    /* Smart Zone Panel (avoids .card class to prevent Odoo checkout handler conflicts) */
+    .smart-zone-panel {
+        background: white;
+        border-radius: 12px;
+    }
+    
+    .smart-zone-header {
+        border-radius: 12px 12px 0 0;
+        
+        h5 {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+    }
+    
+    .smart-zone-body {
+        border-radius: 0 0 12px 12px;
     }
     
     .delivery-zone-option {
@@ -633,7 +648,7 @@
             background-color: rgba(113, 75, 103, 0.05);
         }
         
-        &.selected, &:has(.form-check-input:checked) {
+        &.selected, &:has(.form-check-input:checked), &.border-primary {
             border-color: #714B67 !important;
             border-width: 2px;
             background-color: rgba(113, 75, 103, 0.08);
