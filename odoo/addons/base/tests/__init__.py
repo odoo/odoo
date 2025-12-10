@@ -40,7 +40,6 @@ from . import test_ir_default
 from . import test_lxml
 from . import test_mail
 from . import test_menu
-from . import test_mimetypes
 from . import test_misc
 from . import test_module
 from . import test_module_graph

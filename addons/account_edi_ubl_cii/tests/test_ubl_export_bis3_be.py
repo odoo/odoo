@@ -1,10 +1,6 @@
 from odoo import Command
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, TestUblCiiBECommon
-try:
-    from odoo.addons.test_orm.tests.test_guess_mimetypes import contents
-except ImportError:
-    contents = None
-
+from odoo.addons.base.tests.files import DOCX_RAW, XLSX_RAW
 from odoo.tests import tagged
 
 
@@ -394,13 +390,13 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         # Supported
         xlsx_attachment = self.env['ir.attachment'].create({
             'name': 'xlsx attachment',
-            'raw': contents('xlsx'),
+            'raw': XLSX_RAW,
             'mimetype': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         })
         # Not supported
         docx_attachment = self.env['ir.attachment'].create({
             'name': 'docx attachment',
-            'raw': contents('docx'),
+            'raw': DOCX_RAW,
             'mimetype': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         })
         xml_attachment = self.env['ir.attachment'].create({

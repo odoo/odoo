@@ -16,12 +16,12 @@ from odoo.tools import float_repr, mute_logger
 from odoo.tools.image import image_data_uri
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.base.tests.files import SVG_B64, ZIP_RAW
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
-
     def setUp(self):
         # for tests methods that create custom models/fields
         self.addCleanup(self.registry.reset_changes)
@@ -2667,28 +2667,25 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertFalse(message1.label)
 
     def test_85_binary_guess_zip(self):
-        from odoo.addons.base.tests.test_mimetypes import ZIP  # noqa: PLC0415
         # Regular ZIP files can be uploaded by non-admin users
         self.env['test_orm.binary_svg'].with_user(self.user_demo).create({
             'name': 'Test without attachment',
-            'image_wo_attachment': base64.b64decode(ZIP),
+            'image_wo_attachment': ZIP_RAW,
         })
 
     def test_86_text_base64_guess_svg(self):
-        from odoo.addons.base.tests.test_mimetypes import SVG  # noqa: PLC0415
         with self.assertRaises(UserError) as e:
             self.env['test_orm.binary_svg'].with_user(self.user_demo).create({
                 'name': 'Test without attachment',
-                'image_wo_attachment': SVG.decode("utf-8"),
+                'image_wo_attachment': SVG_B64.decode("utf-8"),
             })
         self.assertEqual(e.exception.args[0], 'Only admins can upload SVG files.')
 
     def test_90_binary_svg(self):
-        from odoo.addons.base.tests.test_mimetypes import SVG  # noqa: PLC0415
         # This should work without problems
         self.env['test_orm.binary_svg'].create({
             'name': 'Test without attachment',
-            'image_wo_attachment': SVG,
+            'image_wo_attachment': SVG_B64,
         })
         # And this gives error
         with self.assertRaises(UserError):
@@ -2696,15 +2693,14 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
                 self.user_demo,
             ).create({
                 'name': 'Test without attachment',
-                'image_wo_attachment': SVG,
+                'image_wo_attachment': SVG_B64,
             })
 
     def test_91_binary_svg_attachment(self):
-        from odoo.addons.base.tests.test_mimetypes import SVG  # noqa: PLC0415
         # This doesn't neuter SVG with admin
         record = self.env['test_orm.binary_svg'].create({
             'name': 'Test without attachment',
-            'image_attachment': SVG,
+            'image_attachment': SVG_B64,
         })
         attachment = self.env['ir.attachment'].search([
             ('res_model', '=', record._name),
@@ -2717,7 +2713,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             self.user_demo,
         ).create({
             'name': 'Test without attachment',
-            'image_attachment': SVG,
+            'image_attachment': SVG_B64,
         })
         attachment = self.env['ir.attachment'].search([
             ('res_model', '=', record._name),
@@ -2727,10 +2723,9 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(attachment.mimetype, 'text/plain')
 
     def test_92_binary_self_avatar_svg(self):
-        from odoo.addons.base.tests.test_mimetypes import SVG  # noqa: PLC0415
         demo_user = self.user_demo
         # User demo changes his own avatar
-        demo_user.with_user(demo_user).image_1920 = SVG
+        demo_user.with_user(demo_user).image_1920 = SVG_B64
         # The SVG file should have been neutered
         attachment = self.env['ir.attachment'].search([
             ('res_model', '=', demo_user.partner_id._name),

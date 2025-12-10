@@ -56,7 +56,7 @@ class TestSignature(TransactionCase):
             critical=False
         ).sign(cls.private_key, hashes.SHA256())
 
-        cls.pdf_path =  "base/tests/minimal.pdf"
+        cls.pdf_path = "base/tests/files/file.pdf"
 
     def test_odoo_pdf_signer(self):
         fixed_time = datetime.datetime.now(datetime.timezone.utc)
