@@ -12,6 +12,7 @@ import {
 import { describe, expect, test } from "@odoo/hoot";
 import { insertTestHtml } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
+import { isBlock } from "../../src/utils/blocks";
 
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -649,6 +650,19 @@ describe("areSimilarElements", () => {
             "<span class='first second' style='color2: blue'>hello</span><span class='second first' style='color2: blue; color: red'>world</span>"
         );
         const result = areSimilarElements(span1, span2);
+        expect(result).toBe(false);
+    });
+});
+
+describe("isBlock on display none elements", () => {
+    test("t element should not be block", () => {
+        const [t] = insertTestHtml(`<t style="display: none"></t>`);
+        const result = isBlock(t);
+        expect(result).toBe(false);
+    });
+    test("span element should not be block", () => {
+        const [span] = insertTestHtml(`<span style="display: none"></span>`);
+        const result = isBlock(span);
         expect(result).toBe(false);
     });
 });
