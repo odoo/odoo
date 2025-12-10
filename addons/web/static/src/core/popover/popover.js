@@ -96,6 +96,7 @@ export class Popover extends Component {
 
         // Positioning props
         fixedPosition: { optional: true, type: Boolean },
+        shrink: { optional: true, type: Boolean },
         holdOnHover: { optional: true, type: Boolean },
         onPositioned: { optional: true, type: Function },
         position: {
@@ -168,7 +169,7 @@ export class Popover extends Component {
                 this.props.onPositioned?.(el, solution);
             },
             position: this.props.position,
-            shrink: true,
+            shrink: this.props.shrink,
         };
     }
 
