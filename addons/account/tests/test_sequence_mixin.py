@@ -285,13 +285,8 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         with Form(copy2) as move_form:  # It is editable in the form
             with self.assertLogs('odoo.tests.form') as cm:
                 move_form.name = 'MyMISC/2016/0001'
-                record = next(
-                    record
-                    for record in cm.records
-                    if record.name == 'odoo.tests.form.onchange'
-                    if record.levelname == "WARNING"
-                )
-                self.assertIn('The sequence will restart at 1 at the start of every year', record.args['message'])
+                self.assertTrue(cm.output[0].startswith('WARNING:odoo.tests.form.onchange:'))
+                self.assertIn('The sequence will restart at 1 at the start of every year', cm.output[0])
 
         copy2.name = False  # Can't modify journal_id if name is set
         copy2.journal_id = self.test_move.journal_id
