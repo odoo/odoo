@@ -3,6 +3,10 @@ import { registry } from "@web/core/registry";
 import { applyNeededCss } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef {((editingElement: HTMLElement) => void)[]} on_bg_color_updated_handlers
+ */
+
 class ColorStylePlugin extends Plugin {
     static id = "colorStyle";
     static dependencies = ["color"];
@@ -21,6 +25,7 @@ class ColorStylePlugin extends Plugin {
                 value = `bg-${match[1]}`;
             }
             this.dependencies.color.colorElement(editingElement, value, "backgroundColor");
+            this.dispatchTo("on_bg_color_updated_handlers", editingElement);
             return true;
         } else if (styleName === "color") {
             const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);

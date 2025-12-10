@@ -22,6 +22,8 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
  *     marginToAdd: string[];
  *     mousePositionYOnElement: number;
  *     mousePositionXOnElement: number;
+ *     originNextEl: HTMLElement | undefined;
+ *     originPreviousEl: HTMLElement | undefined;
  *     overFirstDropzone: boolean;
  *     overGrid: boolean;
  *     restoreCallbacks?: ReturnType<on_prepare_drag_handlers[0]>[] | null;
@@ -247,6 +249,8 @@ export class DragAndDropPlugin extends Plugin {
                 );
                 this.dragState.mousePositionYOnElement = boundedYMousePosition - targetRect.y;
                 this.dragState.mousePositionXOnElement = (x - targetRect.x) * (this.isRtl ? -1 : 1);
+                this.dragState.originPreviousEl = this.overlayTarget.previousElementSibling;
+                this.dragState.originNextEl = this.overlayTarget.nextElementSibling;
 
                 // Stop marking the elements with mutations as dirty and make
                 // some changes on the page to ease the drag and drop.
