@@ -18,6 +18,9 @@
                     There was an error while sending this invoice via Peppol.
                 </div>
             </sheet>
+            <xpath expr="//group[@name='sale_info_group']" position="inside">
+                <field name="peppol_include_product_reference"/>
+            </xpath>
         </field>
     </record>
 

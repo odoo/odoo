@@ -171,6 +171,33 @@ class TestUblBis3(AccountTestInvoicingCommon):
         self._generate_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'bis3/test_product_code_and_barcode')
 
+    def test_hiding_product_code(self):
+        self.setup_partner_as_be1(self.env.company.partner_id)
+        self.setup_partner_as_be2(self.partner_a)
+        tax_21 = self.percent_tax(21.0)
+
+        self.product_a.write({
+            'default_code': 'P123',
+            'barcode': '1234567890123',
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2017-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+            'peppol_include_product_reference': False,
+        })
+        invoice.action_post()
+        self._generate_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'bis3/test_hiding_product_code')
+
     def test_financial_account(self):
         self.setup_partner_as_be1(self.env.company.partner_id)
         self.setup_partner_as_be2(self.partner_a)

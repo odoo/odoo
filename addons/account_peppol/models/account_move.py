@@ -22,6 +22,10 @@ class AccountMove(models.Model):
         string='PEPPOL status',
         copy=False,
     )
+    peppol_include_product_reference = fields.Boolean(
+        string='Include Product Reference',
+        default=True
+    )
 
     def action_send_and_print(self):
         for move in self:

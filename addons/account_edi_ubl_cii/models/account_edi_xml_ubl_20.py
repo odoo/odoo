@@ -1001,13 +1001,16 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         pass
 
     def _add_document_line_item_nodes(self, line_node, vals):
+        invoice = vals.get('invoice')
         product = vals['base_line']['product_id']
 
         line_node['cac:Item'] = {
             'cbc:Description': {'_text': product.description_sale},
             'cbc:Name': {'_text': product.name},
             'cac:SellersItemIdentification': {
-                'cbc:ID': {'_text': product.default_code},
+                'cbc:ID': {
+                    '_text': product.default_code
+                } if not invoice or invoice.peppol_include_product_reference else None,
             },
             'cac:StandardItemIdentification': {
                 'cbc:ID': {
