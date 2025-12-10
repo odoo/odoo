@@ -23,7 +23,7 @@
                                     <BuilderButton type="''" action="this.props.shapeActionId" actionValue="shape[0]">
                                         <div t-att-class="props.imgThroughDiv ? 'o_we_shape_btn_content' : ''">
                                             <t t-if="props.imgThroughDiv">
-                                                <div class="o_we_shape" t-att-class="this.getShapeClass(shape[0])"/>
+                                                <div class="o_we_shape" t-att-class="this.getShapeClass(shape[0])" t-att-style="this.props.getShapeStyle(shape[0])"/>
                                             </t>
                                             <t t-else="" >
                                                 <Image src="this.getShapeUrl(shape[0])" svgCheck="false"/>
