@@ -66,6 +66,14 @@ def handle_message(message_type: str, **kwargs: dict) -> dict:
                 'status': 'success',
                 'result': {'enabled': system.is_ngrok_enabled()}
             }
+        case "reset_password":
+            return {
+                **base_response,
+                'status': 'success',
+                'result': {
+                    'password': system.generate_password()
+                }
+            }
         case "test_protocol":
             return {
                 **base_response,
