@@ -18334,13 +18334,13 @@ test(`monetary field display for rtl languages`, async () => {
     expect(`thead th:not(.o_list_record_selector):eq(1)`).toHaveStyle(
         { "text-align": "right" },
         {
-            message: "header cells of monetary fields should be right alined",
+            message: "header cells of monetary fields should be right aligned",
         }
     );
     expect(`tbody tr:eq(0) td:not(.o_list_record_selector):eq(1)`).toHaveStyle(
         { "text-align": "right" },
         {
-            message: "Monetary cells should be right alined",
+            message: "Monetary cells should be right aligned",
         }
     );
     expect(`tbody tr:eq(0) td:not(.o_list_record_selector):eq(1)`).toHaveStyle(

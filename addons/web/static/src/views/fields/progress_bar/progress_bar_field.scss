@@ -24,21 +24,28 @@
     }
 }
 
-.o_list_view .o_data_cell {
-    .o_progressbar {
-        // Force progress bars to respect table's layout
-        display: table-row;
-        justify-content: end;
-        .o_rtl & {
-            justify-content: flex-start;
-            text-align: right;
-        }
-        .o_progressbar_value {
-            span {
-                min-width: 1.5rem;
+.o_list_view {
+    .o_progressbar_cell .o_list_number_th {
+        text-align: left !important;
+    }
+
+    .o_data_cell {
+        .o_progressbar {
+            // Force progress bars to respect table's layout
+            display: table-row;
+            justify-content: start;
+            .o_rtl & {
+                justify-content: flex-end;
+                text-align: right;
             }
-            span:last-child{
-                text-align: left;
+            .o_progressbar_value {
+                span {
+                    min-width: 1.5rem;
+                    text-align: end;
+                }
+                span:last-child{
+                    text-align: start;
+                }
             }
         }
     }
