@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
-from stdnum.fr import siret
+from stdnum import ean, get_cc_module
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
@@ -8,10 +8,48 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPIN
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 
 
+PEPPOL_ENDPOINT_ONLY_NUMBERS_REGEX = r'[^0-9]'
 PEPPOL_ENDPOINT_INVALIDCHARS_RE = re.compile(r'[^a-zA-Z\d\-._~]')
 PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS = {
-    '0208': re.compile(r'[^0-9]'),
+    '0007': re.compile(PEPPOL_ENDPOINT_ONLY_NUMBERS_REGEX),
+    '0184': re.compile(PEPPOL_ENDPOINT_ONLY_NUMBERS_REGEX),
+    '0192': re.compile(PEPPOL_ENDPOINT_ONLY_NUMBERS_REGEX),
+    '0208': re.compile(PEPPOL_ENDPOINT_ONLY_NUMBERS_REGEX),
     '9925': re.compile(r'[^beBE0-9]'),
+}
+
+
+def _cc_checker(country_code, code_type):
+    return lambda endpoint: get_cc_module(country_code, code_type).is_valid(endpoint)
+
+
+def _matcher(pattern):
+    return lambda endpoint: bool(re.match(pattern, endpoint))
+
+
+PEPPOL_ENDPOINT_RULES = {
+    # 'eas': (check_fn, expected_format)
+    '0007': (_cc_checker('se', 'orgnr'), "SE-ON-556091-2148"),
+    '0009': (_cc_checker('fr', 'siret'), "73282932000074"),
+    '0088': (ean.is_valid, ""),
+    '0106': (_matcher(r'\d{8,9}'), "012345678"),  # NL kvk
+    '0151': (_cc_checker('au', 'abn'), "18820619616"),
+    '0184': (_cc_checker('dk', 'cvr'), "45678938"),
+    '0190': (_matcher(r'\d{20}'), "01234567890123456789"),  # NL oin
+    '0192': (_cc_checker('no', 'orgnr'), "958040741"),
+    '0201': (_matcher(r'[0-9a-zA-Z]{6}'), "01abCD"),
+    '0208': (_cc_checker('be', 'vat'), "0428754450"),
+    '0210': (_cc_checker('it', 'codicefiscale'), "DQF DSF 00T18 F205K"),
+    '0211': (_cc_checker('it', 'iva'), "83218760839"),
+    '9925': (
+        lambda endpoint: _matcher(r'(be|BE)\d{10}')(endpoint) and _cc_checker('be', 'vat')(endpoint),
+        "BE0428754450",
+    ),
+    '9944': (_cc_checker('nl', 'vat'), "NL264652708B01"),  # NL vat
+    'default': (
+        lambda endpoint: bool(not PEPPOL_ENDPOINT_INVALIDCHARS_RE.search(endpoint) or not 1 <= len(endpoint) <= 50),
+        "only letters and digits",
+    ),
 }
 
 
@@ -230,6 +268,28 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_peppol_edi_format = partner.invoice_edi_format in self._get_peppol_formats()
 
+    @api.model
+    def _sanitize_peppol_endpoint_in_values(self, values):
+        eas = values.get('peppol_eas')
+        endpoint = values.get('peppol_endpoint')
+        if not eas or not endpoint:
+            return
+        if new_endpoint := sanitize_peppol_endpoint(endpoint, eas):
+            values['peppol_endpoint'] = new_endpoint
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._sanitize_peppol_endpoint_in_values(vals)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if vals.get('peppol_eas') and vals.get('peppol_endpoint'):
+            self._sanitize_peppol_endpoint_in_values(vals)
+        elif vals.get('peppol_endpoint') and vals.get('peppol_eas') is None and self.peppol_eas:
+            vals['peppol_endpoint'] = sanitize_peppol_endpoint(vals['peppol_endpoint'], self.peppol_eas)
+        return super().write(vals)
+
     def _get_peppol_endpoint_value(self, country_code, field, eas):
         self.ensure_one()
         value = field in self._fields and self[field]
@@ -286,18 +346,16 @@ class ResPartner(models.Model):
         # TO OVERRIDE
         self.available_peppol_eas = list(dict(self._fields['peppol_eas'].selection))
 
+    @api.model
     def _build_error_peppol_endpoint(self, eas, endpoint):
         """ This function contains all the rules regarding the peppol_endpoint."""
-        if eas == '0208' and not re.match(r"^\d{10}$", endpoint):
-            return _("The Peppol endpoint is not valid. The expected format is: 0239843188")
-        if eas == '0009' and not siret.is_valid(endpoint):
-            return _("The Peppol endpoint is not valid. The expected format is: 73282932000074")
-        if eas == '0007' and not re.match(r"^\d{10}$", endpoint):
-            return _("The Peppol endpoint is not valid. "
-                     "It should contain exactly 10 digits (Company Registry number)."
-                     "The expected format is: 1234567890")
-        if PEPPOL_ENDPOINT_INVALIDCHARS_RE.search(endpoint) or not 1 <= len(endpoint) <= 50:
-            return _("The Peppol endpoint (%s) is not valid. It should contain only letters and digit.", endpoint)
+        endpoint_rule, expected_format = PEPPOL_ENDPOINT_RULES.get(eas) or PEPPOL_ENDPOINT_RULES.get('default')
+        if not endpoint_rule(endpoint):
+            return _("The Peppol endpoint is not valid. The expected format is: %s", expected_format)
+
+    def _check_peppol_endpoint_number(self):
+        self.ensure_one()
+        return not self._build_error_peppol_endpoint(self.peppol_eas, self.peppol_endpoint)
 
     @api.model
     def _get_edi_builder(self, invoice_edi_format):

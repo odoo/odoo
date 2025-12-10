@@ -10,6 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account_edi_ubl_cii.models.res_partner import sanitize_peppol_endpoint
 
 try:
     import phonenumbers
@@ -17,37 +18,6 @@ except ImportError:
     phonenumbers = None
 
 
-def _cc_checker(country_code, code_type):
-    return lambda endpoint: get_cc_module(country_code, code_type).is_valid(endpoint)
-
-
-def _re_sanitizer(expression):
-    return lambda endpoint: (res.group(0) if (res := re.search(expression, endpoint)) else endpoint)
-
-
-PEPPOL_ENDPOINT_RULES = {
-    '0007': _cc_checker('se', 'orgnr'),
-    '0088': ean.is_valid,
-    '0184': _cc_checker('dk', 'cvr'),
-    '0192': _cc_checker('no', 'orgnr'),
-    '0208': _cc_checker('be', 'vat'),
-}
-
-PEPPOL_ENDPOINT_WARNINGS = {
-    '0151': _cc_checker('au', 'abn'),
-    '0201': lambda endpoint: bool(re.match('[0-9a-zA-Z]{6}$', endpoint)),
-    '0210': _cc_checker('it', 'codicefiscale'),
-    '0211': _cc_checker('it', 'iva'),
-    '9906': _cc_checker('it', 'iva'),
-    '9907': _cc_checker('it', 'codicefiscale'),
-}
-
-PEPPOL_ENDPOINT_SANITIZERS = {
-    '0007': _re_sanitizer(r'\d{10}'),
-    '0184': _re_sanitizer(r'\d{8}'),
-    '0192': _re_sanitizer(r'\d{9}'),
-    '0208': _re_sanitizer(r'\d{10}'),
-}
 TIMEOUT = 10
 
 
@@ -196,12 +166,6 @@ class ResCompany(models.Model):
         if country_code not in PEPPOL_LIST or not phonenumbers.is_valid_number(phone_nbr):
             raise ValidationError(error_message)
 
-    def _check_peppol_endpoint_number(self, warning=False):
-        self.ensure_one()
-        peppol_dict = PEPPOL_ENDPOINT_WARNINGS if warning else PEPPOL_ENDPOINT_RULES
-
-        return True if (endpoint_rule := peppol_dict.get(self.peppol_eas)) is None else endpoint_rule(self.peppol_endpoint)
-
     # -------------------------------------------------------------------------
     # CONSTRAINTS
     # -------------------------------------------------------------------------
@@ -211,14 +175,6 @@ class ResCompany(models.Model):
         for company in self:
             if company.account_peppol_phone_number:
                 company._sanitize_peppol_phone_number()
-
-    @api.constrains('peppol_endpoint')
-    def _check_peppol_endpoint(self):
-        for company in self:
-            if not company.peppol_endpoint:
-                continue
-            if not company._check_peppol_endpoint_number(PEPPOL_ENDPOINT_RULES):
-                raise ValidationError(_("The Peppol endpoint identification number is not correct."))
 
     @api.constrains('peppol_purchase_journal_id')
     def _check_peppol_purchase_journal_id(self):
@@ -324,21 +280,10 @@ class ResCompany(models.Model):
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
 
-    @api.model
-    def _sanitize_peppol_endpoint_in_values(self, values):
-        eas = values.get('peppol_eas')
-        endpoint = values.get('peppol_endpoint')
-        if not eas or not endpoint:
-            return
-        if sanitizer := PEPPOL_ENDPOINT_SANITIZERS.get(eas):
-            new_endpoint = sanitizer(endpoint)
-            if new_endpoint:
-                values['peppol_endpoint'] = new_endpoint
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            self._sanitize_peppol_endpoint_in_values(vals)
+            self.env['res.partner']._sanitize_peppol_endpoint_in_values(vals)
 
         res = super().create(vals_list)
         if res:
@@ -352,7 +297,10 @@ class ResCompany(models.Model):
         return res
 
     def write(self, vals):
-        self._sanitize_peppol_endpoint_in_values(vals)
+        if vals.get('peppol_eas') and vals.get('peppol_endpoint'):
+            self.env['res.partner']._sanitize_peppol_endpoint_in_values(vals)
+        elif vals.get('peppol_endpoint') and vals.get('peppol_eas') is None and self.peppol_eas:
+            vals['peppol_endpoint'] = sanitize_peppol_endpoint(vals['peppol_endpoint'], self.peppol_eas)
         return super().write(vals)
 
     # -------------------------------------------------------------------------

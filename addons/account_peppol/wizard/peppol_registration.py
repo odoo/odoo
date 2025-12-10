@@ -8,6 +8,7 @@ except ImportError:
 from odoo import _, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo.addons.account_edi_ubl_cii.models.res_partner import sanitize_peppol_endpoint
 
 
 class PeppolRegistration(models.TransientModel):
@@ -95,7 +96,10 @@ class PeppolRegistration(models.TransientModel):
     def _onchange_peppol_endpoint(self):
         for wizard in self:
             if wizard.peppol_endpoint:
-                wizard.peppol_endpoint = ''.join(char for char in wizard.peppol_endpoint if char.isalnum())
+                if wizard.peppol_eas:
+                    wizard.peppol_endpoint = sanitize_peppol_endpoint(wizard.peppol_endpoint, wizard.peppol_eas)
+                else:
+                    wizard.peppol_endpoint = ''.join(char for char in wizard.peppol_endpoint if char.isalnum())
 
     @api.onchange('phone_number')
     def _onchange_phone_number(self):
@@ -163,7 +167,7 @@ class PeppolRegistration(models.TransientModel):
             if all((
                 wizard.peppol_eas,
                 wizard.peppol_endpoint,
-                not wizard.selected_company_id._check_peppol_endpoint_number(warning=True),
+                not wizard.selected_company_id.partner_id._check_peppol_endpoint_number(),
             )):
                 peppol_warnings['company_peppol_endpoint_warning'] = {
                     'level': 'warning',

@@ -50,19 +50,19 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'refresh_token': FAKE_UUID[0],
         })
 
+        # The invalid partner is a partner with no eas/endpoint. The creation of a partner with
+        # an invalid endpoint is handled in the test_invalid_partner_raise_error_at_creation method
         cls.invalid_partner, cls.valid_partner = cls.env['res.partner'].create([{
             'name': 'Wintermute',
             'city': 'Charleroi',
             'country_id': cls.env.ref('base.be').id,
-            'peppol_eas': '0208',
-            'peppol_endpoint': '3141592654',
         }, {
             'name': 'Molly',
             'city': 'Namur',
             'email': 'Namur@company.com',
             'country_id': cls.env.ref('base.be').id,
             'peppol_eas': '0208',
-            'peppol_endpoint': '2718281828',
+            'peppol_endpoint': '0366699392',
         }])
 
         cls.env['res.partner.bank'].create({
@@ -121,7 +121,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                     },
                 }
                 return response
-            if peppol_identifier == '0208:2718281828':
+            if peppol_identifier == '0208:0366699392':
                 response.status_code = 200
                 response.json = lambda: {
                     "result": {
@@ -270,10 +270,10 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         wizard = self.create_send_and_print(move, default=True)
 
         self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
-        self.assertEqual(self.invalid_partner.peppol_verification_state, 'not_valid')  # not on peppol at all
+        self.assertEqual(self.invalid_partner.peppol_verification_state, 'not_verified')  # not verified because no datas
         self.assertFalse(wizard.sending_methods and 'peppol' in wizard.sending_methods)  # peppol is not checked
         self.assertTrue(wizard.sending_method_checkboxes['peppol']['readonly'])  # peppol is not possible to select
-        self.assertFalse(wizard.alerts)  # there is no alerts
+        self.assertIn('account_edi_ubl_cii_configure_partner', wizard.alerts)
 
     @patch('odoo.addons.account_peppol.models.res_partner.ResPartner._check_document_type_support', return_value=False)
     def test_send_peppol_alerts_not_valid_format_partner(self, mocked_check):
@@ -416,7 +416,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'peppol_endpoint': '0477472701',
             }])
 
-        new_partner.peppol_endpoint = '3141592654'
+        with self.assertRaisesRegex(UserError, "The Peppol endpoint is not valid. The expected format is: 0428754450"):
+            new_partner.peppol_endpoint = '3141592654'
         new_partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(
             new_partner, [{
@@ -604,7 +605,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'country_id': self.env.ref('base.be').id,
                 'parent_id': self.env.company.id,
                 'peppol_eas': '0208',
-                'peppol_endpoint': '0477471111',
+                'peppol_endpoint': '0366699392',
                 'account_peppol_proxy_state': 'receiver',
             },
         ])
@@ -814,6 +815,16 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'currency_id': self.env.ref('base.EUR').id,
             },
         ])
+
+    def test_invalid_partner_raise_error_at_creation(self):
+        with self.assertRaisesRegex(UserError, "The Peppol endpoint is not valid. The expected format is: 0428754450"):
+            self.env['res.partner'].create({
+                'name': 'Wintermute',
+                'city': 'Charleroi',
+                'country_id': self.env.ref('base.be').id,
+                'peppol_eas': '0208',
+                'peppol_endpoint': '3141592654',
+            })
 
     def test_automatic_invoicing_auto_update_partner_peppol_status(self):
         self.ensure_installed('sale')

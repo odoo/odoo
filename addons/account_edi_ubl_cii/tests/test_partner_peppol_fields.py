@@ -114,8 +114,66 @@ class TestAccountUblCii(AccountTestInvoicingCommon):
         partner = self.env['res.partner'].create({
             'name': "BE partner dots",
             'country_id': self.env.ref('base.be').id,
-            'company_registry': '0123.456.789',
+            'company_registry': '0428.754.450',
             'vat': False
         })
         self.assertEqual(partner.peppol_eas, '0208')
-        self.assertEqual(partner.peppol_endpoint, '0123456789')
+        self.assertEqual(partner.peppol_endpoint, '0428754450')
+
+    def test_peppol_endpoint_sanitizer(self):
+        company_1, company_2 = self.env['res.company'].create([
+        {
+            'name': 'COMPANY 1',
+            'country_id': self.env.ref('base.be').id,
+            'peppol_eas': '0208',
+            'peppol_endpoint': 'BE0799.332.854',
+        },
+        {
+            'name': 'COMPANY 2',
+            'country_id': self.env.ref('base.be').id,
+            'peppol_eas': '0208',
+        }])
+
+        # Change it from the company and it should be sanitized
+        company_2.peppol_endpoint = 'BE0428/754-450'
+        self.assertEqual(company_1.peppol_endpoint, '0799332854')
+        self.assertEqual(company_2.peppol_endpoint, '0428754450')
+
+        # Change it from the partner, it should still be sanitized
+        company_1.partner_id.peppol_endpoint = 'BE0765/983.660'
+        company_2.partner_id.peppol_endpoint = 'BE0156886909'
+        self.assertEqual(company_1.peppol_endpoint, '0765983660')
+        self.assertEqual(company_2.peppol_endpoint, '0156886909')
+
+        # Change it from a dependency field, same
+        company_1.company_registry = 'BE0799.332.854'
+        company_2.company_registry = 'BE0428/754-450'
+        self.assertEqual(company_1.peppol_endpoint, '0799332854')
+        self.assertEqual(company_2.peppol_endpoint, '0428754450')
+
+    def test_peppol_endpoint_checker(self):
+        config = {
+            'be': {
+                '0208': ('company_registry', '0428754450'),
+                '9925': ('vat', 'BE0428754450')
+            },
+            'nl': {
+                '0106': (None, '012345678'),
+                '0190': (None, '01234567890123456789'),
+                '9944': (None, 'NL264652708B01'),
+            },
+            'it': {
+                '0211': ('vat', '83218760839'),
+            }
+        }
+        for country_code, vals in config.items():
+            company = self.env['res.company'].create({
+                'name': f'test company {country_code}',
+                'country_id': self.env.ref(f'base.{country_code}').id,
+            })
+            for eas, (field, value) in vals.items():
+                company[field or 'peppol_endpoint'] = False
+                company.write({
+                    'peppol_eas': eas,
+                    field or 'peppol_endpoint': value,
+                })
