@@ -1542,6 +1542,29 @@ test(`render popover`, async () => {
         `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item:eq(1) span.fw-bold`
     ).toHaveText("Partner");
 
+    await animationFrame();
+    await runAllTimers(); // Wait for popover reposition by position hook
+    // Fully visible
+    const popover = document.querySelector(`.o_cw_popover`).getBoundingClientRect();
+    expect(
+        popover.top >= 0 &&
+            popover.left >= 0 &&
+            popover.bottom <= window.innerHeight &&
+            popover.right <= window.innerWidth
+    ).toBe(true);
+    // Displayed nearby its targeted full calendar event
+    const popoverTarget = document
+        .querySelector(`.fc-event[data-event-id='2']`)
+        .getBoundingClientRect();
+    expect(
+        Math.min(
+            Math.abs(popover.top - popoverTarget.bottom),
+            Math.abs(popover.bottom - popoverTarget.top),
+            Math.abs(popover.left - popoverTarget.right),
+            Math.abs(popover.right - popoverTarget.left)
+        ) < 30
+    ).toBe(true);
+
     await contains(`.o_cw_popover .o_cw_popover_close`).click();
     expect(`.o_cw_popover`).toHaveCount(0);
 });
