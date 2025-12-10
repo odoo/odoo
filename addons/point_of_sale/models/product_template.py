@@ -303,7 +303,7 @@ class ProductTemplate(models.Model):
                 ))
 
     def _ensure_unused_in_pos(self):
-        open_pos_sessions = self.env['pos.session'].search([('state', '!=', 'closed')])
+        open_pos_sessions = self.env['pos.session'].sudo().search([('state', '!=', 'closed')])
         used_products = open_pos_sessions.order_ids.filtered(lambda o: o.state == "draft").lines.product_id.product_tmpl_id
         if used_products & self:
             raise UserError(_(
