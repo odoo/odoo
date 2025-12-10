@@ -66,7 +66,7 @@ export class FeedbackScreen extends Component {
         if (this.isAutoSkip && !this.ignoreTimeout) {
             this.timeout.set(
                 setTimeout(() => {
-                    this.pos.orderDone(this.currentOrder);
+                    this.goNext();
                 }, this.pos.feedbackScreenAutoSkipDelay)
             );
         }
@@ -104,7 +104,13 @@ export class FeedbackScreen extends Component {
     }
 
     goNext() {
-        this.pos.orderDone(this.currentOrder);
+        this.currentOrder.setScreenData({ name: "" });
+        this.pos.searchProductWord = "";
+        const { page, params } = this.pos.defaultPage;
+        this.pos.navigate(
+            page,
+            page === "ProductScreen" ? { orderUuid: this.pos.getEmptyOrder().uuid } : params
+        );
     }
 
     get canPrintReceipt() {

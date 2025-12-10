@@ -2758,16 +2758,6 @@ export class PosStore extends WithLazyGetterTrap {
         return getTimeUtil(date);
     }
 
-    orderDone(order) {
-        order.setScreenData({ name: "" });
-        this.searchProductWord = "";
-        const { page, params } = this.defaultPage;
-        this.navigate(
-            page,
-            page === "ProductScreen" ? { orderUuid: this.getEmptyOrder().uuid } : params
-        );
-    }
-
     async isSessionDeleted() {
         return (
             (await this.data.orm.searchCount("pos.session", [["id", "=", this.session.id]])) === 0
