@@ -23,6 +23,12 @@
         .o-mail-DiscussSidebarCategory-actions {
             visibility: hidden;
         }
+        .o-mail-DiscussSidebarCategory-title {
+            color: $text-muted;
+        }
+        &:has(.o-mail-DiscussSidebarCategory-chevronCompact) .o-mail-DiscussSidebarCategory-toggler {
+            color: $text-muted !important;
+        }
     }
 
 }
@@ -34,7 +40,7 @@
 }
 
 .o-mail-DiscussSidebarCategory-chevronCompact {
-    left: - map-get($spacers, 1)/2;
+    left: map-get($spacers, 1)/2;
 }
 
 .o-mail-DiscussSidebarCategory-toggler {
@@ -42,6 +48,6 @@
         font-size: .65rem;
     }
     &:not(.o-compact) {
-        line-height: 2.35; // so that same height as actions, so folding doesn't resize
+        line-height: 2; // so that same height as actions, so folding doesn't resize
     }
 }
