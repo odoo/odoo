@@ -76,7 +76,9 @@ export function isBlock(node) {
         display = style.display;
         computedStyleDisplayCache.set(node, display);
     }
-    if (display) {
+    // In case the node has display `none` we don't know what is its display
+    // so we check its tagName in `blockTagNames`
+    if (display && display !== "none") {
         return !display.includes("inline") && display !== "contents";
     }
     return blockTagNames.includes(tagName);
