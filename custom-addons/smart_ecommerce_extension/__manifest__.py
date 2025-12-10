@@ -66,6 +66,7 @@ Features:
         # Views (Backend)
         'views/product_template_views.xml',
         'views/delivery_zone_views.xml',
+        'views/sale_order_views.xml',
         'views/menus.xml',
         
         # Website Templates

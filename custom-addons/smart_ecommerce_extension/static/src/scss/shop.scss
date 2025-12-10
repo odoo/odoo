@@ -255,6 +255,190 @@
 }
 
 /* ----------------------------------------
+   Categories Sidebar
+   ---------------------------------------- */
+.smart-categories-sidebar {
+    position: sticky;
+    top: 100px;
+    
+    .card {
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        
+        .card-header {
+            border-radius: 0;
+            border-bottom: none;
+            
+            &.bg-primary {
+                background: linear-gradient(135deg, #714B67 0%, #9B6A8F 100%) !important;
+            }
+            
+            &.bg-secondary {
+                background: linear-gradient(135deg, #6c757d 0%, #868e96 100%) !important;
+            }
+            
+            h5, h6 {
+                font-weight: 600;
+                letter-spacing: 0.5px;
+            }
+        }
+    }
+    
+    .list-group-item {
+        border-left: none;
+        border-right: none;
+        padding: 0.85rem 1rem;
+        transition: background-color 0.2s ease;
+        
+        &:first-child {
+            border-top: none;
+        }
+        
+        &:hover {
+            background-color: rgba(113, 75, 103, 0.05);
+        }
+        
+        a {
+            color: #495057;
+            transition: color 0.2s ease;
+            
+            &:hover {
+                color: #714B67;
+            }
+            
+            &.fw-bold {
+                color: #714B67 !important;
+            }
+        }
+        
+        .badge {
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+    }
+    
+    // Nested category styles
+    ul.list-unstyled {
+        li a {
+            font-size: 0.875rem;
+            
+            &:hover {
+                color: #714B67 !important;
+            }
+        }
+    }
+    
+    // Brand filter badges
+    .badge {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            transform: scale(1.05);
+        }
+        
+        &.bg-light {
+            border: 1px solid #dee2e6;
+            
+            &:hover {
+                border-color: #714B67;
+                color: #714B67 !important;
+            }
+        }
+    }
+    
+    // Availability filter
+    .form-check {
+        padding-left: 1.75rem;
+        margin-bottom: 0.5rem;
+        
+        .form-check-input {
+            cursor: pointer;
+            
+            &:checked {
+                background-color: #714B67;
+                border-color: #714B67;
+            }
+            
+            &:focus {
+                box-shadow: 0 0 0 0.25rem rgba(113, 75, 103, 0.25);
+            }
+        }
+        
+        .form-check-label {
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+    }
+}
+
+/* ----------------------------------------
+   Mobile Categories Dropdown
+   ---------------------------------------- */
+#mobileCategoriesDropdown {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    
+    &:hover, &:focus {
+        background-color: rgba(113, 75, 103, 0.1);
+        border-color: #714B67;
+        color: #714B67;
+    }
+}
+
+.dropdown-menu[aria-labelledby="mobileCategoriesDropdown"] {
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: none;
+    
+    .dropdown-item {
+        padding: 0.65rem 1rem;
+        
+        &:hover {
+            background-color: rgba(113, 75, 103, 0.1);
+            color: #714B67;
+        }
+        
+        .badge {
+            font-size: 0.7rem;
+        }
+    }
+}
+
+/* ----------------------------------------
+   Order Confirmation Page
+   ---------------------------------------- */
+.smart-order-confirmation {
+    .order-summary-card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        
+        .card-header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            
+            i {
+                font-size: 1.5rem;
+            }
+        }
+    }
+    
+    .delivery-info {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-radius: 8px;
+        padding: 1rem;
+        
+        .fa-truck {
+            color: #1565c0;
+        }
+    }
+}
+
+/* ----------------------------------------
    Dark Mode Support (if website has dark theme)
    ---------------------------------------- */
 [data-bs-theme="dark"] {
@@ -282,6 +466,29 @@
             
             tr:hover {
                 background-color: #495057;
+            }
+        }
+    }
+    
+    .smart-categories-sidebar {
+        .card {
+            background-color: #2d3436;
+            
+            .card-body {
+                background-color: #2d3436;
+            }
+        }
+        
+        .list-group-item {
+            background-color: #2d3436;
+            border-color: #495057;
+            
+            a {
+                color: #adb5bd;
+                
+                &:hover {
+                    color: #9B6A8F;
+                }
             }
         }
     }

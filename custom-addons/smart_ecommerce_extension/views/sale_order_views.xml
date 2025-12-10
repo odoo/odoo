@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- SALE ORDER VIEWS - WEBSITE ORDERS ENHANCEMENT -->
+    <!-- ============================================================ -->
+    
+    <!-- Add website origin indicator to sale order list view -->
+    <record id="view_sale_order_list_website_indicator" model="ir.ui.view">
+        <field name="name">sale.order.list.website.indicator</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="website_id" optional="show" string="Source"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="delivery_zone_id" optional="hide" string="Delivery Zone"/>
+                <field name="estimated_delivery_date" optional="hide" string="Est. Delivery"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Add website info to sale order form view -->
+    <record id="view_sale_order_form_website_info" model="ir.ui.view">
+        <field name="name">sale.order.form.website.info</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="website_id" readonly="1" groups="base.group_no_one"/>
+            </xpath>
+            <xpath expr="//group[@name='sale_shipping']" position="inside">
+                <field name="delivery_zone_id" readonly="1"/>
+                <field name="computed_delivery_price" readonly="1"/>
+                <field name="estimated_delivery_date" readonly="1"/>
+                <field name="total_shipping_weight" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Website Orders Filter -->
+    <record id="view_sale_order_filter_website" model="ir.ui.view">
+        <field name="name">sale.order.filter.website</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="after">
+                <separator/>
+                <filter string="Website Orders" name="website_orders" 
+                        domain="[('website_id', '!=', False)]"
+                        help="Orders placed through the website"/>
+                <filter string="Manual Orders" name="manual_orders" 
+                        domain="[('website_id', '=', False)]"
+                        help="Orders created manually"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Website" name="group_website" context="{'group_by': 'website_id'}"/>
+                <filter string="Delivery Zone" name="group_delivery_zone" context="{'group_by': 'delivery_zone_id'}"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <!-- Action: Website Orders -->
+    <record id="action_website_orders" model="ir.actions.act_window">
+        <field name="name">Website Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="domain">[('website_id', '!=', False)]</field>
+        <field name="context">{
+            'search_default_website_orders': 1,
+            'default_type_name': 'Website Order'
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No website orders yet!
+            </p>
+            <p>
+                Orders placed by customers through your online shop will appear here.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Action: Today's Website Orders -->
+    <record id="action_today_website_orders" model="ir.actions.act_window">
+        <field name="name">Today's Website Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[
+            ('website_id', '!=', False),
+            ('date_order', '>=', (context_today() - datetime.timedelta(days=0)).strftime('%Y-%m-%d')),
+            ('date_order', '&lt;', (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d'))
+        ]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No orders today yet!
+            </p>
+            <p>
+                Orders placed today through your website will appear here.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menu: Website Orders under Sales -->
+    <menuitem
+        id="menu_website_orders"
+        name="Website Orders"
+        parent="sale.sale_order_menu"
+        action="action_website_orders"
+        sequence="5"/>
+    
+</odoo>
+

@@ -1,6 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- ============================================================ -->
+    <!-- SHOP PAGE - SMART CATEGORIES DISPLAY -->
+    <!-- ============================================================ -->
+    
+    <!-- Add Categories Section to Shop Page (Above Products) -->
+    <template id="shop_categories_section" inherit_id="website_sale.products" name="SMART Categories Section">
+        <xpath expr="//div[@id='products_grid']" position="before">
+            <!-- Categories Display Section -->
+            <div class="smart-categories-section mb-4 d-none d-lg-block">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header" style="background: linear-gradient(135deg, #714B67 0%, #9B6A8F 100%);">
+                        <h5 class="mb-0 text-white">
+                            <i class="fa fa-th-list me-2"/>Shop by Category
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <!-- All Products -->
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <a href="/shop" t-attf-class="text-decoration-none d-flex flex-column align-items-center p-2 rounded #{'bg-primary text-white' if not category else 'bg-light text-dark hover-shadow'}">
+                                    <i class="fa fa-home fa-2x mb-2"/>
+                                    <span class="small text-center">All Products</span>
+                                </a>
+                            </div>
+                            <!-- Category Cards -->
+                            <t t-foreach="categories" t-as="c">
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <a t-att-href="keep('/shop/category/%s' % slug(c), category=0)" 
+                                       t-attf-class="text-decoration-none d-flex flex-column align-items-center p-2 rounded #{'bg-primary text-white' if category and category.id == c.id else 'bg-light text-dark hover-shadow'}">
+                                        <t t-if="c.image_128">
+                                            <img t-att-src="image_data_uri(c.image_128)" 
+                                                 class="rounded mb-2" style="width: 48px; height: 48px; object-fit: cover;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <i class="fa fa-folder fa-2x mb-2"/>
+                                        </t>
+                                        <span class="small text-center"><t t-esc="c.name"/></span>
+                                        <span class="badge bg-secondary mt-1" t-esc="len(c.product_tmpl_ids)"/>
+                                    </a>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Categories Dropdown -->
+            <div class="smart-categories-mobile d-lg-none mb-3">
+                <div class="dropdown w-100">
+                    <button class="btn btn-outline-primary dropdown-toggle w-100 d-flex justify-content-between align-items-center" 
+                            type="button" id="smartMobileCategoriesDropdown" 
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <span>
+                            <i class="fa fa-th-list me-2"/>
+                            <t t-if="category" t-esc="category.name"/>
+                            <t t-else="">All Categories</t>
+                        </span>
+                        <i class="fa fa-chevron-down"/>
+                    </button>
+                    <ul class="dropdown-menu w-100 shadow" aria-labelledby="smartMobileCategoriesDropdown">
+                        <li>
+                            <a class="dropdown-item d-flex justify-content-between" href="/shop">
+                                <span><i class="fa fa-home me-2"/>All Products</span>
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"/></li>
+                        <t t-foreach="categories" t-as="c">
+                            <li>
+                                <a class="dropdown-item d-flex justify-content-between" 
+                                   t-att-href="keep('/shop/category/%s' % slug(c), category=0)">
+                                    <span><t t-esc="c.name"/></span>
+                                    <span class="badge bg-secondary"><t t-esc="len(c.product_tmpl_ids)"/></span>
+                                </a>
+                            </li>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Filter Badges Row -->
+            <div t-if="selected_brand or selected_availability" class="smart-active-filters mb-3 d-flex flex-wrap gap-2 align-items-center">
+                <span class="text-muted small">Active filters:</span>
+                <t t-if="selected_brand">
+                    <a t-att-href="keep(brand='')" class="badge bg-primary text-decoration-none">
+                        Brand: <t t-esc="selected_brand"/>
+                        <i class="fa fa-times ms-1"/>
+                    </a>
+                </t>
+                <t t-if="selected_availability">
+                    <a t-att-href="keep(availability='')" class="badge bg-info text-decoration-none">
+                        <t t-esc="selected_availability.replace('_', ' ').title()"/>
+                        <i class="fa fa-times ms-1"/>
+                    </a>
+                </t>
+                <a t-att-href="keep(brand='', availability='')" class="badge bg-danger text-decoration-none">
+                    Clear All <i class="fa fa-times ms-1"/>
+                </a>
+            </div>
+        </xpath>
+    </template>
+    
+    <!-- ============================================================ -->
     <!-- PRODUCT PAGE ENHANCEMENTS -->
     <!-- ============================================================ -->
     
@@ -53,6 +154,52 @@
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowfullscreen="allowfullscreen"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    
+    <!-- ============================================================ -->
+    <!-- ORDER CONFIRMATION PAGE ENHANCEMENTS -->
+    <!-- ============================================================ -->
+    
+    <!-- Add delivery info to confirmation page -->
+    <template id="order_confirmation_delivery" inherit_id="website_sale.confirmation" name="Order Confirmation Delivery Info">
+        <xpath expr="//div[@id='oe_structure_website_sale_confirmation_1']" position="before">
+            <!-- Order Success Message Enhancement -->
+            <div class="smart-order-success alert alert-success d-flex align-items-center mt-3" role="alert">
+                <i class="fa fa-check-circle fa-2x me-3 text-success"/>
+                <div>
+                    <strong>Your order has been confirmed!</strong>
+                    <p class="mb-0 small">Order reference: <strong t-field="order.name"/></p>
+                </div>
+            </div>
+            
+            <!-- Delivery Zone Info if available -->
+            <div t-if="order.delivery_zone_id" class="card mt-3 border-info">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fa fa-truck me-2 text-info"/>Delivery Information
+                    </h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Delivery Zone:</strong> <t t-esc="order.delivery_zone_id.name"/></p>
+                            <p class="mb-1" t-if="order.estimated_delivery_date">
+                                <strong>Estimated Delivery:</strong> 
+                                <t t-esc="order.estimated_delivery_date" t-options="{'widget': 'date'}"/>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1" t-if="order.computed_delivery_price">
+                                <strong>Delivery Cost:</strong> 
+                                <t t-esc="order.computed_delivery_price" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
+                            </p>
+                            <p class="mb-1" t-if="order.total_shipping_weight">
+                                <strong>Package Weight:</strong> 
+                                <t t-esc="order.total_shipping_weight"/> kg
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </xpath>
