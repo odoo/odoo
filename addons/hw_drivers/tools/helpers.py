@@ -227,6 +227,9 @@ def check_git_branch(server_url=None, get_db_branch=False):
                         ['/home/pi/odoo/addons/iot_box_image/configuration/checkout.sh'], check=True
                     )
             except subprocess.CalledProcessError:
+                # reset local branch name if update failed, to allow new attempt on next restart
+                with writable():
+                    subprocess.run(git + ['branch', '-m', local_branch], check=False)
                 _logger.exception("Failed to update the code with git.")
             finally:
                 odoo_restart()
