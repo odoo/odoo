@@ -347,6 +347,11 @@ class StockMove(models.Model):
         subcontracting_location = self.picking_id.partner_id.with_company(self.company_id).property_stock_subcontractor
         return (
                 not self.is_subcontract
-                and self.origin_returned_move_id.is_subcontract
+                and self._is_previous_move_subcontract()
                 and self.location_dest_id.id == subcontracting_location.id
         )
+
+    def _is_previous_move_subcontract(self):
+        if not self.group_id:
+            return False
+        return any(move.is_subcontract and move.product_id == self.product_id for move in self.group_id.stock_move_ids)

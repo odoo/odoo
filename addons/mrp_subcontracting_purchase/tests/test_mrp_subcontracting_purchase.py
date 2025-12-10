@@ -1030,3 +1030,72 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         with Form(mo) as production_form:
             production_form.date_start = original_mo_start_date
         self.assertEqual(mo.date_start, original_mo_start_date)
+
+    def test_purchase_and_return04(self):
+        """
+        This test is to make sure the purchase order line's received
+        quantity gets updated correctly when performing a chain of returns
+        on a subcontracting receipt.
+        """
+        # Create Purchase
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': self.finished2.name,
+                'product_id': self.finished2.id,
+                'product_uom_qty': 10,
+                'product_uom': self.finished2.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        po.button_confirm()
+
+        # Receive the products
+        receipt_1 = po.picking_ids
+        receipt_1.move_ids.quantity = 10
+        receipt_1.move_ids.picked = True
+        receipt_1.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 10.0)
+
+        # Return receipt_1
+        return_form_1 = Form(self.env['stock.return.picking'].with_context(active_id=receipt_1.id, active_model='stock.picking'))
+        return_wizard_1 = return_form_1.save()
+        return_wizard_1.product_return_moves.quantity = 10
+        return_wizard_1.product_return_moves.to_refund = True
+        return_1_id, _ = return_wizard_1._create_returns()
+
+        return_picking_1 = self.env['stock.picking'].browse(return_1_id)
+        return_picking_1.move_ids.quantity = 10
+        return_picking_1.move_ids.picked = True
+        return_picking_1.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 0.0)
+
+        # Return return_picking_1
+        return_form_2 = Form(self.env['stock.return.picking'].with_context(active_id=return_picking_1.id, active_model='stock.picking'))
+        return_wizard_2 = return_form_2.save()
+        return_wizard_2.product_return_moves.quantity = 10
+        return_wizard_2.product_return_moves.to_refund = True
+        return_2_id, _ = return_wizard_2._create_returns()
+
+        return_picking_2 = self.env['stock.picking'].browse(return_2_id)
+        return_picking_2.move_ids.quantity = 10
+        return_picking_2.move_ids.picked = True
+        return_picking_2.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 10.0)
+
+        # Return return_picking_2
+        return_form_3 = Form(self.env['stock.return.picking'].with_context(active_id=return_picking_2.id, active_model='stock.picking'))
+        return_wizard_3 = return_form_3.save()
+        return_wizard_3.product_return_moves.quantity = 10
+        return_wizard_3.product_return_moves.to_refund = True
+        return_3_id, _ = return_wizard_3._create_returns()
+
+        return_picking_3 = self.env['stock.picking'].browse(return_3_id)
+        return_picking_3.move_ids.quantity = 10
+        return_picking_3.move_ids.picked = True
+        return_picking_3.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 0.0)
