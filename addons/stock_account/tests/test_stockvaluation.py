@@ -2370,6 +2370,7 @@ class TestStockValuation(TestStockValuationCommon):
         This test check that the value of this SVL is correct and does result in new_std_price * quantity.
         To do so, we create 2 In moves, which result in a standard price rounded at $5.29, the non-rounded value ≃ 5.2857.
         Then we update the standard price to $7
+        We will then do one more In move to ensure that the most recent value information is used when both sources are present.
         """
         product = self.product_avco
         self._make_in_move(product, 5, unit_cost=5)
@@ -2388,6 +2389,13 @@ class TestStockValuation(TestStockValuationCommon):
         with freeze_time(Datetime.now() + timedelta(minutes=1)):
             product.standard_price = 7
         self.assertEqual(product.total_value, 49)
+
+        with freeze_time(Datetime.now() + timedelta(minutes=2)):
+            move = self._make_in_move(product, 5, unit_cost=5)
+            # We force the sequence here to simulate moves that are not ordered by date
+            move.sequence = -1
+
+        self.assertEqual(product.total_value, 74)  # 49 + (5 * 5) = 74
 
     def test_average_manual_revaluation(self):
         product = self.product_avco
