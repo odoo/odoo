@@ -1048,7 +1048,28 @@ patch(PosStore.prototype, {
             customer_count: order.getCustomerCount(),
         };
     },
+    continueSplitting(order) {
+        const originalOrderUuid = order.uiState.splittedOrderUuid;
+        order.uiState.screen_data.value = "";
+        this.selectedOrderUuid = originalOrderUuid;
+        const nextOrderScreen = this.getOrder().getCurrentScreenData().name;
+        this.navigate(nextOrderScreen || "ProductScreen", {
+            orderUuid: originalOrderUuid,
+        });
+    },
+    isContinueSplitting(order) {
+        if (this.config.module_pos_restaurant && !this.selectedTable) {
+            const splittedOrder = order.originalSplittedOrder;
 
+            if (!splittedOrder) {
+                return false;
+            }
+
+            return !splittedOrder.finalized;
+        } else {
+            return false;
+        }
+    },
     async validateOrderFast(paymentMethod) {
         const currentOrder = this.getOrder();
         if (!currentOrder) {
