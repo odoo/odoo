@@ -627,7 +627,7 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.product.invalidate_recordset(['total_value', 'avg_cost'])
         self.product._compute_value()
         self.assertEqual(self.product.total_value, 0.0)
-        self.assertEqual(self.product.avg_cost, 42.0)
+        self.assertEqual(self.product.avg_cost, 0.0)
 
 
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
