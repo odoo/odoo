@@ -87,6 +87,7 @@ def check_git_branch(server_url=None):
 
     :param server_url: The URL of the connected Odoo database (provided by decorator).
     """
+    local_branch = ""
     db_branch = get_db_branch(server_url)
     if not db_branch:
         _logger.warning("Could not get the database branch, skipping git checkout")
@@ -114,6 +115,9 @@ def check_git_branch(server_url=None):
             _logger.warning("Update completed, restarting...")
             odoo_restart()
     except Exception:
+        if local_branch:
+            # reset local branch name if update failed, to allow new attempt on next restart
+            git('branch', '-m', local_branch)
         _logger.exception('An error occurred while trying to update the code with git')
 
 
