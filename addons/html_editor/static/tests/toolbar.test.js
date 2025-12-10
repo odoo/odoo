@@ -1889,7 +1889,7 @@ test("dropdown menu should not overflow scroll container", async () => {
     expect(top(toolbar)).toBeGreaterThan(bottom(range));
 
     // Scroll down to make the toolbar overflow the scroll container
-    scrollStep = top(toolbar) - top(scrollableElement);
+    scrollStep = top(toolbar);
     scrollableElement.scrollTop += scrollStep;
     await animationFrame();
     await advanceTime(200);
@@ -1915,7 +1915,7 @@ test("dropdown menu should not overflow scroll container", async () => {
     const fontSelector = queryOne(".o_font_selector_menu");
 
     // Scroll down to make the toolbar overflow the scroll container
-    scrollStep = top(toolbar) - top(scrollableElement);
+    scrollStep = top(toolbar);
     scrollableElement.scrollTop += scrollStep;
     await animationFrame();
 

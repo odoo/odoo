@@ -166,6 +166,7 @@ export class Dropdown extends Component {
                 return getPosition();
             },
             ref: this.menuRef,
+            shrink: true,
             setActiveElement: false,
         };
         if (this.isBottomSheet) {

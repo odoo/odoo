@@ -361,7 +361,7 @@ test("popover with arrow and onPositioned", async () => {
 
     expect.verifySteps(["onPositioned (from override)", "onPositioned (from props)"]);
     expect(".o_popover").toHaveClass("o_popover popover mw-100 bs-popover-auto");
-    expect(".o_popover").toHaveAttribute("data-popper-placement", "bottom");
+    expect(".o_popover").toHaveAttribute("data-popper-placement", "center");
     expect(".o_popover > .popover-arrow").toHaveClass("position-absolute z-n1");
 });
 

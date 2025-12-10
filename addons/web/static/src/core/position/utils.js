@@ -40,19 +40,21 @@ const DEFAULTS = {
 
 /** @type {{[d: string]: Direction}} */
 const DIRECTIONS = { t: "top", r: "right", b: "bottom", l: "left", c: "center" };
-/** @type {{[v: string]: Variant}} */
-const VARIANTS = { s: "start", m: "middle", e: "end", f: "fit" };
 /** @type DirectionFlipOrder */
-const DIRECTION_FLIP_ORDER = { top: "tb", right: "rl", bottom: "bt", left: "lr" };
-/** @type VariantFlipOrder */
-const VARIANT_FLIP_ORDER = { start: "se", middle: "m", end: "es", fit: "f" };
+const DIRECTION_FLIP_ORDER = {
+    top: "tbrlc",
+    right: "rlbtc",
+    bottom: "btrlc",
+    left: "lrbtc",
+    center: "c",
+};
 
 /**
  * @param {HTMLElement} popperEl
  * @param {HTMLElement} targetEl
  * @returns {HTMLIFrameElement?}
  */
-function getIFrame(popperEl, targetEl) {
+export function getIFrame(popperEl, targetEl) {
     return [...popperEl.ownerDocument.getElementsByTagName("iframe")].find((iframe) =>
         iframe.contentDocument?.contains(targetEl)
     );
@@ -100,10 +102,13 @@ export function reverseForRTL(direction, variant = "middle") {
  *                                => can be applied to popper.style.(top|left)
  */
 function computePosition(popper, target, { container, flip, margin, position, shrink }) {
-    // Retrieve directions and variants
+    // Retrieve directions and variant
     const [direction, variant = "middle"] = reverseForRTL(...position.split("-"));
-    const directions = flip ? DIRECTION_FLIP_ORDER[direction] : [direction.at(0)];
-    const variants = VARIANT_FLIP_ORDER[variant];
+    let directions = flip ? DIRECTION_FLIP_ORDER[direction] : [direction.at(0)];
+    if (flip && shrink) {
+        // Only check the opposite direction when the popper is shrinkable
+        directions = directions.slice(0, -3);
+    }
 
     // Retrieve container
     if (!container) {
@@ -162,12 +167,12 @@ function computePosition(popper, target, { container, flip, margin, position, sh
     };
 
     function getPositioningData(d, v) {
-        const [direction, variant] = reverseForRTL(DIRECTIONS[d], VARIANTS[v]);
+        const [direction, variant] = reverseForRTL(DIRECTIONS[d], v);
         const result = { direction, variant };
-        const vertical = ["t", "b"].includes(d);
+        const vertical = ["t", "b", "c"].includes(d);
         const variantPrefix = vertical ? "v" : "h";
         const directionValue = directionsData[d];
-        let variantValue = variantsData[variantPrefix + v];
+        let variantValue = variantsData[variantPrefix + v[0]];
         const [leftCompensation, topCompensation] = containerIsInIframe
             ? [iframeBox.left, iframeBox.top]
             : [0, 0];
@@ -207,9 +212,8 @@ function computePosition(popper, target, { container, flip, margin, position, sh
             variantOverflow = Math.ceil(variantValue + variantSize) - Math.floor(variantMax);
         }
 
-        // All non zero values of variantOverflow lead to the
-        // same malus value since it can be corrected by shifting
-        const malus = Math.abs(directionOverflow) + (variantOverflow && 1);
+        // variantOverflow won't trigger any malus since we can shift to avoid it
+        const malus = Math.abs(directionOverflow);
 
         // Apply variant offset
         variantValue -= variantOverflow;
@@ -224,8 +228,14 @@ function computePosition(popper, target, { container, flip, margin, position, sh
         // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
         result.top = positioning.top - popBox.top;
         result.left = positioning.left - popBox.left;
-        if (shrink && malus) {
-            const minTop = Math.floor(!vertical && v === "s" ? targetBox.top : contBox.top);
+        if (d === "c") {
+            // Artificial way to say the center direction is a fallback to every other
+            // once there is a direction overflow since we can always shift the position
+            // in any direction in that case
+            result.top -= directionOverflow;
+            return { result, malus: 0 };
+        } else if (shrink) {
+            const minTop = Math.floor(!vertical && v[0] === "s" ? targetBox.top : contBox.top);
             result.top = Math.max(minTop, result.top);
 
             let height;
@@ -236,27 +246,21 @@ function computePosition(popper, target, { container, flip, margin, position, sh
                     s: variantMax - targetBox.top,
                     m: variantMax - variantMin,
                     e: targetBox.bottom - variantMin,
-                }[v];
+                }[v[0]];
             }
             result.maxHeight = Math.floor(height);
         }
         return { result, malus };
     }
 
-    if (direction === "center") {
-        return {
-            top: directionsData[direction[0]] - popBox.top,
-            left: variantsData.vm - popBox.left,
-            direction: DIRECTIONS[direction[0]],
-            variant: "middle",
-        };
-    }
-
     // Find best solution
     const matches = [];
     for (const d of directions) {
-        for (const v of variants) {
-            const match = getPositioningData(d, v);
+        if (d === "c") {
+            // There is no need for variant distinction when checking center position
+            matches.push(getPositioningData("c", "middle"));
+        } else {
+            const match = getPositioningData(d, variant);
             if (!match.malus) {
                 // A perfect position match has been found.
                 return match.result;
