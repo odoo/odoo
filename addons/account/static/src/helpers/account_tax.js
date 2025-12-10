@@ -1864,8 +1864,9 @@ export const accountTaxHelpers = {
         const new_tax_details_list = this.split_tax_details(base_line, company, target_factors);
 
         // Split 'base_line'.
-        const new_base_lines = [];
+        const new_base_lines = factors.map((x) => null);
         for (let i = 0; i < factors.length; i++) {
+            const index = factors[i][0];
             const factor = factors[i][1];
             const new_tax_details = new_tax_details_list[i];
             const target_factor = target_factors[i];
@@ -1879,8 +1880,7 @@ export const accountTaxHelpers = {
                 populate_function(base_line, target_factor, kwargs);
             }
 
-            const new_base_line = this.prepare_base_line_for_taxes_computation(base_line, kwargs);
-            new_base_lines.push(new_base_line);
+            new_base_lines[index] = this.prepare_base_line_for_taxes_computation(base_line, kwargs);
         }
         return new_base_lines;
     },
