@@ -56,7 +56,7 @@ export class OutOfFocusService {
             .substring(0, PREVIEW_MSG_MAX_SIZE);
         await this.sendNotification({
             message: notificationContent,
-            sound: message.thread?.model === "discuss.channel",
+            sound: Boolean(message.channel_id),
             title: notificationTitle,
             type: "info",
             icon,

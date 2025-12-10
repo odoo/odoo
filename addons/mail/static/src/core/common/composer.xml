@@ -149,7 +149,7 @@
         t-att-disabled="isSendButtonDisabled"
         t-att-aria-label="SEND_TEXT"
     >
-        <t t-if="thread and thread.model !== 'discuss.channel'" t-out="SEND_TEXT"/>
+        <t t-if="thread and !thread.channel" t-out="SEND_TEXT"/>
         <t t-else=""><i class="fa fa-fw fa-lg fa-paper-plane-o"/></t>
     </button>
 </t>

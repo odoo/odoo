@@ -48,7 +48,7 @@
                                 <t t-else="" t-out="message.dateSimpleWithDay"/>
                             </small>
                             <small t-if="isPersistentMessageFromAnotherThread" t-on-click.prevent="openRecord" class="ms-1 text-500">
-                                <t t-if="message.thread.model !== 'discuss.channel'">
+                                <t t-if="!message.thread.channel">
                                     on <a t-if="message.thread.displayName" t-att-href="message.resUrl" t-esc="message.thread.displayName"/><em class="pe-1 text-decoration-line-through" t-else="">Deleted document</em>
                                 </t>
                                 <t t-else="">

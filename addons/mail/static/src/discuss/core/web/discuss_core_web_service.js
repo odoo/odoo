@@ -36,7 +36,7 @@ export class DiscussCoreWeb {
             }
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message } }) => {
-            if (message.thread?.model === "discuss.channel") {
+            if (message.channel_id) {
                 // initChannelsUnreadCounter becomes unreliable
                 this.store.channels.fetch();
             }

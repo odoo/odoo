@@ -543,7 +543,7 @@ export class Store extends BaseStore {
         if (role_ids.length) {
             Object.assign(postData, { role_ids });
         }
-        if (thread.model === "discuss.channel" && validMentions?.specialMentions.length) {
+        if (thread.channel && validMentions?.specialMentions.length) {
             postData.special_mentions = validMentions.specialMentions;
         }
         if (attachments.length) {

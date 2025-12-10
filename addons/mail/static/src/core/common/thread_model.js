@@ -303,7 +303,7 @@ export class Thread extends Record {
     }
 
     get hasAttachmentPanel() {
-        return this.model === "discuss.channel";
+        return Boolean(this.channel);
     }
 
     get supportsCustomChannelName() {
@@ -556,7 +556,7 @@ export class Thread extends Record {
     }
 
     getFetchParams() {
-        if (this.model === "discuss.channel") {
+        if (this.channel) {
             return { channel_id: this.id };
         }
         if (this.model === "mail.box") {
@@ -570,7 +570,7 @@ export class Thread extends Record {
     }
 
     getFetchRoute() {
-        if (this.model === "discuss.channel") {
+        if (this.channel) {
             return "/discuss/channel/messages";
         }
         if (this.model === "mail.box" && this.id === "inbox") {
