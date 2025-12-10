@@ -940,6 +940,9 @@ class Field(typing.Generic[T]):
     def _description_sortable(self, env: Environment):
         if self.column_type and (self.store or self.compute_sql):  # shortcut
             return True
+        if self.inherited_field and self.inherited_field._description_sortable(env):
+            # avoid compuation for inherited field
+            return True
 
         model = env[self.model_name]
         query = model._as_query(ordered=False)
@@ -951,6 +954,9 @@ class Field(typing.Generic[T]):
 
     def _description_groupable(self, env: Environment):
         if self.column_type and (self.store or self.compute_sql):  # shortcut
+            return True
+        if self.inherited_field and self.inherited_field._description_groupable(env):
+            # avoid compuation for inherited field
             return True
 
         model = env[self.model_name]
@@ -964,6 +970,9 @@ class Field(typing.Generic[T]):
     def _description_aggregator(self, env: Environment):
         if not self.aggregator or (self.column_type and (self.store or self.compute_sql)):  # shortcut
             return self.aggregator
+        if self.inherited_field and self.inherited_field._description_aggregator(env):
+            # avoid compuation for inherited field
+            return self.inherited_field.aggregator
 
         model = env[self.model_name]
         query = model._as_query(ordered=False)
