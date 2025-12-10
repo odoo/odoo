@@ -6,9 +6,16 @@
             <t t-set="hasSelectedTable" t-value="selectedTables.length > 0" />
             <t t-set="firstSelectedTable" t-value="selectedTables.length ? selectedTables[0] : null" />
             <div t-attf-class="d-flex flex-row {{pos.isEditMode ? 'flex-wrap' : ''}} justify-content-between px-2 gap-1 border-bottom bg-view">
-                <button t-if="!pos.isEditMode" class="new-order btn btn-primary btn-lg lh-lg my-2" t-on-click="() => this.clickNewOrder()">
-                    <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"/>
-                    <span t-if="!ui.isSmall" class="ms-1">New Order</span>
+                <button t-if="!pos.isEditMode" class="new-order btn btn-lg lh-lg my-2" t-attf-class="{{ this.pos.getOrder()?.isDirectSale ? 'btn-secondary' : 'btn-primary'}}" 
+                    t-on-click="() => this.clickNewOrder()">
+                    <t t-if="this.pos.getOrder()?.isDirectSale">
+                        <i class="fa fa-angle-double-left fa-fw" role="img" aria-label="Back" title="Back"/>
+                        <span t-if="!ui.isSmall" class="ms-1">Back</span>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-plus fa-fw" role="img" aria-label="New Order" title="New Order"/>
+                        <span t-if="!ui.isSmall" class="ms-1">New Order</span>
+                    </t>
                 </button>
                 <!-- Center Side Div -->
                 <div class="floor-selector d-flex gap-1 py-2 overflow-auto">

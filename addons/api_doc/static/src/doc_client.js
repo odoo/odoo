@@ -5,6 +5,7 @@ import { ApiKeyModal } from "@api_doc/components/doc_modal_api_key";
 import { SearchModal } from "@api_doc/components/doc_modal_search";
 import { DocSidebar } from "@api_doc/components/doc_sidebar";
 import { DocModel } from "@api_doc/components/doc_model";
+import { DocErrorDialog } from "@api_doc/components/doc_error_dialog";
 
 export class DocClient extends Component {
     static template = "api_doc.DocClient";
@@ -14,7 +15,8 @@ export class DocClient extends Component {
         DocModel,
         ApiKeyModal,
         SearchModal,
-    };t
+        DocErrorDialog,
+    };
     static props = {};
 
     setup() {

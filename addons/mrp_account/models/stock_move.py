@@ -1,29 +1,24 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import models
 
 
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    def _get_value_data(self,
-        forced_std_price=False,
-        at_date=False,
-        ignore_manual_update=False):
-        self.ensure_one()
-        if self.production_id:
-            valued_qty = self._get_valued_qty()
-            return {
-                'value': self._get_value_from_production(valued_qty),
-                'quantity': valued_qty,
-                'description': _('From Production Order %(reference)s', reference=self.production_id.name),
-            }
-        return super()._get_value_data(forced_std_price, at_date, ignore_manual_update)
-
-    def _get_value_from_production(self, quantity):
+    def _get_value_from_production(self, quantity, at_date=None):
         # TODO: Maybe move _cal_price here
         self.ensure_one()
-        return quantity * self.price_unit
+        if not self.production_id:
+            return super()._get_value_from_production(quantity, at_date)
+        value = quantity * self.price_unit
+        return {
+            'value': value,
+            'quantity': quantity,
+            'description': self.env._('%(value)s for %(quantity)s %(unit)s from %(production)s',
+                value=self.company_currency_id.format(value), quantity=quantity, unit=self.product_id.uom_id.name,
+                production=self.production_id.display_name),
+        }
 
     def _get_all_related_sm(self, product):
         moves = super()._get_all_related_sm(product)

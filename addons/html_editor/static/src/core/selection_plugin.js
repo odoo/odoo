@@ -51,6 +51,7 @@ import { weakMemoize } from "@html_editor/utils/functions";
  * @property { boolean } documentSelectionIsInEditable
  * @property { boolean } documentSelectionIsProtected
  * @property { boolean } documentSelectionIsProtecting
+ * @property { boolean } currentSelectionIsInEditable
  */
 
 /**
@@ -179,6 +180,21 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['selectAroundNonEditable'] } selectAroundNonEditable
  */
 
+/**
+ * @typedef {((selectionData: SelectionData) => void)[]} selectionchange_handlers
+ * @typedef {(() => void)[]} selection_leave_handlers
+ *
+ * @typedef {((ev: PointerEvent) => void | true)[]} double_click_overrides
+ * @typedef {((ev: PointerEvent) => void | true)[]} triple_click_overrides
+ * @typedef {((selection: EditorSelection) => boolean)[]} fix_selection_on_editable_root_overrides
+ *
+ * @typedef {((node: Node, selection: EditorSelection, range: Range) => boolean)[]} fully_selected_node_predicates
+ * @typedef {((ev: Event, char: string, lastSkipped: string) => boolean)[]} intangible_char_for_keyboard_navigation_predicates
+ * @typedef {((node: Node) => boolean)[]} is_node_editable_predicates
+ *
+ * @typedef {((targetedNodes: Node[]) => Node[])[]} targeted_nodes_processors
+ */
+
 export class SelectionPlugin extends Plugin {
     static id = "selection";
     static shared = [
@@ -201,10 +217,10 @@ export class SelectionPlugin extends Plugin {
         "isNodeEditable",
         "selectAroundNonEditable",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
         shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
-        is_node_editable_predicates: (node) => node.parentElement?.isContentEditable,
     };
 
     setup() {
@@ -270,6 +286,16 @@ export class SelectionPlugin extends Plugin {
         const container = selection && closestElement(selection.anchorNode, containerSelector);
         const [anchorNode, anchorOffset] = getDeepestPosition(container, 0);
         const [focusNode, focusOffset] = getDeepestPosition(container, nodeSize(container));
+        if (
+            this.delegateTo("select_all_overrides", {
+                anchorNode,
+                anchorOffset,
+                focusNode,
+                focusOffset,
+            })
+        ) {
+            return;
+        }
         this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
     }
 
@@ -635,6 +661,8 @@ export class SelectionPlugin extends Plugin {
      * @returns {() => void}
      */
     preserveTextareaSelections() {
+        const focusedTextarea =
+            this.document.activeElement?.nodeName === "TEXTAREA" && this.document.activeElement;
         const selections = [...this.editable.querySelectorAll("textarea")].map((textarea) => ({
             textarea,
             start: textarea.selectionStart,
@@ -642,12 +670,9 @@ export class SelectionPlugin extends Plugin {
             direction: textarea.selectionDirection,
         }));
         return () => {
-            if (
-                this.activeSelection?.isCollapsed &&
-                this.activeSelection.anchorNode?.nodeName === "TEXTAREA"
-            ) {
+            if (focusedTextarea) {
                 // If a textarea is targeted, focus it so its selection is active.
-                this.activeSelection.anchorNode.focus();
+                focusedTextarea.focus();
             }
             for (const { textarea, start, end, direction } of selections) {
                 textarea.setSelectionRange(start, end, direction);
@@ -1029,16 +1054,21 @@ export class SelectionPlugin extends Plugin {
     }
 
     isNodeEditable(node) {
-        return this.getResource("is_node_editable_predicates").some((p) => p(node));
+        const results = this.getResource("is_node_editable_predicates")
+            .map((p) => p(node))
+            .filter((r) => r !== undefined);
+        if (!results.length) {
+            return node.parentElement?.isContentEditable;
+        }
+        return results.every((r) => r);
     }
 
     focusEditable() {
-        if (this.editable.contains(this.document.activeElement)) {
+        const { editableSelection, currentSelectionIsInEditable } = this.getSelectionData();
+        if (this.editable.contains(this.document.activeElement) && currentSelectionIsInEditable) {
             // Editor has focus — nothing to do.
             return;
         }
-
-        const { editableSelection, documentSelectionIsInEditable } = this.getSelectionData();
 
         const closestNonEditable = (node) => closestElement(node, (el) => !el.isContentEditable);
         // If selection includes a non-editable element, focusing editor will move cursor to different position.
@@ -1050,7 +1080,7 @@ export class SelectionPlugin extends Plugin {
             this.editable.focus({ preventScroll: true });
         }
 
-        if (!documentSelectionIsInEditable) {
+        if (!currentSelectionIsInEditable) {
             // Selection is outside the editor — restore it.
             const { anchorNode, anchorOffset, focusNode, focusOffset } = editableSelection;
             const selection = this.document.getSelection();

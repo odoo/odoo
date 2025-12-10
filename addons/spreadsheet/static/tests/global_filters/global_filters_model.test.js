@@ -310,6 +310,28 @@ test("Can save a value to an existing global filter", async function () {
     expect(listDomain.length).toBe(3);
 });
 
+test("Command rejected when setting the same date filter value", async () => {
+    const { model } = await createSpreadsheetWithPivotAndList();
+    await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {
+        pivot: DEFAULT_FIELD_MATCHINGS,
+        list: DEFAULT_LIST_FIELD_MATCHINGS,
+    });
+    const gf = model.getters.getGlobalFilters()[0];
+    const year = DateTime.local().year;
+
+    let result = await setGlobalFilterValue(model, {
+        id: gf.id,
+        value: { type: "month", month: 2, year },
+    });
+    expect(result).toBe(DispatchResult.Success);
+
+    result = await setGlobalFilterValue(model, {
+        id: gf.id,
+        value: { type: "month", month: 2, year },
+    });
+    expect(result.reasons).toEqual([CommandResult.NoChanges]);
+});
+
 test("Domain of simple date filter", async function () {
     mockDate("2022-07-14 00:00:00");
     const { model } = await createSpreadsheetWithPivotAndList();
@@ -1675,6 +1697,54 @@ test("Export from/to global filters for excel", async function () {
     const sheetId = exportData.sheets.at(-1).id;
     expect(getCell(exportedModel, "B2", sheetId).format).toBe("m/d/yyyy");
     expect(getCell(exportedModel, "C2", sheetId).format).toBe("m/d/yyyy");
+});
+
+test("Export boolean global filters with undefined value for excel", async function () {
+    const { model } = await createSpreadsheetWithPivotAndList();
+    await addGlobalFilter(model, { id: "42", label: "test", type: "boolean" });
+    const filterPlugin = model["handlers"].find(
+        (handler) => handler instanceof GlobalFiltersCoreViewPlugin
+    );
+    const exportData = { styles: [], sheets: [] };
+    filterPlugin.exportForExcel(exportData);
+    const filterSheet = exportData.sheets[0];
+    expect(filterSheet.cells["A1"]).toBe("Filter");
+    expect(filterSheet.cells["A2"]).toBe("test");
+    expect(filterSheet.cells["B1"]).toBe("Value");
+    expect(filterSheet.cells["B2"]).toBe("");
+
+    model.exportXLSX(); // should not crash
+});
+
+test("Export relational global filter for excel", async function () {
+    const { model } = await createSpreadsheetWithPivotAndList();
+    await addGlobalFilter(model, {
+        id: "1",
+        label: "test relation in",
+        type: "relation",
+        defaultValue: { operator: "in", ids: [1, 2] },
+    });
+    await addGlobalFilter(model, {
+        id: "2",
+        label: "test relation ilike",
+        type: "relation",
+        defaultValue: { operator: "ilike", strings: ["hello", "world"] },
+    });
+
+    const filterPlugin = model["handlers"].find(
+        (handler) => handler instanceof GlobalFiltersCoreViewPlugin
+    );
+    const exportData = { styles: [], sheets: [], formats: {} };
+    filterPlugin.exportForExcel(exportData);
+    const filterSheet = exportData.sheets[0];
+
+    expect(filterSheet.cells["A2"]).toBe("test relation in");
+    expect(filterSheet.cells["B2"]).toBe("1, 2");
+
+    expect(filterSheet.cells["A3"]).toBe("test relation ilike");
+    expect(filterSheet.cells["B3"]).toBe("hello, world");
+
+    model.exportXLSX(); // should not crash
 });
 
 test("Date filter automatic default value for years filter", async function () {

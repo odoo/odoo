@@ -112,7 +112,7 @@ export class Composer extends Record {
         },
     });
     autofocus = 0;
-    replyToMessage = fields.One("mail.message");
+    replyToMessage = fields.One("mail.message", { inverse: "composerAsReplyToMessage" });
     /** @type {"text" | "html" | undefined} */
     updateFrom = undefined;
 

@@ -180,7 +180,7 @@ class ChatbotScript(models.Model):
             if not is_html_empty(welcome_step.message):
                 posted_messages += discuss_channel.with_context(mail_post_autofollow_author_skip=True).message_post(
                     author_id=self.operator_partner_id.id,
-                    body=plaintext2html(welcome_step.message),
+                    body=plaintext2html(welcome_step.message, with_paragraph=False),
                     message_type='comment',
                     subtype_xmlid='mail.mt_comment',
                 )

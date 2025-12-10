@@ -41,8 +41,7 @@ test("image_shape_hover_effect changes image on enter & leave", async () => {
     onRpc(
         "/web/image/384-8a55a748/s_banner_3.svg",
         () =>
-            `<svg viewBox="0 0 300 100" width="500px"><g id="hoverEffects"><animate values="a=1;b=2"><rect width="100%" fill="red" height="100%" /></animate></g></svg>`,
-        { pure: true }
+            `<svg viewBox="0 0 300 100" width="500px"><g id="hoverEffects"><animate values="a=1;b=2"><rect width="100%" fill="red" height="100%" /></animate></g></svg>`
     );
     expect(core.interactions).toHaveLength(1);
     await onceAllImagesLoaded(queryOne("#wrapwrap"));

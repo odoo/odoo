@@ -7,7 +7,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
-const FIRST_PARAGRAPH = ":iframe #wrap .s_text_image p:nth-child(2)";
+const FIRST_PARAGRAPH = ":iframe #wrap .s_text_image p:not([data-selection-placeholder]):nth-child(2)";
 
 const clickEditLink = {
     content: "Click on Edit Link in Popover",
@@ -69,6 +69,7 @@ registerWebsitePreviewTour(
             content: "Popover should be shown for home",
             trigger: ".o-we-linkpopover .o_we_url_link:contains('Home')",
         },
+        clickEditLink,
         {
             content: "Click on Remove Link in Popover",
             trigger: ".o-we-linkpopover .o_we_remove_link",

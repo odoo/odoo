@@ -238,14 +238,14 @@ class HrEmployee(models.Model):
         """
         super()._compute_presence_state()
         employees = self.filtered(lambda e: e.hr_presence_state != "present")
-        employee_to_check_working = self.filtered(lambda e: e.attendance_state == "checked_out"
+        employee_to_check_working = self.filtered(lambda e: e.sudo().attendance_state == "checked_out"
                                                             and e.hr_presence_state == "out_of_working_hour")
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in employees:
-            if employee.attendance_state == "checked_out" and employee.hr_presence_state == "out_of_working_hour" and \
+            if employee.sudo().attendance_state == "checked_out" and employee.hr_presence_state == "out_of_working_hour" and \
                     employee.id in working_now_list:
                 employee.hr_presence_state = "absent"
-            elif employee.attendance_state == "checked_in":
+            elif employee.sudo().attendance_state == "checked_in":
                 employee.hr_presence_state = "present"
 
     def _compute_presence_icon(self):

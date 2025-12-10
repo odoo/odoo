@@ -3,13 +3,15 @@
 # * marketing_card
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-17 17:21+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 19:08+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "marketing_card/ru/>\n"
 "Language: ru\n"
@@ -32,6 +34,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\" "
 "title=\"Clicks\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Клики\" role=\"img\" "
+"title=\"Клики\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_kanban
@@ -39,6 +43,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
 "title=\"Shares\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-share\" aria-label=\"Shares\" role=\"img\" "
+"title=\"Shares\"/>"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_preview
@@ -119,7 +125,7 @@ msgstr "Дела"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Оформление задачи-исключения"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__activity_state
@@ -130,6 +136,16 @@ msgstr "Статус дела"
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Иконка категории дела"
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid ""
+"An error occured while rendering a card for %(record_name)s. Try again or "
+"check the server logs for more details."
+msgstr ""
+"Произошла ошибка при отображении карточки %(record_name)s. Попробуйте снова "
+"или проверьте логи сервера для получения подробной информации."
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -160,7 +176,7 @@ msgstr "Фон"
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_blur
 msgid "Blur"
-msgstr ""
+msgstr "Размытие"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__body_html
@@ -222,7 +238,7 @@ msgstr "Макет карточки"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Card Preview"
-msgstr ""
+msgstr "Предпросмотр карточки"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__card_requires_sync_count
@@ -248,7 +264,7 @@ msgstr "Карточки"
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_user_image
 msgid "Center"
-msgstr ""
+msgstr "Центр"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_circles
@@ -299,7 +315,7 @@ msgstr "Дата создания:"
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_dark
 msgid "Dark"
-msgstr ""
+msgstr "Темный"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__default_background
@@ -356,7 +372,7 @@ msgstr "Каждая запись в кампании должна быть ун
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Инструмент для создания писем"
+msgstr "Мастер создания писем"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_follower_ids
@@ -376,7 +392,7 @@ msgstr "Иконка Font awesome, например, fa-tasks"
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_geometric
 msgid "Geometric"
-msgstr ""
+msgstr "Geometric"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__has_message
@@ -402,7 +418,7 @@ msgstr "Путь к заголовку"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Hello everyone"
-msgstr ""
+msgstr "Всем привет!"
 
 #. module: marketing_card
 #. odoo-python
@@ -414,7 +430,7 @@ msgstr "Помогите нам поделиться новостями"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Here's the link to advertise your participation."
-msgstr ""
+msgstr "Используйте эту ссылку для анонса своего участия."
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__id
@@ -436,7 +452,7 @@ msgstr "Иконка"
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Иконка, указывающая на задачу-исключение."
 
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__message_needaction
@@ -519,7 +535,7 @@ msgstr "Дата последнего обновления:"
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_light
 msgid "Light"
-msgstr ""
+msgstr "Светлый"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_lila
@@ -529,7 +545,7 @@ msgstr ""
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_lines
 msgid "Lines"
-msgstr ""
+msgstr "Линии"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__link_tracker_id
@@ -550,7 +566,7 @@ msgstr "Количество рассылок"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Many thanks"
-msgstr ""
+msgstr "Большое спасибо"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card
@@ -618,7 +634,7 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Модели"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__my_activity_date_deadline
@@ -700,11 +716,15 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Опциональный язык перевода (код ISO), выбираемый при отправке e-mail. Если "
+"не установлен, будет использоваться язык основного партнера. Обычно это "
+"выражение-заполнитель, предоставляющее нужный язык, напр. {{ "
+"object.partner_id.lang }}."
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_organic
 msgid "Organic"
-msgstr ""
+msgstr "Органический"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__target_url
@@ -992,7 +1012,7 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Тип задачи-исключения в записи."
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_utm_source
@@ -1018,7 +1038,7 @@ msgstr "Просмотрено"
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_waves
 msgid "Waves"
-msgstr ""
+msgstr "Волны"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__website_message_ids
@@ -1039,7 +1059,7 @@ msgstr ""
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_world_map
 msgid "World Map"
-msgstr ""
+msgstr "Карта мира"
 
 #. module: marketing_card
 #. odoo-python
@@ -1059,7 +1079,7 @@ msgstr "Ваша домашняя страница"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Your help with this promotion would be greatly appreciated!"
-msgstr ""
+msgstr "Мы будем очень признательны за вашу помощь в продвижении!"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_2

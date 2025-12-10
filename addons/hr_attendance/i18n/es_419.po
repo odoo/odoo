@@ -4,13 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-10 20:35+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-14 15:25+0000\n"
+"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/hr_attendance/es_419/>\n"
 "Language: es_419\n"
@@ -42,13 +43,13 @@ msgstr "%(worked_hours)s (%(check_in)s-%(check_out)s)"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "'Buy an RFID Device'"
-msgstr "\"Compra un dispositivo RFID\""
+msgstr "Compra un dispositivo RFID"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "'Read the Documentation'"
-msgstr "\"Consulta la documentación"
+msgstr "Consulta la documentación"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -88,7 +89,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid ""
 "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
-"in ['work_days', 'non_work_days']\">Beetween</span>"
+"in ['work_days', 'non_work_days']\">Between</span>"
 msgstr ""
 "<span class=\"fw-bold\" invisible="
 "\"base_off != 'timing' or timing_type not in ['work_days', 'non_work_days']\""
@@ -489,8 +490,6 @@ msgid "Badge with Barcode on Tablet"
 msgstr "Identificación con código de barras en una tableta"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/views/extra_hours_list_view.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
 msgid "Balance"
 msgstr "Balance"
@@ -726,11 +725,11 @@ msgid ""
 "(120-100)% = 170%\n"
 msgstr ""
 "Controla cómo se combinan las tasas de las diferentes reglas que aplican.\n"
-"  Máx: Usa la tasa más alta (por ejemplo: combinado para 150% y 120% = 150%)."
-"\n"
+"  Máx: Usa la tasa más alta (por ejemplo: combinado para 150% y 120% = "
+"150%).\n"
 "  Suma: Suma el pago *extra* (es decir, sobre el 100%)..\n"
-"    Por ejemplo: Tasa combinada para 150% y 120% = 100% (base) + (150-100)% +"
-" (120-100)% = 170%\n"
+"    Por ejemplo: Tasa combinada para 150% y 120% = 100% (base) + (150-100)% "
+"+ (120-100)% = 170%\n"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__country_id
@@ -804,12 +803,8 @@ msgid "Definition"
 msgstr "Definición"
 
 #. module: hr_attendance
-#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
-msgid "Departement"
-msgstr "Departamento"
-
-#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
+#: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Department"
 msgstr "Departamento"
 
@@ -1179,7 +1174,7 @@ msgstr "Dirección IP"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Identify Manually"
-msgstr "Identifíquese de forma manual"
+msgstr "Identifícate de forma manual"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -1799,12 +1794,6 @@ msgid "Regenerate overtimes for this ruleset"
 msgstr "Volver a generar las horas extra para este conjunto de reglas"
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/views/extra_hours_list_view.xml:0
-msgid "Remaining Extra Hours:"
-msgstr "Horas extra restantes:"
-
-#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
 msgid "Reporting"
 msgstr "Reportes"
@@ -2086,12 +2075,6 @@ msgstr ""
 "injustificada ese día."
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/views/extra_hours_list_view.xml:0
-msgid "Time Off Taken from Extra Hours:"
-msgstr "Tiempo tomado de horas extra:"
-
-#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__base_off__timing
 msgid "Timing"
 msgstr "Tiempo"
@@ -2148,12 +2131,6 @@ msgstr "Tiempo de tolerancia a favor del empleado"
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Total"
 msgstr "Total"
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/views/extra_hours_list_view.xml:0
-msgid "Total Extra Hours Worked:"
-msgstr "Total de horas extra trabajadas:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
@@ -2254,7 +2231,7 @@ msgstr "Semana"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Welcome"
-msgstr "¡Le damos la bienvenida,"
+msgstr "Te damos la bienvenida,"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance_overtime_rule__timing_type__leave
@@ -2403,6 +2380,25 @@ msgstr "con una tasa de"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "con código PIN opcional"
+
+#~ msgid ""
+#~ "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type "
+#~ "not in ['work_days', 'non_work_days']\">Beetween</span>"
+#~ msgstr ""
+#~ "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type "
+#~ "not in ['work_days', 'non_work_days']\">Entre</span>"
+
+#~ msgid "Departement"
+#~ msgstr "Departamento"
+
+#~ msgid "Remaining Extra Hours:"
+#~ msgstr "Horas extra restantes:"
+
+#~ msgid "Time Off Taken from Extra Hours:"
+#~ msgstr "Tiempo tomado de horas extra:"
+
+#~ msgid "Total Extra Hours Worked:"
+#~ msgstr "Total de horas extra trabajadas:"
 
 #~ msgid "'Documentation'"
 #~ msgstr "'Documentación'"

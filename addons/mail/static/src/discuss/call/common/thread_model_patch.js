@@ -156,16 +156,26 @@ const ThreadPatch = {
             },
         });
     },
+    get isCallDisplayedInChatWindow() {
+        return this.chat_window?.isOpen && !this.store.meetingViewOpened;
+    },
     get showCallView() {
         return !this.store.rtc.state.isFullscreen && this.rtc_session_ids.length > 0;
     },
     focusAvailableVideo() {
-        if (this.isDisplayedInDiscussAppDesktop || !this.store.settings.useCallAutoFocus) {
+        if (
+            !this.store.settings.useCallAutoFocus ||
+            !(
+                this.store.env.services.ui.isSmall ||
+                this.store.rtc.state.isPipMode ||
+                this.isCallDisplayedInChatWindow
+            )
+        ) {
             return;
         }
-        const otherStreamingSession = this.rtc_session_ids.find((session) => {
-            session.notEq(this.store.rtc.selfSession) && session.hasVideo;
-        });
+        const otherStreamingSession = this.rtc_session_ids.find(
+            (session) => session.notEq(this.store.rtc.selfSession) && session.hasVideo
+        );
         if (!otherStreamingSession) {
             return;
         }
@@ -178,7 +188,7 @@ const ThreadPatch = {
         if (this.store.fullscreenChannel?.notEq(this)) {
             this.store.rtc.exitFullscreen();
         }
-        super.open(...arguments);
+        return super.open(...arguments);
     },
     /**
      * @param {import("models").RtcSession} session

@@ -179,7 +179,7 @@ class SaleOrder(models.Model):
             and order_line.reward_id.reward_type == 'discount'
         ):
             # When a reward line is deleted we remove it from the auto claimable rewards
-            self = self.with_context(website_sale_loyalty_delete=True)  # noqa: PLW0642
+            order_line = order_line.with_context(website_sale_loyalty_delete=True)
 
         return super()._cart_update_order_line(order_line, quantity, **kwargs)
 

@@ -29,6 +29,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
     SESSION_EXPIRED: 4001,
     KEEP_ALIVE_TIMEOUT: 4002,
     RECONNECTING: 4003,
+    CLOSING_HANDSHAKE_ABORTED: 4004,
 });
 export const WORKER_STATE = Object.freeze({
     CONNECTED: "CONNECTED",
@@ -50,6 +51,7 @@ const logger = new Logger("bus_websocket_worker");
 export class WebsocketWorker {
     INITIAL_RECONNECT_DELAY = 1000;
     RECONNECT_JITTER = 1000;
+    CONNECTION_CHECK_DELAY = 60_000;
 
     constructor(name) {
         this.name = name;
@@ -290,9 +292,10 @@ export class WebsocketWorker {
             this.isWaitingForNewUID = false;
             this.currentUID = uid;
         }
-        if ((this.currentUID !== uid && isCurrentUserKnown) || this.currentDB !== db) {
+        this.currentDB ||= db;
+        if ((this.currentUID !== uid && isCurrentUserKnown) || (db && this.currentDB !== db)) {
             this.currentUID = uid;
-            this.currentDB = db;
+            this.currentDB = db || this.currentDB;
             if (this.websocket) {
                 this.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
             }
@@ -347,6 +350,7 @@ export class WebsocketWorker {
      * closed.
      */
     _onWebsocketClose({ code, reason }) {
+        clearInterval(this._connectionCheckInterval);
         this._logDebug("_onWebsocketClose", code, reason);
         this._updateState(WORKER_STATE.DISCONNECTED);
         this.lastChannelSubscription = null;
@@ -370,8 +374,15 @@ export class WebsocketWorker {
         // WebSocket was not closed cleanly, let's try to reconnect.
         this.broadcast("BUS:RECONNECTING", { closeCode: code });
         this.isReconnecting = true;
-        if (code === WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT) {
-            // Don't wait to reconnect on keep alive timeout.
+        if (
+            [
+                WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT,
+                WEBSOCKET_CLOSE_CODES.CLOSING_HANDSHAKE_ABORTED,
+            ].includes(code)
+        ) {
+            // Don't wait to reconnect: keep-alive shouldn't be noticed, and the
+            // closing handshake was aborted because the client explicitly tried
+            // to connect while the socket was stuck in the closing state.
             this.connectRetryDelay = 0;
         }
         if (code === WEBSOCKET_CLOSE_CODES.SESSION_EXPIRED) {
@@ -394,6 +405,7 @@ export class WebsocketWorker {
      * @param {MessageEvent} messageEv
      */
     _onWebsocketMessage(messageEv) {
+        this._restartConnectionCheckInterval();
         const notifications = JSON.parse(messageEv.data);
         this._logDebug("_onWebsocketMessage", notifications);
         this.lastNotificationId = notifications[notifications.length - 1].id;
@@ -434,6 +446,27 @@ export class WebsocketWorker {
             this.messageWaitQueue.forEach((msg) => this.websocket.send(msg));
             this.messageWaitQueue = [];
         });
+        this._restartConnectionCheckInterval();
+    }
+
+    /**
+     * Sends a custom application-level message to perform a connection check
+     * on the WebSocket.
+     *
+     * Browsers rely on the OS's TCP mechanism, which can take minutes or
+     * hours to detect a dead connection. Sending data triggers an immediate
+     * I/O operation, quickly revealing any network-level failure. This must be
+     * implemented at the application level because the browser WebSocket API
+     * does not expose the built-in ping/pong mechanism.
+     */
+    _restartConnectionCheckInterval() {
+        clearInterval(this._connectionCheckInterval);
+        this._connectionCheckInterval = setInterval(() => {
+            if (this._isWebsocketConnected()) {
+                this.websocket.send(new Uint8Array([0x00]));
+                this._logDebug("connection_checked");
+            }
+        }, this.CONNECTION_CHECK_DELAY);
     }
 
     /**
@@ -473,6 +506,7 @@ export class WebsocketWorker {
             } else {
                 this.firstSubscribeDeferred.then(() => this.websocket.send(payload));
             }
+            this._restartConnectionCheckInterval();
         }
     }
 
@@ -493,10 +527,13 @@ export class WebsocketWorker {
         }
         this._removeWebsocketListeners();
         if (this._isWebsocketClosing()) {
-            // close event was not triggered and will never be, broadcast the
-            // disconnect event for consistency sake.
-            this.lastChannelSubscription = null;
-            this.broadcast("BUS:DISCONNECT", { code: WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE });
+            // The close event didn’t trigger. Trigger manually to maintain
+            // correct state and lifecycle handling.
+            this._onWebsocketClose(
+                new CloseEvent("close", { code: WEBSOCKET_CLOSE_CODES.CLOSING_HANDSHAKE_ABORTED })
+            );
+            this.websocket = null;
+            return;
         }
         this._updateState(WORKER_STATE.CONNECTING);
         this.websocket = new WebSocket(this.websocketURL);

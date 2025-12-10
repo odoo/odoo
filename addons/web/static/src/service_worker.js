@@ -69,6 +69,12 @@ const readDataOnCache = async (url) => {
     });
 };
 
+const fetchErrorMessages = [
+    "Failed to fetch", // Chromium
+    "Load failed", // WebKit
+    "NetworkError when attempting to fetch resource.", // Firefox
+];
+
 const navigateOrDisplayOfflinePage = async (request) => {
     const isDebugAssets = new URL(request.url).searchParams.get("debug")?.includes("assets");
     try {
@@ -80,7 +86,8 @@ const navigateOrDisplayOfflinePage = async (request) => {
     } catch (requestError) {
         if (
             request.method === "GET" &&
-            ["Failed to fetch", "Load failed"].includes(requestError.message)
+            requestError instanceof TypeError &&
+            fetchErrorMessages.includes(requestError.message)
         ) {
             if (sessionInfo?.length && !isDebugAssets) {
                 const cachedResponse = await readDataOnCache(request.url);

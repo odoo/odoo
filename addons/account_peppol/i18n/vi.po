@@ -3,13 +3,15 @@
 # * account_peppol
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 02:34+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"PO-Revision-Date: 2025-11-28 07:26+0000\n"
+"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/vi/>\n"
 "Language: vi\n"
@@ -17,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -62,17 +64,6 @@ msgid "%s has requested electronic invoices reception on Peppol."
 msgstr "%s đã yêu cầu nhận hóa đơn điện tử trên Peppol."
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid ""
-".<br/>\n"
-"                            But you are receiving your e-invoices via this "
-"Access Point:"
-msgstr ""
-".<br/>\n"
-"                            Nhưng bạn sẽ nhận được hóa đơn điện tử qua Điểm "
-"truy cập này:"
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
@@ -82,6 +73,14 @@ msgstr ""
 "<br/>\n"
 "Tại Bỉ, hóa đơn điện tử sẽ trở nên <u>bắt buộc kể từ tháng 1 năm 2026</u> – "
 "đừng chần chừ, hãy đăng ký ngay từ bây giờ."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                            But you are receiving your e-invoices via this "
+"Access Point:"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -606,6 +605,8 @@ msgid ""
 "Any self-billed invoices / credit notes received via Peppol will be created "
 "in draft in this journal. Defaults to the first sale journal."
 msgstr ""
+"Bất kỳ giấy báo có/hóa đơn tự xuất nào nhận qua Peppol sẽ được tạo dưới dạng "
+"bản nháp trong sổ nhật ký này. Mặc định sẽ là sổ nhật ký bán hàng đầu tiên."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -664,11 +665,6 @@ msgid "Cannot cancel an entry that has already been sent to PEPPOL"
 msgstr "Không thể hủy bút toán đã được gửi tới PEPPOL"
 
 #. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
-msgid "Cannot receive this format"
-msgstr "Không thể nhận định dạng này"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
@@ -701,7 +697,7 @@ msgstr ""
 #: model:ir.model,name:account_peppol.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
-msgstr ""
+msgstr "Các chức năng chung cho tài liệu EDI: tạo dữ liệu, ràng buộc,..."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_company
@@ -717,7 +713,7 @@ msgstr "Công ty"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
 msgid "Company Name"
-msgstr ""
+msgstr "Tên doanh nghiệp"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -803,7 +799,7 @@ msgstr "Huỷ bỏ"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Disconnect"
-msgstr ""
+msgstr "Ngắt kết nối"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -912,6 +908,10 @@ msgid ""
 "please go to Settings > Accounting > Peppol Settings and click on 'Reconnect "
 "this database'."
 msgstr ""
+"Không thể kết nối với Điểm truy cập Peppol. Điều này có thể xảy ra nếu bạn "
+"khôi phục cơ sở dữ liệu từ bản sao lưu hoặc sao chép nó mà chưa trung hoà. "
+"Để khắc phục, vui lòng truy cập Cài đặt > Kế toán > Cài đặt Peppol và nhấp "
+"vào 'Kết nối lại cơ sở dữ liệu này'."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -956,6 +956,9 @@ msgid ""
 "Peppol.You can still disable reception by disabling the self-billing "
 "document types below."
 msgstr ""
+"Nếu được kích hoạt, bạn có thể gửi và nhận hóa đơn tự xuất qua Peppol. Bạn "
+"vẫn có thể tắt chức năng nhận hóa đơn bằng cách tắt các loại chứng từ tự "
+"xuất dưới đây."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_activate_self_billing_sending
@@ -1078,19 +1081,9 @@ msgstr ""
 "Không đủ dung lượng đĩa để lưu trữ tất cả các đoạn tin (dự kiến) của nhóm."
 
 #. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
-msgid "Not on Peppol"
-msgstr "Không có trên Peppol"
-
-#. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
 msgid "Not registered"
 msgstr "Không được đăng ký"
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
-msgid "Not verified yet"
-msgstr "Chưa được xác minh"
 
 #. module: account_peppol
 #: model:mail.template,description:account_peppol.mail_template_peppol_registration
@@ -1179,10 +1172,25 @@ msgid "PEPPOL: webhook keep alive"
 msgstr "PEPPOL: webhook vẫn hoạt động"
 
 #. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
+msgid "Partner cannot receive format"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "Partner doesn't have a valid Peppol configuration."
 msgstr "Đối tác không có cấu hình Peppol hợp lệ."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
+msgid "Partner is not on Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
+msgid "Partner is on Peppol"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -1303,12 +1311,6 @@ msgid "Peppol e-address (EAS)"
 msgstr "Địa chỉ điện tử Peppol (EAS)"
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_verification_state
-#: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_verification_state
-msgid "Peppol endpoint verification"
-msgstr "Xác minh endpoint Peppol"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol error: %s"
@@ -1326,6 +1328,8 @@ msgid "Peppol meta updated at"
 msgstr ""
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_verification_state
+#: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_verification_state
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
 msgid "Peppol status"
 msgstr "Trạng thái Peppol"
@@ -1334,7 +1338,7 @@ msgstr "Trạng thái Peppol"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol status update: %s"
-msgstr ""
+msgstr "Cập nhật trạng thái Peppol: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_warnings
@@ -1385,12 +1389,6 @@ msgstr ""
 "liệu."
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Please verify partner configuration in partner settings."
-msgstr "Vui lòng xác minh cấu hình đối tác trong cài đặt đối tác."
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
@@ -1407,6 +1405,10 @@ msgid ""
 "In particular, this email is used by Odoo to reconnect your Peppol account "
 "in case of database change."
 msgstr ""
+"Địa chỉ email liên hệ chính để nhận thông tin và thông báo liên quan đến kết "
+"nối Peppol.\n"
+"Cụ thể, email này được Odoo sử dụng để kết nối lại tài khoản Peppol của bạn "
+"trong trường hợp thay đổi cơ sở dữ liệu."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1500,7 +1502,7 @@ msgstr "Lưu"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
 msgid "Selected Company"
-msgstr ""
+msgstr "Công ty đã chọn"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1822,20 +1824,6 @@ msgstr "Thông điệp không tuân thủ chính sách AS4."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid ""
-"The partner has indicated it does not accept this document type, so you "
-"cannot send this invoice via Peppol."
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_move_send.py:0
-msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
-msgstr "Đối tác thiếu mã định danh Peppol EAS và/hoặc Endpoint."
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "The processor determined that the message's security methods, parameters, "
@@ -1845,13 +1833,6 @@ msgstr ""
 "Bộ xử lý xác định rằng phương thức bảo mật, tham số, phạm vi hoặc các yêu "
 "cầu hay thỏa thuận ở cấp chính sách bảo mật của thông điệp không được đáp "
 "ứng."
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
-msgid ""
-"The recommended identification method for Belgium is your Company Registry "
-"Number."
-msgstr "Phương thức định danh được đề xuất cho Bỉ là Mã số đăng ký công ty."
 
 #. module: account_peppol
 #. odoo-python
@@ -1948,6 +1929,9 @@ msgid ""
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
+"Trường này được sử dụng để chỉ ra rằng token người dùng EDI không đồng bộ "
+"với máy chủ proxy. Nó được đặt thành True khi token cần được làm mới hoặc "
+"cập nhật."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1998,13 +1982,18 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_20
 msgid "UBL 2.0"
-msgstr ""
+msgstr "UBL 2.0"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unable to verify the digest value."
 msgstr "Không thể xác minh giá trị băm."
+
+#. module: account_peppol
+#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
+msgid "Unchecked"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2038,11 +2027,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection_selection
 msgid "Use Parent Connection Selection"
 msgstr ""
-
-#. module: account_peppol
-#: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
-msgid "Valid"
-msgstr "Hợp lệ"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2195,7 +2179,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your Peppol identification is:"
-msgstr ""
+msgstr "Định danh Peppol của bạn là:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2232,11 +2216,10 @@ msgid ""
 "                                        Make sure to reconnect the correct "
 "database."
 msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Your endpoint"
-msgstr "Endpoint của bạn"
+"Cơ sở dữ liệu của bạn hiện không còn được kết nối với Peppol. Điều này có "
+"thể do việc sao chép hoặc khôi phục cơ sở dữ liệu.\n"
+"                                        Hãy đảm bảo kết nối lại với đúng cơ "
+"sở dữ liệu."
 
 #. module: account_peppol
 #. odoo-python
@@ -2306,6 +2289,44 @@ msgstr "để gửi hoá đơn, nhưng hoá đơn này"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "sử dụng"
+
+#~ msgid ""
+#~ ".<br/>\n"
+#~ "                            But you are receiving your e-invoices via "
+#~ "this Access Point:"
+#~ msgstr ""
+#~ ".<br/>\n"
+#~ "                            Nhưng bạn sẽ nhận được hóa đơn điện tử qua "
+#~ "Điểm truy cập này:"
+
+#~ msgid "Cannot receive this format"
+#~ msgstr "Không thể nhận định dạng này"
+
+#~ msgid "Not on Peppol"
+#~ msgstr "Không có trên Peppol"
+
+#~ msgid "Not verified yet"
+#~ msgstr "Chưa được xác minh"
+
+#~ msgid "Peppol endpoint verification"
+#~ msgstr "Xác minh endpoint Peppol"
+
+#~ msgid "Valid"
+#~ msgstr "Hợp lệ"
+
+#~ msgid "Your endpoint"
+#~ msgstr "Endpoint của bạn"
+
+#~ msgid "Please verify partner configuration in partner settings."
+#~ msgstr "Vui lòng xác minh cấu hình đối tác trong cài đặt đối tác."
+
+#~ msgid "The partner is missing Peppol EAS and/or Endpoint identifier."
+#~ msgstr "Đối tác thiếu mã định danh Peppol EAS và/hoặc Endpoint."
+
+#~ msgid ""
+#~ "The recommended identification method for Belgium is your Company "
+#~ "Registry Number."
+#~ msgstr "Phương thức định danh được đề xuất cho Bỉ là Mã số đăng ký công ty."
 
 #~ msgid "Peppol document (UUID: %(uuid)s) has been received successfully"
 #~ msgstr "Chứng từ Peppol (UUID: %(uuid)s) đã được nhận thành công"

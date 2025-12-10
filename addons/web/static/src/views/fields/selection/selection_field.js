@@ -46,7 +46,7 @@ export class SelectionField extends Component {
                 return [...this.specialData.data];
             case "selection":
                 return this.props.record.fields[this.props.name].selection.filter(
-                    (option) => option[0] !== false && option[1] !== ""
+                    (option) => option[1] !== ""
                 );
             default:
                 return [];
@@ -95,7 +95,7 @@ export class SelectionField extends Component {
                 break;
             case "selection":
                 this.props.record.update(
-                    { [this.props.name]: value },
+                    { [this.props.name]: value ?? false },
                     { save: this.props.autosave }
                 );
                 break;

@@ -6,13 +6,14 @@
 # Jumshud Sultanov <cumshud@gmail.com>, 2022
 # erpgo translator <jumshud@erpgo.az>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 13:37+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-11-16 15:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-19/"
 "auth_signup/az/>\n"
 "Language: az\n"
@@ -105,6 +106,61 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-"
+"color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width:"
+" 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
+"    <tbody>\n"
+"        <!-- CONTENT -->\n"
+"        <tr>\n"
+"            <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                    <t t-set=\"invited_users\" t-value="
+"\"ctx.get('invited_users', [])\"/>\n"
+"                    <td style=\"text-align : left\">\n"
+"                        <span style=\"font-size: 20px; font-weight: bold;\">"
+"\n"
+"                            Gözləyən Dəvətlər\n"
+"                        </span><br/><br/>\n"
+"                    </td>\n"
+"                    <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hörmətli <t t-out=\"object.name or ''\">Mitchell "
+"Admin</t>,<br/><br/>\n"
+"                            Siz aşağıdakı istifadəçi(ləri) verilənlər "
+"bazanıza əlavə etmisiniz, lakin onlar hələ qeydiyyatdan keçməyiblər:\n"
+"                            <ul>\n"
+"                                <t t-foreach=\"invited_users\" t-as="
+"\"invited_user\">\n"
+"                                    <li t-out=\"invited_user or ''\""
+">demo@example.com</li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                            Onlarla əlaqə saxlayın ki, verilənlər bazasına "
+"daxil ola bilsinlər və sizinlə birlikdə işləməyə başlasınlar.\n"
+"                            <br/><br/>\n"
+"                            Sizə xoş günlər arzulayırıq!<br/>\n"
+"                            --<br/><t t-out=\"object.company_id.name or ''\""
+">YourCompany</t> komandası\n"
+"                        </div>\n"
+"                    </td></tr>\n"
+"                    <tr><td style=\"text-align:center;\">\n"
+"                      <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td></tr>\n"
+"                </table>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"    </td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.portal_set_password_email
@@ -541,7 +597,7 @@ msgstr "E-poçt göndərmək mümkün deyil: %s istifadəçi  email ünvanı yox
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Change password"
-msgstr ""
+msgstr "Şifrəni dəyişdir"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
@@ -596,7 +652,7 @@ msgstr "Müştəri Hesabı"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Dear"
-msgstr ""
+msgstr "Hörmətli"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -609,7 +665,7 @@ msgstr "Defolt Giriş Hüquqları"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Göstəriləcək Ad"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -620,7 +676,7 @@ msgstr "Hesabınız yoxdur?"
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Email"
-msgstr ""
+msgstr "E-poçt"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
@@ -644,7 +700,7 @@ msgstr "HTTP Marşrutizasiyası"
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__id
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -688,7 +744,7 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Name"
-msgstr ""
+msgstr "Ad"
 
 #. module: auth_signup
 #. odoo-python
@@ -705,7 +761,7 @@ msgstr "Giriş təmin edilməyib."
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
@@ -743,7 +799,7 @@ msgstr "Parollar uyğun gəlmir; xahiş edirik onları yenidən yazın."
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
 msgid "Powered by"
-msgstr ""
+msgstr "Tərəfindən dəstəklənir"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
@@ -823,7 +879,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Sign Up"
-msgstr ""
+msgstr "Qeydiyyatdan Keç"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -869,7 +925,7 @@ msgstr "Qeydiyyat: yeni istifadəçi üçün ad və ya tərəfdaş verilməyib"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id

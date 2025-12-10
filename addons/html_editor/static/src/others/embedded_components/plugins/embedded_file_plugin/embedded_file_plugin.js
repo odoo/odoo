@@ -15,6 +15,7 @@ export class EmbeddedFilePlugin extends FilePlugin {
     static dependencies = [...super.dependencies, "embeddedComponents", "selection"];
 
     // Extends the base class resources
+    /** @type {import("plugins").EditorResources} */
     resources = {
         ...this.resources,
         mount_component_handlers: this.setupNewFile.bind(this),
@@ -40,25 +41,23 @@ export class EmbeddedFilePlugin extends FilePlugin {
 
     setupNewFile({ name, env }) {
         if (name === "file") {
-            Object.assign(env, {
-                editorShared: {
-                    setSelectionAfter: (host) => {
-                        try {
-                            const leaf = nextLeaf(host, this.editable);
-                            if (!leaf) {
-                                return;
-                            }
-                            const leafEl = isBlock(leaf) ? leaf : leaf.parentElement;
-                            if (isBlock(leafEl) && leafEl.isContentEditable) {
-                                this.dependencies.selection.setSelection({
-                                    anchorNode: leafEl,
-                                    anchorOffset: 0,
-                                });
-                            }
-                        } catch {
+            Object.assign(env.editorShared, {
+                setSelectionAfter: (host) => {
+                    try {
+                        const leaf = nextLeaf(host, this.editable);
+                        if (!leaf) {
                             return;
                         }
-                    },
+                        const leafEl = isBlock(leaf) ? leaf : leaf.parentElement;
+                        if (isBlock(leafEl) && leafEl.isContentEditable) {
+                            this.dependencies.selection.setSelection({
+                                anchorNode: leafEl,
+                                anchorOffset: 0,
+                            });
+                        }
+                    } catch {
+                        return;
+                    }
                 },
             });
         }

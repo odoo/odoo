@@ -69,7 +69,9 @@ test("should make qweb tag bold and create a step even with partial selection in
     );
     bold(editor);
     expect(getContent(el)).toBe(
-        `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`
+        '<p data-selection-placeholder=""><br></p>' +
+            `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>` +
+            '<p data-selection-placeholder=""><br></p>'
     );
     expect(queryOne(`p[contenteditable="false"]`).childNodes.length).toBe(1);
     const historySteps = editor.shared.history.getHistorySteps();
@@ -213,6 +215,7 @@ test("should make a few characters bold inside table (bold)", async () => {
             </table>`),
         stepFunction: bold,
         contentAfterEdit: unformat(`
+            <p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
@@ -231,7 +234,8 @@ test("should make a few characters bold inside table (bold)", async () => {
                         <td><p><br></p></td>
                     </tr>
             </tbody>
-            </table>`),
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
     });
 });
 

@@ -140,10 +140,11 @@ export class SelectMenu extends Component {
 
         this.selectedChoice = this.getSelectedChoice(this.props);
         onWillUpdateProps((nextProps) => {
-            if (this.state.choices !== nextProps.choices) {
+            const choicesChanged = this.state.choices !== nextProps.choices;
+            if (choicesChanged) {
                 this.state.choices = nextProps.choices;
             }
-            if (this.props.value !== nextProps.value) {
+            if (choicesChanged || this.props.value !== nextProps.value) {
                 this.selectedChoice = this.getSelectedChoice(nextProps);
             }
         });
@@ -340,6 +341,9 @@ export class SelectMenu extends Component {
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
+            if (this.inputRef.el) {
+                this.inputRef.el.value = this.state.choices.find((c) => c.value === value).label;
+            }
         }
         this.state.searchValue = null;
     }

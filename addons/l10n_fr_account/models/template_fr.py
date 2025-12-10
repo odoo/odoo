@@ -31,12 +31,14 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'pcg_765',
                 'deferred_expense_account_id': 'pcg_486',
                 'deferred_revenue_account_id': 'pcg_487',
-                'l10n_fr_rounding_difference_loss_account_id': 'pcg_4768',
-                'l10n_fr_rounding_difference_profit_account_id': 'pcg_4778',
+                'l10n_fr_rounding_difference_loss_account_id': 'pcg_658',
+                'l10n_fr_rounding_difference_profit_account_id': 'pcg_758',
                 'account_sale_tax_id': 'tva_normale',
                 'account_purchase_tax_id': 'tva_acq_normale',
                 'expense_account_id': 'pcg_607_account',
                 'income_account_id': 'pcg_707_account',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'pcg_31_account',
             },
         }
 
@@ -56,3 +58,12 @@ class AccountChartTemplate(models.AbstractModel):
             ('name', '=', 'Other expenses and commissions on services supplied'),
         ], limit=1)
         return fr_account or super()._get_bank_fees_reco_account(company)
+
+    @template('fr', 'account.account')
+    def _get_fr_account_account(self):
+        return {
+            'pcg_31_account': {
+                'account_stock_expense_id': 'pcg_601_account',
+                'account_stock_variation_id': 'pcg_6031',
+            },
+        }

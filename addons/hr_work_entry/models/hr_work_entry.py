@@ -11,6 +11,7 @@ from psycopg2 import OperationalError
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.tools import float_compare
 from odoo.tools.intervals import Intervals
 
 
@@ -22,11 +23,15 @@ class HrWorkEntry(models.Model):
     name = fields.Char()
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
-    version_id = fields.Many2one('hr.version', string="Employee Record", required=True)
+    version_id = fields.Many2one('hr.version', string="Employee Record", required=True, index=True)
     work_entry_source = fields.Selection(related='version_id.work_entry_source')
     date = fields.Date(required=True)
     duration = fields.Float(string="Duration", default=8)
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1), domain="['|', ('country_id', '=', False), ('country_id', '=', country_id)]")
+    work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type',
+        index=True,
+        default=lambda self: self.env['hr.work.entry.type'].search([], limit=1),
+        domain=lambda self: self._get_work_entry_type_domain())
     display_code = fields.Char(related='work_entry_type_id.display_code')
     code = fields.Char(related='work_entry_type_id.code')
     external_code = fields.Char(related='work_entry_type_id.external_code')
@@ -46,6 +51,12 @@ class HrWorkEntry(models.Model):
 
     # FROM 7s by query to 2ms (with 2.6 millions entries)
     _contract_date_start_stop_idx = models.Index("(version_id, date) WHERE state IN ('draft', 'validated')")
+
+    @api.constrains('duration')
+    def _check_duration(self):
+        for work_entry in self:
+            if float_compare(work_entry.duration, 0, 3) <= 0 or float_compare(work_entry.duration, 24, 3) > 0:
+                raise ValidationError(self.env._("Duration must be positive and cannot exceed 24 hours."))
 
     @api.depends('display_code', 'duration')
     def _compute_display_name(self):
@@ -154,9 +165,8 @@ class HrWorkEntry(models.Model):
                 FROM hr_work_entry
                 WHERE active = TRUE
                   AND date BETWEEN %(start)s AND %(stop)s
-                  {ids_filter}
                 GROUP BY employee_id, date
-                HAVING SUM(duration) > 1000
+                HAVING 0 >= SUM(duration) OR SUM(duration) > 24
             )
             SELECT we.id
             FROM hr_work_entry we
@@ -164,13 +174,10 @@ class HrWorkEntry(models.Model):
               ON we.employee_id = ed.employee_id
              AND we.date = ed.date
             WHERE we.active = TRUE
-        """.format(
-            ids_filter="AND id IN %(ids)s" if self.ids else ""
-        )
+        """
         self.env.cr.execute(query, {
             "start": start,
             "stop": stop,
-            "ids": tuple(self.ids) if self.ids else (),
         })
         conflict_ids = [row[0] for row in self.env.cr.fetchall()]
         self.browse(conflict_ids).write({'state': 'conflict'})
@@ -193,10 +200,15 @@ class HrWorkEntry(models.Model):
 
         outside_entries = self.env['hr.work.entry']
         for calendar, entries in entries_by_calendar.items():
+            if not calendar or calendar.flexible_hours:
+                continue
             datetime_start = datetime.combine(min(entries.mapped('date')), time.min)
             datetime_stop = datetime.combine(max(entries.mapped('date')), time.max)
 
-            calendar_intervals = calendar._attendance_intervals_batch(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop))[False]
+            if calendar:
+                calendar_intervals = calendar._attendance_intervals_batch(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop))[False]
+            else:
+                calendar_intervals = Intervals([(pytz.utc.localize(datetime_start), pytz.utc.localize(datetime_stop), self.env['resource.calendar.attendance'])])
             entries_intervals = entries._to_intervals()
             overlapping_entries = self._from_intervals(entries_intervals & calendar_intervals)
             outside_entries |= entries - overlapping_entries
@@ -234,7 +246,7 @@ class HrWorkEntry(models.Model):
         return work_entries
 
     def write(self, vals):
-        skip_check = not bool({'date_start', 'date_stop', 'employee_id', 'work_entry_type_id', 'active'} & vals.keys())
+        skip_check = not bool({'date', 'duration', 'employee_id', 'work_entry_type_id', 'active'} & vals.keys())
         if 'state' in vals:
             if vals['state'] == 'draft':
                 vals['active'] = True
@@ -301,3 +313,8 @@ class HrWorkEntry(models.Model):
                 # New work entries are handled in the create method,
                 # no need to reload work entries.
                 work_entries.exists()._check_if_error()
+
+    def _get_work_entry_type_domain(self):
+        if len(self.env.companies.country_id.ids) > 1:
+            return [('country_id', '=', False)]
+        return ['|', ('country_id', '=', False), ('country_id', 'in', self.env.companies.country_id.ids)]

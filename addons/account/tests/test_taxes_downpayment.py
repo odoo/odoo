@@ -1008,7 +1008,7 @@ class TestTaxesDownPayment(TestTaxCommon):
     def test_taxes_l10n_in_generic_helpers(self):
         for test_mode, document, soft_checking, amount_type, amount, expected_values in self._test_taxes_l10n_in():
             with self.subTest(test_code=test_mode, amount=amount):
-                self.assert_down_payment(document, amount_type, amount, expected_values, soft_checking=soft_checking)
+                self.assert_down_payment(document, amount_type, amount, {'tax_totals': expected_values}, soft_checking=soft_checking)
         self._run_js_tests()
 
     def _test_taxes_l10n_br(self):
@@ -1624,7 +1624,7 @@ class TestTaxesDownPayment(TestTaxCommon):
     def test_taxes_l10n_br_generic_helpers(self):
         for test_mode, document, soft_checking, amount_type, amount, expected_values in self._test_taxes_l10n_br():
             with self.subTest(test_code=test_mode, amount=amount):
-                self.assert_down_payment(document, amount_type, amount, expected_values, soft_checking=soft_checking)
+                self.assert_down_payment(document, amount_type, amount, {'tax_totals': expected_values}, soft_checking=soft_checking)
         self._run_js_tests()
 
     def _test_taxes_l10n_be(self):
@@ -1670,8 +1670,8 @@ class TestTaxesDownPayment(TestTaxCommon):
                                 'base_amount': 67.16,
                                 'tax_amount_currency': 2.0,
                                 'tax_amount': 4.0,
-                                'display_base_amount_currency': None,
-                                'display_base_amount': None,
+                                'display_base_amount_currency': False,
+                                'display_base_amount': False,
                             },
                             {
                                 'id': self.tax_groups[1].id,
@@ -1752,8 +1752,8 @@ class TestTaxesDownPayment(TestTaxCommon):
                                 'base_amount': 67.16,
                                 'tax_amount_currency': 2.0,
                                 'tax_amount': 4.0,
-                                'display_base_amount_currency': None,
-                                'display_base_amount': None,
+                                'display_base_amount_currency': False,
+                                'display_base_amount': False,
                             },
                             {
                                 'id': self.tax_groups[1].id,
@@ -1844,8 +1844,8 @@ class TestTaxesDownPayment(TestTaxCommon):
                                 'base_amount': 67.16,
                                 'tax_amount_currency': 2.0,
                                 'tax_amount': 4.0,
-                                'display_base_amount_currency': None,
-                                'display_base_amount': None,
+                                'display_base_amount_currency': False,
+                                'display_base_amount': False,
                             },
                             {
                                 'id': self.tax_groups[1].id,
@@ -1926,8 +1926,8 @@ class TestTaxesDownPayment(TestTaxCommon):
                                 'base_amount': 67.17,
                                 'tax_amount_currency': 2.0,
                                 'tax_amount': 4.0,
-                                'display_base_amount_currency': None,
-                                'display_base_amount': None,
+                                'display_base_amount_currency': False,
+                                'display_base_amount': False,
                             },
                             {
                                 'id': self.tax_groups[1].id,
@@ -1985,7 +1985,7 @@ class TestTaxesDownPayment(TestTaxCommon):
     def test_taxes_l10n_be_generic_helpers(self):
         for test_mode, document, soft_checking, amount_type, amount, expected_values in self._test_taxes_l10n_be():
             with self.subTest(test_code=test_mode, amount=amount):
-                self.assert_down_payment(document, amount_type, amount, expected_values, soft_checking=soft_checking)
+                self.assert_down_payment(document, amount_type, amount, {'tax_totals': expected_values}, soft_checking=soft_checking)
         self._run_js_tests()
 
     def _test_taxes_fixed_tax_last_position(self):
@@ -2027,7 +2027,7 @@ class TestTaxesDownPayment(TestTaxCommon):
     def test_taxes_fixed_tax_last_position_generic_helpers(self):
         for test_mode, document, amount_type, amount, expected_values in self._test_taxes_fixed_tax_last_position():
             with self.subTest(test_code=test_mode, amount=amount):
-                self.assert_down_payment(document, amount_type, amount, expected_values)
+                self.assert_down_payment(document, amount_type, amount, {'tax_totals': expected_values})
         self._run_js_tests()
 
     def _test_no_taxes(self):
@@ -2059,7 +2059,7 @@ class TestTaxesDownPayment(TestTaxCommon):
 
     def test_no_taxes_generic_helpers(self):
         document, amount_type, amount, expected_values = self._test_no_taxes()
-        self.assert_down_payment(document, amount_type, amount, expected_values)
+        self.assert_down_payment(document, amount_type, amount, {'tax_totals': expected_values})
         self._run_js_tests()
 
     def _test_reverse_charge_tax(self):
@@ -2081,7 +2081,7 @@ class TestTaxesDownPayment(TestTaxCommon):
         ])
         document = self.populate_document(document_params)
 
-        expected_values = {
+        expected_tax_totals_values = {
             'same_tax_base': True,
             'currency_id': self.currency.id,
             'base_amount_currency': 3.0,
@@ -2103,7 +2103,46 @@ class TestTaxesDownPayment(TestTaxCommon):
                 },
             ],
         }
-        return document, 'fixed', 3.0, expected_values
+        expected_base_line_tax_details_values = [
+            {
+                'total_excluded': 3.0,
+                'total_excluded_currency': 3.0,
+                'total_included': 3.0,
+                'total_included_currency': 3.0,
+                'delta_total_excluded': 0.0,
+                'delta_total_excluded_currency': 0.0,
+                'manual_total_excluded': 3.0,
+                'manual_total_excluded_currency': 3.0,
+                'manual_tax_amounts': {
+                    str(tax.id): {
+                        'tax_amount': 0.63,
+                        'tax_amount_currency': 0.63,
+                        'base_amount': 3.0,
+                        'base_amount_currency': 3.0,
+                    },
+                },
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'tax_amount': 0.63,
+                        'tax_amount_currency': 0.63,
+                        'base_amount': 3.0,
+                        'base_amount_currency': 3.0,
+                    },
+                    {
+                        'tax_id': tax.id,
+                        'tax_amount': -0.63,
+                        'tax_amount_currency': -0.63,
+                        'base_amount': 3.0,
+                        'base_amount_currency': 3.0,
+                    },
+                ],
+            }
+        ]
+        return document, 'fixed', 3.0, {
+            'tax_totals': expected_tax_totals_values,
+            'base_lines_tax_details': expected_base_line_tax_details_values,
+        }
 
     def test_reverse_charge_generic_helpers(self):
         document, amount_type, amount, expected_values = self._test_reverse_charge_tax()

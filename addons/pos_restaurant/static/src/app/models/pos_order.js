@@ -12,6 +12,9 @@ patch(PosOrder.prototype, {
     initState() {
         super.initState();
         this.uiState.selected_course_uuid = undefined;
+        if (this.config.module_pos_restaurant) {
+            this.uiState.mappingOrderlinesUuid = {};
+        }
     },
     getCustomerCount() {
         return this.customer_count;
@@ -33,7 +36,7 @@ patch(PosOrder.prototype, {
         if (numCustomers === 0) {
             return 0;
         }
-        return this.getTotalDue() / numCustomers;
+        return this.totalDue / numCustomers;
     },
     setBooked(booked) {
         this.uiState.booked = booked;

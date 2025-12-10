@@ -4,13 +4,19 @@ import { queryAllTexts, queryAllValues, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import { ShadowOption } from "@html_builder/plugins/shadow_option";
+
 describe.current.tags("desktop");
 
 test("edit box-shadow with ShadowOption", async () => {
-    addBuilderOption({
-        selector: ".test-options-target",
-        template: xml`<ShadowOption/>`,
-    });
+    addBuilderOption(
+        class extends BaseOptionComponent {
+            static selector = ".test-options-target";
+            static template = xml`<ShadowOption/>`;
+            static components = { ShadowOption };
+        }
+    );
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await waitFor(".hb-row");

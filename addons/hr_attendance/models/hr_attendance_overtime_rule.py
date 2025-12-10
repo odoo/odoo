@@ -95,7 +95,7 @@ class HrAttendanceOvertimeRule(models.Model):
         # ('employee', "Outside the employee's working schedule"),
         # ('off_time', "When employee is off"),  # TODO in ..._holidays
         # ('public_leave', "On a holiday"), ......
-    ])
+    ], default='work_days')
     timing_start = fields.Float("From", default=0)
     timing_stop = fields.Float("To", default=24)
     expected_hours_from_contract = fields.Boolean("Hours from employee schedule", default=True)
@@ -183,12 +183,12 @@ class HrAttendanceOvertimeRule(models.Model):
         end_dt = max(attendances.mapped('check_out'))
 
         if self.timing_type in ['work_days', 'non_work_days']:
-
-            unusual_days = self.company_id.resource_calendar_id._get_unusual_days(start_dt, end_dt)
+            company = self.company_id or employee.company_id
+            unusual_days = company.resource_calendar_id._get_unusual_days(start_dt, end_dt, company_id=company)
 
             attendance_intervals = []
             for date, day_attendances in attendances.filtered(
-                lambda att: unusual_days[att.date.strftime('%Y-%m-%d')] == (self.timing_type == 'non_work_days')
+                lambda att: unusual_days.get(att.date.strftime('%Y-%m-%d'), None) == (self.timing_type == 'non_work_days')
             ).grouped('date').items():
                 tz = timezone(version_map[employee][date]._get_tz())
                 time_start = self._get_local_time_start(date, tz)

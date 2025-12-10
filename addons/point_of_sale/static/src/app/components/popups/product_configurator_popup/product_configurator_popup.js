@@ -14,6 +14,11 @@ export class BaseProductAttribute extends Component {
         "allSelectedValues",
     ];
 
+    setup() {
+        super.setup(...arguments);
+        this.pos = usePos();
+    }
+
     getFormatPriceExtra(val) {
         const sign = val < 0 ? "- " : "+ ";
         return sign + this.env.utils.formatCurrency(Math.abs(val));
@@ -51,6 +56,7 @@ export class MultiProductAttribute extends BaseProductAttribute {
     static props = [...BaseProductAttribute.props, "selected?", "customValue?"];
 
     setup() {
+        super.setup(...arguments);
         this.state = useState({
             is_value_selected: this.props.attribute.values().reduce((acc, value) => {
                 acc[value.id] = this.props.selected?.includes(value) || false;
@@ -141,7 +147,7 @@ export class ProductConfiguratorPopup extends Component {
 
         let combination;
         while ((combination = getNext()) !== null) {
-            if (!combination.some((value) => value.doHaveConflictWith(combination))) {
+            if (!combination.some((value) => this.pos.doHaveConflictWith(value, combination))) {
                 combination.forEach((value) => {
                     const forceVariant = this.props.forceVariantValue
                         ? Object.values(this.props.forceVariantValue).find(
@@ -234,18 +240,16 @@ export class ProductConfiguratorPopup extends Component {
     }
 
     isValidCombination() {
-        return !this.selectedValues.some((value) => value.doHaveConflictWith(this.selectedValues));
+        return !this.selectedValues.some((value) =>
+            this.pos.doHaveConflictWith(value, this.selectedValues)
+        );
     }
 
     get title() {
-        const info = this.props.productTemplate.getProductPriceInfo(this.product, this.pos.company);
+        const info = this.props.productTemplate.getTaxDetails();
         const name = this.props.productTemplate.display_name;
         const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
-        const taxName = info?.taxes_data[0]?.name || "";
-        const taxAmount = this.env.utils.formatCurrency(
-            info?.taxes_data[0]?.raw_tax_amount_currency || 0.0
-        );
-        return `${name} | ${total} | VAT: ${taxName} (= ${taxAmount})`;
+        return `${name} | ${total}`;
     }
     get showInfoBanner() {
         return this.props.productTemplate.is_storable;

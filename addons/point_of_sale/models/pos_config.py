@@ -234,14 +234,27 @@ class PosConfig(models.Model):
             'records': records
         })
 
+        for config in self.trusted_config_ids:
+            config._notify('SYNCHRONISATION', {
+                'static_records': static_records,
+                'session_id': config.current_session_id.id,
+                'login_number': 0,
+                'records': records
+            })
+
     def read_config_open_orders(self, domain, record_ids=[]):
         delete_record_ids = {}
         dynamic_records = {}
 
-        for model, domain in domain.items():
-            ids = record_ids[model]
-            delete_record_ids[model] = [id for id in ids if not self.env[model].browse(id).exists()]
-            dynamic_records[model] = self.env[model].search(domain)
+        for model, dom in domain.items():
+            ids = record_ids.get(model, [])
+            browsed = self.env[model].browse(ids)
+
+            dynamic_records[model] = self.env[model].search(dom)
+            delete_record_ids[model] = browsed.filtered(lambda r: not r.exists()).ids
+            # Cancelled orders must be forced deleted from the user interface.
+            if model == "pos.order":
+                delete_record_ids[model] += browsed.filtered(lambda r: r.state == "cancel").ids
 
         pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']
         data = pos_order_data.read_pos_data([], self)
@@ -636,7 +649,7 @@ class PosConfig(models.Model):
         result = super(PosConfig, self).write(vals)
 
         for config in self:
-            if config.use_presets and config.default_preset_id.id not in config.available_preset_ids.ids:
+            if config.use_presets and config.default_preset_id and config.default_preset_id.id not in config.available_preset_ids.ids:
                 config.available_preset_ids |= config.default_preset_id
 
         self.sudo()._set_fiscal_position()
@@ -1215,7 +1228,7 @@ class PosConfig(models.Model):
 
     def _get_available_pricelists(self):
         self.ensure_one()
-        return self.available_pricelist_ids if self.use_pricelist else self.pricelist_id
+        return self.available_pricelist_ids + self.pricelist_id if self.use_pricelist else self.pricelist_id
 
     def _env_with_clean_context(self):
         safe_context = {}

@@ -28,5 +28,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'V27',
                 'expense_account_id': 'l10n_hu_811',
                 'income_account_id': 'l10n_hu_911',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'l10n_hu_211',
+            },
+        }
+
+    @template('hu', 'account.account')
+    def _get_hu_account_account(self):
+        return {
+            'l10n_hu_211': {
+                'account_stock_expense_id': 'l10n_hu_5111',
+                'account_stock_variation_id': 'l10n_hu_581',
             },
         }

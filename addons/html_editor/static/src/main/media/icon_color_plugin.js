@@ -7,6 +7,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 export class IconColorPlugin extends Plugin {
     static id = "iconColor";
     static dependencies = ["icon", "colorUi"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         toolbar_groups: withSequence(1, { id: "icon_color", namespaces: ["icon"] }),
         toolbar_items: [

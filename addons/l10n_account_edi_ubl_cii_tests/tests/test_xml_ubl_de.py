@@ -297,3 +297,32 @@ class TestUBLDE(TestUBLCommon):
         self._detach_attachment(attachment)
         created_bill.message_post(attachment_ids=[attachment.id])
         self.assertTrue(created_bill)
+
+    def test_leitweg_id(self):
+        partner = self.partner_2
+        partner.write({
+            'peppol_eas': '0204',
+            'peppol_endpoint': '123456789',
+        })
+
+        acc_bank = self.env['res.partner.bank'].create({
+            'acc_number': 'DE15001559627232',
+            'partner_id': partner.id,
+        })
+
+        invoice = self._generate_move(
+            self.partner_1,
+            partner,
+            move_type='out_invoice',
+            partner_id=partner.id,
+            partner_bank_id=acc_bank.id,
+            invoice_date='2025-12-01',
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+        attachment = invoice.ubl_cii_xml_id
+
+        self.assertTrue(attachment)
+
+        xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
+        xml_etree = self.get_xml_tree_from_string(xml_content)
+        self.assertEqual(xml_etree.find('{*}BuyerReference').text, '123456789')

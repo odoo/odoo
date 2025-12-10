@@ -17,7 +17,7 @@ from operator import attrgetter
 from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import AccessError, MissingError
-from odoo.tools import Query, SQL, sql
+from odoo.tools import Query, SQL, reset_cached_properties, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, ReadonlyDict, Sentinel, unique
 
@@ -550,7 +550,8 @@ class Field(typing.Generic[T]):
                 warnings.warn(f'Property {self}.readonly should be a boolean ({self.readonly}).', stacklevel=1)
 
             self._setup_done = True
-
+            # column_type might be changed during Field.setup
+            reset_cached_properties(self)
     #
     # Setup of non-related fields
     #
@@ -1131,10 +1132,7 @@ class Field(typing.Generic[T]):
             return
         if column['udt_name'] == self.column_type[0]:
             return
-        if column['is_nullable'] == 'NO':
-            sql.drop_not_null(model.env.cr, model._table, self.name)
         self._convert_db_column(model, column)
-        column.clear()  # remove information, because it may no longer be valid
 
     def _convert_db_column(self, model: BaseModel, column: dict[str, typing.Any]):
         """ Convert the given database column to the type of the field. """
@@ -1441,7 +1439,7 @@ class Field(typing.Generic[T]):
                     yield '$'
                 # no need to match r'.*' in else because we only use .match()
 
-            like_regex = re.compile("".join(build_like_regex(unaccent(value), "=" in operator)))
+            like_regex = re.compile("".join(build_like_regex(unaccent(value), "=" in operator)), flags=re.DOTALL)
             return lambda rec: like_regex.match(unaccent(getter(rec)))
 
         # -------------------------------------------------

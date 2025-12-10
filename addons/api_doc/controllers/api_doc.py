@@ -42,11 +42,11 @@ class DocController(http.Controller):
         res.headers['X-Frame-Options'] = 'deny'
         return res
 
-    @http.route('/doc-bearer/index.json', type='http', auth='bearer')
+    @http.route('/doc-bearer/index.json', type='json2', auth='bearer')
     def doc_bearer_index(self):
         return self.doc_index()
 
-    @http.route('/doc/index.json', type='http', auth='user')
+    @http.route('/doc/index.json', type='json2', auth='user')
     def doc_index(self):
         """
         Get a listing of all modules, models, methods and fields. But
@@ -101,6 +101,8 @@ class DocController(http.Controller):
         # TODO: gzip
         filename = f'odoo-doc-index-{db_registry_sequence}-{unique}.json'
         index_attach = self.env['ir.attachment'].sudo().search([('name', '=', filename)], limit=1)
+        if not use_cache:
+            modules, models = self._doc_index()
         if not index_attach:
             # No cache, generate the index and save it.
             modules, models = self._doc_index()
@@ -136,6 +138,7 @@ class DocController(http.Controller):
                     field.name: {'string': field.field_description}
                     for field in ir_model.field_id
                     # sorted(ir_model.field_id, key=partial(sort_key_field, modules, Model))
+                    if field.name in Model._fields  # band-aid, see task 5172546
                     if Model._has_field_access(Model._fields[field.name], 'read')
                 },
                 'methods': [
@@ -150,11 +153,11 @@ class DocController(http.Controller):
         ]
         return modules, models
 
-    @http.route('/doc-bearer/<model_name>.json', type='http', auth='bearer', readonly=True)
+    @http.route('/doc-bearer/<model_name>.json', type='json2', auth='bearer', readonly=True)
     def doc_bearer_modec(self, model_name):
         return self.doc_model(model_name)
 
-    @http.route('/doc/<model_name>.json', type='http', auth='user', readonly=True)
+    @http.route('/doc/<model_name>.json', type='json2', auth='user', readonly=True)
     def doc_model(self, model_name):
         """
         Get a complete listing of all the methods and fields for a

@@ -1,27 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* resource
+# * resource
 #
 # Translators:
 # Martin Trigaux, 2022
 # Dorin Hongu <dhongu@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2022\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"PO-Revision-Date: 2025-11-16 22:46+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
+"resource/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_tree
@@ -66,7 +68,7 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Libere</span>"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -98,6 +100,8 @@ msgid ""
 "Are you sure you want to switch to a 1-week calendar? All work entries will "
 "be lost."
 msgstr ""
+"Sunteți sigur că doriți să treceți la un calendar de 1 săptămână? Toate "
+"înregistrările de lucru vor fi pierdute."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -105,6 +109,8 @@ msgid ""
 "Are you sure you want to switch to a 2-week calendar? All work entries will "
 "be lost."
 msgstr ""
+"Sunteți sigur că doriți să treceți la un calendar de 2 săptămâni? Toate "
+"înregistrările de lucru vor fi pierdute."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__duration_based
@@ -121,7 +127,7 @@ msgstr "Prezențele nu se pot suprapune."
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_day
@@ -138,12 +144,12 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Avg"
-msgstr ""
+msgstr "Medie"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__lunch
 msgid "Break"
-msgstr ""
+msgstr "Intrerupere"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
@@ -183,7 +189,7 @@ msgstr "Companie"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmă"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__create_uid
@@ -204,7 +210,7 @@ msgstr "Creat în"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Date"
-msgstr ""
+msgstr "Dată"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__day_period
@@ -235,6 +241,8 @@ msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
+"Definește programul de lucru al resursei. Dacă nu este setat, resursa va "
+"avea program de lucru complet flexibil."
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
@@ -264,12 +272,12 @@ msgstr "Tipul de afișare"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_days
 msgid "Duration (days)"
-msgstr ""
+msgstr "Durată (zile)"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__duration_hours
 msgid "Duration (hours)"
-msgstr ""
+msgstr "Durată (ore)"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__time_efficiency
@@ -279,7 +287,7 @@ msgstr "Factor eficiență"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__email
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__date_to
@@ -297,6 +305,7 @@ msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
 msgstr ""
+"Utilizator extern cu acces limitat, creat numai in scopul partajarii datelor."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__week_type__0
@@ -313,12 +322,12 @@ msgstr "Prima săptămână"
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar__schedule_type__flexible
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Flexible"
-msgstr ""
+msgstr "Flexibil"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__flexible_hours
 msgid "Flexible Hours"
-msgstr ""
+msgstr "Ore flexibile"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -335,7 +344,7 @@ msgstr "Vineri după-amiază"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Friday Lunch"
-msgstr ""
+msgstr "Prânzul de Vineri"
 
 #. module: resource
 #. odoo-python
@@ -346,7 +355,7 @@ msgstr "Vineri dimineată"
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__day_period__full_day
 msgid "Full Day"
-msgstr ""
+msgstr "Zi întreagă"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__full_time_required_hours
@@ -361,7 +370,7 @@ msgstr ""
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 msgid "Fully Flexible"
-msgstr ""
+msgstr "Complet flexibil"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
@@ -382,7 +391,7 @@ msgstr "Ore"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__hours_per_week
 msgid "Hours per Week"
-msgstr ""
+msgstr "Ore pe săptămână"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
@@ -454,7 +463,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__is_fulltime
 msgid "Is Full Time"
-msgstr ""
+msgstr "Este normă întreagă"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -493,7 +502,7 @@ msgstr "Luni după-amiază"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Monday Lunch"
-msgstr ""
+msgstr "Prânzul de Luni"
 
 #. module: resource
 #. odoo-python
@@ -518,6 +527,8 @@ msgstr "Nume"
 msgid ""
 "Number of hours to work on the company schedule to be considered as fulltime."
 msgstr ""
+"Numărul de ore de lucru conform programului companiei pentru a fi considerat "
+"normă întreagă."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_leaves__time_type__other
@@ -537,7 +548,7 @@ msgstr "Perioadă"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__phone
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: resource
 #. odoo-python
@@ -575,7 +586,7 @@ msgstr "Resursă"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr ""
+msgstr "Combinație de resurse"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
@@ -681,7 +692,7 @@ msgstr "Secvență"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource__share
 msgid "Share User"
-msgstr ""
+msgstr "Partajează utilizator"
 
 #. module: resource
 #. odoo-python
@@ -700,11 +711,13 @@ msgid ""
 "Start and End time of working.\n"
 "A specific value of 24:00 is interpreted as 23:59:59.999999."
 msgstr ""
+"Ora de începere și de încheiere a lucrului.\n"
+"O valoare specifică de 24:00 este interpretată ca 23:59:59.999999."
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Time Off"
-msgstr ""
+msgstr "Data de începere a concediului de odihnă"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -714,7 +727,7 @@ msgstr "Duminică"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Switch"
-msgstr ""
+msgstr "Schimbare (switch)"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
@@ -804,7 +817,7 @@ msgstr "Joi după-amiază"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Thursday Lunch"
-msgstr ""
+msgstr "Prânzul de Joi"
 
 #. module: resource
 #. odoo-python
@@ -822,7 +835,7 @@ msgstr "Concediu"
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
 msgid "Time Off Detail"
-msgstr ""
+msgstr "Detalii privind timpul liber"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -849,7 +862,7 @@ msgstr "Decalaj fus orar"
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__1
@@ -866,7 +879,7 @@ msgstr "Marți după-amiază"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Tuesday Lunch"
-msgstr ""
+msgstr "Prânzul de Marți"
 
 #. module: resource
 #. odoo-python
@@ -891,7 +904,7 @@ msgstr "Operator"
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 #: model_terms:ir.ui.view,arch_db:resource.resource_resource_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Vizibil pentru toți"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__2
@@ -908,7 +921,7 @@ msgstr "Miercuri după-amiază"
 #. odoo-python
 #: code:addons/resource/models/resource_calendar.py:0
 msgid "Wednesday Lunch"
-msgstr ""
+msgstr "Prânzul de Miercuri"
 
 #. module: resource
 #. odoo-python
@@ -937,6 +950,8 @@ msgid ""
 "When enabled, it will allow employees to work flexibly, without relying on "
 "the company's working schedule (working hours)."
 msgstr ""
+"Când este activat, va permite angajaților să lucreze flexibil, fără a se "
+"baza pe programul de lucru al companiei (orele de lucru)."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
@@ -965,7 +980,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__work_time_rate
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Time Rate"
-msgstr ""
+msgstr "Rată timp de lucru"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_from
@@ -978,6 +993,8 @@ msgid ""
 "Work time rate versus full time working schedule, should be between 0 and "
 "100 %."
 msgstr ""
+"Rata timpului de lucru față de programul cu normă întreagă, ar trebui să fie "
+"între 0 și 100%."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__hour_to
@@ -1002,7 +1019,7 @@ msgstr "Orele de Lucru ale %s"
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: model:ir.ui.menu,name:resource.menu_resource_calendar
 msgid "Working Schedules"
-msgstr ""
+msgstr "Programe de lucru"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__attendance_ids
@@ -1048,7 +1065,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/resource/models/resource_calendar_attendance.py:0
 msgid "other week"
-msgstr ""
+msgstr "altă săptămână"
 
 #. module: resource
 #. odoo-python

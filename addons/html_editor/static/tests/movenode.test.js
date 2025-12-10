@@ -117,7 +117,7 @@ describe("drag", () => {
         expect(".oe-dropzone-box-side").toHaveCount(8);
         await drop(".oe-dropzone-box-side:eq(2)");
         expect(getContent(el)).toBe(
-            `<div class="oe_unbreakable"><br></div><p>a[]</p><div class="o-paragraph">d</div><p>b</p><p>c</p>`
+            `<p data-selection-placeholder=""><br></p><div class="oe_unbreakable"><br></div><p>a[]</p><div class="o-paragraph">d</div><p>b</p><p>c</p>`
         );
     });
     test("should drop after the next baseContainer", async () => {
@@ -136,7 +136,7 @@ describe("drag", () => {
         expect(".oe-dropzone-box-side").toHaveCount(8);
         await drop(".oe-dropzone-box-side:eq(3)");
         expect(getContent(el)).toBe(
-            `<div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>a[]</p><p>b</p><p>c</p>`
+            `<p data-selection-placeholder=""><br></p><div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>a[]</p><p>b</p><p>c</p>`
         );
     });
     test("should drop LI at correct position within list", async () => {
@@ -314,6 +314,7 @@ describe("click", () => {
         await animationFrame();
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <table class="o_selected_table">
                     <tbody>
                         <tr>

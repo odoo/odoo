@@ -6,6 +6,7 @@ import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("ProductConfiguratorTour", {
     steps: () =>
@@ -107,6 +108,10 @@ registry.category("web_tour.tours").add("PosProductWithDynamicAttributes", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ProductScreen.searchProduct("Non Existing Product"),
+            ProductScreen.productIsDisplayed("Dynamic Product").map(negateStep),
+            ProductScreen.searchProduct("Dynamic Product"),
+            ProductScreen.productIsDisplayed("Dynamic Product"),
             ProductScreen.clickDisplayedProduct("Dynamic Product"),
             ProductConfigurator.pickRadio("Test 1"),
             Dialog.confirm(),
@@ -170,17 +175,39 @@ registry.category("web_tour.tours").add("test_cross_exclusion_attribute_values",
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Test Product 1"),
             ProductConfigurator.pickRadio("attribute_1_value_1"),
-            ProductConfigurator.pickRadio("attribute_2_value_1"),
-            ProductConfigurator.isAddDisabled(),
+            ProductConfigurator.isRadioDisabled("attribute_2_value_1"),
             ProductConfigurator.pickRadio("attribute_2_value_2"),
-            ProductConfigurator.pickRadio("attribute_1_value_2"),
-            ProductConfigurator.isAddDisabled(),
+            ProductConfigurator.isRadioDisabled("attribute_1_value_2"),
             ProductConfigurator.pickRadio("attribute_1_value_1"),
             ProductConfigurator.pickRadio("attribute_2_value_2"),
             ProductConfigurator.isAddEnabled(),
-            ProductConfigurator.pickRadio("attribute_1_value_2"),
-            ProductConfigurator.pickRadio("attribute_2_value_1"),
-            ProductConfigurator.isAddEnabled(),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_exclusion_attribute_values", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Configurable Chair"),
+            ProductConfigurator.pickColor("Red"),
+            ProductConfigurator.pickSelect("Metal"),
+            ProductConfigurator.isUnavailable("Other"),
+            ProductConfigurator.isUnavailable("Wool"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_custom_attribute_alone_displayed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Only Custom"),
+            ProductConfigurator.fillCustomAttribute("Filling"),
+            ProductConfigurator.selectedCustomAttribute("Filling"),
+            Dialog.confirm(),
             Chrome.endTour(),
         ].flat(),
 });

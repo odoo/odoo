@@ -8,6 +8,22 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { uniqueId } from "@web/core/utils/functions";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import { forwardToThumbnail } from "@html_builder/utils/utils_css";
+
+/**
+ * @typedef { Object } ImageGalleryOptionShared
+ * @property { ImageGalleryOption['getColumns'] } getColumns
+ * @property { ImageGalleryOption['getMode'] } getMode
+ * @property { ImageGalleryOption['processImage'] } processImage
+ * @property { ImageGalleryOption['restoreSelection'] } restoreSelection
+ * @property { ImageGalleryOption['setImages'] } setImages
+ */
+
+export class ImageGalleryImagesOption extends BaseOptionComponent {
+    static template = "website.ImageGalleryImagesOption";
+    static selector = ".s_image_gallery";
+}
 
 class ImageGalleryOption extends Plugin {
     static id = "imageGalleryOption";
@@ -21,16 +37,11 @@ class ImageGalleryOption extends Plugin {
         "imagePostProcess",
     ];
     static shared = ["processImages", "getMode", "setImages", "restoreSelection", "getColumns"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
-            withSequence(SNIPPET_SPECIFIC, {
-                template: "website.ImageGalleryImagesOption",
-                selector: ".s_image_gallery",
-            }),
-            withSequence(SNIPPET_SPECIFIC_END, {
-                OptionComponent: ImageGalleryComponent,
-                selector: ".s_image_gallery",
-            }),
+            withSequence(SNIPPET_SPECIFIC, ImageGalleryImagesOption),
+            withSequence(SNIPPET_SPECIFIC_END, ImageGalleryComponent),
         ],
         builder_actions: {
             AddImageAction,
@@ -44,6 +55,9 @@ class ImageGalleryOption extends Plugin {
         reorder_items_handlers: this.reorderGalleryItems.bind(this),
         on_will_remove_handlers: this.onWillRemove.bind(this),
         on_removed_handlers: this.onRemoved.bind(this),
+        on_replaced_media_handlers: ({ newMediaEl }) => this.updateCarouselThumbnail(newMediaEl),
+        on_image_updated_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
+        on_image_saved_handlers: ({ imageEl }) => this.updateCarouselThumbnail(imageEl),
         on_snippet_dropped_handlers: ({ snippetEl }) => {
             const carousels = snippetEl.querySelectorAll(".s_image_gallery .carousel");
             this.addCarouselListener(carousels);
@@ -80,7 +94,7 @@ class ImageGalleryOption extends Plugin {
     restoreSelection(imageToSelect, isPreviewing) {
         if (imageToSelect && !isPreviewing) {
             // Activate the containers of the equivalent cloned image.
-            this.dependencies["builderOptions"].setNextTarget(imageToSelect);
+            this.dependencies.builderOptions.setNextTarget(imageToSelect);
         }
     }
 
@@ -129,7 +143,7 @@ class ImageGalleryOption extends Plugin {
 
                 // Activate the active image.
                 const activeImageEl = galleryEl.querySelector(".carousel-item.active img");
-                this.dependencies["builderOptions"].setNextTarget(activeImageEl);
+                this.dependencies.builderOptions.setNextTarget(activeImageEl);
             }
         }
     }
@@ -287,7 +301,7 @@ class ImageGalleryOption extends Plugin {
     onCarouselSlid(ev) {
         // When the carousel slides, update the builder options to select the active image
         const activeImageEl = ev.target.querySelector(".carousel-item.active img");
-        this.dependencies["builderOptions"].updateContainers(activeImageEl);
+        this.dependencies.builderOptions.updateContainers(activeImageEl);
     }
 
     async processImages(editingElement, newImages = []) {
@@ -340,7 +354,7 @@ class ImageGalleryOption extends Plugin {
         const clonedImgs = [];
         const imgLoaded = [];
         let imageToSelect;
-        const currentContainers = this.dependencies["builderOptions"].getContainers();
+        const currentContainers = this.dependencies.builderOptions.getContainers();
         for (const image of imagesHolder) {
             // Only on Chrome: appended images are sometimes invisible
             // and not correctly loaded from cache, we use a clone of the
@@ -420,6 +434,12 @@ class ImageGalleryOption extends Plugin {
             const images = this.getImages(this.imageRemovedGalleryElement);
             this.setImages(this.imageRemovedGalleryElement, mode, images);
             this.imageRemovedGalleryElement = undefined;
+        }
+    }
+
+    updateCarouselThumbnail(mediaEl) {
+        if (mediaEl.matches(".s_image_gallery img")) {
+            forwardToThumbnail(mediaEl);
         }
     }
 }

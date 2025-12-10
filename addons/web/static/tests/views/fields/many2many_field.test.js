@@ -1097,6 +1097,44 @@ test('many2many field with link option (kanban, create="0")', async () => {
     expect(".o-kanban-button-new").toHaveCount(0);
 });
 
+test("readonly many2many field: edit record", async () => {
+    Partner._records[0].timmy = [1, 2];
+
+    onRpc("web_save", ({ args }) => {
+        expect.step(`save ${args[1].name}`);
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="color"/>
+                <field name="timmy" readonly="1">
+                    <list>
+                        <field name="name"/>
+                    </list>
+                    <form>
+                        <field name="name"/>
+                    </form>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=timmy]").toHaveClass("o_readonly_modifier");
+    expect(".o_field_x2many_list_row_add").toHaveCount(0);
+    expect(".o_list_record_remove").toHaveCount(0);
+    expect(queryAllTexts(".o_data_cell")).toEqual(["gold", "silver"]);
+
+    await contains(".o_data_row:first .o_data_cell").click();
+    expect(".o_dialog .o_form_renderer").toHaveClass("o_form_editable");
+
+    await contains(".o_dialog .o_field_widget[name=name] input").edit("new name");
+    await contains(".o_dialog .o_form_button_save").click();
+    expect(queryAllTexts(".o_data_cell")).toEqual(["new name", "silver"]);
+    expect.verifySteps(["save new name"]);
+});
+
 test("many2many list: list of id as default value", async () => {
     Partner._fields.turtles = fields.Many2many({
         relation: "turtle",

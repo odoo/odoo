@@ -7,7 +7,7 @@ from freezegun import freeze_time
 from pytz import timezone
 
 from odoo import fields, Command
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import date_utils, mute_logger
 from odoo.tests import Form, tagged, users
 
@@ -273,6 +273,84 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'date_from': date(2019, 5, 6),
             'date_to': date(2019, 5, 6),
             'employee_ids': (employee_1 + employee_2).ids
+        })
+        leave_wizard.action_generate_time_off()
+
+    @users('Titus')
+    def test_create_conflicting_group_leave_without_hr_right(self):
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {
+                'name': 'Emp1',
+                'leave_manager_id': self.user_responsible_id,
+            }, {
+                'name': 'Emp2',
+                'leave_manager_id': self.user_responsible_id,
+            },
+        ])
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': date(2019, 5, 6),
+            'date_to': date(2019, 5, 8),
+            'employee_ids': (employee_1 + employee_2).ids,
+        })
+        leave_wizard.action_generate_time_off()
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': date(2019, 5, 7),
+            'date_to': date(2019, 5, 9),
+            'employee_ids': (employee_1 + employee_2).ids,
+        })
+        leave_wizard.action_generate_time_off()
+
+    @users('Titus')
+    def test_create_group_leave_form_allocation_mode_without_hr_right(self):
+        employee_1, employee_2, employee_3 = self.env['hr.employee'].sudo().create([
+            {
+                'name': 'Emp1',
+                'leave_manager_id': self.user_responsible_id,
+            }, {
+                'name': 'Emp2',
+                'leave_manager_id': self.user_responsible_id,
+            }, {
+                'name': 'Emp3',
+            },
+        ])
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': date(2019, 5, 6),
+            'date_to': date(2019, 5, 6),
+            'allocation_mode': 'employee',
+        })
+        leave_wizard.action_generate_time_off()
+        generated_leaves = self.env['hr.leave'].search([
+            ('employee_id', 'in', (employee_1 + employee_2 + employee_3).ids),
+            ('holiday_status_id', '=', self.holidays_type_1.id),
+        ])
+        self.assertEqual(len(generated_leaves), 2, "Only 2 leaves should be generated")
+
+    @users('Titus')
+    def test_create_differnt_calendars_group_leave_without_hr_right(self):
+        flexible_calendar = self.env['resource.calendar'].sudo().create({
+            'name': 'flexible calendar',
+            'flexible_hours': True,
+            'full_time_required_hours': 21,
+            'hours_per_day': 3,
+        })
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([
+            {
+                'name': 'Emp1',
+                'leave_manager_id': self.user_responsible_id,
+            }, {
+                'name': 'Emp2',
+                'leave_manager_id': self.user_responsible_id,
+                'resource_calendar_id': flexible_calendar.id,
+            },
+        ])
+        leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': date(2019, 5, 6),
+            'date_to': date(2019, 5, 8),
+            'employee_ids': (employee_1 + employee_2).ids,
         })
         leave_wizard.action_generate_time_off()
 
@@ -1085,6 +1163,23 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'request_date_to': '2022-10-17',
                 'supported_attachment_ids': [(6, 0, [])],  # Sent by webclient
             })
+
+    def test_create_supported_attachments_link_attachment_ids(self):
+        with freeze_time('2025-10-21'):
+            attachment = self.env['ir.attachment'].create({
+                'name': "an attachment",
+                'datas': 'My attachment',
+                'res_model': 'hr.leave',
+            })
+            leave = self.env['hr.leave'].create({
+                'employee_id': 1,
+                'state': 'confirm',
+                'holiday_status_id': self.holidays_support_document.id,
+                'request_date_from': '2025-10-24',
+                'request_date_to': '2025-10-24',
+                'supported_attachment_ids': [[4, attachment.id]],
+            })
+            self.assertTrue(leave.attachment_ids)
 
     def test_prevent_misplacement_of_allocations_without_end_date(self):
         """
@@ -1913,3 +2008,110 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             leave_form.request_date_from = date(2022, 3, 11)
             leave_form.request_date_to = date(2022, 3, 11)
             leave_form.holiday_status_id = self.holidays_type_1
+
+    def test_calendar_event_create_access_rights(self):
+        """Test that a manager can validate a leave request for an employee linked to a portal user.
+        Customers defined custom ACLs and record rules to support the possibility to assign a portal user to employees
+        and still be able to manage their holidays.
+        """
+        # Add the required ACLs and record rules to allow portal users to create `calendar.event`.
+        # This reflects the customization done by customers for the reason explained above.
+        self.env['ir.model.access'].create([
+            # Read access on `mail.activity.type` for portal required for
+            # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L734
+            {
+                'name': 'Portal can read mail.activity.type',
+                'model_id': self.env.ref('mail.model_mail_activity_type').id,
+                'group_id': self.env.ref('base.group_portal').id,
+                'perm_read': True, 'perm_create': False, 'perm_write': False, 'perm_unlink': False,
+            },
+            # Read access on `mail.activity` for portal required for
+            # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L786
+            # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L882
+            {
+                'name': 'Portal can read mail.activity',
+                'model_id': self.env.ref('mail.model_mail_activity').id,
+                'group_id': self.env.ref('base.group_portal').id,
+                'perm_read': True, 'perm_create': False, 'perm_write': False, 'perm_unlink': False,
+            },
+            # Read and create acess on `calendar.event` for portal required for
+            # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/hr_holidays/models/hr_leave.py#L894-L898
+            # Write and unlink added to match the customer customization + out of common sense,
+            # if you give create to portal for their own events,
+            # you give write and unlink so they can manage their own events
+            {
+                'name': 'Portal all CRUD on calendar.event',
+                'model_id': self.env.ref('calendar.model_calendar_event').id,
+                'group_id': self.env.ref('base.group_portal').id,
+                'perm_read': True, 'perm_create': True, 'perm_write': True, 'perm_unlink': True,
+            },
+            # Read and create acess on `calendar.event` for portal required for
+            # https://github.com/odoo/odoo/blob/cc0060e889603eb2e47fa44a8a22a70d7d784185/addons/calendar/models/calendar_event.py#L760-L768
+            # Write and unlink added to match the customer customization + out of common sense,
+            # if you give create to portal for their own events attendees,
+            # you give write and unlink so they can manage their own attendees
+            {
+                'name': 'Portal all CRUD on calendar.attendee',
+                'model_id': self.env.ref('calendar.model_calendar_attendee').id,
+                'group_id': self.env.ref('base.group_portal').id,
+                'perm_read': True, 'perm_create': True, 'perm_write': True, 'perm_unlink': True,
+            }])
+        self.env['ir.rule'].create([
+            # Restrict portals to their own activities
+            # so they cannot read the activities of other users
+            {
+                'name': 'Portal own mail activity',
+                'model_id': self.env.ref('mail.model_mail_activity').id,
+                'groups': [(4, self.env.ref('base.group_portal').id)],
+                'domain_force': "['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]",
+            },
+            # Restrict portals to their own events
+            # so they cannot read the events of other users
+            {
+                'name': 'Portal own calendar events',
+                'model_id': self.env.ref('calendar.model_calendar_event').id,
+                'groups': [(4, self.env.ref('base.group_portal').id)],
+                'domain_force': "[('partner_ids', 'in', user.partner_id.id)]",
+            },
+            # Restrict portals to their own attendees
+            # so they cannot read the attendees of other users
+            {
+                'name': 'Portal own calendar attendees',
+                'model_id': self.env.ref('calendar.model_calendar_attendee').id,
+                'groups': [(4, self.env.ref('base.group_portal').id)],
+                'domain_force': "[('partner_id', '=', user.partner_id.id)]",
+            }
+        ])
+
+        # Create a portal user and assign it to the employee
+        user_portal = self.env['res.users'].create({
+            'name': 'Portal', 'login': 'portal_user', 'password': 'portal_user',
+            'group_ids': [(6, 0, [self.env.ref('base.group_portal').id])],
+        })
+        self.employee_emp.user_id = user_portal
+
+        # As a manager, create a leave request for the employee linked to a portal user
+        with freeze_time('2025, 1, 8'):
+            leave = self.env['hr.leave'].with_user(self.user_hrmanager_id).create({
+                'name': 'Holiday Request',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_1.id,
+                'request_date_from': (datetime.today() - relativedelta(days=7)),
+                'request_date_to': datetime.today(),
+                'number_of_days': 1,
+            })
+
+        # Assert the employee cannot approve his own leave request
+        with self.assertRaises(AccessError):
+            leave.with_user(self.user_employee_id).action_approve()
+
+        # Assert the manager can approve the leave request assign to portal employee
+        leave.with_user(self.user_hrmanager_id).action_approve()
+
+    def test_set_employee_on_leave_req_without_start_date(self):
+        """Test setting the employee on a leave request without a start date."""
+        leave_req_form = Form(self.env['hr.leave'].with_user(self.user_hrmanager_id))
+        leave_req_form.request_date_from = False
+        leave_req_form.employee_id = self.employee_responsible
+
+        self.assertFalse(leave_req_form.can_approve)

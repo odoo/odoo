@@ -13,9 +13,10 @@ import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 
+/** @typedef {import("@odoo/owl").Component} Component */
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
  */
@@ -125,6 +126,19 @@ async function fetchAttachmentMetaData(url, ormService) {
  * @property { LinkPlugin['insertLink'] } insertLink
  */
 
+/**
+ * @typedef {((link: HTMLLinkElement) => boolean)[]} is_link_editable_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean)[]} legit_empty_link_predicates
+ * @typedef {(() => boolean)[]} link_compatible_selection_predicates
+ * @typedef {CSSSelector[]} immutable_link_selectors
+ * @typedef {{
+ *      PopoverClass: Component;
+ *      isAvailable: (linkEl: HTMLLinkElement) => boolean;
+ *      getProps: (props) => props;
+ *  }[]} link_popovers
+ * @typedef {((linkEl: HTMLAnchorElement) => void)[]} create_link_handlers
+ */
+
 export class LinkPlugin extends Plugin {
     static id = "link";
     static dependencies = [
@@ -144,6 +158,7 @@ export class LinkPlugin extends Plugin {
     };
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
@@ -276,6 +291,17 @@ export class LinkPlugin extends Plugin {
         delete_image_overrides: this.deleteImageLink.bind(this),
         double_click_overrides: this.doubleClickLinkOverrides.bind(this),
         triple_click_overrides: this.tripleClickButtonOverrides.bind(this),
+
+        /** Processors */
+        to_inline_code_processors: (node) => {
+            this.removeEmptyLinks(node);
+            for (const btn of selectElements(node, "a.btn")) {
+                // Remove all attributes from the button link except "href"
+                [...btn.attributes].forEach(
+                    (attr) => attr.name !== "href" && btn.removeAttribute(attr.name)
+                );
+            }
+        },
     };
 
     setup() {
@@ -507,18 +533,10 @@ export class LinkPlugin extends Plugin {
                 }
             } else if (url) {
                 // prevent the link creation if the url field was empty
-                const sameTextOrImage =
-                    (selectionTextContent && selectionTextContent === label) || isImage;
-                if (sameTextOrImage || label) {
-                    // Create a new link with current selection as a content.
+
+                // create a new link with current selection as a content
+                if ((selectionTextContent && selectionTextContent === label) || isImage) {
                     const link = this.createLink(url);
-                    const fontSizeWrapper = closestElement(
-                        selection.commonAncestorContainer,
-                        (el) =>
-                            el.tagName === "SPAN" &&
-                            (FONT_SIZE_CLASSES.some((cls) => el.classList.contains(cls)) ||
-                                el.style?.fontSize)
-                    );
                     if (relValue) {
                         link.setAttribute("rel", relValue);
                     }
@@ -526,74 +544,48 @@ export class LinkPlugin extends Plugin {
                     const figure =
                         image?.parentElement?.matches("figure[contenteditable=false]") &&
                         image.parentElement;
-                    let content;
-
-                    // Split selection to include font-size <span>
-                    // inside <a> to preserve styling.
-                    if (fontSizeWrapper) {
-                        this.dependencies.split.splitSelection();
-                        const selectedNodes = this.dependencies.selection
-                            .getTargetedNodes()
-                            .filter(
-                                this.dependencies.selection.areNodeContentsFullySelected.bind(this)
-                            );
-                        content = this.dependencies.split.splitAroundUntil(
-                            selectedNodes,
-                            fontSizeWrapper
-                        );
-                        const [anchorNode, anchorOffset] = leftPos(content);
-                        // Force selection to correct spot after split to prevent wrong link placement.
-                        this.dependencies.selection.setSelection(
-                            { anchorNode, anchorOffset },
-                            { normalize: false }
-                        );
-                        if (!sameTextOrImage) {
-                            // If label changed, clear existing content and set new text.
-                            content.textContent = label;
-                        }
-                    } else if (sameTextOrImage) {
-                        if (figure) {
-                            figure.before(link);
-                            link.append(figure);
-                            if (link.parentElement === this.editable) {
-                                const baseContainer =
-                                    this.dependencies.baseContainer.createBaseContainer();
-                                link.before(baseContainer);
-                                baseContainer.append(link);
-                            }
-                        } else {
-                            content = this.dependencies.selection.extractContent(selection);
-                            selection = this.dependencies.selection.getEditableSelection();
-                            const anchorClosestElement = closestElement(selection.anchorNode);
-                            if (commonAncestor !== anchorClosestElement && !fontSizeWrapper) {
-                                // We force the cursor after the anchorClosestElement
-                                // To be sure the link is inserted in the correct place in the dom.
-                                const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
-                                this.dependencies.selection.setSelection(
-                                    { anchorNode, anchorOffset },
-                                    { normalize: false }
-                                );
-                            }
+                    if (figure) {
+                        figure.before(link);
+                        link.append(figure);
+                        if (link.parentElement === this.editable) {
+                            const baseContainer =
+                                this.dependencies.baseContainer.createBaseContainer();
+                            link.before(baseContainer);
+                            baseContainer.append(link);
                         }
                     } else {
-                        content = this.document.createTextNode(label);
-                        if (customStyle) {
-                            link.setAttribute("style", customStyle);
-                        }
-                        if (linkTarget) {
-                            link.setAttribute("target", linkTarget);
-                        }
-                    }
-                    this.linkInDocument = link;
-                    if (classes) {
-                        link.className = classes;
-                    }
-                    if (!figure) {
+                        const content = this.dependencies.selection.extractContent(selection);
                         link.append(content);
                         link.normalize();
                         cursorsToRestore = null;
+                        selection = this.dependencies.selection.getEditableSelection();
+                        const anchorClosestElement = closestElement(selection.anchorNode);
+                        if (commonAncestor !== anchorClosestElement) {
+                            // We force the cursor after the anchorClosestElement
+                            // To be sure the link is inserted in the correct place in the dom.
+                            const [anchorNode, anchorOffset] = rightPos(anchorClosestElement);
+                            this.dependencies.selection.setSelection(
+                                { anchorNode, anchorOffset },
+                                { normalize: false }
+                            );
+                        }
                         this.dependencies.dom.insert(link);
                     }
+                    this.linkInDocument = link;
+                } else if (label) {
+                    const link = this.createLink(url, label);
+                    if (classes) {
+                        link.className = classes;
+                    }
+                    if (customStyle) {
+                        link.setAttribute("style", customStyle);
+                    }
+                    if (linkTarget) {
+                        link.setAttribute("target", linkTarget);
+                    }
+                    this.linkInDocument = link;
+                    cursorsToRestore = null;
+                    this.dependencies.dom.insert(link);
                 }
             }
             if (attachmentId) {
@@ -799,8 +791,12 @@ export class LinkPlugin extends Plugin {
             }
         }
         if (!selectionData.currentSelectionIsInEditable) {
+            const popoverEl = document.querySelector(".o-we-linkpopover");
             const anchorNode = document.getSelection()?.anchorNode;
-            if (anchorNode && isElement(anchorNode) && anchorNode.closest(".o-we-linkpopover")) {
+            if (
+                (popoverEl && !selectionData.documentSelection) ||
+                (anchorNode && isElement(anchorNode) && anchorNode.closest(".o-we-linkpopover"))
+            ) {
                 return;
             }
             this.linkInDocument = null;
@@ -880,6 +876,7 @@ export class LinkPlugin extends Plugin {
         }
         cursors.restore();
         this.linkInDocument = null;
+        this.dependencies.selection.focusEditable();
         this.dependencies.history.addStep();
     }
 

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-14 14:27+0000\n"
+"PO-Revision-Date: 2025-12-02 14:56+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "mail_group/ko/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
@@ -33,7 +33,7 @@ msgstr "메시지 수"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#To Review"
-msgstr ""
+msgstr "검토 대기 수"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -70,6 +70,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                안녕하세요,<br/><br/>\n"
+"                메일링 리스트 구독을 신청하셨습니다<strong t-out="
+"\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                확인하려면 다음 링크를 눌러주세요: <strong t-if="
+"\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out="
+"\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                구독을 요청하지 않으셨거나 실수로 누르신 경우 이 메시지는 무"
+"시하셔도 됩니다.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -88,6 +101,19 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                안녕하세요,<br/><br/>\n"
+"                메일링 리스트 구독 해지를 신청하셨습니다<strong t-out="
+"\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                확인하려면 다음 링크를 눌러주세요: <strong t-if="
+"\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out="
+"\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                구독 취소를 요청하지 않으셨거나 실수로 누르신 경우 이 메시지"
+"는 무시하셔도 됩니다.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -722,7 +748,7 @@ msgstr "금지 대상 여부"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
 msgid "Is Closed"
-msgstr ""
+msgstr "마감됨"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
@@ -1259,7 +1285,7 @@ msgstr "중재중인 목록 검색"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Select users"
-msgstr ""
+msgstr "사용자 선택"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
@@ -1295,7 +1321,7 @@ msgstr "메시지 작성자에게 이메일 보내기"
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
 msgid "Send email"
-msgstr ""
+msgstr "이메일 전송"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
@@ -1584,7 +1610,7 @@ msgstr "메시지 / 월"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "messages to review"
-msgstr ""
+msgstr "검토할 메시지"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short

@@ -1,8 +1,9 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { setupEditor } from "../_helpers/editor";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import {
     cleanTextNode,
     fillEmpty,
+    removeInvisibleWhitespace,
     splitTextNode,
     wrapInlinesInBlocks,
 } from "@html_editor/utils/dom";
@@ -301,13 +302,15 @@ describe("wrapInlinesInBlocks", () => {
         // element).
         expect(getContent(el)).toBe(
             unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
     });
@@ -335,12 +338,13 @@ describe("wrapInlinesInBlocks", () => {
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>[]
                 </div>
-                <div class="o-paragraph"><br></div>
+                <p data-selection-placeholder=""><br></p>
                 <div>
                     text
                     <div contenteditable="false" style="display: inline;">inline</div>
                     <span class="a">span</span>
                 </div>
+                <p data-selection-placeholder=""><br></p>
             `)
         );
     });
@@ -391,10 +395,14 @@ describe("wrapInlinesInBlocks", () => {
 describe("fillEmpty", () => {
     test("should not add fill a shrunk protected block, nor add a ZWS to it", async () => {
         const { el } = await setupEditor('<div data-oe-protected="true"></div>');
-        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        expect(el.innerHTML).toBe(
+            '<p data-selection-placeholder=""><br></p><div data-oe-protected="true" contenteditable="false"></div><p data-selection-placeholder=""><br></p>'
+        );
         const div = el.firstChild;
         fillEmpty(div);
-        expect(el.innerHTML).toBe('<div data-oe-protected="true" contenteditable="false"></div>');
+        expect(el.innerHTML).toBe(
+            '<p data-selection-placeholder=""><br></p><div data-oe-protected="true" contenteditable="false"></div><p data-selection-placeholder=""><br></p>'
+        );
     });
     test("should not fill a block containing a canvas", async () => {
         const { el } = await setupEditor("<div><canvas></canvas></div>");
@@ -402,5 +410,34 @@ describe("fillEmpty", () => {
         const div = el.firstChild;
         fillEmpty(div);
         expect(el.innerHTML).toBe('<div class="o-paragraph"><canvas></canvas></div>');
+    });
+});
+
+describe("removeInvisibleWhitespace", () => {
+    test("should remove invisible whitespace from an element and preserve the selection", async () => {
+        await testEditor({
+            contentBefore: `<p>
+                <u>
+                    abc
+                </u>
+                def
+                <span>
+                    <b>
+                        ghi
+                    </b>
+                    jkl
+                </span>
+                mno
+                <i>
+                    pqr
+                </i>
+            </p>`,
+            stepFunction: (editor) => {
+                const cursors = editor.shared.selection.preserveSelection();
+                removeInvisibleWhitespace(editor.editable.querySelector("p"), cursors);
+                cursors.restore();
+            },
+            contentAfter: `<p><u>abc</u> def<span><b> ghi</b> jkl</span> mno<i> pqr</i></p>`,
+        });
     });
 });

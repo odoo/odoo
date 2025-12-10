@@ -125,7 +125,7 @@ class Im_LivechatReportChannel(models.Model):
                     ELSE C.livechat_failure
                 END AS session_outcome,
                 C.country_id,
-                C.rating_last_value AS rating,
+                NULLIF(C.rating_last_value, 0) AS rating,
                 CASE
                     WHEN C.rating_last_value = 1 THEN 'Unhappy'
                     WHEN C.rating_last_value = 5 THEN 'Happy'

@@ -353,7 +353,7 @@ class CrmLead(models.Model):
     @api.depends('team_id', 'type')
     def _compute_stage_id(self):
         for lead in self:
-            if not lead.stage_id:
+            if not lead.stage_id or (lead.team_id and lead.stage_id.team_ids and lead.team_id not in lead.stage_id.team_ids):
                 lead.stage_id = lead._stage_find(domain=[('fold', '=', False)]).id
 
     @api.depends('user_id')
@@ -1054,15 +1054,11 @@ class CrmLead(models.Model):
         # - OR ('fold', '=', False): add default columns that are not folded
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         team_id = self.env.context.get('default_team_id')
-        if team_id:
-            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_id)]
-        if self.env.context.get('show_user_team_stages'):
-            team_ids = self.env.user.crm_team_ids._ids
-            if team_id:
-                team_ids += (team_id,)
+        team_ids = self.env.user.crm_team_ids._ids if self.env.context.get('show_user_team_stages') else ()
+        team_ids += (team_id,) if team_id else ()
+        search_domain = ['|', ('id', 'in', stages.ids), ('team_ids', '=', False)]
+        if team_ids:
             search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_ids)]
-        else:
-            search_domain = ['|', ('id', 'in', stages.ids), ('team_ids', '=', False)]
 
         # perform search
         stage_ids = stages.sudo()._search(search_domain, order=stages._order)

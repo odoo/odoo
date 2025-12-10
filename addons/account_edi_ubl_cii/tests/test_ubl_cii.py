@@ -507,15 +507,14 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon, HttpCase):
         ])
         invoices[:2].action_post()
         invoices[:2]._generate_and_send()
-        print_items = invoices.get_extra_print_items()
+        xml_print_url = next(item for item in invoices.get_extra_print_items() if item['key'] == 'download_ubl')['url']
         self.assertEqual(
-            print_items[0]['url'],
+            xml_print_url,
             f'/account/download_invoice_documents/{invoices[0].id},{invoices[1].id}/ubl?allow_fallback=true',
             'Only posted invoices should be called in the URL',
         )
-        url = print_items[0]['url']
         self.authenticate(self.env.user.login, self.env.user.login)
-        res = self.url_open(url)
+        res = self.url_open(xml_print_url)
         self.assertEqual(res.status_code, 200)
         with ZipFile(BytesIO(res.content)) as zip_file:
             self.assertEqual(
@@ -621,6 +620,17 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon, HttpCase):
         self.env['account.edi.common']._import_partner_bank(invoice, [acc_number])
         self.assertEqual(invoice.partner_bank_id, partner_bank, "Partner bank must be the same")
         self.assertTrue(partner_bank.active, "Partner bank must be the activated")
+
+    def test_bank_details_import_duplicate(self):
+        acc_number = '1234567890'
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'in_invoice',
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+        })
+        # Importing should not try to create multiple partner bank records with the same account number.
+        # It would cause a traceback due to a unique constraint on the (sanitized) account number, partner pair.
+        self.env['account.edi.common']._import_partner_bank(invoice, [acc_number, acc_number])
 
     def test_oin_code(self):
         partner = self.partner_a

@@ -121,12 +121,41 @@ class StockMove(models.Model):
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
+    def write(self, vals):
+        res = super().write(vals)
+        if 'product_id' in vals:
+            for move in self:
+                if move.sale_line_id and move.product_id != move.sale_line_id.product_id:
+                    move.sale_line_id = False
+        return res
+
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
         # to pass sale_line_id fom SO to MO in mto
         if self.sale_line_id:
             res['sale_line_id'] = self.sale_line_id.id
         return res
+
+    def _reassign_sale_lines(self, sale_order):
+        current_order = self.sale_line_id.order_id
+        if len(current_order) <= 1 and current_order != sale_order:
+            ids_to_reset = set()
+            if not sale_order:
+                ids_to_reset.update(self.ids)
+            else:
+                line_ids_by_product = dict(self.env['sale.order.line']._read_group(
+                    domain=[('order_id', '=', sale_order.id), ('product_id', 'in', self.product_id.ids)],
+                    aggregates=['id:array_agg'],
+                    groupby=['product_id']
+                ))
+                for move in self:
+                    if line_id := line_ids_by_product.get(move.product_id, [])[:1]:
+                        move.sale_line_id = line_id[0]
+                    else:
+                        ids_to_reset.add(move.id)
+
+            if ids_to_reset:
+                self.env['stock.move'].browse(ids_to_reset).sale_line_id = False
 
 
 class StockMoveLine(models.Model):
@@ -169,14 +198,21 @@ class StockPicking(models.Model):
                     picking.move_type = "one"
 
     def _set_sale_id(self):
-        if self.reference_ids and self.sale_id:
-            self.reference_ids.sale_ids = Command.link(self.sale_id)
+        if self.reference_ids:
+            if self.sale_id:
+                self.reference_ids.sale_ids = [Command.link(self.sale_id.id)]
+            else:
+                sale_order = self.move_ids.sale_line_id.order_id
+                if len(sale_order) == 1:
+                    self.reference_ids.sale_ids = [Command.unlink(sale_order.id)]
         else:
             if self.sale_id:
-                self.env['stock.reference'].create({
+                reference = self.env['stock.reference'].create({
                     'sale_ids': [Command.link(self.sale_id.id)],
                     'name': self.sale_id.name,
                 })
+                self._add_reference(reference)
+        self.move_ids._reassign_sale_lines(self.sale_id)
 
     def _auto_init(self):
         """

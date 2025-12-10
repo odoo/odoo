@@ -105,6 +105,7 @@ patch(OrderPaymentValidation.prototype, {
                         return false;
                     }
 
+                    await this.pos.syncAllOrders({ orders: [this.order] });
                     onlinePaymentLine.setPaymentStatus("waiting");
                     this.order.selectPaymentline(onlinePaymentLine);
                     const onlinePaymentData = {
@@ -214,10 +215,10 @@ patch(OrderPaymentValidation.prototype, {
 
         // Now, do practically the normal flow
         if (
-            (this.order.isPaidWithCash() || this.order.getChange()) &&
+            (this.order.isPaidWithCash() || this.order.change) &&
             this.pos.config.iface_cashdrawer
         ) {
-            this.hardwareProxy.printer.openCashbox();
+            this.pos.hardwareProxy.openCashbox();
         }
 
         if (isInvoiceRequested) {
@@ -227,7 +228,7 @@ patch(OrderPaymentValidation.prototype, {
                     body: _t("The invoice could not be generated."),
                 });
             } else {
-                await this.invoiceService.downloadPdf(orderJSON[0].account_move);
+                await this.pos.env.services.account_move.downloadPdf(orderJSON[0].account_move);
             }
         }
 

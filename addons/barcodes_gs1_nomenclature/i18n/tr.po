@@ -3,13 +3,16 @@
 # * barcodes_gs1_nomenclature
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-17 17:25+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
+"PO-Revision-Date: 2025-11-21 14:47+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "barcodes_gs1_nomenclature/tr/>\n"
 "Language: tr\n"
@@ -24,7 +27,7 @@ msgstr ""
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid ""
 "A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
-"to be converted to a valid date: '%(error_message)'"
+"to be converted to a valid date: '%(error_message)s'"
 msgstr ""
 
 #. module: barcodes_gs1_nomenclature
@@ -81,7 +84,7 @@ msgstr "Hedef konum"
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_ir_http__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "İsim Göster"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__encoding
@@ -118,7 +121,7 @@ msgstr "HTTP Yönlendirme"
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__id
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_ir_http__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
@@ -190,7 +193,7 @@ msgstr "Miktar"
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid "The FNC1 Separator Alternative is not a valid Regex: %(error)s"
-msgstr ""
+msgstr "FNC1 Ayırıcı Alternatifi geçerli bir Regex değildir: %(error)s"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -201,6 +204,11 @@ msgid ""
 "unit;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"GS1 içerik türü, kuralın barkodu ne tür bir veri olarak işleyeceğini "
+"tanımlar:        * Tarih: barkod bir Odoo tarih saatine dönüştürülecektir; * "
+"Ölçü: barkodun değeri belirli bir birimle ilgilidir; * Sayısal Tanımlayıcı: "
+"belirli bir kodlamayı izleyen sabit uzunlukta barkod; * Alfa-Sayısal Ad: "
+"değişken uzunlukta barkod."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -218,7 +226,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 msgid "The rule pattern '%(rule)s' is not a valid Regex: %(error)s"
-msgstr ""
+msgstr "'%(rule)s' kural kalıbı geçerli bir Regex değildir: %(error)s"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -271,3 +279,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__type
 msgid "Type"
 msgstr "Tip"
+
+#~ msgid ""
+#~ "A GS1 barcode nomenclature pattern was matched. However, the barcode "
+#~ "failed to be converted to a valid date: '%(error_message)'"
+#~ msgstr ""
+#~ "Bir GS1 barkod isimlendirme deseni eşleştirildi. Ancak barkod geçerli bir "
+#~ "tarihe dönüştürülemedi: '%(error_message)'"

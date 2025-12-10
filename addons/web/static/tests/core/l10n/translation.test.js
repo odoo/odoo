@@ -1,5 +1,6 @@
 /* eslint no-restricted-syntax: 0 */
 import { after, describe, expect, test } from "@odoo/hoot";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     defineParams,
     makeMockEnv,
@@ -10,9 +11,8 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { _t as basic_t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
-import { session } from "@web/session";
 import { IndexedDB } from "@web/core/utils/indexed_db";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { session } from "@web/session";
 
 import { Component, markup, xml } from "@odoo/owl";
 const { DateTime } = luxon;
@@ -75,19 +75,15 @@ test("lang is given by an attribute on the DOM root node", async () => {
 });
 
 test("url is given by the session", async () => {
-    expect.assertions(1);
     patchWithCleanup(session, {
         translationURL: "/get_translations",
     });
-    onRpc(
-        "/get_translations",
-        function (request) {
-            expect(request.url).toInclude("/get_translations");
-            return this.loadTranslations(request);
-        },
-        { pure: true }
-    );
+    onRpc("/get_translations", function (request) {
+        expect.step("/get_translations");
+        return this.loadTranslations(request);
+    });
     await makeMockEnv();
+    expect.verifySteps(["/get_translations"]);
 });
 
 test("can translate a text node", async () => {

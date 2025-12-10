@@ -11,6 +11,8 @@ import { BuilderOverlayPlugin } from "./builder_overlay/builder_overlay_plugin";
 import { CachedModelPlugin } from "./cached_model_plugin";
 import { ClonePlugin } from "./clone_plugin";
 import { ColorUIPlugin } from "./color_ui_plugin";
+import { ImagePlugin } from "./image_plugin";
+import { IconPlugin } from "./icon_plugin";
 import { CoreBuilderActionPlugin } from "./core_builder_action_plugin";
 import { CompositeActionPlugin } from "./composite_action_plugin";
 import { CustomizeTabPlugin } from "./customize_tab_plugin";
@@ -27,6 +29,7 @@ import { RemovePlugin } from "./remove_plugin";
 import { SavePlugin } from "./save_plugin";
 import { SaveSnippetPlugin } from "./save_snippet_plugin";
 import { SetupEditorPlugin } from "./setup_editor_plugin";
+import { CoreSetupEditorPlugin } from "./core_setup_editor_plugin";
 import { VisibilityPlugin } from "./visibility_plugin";
 import { FieldChangeReplicationPlugin } from "./field_change_replication_plugin";
 import { BuilderContentEditablePlugin } from "./builder_content_editable_plugin";
@@ -44,6 +47,8 @@ const mainEditorPluginsToRemove = [
     "FontFamilyPlugin",
     // Replaced plugins:
     "ColorUIPlugin",
+    "ImagePlugin",
+    "IconPlugin",
 ];
 
 export const MAIN_PLUGINS = [
@@ -52,6 +57,8 @@ export const MAIN_PLUGINS = [
         mainEditorPluginsToRemove
     ),
     ColorUIPlugin,
+    ImagePlugin,
+    IconPlugin,
 ];
 
 export const CORE_PLUGINS = [
@@ -73,6 +80,7 @@ export const CORE_PLUGINS = [
     DisableSnippetsPlugin,
     MediaWebsitePlugin,
     SetupEditorPlugin,
+    CoreSetupEditorPlugin,
     SavePlugin,
     VisibilityPlugin,
     DropZoneSelectorPlugin,

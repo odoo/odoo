@@ -138,6 +138,7 @@ const test_pricelists_in_pos_steps = [
         },
     },
     ProductConfigurator.pickRadio("BIG"),
+    ProductConfigurator.pickRadio("GREEN"),
     ProductConfigurator.isUnavailable("RED"),
     Dialog.confirm(),
     ProductScreen.clickPayButton(),

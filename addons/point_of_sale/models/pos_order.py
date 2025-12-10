@@ -188,7 +188,7 @@ class PosOrder(models.Model):
             return_payment_vals = {
                 'name': _('return'),
                 'pos_order_id': order.id,
-                'amount': -pos_order['amount_return'],
+                'amount': pos_order['amount_return'],
                 'payment_date': fields.Datetime.now(),
                 'payment_method_id': cash_payment_method.id,
                 'is_change': True,
@@ -209,7 +209,7 @@ class PosOrder(models.Model):
     @api.model
     def _get_invoice_lines_values(self, line_values, pos_line, move_type):
         # correct quantity sign based on move type and if line is refund.
-        is_refund_order = pos_line.order_id.amount_total < 0.0
+        is_refund_order = pos_line.order_id.is_refund
         qty_sign = -1 if (
             (move_type == 'out_invoice' and is_refund_order)
             or (move_type == 'out_refund' and not is_refund_order)
@@ -302,7 +302,8 @@ class PosOrder(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     partner_id = fields.Many2one('res.partner', string='Customer', change_default=True, index='btree_not_null')
-    sequence_number = fields.Integer(string='Sequence Number', help='A session-unique sequence number for the order. Negative if generated from the client', default=1)
+    sequence_number = fields.Integer(string='Sequence Number', copy=False,
+                                     help='A session-unique sequence number for the order. Negative if generated from the client')
     session_id = fields.Many2one('pos.session', string='Session', index=True, domain="[('state', '=', 'opened')]")
     config_id = fields.Many2one('pos.config', compute='_compute_order_config_id', string="Point of Sale", readonly=False, store=True)
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency")
@@ -408,7 +409,7 @@ class PosOrder(models.Model):
     def _compute_refund_related_fields(self):
         for order in self:
             order.refund_orders_count = len(order.mapped('lines.refund_orderline_ids.order_id'))
-            order.refunded_order_id = order.lines.refunded_orderline_id.order_id
+            order.refunded_order_id = next(iter(order.lines.refunded_orderline_id.order_id), False)
 
     @api.depends('lines.refunded_qty', 'lines.qty')
     def _compute_has_refundable_lines(self):
@@ -535,6 +536,9 @@ class PosOrder(models.Model):
             vals = self._complete_values_from_session(session, vals)
         return super().create(vals_list)
 
+    def _update_sequence_number(self, session, values):
+        values['sequence_number'] = session.config_id.order_seq_id._next()  # Some localization needs orders to have a sequence number
+
     @api.model
     def _complete_values_from_session(self, session, values):
         values.setdefault('pricelist_id', session.config_id.pricelist_id.id)
@@ -547,7 +551,7 @@ class PosOrder(models.Model):
             values['tracking_number'] = tracking_number
 
         if not values.get('sequence_number'):
-            values['sequence_number'] = session.config_id.order_seq_id._next()  # Some localization needs orders to have a sequence number
+            self._update_sequence_number(session, values)
 
         return values
 
@@ -847,8 +851,7 @@ class PosOrder(models.Model):
         fiscal_position = self.fiscal_position_id
         pos_config = self.config_id
         rounding_method = pos_config.rounding_method
-        amount_total = sum(order.amount_total for order in self)
-        move_type = 'out_invoice' if amount_total >= 0 else 'out_refund'
+        move_type = 'out_invoice' if not any(order.is_refund for order in self) else 'out_refund'
         invoice_payment_term_id = (
             self.partner_id.property_payment_term_id.id
             if self.partner_id.property_payment_term_id and any(p.payment_method_id.type == 'pay_later' for p in self.payment_ids)
@@ -1135,6 +1138,8 @@ class PosOrder(models.Model):
         next_days_orders = self.filtered(lambda order: order.preset_time and order.preset_time.date() > fields.Date.today() and order.state == 'draft')
         next_days_orders.session_id = False
         today_orders.write({'state': 'cancel'})
+        for config in today_orders.config_id:
+            config.notify_synchronisation(config.current_session_id.id, self.env.context.get('login_number', 0))
         return {
             'pos.order': self._load_pos_data_read(today_orders, self.config_id)
         }
@@ -1692,7 +1697,7 @@ class PosOrderLine(models.Model):
             'date_deadline': date_deadline,
             'route_ids': self.order_id.config_id.route_id,
             'warehouse_id': self.order_id.config_id.warehouse_id or False,
-            'partner_id': self.order_id.partner_id.id,
+            'partner': self.order_id.partner_id,
             'product_description_variants': self.full_product_name,
             'company_id': self.order_id.company_id,
             'reference_ids': self.order_id.stock_reference_ids,

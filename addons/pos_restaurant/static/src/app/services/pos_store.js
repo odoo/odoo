@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
-import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
 patch(PosStore.prototype, {
@@ -102,21 +102,35 @@ patch(PosStore.prototype, {
         this.addPendingOrder([currentOrder.id]);
         return true;
     },
-    async sendOrderInPreparationUpdateLastChange(order, opts = {}) {
+    async sendOrderInPreparation(order, opts = {}) {
+        let categoryCount = [];
+        if (!opts.cancelled) {
+            categoryCount = this.getCategoryCount(order);
+        }
+        const result = await super.sendOrderInPreparation(order, opts);
+
+        if (this.config.module_pos_restaurant && categoryCount.length) {
+            const categorySummary = categoryCount
+                .map((cat) => `${cat.count} ${cat.name}`)
+                .join(_t(", "))
+                .replace(/, ([^,]*)$/, _t(" and $1"));
+            this.notification.add(_t("%s, sent to the kitchen", categorySummary), {
+                type: "success",
+            });
+        }
+        return result;
+    },
+    async ensureGuestCustomerCount(order) {
         const currentPreset = order.preset_id;
-        if (
-            this.config.use_presets &&
-            currentPreset?.use_guest &&
-            !order.uiState.guestSetted &&
-            !opts.cancelled
-        ) {
-            const response = await this.setCustomerCount(order);
-            if (!response) {
-                return;
+        if (this.config.use_presets && currentPreset?.use_guest && !order.uiState.guestSetted) {
+            await this.setCustomerCount(order);
+            if (order.getCustomerCount() === 0 && order.table_id) {
+                order.setCustomerCount(order.table_id.seats);
             }
             order.uiState.guestSetted = true;
         }
-
+    },
+    async sendOrderInPreparationUpdateLastChange(order, opts = {}) {
         if (!opts.cancelled) {
             order.cleanCourses();
             const firstCourse = order.getFirstCourse();
@@ -191,6 +205,7 @@ patch(PosStore.prototype, {
                 destOrder.uiState.unmerge[uuid] = {
                     table_id: sourceOrder.table_id.id,
                     quantity: orphanLine.qty,
+                    formerUuid: orphanLine.uuid,
                 };
             }
 
@@ -276,6 +291,7 @@ patch(PosStore.prototype, {
                     acc.push({
                         quantity: details.quantity,
                         uuid: uuid,
+                        formerUuid: details.formerUuid,
                     });
                 }
                 return acc;
@@ -347,6 +363,9 @@ patch(PosStore.prototype, {
                 );
 
                 delete order.uiState.unmerge[line.uuid];
+                if (this.config.module_pos_restaurant) {
+                    newOrder.uiState.mappingOrderlinesUuid[detail.formerUuid] = newLine.uuid;
+                }
             }
 
             await this.syncAllOrders({ orders: [order, newOrder] });
@@ -392,7 +411,10 @@ patch(PosStore.prototype, {
         }
     },
     get categoryCount() {
-        const orderChanges = this.getOrderChanges();
+        return this.getCategoryCount();
+    },
+    getCategoryCount(order = this.getOrder()) {
+        const orderChanges = this.getOrderChanges(order);
         const linesChanges = orderChanges.orderlines;
 
         const categories = Object.values(linesChanges).reduce((acc, curr) => {
@@ -423,12 +445,11 @@ patch(PosStore.prototype, {
             categories["noteUpdate"] = { count: nbNoteChange, name: _t("Note") };
         }
         // Only send modeUpdate if there's already an older mode in progress.
-        const currentOrder = this.getOrder();
         if (
             orderChanges.modeUpdate &&
-            Object.keys(currentOrder.last_order_preparation_change.lines).length
+            Object.keys(order.last_order_preparation_change.lines).length
         ) {
-            const displayName = _t(currentOrder.preset_id?.name);
+            const displayName = _t(order.preset_id?.name);
             categories["modeUpdate"] = { count: 1, name: displayName };
         }
 
@@ -527,9 +548,37 @@ patch(PosStore.prototype, {
     },
     async submitOrder() {
         const order = this.getOrder();
+        await this.ensureGuestCustomerCount(order);
         await this.sendOrderInPreparationUpdateLastChange(order);
         this.addPendingOrder([order.id]);
         this.showDefault();
+    },
+    async _askForPreparation() {
+        const order = this.getOrder();
+        if (this.config.module_pos_restaurant && order.hasChange && !order.isRefund) {
+            const confirmed = await ask(this.dialog, {
+                title: _t("Warning !"),
+                body: _t(
+                    "It seems that the order has not been sent. Would you like to send it to preparation?"
+                ),
+                confirmLabel: _t("Order"),
+                cancelLabel: _t("Discard"),
+            });
+            if (!confirmed) {
+                return;
+            }
+            try {
+                await this.ensureGuestCustomerCount(order);
+                this.env.services.ui.block();
+                await this.sendOrderInPreparationUpdateLastChange(order);
+            } finally {
+                this.env.services.ui.unblock();
+            }
+        }
+    },
+    async pay() {
+        await this._askForPreparation();
+        return super.pay(...arguments);
     },
     async getServerOrders() {
         if (this.config.module_pos_restaurant) {
@@ -577,7 +626,7 @@ patch(PosStore.prototype, {
     async editFloatingOrderName(order) {
         const payload = await makeAwaitable(this.dialog, EditOrderNamePopup, {
             title: _t("Edit Order Name"),
-            placeholder: _t("18:45 John 4P"),
+            placeholder: _t("e.g. John"),
             startingValue: order.floating_order_name || "",
         });
         if (payload) {
@@ -808,7 +857,7 @@ patch(PosStore.prototype, {
 
         if (destinationTable) {
             if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
-                await this.syncAllOrders({ orders: [sourceOrder] });
+                await this.handleFailToPrepareOrderTransfer([sourceOrder]);
                 return;
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
@@ -822,13 +871,16 @@ patch(PosStore.prototype, {
         const sourceOrder = this.models["pos.order"].getBy("uuid", orderUuid);
 
         if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
-            await this.syncAllOrders({ orders: [sourceOrder] });
+            await this.handleFailToPrepareOrderTransfer([sourceOrder]);
             return;
         }
 
         const destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         await this.mergeOrders(sourceOrder, destinationOrder);
         await this.setTable(destinationTable);
+    },
+    async handleFailToPrepareOrderTransfer(orders) {
+        await this.syncAllOrders({ orders });
     },
     getCustomerCount(tableId) {
         const tableOrders = this.getTableOrders(tableId).filter((order) => !order.finalized);
@@ -877,7 +929,6 @@ patch(PosStore.prototype, {
                 index: order.getNextCourseIndex(),
             });
         }
-        order.recomputeOrderData(); // To ensure that courses are stored locally
         order.selectCourse(selectedCourse);
         return course;
     },
@@ -949,7 +1000,6 @@ patch(PosStore.prototype, {
             line.course_id = destCourse.id;
         });
         order.selectCourse(destCourse);
-        order.recomputeOrderData();
     },
     async loadSampleData() {
         if (this.config.module_pos_restaurant) {
@@ -1000,6 +1050,7 @@ patch(PosStore.prototype, {
         if (!currentOrder) {
             return false;
         }
+        await this._askForPreparation();
         await super.validateOrderFast(...arguments);
     },
     setPartnerToCurrentOrder(partner) {

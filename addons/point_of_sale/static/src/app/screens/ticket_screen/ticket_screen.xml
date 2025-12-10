@@ -8,6 +8,11 @@
                 <t t-set="usePreset" t-value="pos.config.use_presets and pos.models['pos.preset'].length > 1" />
                 <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 pe-lg-0 bg-view border-end overflow-y-auto">
                     <div class="controls d-grid d-sm-flex align-items-center justify-content-between gap-2 gap-sm-3 p-2 border-bottom bg-view">
+                        <SearchBar
+                            config="getSearchBarConfig()"
+                            placeholder.translate="Search Orders..."
+                            onSearch.bind="onSearch"
+                            onFilterSelected.bind="onFilterSelected" />
                         <div class="buttons d-flex gap-1" t-if="usePreset">
                             <button t-foreach="pos.models['pos.preset'].getAll()" t-as="preset" t-key="preset.id"
                                 class="btn btn-lg btn-secondary text-nowrap" t-on-click="() => this.onPresetSelected(preset)"
@@ -15,11 +20,6 @@
                                 <t t-esc="preset.name"/>
                             </button>
                         </div>
-                        <SearchBar
-                            config="getSearchBarConfig()"
-                            placeholder.translate="Search Orders..."
-                            onSearch.bind="onSearch"
-                            onFilterSelected.bind="onFilterSelected" />
                         <div class="item d-none d-xl-flex align-items-center justify-content-end">
                             <span class="page me-2" t-on-click="onClickPageNbr"><t t-esc="getPageNumber()" /></span>
                             <div class="page-controls d-flex align-items-center gap-1">
@@ -124,11 +124,13 @@
                                 </div>
                             </t>
                         </t>
-                        <CenteredIcon
-                            t-else=""
-                            icon="this.pos.data.network.loading ? 'fa-circle-o-notch fa-spin' : 'fa-shopping-cart fa-4x'"
-                            text="this.pos.data.network.loading ? 'Loading...' : 'No orders found'"
-                            class="'h-100'"/>
+                        <div t-else="" class="d-flex h-100 flex-column align-items-center justify-content-center">
+                            <CenteredIcon
+                                icon="this.pos.data.network.loading ? 'fa-circle-o-notch fa-spin' : 'fa-shopping-cart fa-4x'"
+                                text="this.pos.data.network.loading ? 'Loading...' : 'No orders found'"
+                                class="'w-100'"/>
+                            <button class="btn btn-secondary" t-on-click="onClickNewOrder">New Order</button>
+                        </div>
                     </div>
                     <div class="switchpane d-flex gap-2 m-2" t-if="ui.isSmall">
                         <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />

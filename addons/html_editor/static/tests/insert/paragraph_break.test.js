@@ -137,19 +137,26 @@ describe("Selection collapsed", () => {
                 // highlighted and the focus is in the textarea.
                 await animationFrame();
             };
+
             beforeEach(patchPrism);
 
             test("should insert a line break within the pre", async () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>abcd</pre>",
-                    contentBeforeEdit: highlightedPre({ value: "abcd" }),
+                    contentBeforeEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "abcd" }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testEnterInCodeBlock(2), // "ab[]cd"
-                    contentAfterEdit: highlightedPre({
-                        value: "ab\ncd",
-                        textareaRange: 3, // "ab\n[]cd"
-                    }),
-                    contentAfter: `<pre data-language-id="plaintext">ab<br>cd</pre>[]`,
+                    contentAfterEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({
+                            value: "ab\ncd",
+                            textareaRange: 3, // "ab\n[]cd"
+                        }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">ab<br>cd</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -157,14 +164,20 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     compareFunction: compareHighlightedContent,
                     contentBefore: "<pre>abc</pre>",
-                    contentBeforeEdit: highlightedPre({ value: "abc" }),
+                    contentBeforeEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({ value: "abc" }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
                     stepFunction: testEnterInCodeBlock(3), // "abc[]"
-                    contentAfterEdit: highlightedPre({
-                        value: "abc\n",
-                        preHtml: "abc<br><br>",
-                        textareaRange: 4, // "abc\n[]"
-                    }),
-                    contentAfter: `<pre data-language-id="plaintext">abc<br><br></pre>[]`,
+                    contentAfterEdit:
+                        '<p data-selection-placeholder=""><br></p>' +
+                        highlightedPre({
+                            value: "abc\n",
+                            preHtml: "abc<br><br>",
+                            textareaRange: 4, // "abc\n[]"
+                        }) +
+                        '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abc<br><br></pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -492,7 +505,7 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore: `<div class="oe_unbreakable"><a href="http://test.test/">ab[]</a></div>`,
                     stepFunction: splitBlockA,
-                    contentAfter: `<div class="oe_unbreakable"><a href="http://test.test/">ab</a><br><br>[]</div>`,
+                    contentAfter: `<div class="oe_unbreakable"><a href="http://test.test/">ab</a><br>[]<br></div>`,
                 });
                 await testEditor({
                     contentBefore: `<div class="oe_unbreakable"><a href="http://test.test/">ab[]</a>cd</div>`,

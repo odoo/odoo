@@ -5,19 +5,26 @@ import { _t } from "@web/core/l10n/translation";
 import { getCommonAncestor, selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+/**
+ * @typedef { Object } InstagramOptionShared
+ * @property { InstagramOptionPlugin['instagramPageNameFromUrl'] } instagramPageNameFromUrl
+ */
+
+export class InstagramOption extends BaseOptionComponent {
+    static template = "website.InstagramOption";
+    static selector = ".s_instagram_page";
+}
 
 class InstagramOptionPlugin extends Plugin {
     static id = "instagramOption";
     static dependencies = ["history"];
     static shared = ["instagramPageNameFromUrl"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(SNIPPET_SPECIFIC_END, {
-                template: "website.InstagramOption",
-                selector: ".s_instagram_page",
-            }),
-        ],
+        builder_options: [withSequence(SNIPPET_SPECIFIC_END, InstagramOption)],
         builder_actions: {
             InstagramPageAction,
         },

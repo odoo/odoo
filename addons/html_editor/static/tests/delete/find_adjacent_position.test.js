@@ -92,7 +92,15 @@ describe("findAdjacentPosition method", () => {
                 const previous = '<div><p>a[]</p><span contenteditable="false">b</span></div>';
                 const next = '<div><p>a</p>[]<span contenteditable="false">b</span></div>';
                 const { editor } = await setupEditor(previous);
-                assertAdjacentPositions(editor, previous, next);
+                assertAdjacentPositions(
+                    editor,
+                    '<p data-selection-placeholder=""><br></p>' +
+                        previous +
+                        '<p data-selection-placeholder=""><br></p>',
+                    '<p data-selection-placeholder=""><br></p>' +
+                        next +
+                        '<p data-selection-placeholder=""><br></p>'
+                );
             });
             test("Should find position before filebox", async () => {
                 const content = `<div>\ufeff<span contenteditable="false" class="o_file_box"></span>\ufeff[]</div>`;
@@ -140,6 +148,7 @@ describe("findAdjacentPosition method", () => {
     describe("Different editable zones", () => {
         test("should find adjacent character", async () => {
             const previous = unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false">
                     <p>abc</p>
                     <p contenteditable="true">[]def</p>
@@ -147,6 +156,7 @@ describe("findAdjacentPosition method", () => {
                 <p>fgh</p>
             `);
             const next = unformat(`
+                <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false">
                     <p>abc</p>
                     <p contenteditable="true">d[]ef</p>
@@ -201,6 +211,7 @@ describe("findAdjacentPosition method", () => {
                 // it's the desirable one to compose a range for deletion,
                 // allowing to remove the div with deleteBackward
                 unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     []<div contenteditable="false">
                         <p>abc</p>
                         <p contenteditable="true">def</p>
@@ -231,6 +242,7 @@ describe("findAdjacentPosition method", () => {
                         <p>abc</p>
                         <p contenteditable="true">def</p>
                     </div>[]
+                    <p data-selection-placeholder=""><br></p>
                 `)
             );
         });

@@ -1,3 +1,4 @@
+
 import logging
 import re
 import uuid
@@ -1547,29 +1548,6 @@ class AccountMove(models.Model):
                 if move_line:
                     message_to_log += self._l10n_it_edi_import_line(element, move_line, extra_info)
 
-            # Global discount summarized in 1 amount
-            if discount_elements := tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione'):
-                taxable_amount = float(self.tax_totals['base_amount_currency'])
-                discounted_amount = taxable_amount
-                for discount_element in discount_elements:
-                    discount_sign = 1
-                    if (discount_type := discount_element.xpath('.//Tipo')) and discount_type[0].text == 'MG':
-                        discount_sign = -1
-                    if discount_amount := get_text(discount_element, './/Importo'):
-                        discounted_amount -= discount_sign * float(discount_amount)
-                        continue
-                    if discount_percentage := get_text(discount_element, './/Percentuale'):
-                        discounted_amount *= 1 - discount_sign * float(discount_percentage) / 100
-
-                general_discount = discounted_amount - taxable_amount
-                sequence = len(elements) + 1
-
-                self.invoice_line_ids = [Command.create({
-                    'sequence': sequence,
-                    'name': 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
-                    'price_unit': general_discount,
-                })]
-
             for element in tree.xpath('.//Allegati'):
                 self.l10n_it_edi_attachment_name = get_text(element, './/NomeAttachment')
                 self.l10n_it_edi_attachment_file = b64decode(get_text(element, './/Attachment'))
@@ -1711,7 +1689,7 @@ class AccountMove(models.Model):
                 discount_type = get_text(discount, './/Tipo')
                 discount_sign = -1 if discount_type == 'MG' else 1
                 if (discount_percentage := get_float(discount, './/Percentuale')) and not float_is_zero(discount_percentage, precision_rounding=move_line.currency_id.rounding):
-                    current_unit_price *= discount_sign * (100 - discount_percentage) / 100
+                    current_unit_price *= (100 - discount_sign * discount_percentage) / 100
                 elif discount_amount := get_float(discount, './/Importo'):
                     current_unit_price -= discount_sign * discount_amount
             expected_total = get_float(element, './/PrezzoTotale')
@@ -1844,7 +1822,7 @@ class AccountMove(models.Model):
         errors = {}
         for kind_code, kind_desc, min_len in (
             ('vat', _('VAT'), 1),
-            ('withholding', _('Withholding'), 0),
+            ('withholding_no_enasarco', _('Withholding'), 0),
             ('pension_fund', _('Pension Fund'), 0),
         ):
             errors.update(self._l10n_it_edi_check_lines_for_tax_kind(kind_code, kind_desc, min_len))

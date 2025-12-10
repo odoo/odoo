@@ -14,9 +14,8 @@
             <field name="inherit_id" ref="account.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//block[@name='default_taxes_setting_container']" position="inside">
-                    <setting id="update_tax_tags">
+                    <setting id="update_tax_tags" groups="base.group_no_one">
                         <button name="%(account_update_tax_tags.action_open_wizard)d" icon="fa-refresh" type="action" class="btn-link"
-                                groups="base.group_no_one"
                                 string="Update tax tags on existing Journal Entries"/>
                     </setting>
                 </xpath>

@@ -1,10 +1,11 @@
 import { expect, getFixture, test } from "@odoo/hoot";
-import { animationFrame, mockFetch } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     contains,
     makeMockEnv,
     mountWithCleanup,
+    onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
@@ -34,8 +35,8 @@ test("Installation page displays the app info correctly", async () => {
         },
     });
     mountManifestLink("/web/manifest.scoped_app_manifest");
-    mockFetch((route) => {
-        expect.step(route);
+    onRpc("/*", (request) => {
+        expect.step(new URL(request.url).pathname);
         return {
             icons: [
                 {
@@ -81,8 +82,8 @@ test("Installation page displays the error message when browser is not supported
     delete browser.BeforeInstallPromptEvent;
     await makeMockEnv();
     mountManifestLink("/web/manifest.scoped_app_manifest");
-    mockFetch((route) => {
-        expect.step(route);
+    onRpc("/*", (request) => {
+        expect.step(new URL(request.url).pathname);
         return {
             icons: [
                 {

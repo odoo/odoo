@@ -8,10 +8,11 @@ import requests
 
 from werkzeug.urls import url_encode
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, release
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import hmac, email_normalize
 from odoo.tools.urls import urljoin as url_join
+from odoo.addons.google_gmail.tools import get_iap_error_message
 
 _logger = logging.getLogger(__name__)
 
@@ -87,6 +88,9 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         is_configured = microsoft_outlook_client_id and microsoft_outlook_client_secret
 
         if not is_configured:  # use IAP (see '/microsoft_outlook/iap_confirm')
+            if release.version_info[-1] != 'e':
+                raise UserError(_('Please configure your Outlook credentials.'))
+
             outlook_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
                 'mail.server.outlook.iap.endpoint',
                 self._DEFAULT_OUTLOOK_IAP_ENDPOINT,
@@ -122,7 +126,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             microsoft_outlook_uri = self.microsoft_outlook_uri
 
         if not microsoft_outlook_uri:
-            raise UserError(_('Please configure your outlook credentials.'))
+            raise UserError(_('Please configure your Outlook credentials.'))
 
         return {
             'type': 'ir.actions.act_url',
@@ -230,11 +234,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         return response
 
     def _raise_iap_error(self, error):
-        errors = {
-            "not_configured": _("Outlook is not configured on IAP."),
-            "no_subscription": _("You don't have an active subscription."),
-        }
-        raise UserError(_('An error occurred: %s.', errors.get(error, error)))
+        raise UserError(get_iap_error_message(self.env, error))
 
     def _generate_outlook_oauth2_string(self, login):
         """Generate a OAuth2 string which can be used for authentication.

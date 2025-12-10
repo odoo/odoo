@@ -351,6 +351,18 @@ class PaymentTransaction(models.Model):
             },
         }
 
+    def action_post_process(self):
+        """Trigger the post-processing of the transactions.
+
+        :return: A client action to soft-reload the view.
+        :rtype: dict
+        """
+        self._post_process()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'soft_reload',
+        }
+
     # === BUSINESS METHODS - PRE-PROCESSING === #
 
     @api.model
@@ -733,8 +745,9 @@ class PaymentTransaction(models.Model):
         tx = self or self._search_by_reference(provider_code, payment_data)
         if tx:
             tx.ensure_one()
+            previous_state = tx.state
             tx._validate_amount(payment_data)
-            if tx.state == 'error':
+            if tx.state == 'error' and tx.state != previous_state:
                 return tx
             tx._apply_updates(payment_data)
             if tx.tokenize and tx.state in {'authorized', 'done'}:

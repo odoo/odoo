@@ -1,8 +1,15 @@
 import { closestBlock, isBlock } from "./blocks";
-import { isParagraphRelatedElement, isShrunkBlock, isVisible } from "./dom_info";
+import {
+    isEmptyTextNode,
+    isParagraphRelatedElement,
+    isShrunkBlock,
+    isVisible,
+    nextLeaf,
+    previousLeaf,
+} from "./dom_info";
 import { callbacksForCursorUpdate } from "./selection";
 import { isEmptyBlock, isPhrasingContent } from "../utils/dom_info";
-import { childNodes } from "./dom_traversal";
+import { childNodes, descendants } from "./dom_traversal";
 import { childNodeIndex, DIRECTIONS } from "./position";
 import {
     baseContainerGlobalSelector,
@@ -254,11 +261,16 @@ export function cleanTextNode(node, char, cursors) {
         removedIndexes.push(offset);
         return "";
     });
-    cursors?.update((cursor) => {
-        if (cursor.node === node) {
-            cursor.offset -= removedIndexes.filter((index) => cursor.offset > index).length;
-        }
-    });
+    if (isEmptyTextNode(node)) {
+        cursors?.update(callbacksForCursorUpdate.remove(node));
+        node.remove();
+    } else {
+        cursors?.update((cursor) => {
+            if (cursor.node === node) {
+                cursor.offset -= removedIndexes.filter((index) => cursor.offset > index).length;
+            }
+        });
+    }
 }
 
 /**
@@ -302,22 +314,57 @@ export function splitTextNode(textNode, offset, originalNodeSide = DIRECTIONS.RI
 }
 
 /**
- * Ensures that the first child of the editable container is editable.
+ * Remove invisible whitespace from an element and adapt the given cursors
+ * accordingly if any.
  *
- * A Chromium bug prevents selecting the container if editable's first child
- * is contenteditable= false element. To avoid this, a base container is
- * inserted before the non-editable node so it no longer appears as
- * the first child.
+ * Note (TODO): in the future, this function should use the mechanism used by
+ * `enforceWhitespace` but doing so would require a little overhaul of it and of
+ * `getState`/`restoreState` to isolate the part that identifies invisible
+ * whitespace.
  *
- * @param {HTMLElement} editable
- * @param {Node} node The non-editable first child of the editable container.
- * @param {string} baseContainerNodeName
+ * @param {Element} el
+ * @param {import("@html_editor/core/selection_plugin").Cursors} [cursors]
  */
-export function fixNonEditableFirstChild(editable, node, baseContainerNodeName) {
-    if (editable.firstChild === node) {
-        const ownerDocument = node.ownerDocument;
-        const firstBaseContainer = createBaseContainer(baseContainerNodeName, ownerDocument);
-        firstBaseContainer.append(ownerDocument.createElement("br"));
-        node.before(firstBaseContainer);
+export function removeInvisibleWhitespace(el, cursors) {
+    const [countLeadingWhitespace, countTrailingWhitespace] = [/^\s+/, /\s+$/].map(
+        (regex) => (node) => node?.textContent.match(regex)?.[0]?.length || 0
+    );
+    const isInlineElement = (node) => node?.nodeType === Node.ELEMENT_NODE && !isBlock(node);
+    const textChildren = descendants(el).filter((child) => child.nodeType === Node.TEXT_NODE);
+    let removedTrailingSpaceBefore = false;
+    let index = 0;
+    for (const child of textChildren) {
+        let leadingWhitespace = countLeadingWhitespace(child);
+        let trailingWhitespace = countTrailingWhitespace(child);
+        const previous = previousLeaf(child, el);
+        if (
+            leadingWhitespace &&
+            previous &&
+            (isInlineElement(child.previousSibling) || removedTrailingSpaceBefore)
+        ) {
+            // `<span>a</span>\n   b` shows as `<span>a</span> b`
+            leadingWhitespace -= 1; // Keep one space.
+        } else if (
+            trailingWhitespace &&
+            index !== textChildren.length - 1 &&
+            isInlineElement(child.nextSibling) &&
+            !countTrailingWhitespace(nextLeaf(child, el))
+        ) {
+            // `a\n   <span>\n   b\n</span>` shows as `a <span>b</span>`
+            trailingWhitespace -= 1; // Keep one space.
+        }
+        removedTrailingSpaceBefore = !!trailingWhitespace;
+        cursors?.shiftOffset(child, -leadingWhitespace);
+        child.textContent = child.textContent
+            .substring(
+                leadingWhitespace,
+                child.textContent.length - trailingWhitespace || leadingWhitespace
+            )
+            .replace(/^\s+/, " ")
+            .replace(/\s+$/, " ");
+        if (!child.textContent) {
+            child.remove();
+        }
+        index += 1;
     }
 }

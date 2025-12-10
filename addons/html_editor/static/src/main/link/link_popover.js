@@ -230,7 +230,9 @@ export class LinkPopover extends Component {
         }
         this.updateDocumentState();
         this.editingWrapper = useRef("editing-wrapper");
-        this.inputRef = useRef(this.state.isImage ? "url" : "label");
+        this.inputRef = useRef(
+            this.state.isImage || (this.state.label && !this.state.url) ? "url" : "label"
+        );
         useEffect(
             (el) => {
                 if (el) {
@@ -329,6 +331,7 @@ export class LinkPopover extends Component {
             textContent + "/" === this.props.linkElement.getAttribute("href");
         this.state.label = labelEqualsUrl ? "" : textContent;
     }
+    // TODO: remove in master
     async onClickCopy(ev) {
         ev.preventDefault();
         await browser.navigator.clipboard.writeText(this.props.linkElement.href || "");
@@ -591,41 +594,39 @@ export class LinkPopover extends Component {
     }
 
     get classes() {
-        let classes = [...this.props.linkElement.classList]
-            .filter(
-                (value) =>
-                    !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
-            )
-            .join(" ");
+        const classes = [...this.props.linkElement.classList].filter(
+            (value) => !value.match(/^(btn.*|rounded-circle|flat|(text|bg)-(o-color-\d$|\d{3}$))$/)
+        );
 
         let stylePrefix = "";
-        if (this.state.type === "custom") {
+        if (this.state.type) {
             if (this.state.buttonSize) {
-                classes += ` btn-${this.state.buttonSize}`;
+                classes.push(`btn-${this.state.buttonSize}`);
             }
+
             if (this.state.buttonShape) {
                 const buttonShape = this.state.buttonShape.split(" ");
                 if (["outline", "fill"].includes(buttonShape[0])) {
                     stylePrefix = `${buttonShape[0]}-`;
                 }
-                classes += ` ${buttonShape.slice(stylePrefix ? 1 : 0).join(" ")}`;
+                classes.push(buttonShape.slice(stylePrefix ? 1 : 0).join(" "));
             }
-        }
-        if (this.state.type) {
-            classes += ` btn btn-${stylePrefix}${this.state.type}`;
+
+            classes.push(`btn`, `btn-${stylePrefix}${this.state.type}`);
         }
 
         const textColor = this.customTextColorState.selectedColor;
         if (isCSSVariable(textColor)) {
-            classes += " text-" + textColor;
+            classes.push(`text-${textColor}`);
         }
 
         const fillColor = this.customFillColorState.selectedColor;
         if (isCSSVariable(fillColor)) {
-            classes += " bg-" + fillColor;
+            classes.push(`bg-${fillColor}`);
         }
 
-        return classes.trim();
+        // Ensure single space between classes
+        return classes.filter(Boolean).join(" ");
     }
 
     get customStyles() {

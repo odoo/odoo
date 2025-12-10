@@ -43,8 +43,8 @@ class HrAttendance(http.Controller):
                 'kiosk_delay': employee.company_id.attendance_kiosk_delay * 1000,
                 'attendance': {'check_in': employee.last_attendance_id.check_in,
                                'check_out': employee.last_attendance_id.check_out},
-                'overtime_today': request.env['hr.attendance.overtime.line'].sudo().search([
-                    ('employee_id', '=', employee.id), ('date', '=', datetime.date.today())]).duration or 0,
+                'overtime_today': sum(request.env['hr.attendance.overtime.line'].sudo().search([
+                    ('employee_id', '=', employee.id), ('date', '=', datetime.date.today())]).mapped('duration')) or 0,
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
                 'display_overtime': employee.company_id.hr_attendance_display_overtime,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,

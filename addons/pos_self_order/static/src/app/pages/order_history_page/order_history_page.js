@@ -23,9 +23,7 @@ export class OrdersHistoryPage extends Component {
     }
 
     getPrice(line) {
-        return this.selfOrder.config.iface_tax_included
-            ? line.price_subtotal_incl
-            : line.price_subtotal;
+        return line.displayPrice;
     }
 
     getOrderState(state) {

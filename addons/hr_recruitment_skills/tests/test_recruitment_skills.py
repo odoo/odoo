@@ -598,3 +598,35 @@ class TestRecruitmentSkills(TransactionCase):
         self.env.flush_all()
         matching_skill_ids = self.t_applicant.with_user(interviewer_user).matching_skill_ids
         self.assertEqual(matching_skill_ids, self.t_applicant.matching_skill_ids, "The interviewer should see the skills of the applicant")
+
+    def test_applicant_from_talent_preserve_skills(self):
+        """
+        Verify that when an applicant is created from a talent pool applicant, the new applicant
+        has the same skills as the talent and the talent retains all its skills.
+        """
+        talent = (
+            self.env["talent.pool.add.applicants"]
+            .create({"applicant_ids": self.t_applicant, "talent_pool_ids": self.t_talent_pool})
+            ._add_applicants_to_pool()
+        )
+        talent_form = Form(talent)
+        with talent_form.current_applicant_skill_ids.new() as skill:
+            skill.skill_type_id = self.t_skill_type
+            skill.skill_id = self.t_skill_1
+            skill.skill_level_id = self.t_skill_level_1
+        talent_form.save()
+
+        test_job = self.env["hr.job"].create({"name": "Test Job"})
+        applicant = (
+            self.env["job.add.applicants"]
+            .create({"applicant_ids": talent.ids, "job_ids": test_job})
+            ._add_applicants_to_job()
+        )
+
+        self.assertEqual(applicant.applicant_skill_ids.skill_type_id, self.t_skill_type)
+        self.assertEqual(applicant.applicant_skill_ids.skill_level_id, self.t_skill_level_1)
+        self.assertEqual(applicant.applicant_skill_ids.skill_id, self.t_skill_1)
+
+        self.assertEqual(talent.applicant_skill_ids.skill_type_id, applicant.applicant_skill_ids.skill_type_id)
+        self.assertEqual(talent.applicant_skill_ids.skill_level_id, applicant.applicant_skill_ids.skill_level_id)
+        self.assertEqual(talent.applicant_skill_ids.skill_id, applicant.applicant_skill_ids.skill_id)

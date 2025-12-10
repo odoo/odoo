@@ -8,7 +8,8 @@
             </button>
         </xpath>
         <xpath expr="//div[hasclass('validation')]" position="attributes">
-            <attribute name="t-if">this.swapButton or props.showActionButton</attribute>
+            <!-- Check availability for all children, needed due to condition based pay button. Skip rendering if none are available. -->
+            <attribute name="t-if">!this.swapButton or showFastPaymentMethods or (pos.showBackButton() and !pos.config.module_pos_restaurant)</attribute>
         </xpath>
         <xpath expr="//div[hasclass('validation')]//button[hasclass('pay-order-button')]" position="attributes">
             <attribute name="t-if">!this.swapButton</attribute>
@@ -23,7 +24,7 @@
                     t-if="!this.currentOrder.isDirectSale and this.displayCategoryCount.length"
                     t-att-disabled="doSubmitOrder.status === 'loading'"
                 >
-                    <div t-if="!(ui.isSmall or displayCategoryCount.length > 2) or (!displayCategoryCount.length and ui.isSmall)" class="text-truncate text-start">Order</div>
+                    <div t-if="!(ui.isSmall or displayCategoryCount.length > 2) or (!displayCategoryCount.length and ui.isSmall)" class="text-truncate text-start">Send</div>
                     <div t-attf-class="{{ !(displayCategoryCount.length > 2) ? 'd-flex flex-column align-items-end gap-1' : 'row row-cols-2 g-1 gx-2' }} {{ isCategoryCountOverflow ? 'mt-n3' : ''}}">
                         <t t-if="displayCategoryCount.length">
                             <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">

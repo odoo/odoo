@@ -20,7 +20,7 @@ class MailActivity(models.Model):
             date_deadline = self[0].date_deadline  # updated, hence all same value
             # also protect against loops in case of ill-managed timezones
             events = self.calendar_event_id.with_context(mail_activity_meeting_update=True)
-            user_tz = self.env.context.get('tz', 'UTC')
+            user_tz = self.env.context.get('tz') or 'UTC'
             for event in events:
                 # allday: just apply diff between dates
                 if event.allday and event.start_date != date_deadline:

@@ -8,12 +8,13 @@
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-21 05:28+0000\n"
+"POT-Creation-Date: 2025-11-07 18:35+0000\n"
+"PO-Revision-Date: 2025-11-27 09:03+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/survey/nl/>"
 "\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -452,7 +453,7 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Pijl icoon\" "
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Pijlicoon\" "
 "title=\"Pijl\"/>"
 
 #. module: survey
@@ -1204,7 +1205,7 @@ msgstr "Burger quiz"
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "But first, keep listening to the host."
-msgstr "Maar blijf eerst naar de gastheer luisteren."
+msgstr "Maar blijf eerst naar de host luisteren."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_3
@@ -1376,7 +1377,7 @@ msgstr "Klassiek paar"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 msgid "Click to copy link"
-msgstr ""
+msgstr "Klik om link te kopiëren"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug4
@@ -1387,7 +1388,7 @@ msgstr "Cliff Burton"
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close"
-msgstr "Afsluiten"
+msgstr "Sluiten"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -1976,6 +1977,12 @@ msgid "Food Preferences"
 msgstr "Voedselvoorkeuren"
 
 #. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+msgid "For this question, you can only select one answer."
+msgstr "Voor deze vraag kun je slechts één antwoord selecteren."
+
+#. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
 msgid "Free Text"
 msgstr "Vrije tekst"
@@ -2053,7 +2060,7 @@ msgstr "Bestaande uitnodiging"
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "Handle quiz & certifications"
-msgstr ""
+msgstr "Quizzen en certificeringen beheren"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__has_message
@@ -2085,7 +2092,7 @@ msgstr "Hemiunu"
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Here, you can view the participants."
-msgstr ""
+msgstr "Hier kun je de deelnemers bekijken."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug1
@@ -3276,6 +3283,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Optionele vertaaltaal (ISO-code) om te selecteren bij het versturen van een "
+"e-mail. Als deze niet is ingesteld, wordt de taal van de hoofdpartner "
+"gebruikt. Dit moet meestal een 'placeholder expression' zijn die de juiste "
+"taal voorziet, bv. {{ object.partner_id.lang }}."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3606,7 +3617,7 @@ msgstr "Vragen"
 #. module: survey
 #: model:ir.ui.menu,name:survey.survey_menu_questions
 msgid "Questions & Answers"
-msgstr "Vragen"
+msgstr "Vragen & antwoorden"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__triggering_question_ids
@@ -3625,7 +3636,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Quiz passed"
-msgstr ""
+msgstr "Quiz geslaagd"
 
 #. module: survey
 #. odoo-javascript
@@ -4453,7 +4464,7 @@ msgstr "Hartelijk dank voor je feedback. We hechten veel waarde aan je mening!"
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Thank you!"
-msgstr "Dank je!"
+msgstr "Bedankt!"
 
 #. module: survey
 #. odoo-python
@@ -4818,6 +4829,8 @@ msgstr "Meedoen:"
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "To take this survey, please close all other tabs on %(hostname)s"
 msgstr ""
+"Om deze enquête in te vullen moet je alle andere tabbladen op %(hostname)s "
+"sluiten"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -5311,8 +5324,8 @@ msgid ""
 "You cannot delete questions from surveys \"%(survey_names)s\" while live "
 "sessions are in progress."
 msgstr ""
-"Je kunt de vragen van de enquêtes \"%(survey_names)s\"  niet verwijderen "
-"tijdens live sessies."
+"Je kan de vragen van de enquêtes \"%(survey_names)s\" niet verwijderen "
+"tijdens livesessies."
 
 #. module: survey
 #. odoo-python

@@ -100,12 +100,18 @@
                 <th name="th_position" class="text-start">Position</th>
             </t>
         </xpath>
+        <!-- Insert Empty Column for Position Numbers to Handle Section Misalignment -->
+        <xpath expr="//td[@name='td_section_name']" position="after">
+            <t t-if="doc.company_id.has_position_column">
+               <td/>
+            </t>
+        </xpath>
         <xpath expr="//table/tbody" position="before">
             <t t-if="doc.company_id.has_position_column">
                 <t t-set="line_number" t-value="1"/>
             </t>
         </xpath>
-        <xpath expr="//table/tbody//tr[1]//td[1]" position="before">
+        <xpath expr="//td[@name='td_product_name']" position="before">
             <t t-if="doc.company_id.has_position_column">
                <td class="text-start" t-esc="line_number"/>
                 <t t-set="line_number" t-value="line_number+1"/>

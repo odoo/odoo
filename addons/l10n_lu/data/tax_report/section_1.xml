@@ -2,6 +2,7 @@
 <odoo auto_sequence="1">
     <record id="l10n_lu_tax_report_section_1" model="account.report">
         <field name="name">Section I</field>
+        <field name="name@fr">Section I</field>
         <field name="name@de">Abschnitt I</field>
         <field name="name@lb">Abschnitt I</field>
         <field name="sequence">1</field>
@@ -10,8 +11,9 @@
         <field name="column_ids">
             <record id="tax_report_section_1_balance" model="account.report.column">
                 <field name="name">Balance</field>
-                <field name="name@de">Waage</field>
-                <field name="name@lb">Gläichgewiicht</field>
+                <field name="name@fr">Solde</field>
+                <field name="name@de">Saldo</field>
+                <field name="name@lb">Sold</field>
                 <field name="expression_label">balance</field>
             </record>
         </field>

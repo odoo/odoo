@@ -395,7 +395,9 @@ class AccountDocumentImportMixin(models.AbstractModel):
         self.ensure_one()
         attachments_to_attach = attachments.filtered(self._should_attach_to_record)
         if attachments_to_attach:
-            attachments_to_attach.write({
+            # No need to write to attachments that have the same res_model and res_id
+            attachments_to_write = attachments_to_attach.filtered(lambda a: a.res_model != self._name or a.res_id != self.id)
+            attachments_to_write.write({
                 'res_model': self._name,
                 'res_id': self.id,
             })
@@ -408,7 +410,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
 
     def _should_attach_to_record(self, attachment):
         """ Indicate whether a given attachment should be displayed in the record's attachments. """
-        return not attachment.res_field and attachment.mimetype in {
+        return attachment and not attachment.res_field and attachment.mimetype in {
             'text/csv',
             'application/pdf',
             'application/vnd.ms-excel',

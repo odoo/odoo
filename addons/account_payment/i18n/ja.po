@@ -12,12 +12,13 @@
 # Andy Yiu, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Sayaka Yamada <sayaka@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-16 06:07+0000\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-12-05 06:18+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "account_payment/ja/>\n"
@@ -26,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_payment
 #. odoo-python
@@ -194,7 +195,7 @@ msgstr "承認されたトランザクション"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Capture Transaction"
-msgstr "取引をキャプチャする"
+msgstr "取引を確定する"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -202,11 +203,6 @@ msgstr "取引をキャプチャする"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment_paid
 msgid "Close"
 msgstr "閉じる"
-
-#. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "コード"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
@@ -405,8 +401,8 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
-"（金額をキャプチャする代わりに）トランザクションの承認のみに設定されたプロバ"
-"イダーのトークンは利用できないことに注意して下さい。"
+"（金額を確定する代わりに）トランザクションの承認のみに設定されたプロバイダー"
+"のトークンは利用できないことに注意して下さい。"
 
 #. module: account_payment
 #. odoo-python
@@ -601,7 +597,7 @@ msgstr "ソース・ペイメント"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
 msgid "State"
-msgstr "都道府県・州"
+msgstr "ステータス"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
@@ -631,7 +627,7 @@ msgstr "成功した取引が記帳される仕訳帳"
 #. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
 msgid "The payment related to transaction %(ref)s has been posted: %(link)s"
-msgstr ""
+msgstr "取引%(ref)s に関連する支払いが計上されました：%(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -738,8 +734,8 @@ msgid ""
 "enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
-"有効状態またはテスト状態のプロバイダーにリンクされている支払方法を削除するこ"
-"とはできません。\n"
+"有効ステータスまたはテストステータスのプロバイダーにリンクされている支払方法"
+"を削除することはできません。\n"
 "リンクされているプロバイダー:%s"
 
 #. module: account_payment
@@ -783,6 +779,9 @@ msgstr "適用されました。"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
 msgid "overdue"
 msgstr "滞納"
+
+#~ msgid "Code"
+#~ msgstr "コード"
 
 #~ msgid ""
 #~ "<strong>No suitable payment option could be found.</strong><br/>\n"

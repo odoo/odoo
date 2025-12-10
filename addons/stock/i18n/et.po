@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-17 09:07+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-12-05 14:37+0000\n"
 "Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/stock/"
 "et/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock
 #. odoo-python
@@ -51,8 +51,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Siirded %(transfer_list)s: vaja määrata partii/seerianumber toodetele "
-"%(product_list)s."
+"Siirded %(transfer_list)s: vaja määrata partii/seerianumber toodetele %"
+"(product_list)s."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__serial_prefix_format
@@ -340,7 +340,7 @@ msgstr "'Operatsiooni tüüp - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
 msgid "'Packages - %s' % (object.name)"
-msgstr "'Pakendid - %s' % (object.name)"
+msgstr "'Pakid - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -434,8 +434,8 @@ msgstr ""
 "* Klient: Virtuaalne asukoht, mis tähistab teie klientidele saadetud toodete "
 "sihtkoha asukohta\n"
 "* Inventuuri kadu: inventuuride taseme korrigeerimiseks kasutatavate "
-"inventuuri toimingute vastena kasutatav virtuaalne asukoht (füüsilised varud)"
-"\n"
+"inventuuri toimingute vastena kasutatav virtuaalne asukoht (füüsilised "
+"varud)\n"
 "* Tootmine: tootmistoimingute virtuaalne asukoht: see asukoht kasutab "
 "komponente ja toodab valmistooteid\n"
 "* Transiit: vastaspoole asukoht, mida tuleks kasutada ettevõttevahelistes "
@@ -610,8 +610,8 @@ msgid ""
 "<br>The products will be moved towards <b>%(destination)s</b>, <br/> as "
 "specified from <b>%(operation)s</b> destination."
 msgstr ""
-"<br>Tooted liiguvad <b>%(destination)s</b> suunas, <br/> täpsustatult "
-"<b>%(operation)s</b> asukohast."
+"<br>Tooted liiguvad <b>%(destination)s</b> suunas, <br/> täpsustatult <b>%"
+"(operation)s</b> asukohast."
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
@@ -661,22 +661,21 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Tere <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<"
-"br/><br/>\n"
+"        Tere <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
 "        Meil on hea meel teavitada teid, et teie tellimus on teele pandud.\n"
-"        <t t-if="
-"\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">"
-"\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
 "            Teie jälgimisviide on:\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value="
-"\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
-"\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" "
-"t-out=\"line[0] or ''\"/>\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
@@ -694,9 +693,9 @@ msgstr ""
 "        Aitäh,\n"
 "        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "            <br/>\n"
-"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
-"t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell "
-"Admin</t></div>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -818,7 +817,7 @@ msgstr "<span class=\"o_stat_text\">Välja:</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Packages</span>"
-msgstr "<span class=\"o_stat_text\">Pakendid</span>"
+msgstr "<span class=\"o_stat_text\">Pakid</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view
@@ -856,10 +855,9 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span class=\"o_stat_value text-muted\">\n"
-"                                                                                      "
-"Prognoositud\n"
-"                                                                          "
-"</span>"
+"                                                                                      Prognoositud\n"
+"                                                                          </"
+"span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
@@ -1119,7 +1117,7 @@ msgstr "Triipkoodi saab määrata ainult ühele pakenditüübile!"
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
 "A package can't have one of its contained packages as destination container."
-msgstr "Pakendi sihtkonteineriks ei saa olla mõni tema enda sees olev pakend."
+msgstr "Paki sihtkonteineriks ei saa olla mõni tema enda sees olev pakk."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -1347,7 +1345,7 @@ msgstr "Kõik kategooriad"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
-msgstr "Kõik alampakendid"
+msgstr "Kõik alampakid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -1606,7 +1604,7 @@ msgstr "Määra"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_dest_ids
 msgid "Assigned Contained Packages"
-msgstr "Määratud sisepakendid"
+msgstr "Määratud sisepakk"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -1669,7 +1667,7 @@ msgstr "Prindi pakendi etikett automaatselt"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_packages
 msgid "Auto Print Packages"
-msgstr "Prindi pakendeid automaatselt"
+msgstr "Prindi pakke automaatselt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_product_labels
@@ -1943,8 +1941,8 @@ msgid ""
 "Can't move a container having packages in another location (%"
 "(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
-"Ei saa liigutada konteinerit, mille sees olevad pakendid asuvad teises "
-"asukohas %(old_location)s teisse asukohta %(new_location)s ."
+"Ei saa liigutada konteinerit, mille sees olevad pakid asuvad teises asukohas "
+"%(old_location)s ,teisse asukohta %(new_location)s ."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
@@ -1952,7 +1950,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Cancel"
 msgstr "Tühista"
@@ -2213,8 +2210,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada DHL'ga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2239,8 +2236,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada FedExiga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2270,8 +2267,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada UPSiga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2286,8 +2283,8 @@ msgid ""
 "install)</strong>"
 msgstr ""
 "Arvuta saatmiskulud ja saada USPSiga<br/>\n"
-"                                    <strong>(palun mine Avalehele&gt;"
-"Rakendused allalaadimiseks)</strong>"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2390,7 +2387,7 @@ msgstr "Kontakt"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__child_package_ids
 msgid "Contained Packages"
-msgstr "Määratud sisepakendid"
+msgstr "Määratud sisepakid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__contained_quant_ids
@@ -2553,7 +2550,7 @@ msgstr "Loo uus operatsioonitüüp"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
 msgid "Create a new package"
-msgstr "Loo uus pakett"
+msgstr "Loo uus pakk"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3081,7 +3078,7 @@ msgstr ""
 "välja.\n"
 "Lähim asukoht: tooted/partiid, mis on sihtkohale kõige lähemal, saadetakse "
 "kõigepealt välja.\n"
-"Vähim arv pakendeid: tooted/partiid, mis on laos pakendites vähima kogusega, "
+"Vähim arv pakke: tooted/partiid, mis on laos vähima kogusega pakkides, "
 "liigutatakse esimesena välja.\n"
 "FEFO: välja saadetakse kõige lähedasema eemaldamise kuupäevaga tooted/"
 "partiid (selle meetodi kuvamine sõltub seadistusest \"aegumiskuupäevad\")."
@@ -3192,7 +3189,7 @@ msgstr "Saateleht"
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.picking_type_out
 msgid "Delivery Orders"
-msgstr "Saatelehed"
+msgstr "Kauba väljastus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_route_id
@@ -3436,7 +3433,7 @@ msgstr "Detailsed tegevused"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Details"
-msgstr "Sinu andmed"
+msgstr "Üksikasjad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_details_visible
@@ -3472,6 +3469,7 @@ msgstr "Mõõdud"
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Discard"
 msgstr "Loobu"
 
@@ -4485,8 +4483,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the packages and "
 "their contents of a picking when it is validated."
 msgstr ""
-"Kui see väli on valitud, prindib Odoo automaatelt pakisildid ja pakendite "
-"sisu kui siire on kinnitatud."
+"Kui see väli on valitud, prindib Odoo automaatelt pakisildid ja pakkide sisu "
+"kui siire on kinnitatud."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_product_labels
@@ -4591,8 +4589,8 @@ msgid ""
 "If ticked, packages to move will be directly displayed in Barcode instead of "
 "the products they contain"
 msgstr ""
-"Kui valitud, kuvatakse triipkoodivaates liigutatavad pakendid otse, mitte "
-"nende sees olevad tooted"
+"Kui valitud, kuvatakse triipkoodivaates liigutatavad pakid otse, mitte nende "
+"sees olevad tooted"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__set_package_type
@@ -4975,6 +4973,11 @@ msgid "Inventory at Date"
 msgstr "Laoseis kuupäeval"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
+msgid "Is Date Editable"
+msgstr "Kuupäev on muudetav"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
 msgstr "On tühi"
@@ -5002,6 +5005,11 @@ msgstr "Kas kasutatakse mitut asukohta"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
 msgstr "On osaline pakend"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
+msgid "Is Scheduled Date Editable"
+msgstr "Planeeritud kuupäev on muudetav"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -5659,7 +5667,7 @@ msgstr "Tellimuspõhine reegel"
 #: model_terms:ir.ui.view,arch_db:stock.package_history_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_search
 msgid "Main Packages"
-msgstr "Peamised pakendid"
+msgstr "Peamised pakid"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -6439,12 +6447,12 @@ msgstr "Operatsiooni kogused"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Operation Type"
-msgstr "Operatsiooni tüüp"
+msgstr "Operatsioonitüüp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__return_picking_type_id
 msgid "Operation Type for Returns"
-msgstr "Operatsiooni tüüp tagastamisel"
+msgstr "Operatsioonitüüp tagastamisel"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking_type_label
@@ -6463,17 +6471,17 @@ msgstr "Toiming pole toetatud"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_id
 msgid "Operation type"
-msgstr "Operatsiooni tüüp"
+msgstr "Operatsioonitüüp"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
 msgid "Operation type (PDF)"
-msgstr "Operatsiooni tüüp (PDF)"
+msgstr "Operatsioonitüüp (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking_type
 msgid "Operation type (ZPL)"
-msgstr "Operatsiooni tüüp (ZPL)"
+msgstr "Operatsioonitüüp (ZPL)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_get_picking_type_operations
@@ -6489,7 +6497,7 @@ msgstr "Tegevused"
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
-msgstr "Operatsioonide tüübid"
+msgstr "Operatsioonitüübid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6933,7 +6941,7 @@ msgstr "Pakendi tüüp"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 msgid "Packages"
-msgstr "Pakendid"
+msgstr "Pakid"
 
 #. module: stock
 #. odoo-python
@@ -6942,7 +6950,7 @@ msgid ""
 "Packages %(duplicate_names)s are moved to different locations while being in "
 "the same container %(container_name)s."
 msgstr ""
-"Pakendid %(duplicate_names)s , mis on samas konteineris %(container_name)s, "
+"Pakid %(duplicate_names)s , mis on samas konteineris %(container_name)s, "
 "liigutatakse teisse asukohta."
 
 #. module: stock
@@ -6958,9 +6966,9 @@ msgid ""
 "                Once created, the whole package can be moved at once, or "
 "products can be unpacked and moved as single units again."
 msgstr ""
-"Pakendid luuakse tavaliselt siirete kaudu (pakkimise toimingu käigus) ja "
-"võivad sisaldada erinevaid tooteid.\n"
-"                Kui pakend on kord juba loodud, siis tervet pakendit saab "
+"Pakkr luuakse tavaliselt siirete kaudu (pakkimise toimingu käigus) ja võivad "
+"sisaldada erinevaid tooteid.\n"
+"                Kui pakk on kord juba loodud, siis tervet pakki saab "
 "liigutada korraga või siis pakkida tooted lahti ja liigutada jälle üksikult."
 
 #. module: stock
@@ -7459,7 +7467,7 @@ msgstr "Toote marsruutide raport"
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_tmpl_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_tmpl_id
 msgid "Product Template"
-msgstr "Toote mall"
+msgstr "Tootemall"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_tmpl_id
@@ -8014,7 +8022,8 @@ msgstr "Võta kaup vastu ja talleta (2 sammu)"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
 msgid "Receive, Quality Control, then Store (3 steps)"
-msgstr "Võta kaup vastu, tee kvaliteedi kontroll ja siis talleta laos (3 sammu)"
+msgstr ""
+"Võta kaup vastu, tee kvaliteedi kontroll ja siis talleta laos (3 sammu)"
 
 #. module: stock
 #. odoo-python
@@ -8047,8 +8056,8 @@ msgid ""
 "                        locations management traceability, quality control, "
 "etc."
 msgstr ""
-"Vähenda kaubapuudust teavituste, triipkoodirakenduse, täiendamissoovituste, "
-"\n"
+"Vähenda kaubapuudust teavituste, triipkoodirakenduse, "
+"täiendamissoovituste, \n"
 "                                                    asukohtade halduse, "
 "jälgitavuse ja kvaliteedikontrolli abil jne."
 
@@ -8218,13 +8227,13 @@ msgstr "Tellimise viisard"
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Replenishment"
-msgstr "Laovaru täiendamine"
+msgstr "Laovarude täiendamine"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__horizon_days
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__horizon_days
 msgid "Replenishment Horizon"
-msgstr "Laovaru täiendamise ajahorisont"
+msgstr "Laovarude täiendamise ajahorisont"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__replenishment_info_id
@@ -8899,8 +8908,8 @@ msgid ""
 "Serial number (%(serial_number)s) already exists in location(s): %"
 "(location_list)s. Please correct the serial number encoded."
 msgstr ""
-"Seerianumber (%(serial_number)s) on juba asukohas (kohtades): "
-"%(location_list)s olemas. Parandage kodeeritud seerianumber."
+"Seerianumber (%(serial_number)s) on juba asukohas (kohtades): %"
+"(location_list)s olemas. Parandage kodeeritud seerianumber."
 
 #. module: stock
 #. odoo-python
@@ -8979,8 +8988,8 @@ msgstr ""
 "kõigepealt välja.\n"
 "FEFO: välja saadetakse kõige lähedasema eemaldamise kuupäevaga tooted/"
 "partiid (selle meetodi kuvamine sõltub seadistusest \"aegumiskuupäevad\").\n"
-"Vähim arv pakendeid: FIFO, kuid võimalikult vähese arvu pakenditega, kui "
-"sama toodet sisaldub mitmes pakendis."
+"Vähim arv pakke: FIFO, kuid võimalikult vähese arvu pakekidega, kui sama "
+"toodet sisaldub mitmes pakis."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9367,7 +9376,7 @@ msgstr "Lao triipkoodide andmebaas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_confirmation_type
 msgid "Stock Confirmation Type"
-msgstr "Lao kinnitus tüüp"
+msgstr "Lao kinnitustüüp"
 
 #. module: stock
 #. odoo-javascript
@@ -9720,7 +9729,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Text Confirmation"
-msgstr "Kinnitustekst"
+msgstr "SMS teavitus"
 
 #. module: stock
 #. odoo-python
@@ -9761,8 +9770,8 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
-"Seerianumber (%(serial_number)s) on juba kasutusel järgmistes asukohtades: "
-"%(location_list)s.\n"
+"Seerianumber (%(serial_number)s) on juba kasutusel järgmistes asukohtades: %"
+"(location_list)s.\n"
 "\n"
 "Kas see on oodatav? Näiteks võib see juhtuda, kui tarnetoiming on kinnitatud "
 "enne selle vastava vastuvõtutoimingu kinnitamist. Sel juhul lahendatakse "
@@ -10049,16 +10058,6 @@ msgstr "Sellele laosiirdele loodud laoreegel"
 #: code:addons/stock/models/stock_move_line.py:0
 msgid "There are no inventory adjustments to revert."
 msgstr "Taastamiseks pole varude korrigeerimisi vaja."
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"There is nothing eligible to put in a pack. Either there are no quantities "
-"to put in a pack or moves are already done."
-msgstr ""
-"Pakendisse pole midagi sobivat panna. Kas pakendisse pole koguseid panna või "
-"on kõik tooted juba pakendis."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10670,7 +10669,7 @@ msgstr "Transiidi asukohad"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Transport management: organize packs in your fleet, or carriers."
 msgstr ""
-"Transpordihaldus: organiseeri pakendid oma transpordivahendite või vedajate "
+"Transpordihaldus: organiseeri pakid oma transpordivahendite või vedajate "
 "vahel."
 
 #. module: stock
@@ -10753,8 +10752,8 @@ msgid ""
 "Unavailable Serial numbers. Please correct the serial numbers encoded: %"
 "(serial_numbers_to_locations)s"
 msgstr ""
-"Seerianumbrid pole saadaval. Palun parandage kodeeritud seerianumbrid: "
-"%(serial_numbers_to_locations)s"
+"Seerianumbrid pole saadaval. Palun parandage kodeeritud seerianumbrid: %"
+"(serial_numbers_to_locations)s"
 
 #. module: stock
 #. odoo-javascript
@@ -10798,7 +10797,7 @@ msgstr "Ühikud"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr "Ühikud ja pakendid"
+msgstr "Mõõtühikud ja pakendid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -11550,8 +11549,8 @@ msgid ""
 "You cannot archive location %(location)s because it is used by warehouse %"
 "(warehouse)s"
 msgstr ""
-"Te ei saa arhiveerida asukohta %(location)s kuna see on kasutusel teie laos "
-"%(warehouse)s"
+"Te ei saa arhiveerida asukohta %(location)s kuna see on kasutusel teie laos %"
+"(warehouse)s"
 
 #. module: stock
 #. odoo-python
@@ -11741,7 +11740,7 @@ msgstr "Te saate tagastada ainult ühe korje korraga."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You need a transfer to add these packages to."
-msgstr "Nende pakendite lisamiseks on vaja siiret."
+msgstr "Nende pakkide lisamiseks on vaja siiret."
 
 #. module: stock
 #. odoo-python
@@ -12000,7 +11999,7 @@ msgstr "päev(a)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "days before when starred"
-msgstr "päevade arv enne tähistamist"
+msgstr "päevade arv enne tärniga tähistamist"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -12199,6 +12198,13 @@ msgid ""
 msgstr ""
 "{{object.company_id.name}} kohaletoimetamise järjekord (ref {{object.name or "
 "'n/a'}})"
+
+#~ msgid ""
+#~ "There is nothing eligible to put in a pack. Either there are no "
+#~ "quantities to put in a pack or moves are already done."
+#~ msgstr ""
+#~ "Pakendisse pole midagi sobivat panna. Kas pakendisse pole koguseid panna "
+#~ "või on kõik tooted juba pakendis."
 
 #~ msgid ""
 #~ "\n"

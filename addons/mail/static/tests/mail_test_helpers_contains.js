@@ -543,6 +543,7 @@ afterEach(() => (hasUsedContainsPositively = false));
  * @property {boolean} [visible] if provided, the found element(s) must be (in)visible
  */
 class Contains {
+    timeoutCount = 0;
     /**
      * @param {string} selector
      * @param {ContainsOptions} [options={}]
@@ -610,6 +611,18 @@ class Contains {
         this.executeError = undefined;
     }
 
+    setTickTimeout() {
+        this.timer = setTimeout(() => {
+            this.timeoutCount++;
+            const res = this.runOnce(`Timeout of ${this.timeoutCount * 0.1} seconds`, {
+                crashOnFail: this.timeoutCount > 29,
+            });
+            if (!res) {
+                this.setTickTimeout();
+            }
+        }, 100);
+    }
+
     /**
      * Starts this contains check, either immediately resolving if there is a
      * match, or registering appropriate listeners and waiting until there is a
@@ -628,10 +641,7 @@ class Contains {
         this.onFocus = () => this.runOnce("after focus");
         this.onScroll = () => this.runOnce("after scroll");
         if (!this.runOnce("immediately")) {
-            this.timer = setTimeout(
-                () => this.runOnce("Timeout of 3 seconds", { crashOnFail: true }),
-                3000
-            );
+            this.setTickTimeout();
             this.observer = new MutationObserver((mutations) => {
                 try {
                     this.runOnce("after mutations");

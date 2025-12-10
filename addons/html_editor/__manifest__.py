@@ -29,6 +29,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/scss/html_editor.common.scss',
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
+            'html_editor/static/src/main/selection_placeholder_plugin.scss',
         ],
         'web.assets_backend': [
             ('include', 'html_editor.assets_editor'),
@@ -112,7 +113,12 @@ This addon provides an extensible, maintainable editor.
         ],
         'html_editor.assets_prism': [
             'web/static/lib/prismjs/prism.js',
+            'web/static/lib/prismjs/themes/default.css',
         ],
+        'html_editor.assets_prism_dark': [
+            'web/static/lib/prismjs/prism.js',
+            'web/static/lib/prismjs/themes/okaida.css',
+        ]
     },
     'license': 'LGPL-3'
 }

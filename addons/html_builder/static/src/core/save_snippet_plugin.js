@@ -15,6 +15,7 @@ function isSavable(el) {
 
 export class SaveSnippetPlugin extends Plugin {
     static id = "saveSnippet";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         get_options_container_top_buttons: withSequence(
             1,
@@ -71,7 +72,7 @@ export class SaveSnippetPlugin extends Plugin {
         );
         if (savedName) {
             const message = _t(
-                "Your custom snippet was successfully saved as %s. Find it in your snippets collection.",
+                "Saved as %s. Find it in your snippets.",
                 markup`<strong>${savedName}</strong>`
             );
             this.services.notification.add(message, {

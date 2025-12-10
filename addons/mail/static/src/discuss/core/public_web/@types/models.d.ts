@@ -21,6 +21,7 @@ declare module "models" {
     }
     export interface Thread {
         _computeDiscussAppCategory: () => undefined|unknown;
+        _computeDisplayInSidebar: () => boolean;
         appAsUnreadChannels: DiscussApp;
         categoryAsThreadWithCounter: DiscussAppCategory;
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
@@ -28,7 +29,6 @@ declare module "models" {
         displayInSidebar: boolean;
         from_message_id: Message;
         hasSubChannelFeature: Readonly<boolean>;
-        isBusSubscribed: boolean;
         lastSubChannelLoaded: Thread|null;
         loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<Thread[]|undefined>;
         loadSubChannelsDone: boolean;

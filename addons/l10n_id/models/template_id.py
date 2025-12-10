@@ -29,9 +29,20 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_currency_exchange_account_id': 'l10n_id_91100010',
                 'account_journal_early_pay_discount_loss_account_id': 'l10n_id_99900003',
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_id_99900004',
-                'account_sale_tax_id': 'tax_ST1',
-                'account_purchase_tax_id': 'tax_PT1',
+                'account_sale_tax_id': 'tax_ST4',
+                'account_purchase_tax_id': 'tax_PT4',
                 'expense_account_id': 'l10n_id_51000010',
                 'income_account_id': 'l10n_id_41000010',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'l10n_id_11300180',
+            },
+        }
+
+    @template('id', 'account.account')
+    def _get_id_account_account(self):
+        return {
+            'l10n_id_11300180': {
+                'account_stock_expense_id': 'l10n_id_51000020',
+                'account_stock_variation_id': 'l10n_id_42500010',
             },
         }

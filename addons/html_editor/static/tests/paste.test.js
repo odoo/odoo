@@ -101,11 +101,10 @@ describe("Html Paste cleaning - whitelist", () => {
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p><br></p></td>
+                            <td><p>[]<br></p></td>
                         </tr>
                     </tbody>
                 </table>
-                <p>[]<br></p>
             `),
         });
     });
@@ -3339,9 +3338,9 @@ describe("images", () => {
             // select xxx in "<p>ab[xxx]cd</p>""
             const p = editor.editable.querySelector("p");
             const selection = {
-                anchorNode: p.childNodes[1],
+                anchorNode: p.childNodes[0],
                 anchorOffset: 2,
-                focusNode: p.childNodes[1],
+                focusNode: p.childNodes[0],
                 focusOffset: 5,
             };
             setSelection(selection);
@@ -3541,9 +3540,9 @@ describe("youtube video", () => {
             // select xxx in "<p>ab[xxx]cd</p>"
             const p = editor.editable.querySelector("p");
             const selection = {
-                anchorNode: p.childNodes[1],
+                anchorNode: p.childNodes[0],
                 anchorOffset: 2,
-                focusNode: p.childNodes[1],
+                focusNode: p.childNodes[0],
                 focusOffset: 5,
             };
             setSelection(selection);
@@ -3884,9 +3883,9 @@ ${"            "}
             </tr>
             <tr>
                 <td>14pt MONO TEXT
-                </td>
+                []</td>
             </tr>
-        </tbody></table><p>[]<br></p>`,
+        </tbody></table>`,
         });
     });
 
@@ -3994,10 +3993,10 @@ ${"        "}
                     text on color background</td>
             </tr>
             <tr>
-                <td>14pt MONO TEXT</td>
+                <td>14pt MONO TEXT[]</td>
             </tr>
         </tbody>
-    </table><p>[]<br></p>`,
+    </table>`,
         });
     });
 
@@ -4123,10 +4122,10 @@ ${"        "}
         </tr>
         <tr>
             <td>
-                14pt MONO TEXT
+                14pt MONO TEXT[]
             </td>
         </tr>
-    </tbody></table><p>[]<br></p>`,
+    </tbody></table>`,
         });
     });
 
@@ -4153,11 +4152,10 @@ ${"        "}
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
-                            <td><p><br></p></td>
+                            <td><p>[]<br></p></td>
                         </tr>
                     </tbody>
                 </table>
-                <p>[]<br></p>
             `),
         });
     });
@@ -4203,11 +4201,10 @@ ${"        "}
                                 </tr>
                                 <tr>
                                     <td>1</td>
-                                    <td>2</td>
+                                    <td>2[]</td>
                                 </tr>
                             </tbody>
                         </table>
-                        <p>[]<br></p>
                     `),
         });
     });
@@ -4234,11 +4231,10 @@ ${"        "}
                             <tbody>
                                 <tr>
                                     <th>1</th>
-                                    <th>2</th>
+                                    <th>2[]</th>
                                 </tr>
                             </tbody>
                         </table>
-                        <p>[]<br></p>
                     `),
         });
     });

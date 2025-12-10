@@ -151,16 +151,18 @@ class SaleOrder(models.Model):
                 continue
             free_qty = product.with_context(warehouse_id=wh_id).free_qty
             for ol in ols:
-                free_qty_in_uom = max(
-                    int(product.uom_id._compute_quantity(free_qty, ol.product_uom_id)), 0
-                )  # Round down as only integer quantities can be sold.
-                if ol.product_uom_qty > free_qty_in_uom:
+                free_qty_in_uom = max(int(product.uom_id._compute_quantity(
+                    free_qty, ol.product_uom_id, rounding_method="DOWN"
+                )), 0)  # Round down as only integer quantities can be sold.
+                line_qty_in_uom = ol.product_uom_qty
+                if line_qty_in_uom > free_qty_in_uom:  # Not enough stock.
+                    # Set a warning on the order line.
                     insufficient_stock_data[ol] = free_qty_in_uom
                     ol.shop_warning = self.env._(
                         "%(available_qty)s/%(line_qty)s available at this location",
-                        available_qty=free_qty_in_uom, line_qty=int(ol.product_uom_qty),
+                        available_qty=free_qty_in_uom, line_qty=int(line_qty_in_uom),
                     )
-                free_qty -= ol.product_uom_id._compute_quantity(free_qty_in_uom, product.uom_id)
+                free_qty -= ol.product_uom_id._compute_quantity(line_qty_in_uom, product.uom_id)
         return insufficient_stock_data
 
     def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):

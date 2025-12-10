@@ -5,12 +5,13 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-10 17:18+0000\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
+"PO-Revision-Date: 2025-12-02 14:57+0000\n"
 "Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/html_builder/es_419/>\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: html_builder
 #. odoo-javascript
@@ -236,8 +237,12 @@ msgstr "Etiqueta alternativa"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_plugin.js:0
-msgid "Anchor copied to clipboard%(br)sLink: %(anchorLink)s"
-msgstr "Enlace ancla copiado al portapapeles%(br)sEnlace: %(anchorLink)s"
+msgid ""
+"Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%"
+"(close_span)s"
+msgstr ""
+"Ancla copiada al portapapeles%(br)s%(open_span)sEnlace: %(anchor_link)s%"
+"(close_span)s"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2200,6 +2205,12 @@ msgstr "Eliminar"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/background_option/background_image.xml:0
+msgid "Remove image"
+msgstr "Eliminar imagen"
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/sidebar/option_container.xml:0
 msgid "Remove this block"
 msgstr "Eliminar este bloque"
@@ -2354,6 +2365,12 @@ msgstr "Guardar y copiar"
 #: code:addons/html_builder/static/src/snippets/snippet_service.js:0
 msgid "Save and Install"
 msgstr "Guardar e instalar"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/core/save_snippet_plugin.js:0
+msgid "Saved as %s. Find it in your snippets."
+msgstr "Guardado como %s. Encuéntralo en tus snippets."
 
 #. module: html_builder
 #. odoo-javascript
@@ -3055,6 +3072,12 @@ msgstr "Ondulado 14"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_filter_option.js:0
+msgid "WebGL is not enabled on your browser."
+msgstr "WebGL no está habilitado en tu navegador."
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_format_option.xml:0
 msgid "WebP compression not supported on this browser"
 msgstr "Este navegador no es compatible con la compresión WebP"
@@ -3096,16 +3119,6 @@ msgstr "No tienes ningún registro que agregar"
 #: code:addons/html_builder/static/src/plugins/image/replace_media_option.xml:0
 msgid "Your URL"
 msgstr "Su URL"
-
-#. module: html_builder
-#. odoo-javascript
-#: code:addons/html_builder/static/src/core/save_snippet_plugin.js:0
-msgid ""
-"Your custom snippet was successfully saved as %s. Find it in your snippets "
-"collection."
-msgstr ""
-"Tu snippet personalizado se guardó como %s. Lo podrás encontrar en tu "
-"colección de snippets."
 
 #. module: html_builder
 #. odoo-javascript
@@ -3226,6 +3239,16 @@ msgstr "⌙ Activo"
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 msgid "⌙ Inactive"
 msgstr "⌙ Inactivo"
+
+#~ msgid "Anchor copied to clipboard%(br)sLink: %(anchorLink)s"
+#~ msgstr "Enlace ancla copiado al portapapeles%(br)sEnlace: %(anchorLink)s"
+
+#~ msgid ""
+#~ "Your custom snippet was successfully saved as %s. Find it in your "
+#~ "snippets collection."
+#~ msgstr ""
+#~ "Tu snippet personalizado se guardó como %s. Lo podrás encontrar en tu "
+#~ "colección de snippets."
 
 #~ msgid "ACCESS OPTIONS ANYWAY"
 #~ msgstr "IR A LAS OPCIONES DE ACCESO DE TODAS FORMAS"

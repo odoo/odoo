@@ -70,8 +70,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         this.isInternalUpdate = false;
         this.wasCombo = false;
         let isMounted = false;
-        this.isInternalUpdate = false;
-        this.wasCombo = false;
         useEffect(value => {
             if (!isMounted) {
                 isMounted = true;
@@ -135,7 +133,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return {
             ...super.sectionAndNoteClasses,
             "text-warning":
-                !this.isSection() && !this.isNote() && !this.productName && !this.isDownpayment,
+                !this.isSectionOrSubSection && !this.isNote() && !this.productName && !this.isDownpayment,
         };
     }
 
@@ -170,7 +168,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         }
         return {
             ...p,
-            canOpen: this.props.canOpen || !this.props.readonly || this.isProductClickable,
+            canOpen: this.props.canOpen && (!this.props.readonly || this.isProductClickable),
             update: (value) => {
                 this.isInternalUpdate = true;
                 this.wasCombo = this.isCombo;
@@ -272,7 +270,8 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                         const line = await saleOrderRecord.data.order_line.addNewRecord({
                             position: 'bottom', mode: 'readonly'
                         });
-                        await applyProduct(line, product);
+                        const productData = this._prepareNewLineData(line, product);
+                        await applyProduct(line, productData);
                     }),
                 ]);
                 this._onProductUpdate();
@@ -382,6 +381,13 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
      */
     _getAdditionalDialogProps() {
         return {};
+    }
+
+    /**
+     * Hook to append extra data in newly created optional product lines.
+     */
+    _prepareNewLineData(_line, product) {
+        return product;
     }
 
     /**

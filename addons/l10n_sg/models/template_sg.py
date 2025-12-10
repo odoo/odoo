@@ -21,7 +21,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_fiscal_country_id': 'base.sg',
                 'bank_account_code_prefix': '10141',
                 'cash_account_code_prefix': '10140',
-                'transfer_account_code_prefix': '101100',
+                'transfer_account_code_prefix': '10110',
                 'account_default_pos_receivable_account_id': 'account_account_737',
                 'income_currency_exchange_account_id': 'account_account_853',
                 'expense_currency_exchange_account_id': 'account_account_853',
@@ -31,5 +31,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'sg_purchase_tax_tx8_9',
                 'expense_account_id': 'account_account_819',
                 'income_account_id': 'account_account_803',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'account_account_699',
+            },
+        }
+
+    @template('sg', 'account.account')
+    def _get_sg_account_account(self):
+        return {
+            'account_account_699': {
+                'account_stock_variation_id': 'account_account_844',
             },
         }

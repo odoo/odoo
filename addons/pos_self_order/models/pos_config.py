@@ -64,12 +64,14 @@ class PosConfig(models.Model):
         'ir.attachment',
         string="Add images",
         help="Image to display on the self order screen",
+        bypass_search_access=True,
     )
     self_ordering_image_background_ids = fields.Many2many(
         'ir.attachment',
         string="Set background image",
         help="Image to be displayed in the background",
         relation="pos_self_order_background_rels",
+        bypass_search_access=True,
     )
     self_ordering_default_user_id = fields.Many2one(
         "res.users",
@@ -423,6 +425,7 @@ class PosConfig(models.Model):
             'iface_splitbill': True,
             'module_pos_restaurant': True,
             'self_ordering_mode': 'kiosk',
+            'self_ordering_pay_after': 'each',
         })
 
     def _generate_single_qr_code__(self, url):  # noqa: PLW3201

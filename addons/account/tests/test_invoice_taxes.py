@@ -373,7 +373,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move_form.ref = 'azerty'
 
         # Debit base tax line.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'debit_line_1'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.debit = 1000.0
@@ -382,7 +382,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
 
         # Balance the journal entry.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'balance'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.credit = 1100.0
@@ -401,7 +401,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move_form.ref = 'azerty'
 
         # Debit base tax line.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'debit_line_1'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.credit = 1000.0
@@ -409,7 +409,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.tax_ids.add(sale_tax)
 
         # Balance the journal entry.
-        with move_form.journal_line_ids.new() as debit_line:
+        with move_form.line_ids.new() as debit_line:
             debit_line.name = 'balance'
             debit_line.account_id = self.company_data['default_account_revenue']
             debit_line.debit = 1100.0
@@ -459,7 +459,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move_form.ref = 'azerty'
 
         # Debit base tax line.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'debit_line_1'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.debit = 1000.0
@@ -467,7 +467,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.tax_ids.add(purch_tax)
 
         # Balance the journal entry.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'balance'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.credit = 1100.0
@@ -486,7 +486,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         move_form.ref = 'azerty'
 
         # Debit base tax line.
-        with move_form.journal_line_ids.new() as credit_line:
+        with move_form.line_ids.new() as credit_line:
             credit_line.name = 'debit_line_1'
             credit_line.account_id = self.company_data['default_account_revenue']
             credit_line.credit = 1000.0
@@ -494,7 +494,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             credit_line.tax_ids.add(purch_tax)
 
         # Balance the journal entry.
-        with move_form.journal_line_ids.new() as debit_line:
+        with move_form.line_ids.new() as debit_line:
             debit_line.name = 'balance'
             debit_line.account_id = self.company_data['default_account_revenue']
             debit_line.debit = 1100.0
@@ -567,7 +567,7 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             with Form(self.env['account.move'], view='account.view_move_form') as move_form:
                 for line_field in ('debit', 'credit'):
                     line_amount = tax_field == line_field and 1000 or 1150
-                    with move_form.journal_line_ids.new() as line_form:
+                    with move_form.line_ids.new() as line_form:
                         line_form.name = '%s_line' % line_field
                         line_form.account_id = self.company_data['default_account_revenue']
                         line_form.debit = line_field == 'debit' and line_amount or 0
@@ -884,3 +884,46 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
                 {'tax_ids': [],                     'tax_line_id': False,                 'tax_tag_ids': [],               'credit': 0,    'debit': 1555},
             ],
         )
+
+    def test_fiscal_position_tax_mapping_with_inactive_tax(self):
+        """ Test that inactive taxes are not mapped by fiscal positions """
+        fp = self.env['account.fiscal.position'].create({'name': 'FP'})
+        src_tax = self.company_data['default_tax_sale']
+        active_tax = self.percent_tax_1.copy({
+            'fiscal_position_ids': [Command.set(fp.ids)],
+            'original_tax_ids': [Command.set(src_tax.ids)],
+        })
+        self.percent_tax_2.copy({
+            'active': False,
+            'fiscal_position_ids': [Command.set(fp.ids)],
+            'original_tax_ids': [Command.set(src_tax.ids)],
+        })
+        self.partner_a.property_account_position_id = fp
+
+        move = self.init_invoice('out_invoice', self.partner_a, post=True, products=[self.product])
+        line = move.invoice_line_ids
+        self.assertEqual(line.tax_ids, active_tax, f"The tax should be {active_tax.name}, but is is currently {line.tax_ids.name}")
+
+    def test_multiple_onchange_product_and_price(self):
+        """
+        This test checks that the totals are computed correctly when an onchange is executed
+        with "price_unit" before "product_id" in the values.
+        This test covers a UI issue where the totals were not updated when the price was changed,
+        then the product and finally the price again.
+        The issue was only occuring between the change of value and the next save.
+        That's why the test is using the onchange method directly instead of using a Form.
+        """
+        invoice = self.init_invoice('out_invoice', products=self.product_a)
+        self.assertEqual(invoice.tax_totals['base_amount'], 1000.0)
+        self.assertEqual(invoice.tax_totals['total_amount'], 1150.0)
+        # The onchange is executed directly to simulate the following flow:
+        # 1) unit price is changed to any value
+        # 2) product is changed to "Product B"
+        # 3) unit price is changed to 2000.0
+        results = invoice.onchange(
+            {'invoice_line_ids': [Command.update(invoice.invoice_line_ids[0].id, {'price_unit': 2000.0, 'product_id': self.product_b.id})]},
+            ['invoice_line_ids'],
+            {"invoice_line_ids": {}, 'tax_totals': {}}
+        )
+        self.assertEqual(results['value']['tax_totals']['base_amount'], 2000.0)
+        self.assertEqual(results['value']['tax_totals']['total_amount'], 2600.0)

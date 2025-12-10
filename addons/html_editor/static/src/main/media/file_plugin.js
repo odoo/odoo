@@ -13,6 +13,7 @@ export class FilePlugin extends Plugin {
     static defaultConfig = {
         allowFile: true,
     };
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: {
             id: "uploadFile",
@@ -45,6 +46,11 @@ export class FilePlugin extends Plugin {
         selectors_for_feff_providers: () => ".o_file_box",
         functional_empty_node_predicates: (node) =>
             node?.nodeName === "SPAN" && node.classList.contains("o_file_box"),
+        is_node_editable_predicates: (node) => {
+            if (node?.nodeName === "SPAN" && node.classList.contains("o_file_box")) {
+                return false;
+            }
+        },
     };
 
     get recordInfo() {

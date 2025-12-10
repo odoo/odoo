@@ -106,11 +106,23 @@ export const purchaseForm = {
             },
         ];
     },
+
+    createNewPO() {
+        const content = "Create a New PO";
+        const trigger = ".o_list_button_add, .o_form_button_create";
+        return [{ content, trigger, run: "click" }];
+    },
 };
 
 export const productCatalog = {
     addProduct(productName) {
         const trigger = `.o_kanban_record:contains("${productName}") button:has(.fa-plus,.fa-shopping-cart)`;
+        return [{ trigger, run: "click" }];
+    },
+
+    /** Remove a product from the PO by clicking the "trash" button */
+    removeProduct(productName) {
+        const trigger = `.o_kanban_record:contains("${productName}") button:has(.fa-trash)`;
         return [{ trigger, run: "click" }];
     },
 
@@ -131,16 +143,18 @@ export const productCatalog = {
         return [{ trigger }];
     },
 
+    selectSearchPanelCategory(categoryName) {
+        const content = `Select the category ${categoryName}`;
+        const trigger = `.o_search_panel_label_title:contains("${categoryName}")`;
+        return [{ content, trigger, run: "click" }];
+    },
+
     /**
      * Clicks on the "Back to Order" button from the Catalog view
      */
     goBackToOrder() {
-        return [
-            {
-                content: "Go back to the Order",
-                trigger: "button.o-kanban-button-back",
-                run: "click",
-            },
-        ];
+        const content = "Go back to the Order";
+        const trigger = "button.o-kanban-button-back";
+        return [{ content, trigger, run: "click" }];
     },
 };

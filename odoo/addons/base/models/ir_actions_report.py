@@ -22,7 +22,7 @@ from lxml import etree
 from markupsafe import Markup
 
 from odoo import api, fields, models, modules, tools, _
-from odoo.exceptions import UserError, AccessError, RedirectWarning
+from odoo.exceptions import UserError, AccessError, RedirectWarning, ValidationError
 from odoo.fields import Domain
 from odoo.service import security
 from odoo.http import request, root
@@ -327,7 +327,7 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--page-width', str(paperformat_id.page_width) + 'mm'])
                 command_args.extend(['--page-height', str(paperformat_id.page_height) + 'mm'])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-top'):
+            if specific_paperformat_args and 'data-report-margin-top' in specific_paperformat_args:
                 command_args.extend(['--margin-top', str(specific_paperformat_args['data-report-margin-top'])])
             else:
                 command_args.extend(['--margin-top', str(paperformat_id.margin_top)])
@@ -346,14 +346,14 @@ class IrActionsReport(models.Model):
                 if _wkhtml().dpi_zoom_ratio:
                     command_args.extend(['--zoom', str(96.0 / dpi)])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
+            if specific_paperformat_args and 'data-report-header-spacing' in specific_paperformat_args:
                 command_args.extend(['--header-spacing', str(specific_paperformat_args['data-report-header-spacing'])])
             elif paperformat_id.header_spacing:
                 command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
 
             command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
 
-            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-bottom'):
+            if specific_paperformat_args and 'data-report-margin-bottom' in specific_paperformat_args:
                 command_args.extend(['--margin-bottom', str(specific_paperformat_args['data-report-margin-bottom'])])
             else:
                 command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
@@ -798,7 +798,10 @@ class IrActionsReport(models.Model):
                 handle_error(error=e, error_stream=stream)
         result_stream = io.BytesIO()
         streams.append(result_stream)
-        writer.write(result_stream)
+        try:
+            writer.write(result_stream)
+        except PdfReadError:
+            raise UserError(_("Odoo is unable to merge the generated PDFs."))
         return result_stream
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
@@ -1198,28 +1201,10 @@ class IrActionsReport(models.Model):
 
     @api.model
     def _prepare_local_attachments(self, attachments):
-        attachments_with_data = self.env['ir.attachment']
         for attachment in attachments:
-            if not attachment._is_remote_source():
-                attachments_with_data |= attachment
-            elif (stream := attachment._to_http_stream()) and stream.url:
-                # call `_to_http_stream()` in case the attachment is an url or cloud storage attachment
+            if attachment._is_remote_source():
                 try:
-                    response = requests.get(stream.url, timeout=10)
-                    response.raise_for_status()
-                    attachment_data = response.content
-                    if not attachment_data:
-                        _logger.warning("Attachment %s at with URL %s retrieved successfully, but no content was found.", attachment.id, attachment.url)
-                        continue
-                    attachments_with_data |= self.env['ir.attachment'].new({
-                        'db_datas': attachment_data,
-                        'name': attachment.name,
-                        'mimetype': attachment.mimetype,
-                        'res_model': attachment.res_model,
-                        'res_id': attachment.res_id
-                    })
-                except requests.exceptions.RequestException as e:
-                    _logger.error("Request for attachment %s with URL %s failed: %s", attachment.id, attachment.url, e)
-            else:
-                _logger.error("Unexpected edge case: Is not being considered as a local or remote attachment, attachment ID:%s will be skipped.", attachment.id)
-        return attachments_with_data
+                    attachment._migrate_remote_to_local()
+                except (ValidationError, requests.exceptions.RequestException) as e:
+                    _logger.error("Failed to migrate attachment %s to local: %s", attachment.id, e)
+        return attachments.filtered(lambda a: not a._is_remote_source())

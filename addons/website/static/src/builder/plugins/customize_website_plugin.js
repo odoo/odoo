@@ -14,6 +14,25 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { renderToElement } from "@web/core/utils/render";
 import { CompositeAction } from "@html_builder/core/composite_action_plugin";
 
+/**
+ * @typedef { Object } CustomizeWebsiteShared
+ * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
+ * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
+ * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
+ * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
+ * @property { CustomizeWebsitePlugin['toggleTemplate'] } toggleTemplate
+ * @property { CustomizeWebsitePlugin['withCustomHistory'] } withCustomHistory
+ * @property { CustomizeWebsitePlugin['populateCache'] } populateCache
+ * @property { CustomizeWebsitePlugin['loadConfigKey'] } loadConfigKey
+ * @property { CustomizeWebsitePlugin['getConfigKey'] } getConfigKey
+ * @property { CustomizeWebsitePlugin['getWebsiteVariableValue'] } getWebsiteVariableValue
+ * @property { CustomizeWebsitePlugin['getPendingThemeRequests'] } getPendingThemeRequests
+ * @property { CustomizeWebsitePlugin['setPendingThemeRequests'] } setPendingThemeRequests
+ * @property { CustomizeWebsitePlugin['isPluginDestroyed'] } isPluginDestroyed
+ * @property { CustomizeWebsitePlugin['reloadBundles'] } reloadBundles
+ * @property { CustomizeWebsitePlugin['setViewsOnSave'] } setViewsOnSave
+ */
+
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
@@ -37,6 +56,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "setViewsOnSave",
     ];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             CustomizeWebsiteVariableAction,
@@ -384,7 +404,7 @@ export class CustomizeWebsitePlugin extends Plugin {
 
 export class SwitchThemeAction extends BuilderAction {
     static id = "switchTheme";
-    static dependencies = ["savePlugin", "action"];
+    static dependencies = ["savePlugin"];
     setup() {
         this.preview = false;
     }
@@ -431,19 +451,25 @@ export class AddLanguageAction extends BuilderAction {
         if (!save) {
             return;
         }
-        this.config.builderSidebar.toggle(false);
-        await this.dependencies.savePlugin.save(/* not in translation */);
-        await this.services.action.doAction("base.action_view_base_language_install", {
-            additionalContext: {
-                params: {
-                    website_id: websiteId,
-                    url_return: "[lang]",
+        await this.config.builderSidebar.withHiddenSidebar(() =>
+            this.dependencies.savePlugin.save({
+                shouldSkipAfterSaveHandlers: async () => {
+                    await this.services.action.doAction("base.action_view_base_language_install", {
+                        additionalContext: {
+                            params: {
+                                website_id: websiteId,
+                                url_return: "[lang]",
+                            },
+                        },
+                        // The `noReload` in the params of the close callback
+                        // are the only way we have to know whether the modal
+                        // dialog has been cancelled
+                        onClose: (closeParams) => def.resolve(!!closeParams?.noReload),
+                    });
+                    return await def;
                 },
-            },
-            onClose: def.resolve,
-        });
-        await def;
-        this.config.builderSidebar.toggle(true);
+            })
+        );
     }
 }
 

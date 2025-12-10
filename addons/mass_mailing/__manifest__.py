@@ -117,10 +117,18 @@
             'web/static/src/scss/ui.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
 
-            ('include', 'html_builder.assets_inside_builder_iframe'),
             ('include', 'mass_mailing.assets_mail_themes'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
+        ],
+        # style assets used to view the mail content in Odoo, but not used
+        # during html conversion, specific to the builder
+        'mass_mailing.assets_inside_builder_iframe': [
+            ('include', 'html_builder.assets_inside_builder_iframe'),
+            # TODO ABD: fix bundles usages so that html_editor files don't
+            # have to be cherry picked individually.
+            'html_editor/static/src/main/selection_placeholder_plugin.scss',
+            'mass_mailing/static/src/builder/**/*.inside.scss'
         ],
         'mass_mailing.iframe_add_dialog': [
             'mass_mailing/static/src/builder/snippet_viewer/*.scss',
@@ -133,6 +141,7 @@
             'mass_mailing/static/src/xml/mailing_portal_subscription_form.xml',
         ],
         'web.assets_backend': [
+            'mass_mailing/static/src/editor/**/*',
             'mass_mailing/static/src/fields/**/*',
             'mass_mailing/static/src/themes/**/*',
             'mass_mailing/static/src/iframe/**/*',

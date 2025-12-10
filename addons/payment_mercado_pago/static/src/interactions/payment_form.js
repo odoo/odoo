@@ -116,14 +116,13 @@ patch(PaymentForm.prototype, {
         }
 
         // Trigger form validation.
-        const _super = super.bind(this);
         this.mercadoPagoFormData = await this.waitFor(this.lastMercadoPagoBrick.getFormData());
         if (!this.mercadoPagoFormData){
             this._displayErrorDialog(_t("Incorrect payment details"));
             this._enableButton();  // The submit button is disabled at this point, enable it.
             return;
         }
-        return await _super._initiatePaymentFlow(...arguments);
+        await super._initiatePaymentFlow(...arguments);
     },
 
     /**

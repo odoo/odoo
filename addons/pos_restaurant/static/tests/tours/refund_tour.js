@@ -23,10 +23,10 @@ registry.category("web_tour.tours").add("RefundStayCurrentTableTour", {
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "2"),
             ProductScreen.clickDisplayedProduct("Water", true, "1"),
             ProductScreen.totalAmountIs("6.60"),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
 
             // Go to another table and refund one of the products

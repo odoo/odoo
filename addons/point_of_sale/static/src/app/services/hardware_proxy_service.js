@@ -149,6 +149,7 @@ export class HardwareProxy extends EventBus {
             const response = await browser
                 .fetch(`${url}/hw_proxy/hello`, {
                     signal: timeoutController.signal,
+                    targetAddressSpace: odoo.use_lna ? "local" : undefined,
                 })
                 .catch(() => ({}));
             if (response.ok) {
@@ -160,11 +161,10 @@ export class HardwareProxy extends EventBus {
     }
 
     async openCashbox(action = false) {
-        if (
-            this.pos.config.iface_cashdrawer &&
-            this.printer &&
-            ["connected", "init"].includes(this.connectionInfo.status)
-        ) {
+        const isPrinterConnected =
+            ["connected", "init"].includes(this.connectionInfo.status) ||
+            this.pos.config.epson_printer_ip;
+        if (this.pos.config.iface_cashdrawer && this.printer && isPrinterConnected) {
             this.printer.openCashbox();
             if (action) {
                 this.pos.logEmployeeMessage(action, "CASH_DRAWER_ACTION");

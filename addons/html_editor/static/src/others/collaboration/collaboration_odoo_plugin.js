@@ -47,6 +47,7 @@ export class CollaborationOdooPlugin extends Plugin {
     static id = "collaborationOdoo";
     static dependencies = ["baseContainer", "history", "collaboration", "selection"];
     static shared = ["getPeerMetadata"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         selectionchange_handlers: debounce(() => {
             this.ptp?.notifyAllPeers(

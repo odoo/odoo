@@ -218,7 +218,7 @@ class SaleOrder(models.Model):
         compute='_compute_team_id',
         store=True, readonly=False, precompute=True, ondelete="set null",
         change_default=True, check_company=True,  # Unrequired company
-        tracking=True,
+        tracking=True, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     # Lines and line based computes
@@ -816,6 +816,9 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.sale_warn_msg', 'order_line.sale_line_warn_msg')
     def _compute_sale_warning_text(self):
+        if not self.env.user.has_group('sale.group_warning_sale'):
+            self.sale_warning_text = ''
+            return
         for order in self:
             warnings = OrderedSet()
             if partner_msg := order.partner_id.sale_warn_msg:
@@ -918,10 +921,15 @@ class SaleOrder(models.Model):
     @api.onchange('order_line')
     def _onchange_order_line(self):
         for index, line in enumerate(self.order_line):
-            if line.product_type != 'combo':
-                continue
             combo_item_lines = line._get_linked_lines().filtered('combo_item_id')
-            if line.selected_combo_items:
+            if line.product_template_id.type != 'combo':
+                if combo_item_lines:
+                    # Delete any linked combo item lines if the line's product is no longer a combo
+                    # product.
+                    self.order_line = [
+                        Command.delete(linked_line.id) for linked_line in combo_item_lines
+                    ]
+            elif line.selected_combo_items:
                 selected_combo_items = json.loads(line.selected_combo_items)
                 if (
                     selected_combo_items
@@ -963,7 +971,11 @@ class SaleOrder(models.Model):
                 # Clear `selected_combo_items` to avoid applying the same changes multiple times.
                 line.selected_combo_items = False
                 self.order_line = delete_commands + create_commands + update_commands
-            elif combo_item_lines:
+            elif (
+                combo_item_lines
+                # Only update the combo item lines if the line's combo choices haven't changed.
+                and combo_item_lines.combo_item_id.combo_id == line.product_template_id.combo_ids
+            ):
                 combo_item_lines.update({
                     'product_uom_qty': line.product_uom_qty,
                     'discount': line.discount,
@@ -1451,7 +1463,7 @@ class SaleOrder(models.Model):
         return action
 
     def _get_invoice_grouping_keys(self):
-        return ['company_id', 'partner_id', 'partner_shipping_id', 'currency_id']
+        return ['company_id', 'partner_id', 'partner_shipping_id', 'currency_id', 'fiscal_position_id']
 
     def _nothing_to_invoice_error_message(self):
         return _(
@@ -2125,9 +2137,10 @@ class SaleOrder(models.Model):
             **kwargs,
         )
         res = super()._get_product_catalog_order_data(products, **kwargs)
+        has_warning_group = self.env.user.has_group('sale.group_warning_sale')
         for product in products:
             res[product.id]['price'] = pricelist.get(product.id)
-            if product.sale_line_warn_msg:
+            if product.sale_line_warn_msg and has_warning_group:
                 res[product.id]['warning'] = product.sale_line_warn_msg
         return res
 
@@ -2191,7 +2204,16 @@ class SaleOrder(models.Model):
                 'product_uom_qty': quantity,
                 'sequence': self._get_new_line_sequence(child_field, section_id),
             })
-        return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
+        else:  # quantity of 0, no line to update, return defaut pricelist price
+            return self.pricelist_id._get_product_price(
+                product=self.env['product.product'].browse(product_id),
+                quantity=1.0,
+                currency=self.currency_id,
+                date=self.date_order,
+                **kwargs,
+            )
+
+        return sol._get_discounted_price()
 
     # === Product Documents === #
 

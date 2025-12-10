@@ -36,6 +36,13 @@ import { FontSizeSelector } from "./font_size_selector";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 
+/** @typedef {import("plugins").TranslatedString} TranslatedString */
+
+/**
+ * @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_within_pre_processors
+ * @typedef {{ name: TranslatedString; tagName: string; extraClass?: string; }[]} font_items
+ */
+
 export const fontSizeItems = [
     { variableName: "display-1-font-size", className: "display-1-fs" },
     { variableName: "display-2-font-size", className: "display-2-fs" },
@@ -71,6 +78,7 @@ export class FontPlugin extends Plugin {
         "format",
         "lineBreak",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         font_items: [
             withSequence(10, {
@@ -215,14 +223,17 @@ export class FontPlugin extends Plugin {
             {
                 categoryId: "format",
                 commandId: "setTagHeading1",
+                keywords: [_t("title")],
             },
             {
                 categoryId: "format",
                 commandId: "setTagHeading2",
+                keywords: [_t("title")],
             },
             {
                 categoryId: "format",
                 commandId: "setTagHeading3",
+                keywords: [_t("title")],
             },
             {
                 categoryId: "format",
@@ -330,7 +341,10 @@ export class FontPlugin extends Plugin {
     }
 
     normalize(root) {
-        for (const el of selectElements(root, "strong, b, span[style*='font-weight: bolder']")) {
+        for (const el of selectElements(
+            root,
+            "strong, b, span[style*='font-weight: bolder'], small"
+        )) {
             if (isRedundantElement(el)) {
                 unwrapContents(el);
             }
@@ -538,17 +552,18 @@ export class FontPlugin extends Plugin {
     }
 
     /**
-     * Transform an empty heading, blockquote or pre at the beginning of the
-     * editable into a baseContainer.
+     * Transform an empty heading or pre at the beginning of the
+     * editable into a base container. An empty blockquote is transformed
+     * into a base container, regardless of its position in the editable.
      */
     handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
         // Detect if cursor is at the start of the editable (collapsed range).
         const rangeIsCollapsed = startContainer === endContainer && startOffset === endOffset;
-        if (!rangeIsCollapsed) {
+        const closestHandledElement = closestElement(endContainer, handledElemSelector);
+        if (!rangeIsCollapsed && closestHandledElement?.tagName !== "BLOCKQUOTE") {
             return;
         }
         // Check if cursor is inside an empty heading, blockquote or pre.
-        const closestHandledElement = closestElement(endContainer, handledElemSelector);
         if (!closestHandledElement || closestHandledElement.textContent.length) {
             return;
         }

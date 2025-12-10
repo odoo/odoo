@@ -6,6 +6,7 @@ import datetime
 import dateutil
 import email
 import email.policy
+import encodings
 import hashlib
 import hmac
 import json
@@ -50,6 +51,12 @@ from odoo.tools.mail import (
 MAX_DIRECT_PUSH = 5
 
 _logger = logging.getLogger(__name__)
+
+# monkey-patching encodings so that it will recognize `charset=cp-850` in emails
+# as a correct alias for cp850 when decoding email parts with the email python library.
+# The key "cp_850" will implicitly match "cp_850" and "cp-850"
+# See https://stackoverflow.com/a/51961225
+encodings.aliases.aliases['cp_850'] = 'cp850'
 
 
 class MailThread(models.AbstractModel):
@@ -1050,7 +1057,7 @@ class MailThread(models.AbstractModel):
 
             # search messages linked to email -> alias updating records
             if doc_ids and not loop_new:
-                base_msg_domain = Domain([('model', '=', model._name), ('res_id', 'in', doc_ids), ('create_date', '>=', create_date_limit)])
+                base_msg_domain = Domain([('model', '=', model._name), ('res_id', 'in', doc_ids), ('create_date', '>=', create_date_limit), ('message_type', '=', 'email')])
                 if author_id:
                     msg_domain = Domain('author_id', '=', author_id) & base_msg_domain
                 else:
@@ -2993,7 +3000,10 @@ class MailThread(models.AbstractModel):
                 [('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')],
                 order='date desc, id desc',
                 limit=200,  # arbitrary, but sometimes loops / spam may creater a long history
-            ).sorted(lambda msg: (msg.message_type in ('comment', 'email'), msg.date, msg.id), reverse=True)
+            ).sorted(
+                lambda msg: (msg.message_type in ('comment', 'email'), msg.date or msg.create_date, msg.id),
+                reverse=True,
+            )
             current_ancestor = current_ancestor[:1]
         return current_ancestor.id
 
@@ -4926,7 +4936,7 @@ class MailThread(models.AbstractModel):
                     etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited"})
                     msg_values["body"] = (
                         # markup: it is considered safe, as coming from html.fragment_fromstring
-                        Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
+                        (tree.text or "") + Markup("".join(etree.tostring(child, encoding="unicode") for child in tree))
                     )
                 else:  # body is plain text
                     # keep html if already Markup, otherwise escape

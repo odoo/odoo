@@ -4,13 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-13 10:05+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
+"PO-Revision-Date: 2025-12-02 14:37+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "html_builder/de/>\n"
 "Language: de\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: html_builder
 #. odoo-javascript
@@ -237,8 +238,12 @@ msgstr "Alt-Tag"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_plugin.js:0
-msgid "Anchor copied to clipboard%(br)sLink: %(anchorLink)s"
-msgstr "Anker in die Zwischenablage kopiert%(br)sLink: %(anchorLink)s"
+msgid ""
+"Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%"
+"(close_span)s"
+msgstr ""
+"Anker in die Zwischenablage kopiert%(br)s%(open_span)sLink: %(anchor_link)s%"
+"(close_span)s"
 
 #. module: html_builder
 #. odoo-javascript
@@ -521,7 +526,7 @@ msgstr "Kleckse"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/utils/utils.js:0
 msgid "Block"
-msgstr "Blockieren"
+msgstr "Block"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2205,6 +2210,12 @@ msgstr "Entfernen"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/background_option/background_image.xml:0
+msgid "Remove image"
+msgstr "Bild entfernen"
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/sidebar/option_container.xml:0
 msgid "Remove this block"
 msgstr "Diesen Block entfernen"
@@ -2359,6 +2370,12 @@ msgstr "Speichern & kopieren"
 #: code:addons/html_builder/static/src/snippets/snippet_service.js:0
 msgid "Save and Install"
 msgstr "Speichern und istallieren"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/core/save_snippet_plugin.js:0
+msgid "Saved as %s. Find it in your snippets."
+msgstr "Gespeichert als „ %s “. In Ihren Snippets verfügbar."
 
 #. module: html_builder
 #. odoo-javascript
@@ -2756,7 +2773,7 @@ msgstr "Tetris"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.xml:0
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2796,7 +2813,7 @@ msgstr "Daumen"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/color_picker_theme_tab.xml:0
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2899,7 +2916,7 @@ msgstr "Ausrichtung aufheben"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_many2one.xml:0
 msgid "Unselect"
-msgstr ""
+msgstr "Abwählen"
 
 #. module: html_builder
 #. odoo-javascript
@@ -3061,6 +3078,12 @@ msgstr "Wellig 14"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_filter_option.js:0
+msgid "WebGL is not enabled on your browser."
+msgstr "WebGL ist in Ihrem Browser nicht aktiviert."
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_format_option.xml:0
 msgid "WebP compression not supported on this browser"
 msgstr "WebP-Komprimierung wird von diesem Browser nicht unterstützt."
@@ -3102,16 +3125,6 @@ msgstr "Sie haben keine hinzuzufügenden Datensätze"
 #: code:addons/html_builder/static/src/plugins/image/replace_media_option.xml:0
 msgid "Your URL"
 msgstr "Ihre URL"
-
-#. module: html_builder
-#. odoo-javascript
-#: code:addons/html_builder/static/src/core/save_snippet_plugin.js:0
-msgid ""
-"Your custom snippet was successfully saved as %s. Find it in your snippets "
-"collection."
-msgstr ""
-"Ihr benutzerdefiniertes Snippet wurde erfolgreich als %s gespeichert. Sie "
-"finden ihn in Ihrer Snippet-Sammlung."
 
 #. module: html_builder
 #. odoo-javascript
@@ -3232,6 +3245,16 @@ msgstr "Aktiv"
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 msgid "⌙ Inactive"
 msgstr "⌙ Inaktiv"
+
+#~ msgid "Anchor copied to clipboard%(br)sLink: %(anchorLink)s"
+#~ msgstr "Anker in die Zwischenablage kopiert%(br)sLink: %(anchorLink)s"
+
+#~ msgid ""
+#~ "Your custom snippet was successfully saved as %s. Find it in your "
+#~ "snippets collection."
+#~ msgstr ""
+#~ "Ihr benutzerdefiniertes Snippet wurde erfolgreich als %s gespeichert. Sie "
+#~ "finden ihn in Ihrer Snippet-Sammlung."
 
 #~ msgid "ACCESS OPTIONS ANYWAY"
 #~ msgstr "OPTIONEN TROTZDEM ANSEHEN"

@@ -252,6 +252,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             move.is_in_extractable_state = False
 
         move._extend_with_attachments([file_data], new=True)
+        move._autopost_bill()
         attachment.write({'res_model': 'account.move', 'res_id': move.id})
         return {'uuid': uuid, 'move': move}
 

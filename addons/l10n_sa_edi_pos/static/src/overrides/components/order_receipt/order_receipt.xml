@@ -4,7 +4,7 @@
         <xpath expr="//img[hasclass('pos-receipt-qrcode')]" position="after">
             <div t-if="order.notLegal and order.isSACompany() and !order.isSettlement()" class="text-center mt-3">
                 <p>THIS IS NOT A LEGAL DOCUMENT</p>
-                <p>هذا المستند ليس مستنداً قانونياً</p>
+                <p t-if="order.config_id.l10n_gcc_dual_language_receipt">هذا المستند ليس مستنداً قانونياً</p>
             </div>
         </xpath>
     </t>

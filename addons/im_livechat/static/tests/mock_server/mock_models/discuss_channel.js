@@ -1,7 +1,7 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { fields, getKwArgs, makeKwArgs } from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDate } from "@web/core/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
 
@@ -179,5 +179,33 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         }
         this.add_members([channel.id], [this.env.user.partner_id]);
         return true;
+    }
+
+    /** @type {typeof models.Model["prototype"]["write"]} */
+    write(idOrIds, values) {
+        const kwargs = getKwArgs(arguments, "ids", "vals");
+        ({ ids: idOrIds, vals: values } = kwargs);
+        const needHelpBefore = [];
+        for (const channel of this._filter([["livechat_status", "=", "need_help"]])) {
+            needHelpBefore.push(channel.id);
+        }
+        const result = super.write(...arguments);
+        const needHelpAfter = [];
+        for (const channel of this._filter([["livechat_status", "=", "need_help"]])) {
+            needHelpAfter.push(channel.id);
+        }
+        const updatedChannelIds = [
+            ...needHelpBefore.filter((id) => !needHelpAfter.includes(id)),
+            ...needHelpAfter.filter((id) => !needHelpBefore.includes(id)),
+        ];
+        if (updatedChannelIds.length) {
+            this.env["bus.bus"]._sendone(
+                [this.env["res.groups"].browse(serverState.groupLivechatId), "LOOKING_FOR_HELP"],
+                "mail.record/insert",
+                new mailDataHelpers.Store().add(this.browse(updatedChannelIds)).get_result()
+            );
+        }
+
+        return result;
     }
 }

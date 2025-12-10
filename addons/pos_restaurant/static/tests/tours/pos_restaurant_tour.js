@@ -69,10 +69,10 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 { name: "Coca-Cola", qty: 1 },
                 { name: "Minute Maid", qty: 1 },
             ]),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
 
             // order on another table with a product variant
@@ -175,10 +175,10 @@ registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", {
             ProductScreen.totalAmountIs("6.60"),
             ProductScreen.clickNumpad("1"),
             ProductScreen.totalAmountIs("4.40"),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.clickNextOrder(),
             // At this point, there are no draft orders.
 
@@ -287,10 +287,10 @@ registry.category("web_tour.tours").add("OrderTrackingTour", {
                 ...["⌫", "1"].map(Numpad.click),
                 ...ProductScreen.selectedOrderlineHasDirect("Coca-Cola", "1"),
             ]),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
             ReceiptScreen.isShown(),
         ].flat(),
 });
@@ -345,7 +345,8 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour1", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.totalAmountIs("2.20"),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.emptyPaymentlines("2.20"),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickBackToProductScreen(),
@@ -367,7 +368,8 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour2", {
             ProductScreen.isShown(),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.totalAmountIs("4.40"),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentlineDelButton("Bank", "2.20"),
             PaymentScreen.emptyPaymentlines("4.40"),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -390,7 +392,8 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour3", {
             ProductScreen.isShown(),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.totalAmountIs("6.60"),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.remainingIs("2.2"),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickBackToProductScreen(),
@@ -529,7 +532,8 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt", {
                 { name: "Combo Product 8", qty: 1 },
             ]),
             ProductScreen.totalAmountIs("95.00"),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
         ].flat(),
 });
 
@@ -634,6 +638,31 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.isShown(),
+            FloorScreen.clickTable("5"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("RestaurantPresetEatInTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola", true),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.cashierNameExists("test_user"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout", {
     steps: () =>
         [
@@ -726,10 +755,10 @@ registry
                             }
                         },
                     },
-                    ProductScreen.clickPayButton(),
+                    ProductScreen.clickPayButton(false),
+                    ProductScreen.discardOrderWarningDialog(),
                     PaymentScreen.clickPaymentMethod("Bank"),
                     PaymentScreen.clickValidate(),
-                    Dialog.discard(),
                     FeedbackScreen.isShown(),
                     Dialog.confirm(),
                     FeedbackScreen.clickScreen(),
@@ -782,10 +811,10 @@ registry
                             }
                         },
                     },
-                    ProductScreen.clickPayButton(),
+                    ProductScreen.clickPayButton(false),
+                    ProductScreen.discardOrderWarningDialog(),
                     PaymentScreen.clickPaymentMethod("Bank"),
                     PaymentScreen.clickValidate(),
-                    Dialog.discard(),
                     ReceiptScreen.isShown(),
                     ReceiptScreen.clickNextOrder(),
                     FloorScreen.isShown(),
@@ -905,11 +934,11 @@ registry.category("web_tour.tours").add("test_direct_sales", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.totalAmountIs("4.40"),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.syncCurrentOrder(),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
 
             Chrome.clickPlanButton(),
             FloorScreen.clickNewOrder(),
@@ -917,22 +946,22 @@ registry.category("web_tour.tours").add("test_direct_sales", {
             ProductScreen.setTab("Test"),
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.totalAmountIs("4.40"),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.syncCurrentOrder(),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
 
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.totalAmountIs("4.40"),
-            ProductScreen.clickPayButton(),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.syncCurrentOrder(),
             PaymentScreen.clickValidate(),
-            ReceiptScreen.discardOrderWarningDialog(),
         ].flat(),
 });
 
@@ -1039,7 +1068,7 @@ registry.category("web_tour.tours").add("test_sync_set_pricelist", {
             assertCurrentOrderDirty(false),
             ProductScreen.isShown(),
             ProductScreen.clickLine("Coca-Cola"),
-            ProductScreen.clickPriceList("Restaurant Pricelist"),
+            ProductScreen.clickPriceList("Second Pricelist"),
             assertCurrentOrderDirty(true),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
@@ -1105,5 +1134,40 @@ registry.category("web_tour.tours").add("test_combo_synchronisation", {
                     }
                 },
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_guest_count_bank_payment", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Order.hasLine({ productName: "Coca-Cola" }),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.confirmOrderWarningDialog(),
+            NumberPopup.enterValue("5"),
+            NumberPopup.isShown("5"),
+            Dialog.confirm(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickBackToProductScreen(),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_name_preset_skip_screen", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });

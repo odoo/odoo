@@ -56,7 +56,7 @@ class HrEmployee(models.Model):
         'hr.version',
         compute='_compute_current_version_id',
         store=True,
-        groups="hr.group_hr_user",
+        bypass_search_access=True,
     )
     current_date_version = fields.Date(
         related="current_version_id.date_version",
@@ -172,6 +172,8 @@ class HrEmployee(models.Model):
         ("home", "Home"),
         ("office", "Office"),
         ("other", "Other")], compute="_compute_work_location_type", tracking=True)
+
+    # All version fields needing a specific group to be accessible should also have `inherited=True` set on its definition to make sure those fields are linked to `_inherits` on `hr.version`
     contract_date_start = fields.Date(readonly=False, related="version_id.contract_date_start", inherited=True, groups="hr.group_hr_manager")
     contract_date_end = fields.Date(readonly=False, related="version_id.contract_date_end", inherited=True, groups="hr.group_hr_manager")
     trial_date_end = fields.Date(readonly=False, related="version_id.trial_date_end", inherited=True, groups="hr.group_hr_manager")
@@ -455,7 +457,7 @@ class HrEmployee(models.Model):
 
     def _get_first_version_date(self, no_gap=True):
         self.ensure_one()
-        if not self.env.user.has_group("hr.group_hr_user"):
+        if not self.env.su and not self.env.user.has_group("hr.group_hr_user"):
             raise AccessError(_("Only HR users can access first version date on an employee."))
 
         def remove_gap(versions):
@@ -518,12 +520,14 @@ class HrEmployee(models.Model):
                 order='date_version desc',
                 limit=1,
             )
+            new_current_version = False
             if version:
-                employee.current_version_id = version
+                new_current_version = version
             elif employee.version_ids:
-                employee.current_version_id = employee.version_ids[0]
-            else:
-                employee.current_version_id = False
+                new_current_version = employee.version_ids[0]
+            # To not trigger computed properties if still the same version
+            if employee.current_version_id != new_current_version:
+                employee.current_version_id = new_current_version
 
     def _cron_update_current_version_id(self):
         self.search([])._compute_current_version_id()
@@ -554,14 +558,14 @@ class HrEmployee(models.Model):
     def create_version(self, values):
         self.ensure_one()
 
-        if 'date_version' not in values:
+        date = values.get('date_version', False)
+        if not date:
             raise ValueError("date_version is required")
-        if isinstance(values['date_version'], str):
-            date = fields.Date.to_date(values['date_version'])
-        elif isinstance(values['date_version'], datetime):
-            date = values['date_version'].date()
-        else:
-            date = values['date_version']
+
+        if isinstance(date, str):
+            date = fields.Date.to_date(date)
+        elif isinstance(date, datetime):
+            date = date.date()
 
         version_to_copy = self._get_version(date)
         if not version_to_copy:
@@ -570,19 +574,18 @@ class HrEmployee(models.Model):
             return version_to_copy
 
         date_from, date_to = self.sudo()._get_contract_dates(date)
-        contract_date_start = values['contract_date_start'] = values.get('contract_date_start', date_from)
-        contract_date_end = values['contract_date_end'] = values.get('contract_date_end', date_to)
+        contract_date_start = values.get('contract_date_start', date_from)
+        contract_date_end = values.get('contract_date_end', date_to)
+        employee_id = values.get('employee_id', self.id)
+
         if isinstance(contract_date_start, str):
             contract_date_start = fields.Date.to_date(contract_date_start)
         if isinstance(contract_date_end, str):
             contract_date_end = fields.Date.to_date(contract_date_end)
 
-        if 'employee_id' not in values:
-            values['employee_id'] = self.id
-
         if contract_date_start == date_from and contract_date_end != date_to:
             versions_sudo_to_sync = self.env['hr.version'].with_context(sync_contract_dates=True).sudo().search([
-                ('employee_id', '=', values['employee_id']),
+                ('employee_id', '=', employee_id),
                 ('contract_date_start', '=', date_from),
             ])
             if versions_sudo_to_sync:
@@ -591,8 +594,40 @@ class HrEmployee(models.Model):
                 })
         self.check_access('write')
         version_to_copy.check_access('write')
-        new_version = version_to_copy.sudo().copy(values)
-        return new_version.sudo(False)
+        # to be sure even if the user has no access to certain fields, we can still copy the verison without any issues.
+        copy_vals = {
+            'date_version': date,
+            'employee_id': employee_id,
+            'contract_date_start': contract_date_start,
+            'contract_date_end': contract_date_end,
+        }
+        if 'active' in values:
+            copy_vals['active'] = values['active']
+        if calendar_id := values.get('resource_calendar_id'):
+            copy_vals['resource_calendar_id'] = calendar_id
+        # apply the changes on the new versions.
+        new_version_vals = {
+            field_name: field_value
+            for field_name, field_value in values.items()
+            if field_name not in copy_vals
+        }
+        version_fields = self.env['hr.version']._fields
+        copy_vals = {
+            k: v
+            for k, v in version_to_copy.sudo().copy_data()[0].items()
+            if not (k in new_version_vals and version_fields[k].type in ['one2many', 'many2many'])
+        } | copy_vals
+        new_version = self.env['hr.version'].sudo().create(copy_vals).sudo(False)
+        with self.env.protecting([f for f_name, f in version_fields.items() if f_name not in new_version_vals and f.copy], new_version):
+            properties_fields_vals = {
+                field_name: field_value
+                for field_name, field_value in copy_vals.items()
+                if version_fields[field_name].type == 'properties' and field_name not in new_version_vals
+            }
+            if properties_fields_vals:  # make sure properties vals are correctly copied.
+                new_version.sudo().write(properties_fields_vals)
+            new_version.write(new_version_vals)
+        return new_version
 
     def create_contract(self, date):
         # Here we can assume that there is no existing contract on the date given
@@ -685,6 +720,8 @@ class HrEmployee(models.Model):
         version_domain = Domain('contract_date_start', '!=', False)
         if self.ids:
             version_domain &= Domain('employee_id', 'in', self.ids)
+        elif not any(self._ids):  # onchange
+            version_domain &= Domain('employee_id', 'in', self._origin.ids)
         if date_start:
             version_domain &= Domain('contract_date_end', '=', False) | Domain('contract_date_end', '>=', date_start)
         if date_end:
@@ -698,7 +735,8 @@ class HrEmployee(models.Model):
         )
         contract_versions_by_employee = defaultdict(lambda: defaultdict(lambda: self.env["hr.version"]))
         for employee, _date_version, version in all_versions:
-            contract_versions_by_employee[employee.id][version[0].contract_date_start] |= version
+            first_version = next(iter(version), version)
+            contract_versions_by_employee[employee.id][first_version.contract_date_start] |= version
         return contract_versions_by_employee
 
     def _get_all_contract_dates(self):
@@ -899,15 +937,6 @@ class HrEmployee(models.Model):
             permit_no = '_' + employee.permit_no if employee.permit_no else ''
             employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
 
-    @api.depends('distance_home_work', 'distance_home_work_unit')
-    def _compute_km_home_work(self):
-        for employee in self:
-            employee.km_home_work = employee.distance_home_work * 1.609 if employee.distance_home_work_unit == "miles" else employee.distance_home_work
-
-    def _inverse_km_home_work(self):
-        for employee in self:
-            employee.distance_home_work = employee.km_home_work / 1.609 if employee.distance_home_work_unit == "miles" else employee.km_home_work
-
     def _get_partner_count_depends(self):
         return ['user_id']
 
@@ -1061,10 +1090,9 @@ class HrEmployee(models.Model):
         # cache, and interpreted as an access error
         if field_names is None:
             field_names = [field.name for field in self._determine_fields_to_fetch()]
+        field_names = [f_name for f_name in field_names if f_name != 'current_version_id']
         self._check_private_fields(field_names)
         self.flush_model(field_names)
-        # HACK: suppress warning if domain is optimized for another model
-        domain = list(domain) if isinstance(domain, Domain) else domain
         public = self.env['hr.employee.public'].search_fetch(domain, field_names, offset, limit, order)
         employees = self.browse(public._ids)
         employees._copy_cache_from(public, field_names)
@@ -1079,10 +1107,18 @@ class HrEmployee(models.Model):
         # cache, and interpreted as an access error
         if field_names is None:
             field_names = [field.name for field in self._determine_fields_to_fetch()]
+        field_names = [f_name for f_name in field_names if f_name != 'current_version_id']
         self._check_private_fields(field_names)
         self.flush_recordset(field_names)
         public = self.env['hr.employee.public'].browse(self._ids)
         public.fetch(field_names)
+        # make sure all related fields from employee are in cache
+        for field_name in field_names:
+            public_field = self.env['hr.employee.public']._fields[field_name]
+            private_field = self.env['hr.employee']._fields[field_name]
+            if (public_field.related and public_field.related_field.model_name == 'hr.employee'
+                    or private_field.inherited and private_field.inherited_field.model_name == 'hr.version'):
+                public.mapped(field_name)
         self._copy_cache_from(public, field_names)
 
     def _check_access(self, operation):
@@ -1179,12 +1215,16 @@ We can redirect you to the public employee list."""
         """
         if self.browse().has_access('read') or bypass_access:
             return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
+        domain = Domain(domain)
+        # HACK Some fields are inherited from the `current_version_id` and may have been already
+        # optimized, showing current_version_id in the domain, but public employee does not have
+        # that field and may have fields directly on the model, just change the condition to `id` in
+        # that case.
+        domain = domain.map_conditions(lambda cond: Domain('id', cond.operator, cond.value) if cond.field_expr == 'current_version_id' else cond)
         try:
-            # HACK: suppress warning if domain is optimized for another model
-            domain = list(domain) if isinstance(domain, Domain) else domain
             ids = self.env['hr.employee.public']._search(domain, offset, limit, order, **kwargs)
-        except ValueError:
-            raise AccessError(_('You do not have access to this document.'))
+        except ValueError as e:
+            raise AccessError(self.env._('You do not have access to this document.')) from e
         # the result is expected from this table, so we should link tables
         return super(HrEmployee, self.sudo())._search([('id', 'in', ids)], order=order)
 
@@ -1356,7 +1396,7 @@ We can redirect you to the public employee list."""
             self._remove_work_contact_id(user, vals.get('company_id'))
         if 'work_permit_expiration_date' in vals:
             vals['work_permit_scheduled_activity'] = False
-        if 'tz' in vals:
+        if vals.get('tz'):
             users_to_update = self.env['res.users']
             for employee in self:
                 if employee.user_id and employee.company_id == employee.user_id.company_id and vals['tz'] != employee.user_id.tz:
@@ -1530,23 +1570,23 @@ We can redirect you to the public employee list."""
         :param datetime stop: the stop of the period
         """
         calendar_periods_by_employee = defaultdict(list)
-        for employee in self.sudo():
-            for version in employee._get_versions_with_contract_overlap_with_period(start.date(), stop.date()):
-                # if employee is under fully flexible contract, use timezone of the employee
-                calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(employee.resource_id.tz)
-                date_start = datetime.combine(
-                    version.date_start,
+        versions = self.sudo()._get_versions_with_contract_overlap_with_period(start.date(), stop.date())
+        for version in versions:
+            # if employee is under fully flexible contract, use timezone of the employee
+            calendar_tz = timezone(version.resource_calendar_id.tz) if version.resource_calendar_id else timezone(version.employee_id.resource_id.tz)
+            date_start = datetime.combine(
+                version.contract_date_start,
+                time(0, 0, 0)
+            ).replace(tzinfo=calendar_tz).astimezone(utc)
+            if version.date_end:
+                date_end = datetime.combine(
+                    version.date_end + relativedelta(days=1),
                     time(0, 0, 0)
                 ).replace(tzinfo=calendar_tz).astimezone(utc)
-                if version.date_end:
-                    date_end = datetime.combine(
-                        version.date_end + relativedelta(days=1),
-                        time(0, 0, 0)
-                    ).replace(tzinfo=calendar_tz).astimezone(utc)
-                else:
-                    date_end = stop
-                calendar_periods_by_employee[employee].append(
-                    (max(date_start, start), min(date_end, stop), version.resource_calendar_id))
+            else:
+                date_end = stop
+            calendar_periods_by_employee[version.employee_id].append(
+                (max(date_start, start), min(date_end, stop), version.resource_calendar_id))
         return calendar_periods_by_employee
 
     @api.model
@@ -1620,12 +1660,15 @@ We can redirect you to the public employee list."""
                 domain=[('company_id', 'in', [False, self.company_id.id])])[self.resource_id.id]
             return calendar_intervals
         duration_data = Intervals()
+        version_prev = datetime.combine(valid_versions[0].date_start, time.min, employee_tz)
         for version in valid_versions:
             version_start = datetime.combine(version.date_start, time.min, employee_tz)
+            contract_start = datetime.combine(version.contract_date_start, time.min, employee_tz)
             version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
             calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
+            start_date = version_start if version_prev < version_start else contract_start
             version_intervals = calendar._work_intervals_batch(
-                                    max(date_from, version_start),
+                                    max(date_from, start_date),
                                     min(date_to, version_end),
                                     tz=employee_tz,
                                     resources=self.resource_id,
@@ -1685,8 +1728,8 @@ We can redirect you to the public employee list."""
         Returns the versions of the employee between date_from and date_to
         that have at least 1 day in contract during that period
         """
-        return self.env['hr.version'].search([
-            ('employee_id', 'in', self.ids), ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
+        return self.version_ids.filtered_domain([
+            ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
             '|', ('contract_date_end', '>=', date_from), ('contract_date_end', '=', False),
         ])
 

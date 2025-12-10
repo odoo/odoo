@@ -32,7 +32,7 @@ class AccountAccount(models.Model):
 
     @api.constrains('account_type')
     def _check_account_type_unique_current_year_earning(self):
-        result = self._read_group(
+        result = self.with_context(active_test=False)._read_group(
             domain=[('account_type', '=', 'equity_unaffected')],
             groupby=['company_ids'],
             aggregates=['id:recordset'],
@@ -917,12 +917,12 @@ class AccountAccount(models.Model):
         for account in self:
             if formatted_display_name and account.code:
                 account.display_name = (
-                    f"""{account.code} {account.name}"""
+                    f"""{account.code if self.env.user.has_group('account.group_account_readonly') else ''} {account.name}"""
                     f"""{f' `{_("Suggested")}`' if account.id in preferred_account_ids else ''}"""
                     f"""{f'{new_line}--{account.description}--' if account.description else ''}"""
                 )
             else:
-                account.display_name = f"{account.code} {account.name}" if account.code else account.name
+                account.display_name = f"{account.code} {account.name}" if account.code and self.env.user.has_group('account.group_account_readonly') else account.name
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)
@@ -1048,7 +1048,8 @@ class AccountAccount(models.Model):
 
             for vals in vals_list_for_company:
                 if 'prefix' in vals:
-                    prefix, digits = vals.pop('prefix'), vals.pop('code_digits')
+                    prefix = vals.pop('prefix') or ''
+                    digits = vals.pop('code_digits')
                     start_code = prefix.ljust(digits - 1, '0') + '1' if len(prefix) < digits else prefix
                     vals['code'] = self.with_company(companies[0])._search_new_account_code(start_code, cache)
                     cache.add(vals['code'])
@@ -1159,7 +1160,7 @@ class AccountAccount(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_contains_journal_items(self):
-        if self.env['account.move.line'].search_count([('account_id', 'in', self.ids)], limit=1):
+        if self.env['account.move.line'].sudo().search_count([('account_id', 'in', self.ids)], limit=1):
             raise UserError(_('You cannot perform this action on an account that contains journal items.'))
 
     @api.ondelete(at_uninstall=False)

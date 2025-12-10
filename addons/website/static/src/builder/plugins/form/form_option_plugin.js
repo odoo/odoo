@@ -43,8 +43,32 @@ import { FormOption } from "./form_option";
 import { isSmallInteger } from "@html_builder/utils/utils";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate } from "@web/core/l10n/dates";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+/**
+ * @typedef { Object } FormOptionShared
+ * @property { FormOptionPlugin['prepareFormModel'] } prepareFormModel
+ * @property { FormOptionPlugin['getModelsCache'] } getModelsCache
+ * @property { FormOptionPlugin['applyFormModel'] } applyFormModel
+ * @property { FormOptionPlugin['addHiddenField'] } addHiddenField
+ * @property { FormOptionPlugin['fetchAuthorizedFields'] } fetchAuthorizedFields
+ * @property { FormOptionPlugin['loadFieldOptionData'] } loadFieldOptionData
+ * @property { FormOptionPlugin['prepareFields'] } prepareFields
+ * @property { FormOptionPlugin['replaceField'] } replaceField
+ * @property { FormOptionPlugin['prepareConditionInputs'] } prepareConditionInputs
+ * @property { FormOptionPlugin['setLabelsMark'] } setLabelsMark
+ * @property { FormOptionPlugin['clearValidationDataset'] } clearValidationDataset
+ * @property { FormOptionPlugin['defaultMessage'] } defaultMessage
+ * @property { FormOptionPlugin['fetchModels'] } fetchModels
+ */
 
 const { DateTime } = luxon;
+
+export class WebsiteFormSubmitOption extends BaseOptionComponent {
+    static template = "website.s_website_form_submit_option";
+    static selector = ".s_website_form_submit";
+    static exclude = ".s_website_form_no_submit_options";
+}
 
 const DEFAULT_EMAIL_TO_VALUE = "info@yourcompany.example.com";
 export class FormOptionPlugin extends Plugin {
@@ -63,7 +87,9 @@ export class FormOptionPlugin extends Plugin {
         "setLabelsMark",
         "clearValidationDataset",
         "defaultMessage",
+        "fetchModels",
     ];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_header_middle_buttons: [
             {
@@ -108,34 +134,7 @@ export class FormOptionPlugin extends Plugin {
                 reasons.push(_t("You can't remove the submit button of the form"));
             }
         },
-        builder_options: [
-            {
-                OptionComponent: FormOption,
-                props: {
-                    fetchModels: this.fetchModels.bind(this),
-                    prepareFormModel: this.prepareFormModel.bind(this),
-                    fetchFieldRecords: this.fetchFieldRecords.bind(this),
-                    applyFormModel: this.applyFormModel.bind(this),
-                },
-                selector: ".s_website_form",
-                applyTo: "form",
-                cleanForSave: this.whitelistForms.bind(this),
-            },
-            {
-                OptionComponent: FormFieldOptionRedraw,
-                props: {
-                    fetchModels: this.fetchModels.bind(this),
-                    loadFieldOptionData: this.loadFieldOptionData.bind(this),
-                },
-                selector: ".s_website_form_field",
-                exclude: ".s_website_form_dnone",
-            },
-            {
-                template: "website.s_website_form_submit_option",
-                selector: ".s_website_form_submit",
-                exclude: ".s_website_form_no_submit_options",
-            },
-        ],
+        builder_options: [FormOption, FormFieldOptionRedraw, WebsiteFormSubmitOption],
         builder_actions: {
             // Form actions
             // Components that use this action MUST await fetchModels before they start.
@@ -169,8 +168,8 @@ export class FormOptionPlugin extends Plugin {
             SetRequirementComparatorAction,
             SetMultipleFilesAction,
         },
-        force_not_editable_selector: ".s_website_form form",
-        force_editable_selector: [
+        content_not_editable_selectors: ".s_website_form form",
+        content_editable_selectors: [
             ".s_website_form_send",
             ".s_website_form_field_description",
             ".s_website_form_recaptcha",
@@ -382,6 +381,15 @@ export class FormOptionPlugin extends Plugin {
                 );
                 locationEl.insertAdjacentElement("beforebegin", renderField(_field));
             });
+            // Special case: handle hidden fields separately.
+            // In some forms (e.g., contact forms), the "email_to" field must be included as hidden.
+            // For example, this may force the 'email_to' value to a dummy/default one on the
+            // contact us form just by interacting with it.
+            formInfo.fields?.forEach(field => {
+                if (field.defaultValue) {
+                    this.addHiddenField(el, field.defaultValue, field.name);
+                }
+            });
         }
     }
     /**
@@ -395,7 +403,7 @@ export class FormOptionPlugin extends Plugin {
     }
     async fetchAuthorizedFields(formEl) {
         // Combine model and fields into cache key.
-        const model = formEl.dataset.model_name;
+        const model = getModelName(formEl);
         const propertyOrigins = {};
         const parts = [model];
         for (const hiddenInputEl of [...formEl.querySelectorAll("input[type=hidden]")].sort(
@@ -422,26 +430,7 @@ export class FormOptionPlugin extends Plugin {
             limit: 1000, // Safeguard to not crash DBs
         });
     }
-    async whitelistForms(el) {
-        for (const sigEl of el.querySelectorAll("input[name=website_form_signature]")) {
-            sigEl.remove();
-        }
 
-        for (const formEl of selectElements(el, ".s_website_form form[data-model_name]")) {
-            const model = formEl.dataset.model_name;
-            const fields = [
-                ...formEl.querySelectorAll(
-                    ".s_website_form_field:not(.s_website_form_custom) .s_website_form_input"
-                ),
-            ].map((el) => el.name);
-            if (fields.length) {
-                this.services.orm.call("ir.model.fields", "formbuilder_whitelist", [
-                    model,
-                    [...new Set(fields)],
-                ]);
-            }
-        }
-    }
     /**
      * Set the correct mark on all fields.
      */
@@ -470,10 +459,15 @@ export class FormOptionPlugin extends Plugin {
         const field = getCustomField("char", _t("Custom Text"));
         field.formatInfo = getDefaultFormat(formEl);
         const fieldEl = renderField(field);
-        const locationEl = formEl.querySelector(
+        let locationEl = formEl.querySelector(
             ".s_website_form_submit, .s_website_form_recaptcha"
         );
-        locationEl.insertAdjacentElement("beforebegin", fieldEl);
+        if (!locationEl) {
+            locationEl = formEl.querySelector(".s_website_form_rows");
+            locationEl.insertAdjacentElement("beforeend", fieldEl);
+        } else {
+            locationEl.insertAdjacentElement("beforebegin", fieldEl);
+        }
         this.dependencies.builderOptions.setNextTarget(fieldEl);
     }
     addFieldAfterField(fieldEl) {
@@ -485,7 +479,7 @@ export class FormOptionPlugin extends Plugin {
         field.formatInfo.mark = getMark(formEl);
         const newFieldEl = renderField(field);
         fieldEl.insertAdjacentElement("afterend", newFieldEl);
-        this.dependencies["builderOptions"].setNextTarget(newFieldEl);
+        this.dependencies.builderOptions.setNextTarget(newFieldEl);
     }
     /**
      * To be used in load for any action that uses getActiveField or
@@ -716,10 +710,10 @@ export class FormOptionPlugin extends Plugin {
             const type = getFieldType(fieldEl);
 
             const [optionText, checkType] = selectEl
-                ? [_t("Option"), "exclusive_boolean"]
+                ? [_t("Option List"), "exclusive_boolean"]
                 : type === "selection"
-                ? [_t("Radio"), "exclusive_boolean"]
-                : [_t("Checkbox"), "boolean"];
+                ? [_t("Radio Button List"), "exclusive_boolean"]
+                : [_t("Checkbox List"), "boolean"];
             const defaults = [...fieldEl.querySelectorAll("[checked], [selected]")].map((el) =>
                 isSmallInteger(el.value) ? parseInt(el.value) : el.value
             );
@@ -729,8 +723,8 @@ export class FormOptionPlugin extends Plugin {
                 availableRecords = JSON.stringify(field.records);
             }
             valueList = reactive({
-                title: _t("%s List", optionText),
-                addItemTitle: _t("Add"),
+                title: optionText,
+                addItemTitle: _t("Add New Option"),
                 checkType,
                 defaultItemName: _t("Item"),
                 hasDefault: ["one2many", "many2many"].includes(type) ? "multiple" : "unique",

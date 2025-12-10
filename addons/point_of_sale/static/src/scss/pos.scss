@@ -190,6 +190,17 @@ select > option {
         $-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
         @include o-print-color($-bg, background-color, bg-opacity);
         @include o-print-color($-color, color, text-opacity);
+        border-color: #{darken(nth($o-colors, $size), 20%)};
+        &:hover {
+            border-color: #{darken(nth($o-colors, $size), 20%)};
+        }
+    }
+
+    .o_colorlist_item_wo_border_color_#{$size - 1} {
+        $-bg: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 15%);
+        $-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
+        @include o-print-color($-bg, background-color, bg-opacity);
+        @include o-print-color($-color, color, text-opacity);
     }
 }
 

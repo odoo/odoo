@@ -170,7 +170,7 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
 
     # Cloning odoo
     DetailPrint "Cloning Odoo"
-    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter=tree:0 -b saas-18.4 --single-branch --no-checkout https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" clone --filter=tree:0 -b 19.0 --single-branch --no-checkout https://github.com/odoo/odoo.git "$INSTDIR\odoo"'
 
     DetailPrint "Configuring Sparse Checkout for IoT modules"
     nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout init --no-cone'
@@ -282,6 +282,7 @@ SectionEnd
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 Section "Uninstall"
+    SetRegView 64
     # Check if the server is installed
     !insertmacro IfKeyExists "HKLM" "${UNINSTALL_REGISTRY_KEY_SERVER}" "UninstallString"
     Pop $R0

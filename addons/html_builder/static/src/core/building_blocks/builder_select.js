@@ -37,7 +37,9 @@ export class BuilderSelect extends Component {
                 fixedButton: { type: Object, optional: true },
             },
         },
+        dropdownClass: { type: String, optional: true },
     };
+    static defaultProps = { dropdownClass: "o-hb-select-dropdown" };
     static components = {
         Dropdown,
         BuilderComponent,

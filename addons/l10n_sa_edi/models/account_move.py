@@ -29,6 +29,7 @@ class AccountMove(models.Model):
   )
 
     def _l10n_gcc_get_invoice_title(self):
+        # DEPRECATED - to be removed in master
         # EXTENDS l10n_gcc_invoice
         self.ensure_one()
         if self.company_id.country_code == 'SA' and self._l10n_sa_is_simplified():
@@ -37,12 +38,18 @@ class AccountMove(models.Model):
         return super()._l10n_gcc_get_invoice_title()
 
     def _l10n_sa_is_simplified(self):
+        # DEPRECATED - to be removed in master
         """
             Returns True if the customer is an individual, i.e: The invoice is B2C
         :return:
         """
         self.ensure_one()
-        return self.partner_id.company_type == 'person'
+
+        return (
+            self.partner_id.commercial_partner_id.company_type == "person"
+            if self.partner_id.commercial_partner_id
+            else self.partner_id.company_type == "person"
+        )
 
     @api.ondelete(at_uninstall=False)
     def _prevent_zatca_rejected_invoice_deletion(self):

@@ -4,20 +4,20 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+
+export class NewsletterLayoutOption extends BaseOptionComponent {
+    static template = "website_mass_mailing.NewsletterLayoutOption";
+    static selector = ".s_newsletter_block";
+    static applyTo = ":scope > .container, :scope > .container-fluid, :scope > .o_container_small";
+}
 
 export class NewsletterLayoutOptionPlugin extends Plugin {
     static id = "newsletterLayoutOptionPlugin";
     static dependencies = ["builderActions"];
 
     resources = {
-        builder_options: [
-            withSequence(before(NEWSLETTER_SELECT), {
-                template: "website_mass_mailing.NewsletterLayoutOption",
-                selector: ".s_newsletter_block",
-                applyTo:
-                    ":scope > .container, :scope > .container-fluid, :scope > .o_container_small",
-            }),
-        ],
+        builder_options: [withSequence(before(NEWSLETTER_SELECT),NewsletterLayoutOption)],
         builder_actions: {
             SelectNewsletterTemplateAction
         },

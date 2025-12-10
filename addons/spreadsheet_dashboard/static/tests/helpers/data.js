@@ -69,12 +69,10 @@ export class SpreadsheetDashboardGroup extends models.Model {
     ];
 }
 
-function mockDashboardDataController(request) {
-    const parts = request.url.split("/");
-    const resId = parseInt(parts.at(-1));
-    const record = this.env["spreadsheet.dashboard"].search_read([["id", "=", resId]])[0];
+function mockDashboardDataController(_request, { res_id }) {
+    const [record] = this.env["spreadsheet.dashboard"].search_read([["id", "=", parseInt(res_id)]]);
     if (!record) {
-        const error = new RPCError(`Dashboard ${resId} does not exist`);
+        const error = new RPCError(`Dashboard ${res_id} does not exist`);
         error.data = {};
         throw error;
     }
@@ -84,7 +82,7 @@ function mockDashboardDataController(request) {
     };
 }
 
-onRpc("/spreadsheet/dashboard/data/*", mockDashboardDataController, { pure: true });
+onRpc("/spreadsheet/dashboard/data/<int:res_id>", mockDashboardDataController);
 
 export function defineSpreadsheetDashboardModels() {
     const SpreadsheetDashboardModels = [SpreadsheetDashboard, SpreadsheetDashboardGroup];

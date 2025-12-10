@@ -4,7 +4,7 @@
         <div class="d-flex gap-3">
             <t t-foreach="items" t-as="month" t-key="month.id">
                 <div
-                    class="o_date_picker d-grid flex-grow-1 bg-view rounded overflow-auto"
+                    class="o_date_picker d-grid flex-grow-1 rounded overflow-auto"
                     t-on-pointerleave="() => (state.hoveredDate = null)"
                 >
                     <t t-foreach="month.daysOfWeek" t-as="dayOfWeek" t-key="dayOfWeek[0]">
@@ -18,7 +18,7 @@
                     <t t-foreach="month.weeks" t-as="week" t-key="week.number">
                         <t t-if="props.showWeekNumbers">
                             <div
-                                class="o_week_number_cell d-flex align-items-center ps-2 fw-bolder"
+                                class="o_week_number_cell d-flex justify-content-end align-items-center pe-3 fw-bolder"
                                 t-esc="week.number"
                             />
                         </t>
@@ -58,6 +58,7 @@
                     onChange="(newTime) => this.onTimeChange(0, newTime)"
                     minutesRounding="props.rounding"
                     showSeconds="props.rounding === 0"
+                    inputCssClass="'o_input'"
                 />
                 <i t-if="state.timeValues[0] and state.timeValues[1]" class="fa fa-long-arrow-right"/>
                 <TimePicker
@@ -66,6 +67,7 @@
                     onChange="(newTime) => this.onTimeChange(1, newTime)"
                     minutesRounding="props.rounding"
                     showSeconds="props.rounding === 0"
+                    inputCssClass="'o_input'"
                 />
             </div>
             <t t-slot="buttons" />

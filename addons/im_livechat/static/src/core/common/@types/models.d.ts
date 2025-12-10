@@ -32,6 +32,10 @@ declare module "models" {
         livechat_expertise: String[];
         livechat_languages: String[];
     }
+    export interface ResUsers {
+        is_livechat_manager: boolean;
+        livechat_expertise_ids: LivechatExpertise[];
+    }
     export interface Store {
         Chatbot: StaticMailRecord<Chatbot, typeof ChatbotClass>;
         "chatbot.script": StaticMailRecord<ChatbotScript, typeof ChatbotScriptClass>;
@@ -47,7 +51,7 @@ declare module "models" {
         composerDisabled: Readonly<boolean>;
         composerDisabledText: Readonly<string>;
         livechat_conversation_tag_ids: LivechatConversationTag[];
-        livechat_end_dt: luxon.DateTime;
+        livechat_end_dt: import("luxon").DateTime;
         livechat_operator_id: ResPartner;
         livechatVisitorMember: ChannelMember;
         open_chat_window: true|undefined;

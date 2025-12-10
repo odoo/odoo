@@ -12,8 +12,20 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product_oos_order_allowed = cls._create_product(
+            is_storable=True,
+            allow_out_of_stock_order=True,
+        )
+        cls.product_oos_order_not_allowed = cls._create_product(
+            is_storable=True,
+            allow_out_of_stock_order=False,
+        )
+
     def test_website_sale_stock_get_additional_configurator_data(self):
-        product = self._create_product(is_storable=True, allow_out_of_stock_order=False)
+        product = self.product_oos_order_not_allowed
         self.env['stock.quant'].create({
             'product_id': product.id,
             'location_id': self.warehouse.lot_stock_id.id,
@@ -32,9 +44,9 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
         self.assertEqual(configurator_data['free_qty'], 10)
 
     def test_get_additional_combination_info_max_combo_quantity_with_max(self):
-        product_a = self._create_product(is_storable=True, allow_out_of_stock_order=False)
+        product_a = self.product_oos_order_not_allowed
         product_b = self._create_product(is_storable=True, allow_out_of_stock_order=False)
-        product_c = self._create_product(is_storable=True, allow_out_of_stock_order=True)
+        product_c = self.product_oos_order_allowed
         self.env['stock.quant'].create([
             {
                 'product_id': product_a.id,
@@ -73,7 +85,7 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
         self.assertEqual(combination_info['max_combo_quantity'], 2)
 
     def test_get_additional_combination_info_max_combo_quantity_without_max(self):
-        product = self._create_product(is_storable=True, allow_out_of_stock_order=True)
+        product = self.product_oos_order_allowed
         combo = self.env['product.combo'].create({
             'name': "Test combo", 'combo_item_ids': [Command.create({'product_id': product.id})]
         })
@@ -91,3 +103,21 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
             )
 
         self.assertNotIn('max_combo_quantity', combination_info)
+
+    def test_get_additional_combination_info_free_quantity_is_integer(self):
+        self._add_product_qty_to_wh(
+            self.product_oos_order_not_allowed.id,
+            9,
+            self.warehouse.lot_stock_id.id,
+        )
+        with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
+            combination_info = self.env['product.template'].with_context(
+                website_sale_stock_get_quantity=True,
+            )._get_additionnal_combination_info(
+                self.product_oos_order_not_allowed,
+                quantity=9,
+                uom=self.env.ref('uom.product_uom_pack_6'),
+                date=datetime(2000, 1, 1),
+                website=self.website,
+            )
+        self.assertEqual(combination_info['free_qty'], 1)

@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { getFieldDomain, useRecordObserver } from "@web/model/relational_model/utils";
 import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
+import { _t } from "@web/core/l10n/translation";
 
 export class VersionsTimeline extends StatusBarField {
     static template = "hr.VersionsTimeline";
@@ -19,7 +20,7 @@ export class VersionsTimeline extends StatusBarField {
             this.specialData = useSpecialDataNoCache((orm, props) => {
                 const { foldField, name: fieldName, record } = props;
                 const { relation } = record.fields[fieldName];
-                const fieldNames = ["display_name"];
+                const fieldNames = ["display_name", "contract_type_id", "contract_date_start", "contract_date_end"];
                 if (foldField) {
                     fieldNames.push(foldField);
                 }
@@ -34,7 +35,7 @@ export class VersionsTimeline extends StatusBarField {
                         record.evalContext
                     );
                 }
-                return orm.searchRead(relation, domain, fieldNames);
+                return orm.searchRead(relation, domain, fieldNames.filter((fName) => fName in record.fields));
             });
         }
 
@@ -47,6 +48,12 @@ export class VersionsTimeline extends StatusBarField {
                 return { type: "date" };
             },
         });
+    }
+
+    displayContractLines() {
+        return ["contract_type_id", "contract_date_start", "contract_date_end"].every(
+            (fieldName) => fieldName in this.props.record.fields
+        );
     }
 
     async createVersion(date) {
@@ -73,12 +80,44 @@ export class VersionsTimeline extends StatusBarField {
     async selectItem(item) {
         const { record } = this.props;
         await record.save();
-        // await super.selectItem(item);
         await this.props.record.model.load({
             context: {
                 ...this.props.record.model.env.searchModel.context,
                 version_id: item.value,
             },
+        });
+    }
+
+    /** @override **/
+    getAllItems() {
+        function format(dateString) {
+            return luxon.DateTime.fromISO(dateString).toFormat("MMM dd, yyyy");
+        }
+        const items = super.getAllItems();
+        if (!this.displayContractLines) {
+            return items;
+        }
+        const dataById = new Map(this.specialData.data.map(d => [d.id, d]));
+
+        const selectedVersion = items.find(item => item.isSelected)?.value;
+        const selectedContractDate = dataById.get(selectedVersion)?.contract_date_start;
+
+        return items.map((item, index) => {
+            const itemSpecialData = dataById.get(item.value) || {};
+            const contractDateStart = itemSpecialData.contract_date_start;
+            let contractDateEnd = itemSpecialData.contract_date_end;
+            contractDateEnd = contractDateEnd ? format(contractDateEnd) : _t("Indefinite");
+            const contractType = itemSpecialData.contract_type_id?.[1] ?? _t("Contract");
+            const toolTip = contractDateStart
+                ? `${contractType}: ${format(contractDateStart)} - ${contractDateEnd}`
+                : _t("No contract");
+
+            return {
+                ...item,
+                isCurrentContract: contractDateStart === selectedContractDate,
+                isInContract: Boolean(contractDateStart),
+                toolTip,
+            };
         });
     }
 }

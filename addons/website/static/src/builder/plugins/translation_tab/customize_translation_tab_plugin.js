@@ -9,6 +9,11 @@ import { uniqueId } from "@web/core/utils/functions";
 import { TranslateWebpageOption } from "./translate_webpage_option";
 
 /**
+ * @typedef { Object } CustomizeTranslationTabShared
+ * @property { CustomizeTranslationTabPlugin['getTranslationState'] } getTranslationState
+ */
+
+/**
  * Action to translate the entire webpage using AI.
  */
 class TranslateToAction extends BuilderAction {
@@ -241,6 +246,7 @@ export class CustomizeTranslationTabPlugin extends Plugin {
         isTranslating: false,
     });
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             TranslateToAction,
@@ -248,12 +254,11 @@ export class CustomizeTranslationTabPlugin extends Plugin {
         translate_options: [
             withSequence(
                 1,
-                this.getTranslationOptionBlock("translate-webpage", _t("Translation"), {
-                    OptionComponent: TranslateWebpageOption,
-                    props: {
-                        translationState: this.translationState,
-                    },
-                })
+                this.getTranslationOptionBlock(
+                    "translate-webpage",
+                    _t("Translation"),
+                    TranslateWebpageOption
+                )
             ),
         ],
     };
@@ -267,19 +272,18 @@ export class CustomizeTranslationTabPlugin extends Plugin {
      *
      * @param {string} id - Unique identifier for the block
      * @param {string} name - Display name for the block
-     * @param {Object} options - Configuration options for the block
+     * @param {Object} Option - Option component
      */
-    getTranslationOptionBlock(id, name, options) {
+    getTranslationOptionBlock(id, name, Option) {
         const el = this.document.createElement("div");
         el.dataset.name = name;
         this.document.body.appendChild(el);
 
-        options.selector = "*";
         return {
             id: id,
             snippetModel: {},
             element: el,
-            options: [options],
+            options: [Option],
             isRemovable: false,
             isClonable: false,
             containerTopButtons: [],

@@ -347,6 +347,28 @@ test("Can delete channel thread as author of thread", async () => {
     await click(".modal button:contains('Delete Thread')");
     await contains(".o-mail-DiscussContent-threadName[title='General']");
     await contains(
-        `.o-mail-NotificationMessage :contains(/^Mitchell Admin deleted the thread "test thread"$/)`
+        `.o-mail-NotificationMessage :text(Mitchell Admin deleted the thread "test thread")`
     );
+});
+
+test("can mention all group chat members inside its sub-thread", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Lilibeth" });
+    const groupChannelId = pyEnv["discuss.channel"].create({
+        name: "Our channel",
+        channel_type: "group",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const groupSubChannelId = pyEnv["discuss.channel"].create({
+        name: "New Thread",
+        parent_channel_id: groupChannelId,
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+    });
+    await start();
+    await openDiscuss(groupSubChannelId);
+    await insertText(".o-mail-Composer-input", "@");
+    await contains(".o-mail-Composer-suggestion", { count: 2 });
 });

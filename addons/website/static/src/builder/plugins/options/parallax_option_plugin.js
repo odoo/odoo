@@ -1,26 +1,34 @@
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
-import { getSelectorParams } from "@html_builder/utils/utils";
+import { filterExtends } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { WebsiteBackgroundOption } from "./background_option";
+import { BaseWebsiteBackgroundOption } from "./background_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";
+
+/**
+ * @typedef { Object } WebsiteParallaxShared
+ * @property { WebsiteParallaxPlugin['applyParallaxType'] } applyParallaxType
+ */
+
 class WebsiteParallaxPlugin extends Plugin {
     static id = "websiteParallaxPlugin";
     static dependencies = ["builderActions", "backgroundImageOption"];
     static shared = ["applyParallaxType"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             SetParallaxTypeAction,
         },
         on_bg_image_hide_handlers: this.onBgImageHide.bind(this),
-        force_not_editable_selector: ".s_parallax_bg, section.s_parallax > .oe_structure",
+        content_not_editable_selectors: ".s_parallax_bg, section.s_parallax > .oe_structure",
+        system_node_selectors: ".s_parallax_bg",
         get_target_element_providers: withSequence(1, this.getTargetElement),
     };
     setup() {
-        this.backgroundOptionSelectorParams = getSelectorParams(
+        this.backgroundOptionClasses = filterExtends(
             this.getResource("builder_options"),
-            WebsiteBackgroundOption
+            BaseWebsiteBackgroundOption
         );
     }
     applyParallaxType({ editingElement, value }) {
@@ -62,11 +70,11 @@ class WebsiteParallaxPlugin extends Plugin {
         }
     }
     onBgImageHide(rootEl) {
-        for (const backgroundOptionSelector of this.backgroundOptionSelectorParams) {
+        for (const backgroundClass of this.backgroundOptionClasses) {
             applyFunDependOnSelectorAndExclude(
                 this.removeParallax.bind(this),
                 rootEl,
-                backgroundOptionSelector
+                backgroundClass
             );
         }
     }

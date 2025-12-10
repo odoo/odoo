@@ -93,7 +93,7 @@ export class BuilderNumberInput extends Component {
     }
 
     clampValue(value) {
-        if (!value) {
+        if (!value && value !== 0) {
             return value;
         }
         value = parseFloat(value);

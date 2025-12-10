@@ -7,6 +7,47 @@ import { Cache } from "@web/core/utils/cache";
 import { DynamicSnippetOption } from "./dynamic_snippet_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
+/**
+ * @typedef {object} Template
+ * @property {string} arrowPosition
+ * @property {string} columnClasses
+ * @property {string} containerClasses
+ * @property {string} contentClasses
+ * @property {string} extraClasses
+ * @property {string} extraSnippetClasses
+ * @property {string} key
+ * @property {string} numberOfElements
+ * @property {string} numberOfElementsSmallDevices
+ * @property {string} numberOfRecords
+ * @property {string} rowPerSlide
+ * @property {string} thumb
+ */
+
+/**
+ * @typedef { Object } DynamicSnippetOptionShared
+ * @property { DynamicSnippetOptionPlugin['fetchDynamicFilters'] } fetchDynamicFilters
+ * @property { DynamicSnippetOptionPlugin['fetchDynamicSnippetTemplates'] } fetchDynamicSnippetTemplates
+ * @property { DynamicSnippetOptionPlugin['getDefaultSnippetFilterId'] } getDefaultSnippetFilterId
+ * @property { DynamicSnippetOptionPlugin['getDefaultSnippetRecordId'] } getDefaultSnippetRecordId
+ * @property { DynamicSnippetOptionPlugin['getDefaultSnippetTemplate'] } getDefaultSnippetTemplate
+ * @property { DynamicSnippetOptionPlugin['getSnippetModelName'] } getSnippetModelName
+ * @property { DynamicSnippetOptionPlugin['getSnippetTitleClasses'] } getSnippetTitleClasses
+ * @property { DynamicSnippetOptionPlugin['getTemplateByKey'] } getTemplateByKey
+ * @property { DynamicSnippetOptionPlugin['isModelSnippetTemplate'] } isModelSnippetTemplate
+ * @property { DynamicSnippetOptionPlugin['isSingleModeSnippet'] } isSingleModeSnippet
+ * @property { DynamicSnippetOptionPlugin['isSingleModeSnippetTemplate'] } isSingleModeSnippetTemplate
+ * @property { DynamicSnippetOptionPlugin['setOptionsDefaultValues'] } setOptionsDefaultValues
+ * @property { DynamicSnippetOptionPlugin['updateTemplate'] } updateTemplate
+ * @property { DynamicSnippetOptionPlugin['getModelNameFilter'] } getModelNameFilter
+ */
+
+/**
+ * @typedef {((arg: {
+ *      el: HTMLElement;
+ *      template: Template;
+ * }) => void)[]} dynamic_snippet_template_updated
+ */
+
 export const DYNAMIC_SNIPPET = SNIPPET_SPECIFIC_END;
 
 class DynamicSnippetOptionPlugin extends Plugin {
@@ -25,21 +66,14 @@ class DynamicSnippetOptionPlugin extends Plugin {
         "isSingleModeSnippetTemplate",
         "setOptionsDefaultValues",
         "updateTemplate",
+        "getModelNameFilter",
     ];
-    selector = ".s_dynamic_snippet";
     modelNameFilter = "";
     fetchedDynamicFilters = [];
     fetchedDynamicFilterTemplates = [];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_options: [
-            withSequence(DYNAMIC_SNIPPET, {
-                OptionComponent: DynamicSnippetOption,
-                props: {
-                    modelNameFilter: this.modelNameFilter,
-                },
-                selector: this.selector,
-            }),
-        ],
+        builder_options: [withSequence(DYNAMIC_SNIPPET, DynamicSnippetOption)],
         builder_actions: {
             DynamicFilterAction,
             DynamicSnippetTemplateAction,
@@ -63,8 +97,11 @@ class DynamicSnippetOptionPlugin extends Plugin {
         this.dynamicFiltersCache.invalidate();
         this.dynamicFilterTemplatesCache.invalidate();
     }
+    getModelNameFilter() {
+        return this.modelNameFilter;
+    }
     async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(this.selector)) {
+        if (snippetEl.matches(DynamicSnippetOption.selector)) {
             await this.setOptionsDefaultValues(snippetEl, this.modelNameFilter);
         }
     }

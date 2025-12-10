@@ -493,3 +493,11 @@ class TestApplicantSkills(TransactionCase):
         )
         self.assertEqual(len(self.t_applicant.applicant_skill_ids), 6)
         self.assertEqual(len(self.t_applicant.current_applicant_skill_ids), 4)
+
+    def test_job_with_no_skills_and_degree_with_score_zero(self):
+        self.t_job.expected_degree = self.env["hr.recruitment.degree"].create({
+            "name": "Degree",
+            "score": 0,
+        })
+
+        self.assertEqual(self.t_applicant.matching_score, 0)

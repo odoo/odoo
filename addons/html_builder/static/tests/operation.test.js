@@ -5,6 +5,7 @@ import {
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Operation } from "@html_builder/core/operation";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, Deferred, delay, hover, press, tick } from "@odoo/hoot-dom";
@@ -13,77 +14,75 @@ import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
-describe("Operation", () => {
-    test("handle 3 concurrent cancellable operations (with delay)", async () => {
-        const operation = new Operation();
-        function makeCall(data) {
-            let resolve;
-            const promise = new Promise((r) => {
-                resolve = r;
-            });
-            async function load() {
-                expect.step(`load before ${data}`);
-                await promise;
-                expect.step(`load after ${data}`);
-            }
-            function apply() {
-                expect.step(`apply ${data}`);
-            }
-
-            operation.next(apply, { load, cancellable: true });
-            return {
-                resolve,
-            };
+test("handle 3 concurrent cancellable operations (with delay)", async () => {
+    const operation = new Operation();
+    function makeCall(data) {
+        let resolve;
+        const promise = new Promise((r) => {
+            resolve = r;
+        });
+        async function load() {
+            expect.step(`load before ${data}`);
+            await promise;
+            expect.step(`load after ${data}`);
         }
-        const call1 = makeCall(1);
-        await delay();
-        const call2 = makeCall(2);
-        await delay();
-        const call3 = makeCall(3);
-        await delay();
-        call1.resolve();
-        call2.resolve();
-        call3.resolve();
-        await operation.mutex.getUnlockedDef();
-        expect.verifySteps([
-            //
-            "load before 1",
-            "load after 1",
-            "load before 3",
-            "load after 3",
-            "apply 3",
-        ]);
-    });
-    test("handle 3 concurrent cancellable operations (without delay)", async () => {
-        const operation = new Operation();
-        function makeCall(data) {
-            let resolve;
-            const promise = new Promise((r) => {
-                resolve = r;
-            });
-            async function load() {
-                expect.step(`load before ${data}`);
-                await promise;
-                expect.step(`load after ${data}`);
-            }
-            function apply() {
-                expect.step(`apply ${data}`);
-            }
-
-            operation.next(apply, { load, cancellable: true });
-            return {
-                resolve,
-            };
+        function apply() {
+            expect.step(`apply ${data}`);
         }
-        const call1 = makeCall(1);
-        const call2 = makeCall(2);
-        const call3 = makeCall(3);
-        call1.resolve();
-        call2.resolve();
-        call3.resolve();
-        await operation.mutex.getUnlockedDef();
-        expect.verifySteps(["load before 3", "load after 3", "apply 3"]);
-    });
+
+        operation.next(apply, { load, cancellable: true });
+        return {
+            resolve,
+        };
+    }
+    const call1 = makeCall(1);
+    await delay();
+    const call2 = makeCall(2);
+    await delay();
+    const call3 = makeCall(3);
+    await delay();
+    call1.resolve();
+    call2.resolve();
+    call3.resolve();
+    await operation.mutex.getUnlockedDef();
+    expect.verifySteps([
+        //
+        "load before 1",
+        "load after 1",
+        "load before 3",
+        "load after 3",
+        "apply 3",
+    ]);
+});
+test("handle 3 concurrent cancellable operations (without delay)", async () => {
+    const operation = new Operation();
+    function makeCall(data) {
+        let resolve;
+        const promise = new Promise((r) => {
+            resolve = r;
+        });
+        async function load() {
+            expect.step(`load before ${data}`);
+            await promise;
+            expect.step(`load after ${data}`);
+        }
+        function apply() {
+            expect.step(`apply ${data}`);
+        }
+
+        operation.next(apply, { load, cancellable: true });
+        return {
+            resolve,
+        };
+    }
+    const call1 = makeCall(1);
+    const call2 = makeCall(2);
+    const call3 = makeCall(3);
+    call1.resolve();
+    call2.resolve();
+    call3.resolve();
+    await operation.mutex.getUnlockedDef();
+    expect.verifySteps(["load before 3", "load after 3", "apply 3"]);
 });
 
 describe("Block editable", () => {
@@ -100,10 +99,12 @@ describe("Block editable", () => {
                 }
             },
         });
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`<BuilderButton action="'customAction'"/>`,
-        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderButton action="'customAction'"/>`;
+            }
+        );
         await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`, {
             loadIframeBundles: true,
         });
@@ -156,17 +157,19 @@ describe("Async operations", () => {
                 }
             },
         });
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`
-                <BuilderRow label.translate="Type">
-                    <BuilderSelect>
-                        <BuilderSelectItem action="'customAction'" actionValue="'first'">first</BuilderSelectItem>
-                        <BuilderSelectItem action="'customAction2'" actionValue="'second'">second</BuilderSelectItem>
-                    </BuilderSelect>
-                </BuilderRow>
-            `,
-        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`
+                    <BuilderRow label.translate="Type">
+                        <BuilderSelect>
+                            <BuilderSelectItem action="'customAction'" actionValue="'first'">first</BuilderSelectItem>
+                            <BuilderSelectItem action="'customAction2'" actionValue="'second'">second</BuilderSelectItem>
+                        </BuilderSelect>
+                    </BuilderRow>
+                `;
+            }
+        );
 
         await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`);
         await contains(":iframe .test-options-target").click();
@@ -202,12 +205,14 @@ describe("Async operations", () => {
                 }
             },
         });
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`<BuilderRow>
-                <BuilderColorPicker enabledTabs="['solid']" styleAction="'background-color'" action="'customAction'"/>
-            </BuilderRow>`,
-        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderRow>
+                    <BuilderColorPicker enabledTabs="['solid']" styleAction="'background-color'" action="'customAction'"/>
+                </BuilderRow>`;
+            }
+        );
 
         await setupHTMLBuilder(`<div class="test-options-target">TEST</div>`);
         await contains(":iframe .test-options-target").click();
@@ -239,12 +244,14 @@ describe("Operation that will fail", () => {
         addBuilderAction({
             TestAction,
         });
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`
-                <BuilderButton action="'testAction'"/>
-                <BuilderButton classAction="'test'"/>`,
-        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`
+                    <BuilderButton action="'testAction'"/>
+                    <BuilderButton classAction="'test'"/>`;
+            }
+        );
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
         await contains("[data-action-id='testAction']").hover();
@@ -267,12 +274,14 @@ describe("Operation that will fail", () => {
         addBuilderAction({
             TestAction,
         });
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`
-                <BuilderButton action="'testAction'"/>
-                <BuilderButton classAction="'test'"/>`,
-        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`
+                    <BuilderButton action="'testAction'"/>
+                    <BuilderButton classAction="'test'"/>`;
+            }
+        );
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
         await contains("[data-action-id='testAction']").click();

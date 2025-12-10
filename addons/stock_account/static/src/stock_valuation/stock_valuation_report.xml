@@ -41,7 +41,7 @@
 
     <t t-name="stock_account.StockValuationReport.InitialBalance">
         <StockValuationReportLine
-            label="_t('Initial Balance')"
+            label.translate="Initial Balance"
             level="0"
             onClickMethod.bind="openAccountMoves"
             sublines="data.initial_balance.lines"
@@ -51,7 +51,7 @@
 
     <t t-name="stock_account.StockValuationReport.StockVariation">
         <StockValuationReportLine
-            label="_t('Stock Variation')"
+            label.translate="Stock Variation"
             level="0"
             sublines="data.stock_variation.lines"
             displayDebitCredit="true"
@@ -61,7 +61,7 @@
 
     <t t-name="stock_account.StockValuationReport.EndingStock">
         <StockValuationReportLine
-            label="_t('Ending Stock')"
+            label.translate="Ending Stock"
             level="0"
             onClickMethod.bind="openStockReport"
             sublines="data.ending_stock.lines"
@@ -71,7 +71,7 @@
 
     <t t-name="stock_account.StockValuationReport.InventoryLoss">
         <StockValuationReportLine
-            label="_t('Inventory Loss')"
+            label.translate="Inventory Loss"
             level="0"
             displayDebitCredit="true"
             onClickMethod.bind="openInventoryLoss"
@@ -83,7 +83,7 @@
     <t t-name="stock_account.StockValuationReport.Accrual">
         <t t-if="accrual.lines.length">
             <StockValuationReportToggleLine
-                label="_t('Accrual')"
+                label.translate="Accrual"
                 sublines="accrual.lines"
                 level="0"/>
         </t>

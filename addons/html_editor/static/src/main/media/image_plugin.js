@@ -41,11 +41,18 @@ const IMAGE_SIZE = [
  * @property { ImagePlugin['resetImageTransformation'] } resetImageTransformation
  */
 
+/**
+ * @typedef {((img: HTMLImageElement) => void | true)[]} delete_image_overrides
+ * @typedef {((img: HTMLImageElement) => boolean)[]} image_name_predicates
+ */
+
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "dom", "selection", "overlay"];
     static shared = ["getTargetedImage", "previewImage", "resetImageTransformation"];
     static defaultConfig = { allowImageTransform: true };
+    toolbarNamespace = "image";
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
@@ -96,14 +103,17 @@ export class ImagePlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        toolbar_namespaces: [
-            {
-                id: "image",
-                isApplied: (targetedNodes) =>
+        toolbar_namespace_providers: [
+            (targetedNodes) => {
+                if (
+                    targetedNodes.length &&
                     targetedNodes.every(
                         // All nodes should be images or its ancestors
                         (node) => node.nodeName === "IMG" || node.querySelector?.("img")
-                    ),
+                    )
+                ) {
+                    return this.toolbarNamespace;
+                }
             },
         ],
         toolbar_groups: [
@@ -184,7 +194,8 @@ export class ImagePlugin extends Plugin {
                         this.updateImageParams();
                     },
                 },
-                isAvailable: isHtmlContentSupported,
+                isAvailable: (selection) =>
+                    isHtmlContentSupported(selection) && (this.config.allowImageResize ?? true),
             },
             {
                 id: "image_transform",
@@ -262,7 +273,6 @@ export class ImagePlugin extends Plugin {
             return;
         }
         targetedImg.style.width = size || "";
-        targetedImg.style.height = size || "";
         this.dependencies.history.addStep();
     }
 

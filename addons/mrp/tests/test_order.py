@@ -980,28 +980,6 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 
-    def test_product_produce_9(self):
-        """ Checks the production wizard contains lines even for untracked products. """
-        serial = self.env['product.product'].create({
-            'name': 'S1',
-            'tracking': 'serial',
-        })
-        mo, bom, p_final, p1, p2 = self.generate_mo()
-        self.assertEqual(len(mo), 1, 'MO should have been created')
-
-        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
-        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
-
-        mo.action_assign()
-        mo_form = Form(mo)
-
-        # change the quantity done in one line
-        with self.assertRaises(AssertionError):
-            with mo_form.move_raw_ids.new() as move:
-                move.product_id = serial
-                move.quantity = 2
-            mo_form.save()
-
     def test_product_produce_10(self):
         """ Produce byproduct with serial, lot and not tracked.
         byproduct1 serial 1.0
@@ -5273,6 +5251,37 @@ class TestMrpOrder(TestMrpCommon):
         serials_wizard.save().action_apply()
         # Check that the serial numbers follow the sequence
         self.assertEqual(mo2.lot_producing_ids.mapped('name'), ['customMRPSerial0000001', 'customMRPSerial0000002', 'customMRPSerial0000003'])
+
+    def test_mark_done_multi_mo_with_different_uom(self):
+        """Test marking multiple productions as done with different product UoMs."""
+        mo1, mo2 = self.env['mrp.production'].create([
+            {'product_id': self.product_1.id},
+            {'product_id': self.product_3.id},
+        ])
+        wo1, wo2 = self.env['mrp.workorder'].create([
+            {
+                'name': 'Test order1',
+                'workcenter_id': self.workcenter_1.id,
+                'product_uom_id': self.product_1.uom_id.id,
+                'production_id': mo1.id,
+            },
+            {
+                'name': 'Test order2',
+                'workcenter_id': self.workcenter_1.id,
+                'product_uom_id': self.product_3.uom_id.id,
+                'production_id': mo2.id,
+            }
+        ])
+
+        mos = mo1 | mo2
+        mos.action_confirm()
+        mos.button_mark_done()
+
+        self.assertEqual(mo1.state, 'done')
+        self.assertEqual(mo2.state, 'done')
+        self.assertNotEqual(mo1.workorder_ids.product_uom_id, mo2.workorder_ids.product_uom_id)
+        self.assertEqual(mo1.product_qty, mo2.product_qty)
+        self.assertEqual(wo1.qty_produced, wo2.qty_produced)
 
 
 @tagged('-at_install', 'post_install')

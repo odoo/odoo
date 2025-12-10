@@ -1,8 +1,10 @@
-import { after, before, describe, expect, test } from "@odoo/hoot";
+import { after, animationFrame, before, describe, expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
+import { click } from "@odoo/hoot-dom";
+import { expandToolbar } from "./_helpers/toolbar";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
 const greenToBlueGradient = "linear-gradient(rgb(0, 255, 0), rgb(0, 0, 255))";
@@ -883,7 +885,7 @@ test("should be able to apply color on icon along with text", async () => {
         contentAfterEdit:
             '<p>a<font style="color: rgb(255, 0, 0);">[bc</font><font style="color: rgb(255, 0, 0);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font><font style="color: rgb(255, 0, 0);">de]</font>f</p>',
         contentAfter:
-            '<p>a<font style="color: rgb(255, 0, 0);">[bc</font><font style="color: rgb(255, 0, 0);"><span class="fa fa-glass"></span></font><font style="color: rgb(255, 0, 0);">de]</font>f</p>',
+            '<p>a<font style="color: rgb(255, 0, 0);">[bc<span class="fa fa-glass"></span>de]</font>f</p>',
     });
 });
 
@@ -919,10 +921,10 @@ test("doesn't change the color of the whole section when there's an icon next to
         </section>`,
         stepFunction: setColor("rgb(0, 0, 255)", "color"),
         contentAfterEdit: `
-        <section style="color: rgb(255, 0, 0);">
+        <p data-selection-placeholder=""><br></p><section style="color: rgb(255, 0, 0);">
             <p>a<font style="color: rgb(0, 0, 255);">[bc]</font>d</p>
             <span class="fa fa-glass" contenteditable="false">\u200b</span>
-        </section>`,
+        </section><p data-selection-placeholder=""><br></p>`,
         contentAfter: `
         <section style="color: rgb(255, 0, 0);">
             <p>a<font style="color: rgb(0, 0, 255);">[bc]</font>d</p>
@@ -949,4 +951,76 @@ test("should remove remove color from `td`", async () => {
             </table>
         `),
     });
+});
+
+test("should be able to remove color applied by 'text-*' classes (1)", async () => {
+    await testEditor({
+        contentBefore: '<p><span class="text-muted">[a]</span></p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: "<p>[a]</p>",
+    });
+});
+
+test("should be able to remove color applied by 'text-*' classes (2)", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="#" class="text-muted">[a]</a></p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: '<p><a href="#">[a]</a></p>',
+    });
+});
+
+test("should be able to remove color from block element", async () => {
+    await testEditor({
+        contentBefore: '<p><a href="#" class="nav-link text-muted">[a]</a></p>',
+        stepFunction: setColor("", "color"),
+        contentAfter: '<p><a href="#" class="nav-link">[a]</a></p>',
+    });
+});
+
+test("Should properly apply color when selection on feff", async () => {
+    const { el, editor } = await setupEditor(
+        unformat(`
+            <font style="color: #6e4a8b;">
+                \ufeff
+                <a href="#">\ufeffa\ufeff</a>
+                \ufeff
+                <font style="color: #008f8c;">b</font>
+            </font>
+        `)
+    );
+    const font = el.querySelector("font");
+    const [feff1, , feff2] = font.childNodes;
+    editor.shared.selection.setSelection({
+        anchorNode: feff2,
+        anchorOffset: 1,
+        focusNode: feff1,
+        focusOffset: 0,
+    });
+    await animationFrame();
+    await expandToolbar();
+    await click(".o-select-color-foreground");
+    await animationFrame();
+    await click(".o_font_color_selector button");
+    await animationFrame();
+    await click('[data-color="#FF0000"]');
+    await animationFrame();
+    expect(el).toHaveInnerHTML(
+        unformat(`
+            <div class="o-paragraph">
+                <font style="color: rgb(255, 0, 0);">
+                    <a href="#">
+                        a
+                    </a>
+                </font>
+                <font style="color: #6e4a8b;">
+                    <font style="color: #008f8c;">
+                        b
+                    </font>
+                </font>
+            </div>
+        `)
+    );
+    // Ensure the link inherited the font color.
+    const a = el.querySelector("a");
+    expect(getComputedStyle(a).color).toBe("rgb(255, 0, 0)");
 });

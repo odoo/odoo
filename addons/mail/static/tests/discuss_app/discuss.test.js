@@ -1,3 +1,5 @@
+import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
+
 import { waitNotifications, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import {
@@ -5,6 +7,7 @@ import {
     contains,
     defineMailModels,
     editInput,
+    focus,
     insertText,
     listenStoreFetch,
     onRpcBefore,
@@ -203,7 +206,7 @@ test("Posting message should transform links.", async () => {
     await contains("a[href='https://www.odoo.com/']");
 });
 
-test("Posting message should transform relevant data to emoji.", async () => {
+test("[text composer] Posting message should transform relevant data to emoji.", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -212,6 +215,27 @@ test("Posting message should transform relevant data to emoji.", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test :P :laughing:");
+    await press("Enter");
+    await contains(".o-mail-Message-body", { text: "test 😛 😆" });
+});
+
+test.tags("html composer");
+test("Posting message should transform relevant data to emoji.", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "test :P :laughing:");
     await press("Enter");
     await contains(".o-mail-Message-body", { text: "test 😛 😆" });
 });
@@ -1315,6 +1339,13 @@ test("receive new chat messages: out of odoo focus (tab title)", async () => {
 
 test("new message in tab title has precedence over action name", async () => {
     const pyEnv = await startServer();
+    patchWithCleanup(document, {
+        set title(newTitle) {
+            if (newTitle?.includes("Inbox")) {
+                expect.step(newTitle);
+            }
+        },
+    });
     const bobUserId = pyEnv["res.users"].create({ name: "bob" });
     const bobPartnerId = pyEnv["res.partner"].create({ name: "bob", user_ids: [bobUserId] });
     const channelId = pyEnv["discuss.channel"].create({
@@ -1327,8 +1358,7 @@ test("new message in tab title has precedence over action name", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" }); // wait for action name being Inbox
-    const titleService = getService("title");
-    expect(titleService.current).toBe("Inbox");
+    await expect.waitForSteps(["Inbox"]);
     // simulate receiving a new message in chat 1 with odoo out-of-focused
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
@@ -1338,11 +1368,18 @@ test("new message in tab title has precedence over action name", async () => {
         })
     );
     await waitNotifications(["discuss.channel.member/fetched"]);
-    expect(titleService.current).toBe("(1) Inbox");
+    await expect.waitForSteps(["(1) Inbox"]);
 });
 
 test("out-of-focus notif takes new inbox messages into account", async () => {
     const pyEnv = await startServer();
+    patchWithCleanup(document, {
+        set title(newTitle) {
+            if (newTitle === "(1) Inbox") {
+                expect.step(newTitle);
+            }
+        },
+    });
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -1350,7 +1387,7 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     await start();
     await waitStoreFetch("init_messaging");
     await openDiscuss("mail.box_inbox");
-    const titleService = getService("title");
+    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" }); // wait for action name being Inbox
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1365,11 +1402,18 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
         })
     );
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", { text: "Inbox" });
-    expect(titleService.current).toBe("(1) Inbox");
+    await expect.waitForSteps(["(1) Inbox"]);
 });
 
 test("out-of-focus notif on needaction message in group chat contributes only once", async () => {
     const pyEnv = await startServer();
+    patchWithCleanup(document, {
+        set title(newTitle) {
+            if (newTitle === "(1) Inbox") {
+                expect.step(newTitle);
+            }
+        },
+    });
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
@@ -1384,7 +1428,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     await start();
     await waitStoreFetch("init_messaging");
     await openDiscuss("mail.box_inbox");
-    const titleService = getService("title");
+    await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" }); // wait for action name being Inbox
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1402,7 +1446,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", {
         text: "Mitchell Admin and Dumbledore",
     });
-    expect(titleService.current).toBe("(1) Inbox");
+    await expect.waitForSteps(["(1) Inbox"]);
 });
 
 test("inbox notifs shouldn't play sound nor open chat bubble", async () => {

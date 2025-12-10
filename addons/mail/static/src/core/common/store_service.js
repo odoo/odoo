@@ -1,6 +1,7 @@
 import { Store as BaseStore, fields, makeStore, storeInsertFns } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
 import { cleanTerm, generateEmojisOnHtml, prettifyMessageText } from "@mail/utils/common/format";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { reactive } from "@odoo/owl";
 
@@ -9,6 +10,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
+import { renderToElement } from "@web/core/utils/render";
 import { debounce } from "@web/core/utils/timing";
 import { session } from "@web/session";
 import { browser } from "@web/core/browser/browser";
@@ -216,6 +218,15 @@ export class Store extends BaseStore {
         return res.join(" ");
     }
 
+    standaloneInboxMessages = fields.Many("mail.message", {
+        compute() {
+            const messages = this.store.inbox.messages.filter((m) => !m.thread);
+            return messages.sort(
+                (m1, m2) => compareDatetime(m2.datetime, m1.datetime) || m2.id - m1.id
+            );
+        },
+    });
+
     /**
      * @param {Object} params post message data
      * @param {import("models").Message} tmpMessage the associated temporary message
@@ -354,13 +365,9 @@ export class Store extends BaseStore {
     }
 
     _fetchStoreDataRpc(fetchParams) {
-        const context = {
-            ...user.context,
-            allowed_company_ids: user.allowedCompanies.map((c) => c.id),
-        };
         return rpc(
             this.fetchReadonly ? "/mail/data" : "/mail/action",
-            { fetch_params: fetchParams, context },
+            { fetch_params: fetchParams, context: user.context },
             { silent: this.fetchSilent }
         );
     }
@@ -468,20 +475,29 @@ export class Store extends BaseStore {
                 } catch {
                     // assumes tab not focused: parent.document from iframe triggers CORS error
                 }
-                if (isTabFocused && thread?.isDisplayed) {
+                // Prevent duplicate inbox push notifications since they're already handled by
+                // `mail.message/inbox` bus notifications, and the `modelsHandleByPush` heuristic
+                // in `out_of_focus_service.js` isn't reliable enough to detect these cases.
+                const isInbox =
+                    this.store.self.main_user_id?.notification_type === "inbox" &&
+                    model !== "discuss.channel";
+                if ((isTabFocused && thread?.isDisplayed) || isInbox) {
                     navigator.serviceWorker.controller?.postMessage({
                         type: "notification-display-response",
                         payload: { correlationId },
                     });
                 }
             }
-            if (
-                type === "notification-displayed" &&
-                ["mail.thread", "discuss.channel"].includes(payload.model)
-            ) {
-                this.env.services["mail.out_of_focus"]._playSound();
+            if (type === "notification-displayed") {
+                this.onPushNotificationDisplayed(payload);
             }
         });
+    }
+
+    onPushNotificationDisplayed(payload) {
+        if (["mail.thread", "discuss.channel"].includes(payload.model)) {
+            this.env.services["mail.out_of_focus"]._playSound();
+        }
     }
 
     /**
@@ -526,6 +542,20 @@ export class Store extends BaseStore {
             (lastMessageId, message) => Math.max(lastMessageId, message.id),
             0
         );
+    }
+
+    handleValidChannelMention(channelLinks) {
+        for (const linkEl of channelLinks.filter(
+            (el) => !el.querySelector(".fa-comments-o, .fa-hashtag")
+        )) {
+            const text = linkEl.textContent.substring(1); // remove '#' prefix
+            const icon = linkEl.classList.contains("o_channel_redirect_asThread")
+                ? "fa fa-comments-o"
+                : "fa fa-hashtag";
+            const iconEl = renderToElement("mail.Message.mentionedChannelIcon", { icon });
+            linkEl.replaceChildren(iconEl);
+            linkEl.insertAdjacentText("beforeend", ` ${text}`);
+        }
     }
 
     getMentionsFromText(

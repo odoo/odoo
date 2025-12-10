@@ -181,6 +181,7 @@ function generateMentionElement({ className, id, model, text }) {
         class: className,
         "data-oe-id": id,
         "data-oe-model": model,
+        "data-oe-protected": "true",
         target: "_blank",
         contenteditable: "false",
     });
@@ -213,6 +214,7 @@ export function generateSpecialMentionElement(label) {
     const link = document.createElement("a");
     setAttributes(link, {
         class: "o-discuss-mention",
+        "data-oe-protected": "true",
         contenteditable: "false",
     });
     link.textContent = `@${label}`;
@@ -296,7 +298,10 @@ async function _generateEmojisOnHtml(htmlString) {
     for (const emoji of emojis) {
         for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
             const escapedSource = htmlEscape(String(source));
-            const regexp = new RegExp("(\\s|^)(" + escapeRegExp(escapedSource) + ")(?=\\s|$)", "g");
+            const regexp = new RegExp(
+                "(\\s|^)(" + escapeRegExp(escapedSource) + ")(?=\\s|$|<)",
+                "g"
+            );
             htmlString = htmlReplace(htmlString, regexp, (_, group1) => group1 + emoji.codepoints);
         }
     }

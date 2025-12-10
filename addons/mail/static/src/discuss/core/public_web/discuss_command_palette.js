@@ -154,7 +154,7 @@ export class DiscussCommandPalette {
 
     /** @param {Record[]} [filtered] persona or thread to filters, e.g. being build already in a category in a patch such as MENTIONS or RECENT */
     buildResults(filtered) {
-        const TOTAL_LIMIT = this.ui.isSmall ? 7 : 8;
+        const TOTAL_LIMIT = this.ui.isSmall ? 7 : 10;
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
         let partners = [];
         if (this.store.self_partner) {
@@ -287,7 +287,7 @@ export class DiscussCommandPalette {
                 },
                 name: _t("Create Chat"),
                 className: "d-flex",
-                props: { action: { icon: "fa fa-fw fa-users" } },
+                props: { action: { icon: "oi fa-fw oi-users" } },
             };
         }
         throw new Error(`Unsupported use of makeDiscussCommand("${threadOrPersona}")`);

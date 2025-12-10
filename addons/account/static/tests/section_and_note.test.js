@@ -299,134 +299,6 @@ test("can't add a subsection if value not in options", async () => {
     expect(".o-dropdown-item:contains(Add a subsection)").toHaveCount(0);
 });
 
-test("can add a section after another", async () => {
-    await mountView({
-        type: "form",
-        resModel: "invoice",
-        resId: 1,
-        arch: `
-            <form>
-                <field
-                    name="invoice_line_ids"
-                    widget="section_and_note_one2many"
-                    options="{'subsections': True}"
-                >
-                    <list editable="bottom">
-                        <control>
-                            <create name="add_line_control" string="Add a line"/>
-                            <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                            <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
-                        </control>
-                        <field name="sequence" widget="handle"/>
-                        <field name="name"/>
-                        <field name="display_type" column_invisible="1"/>
-                    </list>
-                </field>
-            </form>
-        `,
-    });
-    expect(queryAllTexts(".o_data_row")).toEqual([
-        "r1",
-        "r2",
-        "A",
-        "A1",
-        "A2",
-        "B",
-        "B1",
-        "B2",
-        "Ba",
-        "Ba1",
-        "Ba2",
-        "C",
-        "C1",
-    ]);
-    await contains(".o_list_section_options:eq(0) button").click();
-    await contains(".o-dropdown-item:contains(Add a section)").click();
-    await edit("D");
-    await contains(getFixture()).click();
-    expect(queryAllTexts(".o_data_row")).toEqual([
-        "r1",
-        "r2",
-        "A",
-        "A1",
-        "A2",
-        "D",
-        "B",
-        "B1",
-        "B2",
-        "Ba",
-        "Ba1",
-        "Ba2",
-        "C",
-        "C1",
-    ]);
-    expect(`.o_is_line_section:contains(D)`).toHaveCount(1);
-});
-
-test("can add a subsection after another", async () => {
-    await mountView({
-        type: "form",
-        resModel: "invoice",
-        resId: 1,
-        arch: `
-            <form>
-                <field
-                    name="invoice_line_ids"
-                    widget="section_and_note_one2many"
-                    options="{'subsections': True}"
-                >
-                    <list editable="bottom">
-                        <control>
-                            <create name="add_line_control" string="Add a line"/>
-                            <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
-                            <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
-                        </control>
-                        <field name="sequence" widget="handle"/>
-                        <field name="name"/>
-                        <field name="display_type" column_invisible="1"/>
-                    </list>
-                </field>
-            </form>
-        `,
-    });
-    expect(queryAllTexts(".o_data_row")).toEqual([
-        "r1",
-        "r2",
-        "A",
-        "A1",
-        "A2",
-        "B",
-        "B1",
-        "B2",
-        "Ba",
-        "Ba1",
-        "Ba2",
-        "C",
-        "C1",
-    ]);
-    await contains(".o_is_line_subsection .o_list_section_options button").click();
-    await contains(".o-dropdown-item:contains(Add a subsection)").click();
-    await edit("Bb");
-    await contains(getFixture()).click();
-    expect(queryAllTexts(".o_data_row")).toEqual([
-        "r1",
-        "r2",
-        "A",
-        "A1",
-        "A2",
-        "B",
-        "B1",
-        "B2",
-        "Ba",
-        "Ba1",
-        "Ba2",
-        "Bb",
-        "C",
-        "C1",
-    ]);
-    expect(`.o_is_line_subsection:contains(Bb)`).toHaveCount(1);
-});
-
 test("can delete sections", async () => {
     await mountView({
         type: "form",
@@ -1295,7 +1167,7 @@ test("swap sections and subsections", async () => {
         "C",
         "C1",
     ]);
-    await contains(".o_list_section_options:eq(2) button").click();
+    await contains(".o_list_section_options:eq(1) button").click();
     await contains(".o-dropdown-item:contains(Add a subsection)").click();
     await edit("Bb");
     await contains(getFixture()).click();

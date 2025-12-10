@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 
 class PriceListPlugin extends Plugin {
     static id = "priceListPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             TogglePriceListDescriptionAction,

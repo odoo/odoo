@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-15 07:20+0000\n"
+"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"PO-Revision-Date: 2025-11-17 03:10+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/payment/"
 "ja/>\n"
@@ -174,9 +174,9 @@ msgid ""
 "provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
-"<strong>警告！</strong>部分キャプチャは保留中です。処理されるまで\n"
-"                    しばらくお待ち下さい。数分経ってもキャプチャが保留中の場"
-"合は、\n"
+"<strong>警告！</strong>部分確定は保留中です。処理されるまで\n"
+"                    しばらくお待ち下さい。数分経っても確定が保留中の場合"
+"は、\n"
 "                    決済プロバイダ設定を確認して下さい。"
 
 #. module: payment
@@ -185,7 +185,7 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
-"<strong>警告！</strong> 負または以下を超える金額をキャプチャすることは\n"
+"<strong>警告！</strong> 負または以下を超える金額を確定することは\n"
 "できません:"
 
 #. module: payment
@@ -227,7 +227,7 @@ msgstr "ACH Direct Debit"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "ACTIVATE"
-msgstr ""
+msgstr "有効化"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_abitab
@@ -248,7 +248,7 @@ msgstr "アクティブ"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__active_provider_id
 msgid "Active Provider"
-msgstr ""
+msgstr "有効なプロバイダー"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -314,7 +314,7 @@ msgstr "Alma"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr "キャプチャ済です"
+msgstr "確定済です"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
@@ -358,7 +358,7 @@ msgstr "最大金額"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr "キャプチャする金額"
+msgstr "確定する金額"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.state_header
@@ -643,17 +643,17 @@ msgstr "支払方法を保存できません"
 #: code:addons/payment/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 msgid "Capture"
-msgstr "キャプチャ"
+msgstr "確定"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
 msgid "Capture Amount Manually"
-msgstr "手動で金額をキャプチャ"
+msgstr "手動で金額を確定"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Capture Transaction"
-msgstr "取引をキャプチャする"
+msgstr "取引を確定する"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
@@ -662,7 +662,7 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"配達完了時にOdooから金額をキャプチャします。\n"
+"配達完了時にOdooから金額を確定します。\n"
 "商品の発送ができると確信している時のみ、顧客カードに請求したい場合に使用しま"
 "す。"
 
@@ -1243,7 +1243,7 @@ msgstr "追加したいプロバイダーをインストールしてください
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
 msgid "Installation State"
-msgstr "インストール状態"
+msgstr "インストールステータス"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -1253,7 +1253,7 @@ msgstr "インストール済"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr "キャプチャする金額は有効か"
+msgstr "確定する金額は有効か"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_country__is_mercado_pago_supported_country
@@ -1457,12 +1457,12 @@ msgstr "Mandiri"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_manual_capture
 msgid "Manual Capture"
-msgstr "手動キャプチャ"
+msgstr "手動確定"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
-msgstr "手動キャプチャがサポートされています"
+msgstr "手動確定がサポートされています"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_mastercard
@@ -1477,7 +1477,7 @@ msgstr "最大金額"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr "最大キャプチャが許可されています"
+msgstr "最大確定が許可されています"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_maya
@@ -1819,7 +1819,7 @@ msgstr "支払"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr "支払キャプチャウィザード"
+msgstr "支払確定ウィザード"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -2049,6 +2049,11 @@ msgid "Please wait..."
 msgstr "お待ちください..."
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Post-process"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_post_finance
 msgid "PostFinance Pay"
 msgstr "PostFinance Pay"
@@ -2225,6 +2230,11 @@ msgid "RuPay"
 msgstr "RuPay"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Run the post-processing step for this transaction."
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_sepa_direct_debit
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
 msgid "SEPA Direct Debit"
@@ -2318,8 +2328,8 @@ msgid ""
 "Some of the transactions you intend to capture can only be captured in full. "
 "Handle the transactions individually to capture a partial amount."
 msgstr ""
-"キャプチャしようとしている取引の中には、全額しかキャプチャできないものがあり"
-"ます。取引を個別に処理し、一部の金額をキャプチャして下さい。"
+"確定しようとしている取引の中には、全額しか確定できないものがあります。取引を"
+"個別に処理し、一部の金額を確定して下さい。"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_souhoola
@@ -2337,13 +2347,13 @@ msgstr "元取引"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "State"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Status"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_config_settings__onboarding_payment_module__stripe
@@ -2354,22 +2364,22 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr "部分キャプチャをサポート"
+msgstr "部分確定をサポート"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
 msgid "Supported Payment Methods"
-msgstr "サポートされている決済方法"
+msgstr "対応支払方法"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Supported by"
-msgstr "以下によりサポート:"
+msgstr "対応事業者:"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report_records
 msgid "Supported providers:"
-msgstr "サポートされているプロバイダー:"
+msgstr "対応プロバイダー:"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_swish
@@ -2485,7 +2495,7 @@ msgstr "支払いデータに金額または通貨の情報がありません。
 #. odoo-python
 #: code:addons/payment/wizards/payment_capture_wizard.py:0
 msgid "The amount to capture must be positive and cannot be superior to %s."
-msgstr "キャプチャする金額は正の値かつ%s以下でなければなりません。"
+msgstr "確定する金額は正の値かつ%s以下でなければなりません。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__image
@@ -2563,8 +2573,8 @@ msgid ""
 "The following payment methods cannot be enabled because their payment "
 "provider has manual capture activated: %s"
 msgstr ""
-"以下の支払方法は、決済プロバイダーが手動キャプチャを有効化しているため、有効"
-"化できません: %s"
+"以下の支払方法は、決済プロバイダーが手動確定を有効化しているため、有効化でき"
+"ません: %s"
 
 #. module: payment
 #. odoo-python
@@ -2572,8 +2582,7 @@ msgstr ""
 msgid ""
 "The following payment methods must be disabled in order to enable manual "
 "capture: %s"
-msgstr ""
-"手動キャプチャを有効にするには、以下の支払方法を無効にする必要があります: %s"
+msgstr "手動確定を有効にするには、以下の支払方法を無効にする必要があります: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -2888,7 +2897,7 @@ msgstr "Touch'n Go"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__transaction_ids
 msgid "Transaction"
-msgstr "取引明細書"
+msgstr "取引"
 
 #. module: payment
 #. odoo-python
@@ -3062,7 +3071,7 @@ msgstr "取引の後処理時に支払トークンを作成するかどうか"
 #: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
-msgstr "各取引のプロバイダが部分キャプチャをサポートしているかどうか。"
+msgstr "各取引のプロバイダが部分確定をサポートしているかどうか。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__is_published
@@ -3358,7 +3367,7 @@ msgstr "非対応ウェブサイト"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "manual capture not supported"
-msgstr "手動キャプチャはサポートされていません"
+msgstr "手動確定はサポートされていません"
 
 #. module: payment
 #. odoo-python

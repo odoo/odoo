@@ -101,6 +101,7 @@ describe("Range collapsed", () => {
                 `),
                 stepFunction: toggleUnorderedList,
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
@@ -115,6 +116,7 @@ describe("Range collapsed", () => {
                             </tr>
                         </tbody>
                     </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `),
                 contentAfter: unformat(`
                     <table class="table table-bordered">
@@ -164,6 +166,53 @@ describe("Range collapsed", () => {
                 contentBefore: '<p dir="rtl" class="text-uppercase">a[]b</p>',
                 stepFunction: toggleUnorderedList,
                 contentAfter: '<ul dir="rtl" class="text-uppercase"><li>a[]b</li></ul>',
+            });
+        });
+
+        test("should apply both color and size styles on list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></p>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<ul><li style="color: rgb(255, 0, 0); font-size: 18px;">[abc]</li></ul>',
+            });
+            await testEditor({
+                contentBefore:
+                    '<p><b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></i></b></p>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<ul><li style="color: rgb(255, 0, 0); font-size: 18px;"><b><i>[abc]</i></b></li></ul>',
+            });
+        });
+
+        test("should not apply color and size styles on list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span>b</p>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<ul><li><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">a</font></span>b</li></ul>',
+            });
+        });
+
+        test("should only apply color style on list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><font style="color: rgb(255, 0, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></font></p>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<ul><li style="color: rgb(255, 0, 0);"><b><span style="font-size: 18px;">a</span></b><i><span style="font-size: 18px;">a</span></i></li></ul>',
+            });
+        });
+
+        test("should only apply size style on list item", async () => {
+            await testEditor({
+                contentBefore:
+                    '<p><span style="font-size: 18px;"><b><font style="color: rgb(255, 0, 0);">a</font></b><i><font style="color: rgb(255, 0, 0);">a</font></i></span></p>',
+                stepFunction: toggleUnorderedList,
+                contentAfter:
+                    '<ul><li style="font-size: 18px;"><b><font style="color: rgb(255, 0, 0);">a</font></b><i><font style="color: rgb(255, 0, 0);">a</font></i></li></ul>',
             });
         });
     });
@@ -265,6 +314,7 @@ describe("Range collapsed", () => {
                 `),
                 stepFunction: toggleUnorderedList,
                 contentAfterEdit: unformat(`
+                    <p data-selection-placeholder=""><br></p>
                     <table class="table table-bordered o_selected_table">
                         <tbody>
                             <tr>
@@ -279,6 +329,7 @@ describe("Range collapsed", () => {
                             </tr>
                         </tbody>
                     </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
                 `),
                 contentAfter: unformat(`
                     <table class="table table-bordered">

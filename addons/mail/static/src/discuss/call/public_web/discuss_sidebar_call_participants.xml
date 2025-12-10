@@ -55,7 +55,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCallParticipants.list">
-        <div class="d-flex flex-column gap-1 flex-grow-1" style="padding: 1.5px;">
+        <div class="d-flex flex-column gap-1 flex-grow-1 overflow-hidden" style="padding: 1.5px;">
             <t t-foreach="sessions" t-as="session" t-key="session.localId">
                 <t t-call="mail.DiscussSidebarCallParticipants.participant">
                     <t t-set="session" t-value="session"/>
@@ -78,8 +78,8 @@
                     <t t-set="session" t-value="session"/>
                 </t>
                 <t t-else="">
-                    <span t-if="session.is_muted" class="p-1 fa opacity-75" t-att-class="rtc.callActions.find(a => a.id === 'mute').icon"/>
-                    <span t-if="session.is_deaf" class="p-1 fa opacity-75" t-att-class="rtc.callActions.find(a => a.id === 'deafen').icon"/>
+                    <span t-if="session.is_deaf" class="p-1 fa opacity-75" t-att-class="CALL_ICON_DEAFEN"/>
+                    <span t-elif="session.is_muted" class="p-1 fa opacity-75" t-att-class="CALL_ICON_MUTED"/>
                     <span t-if="session.is_screen_sharing_on" class="o-live bg-danger o-text-white rounded">LIVE</span>
                 </t>
             </div>
@@ -89,8 +89,8 @@
 
     <t t-name="mail.DiscussSidebarCallParticipants.participantShortStatus">
         <span t-if="session?.shortStatus" t-att-class="{
-            [`fa ${rtc.callActions.find(a => a.id === 'mute').icon} opacity-75`]: session.shortStatus === 'mute',
-            [`fa ${rtc.callActions.find(a => a.id === 'deafen').icon} opacity-75`]: session.shortStatus === 'deafen',
+            [`${CALL_ICON_MUTED} opacity-75`]: session.shortStatus === 'mute',
+            [`${CALL_ICON_DEAFEN} opacity-75`]: session.shortStatus === 'deafen',
             'o-live bg-danger o-text-white rounded': session.shortStatus === 'live',
         }"><t t-if="session.shortStatus === 'live'">LIVE</t></span>
     </t>

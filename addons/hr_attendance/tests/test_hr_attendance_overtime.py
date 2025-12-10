@@ -3,12 +3,12 @@ from datetime import date, datetime
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.tests import Form, new_test_user
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests import Form, HttpCase, new_test_user
+from odoo.tests.common import tagged
 
 
 @tagged('hr_attendance_overtime')
-class TestHrAttendanceOvertime(TransactionCase):
+class TestHrAttendanceOvertime(HttpCase):
     """ Tests for overtime """
 
     @classmethod
@@ -1018,3 +1018,105 @@ class TestHrAttendanceOvertime(TransactionCase):
     def test_overtime_rule_combined(self):
         # TODO
         pass
+
+    def test_overtime_rule_timing_type_not_set(self):
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Test Timing Ruleset',
+            'rule_ids': [
+                Command.create({
+                    'name': "Company Schedule",
+                    'base_off': 'timing',
+                }),
+            ],
+        })
+
+        self.assertEqual(ruleset.rule_ids.timing_type, 'work_days',
+                 "Employee work Timing type should default to 'work_days' when not set.")
+
+    def test_employee_overtime_with_multiple_attendance_lines(self):
+        """Validate that multiple overtime lines for today are summed correctly
+        and that the entire attendance_employee_data response is consistent.
+        """
+        for _ in range(2):
+            self.env['hr.attendance.overtime.line'].create({
+                'employee_id': self.employee.id,
+                'date': date.today(),
+                'duration': 5,
+            })
+        token = self.employee.company_id.attendance_kiosk_key
+        response = self.make_jsonrpc_request(
+            '/hr_attendance/attendance_employee_data',
+            {'token': token, 'employee_id': self.employee.id},
+        )
+        self.assertEqual(response.get('hours_previously_today'), 0)
+        self.assertEqual(response.get('hours_today'), 0)
+        self.assertEqual(response.get('last_attendance_worked_hours'), 0)
+        self.assertEqual(response.get('overtime_today'), 10)
+        self.assertEqual(response.get('total_overtime'), 10)
+
+    def test_overtime_with_public_holidays(self):
+        """ Comapny 1 has a public holiday, while Company 2 does not.
+            Employee from Company 2 should not get overtime for working that day.
+        """
+        with freeze_time("2025-11-11 12:00:00"):
+            company_be = self.env['res.company'].create({'name': 'Odoo BE'})
+            company_de = self.env['res.company'].create({'name': 'Odoo DE'})
+
+            with Form(self.env['resource.calendar.leaves'].with_company(company_be)) as holiday_form:
+                holiday_form.name = 'Armistice Day'
+                holiday_form.date_from = datetime(2025, 11, 11, 0, 0)
+                holiday_form.save()
+
+            ruleset_be = self.env['hr.attendance.overtime.ruleset'].with_company(company_be).create({
+                'name': 'Ruleset schedule timing',
+                'rule_ids': [Command.create({
+                        'name': 'Rule schedule timing',
+                        'base_off': 'timing',
+                        'timing_type': 'non_work_days',
+                        'timing_start': 0,
+                        'timing_stop': 24,
+                    })],
+            })
+            ruleset_de = self.env['hr.attendance.overtime.ruleset'].with_company(company_de).create({
+                'name': 'Ruleset schedule timing',
+                'rule_ids': [Command.create({
+                        'name': 'Rule schedule timing',
+                        'base_off': 'timing',
+                        'timing_type': 'non_work_days',
+                        'timing_start': 0,
+                        'timing_stop': 24,
+                    })],
+            })
+
+            employee_be = self.env['hr.employee'].with_company(company_be).create({
+                'name': 'Hans Belgian',
+                'ruleset_id': ruleset_be.id,
+            })
+            employee_de = self.env['hr.employee'].with_company(company_de).create({
+                'name': 'Henry German',
+                'ruleset_id': ruleset_de.id,
+            })
+
+            attendance_company_be = self.env['hr.attendance'].create({
+                'employee_id': employee_be.id,
+                'check_in': datetime(2025, 11, 11, 8, 0),
+                'check_out': datetime(2025, 11, 11, 17, 0),
+            })
+            attendance_company_de = self.env['hr.attendance'].create({
+                'employee_id': employee_de.id,
+                'check_in': datetime(2025, 11, 11, 8, 0),
+                'check_out': datetime(2025, 11, 11, 17, 0),
+            })
+
+            self.assertAlmostEqual(attendance_company_be.overtime_hours, 8, 2, "Employee from Company 1 should have overtime for working on a public holiday.")
+            self.assertAlmostEqual(attendance_company_de.overtime_hours, 0, 2, "Employee from Company 2 should not have overtime for working on a non-holiday day.")
+
+    def test_officer_access_on_overtime_records(self):
+        user1 = new_test_user(self.env, login='user1', groups='hr_attendance.group_hr_attendance_officer', company_id=self.company.id).with_company(self.company)
+        self.other_employee.attendance_manager_id = user1.id
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.other_employee.id,
+            'check_in': datetime(2021, 1, 4, 8, 0),
+            'check_out': datetime(2021, 1, 4, 20, 0)
+        })
+        self.assertTrue(attendance.with_user(user1).linked_overtime_ids.rule_ids.has_access("read"))

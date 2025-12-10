@@ -39,7 +39,7 @@ class AccountMove(models.Model):
         # Post entries.
         res = super()._post(soft)
 
-        self.line_ids._get_stock_moves()._set_value()
+        self.line_ids._get_stock_moves().filtered(lambda m: m.is_in)._set_value()
 
         return res
 
@@ -119,7 +119,7 @@ class AccountMove(models.Model):
                 # Compute accounting fields.
                 sign = -1 if move.move_type == 'out_refund' else 1
                 price_unit = line.with_context(anglo_saxon_price_ctx)._get_cogs_value()
-                amount_currency = sign * line.quantity * price_unit
+                amount_currency = sign * line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) * price_unit
 
                 if move.currency_id.is_zero(amount_currency) or float_is_zero(price_unit, precision_digits=price_unit_prec):
                     continue

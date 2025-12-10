@@ -13,7 +13,6 @@ from odoo import Command
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderKiosk(SelfOrderCommonTest):
     def test_self_order_kiosk(self):
-        self_route = self.pos_config._get_self_order_route()
         self.pos_config.write({
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each',
@@ -21,6 +20,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
+        self_route = self.pos_config._get_self_order_route()
 
         tax_10_inc = self.env['account.tax'].create({
             "name": "10% incl",

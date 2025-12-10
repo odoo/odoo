@@ -111,7 +111,10 @@ export class ChannelInvitation extends Component {
     }
 
     get searchPlaceholder() {
-        return this.props.state?.searchPlaceholder ?? _t("Search people to invite");
+        if (this.props.thread?.allow_invite_by_email) {
+            return _t("Invite people or email");
+        }
+        return _t("Search people to invite");
     }
 
     async fetchPartnersToInvite() {
@@ -186,8 +189,18 @@ export class ChannelInvitation extends Component {
     }
 
     async onClickCopy(ev) {
-        await navigator.clipboard.writeText(this.props.thread.invitationLink);
-        this.notification.add(_t("Link copied!"), { type: "success" });
+        let notification = _t("Invitation link copied!");
+        let type = "success";
+        const clipboard = this.env.inDiscussCallView?.isPip
+            ? this.rtc.pipService.pipWindow?.navigator.clipboard
+            : navigator.clipboard;
+        try {
+            await clipboard.writeText(this.props.thread.invitationLink);
+        } catch {
+            notification = _t("Invitation link copy failed (Permission denied?)!");
+            type = "danger";
+        }
+        this.notification.add(notification, { type });
     }
 
     async onClickInvite() {

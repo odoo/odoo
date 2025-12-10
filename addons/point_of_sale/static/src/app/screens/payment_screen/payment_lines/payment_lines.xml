@@ -76,6 +76,9 @@
                                     </div>
                                     <div>
                                         <i class="fa fa-circle-o-notch fa-spin" role="img" />
+                                        <div t-if="line.payment_status == 'waiting'" class="button send_force_done" title="Force Done" t-on-click="() => this.props.sendForceDone(line)">
+                                            Force done
+                                        </div>
                                     </div>
                                 </t>
                                 <t t-elif="line.payment_status == 'reversing'">
@@ -101,7 +104,8 @@
                                         </div>
                                     </t>
                                     <t t-else="">
-                                        <div></div>
+                                        <!-- Todo: remove in master -->
+                                        <div class="d-none"></div>
                                     </t>
                                 </t>
                                 <t t-elif="line.payment_status == 'reversed'">
@@ -124,7 +128,7 @@
                         <div class="paymentline d-flex align-items-center bg-view border rounded-3"
                             t-att-class="unselectedLineClass(line)">
                              <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
-                                 <t t-esc="line.payment_method_id.name" />
+                                 <t t-esc="line.payment_method_id?.name" />
                                  <div class="payment-amount px-3">
                                     <PriceFormatter price="env.utils.formatCurrency(line.getAmount())" />
                                 </div>

@@ -5,6 +5,7 @@ import os
 import logging
 import re
 import requests
+import urllib.parse
 import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
@@ -68,11 +69,9 @@ class QueryURL:
                     paths[key] = "%s" % value
             elif value:
                 if isinstance(value, (list, set)):
-                    fragments.append(
-                        werkzeug.urls.url_encode([(key, item) for item in value if item])
-                    )
+                    fragments.append(urllib.parse.urlencode([(key, item) for item in value if item]))
                 else:
-                    fragments.append(werkzeug.urls.url_encode([(key, value)]))
+                    fragments.append(urllib.parse.urlencode([(key, value)]))
         for key in path_args:
             value = paths.get(key)
             if value is not None:
@@ -421,7 +420,9 @@ class Website(Home):
             dynamic_filter_sudo = dynamic_filter_sudo.search(
                 Domain('id', '=', filter_id) & request.website.website_domain()
             )
-        return dynamic_filter_sudo._render(**kwargs) or []
+        single_record_filter = kwargs.get('limit') == 1 and kwargs.get('res_model') and kwargs.get('res_id')
+        dynamic_filter_found = single_record_filter or dynamic_filter_sudo
+        return dynamic_filter_sudo._render(**kwargs) if dynamic_filter_found else []
 
     @http.route('/website/snippet/options_filters', type='jsonrpc', auth='user', website=True, readonly=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):

@@ -180,7 +180,7 @@ export class UseSuggestion {
         this.clearSearch();
     }
     get thread() {
-        return this.composer.thread || this.composer.message.thread;
+        return this.composer.thread || this.composer.message?.thread;
     }
     insert(option) {
         let position = this.search.position + 1;
@@ -225,6 +225,7 @@ export class UseSuggestion {
             this.comp.editor.shared.dom.insert(inlineElement);
             const [anchorNode, anchorOffset] = rightPos(inlineElement);
             this.comp.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
+            this.comp.editor.shared.dom.insert("\u00A0");
             this.comp.editor.shared.history.addStep();
         } else {
             // remove the user-typed search delimiter
@@ -254,6 +255,9 @@ export class UseSuggestion {
     }
 
     async fetchSuggestions() {
+        if (!this.thread || status(this.comp) === "destroyed") {
+            return;
+        }
         let resetFetchingState = true;
         try {
             this.abortController?.abort();
@@ -275,7 +279,7 @@ export class UseSuggestion {
                 this.state.isFetching = false;
             }
         }
-        if (status(this.comp) === "destroyed") {
+        if (!this.thread || status(this.comp) === "destroyed") {
             return;
         }
         this.update();

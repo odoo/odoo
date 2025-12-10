@@ -15,10 +15,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             if not line.move_id.is_purchase_document():
                 continue
-            if not line.product_id.is_storable:
-                continue
-            # Periodic with expense account
-            if line.product_id.valuation == 'periodic':
+            if not line._eligible_for_stock_account():
                 continue
             fiscal_position = line.move_id.fiscal_position_id
             accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
@@ -32,7 +29,10 @@ class AccountMoveLine(models.Model):
 
     def _eligible_for_stock_account(self):
         self.ensure_one()
-        return self.product_id.is_storable
+        if not self.product_id.is_storable:
+            return False
+        moves = self._get_stock_moves()
+        return all(not m.is_dropship for m in moves)
 
     def _get_gross_unit_price(self):
         if self.product_uom_id.is_zero(self.quantity):
@@ -49,6 +49,8 @@ class AccountMoveLine(models.Model):
         return -price_unit if self.move_id.move_type == 'in_refund' else price_unit
 
     def _get_cogs_value(self):
+        """ Get the COGS price unit in the product's default unit of measure.
+        """
         self.ensure_one()
 
         if not self.product_id:
@@ -65,8 +67,20 @@ class AccountMoveLine(models.Model):
             return self.product_id.standard_price
 
         # FIFO
-        moves = self._get_stock_moves()
-        return moves._get_price_unit()
+        moves = self._get_stock_moves().filtered(lambda m: m.state == 'done')
+        if not moves:
+            return self.product_id._run_fifo(self.quantity)
+
+        price_unit = moves._get_price_unit()
+        valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
+        posted_cogs_value = - sum(self.sale_line_ids.order_id.invoice_ids.line_ids.filtered(
+            lambda line: line.product_id == self.product_id and line.display_type == 'cogs' and line.account_id == valuation_account
+        ).mapped('balance'))
+        posted_cogs_qty = sum(self.sale_line_ids.order_id.invoice_ids.line_ids.filtered(
+            lambda line: line.product_id == self.product_id and line.display_type == 'cogs' and line.account_id == valuation_account
+        ).mapped('quantity'))
+        total_qty = posted_cogs_qty + self.quantity
+        return (price_unit * total_qty - posted_cogs_value) / self.quantity
 
     def _get_stock_moves(self):
         return self.env['stock.move']

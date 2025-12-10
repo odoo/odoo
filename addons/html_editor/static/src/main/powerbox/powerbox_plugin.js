@@ -15,8 +15,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 /**
  * @typedef {Object} PowerboxCategory
  * @property {string} id
- * @property {String} name
- *
+ * @property {TranslatedString} name
  *
  * @typedef {Object} PowerboxItem
  * @property {string} categoryId Id of a powerbox category
@@ -27,40 +26,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @property {string} [icon] fa-class - Inheritable
  * @property {TranslatedString[]} [keywords]
  * @property {(selection: EditorSelection) => boolean} [isAvailable] Optional and inheritable
- */
-
-/**
- * A powerbox item must derive from a user command ( @see UserCommand )
- * specified by commandId. Properties defined in a powerbox item override those
- * from a user command.
- *
- * Example:
- *
- * resources = {
- *      user_commands: [
- *          @type {UserCommand}
- *          {
- *              id: myCommand,
- *              run: myCommandFunction,
- *              title: _t("My Command"),
- *              description: _t("My command's description"),
- *              icon: "fa-bug",
- *          },
- *      ],
- *      powerbox_categories: [
- *          @type {PowerboxCategory}
- *          { id: "myCategory", name: _t("My Category") }
- *      ],
- *      powerbox_items: [
- *          @type {PowerboxItem}
- *          {
- *              categoryId: "myCategory",
- *              commandId: "myCommand",
- *              title: _t("My Powerbox Command"), // overrides the user command's `title`
- *              // `description` and `icon` are inferred from the user command
- *          }
- *      ],
- * };
  */
 
 /**
@@ -85,6 +50,46 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @property { PowerboxPlugin['updatePowerbox'] } updatePowerbox
  */
 
+/** @typedef {PowerboxCategory[]} powerbox_categories */
+/**
+ * @typedef {import("plugins").CSSSelector[]} powerbox_blacklist_selectors
+ *
+ * @see UserCommand
+ * @typedef {PowerboxItem[]} powerbox_items
+ *
+ * A powerbox item must derive from a user command (see UserCommand) specified
+ * by commandId. Properties defined in a powerbox item override those from a
+ * user command. Other properties are inferred from the UserCommand.
+ *
+ * Example:
+ *
+ *     resources = {
+ *          user_commands: [
+ *              // see {UserCommand}
+ *              {
+ *                  id: myCommand,
+ *                  run: myCommandFunction,
+ *                  title: _t("My Command"),
+ *                  description: _t("My command's description"),
+ *                  icon: "fa-bug",
+ *              },
+ *          ],
+ *          powerbox_categories: [
+ *              // see {PowerboxCategory}
+ *              { id: "myCategory", name: _t("My Category") }
+ *          ],
+ *          powerbox_items: [
+ *              // see {PowerboxItem}
+ *              {
+ *                  categoryId: "myCategory",
+ *                  commandId: "myCommand",
+ *                  title: _t("My Powerbox Command"), // overrides the user command's `title`
+ *                  // `description` and `icon` are inferred from the user command
+ *              }
+ *          ],
+ *     };
+ */
+
 export class PowerboxPlugin extends Plugin {
     static id = "powerbox";
     static dependencies = ["overlay", "selection", "history", "userCommand"];
@@ -94,6 +99,7 @@ export class PowerboxPlugin extends Plugin {
         "openPowerbox",
         "updatePowerbox",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: {
             id: "openPowerbox",
@@ -106,6 +112,7 @@ export class PowerboxPlugin extends Plugin {
         powerbox_categories: [
             withSequence(10, { id: "structure", name: _t("Structure") }),
             withSequence(60, { id: "widget", name: _t("Widget") }),
+            withSequence(100, { id: "modules", name: _t("Modules") }),
         ],
         power_buttons: withSequence(100, {
             commandId: "openPowerbox",

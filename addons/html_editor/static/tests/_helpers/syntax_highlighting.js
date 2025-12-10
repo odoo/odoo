@@ -1,12 +1,11 @@
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { unformat } from "./format";
-import {
-    DEFAULT_LANGUAGE_ID,
-    EmbeddedSyntaxHighlightingComponent,
-} from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
+import { EmbeddedSyntaxHighlightingComponent } from "@html_editor/others/embedded_components/backend/syntax_highlighting/syntax_highlighting";
+import { LANGUAGES } from "@html_editor/others/embedded_components/backend/syntax_highlighting/code_toolbar";
 import { expect } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-dom";
 import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
+import { DEFAULT_LANGUAGE_ID } from "@html_editor/others/embedded_components/core/syntax_highlighting/syntax_highlighting_utils";
 
 /** @typedef {import("@html_editor/plugin").Editor} Editor */
 /**
@@ -94,6 +93,22 @@ export const testTextareaRange = (editor, { el, value, range }, message) => {
     );
 };
 
+const TOOLBAR = (language) =>
+    unformat(
+        `<div class="o_code_toolbar">
+        <div data-prevent-closing-overlay="true">
+            <button class="btn o-dropdown dropdown-toggle dropdown" name="language" title="${language}" aria-expanded="false">
+                <span class="px-1">${language}</span>
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <button class="text-nowrap btn o_clipboard_button">
+                <span class="mx-1 fa fa-clipboard"></span>
+                <span>Copy</span>
+            </button>
+        </div>
+    </div>`
+    );
+
 /**
  * Clean the given content to facilitate testing and parse the expected result
  * given as a `HighlightedContent` object (or an array thereof), then compare
@@ -106,14 +121,43 @@ export const testTextareaRange = (editor, { el, value, range }, message) => {
  * @param {Editor} editor
  */
 export const compareHighlightedContent = async (content, expected, phase, editor) => {
-    const cleanedContent = content
-        // Ignore embedded props
-        .replaceAll(/data-embedded-props='([^']|\n)*' /g, "")
+    let cleanedContent = content
+        // Ignore embedded state change ID and previous
+        .replaceAll(/"stateChangeId":\d+/g, "")
+        .replaceAll(/"previous":\{[^}]+\}/g, "")
+        // Make "next" the actual state
+        .replaceAll(/"next":\{([^}]+)\}/g, "$1")
+        // Rename data-embedded-state and data-embedded-props to data-saved so
+        // as not to make a difference between during and after edit.
+        .replaceAll("data-embedded-state", "data-saved")
         // Ignore dataset order
         .replaceAll(
-            /data-language-id="([^"]+)" data-syntax-highlighting-value="(([^"]|\n)+)"/g,
-            `data-syntax-highlighting-value="$2" data-language-id="$1"`
-        );
+            /"languageId":"([^"]*)","value":"(([^"]|\n)*)"/g,
+            `"value":"$2","languageId":"$1"`
+        )
+        // Clean up
+        .replaceAll(/([{,]),+/g, "$1")
+        .replaceAll(/,+([},])/g, "$1")
+        .replaceAll(",,", ",");
+
+    cleanedContent = cleanedContent
+        .split("data-embedded=")
+        .map((currentSection) => {
+            if (currentSection.includes("data-embedded-props")) {
+                if (currentSection.includes("data-saved")) {
+                    // Ignore embedded props if there's an embedded state.
+                    currentSection = currentSection.replaceAll(
+                        /data-embedded-props='\{[^']+\}'( )?/g,
+                        ""
+                    );
+                } else {
+                    currentSection = currentSection.replaceAll("data-embedded-props", "data-saved");
+                }
+            }
+            return currentSection;
+        })
+        .join("data-embedded=");
+
     const message = `(testEditor) ${toExplicitString(
         phase
     )} is strictly equal to "${toExplicitString(expected)}"`;
@@ -143,7 +187,11 @@ export const highlightedPre = ({
     unformat(
         `<div data-embedded="syntaxHighlighting" data-oe-protected="true" contenteditable="false"
             class="o_syntax_highlighting"
-            data-syntax-highlighting-value="${value}" data-language-id="${language.toLowerCase()}">
+            data-saved='{"value":"${value.replaceAll(
+                "\n",
+                "\\n"
+            )}","languageId":"${language.toLowerCase()}"}'>
+            ${TOOLBAR(LANGUAGES[language])}
             <pre>//PRE//</pre>${textareaRange === null ? "" : "[]"}
             <textarea //TEXTAREA// class="o_prism_source" contenteditable="true"></textarea>
         </div>`

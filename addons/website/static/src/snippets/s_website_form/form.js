@@ -234,6 +234,9 @@ export class Form extends Interaction {
                     })
                     .enable()
             );
+            // Disable virtual keyboard to fix popover display issues on small
+            // screens
+            inputEl.setAttribute("inputmode", "none");
         }
         this.datepickerInitialized = true;
     }
@@ -252,7 +255,10 @@ export class Form extends Interaction {
         // default values...)
         if (dataForValues || Object.keys(this.preFillValues).length) {
             dataForValues = dataForValues || {};
-            const fieldNames = [...this.el.querySelectorAll("[name]")].map((el) => el.name);
+            const fieldNames = [...this.el.querySelectorAll("[name]")]
+                .filter((el) => !["submit", "button", "image", "reset", "file"].includes(el.type))
+                .map((el) => el.name);
+
             // All types of inputs do not have a value property (eg:hidden),
             // for these inputs any function that is supposed to put a value
             // property actually puts a HTML value attribute. Because of
@@ -306,6 +312,14 @@ export class Form extends Interaction {
         }
 
         // Prepare form inputs
+        // Set a placeholder name to input fields without
+        // a label to allow FormData to function correctly
+        for (const [i, inputEl] of this.el
+            .querySelectorAll(".s_website_form_input:is(:not([name]), [name=''])")
+            .entries()) {
+            inputEl.setAttribute("name", "unknown_field_" + (i + 1));
+        }
+
         const formFields = [];
         new FormData(this.el).forEach((value, key) => {
             const inputElement = this.el.querySelector(`[name="${CSS.escape(key)}"]`);

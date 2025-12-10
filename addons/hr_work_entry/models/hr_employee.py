@@ -25,6 +25,14 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.has_work_entries = result.get(employee._origin.id, False)
 
+    def create_version(self, values):
+        new_version = super().create_version(values)
+        new_version.update({
+            'date_generated_from': fields.Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0),
+            'date_generated_to': fields.Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0),
+        })
+        return new_version
+
     def action_open_work_entries(self, initial_date=False):
         self.ensure_one()
         ctx = {'default_employee_id': self.id}

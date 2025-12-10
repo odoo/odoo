@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-17 14:59+0000\n"
+"PO-Revision-Date: 2025-12-02 14:54+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "website_sale_stock/nl/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -31,27 +31,29 @@ msgstr ""
 msgid ""
 "%(product_name)s has not been added to your cart since it is not available."
 msgstr ""
+"%(product_name)s is niet toegevoegd aan je winkelwagentje omdat het product "
+"niet beschikbaar is."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "<span invisible=\"not default_show_availability\">units</span>"
-msgstr ""
+msgstr "<span invisible=\"not default_show_availability\">eenheden</span>"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/product_card/product_card.js:0
 msgid "All available quantity selected"
-msgstr ""
+msgstr "Alle beschikbare hoeveelheden geselecteerd"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "All warehouses"
-msgstr ""
+msgstr "Alle magazijnen"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_ribbon__assign
 msgid "Assign"
-msgstr ""
+msgstr "Toewijzen"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
@@ -76,7 +78,7 @@ msgstr "Verkoop hervatten"
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__default_allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
-msgstr "Doorgaan met verkopen wanneer niet op voorraad"
+msgstr "Doorgaan met verkopen indien niet op voorraad"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -134,7 +136,7 @@ msgstr "Ontvang een bericht wanneer er opnieuw voorraad is"
 #: model:ir.model.fields,field_description:website_sale_stock.field_stock_picking__id
 #: model:ir.model.fields,field_description:website_sale_stock.field_website__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -169,7 +171,7 @@ msgstr "Niet op voorraad"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/product/product.xml:0
 msgid "Out of stock"
-msgstr ""
+msgstr "Niet op voorraad"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -192,7 +194,7 @@ msgstr "Product"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "Productcombinatie"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_feed
@@ -233,7 +235,7 @@ msgstr "Verkooporderregel"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
 msgid "Sell when Out-of-Stock"
-msgstr ""
+msgstr "Ook verkopen indien niet op voorraad"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -243,7 +245,7 @@ msgstr "Beschikbare hoeveelheid weergeven"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Show Available Quantity"
-msgstr ""
+msgstr "Beschikbare hoeveelheid weergeven"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__available_threshold
@@ -296,7 +298,7 @@ msgstr "Magazijn"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "We'll notify you once the product is back in stock"
-msgstr ""
+msgstr "We informeren je zodra het product weer op voorraad is"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_website
@@ -313,7 +315,7 @@ msgstr "Website waar deze order is geplaatst, voor E-commerce orders."
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "You already added all the available product in your cart"
-msgstr ""
+msgstr "Je hebt alle beschikbare producten al aan je winkelmand toegevoegd"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -322,6 +324,8 @@ msgid ""
 "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
 "available"
 msgstr ""
+"Je wenst %(desired_qty)s %(product_name)s maar er zijn er maar %(new_qty)s "
+"beschikbaar"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -329,6 +333,7 @@ msgstr ""
 msgid ""
 "You ask for %(desired_qty)s products but only %(available_qty)s is available."
 msgstr ""
+"Je wenst %(desired_qty)s maar er zijn maar %(available_qty)s beschikbaar."
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.product_template_form_view_inherit_website_sale_stock
@@ -339,13 +344,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "in stock"
-msgstr ""
+msgstr "in voorraad"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "in your cart)"
-msgstr ""
+msgstr "in je winkelmandje)"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form

@@ -1,3 +1,4 @@
+/* global posmodel */
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
@@ -610,10 +611,7 @@ registry.category("web_tour.tours").add("test_settle_dont_give_points_again", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            PartnerList.clickPartnerOptions("AAA Partner"),
-            PartnerList.clickDropDownItemText("Settle invoices"),
-            PartnerList.clickSettleOrderName("TSJ/"),
-            ProductScreen.totalAmountIs("10.00"),
+            PartnerList.settleCustomerAccount("AAA Partner", "10.00", "TSJ/"),
         ].flat(),
 });
 
@@ -674,5 +672,51 @@ registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
             PosLoyalty.pointsTotalIs("90"),
             PosLoyalty.orderTotalIs("0.0"),
             PosLoyalty.finalizeOrder("Cash", "0.0"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_confirm_coupon_programs_one_by_one", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            {
+                trigger: "body",
+                content: "Create fake orders",
+                run: async () => {
+                    // Create 5 orders that will be synced one by one
+                    for (let i = 0; i < 5; i++) {
+                        const order = posmodel.createNewOrder();
+                        const product = posmodel.models["product.template"].find(
+                            (p) => p.name === "Desk Pad"
+                        );
+                        const pm = posmodel.models["pos.payment.method"].getFirst();
+                        const program = posmodel.models["loyalty.program"].find(
+                            (p) => p.program_type === "gift_card"
+                        );
+
+                        await posmodel.addLineToOrder({ product_tmpl_id: product }, order);
+                        posmodel.addPendingOrder([order.id]);
+                        order.addPaymentline(pm);
+                        order.state = "paid";
+
+                        // Create fake coupon point changes to simulate coupons to be confirmed
+                        order.uiState.couponPointChanges = [
+                            {
+                                points: 124.2,
+                                program_id: program.id,
+                                coupon_id: -(i + 1),
+                                barcode: "",
+                            },
+                        ];
+                    }
+                },
+            },
+            // Create one more order to be able to trigger the sync from the UI
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });

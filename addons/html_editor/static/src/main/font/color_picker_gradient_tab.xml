@@ -13,7 +13,7 @@
     </div>
     <div class="px-2">
         <button t-attf-style="{{ currentGradient ? `background-image: ${currentGradient}` : '' }};"
-            class="w-50 border btn mb-2 o_custom_gradient_button o_color_picker_button"
+            class="w-50 btn mb-2 o_custom_gradient_button o_color_picker_button"
             t-att-class="{'selected': currentGradient and !gradientsWithOpacity.includes(currentGradient)}"
             t-att-data-color="currentGradient" t-on-click="toggleGradientPicker" title="Define a custom gradient">
             Custom

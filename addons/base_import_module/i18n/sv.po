@@ -11,13 +11,14 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2022
 # Martin Trigaux, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 21:29+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2025-11-07 10:14+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "base_import_module/sv/>\n"
 "Language: sv\n"
@@ -141,8 +142,9 @@ msgstr ""
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_http
+#, fuzzy
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Routing"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
@@ -262,6 +264,8 @@ msgstr "Ingen fil skickade."
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "No manifest found in '%(modules)s'. Can't import the zip file."
 msgstr ""
+"Inget manifest hittades i '%(modules)s'. Det gick inte att importera zip-"
+"filen."
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -269,6 +273,8 @@ msgid ""
 "Note: you can only import data modules (.xml files, i18n files and static "
 "assets)"
 msgstr ""
+"Notera: du kan bara importera datamoduler (.xml-filer, i18n-filer och "
+"statiska resurser)"
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
@@ -311,6 +317,8 @@ msgid ""
 "The assets path in the manifest of imported module '%(module_name)s' cannot "
 "contain glob wildcards (e.g., *, **)."
 msgstr ""
+"Sökvägen för tillgångar i manifestet för den importerade modulen "
+"'%(module_name)s' får inte innehålla glob-jokertecken (t.ex. *, **)."
 
 #. module: base_import_module
 #. odoo-python
@@ -340,7 +348,7 @@ msgstr "Modulen %s kan inte laddas ner"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Unknown module dependencies:"
-msgstr ""
+msgstr "Okända modulberoenden:"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit

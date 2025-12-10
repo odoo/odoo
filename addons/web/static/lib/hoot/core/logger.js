@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { getColorHex } from "../../hoot-dom/hoot_dom_utils";
-import { stringify } from "../hoot_utils";
+import { isNil, stringify } from "../hoot_utils";
 import { urlParams } from "./url";
 
 //-----------------------------------------------------------------------------
@@ -190,7 +190,7 @@ class Logger {
                 `(${withArgs.shift()}`,
                 ...withArgs,
                 "time:",
-                suite.jobs.reduce((acc, job) => acc + (job.duration || 0), 0),
+                suite.reporting.duration,
                 "ms)"
             );
         }
@@ -285,32 +285,56 @@ let nextNetworkLogId = 1;
  */
 export function makeNetworkLogger(prefix, title) {
     const id = nextNetworkLogId++;
+    const slicedTitle =
+        title.length > 128 ? title.slice(0, 128) + " (click to show full input)" : title;
     return {
         /**
-         * Request logger: blue-ish.
-         * @param {() => any} getData
+         * Request logger: blue lotus.
+         * @param {() => any[]} getData
          */
-        async logRequest(getData) {
+        logRequest(getData) {
             if (!logger.canLog("debug")) {
                 return;
             }
-            const color = `color: #66e`;
-            const styles = [`${color}; font-weight: bold;`, color];
-            $groupCollapsed(`-> %c${prefix}#${id}%c<${title}>`, ...styles, await getData());
-            $trace("request trace");
+            const color = `color: #6960ec`;
+            const args = [`${color}; font-weight: bold;`, color];
+            const [dataHeader, ...otherData] = getData();
+            if (!isNil(dataHeader)) {
+                args.push(dataHeader);
+            }
+            $groupCollapsed(`-> %c${prefix}#${id}%c ${slicedTitle}`, ...args);
+            if (slicedTitle !== title) {
+                $log(title);
+            }
+            for (const data of otherData) {
+                $log(data);
+            }
+            $trace("Request trace:");
             $groupEnd();
         },
         /**
-         * Response logger: orange.
-         * @param {() => any} getData
+         * Response logger: dark orange.
+         * @param {() => any[]} getData
          */
-        async logResponse(getData) {
+        logResponse(getData) {
             if (!logger.canLog("debug")) {
                 return;
             }
-            const color = `color: #f80`;
-            const styles = [`${color}; font-weight: bold;`, color];
-            $log(`<- %c${prefix}#${id}%c<${title}>`, ...styles, await getData());
+            const color = `color: #ff8c00`;
+            const args = [`${color}; font-weight: bold;`, color];
+            const [dataHeader, ...otherData] = getData();
+            if (!isNil(dataHeader)) {
+                args.push(dataHeader);
+            }
+            $groupCollapsed(`<- %c${prefix}#${id}%c ${slicedTitle}`, ...args);
+            if (slicedTitle !== title) {
+                $log(title);
+            }
+            for (const data of otherData) {
+                $log(data);
+            }
+            $trace("Response trace:");
+            $groupEnd();
         },
     };
 }

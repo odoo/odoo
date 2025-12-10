@@ -8,17 +8,11 @@ import { FloatingBlocksBlockMobileOption } from "./floating_blocks_block_mobile_
 
 class FloatingBlocksBlockOptionPlugin extends Plugin {
     static id = "floatingBlocksBlockOptionPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
-            withSequence(BEGIN, {
-                OptionComponent: FloatingBlocksBlockMobileOption,
-                selector: ".s_floating_blocks .s_floating_blocks_block",
-                applyTo: ".container-fluid",
-            }),
-            withSequence(LAYOUT_GRID, {
-                OptionComponent: FloatingBlocksBlockOption,
-                selector: ".s_floating_blocks .s_floating_blocks_block",
-            }),
+            withSequence(BEGIN, FloatingBlocksBlockMobileOption),
+            withSequence(LAYOUT_GRID, FloatingBlocksBlockOption),
         ],
         dropzone_selector: [
             // Lock grid-items within their grid

@@ -1,4 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { SNIPPET_SPECIFIC } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
@@ -6,17 +7,21 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 
+export class DonationOption extends BaseOptionComponent {
+    static template = "website_payment.DonationOption";
+    static selector = ".s_donation";
+    // TODO AGAU: remove when merging https://github.com/odoo-dev/odoo/pull/4240
+    static cleanForSave(editingElement) {
+        delete editingElement.dataset.prefilledOptionsList;
+    }
+}
+
 export class DonationOptionPlugin extends Plugin {
     static id = "donationOption";
 
     resources = {
         builder_options: [
-            withSequence(SNIPPET_SPECIFIC, {
-                template: "website_payment.DonationOption",
-                selector: ".s_donation",
-                // TODO AGAU: remove when merging https://github.com/odoo-dev/odoo/pull/4240
-                cleanForSave: this.cleanForSave.bind(this),
-            }),
+            withSequence(SNIPPET_SPECIFIC, DonationOption),
         ],
         builder_actions: {
             ToggleDisplayOptionsAction,
@@ -29,11 +34,6 @@ export class DonationOptionPlugin extends Plugin {
             SetSliderStepAction,
         },
     };
-
-    // TODO AGAU: remove when merging https://github.com/odoo-dev/odoo/pull/4240
-    cleanForSave(editingElement) {
-        delete editingElement.dataset.prefilledOptionsList;
-    }
 }
 
 export class BaseDonationAction extends BuilderAction {

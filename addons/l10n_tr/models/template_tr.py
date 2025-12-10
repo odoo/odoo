@@ -33,6 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'tr150',
                 'income_account_id': 'tr600',
                 'tax_calculation_rounding_method': 'round_per_line',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'tr150',
             },
         }
 
@@ -43,5 +45,14 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _("Cash"),
                 'type': 'cash',
                 'show_on_dashboard': True,
+            },
+        }
+
+    @template('tr', 'account.account')
+    def _get_tr_account_account(self):
+        return {
+            'tr150': {
+                'account_stock_expense_id': 'tr710',
+                'account_stock_variation_id': 'tr713',
             },
         }

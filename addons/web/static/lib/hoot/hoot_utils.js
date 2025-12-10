@@ -114,6 +114,7 @@ const {
     TypeError,
     URL,
     URLSearchParams,
+    WeakMap,
     WeakSet,
     window,
 } = globalThis;
@@ -609,10 +610,12 @@ const R_NAMED_FUNCTION = /^\s*(async\s+)?function/;
 const R_INVISIBLE_CHARACTERS = /[\u00a0\u200b-\u200d\ufeff]/g;
 const R_OBJECT = /^\[object ([\w-]+)\]$/;
 
-const labelObjects = new WeakSet();
-const objectConstructors = new Map();
 /** @type {(KeyboardEventInit & { callback: (ev: KeyboardEvent) => any })[]} */
 const hootKeys = [];
+const labelObjects = new WeakSet();
+const objectConstructors = new Map();
+/** @type {WeakMap<unknown, unknown>} */
+const syncValues = new WeakMap();
 const windowTarget = {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
@@ -740,6 +743,7 @@ export function createReporting(parentReporting) {
 
     const reporting = reactive({
         assertions: 0,
+        duration: 0,
         failed: 0,
         passed: 0,
         skipped: 0,
@@ -1063,6 +1067,30 @@ export function getFuzzyScore(pattern, string) {
         fuzzyScoreMap[string] = score;
     }
     return score;
+}
+
+/**
+ * Returns the value associated to the given object.
+ * If 'toStringValue' is set, the result will concatenate any inner object that
+ * also has an associated sync value. This is typically useful for nested Blobs.
+ *
+ * @param {unknown} object
+ * @param {boolean} toStringValue
+ */
+export function getSyncValue(object, toStringValue) {
+    const result = syncValues.get(object);
+    if (!toStringValue) {
+        return result;
+    }
+    let textResult = "";
+    if (isIterable(result)) {
+        for (const part of result) {
+            textResult += syncValues.has(part) ? getSyncValue(part, toStringValue) : String(part);
+        }
+    } else {
+        textResult += String(result);
+    }
+    return textResult;
 }
 
 /**
@@ -1431,6 +1459,14 @@ export async function paste() {
     } catch (error) {
         console.warn("Could not paste from clipboard:", error);
     }
+}
+
+/**
+ * @param {unknown} object
+ * @param {unknown} value
+ */
+export function setSyncValue(object, value) {
+    syncValues.set(object, value);
 }
 
 /**
@@ -2038,6 +2074,7 @@ export const INCLUDE_LEVEL = {
 };
 
 export const MIME_TYPE = {
+    formData: "multipart/form-data",
     blob: "application/octet-stream",
     json: "application/json",
     text: "text/plain",

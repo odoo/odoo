@@ -4,7 +4,7 @@ from freezegun import freeze_time
 from markupsafe import Markup
 
 from odoo import Command, fields
-from odoo.tests import new_test_user, tagged
+from odoo.tests import new_test_user, tagged, users
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon, TestGetOperatorCommon
 from odoo.addons.mail.tests.common import MailCase
 
@@ -203,6 +203,7 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertFalse(has_joined)
         self.assertNotIn(jane.partner_id, chat.channel_member_ids.partner_id)
 
+    @users("michel")
     def test_livechat_conversation_history(self):
         """Test livechat conversation history formatting"""
         def _convert_attachment_to_html(attachment):
@@ -219,7 +220,6 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
                 "<div data-embedded='file' data-oe-protected='true' contenteditable='false' data-embedded-props='%s'/>",
             ) % json.dumps({"fileData": attachment_data})
 
-        self.authenticate(self.operators[0].login, self.password)
         channel = self.env["discuss.channel"].create(
             {
                 "name": "test",
@@ -240,7 +240,8 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         channel_history = channel.with_user(self.visitor_user)._get_channel_history()
         self.assertEqual(
             channel_history,
-            "Operator Here<br/>%(attachment_1)s<br/>Visitor Here<br/>%(attachment_2)s<br/>"
+            "<br/><strong>Michel Operator:</strong><br/>Operator Here<br/>%(attachment_1)s<br/>"
+            "<br/><strong>Rajesh:</strong><br/>Visitor Here<br/>%(attachment_2)s<br/>"
             % {
                 "attachment_1": _convert_attachment_to_html(attachment1),
                 "attachment_2": _convert_attachment_to_html(attachment2),
@@ -269,3 +270,52 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         with freeze_time(fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=1))):
             channel._gc_bot_only_ongoing_sessions()
         self.assertTrue(channel.livechat_end_dt)
+
+    def test_expertises_added_from_discuss_are_kept(self):
+        bob = self._create_operator()
+        jane = self._create_operator()
+        dog_expertise = self.env["im_livechat.expertise"].create({"name": "Dog"})
+        operator_expertise_ids = dog_expertise
+        chatbot_script = self.env["chatbot.script"].create({"title": "Testing Bot"})
+        self.env["chatbot.script.step"].create(
+            [
+                {
+                    "chatbot_script_id": chatbot_script.id,
+                    "message": "Hello, how can I help you?",
+                    "step_type": "free_input_single",
+                },
+                {
+                    "chatbot_script_id": chatbot_script.id,
+                    "operator_expertise_ids": operator_expertise_ids,
+                    "step_type": "forward_operator",
+                },
+            ]
+        )
+        self.livechat_channel.user_ids = jane
+        self.livechat_channel.rule_ids = [Command.create({"chatbot_script_id": chatbot_script.id})]
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "chatbot_script_id": chatbot_script.id,
+                "channel_id": self.livechat_channel.id,
+            },
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        self.make_jsonrpc_request(
+            "/chatbot/step/trigger",
+            {"channel_id": channel.id, "chatbot_script_id": chatbot_script.id},
+        )
+        self.assertIn(jane.partner_id, channel.livechat_agent_history_ids.partner_id)
+        self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids)
+        cat_expertise = self.env["im_livechat.expertise"].create({"name": "Cat"})
+        self.authenticate(jane.login, jane.login)
+        self.make_jsonrpc_request(
+            "/im_livechat/conversation/write_expertises",
+            {
+                "channel_id": channel.id,
+                "orm_commands": [Command.link(cat_expertise.id)],
+            },
+        )
+        self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise)
+        channel._add_members(users=bob)
+        self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise)

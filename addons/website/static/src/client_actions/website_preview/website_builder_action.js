@@ -226,6 +226,15 @@ export class WebsiteBuilderClientAction extends Component {
                 initialTarget: this.target,
                 initialTab: this.initialTab || this.translation ? "customize" : "blocks",
                 builderSidebar: {
+                    withHiddenSidebar: async (cb) => {
+                        try {
+                            this.state.showSidebar = false;
+                            return await cb();
+                        } finally {
+                            this.state.showSidebar = true;
+                        }
+                    },
+                    // TODO: remove `toggle` in master
                     toggle: (show) => {
                         this.state.showSidebar = show ?? !this.state.showSidebar;
                     },
@@ -270,6 +279,9 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     async onEditPage() {
+        if (!this.websiteContext) {
+            await this.iframeLoaded;
+        }
         this.websiteContext.showResourceEditor = false;
         this.blockIframe();
 
@@ -342,6 +354,10 @@ export class WebsiteBuilderClientAction extends Component {
         const currentTitle = iframe.contentDocument.title;
         history.replaceState(history.state, currentTitle, iframe.contentDocument.location.href);
         this.title.setParts({ action: currentTitle });
+        const frontendIconEl = iframe.contentDocument.querySelector("link[rel~='icon']");
+        if (frontendIconEl) {
+            document.querySelector("link[rel~='icon']").href = frontendIconEl.href;
+        }
     }
 
     onIframeLoad(ev) {
@@ -388,7 +404,8 @@ export class WebsiteBuilderClientAction extends Component {
             this.websiteService.context.showResourceEditor = false;
         }
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
-        if (this.translation) {
+        const url = new URL(this.websiteService.contentWindow.location.href);
+        if (url.searchParams.has("edit_translations")) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
         }
 
@@ -617,6 +634,7 @@ export class WebsiteBuilderClientAction extends Component {
                 );
 
                 this.addListeners(this.websiteContent.el.contentDocument);
+                this.iframefallback.el?.contentDocument.documentElement.replaceChildren();
                 resolve(this.websiteContent.el);
             };
         });
@@ -628,23 +646,11 @@ export class WebsiteBuilderClientAction extends Component {
         const websiteDoc = this.websiteContent.el?.contentDocument;
         const fallBackDoc = this.iframefallback.el?.contentDocument;
         if (!this.state.isEditing && websiteDoc && fallBackDoc) {
-            if (websiteDoc.head) {
-                fallBackDoc.head
-                    .querySelectorAll("link[rel='stylesheet'], style")
-                    .forEach((el) => el.remove());
-                for (const el of websiteDoc.head.querySelectorAll(
-                    "link[rel='stylesheet'], style"
-                )) {
-                    fallBackDoc.head.appendChild(el.cloneNode(true));
-                }
-            }
-            if (websiteDoc.body) {
-                fallBackDoc.body.replaceWith(websiteDoc.body.cloneNode(true));
-                const currentScrollEl = getScrollingElement(websiteDoc);
-                const scrollElement = getScrollingElement(fallBackDoc);
-                scrollElement.scrollTop = currentScrollEl.scrollTop;
-                this.cleanIframeFallback();
-            }
+            fallBackDoc.documentElement.replaceWith(websiteDoc.documentElement.cloneNode(true));
+            const currentScrollEl = getScrollingElement(websiteDoc);
+            const scrollElement = getScrollingElement(fallBackDoc);
+            scrollElement.scrollTop = currentScrollEl.scrollTop;
+            this.cleanIframeFallback();
         }
     }
 

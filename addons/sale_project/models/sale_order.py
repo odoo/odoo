@@ -114,7 +114,6 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
-        is_project_manager = self.env.user.has_group('project.group_project_manager')
         projects = self.env['project.project'].search(['|', ('sale_order_id', 'in', self.ids), ('reinvoiced_sale_order_id', 'in', self.ids)])
         projects_per_so = defaultdict(lambda: self.env['project.project'])
         for project in projects:
@@ -124,8 +123,7 @@ class SaleOrder(models.Model):
             projects |= order.project_id
             projects |= order.order_line.mapped('project_id')
             projects |= projects_per_so[order.id or order._origin.id]
-            if not is_project_manager:
-                projects = projects._filtered_access('read')
+            projects = projects._filtered_access('read')
             order.project_ids = projects
             order.project_count = len(projects.filtered('active'))
 
@@ -269,7 +267,7 @@ class SaleOrder(models.Model):
         project = self.env['project.project'].browse(self.env.context.get('create_for_project_id'))
         task = self.env['project.task'].browse(self.env.context.get('create_for_task_id'))
         if project or task:
-            service_sol = next((sol for sol in created_records.order_line if sol.is_service), False)
+            service_sol = next((sol for sol in created_records.order_line if sol.is_service), self.env['sale.order.line'])
             if project and not project.sale_line_id:
                 project.sale_line_id = service_sol
                 if not project.reinvoiced_sale_order_id:

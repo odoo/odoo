@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.l10n_latam_check.tests.common import L10nLatamCheckTest
 from odoo.tests import Form, tagged
-from odoo import fields
+from odoo import Command, fields
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -64,3 +64,31 @@ class TestOwnChecks(L10nLatamCheckTest):
                          "Canceled payment checks must not have issue state")
         self.assertEqual(len(payment.l10n_latam_new_check_ids.outstanding_line_id), 0,
                          "Canceled payment checks must not have split move")
+
+    def test_post_own_check_with_3_lines(self):
+        foreign_currency = self.env.ref('base.EUR')
+        foreign_currency.active = True
+        payment_method_line = self.bank_journal._get_available_payment_method_lines('outbound').filtered_domain([('code', '=', 'own_checks')])[:1]
+        payment = self.env['account.payment'].create({
+            'payment_type': 'outbound',
+            'partner_id': self.partner_a.id,
+            'journal_id': self.bank_journal.id,
+            'currency_id': foreign_currency.id,
+            'payment_method_line_id': payment_method_line.id,
+            'l10n_latam_new_check_ids': [
+                Command.create({
+                    'payment_date': fields.Date.today(),
+                    'amount': '20',
+                }),
+                Command.create({
+                    'payment_date': fields.Date.today(),
+                    'amount': '30',
+                }),
+                Command.create({
+                    'payment_date': fields.Date.today(),
+                    'amount': '70',
+                }),
+            ]
+        })
+        payment.action_post()
+        self.assertEqual(payment.amount, 120)

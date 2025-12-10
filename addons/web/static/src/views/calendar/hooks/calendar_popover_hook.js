@@ -6,7 +6,7 @@ import { useComponent, useExternalListener } from "@odoo/owl";
 export function useCalendarPopover(component) {
     const owner = useComponent();
     let popoverClass = "";
-    const popoverOptions = { position: "right", onClose: cleanup };
+    const popoverOptions = { onClose: cleanup };
     Object.defineProperty(popoverOptions, "popoverClass", { get: () => popoverClass });
     const popover = usePopover(component, popoverOptions);
     const dialog = useService("dialog");

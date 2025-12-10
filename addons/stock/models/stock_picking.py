@@ -657,6 +657,8 @@ class StockPicking(models.Model):
     is_locked = fields.Boolean(default=True, copy=False, help='When the picking is not done this allows changing the '
                                'initial demand. When the picking is done this allows '
                                'changing the done quantities.')
+    is_date_editable = fields.Boolean(
+        'Is Scheduled Date Editable', compute='_compute_is_date_editable')
 
     weight_bulk = fields.Float(
         'Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
@@ -742,6 +744,13 @@ class StockPicking(models.Model):
     def _compute_is_signed(self):
         for picking in self:
             picking.is_signed = picking.signature
+
+    def _compute_is_date_editable(self):
+        for picking in self:
+            if picking.state in ['done', 'cancel']:
+                picking.is_date_editable = not picking.is_locked
+            else:
+                picking.is_date_editable = True
 
     @api.depends('state', 'picking_type_code', 'scheduled_date', 'move_ids', 'move_ids.forecast_availability', 'move_ids.forecast_expected_date')
     def _compute_products_availability(self):
@@ -880,7 +889,7 @@ class StockPicking(models.Model):
             packages_weight = picking.move_line_ids.result_package_id.sudo()._get_weight(picking.id)
 
             shipping_weight = picking.weight_bulk
-            relevant_packages = picking.move_line_ids.result_package_id.mapped(lambda p: p.outermost_package_id or p)
+            relevant_packages = picking.move_line_ids.result_package_id.outermost_package_id
             children_packages_by_pack = relevant_packages._get_all_children_package_dest_ids()[0]
             for package in relevant_packages:
                 if package.shipping_weight:
@@ -994,6 +1003,9 @@ class StockPicking(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.parent_id.name')
     def _compute_picking_warning_text(self):
+        if not self.env.user.has_group('stock.group_warning_stock'):
+            self.picking_warning_text = ''
+            return
         for picking in self:
             text = ''
             if partner_msg := picking.partner_id.picking_warn_msg:
@@ -1474,6 +1486,11 @@ class StockPicking(models.Model):
         """Whether the different transfers should be displayed on the pre action done wizards."""
         return len(self) > 1
 
+    def _should_ignore_backorders(self):
+        """ Checks if the `create_backorder` setting from the picking type should be ignored.
+        """
+        return bool(self.return_id)
+
     def _get_without_quantities_error_message(self):
         """ Returns the error message raised in validation if no quantities are reserved.
         The purpose of this method is to be overridden in case we want to adapt this message.
@@ -1904,7 +1921,7 @@ class StockPicking(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('picking_ids', 'in', self.ids)],
             'context': {
-                'picking_id': self.id,
+                'picking_ids': self.ids,
                 'location_id': self.location_id.id,
                 'can_add_entire_packs': self.picking_type_code != 'incoming',
                 'search_default_main_packages': True,
@@ -2084,15 +2101,17 @@ class StockPicking(models.Model):
         self.ensure_one()
         return self.state == 'done'
 
+    # TODO: rename the parameter from reference to references in master for improved readability
     def _add_reference(self, reference=False):
-        """ link the given reference to the list of references. """
+        """ link the given references to the list of references. """
         self.ensure_one()
-        self.move_ids.reference_ids = [Command.link(reference.id)]
+        self.move_ids.reference_ids = [Command.link(stock_reference.id) for stock_reference in reference]
 
+    # TODO: rename the parameter from reference to references in master for improved readability
     def _remove_reference(self, reference):
-        """ remove the given reference to the list of references. """
+        """ remove the given references from the list of references. """
         self.ensure_one()
-        self.move_ids.reference_ids = [Command.unlink(reference.id)]
+        self.move_ids.reference_ids = [Command.unlink(stock_reference.id) for stock_reference in reference]
 
     def _prepare_entire_pack_move_line_vals(self, packages):
         """ Prepares the move line values for every packages within packages and their children that contain products.

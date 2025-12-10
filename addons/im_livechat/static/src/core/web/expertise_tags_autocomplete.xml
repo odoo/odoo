@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.ExpertiseTagsAutocomplete">
+        <div
+            class="o-livechat-ExpertiseTagsAutocomplete d-inline-flex o_tags_input o_input flex-wrap gap-1 mb-3"
+            t-ref="root"
+        >
+            <TagsList displayText="true" tags="tags"/>
+            <div class="flex-grow-1 d-inline-flex w-100" style="flex-basis: 0;">
+                <Many2XAutocomplete
+                    placeholder="placeholder"
+                    resModel="'im_livechat.expertise'"
+                    activeActions="{'link': true}"
+                    isToMany="true"
+                    fieldString.translate="Expertise"
+                    update.bind="addExpertises"
+                    quickCreate="store.self_partner?.main_user_id?.is_livechat_manager ? (name) => this.createAndLinkExpertise(name) : null"
+                    getDomain="() => []"
+                >
+                    <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                        <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record.id) }">
+                            <span t-out="autoCompleteItemScope.label"/>
+                        </span>
+                    </t>
+                </Many2XAutocomplete>
+            </div>
+        </div>
+    </t>
+</templates>

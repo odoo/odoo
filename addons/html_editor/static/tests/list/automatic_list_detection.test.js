@@ -95,6 +95,7 @@ test("creating list directly inside table column (td)", async () => {
     await insertText(editor, "A. ");
     expect(getContent(el)).toBe(
         unformat(`
+            <p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table">
                 <tbody>
                     <tr>
@@ -114,7 +115,7 @@ test("creating list directly inside table column (td)", async () => {
                     </tr>
                 </tbody>
             </table>
-            <p><br></p>`)
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });
 

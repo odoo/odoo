@@ -8,15 +8,16 @@
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
 # Noma Yuki, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-10-16 02:30+0000\n"
+"PO-Revision-Date: 2025-12-05 04:16+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/base/ja/"
 ">\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -669,6 +670,9 @@ msgid ""
 "\n"
 "Use iMin ePOS Printers without the IoT Box in the Point of Sale\n"
 msgstr ""
+"\n"
+"\n"
+"IoTボックスを使用せずに、iMin製ePOSプリンターをPOSで利用する\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
@@ -732,6 +736,9 @@ msgid ""
 "        Augment Livechat with AI Agents.\n"
 "    "
 msgstr ""
+"\n"
+"        AIエージェントでライブチャットを強化しましょう。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
@@ -795,6 +802,33 @@ msgid ""
 "Especificaciones.doc\n"
 "\n"
 msgstr ""
+"\n"
+"* "
+"アルゼンチンの法的要件のため、一定期間に行われた販売または購入のVAT詳細情報を"
+"保持するVATブックレポートを追加します。\n"
+"* 請求の分析に使用されるVAT要約レポートを追加します\n"
+"* "
+"ARCAにインポートするTXTファイルを生成できるデジタルVATブック機能を追加します"
+"。実装されているのは:\n"
+"\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
+"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
+"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
+"\n"
+"AFIP公式ドキュメント\n"
+"\n"
+"* デジタルVATブック - 行デザイン https://www.afip.gob.ar/libro-iva-digital/"
+"documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* CITI - 行デザイン (デジタルVATブックと同様): https://www.afip.gob.ar/"
+"comprasyventas/documentos/"
+"RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
+"* CITI - 仕様 "
+"(数値/英数字フィールドの数値と入力のフォーマット方法に関する詳細情報を提供し"
+"ます): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-"
+"Compras-Ventas-Especificaciones.doc\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_reports_simple
@@ -802,6 +836,8 @@ msgid ""
 "\n"
 "* Add export of IVA Simple Tax Report.\n"
 msgstr ""
+"\n"
+"* IVA簡易税務レポートのエクスポート機能を追加。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_ai_app
@@ -875,6 +911,8 @@ msgid ""
 "\n"
 "- Send and receive documents via Nemhandel network in OIOUBL 2.1 format\n"
 msgstr ""
+"\n"
+"- OIOUBL 2.1 形式で、Nemhandel ネットワークを通じて書類の送受信を行います\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail
@@ -1211,6 +1249,10 @@ msgid ""
 "===========================\n"
 "A helper model for managing transfers between accounts.\n"
 msgstr ""
+"\n"
+"口座振替について\n"
+"===========================\n"
+"口座間の送金を管理するためのサポートモデルです。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant
@@ -1537,6 +1579,8 @@ msgid ""
 "\n"
 "Accounting Expense Bridge\n"
 msgstr ""
+"\n"
+"会計費用ブリッジ\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_accountant_fleet
@@ -1544,6 +1588,8 @@ msgid ""
 "\n"
 "Accounting Fleet Bridge\n"
 msgstr ""
+"\n"
+"会計 フリート・ブリッジ\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_base_import
@@ -10826,8 +10872,7 @@ msgid ""
 "module.\n"
 msgstr ""
 "\n"
-"このブリッジモジュールを使用すると、直送モジュールとの下請けを管理できま"
-"す。\n"
+"このブリッジモジュールを使用すると、直送モジュールとの外注を管理できます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account
@@ -12911,30 +12956,31 @@ msgid ""
 "available for generating a payment on the selected invoice.\n"
 msgstr ""
 "\n"
-"このモジュールにより、一連の支払い情報を収集するためにSEPA直接引落 (SDD)\n"
-"準拠のXMLファイル(Pain.008.001.02と互換性あり)を生成して銀行に送信すること"
-"が\n"
+"このモジュールにより、一連の支払い情報を収集するためにSEPA口座振替 (SDD)\n"
+"準拠のXMLファイル(Pain.008.001.02と互換性あり)"
+"を生成して銀行に送信することが\n"
 "可能になります。\n"
 "\n"
 "この支払方法を利用するには、顧客はまず\n"
-"会社に口座振替の委任状を返送し、口座振替の利用に同意する必要があります。.\n"
+"会社に口座振替の同意書を返送し、口座振替の利用に同意する必要があります。.\n"
 "この同意は、Odooで '顧客委任' としてエンコードされている必要があります。\n"
 "\n"
 "また、SDDファイルを適切に生成するには、以下の要件を満たす必要があります:\n"
 "- 会社口座は有効なIBAN番号に設定する必要があります。\n"
-"- 貴社には、債権者識別子が割り当てられているはずです(これは、管理設定 - 一般"
-"設定 - 会計セクション で実行できます)。\n"
-"- 会社は、SDD支払いを受け取る仕訳帳を定義している必要があります(これも、会計"
-"モジュールの '管理設定' で設定できます。)\n"
-"- 支払いを生成する顧客は、全て検証済のIBAN口座番号を持っている必要がありま"
-"す。\n"
+"- 貴社には、債権者識別子が割り当てられているはずです(これは、管理設定 - "
+"一般設定 - 会計セクション で実行できます)。\n"
+"- 会社は、SDD支払いを受け取る仕訳帳を定義している必要があります(これも、"
+"会計モジュールの '管理設定' で設定できます。)\n"
+"- "
+"支払いを生成する顧客は、全て検証済のIBAN口座番号を持っている必要があります。"
+"\n"
 "\n"
 "これらの要件のいずれかが満たされていない場合、Odooが通知します。\n"
 "\n"
 "未払いの顧客請求書に対する支払いを登録するには、\n"
-"'支払登録' ウィザードで銀行口座を選択し、専用の 'SEPA直接引落' オプション\n"
-"を使用します。選択した請求書に対する支払いを生成するための有効な口座振替委任"
-"が\n"
+"'支払登録' ウィザードで銀行口座を選択し、専用の 'SEPA口座振替' オプション\n"
+"を使用します。"
+"選択した請求書に対する支払いを生成するための有効な口座振替委任が\n"
 "利用できない場合、エラーメッセージが表示されます。\n"
 
 #. module: base
@@ -15987,7 +16033,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_livechat
 msgid "AI Livechat"
-msgstr ""
+msgstr "AIライブチャット"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_account
@@ -16395,7 +16441,7 @@ msgstr "ブラジル用会計レポート"
 #: model:ir.module.module,shortdesc:base.module_account_accountant_fleet
 #: model:ir.module.module,shortdesc:base.module_account_fleet
 msgid "Accounting/Fleet bridge"
-msgstr "経理/フリートブリッジ"
+msgstr "会計/フリートブリッジ"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__act_window_id
@@ -16859,7 +16905,7 @@ msgstr "Stripeでの支払いを可能にするセルフオーダーアプリの
 #. module: base
 #: model:ir.module.module,description:base.module_tests
 msgid "Addons to test Odoo industries code."
-msgstr ""
+msgstr "Odooインダストリーコードをテストするためのアドオンです。"
 
 #. module: base
 #. odoo-python
@@ -17532,7 +17578,7 @@ msgstr "アゴラ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_agriculture_shop
 msgid "Agricultural Store"
-msgstr ""
+msgstr "農業資材店"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_A
@@ -18044,7 +18090,7 @@ msgstr "アメリカ/Costa_Rica"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/coyhaique
 msgid "America/Coyhaique"
-msgstr ""
+msgstr "アメリカ/Coyhaique"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/creston
@@ -19071,7 +19117,7 @@ msgstr "アーキテクチャの相違"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_architects
 msgid "Architecture Firm"
-msgstr ""
+msgstr "建築事務所"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
@@ -19196,7 +19242,7 @@ msgstr "アーティストテーマ - アートギャラリー、写真、絵画
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_art_craft
 msgid "Arts & Crafts Store"
-msgstr ""
+msgstr "アート・クラフト用品店"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -19901,12 +19947,12 @@ msgstr "訪問者をメーリングリストに登録するように呼びかけ
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_certification_organism
 msgid "Audit & Certification"
-msgstr ""
+msgstr "監査・認定機関"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_accountant_knowledge
 msgid "Audit Reports"
-msgstr ""
+msgstr "監査レポート"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.ISK
@@ -20240,7 +20286,7 @@ msgstr "従業員契約に基づく自動化規則"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_automobile
 msgid "Automobile Spare Parts"
-msgstr ""
+msgstr "車両スペア部品"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__available_model_ids
@@ -20472,7 +20518,7 @@ msgstr "バイザ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bakery
 msgid "Bakery"
-msgstr ""
+msgstr "ベーカリー"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.PAB
@@ -20583,7 +20629,7 @@ msgstr "銀行とは、あなたや連絡先が口座を持っている金融機
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bar_industry
 msgid "Bar & Pub"
-msgstr ""
+msgstr "バー & パブ"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -20969,7 +21015,7 @@ msgstr "バミューダ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_beverage_distributor
 msgid "Beverage Distributor"
-msgstr ""
+msgstr "飲料販売代理店"
 
 #. module: base
 #: model:res.country,name:base.bt
@@ -20979,12 +21025,12 @@ msgstr "ブータン"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bike_leasing
 msgid "Bike Leasing"
-msgstr ""
+msgstr "自転車リース"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bike_shop
 msgid "Bike Shop"
-msgstr ""
+msgstr "自転車店"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_ups
@@ -20994,7 +21040,7 @@ msgstr "UPSアカウント番号に請求する"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_billboard_rental
 msgid "Billboard Rental"
-msgstr ""
+msgstr "ビルボードレンタル"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_model_id
@@ -21118,7 +21164,7 @@ msgstr "本、雑誌、音楽"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bookstore
 msgid "Bookstore"
-msgstr ""
+msgstr "書店"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bookstore
@@ -21681,7 +21727,7 @@ msgstr "CUIT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cake_shop
 msgid "Cake Shop"
-msgstr ""
+msgstr "ケーキショップ"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_esg
@@ -21743,7 +21789,7 @@ msgstr "カメルーン - 会計レポート"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_campsite
 msgid "Campsite"
-msgstr ""
+msgstr "キャンプ場"
 
 #. module: base
 #. odoo-python
@@ -21848,7 +21894,7 @@ msgstr "キャンセル"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_candy_shop
 msgid "Candy Shop"
-msgstr ""
+msgstr "キャンディーショップ"
 
 #. module: base
 #. odoo-python
@@ -21905,7 +21951,7 @@ msgstr "カーボベルデ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_carpenter
 msgid "Carpenter"
-msgstr ""
+msgstr "大工業"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__cascade
@@ -22423,7 +22469,7 @@ msgstr "クリーンでシャープなデザイン。"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cleaning_services
 msgid "Cleaning Services"
-msgstr ""
+msgstr "クリーニングサービス"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
@@ -22466,7 +22512,7 @@ msgstr "クライアントアクションタグ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_climbing_gym
 msgid "Climbing Gym"
-msgstr ""
+msgstr "クライミングジム"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -22479,7 +22525,7 @@ msgstr "閉じる"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_clothing_boutique
 msgid "Clothing Store"
-msgstr ""
+msgstr "アパレルショップ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cloud_storage
@@ -22995,7 +23041,7 @@ msgstr "コンピューター"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_concert_halls
 msgid "Concert Halls"
-msgstr ""
+msgstr "コンサートホール"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default__condition
@@ -23351,7 +23397,7 @@ msgstr "コーポレート"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_corporate_gifts
 msgid "Corporate Gifts"
-msgstr ""
+msgstr "コーポレートギフト"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_buzzy
@@ -23361,7 +23407,7 @@ msgstr "企業、サービス、テクノロジー、形状、イラスト"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cosmetics_store
 msgid "Cosmetics Store"
-msgstr ""
+msgstr "化粧品専門店"
 
 #. module: base
 #: model:res.country,name:base.cr
@@ -23487,7 +23533,7 @@ msgstr "コース検定"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_coworking
 msgid "Coworking"
-msgstr ""
+msgstr "コワーキングスペース"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_create
@@ -24128,7 +24174,7 @@ msgstr "カスタムフィールド"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_custom_furniture
 msgid "Custom Furniture Production"
-msgstr ""
+msgstr "オーダーメイド家具製作"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model__state__manual
@@ -24143,7 +24189,7 @@ msgstr "カスタムショートカット"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_test_custo
 msgid "Custom Theme (Testing suite)"
-msgstr ""
+msgstr "カスタムテーマ (テストスイート)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__selection_value
@@ -24316,7 +24362,7 @@ msgstr "DIN 5008 - 在庫"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_diy_workshops
 msgid "DIY Workshops"
-msgstr ""
+msgstr "DIYワークショップ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
@@ -25000,7 +25046,7 @@ msgstr "ディルハム"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
 msgid "Disable"
-msgstr "無効にする"
+msgstr "無効化する"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__disable_shrinking
@@ -25536,7 +25582,7 @@ msgstr "ドラム"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_driving_school
 msgid "Driving School"
-msgstr ""
+msgstr "自動車学校"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_dropshipping
@@ -25552,7 +25598,7 @@ msgstr "直送および外注管理"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "直送"
 
 #. module: base
 #. odoo-python
@@ -25847,7 +25893,7 @@ msgstr "エルサルバドル"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_electrician
 msgid "Electricians"
-msgstr ""
+msgstr "電気技術者"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi_stock
@@ -25872,7 +25918,7 @@ msgstr "ペルー(OSEメソッド) およびUBL 2.1用電子請求"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_electronic_store
 msgid "Electronic Store"
-msgstr ""
+msgstr "電化製品店"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_edi
@@ -26151,7 +26197,7 @@ msgstr "キーの説明と目的を入力します。"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
 msgid "Enter your password"
-msgstr ""
+msgstr "パスワードを入力してください"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
@@ -26227,7 +26273,7 @@ msgstr "環境、自然、エコロジー、持続可能な開発、非営利、
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_environmental_agency
 msgid "Environmental Agency"
-msgstr ""
+msgstr "環境機関"
 
 #. module: base
 #: model:res.country,name:base.gq
@@ -26242,7 +26288,7 @@ msgstr "設備、資産、内部ハードウェア、割当追跡"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_equity
 msgid "Equity"
-msgstr ""
+msgstr "資本"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -26324,7 +26370,7 @@ msgstr "エラー：再帰メニューを作成することはできません。
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_escape_rooms
 msgid "Escape Rooms"
-msgstr ""
+msgstr "エスケープルーム"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.CVE
@@ -26334,7 +26380,7 @@ msgstr "エスクード"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_real_estate
 msgid "Estate Management"
-msgstr ""
+msgstr "不動産管理"
 
 #. module: base
 #: model:res.country,name:base.ee
@@ -26919,7 +26965,7 @@ msgstr "イベント出展者"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_management
 msgid "Event Management"
-msgstr ""
+msgstr "イベント管理"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_social
@@ -27467,7 +27513,7 @@ msgstr "フェロー諸島"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fast_food
 msgid "Fast Food"
-msgstr ""
+msgstr "ファストフード"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__state
@@ -27869,7 +27915,7 @@ msgstr "古い記録の検索・アーカイブ・削除"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_restaurant
 msgid "Fine Dining Restaurant"
-msgstr ""
+msgstr "ファインダイニングレストラン"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__finished
@@ -27946,7 +27992,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fitness
 msgid "Fitness Center"
-msgstr ""
+msgstr "フィットネスセンター"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__icon_flag
@@ -27978,7 +28024,7 @@ msgstr "ドキュメントからのフリート"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_florist
 msgid "Florist"
-msgstr ""
+msgstr "フラワーショップ"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_orchid
@@ -28049,12 +28095,12 @@ msgstr "食品"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_food_distribution
 msgid "Food Distribution"
-msgstr ""
+msgstr "食品流通業"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_food_trucks
 msgid "Food Trucks"
-msgstr ""
+msgstr "フードトラック"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
@@ -28187,7 +28233,7 @@ msgstr "コースに関するフォーラム"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_coal_petroleum
 msgid "Fossil Fuel Trading"
-msgstr ""
+msgstr "化石燃料取引"
 
 #. module: base
 #. odoo-python
@@ -28358,7 +28404,7 @@ msgstr "ファンクション"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_furniture_store
 msgid "Furniture Store"
-msgstr ""
+msgstr "家具専門店"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_loftspace
@@ -28474,7 +28520,7 @@ msgstr "ガボン - 会計レポート"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gallery
 msgid "Gallery"
-msgstr ""
+msgstr "ギャラリー"
 
 #. module: base
 #: model:res.country,name:base.gm
@@ -28499,7 +28545,7 @@ msgstr "タイムオフダッシュボードのガントビュー"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gardening
 msgid "Gardening"
-msgstr ""
+msgstr "造園"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_gelato
@@ -28871,7 +28917,7 @@ msgstr "グリッドビュー"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fmcg_store
 msgid "Grocery Store"
-msgstr ""
+msgstr "食料品店"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.PLN
@@ -29024,12 +29070,12 @@ msgstr "ガーンジー"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_guest_house
 msgid "Guest House"
-msgstr ""
+msgstr "ゲストハウス"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_guided_tours
 msgid "Guided Tours"
-msgstr ""
+msgstr "ガイドツアー"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ANG
@@ -29165,12 +29211,12 @@ msgstr "HTTPルーティング"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hvac_services
 msgid "HVAC Services"
-msgstr ""
+msgstr "空調設備サービス"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hair_salon
 msgid "Hair Salon"
-msgstr ""
+msgstr "ヘアサロン"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -29210,7 +29256,7 @@ msgstr "従業員のランチ注文を管理"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_handyman
 msgid "Handyman Services"
-msgstr ""
+msgstr "便利屋サービス"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -29228,7 +29274,7 @@ msgstr "ハードウェアプロキシ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hardware_shop
 msgid "Hardware Store"
-msgstr ""
+msgstr "金物店"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__has_diff
@@ -29253,7 +29299,7 @@ msgstr "全てのレポートの上部に表示されるヘッダーテキスト
 #. module: base
 #: model:ir.module.category,name:base.module_category_health_and_fitness
 msgid "Health and Fitness"
-msgstr ""
+msgstr "ヘルス&フィットネス"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_Q
@@ -29454,7 +29500,7 @@ msgstr "履歴"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_holiday_house
 msgid "Holiday House"
-msgstr ""
+msgstr "ホリデーハウス"
 
 #. module: base
 #: model:res.country,name:base.va
@@ -29519,7 +29565,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitality
 msgid "Hospitality"
-msgstr ""
+msgstr "ホスピタリティ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_host
@@ -29529,7 +29575,7 @@ msgstr "ホスト名またはSMTPサーバのIPアドレス"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hotel
 msgid "Hotel"
-msgstr ""
+msgstr "ホテル"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__hours
@@ -29827,7 +29873,7 @@ msgstr "ISOコード"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_it_hardware
 msgid "IT Hardware & Support"
-msgstr ""
+msgstr "ITハードウエア & サポート"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_J
@@ -32229,7 +32275,7 @@ msgstr "設定ウィザードを開始"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_lawyer
 msgid "Law Firm"
-msgstr ""
+msgstr "法律事務所"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background
@@ -32390,7 +32436,7 @@ msgstr "リベリア"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_library
 msgid "Library"
-msgstr ""
+msgstr "図書館"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bookstore
@@ -32710,7 +32756,7 @@ msgstr "パスキーでログイン"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_device_view_kanban
 msgid "Log out"
-msgstr ""
+msgstr "ログアウト"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -33542,7 +33588,7 @@ msgstr "マーケティング"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_agency
 msgid "Marketing Agency"
-msgstr ""
+msgstr "マーケティングエージェンシー"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_marketing_automation
@@ -33712,7 +33758,7 @@ msgstr "メンバー"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_members_club
 msgid "Members Club"
-msgstr ""
+msgstr "メンバークラブ"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -33789,7 +33835,7 @@ msgstr "メッセージ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_metal_fabricator
 msgid "Metal Fabricator"
-msgstr ""
+msgstr "金属加工業者"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.MZN
@@ -33869,7 +33915,7 @@ msgstr "メキシコ/General"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_micro_brewery
 msgid "Microbrewery"
-msgstr ""
+msgstr "マイクロブルワリー"
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -34573,7 +34619,7 @@ msgstr "多通貨"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_museum
 msgid "Museum"
-msgstr ""
+msgstr "美術館"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -34953,7 +34999,7 @@ msgstr "ナイジェリア - 会計レポート"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_night_clubs
 msgid "Night Clubs"
-msgstr ""
+msgstr "ナイトクラブ"
 
 #. module: base
 #: model:res.country,name:base.nu
@@ -35115,7 +35161,7 @@ msgstr "北マケドニア"
 #. module: base
 #: model:res.country,name:base.xi
 msgid "Northern Ireland"
-msgstr ""
+msgstr "北アイルランド"
 
 #. module: base
 #: model:res.country,name:base.mp
@@ -36320,7 +36366,7 @@ msgstr "OdooモバイルPOS販売モジュール"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_partner
 msgid "Odoo Partner"
-msgstr ""
+msgstr "Odooパートナー"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -38171,7 +38217,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_outdoor_activities
 msgid "Outdoor Activities"
-msgstr ""
+msgstr "アウトドアアクティビティ"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -39232,7 +39278,7 @@ msgstr "パーソナル"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_personal_trainer
 msgid "Personal Trainer"
-msgstr ""
+msgstr "パーソナルトレーナー"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -39307,7 +39353,7 @@ msgstr "ペソ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pharmacy_retail
 msgid "Pharmacy"
-msgstr ""
+msgstr "薬局"
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -39419,7 +39465,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_photography
 msgid "Photography"
-msgstr ""
+msgstr "写真"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.SSP
@@ -39950,7 +39996,7 @@ msgstr "プロダクト・価格表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_expiry
 msgid "Products Expiration Date"
-msgstr "プロダクトの有効期限"
+msgstr "プロダクトの使用期限"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_project_sale
@@ -40399,7 +40445,7 @@ msgstr "属性"
 #: model:ir.model.fields,field_description:base.field_res_partner__properties_base_definition_id
 #: model:ir.model.fields,field_description:base.field_res_users__properties_base_definition_id
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "プロパティベース定義"
 
 #. module: base
 #: model:ir.model,name:base.model_properties_base_definition_mixin
@@ -40429,7 +40475,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_condominium
 msgid "Property Owner Association"
-msgstr ""
+msgstr "住宅所有者組合"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -40908,7 +40954,7 @@ msgstr "読み取り"
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_read
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Read Access"
-msgstr "読み取りアクセス"
+msgstr "読取権限"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
@@ -40929,7 +40975,7 @@ msgstr "不動産"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_real_estate
 msgid "Real Estate Agency"
-msgstr ""
+msgstr "不動産会社"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_real_estate
@@ -41355,7 +41401,7 @@ msgstr "大韓民国 - 会計レポート"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__request
 msgid "Request"
-msgstr "要求"
+msgstr "申請"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__required
@@ -41473,7 +41519,7 @@ msgstr "小売"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__revision
 msgid "Revision"
-msgstr ""
+msgstr "更新"
 
 #. module: base
 #. odoo-python
@@ -42065,7 +42111,7 @@ msgstr "売却在庫証拠金"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock_product_expiry
 msgid "Sale Stock Product Expiry"
-msgstr "販売在庫プロダクト有効期限"
+msgstr "販売在庫プロダクト使用期限"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_stock
@@ -43005,7 +43051,7 @@ msgstr "サーバーは次の例外で応答しました:%s"
 #. module: base
 #: model:ir.module.category,name:base.module_category_service
 msgid "Service"
-msgstr ""
+msgstr "サービス"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_margin
@@ -43164,7 +43210,7 @@ msgstr "Shiprocket配送"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_shoe_maker
 msgid "Shoemaker"
-msgstr ""
+msgstr "靴製造業"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_test_website_sale
@@ -43517,12 +43563,12 @@ msgstr "会社の設定用のソーシャルメディアコネクタ。"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_software_reseller
 msgid "Software Reseller"
-msgstr ""
+msgstr "ソフトウェアリセラー"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_solar_installation
 msgid "Solar Energy Systems"
-msgstr ""
+msgstr "太陽エネルギーシステム"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.PEN
@@ -43623,7 +43669,7 @@ msgstr "南スーダン"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spa_resort
 msgid "Spa Resort"
-msgstr ""
+msgstr "スパリゾート"
 
 #. module: base
 #. odoo-python
@@ -43754,12 +43800,12 @@ msgstr "スポンサー、追跡、議題、イベントニュース"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sport_events
 msgid "Sport Events"
-msgstr ""
+msgstr "スポーツイベント"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sports_club
 msgid "Sports Club"
-msgstr ""
+msgstr "スポーツクラブ"
 
 #. module: base
 #: model:ir.module.module,description:base.module_spreadsheet
@@ -44062,7 +44108,7 @@ msgstr "パレスチナ"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
 msgid "States"
-msgstr "都道府県"
+msgstr "都道府県/州"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__application_statistics
@@ -44078,7 +44124,7 @@ msgstr "統計"
 #: model:ir.model.fields,field_description:base.field_ir_module_module_exclusion__state
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
 msgid "Status"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_increment
@@ -44274,7 +44320,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_student_organization
 msgid "Student Organization"
-msgstr ""
+msgstr "学生団体"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_customizations_studio
@@ -44285,12 +44331,12 @@ msgstr "スタジオ"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_subcontracting
 msgid "Subcontract Productions"
-msgstr "下請けプロダクション"
+msgstr "外注製造"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_mrp_subcontracting
 msgid "Subcontract with Barcode"
-msgstr "バーコードによる下請け"
+msgstr "外注のバーコード対応"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_account
@@ -44347,7 +44393,7 @@ msgstr "概要"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_summer_camps
 msgid "Summer Camps"
-msgstr ""
+msgstr "サマーキャンプ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__7
@@ -44392,7 +44438,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_surveyor
 msgid "Surveying & Mapping"
-msgstr ""
+msgstr "測量・地図作成"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_surveys
@@ -44646,7 +44692,7 @@ msgstr "タカ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_takeaway_restaurant
 msgid "Takeaway Restaurant"
-msgstr ""
+msgstr "テイクアウトレストラン"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.WST
@@ -44656,7 +44702,7 @@ msgstr "タラ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_headhunter
 msgid "Talent Acquisition"
-msgstr ""
+msgstr "人材派遣"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -44715,7 +44761,7 @@ msgstr "タスクログ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_tattoo_shop
 msgid "Tattoo Shop"
-msgstr ""
+msgstr "タトゥーショップ"
 
 #. module: base
 #. odoo-python
@@ -44745,7 +44791,7 @@ msgstr "チャド - 会計レポート"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_team_sports_club
 msgid "Team Sports Club"
-msgstr ""
+msgstr "チームスポーツクラブ"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden
@@ -45097,7 +45143,7 @@ msgstr "WhatsAppで連絡先にメッセージを送信"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_textile_manufacturing
 msgid "Textile Manufacturing"
-msgstr ""
+msgstr "テキスタイル製造"
 
 #. module: base
 #: model:res.country,name:base.th
@@ -45934,7 +45980,7 @@ msgstr "金額フィールドに送信された値が数値ではありません
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theater
 msgid "Theater"
-msgstr ""
+msgstr "舞台芸術"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.BWP
@@ -45961,7 +46007,7 @@ msgstr "テーマストア"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_themes
 msgid "Themes Testing Module"
-msgstr ""
+msgstr "テーマテストモジュール"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -46219,9 +46265,8 @@ msgstr "このモジュールは、販売レンタルアプリに管理機能を
 msgid ""
 "This module adds the OdooBot state and notifications in the user form "
 "modified by hr."
-msgstr ""
-"このモジュールは、hrによって変更されたユーザーフォームにOdooBotの状態と通知を"
-"追加します。"
+msgstr "このモジュールは、hrによって変更されたユーザーフォームにOdooBotのステータスと"
+"通知を追加します。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codabox
@@ -46669,6 +46714,10 @@ msgid ""
 "every\n"
 "    theme on one website."
 msgstr ""
+"このモジュールを使うと、Odoo のすべてのテーマを簡単にテストできます。\n"
+"    ウェブサイト上でテーマを一つずつ切り替える必要はありません。\n"
+"    このモジュールは、各テーマごとに個別のウェブサイトを自動で作成し、\n"
+"    それぞれにテーマをインストールします。"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -46718,7 +46767,7 @@ msgstr "千単位区切り"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_thrift_store
 msgid "Thrift Store"
-msgstr ""
+msgstr "リサイクルショップ"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__4
@@ -46979,7 +47028,7 @@ msgstr "ツアー"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_toy_store
 msgid "Toy Store"
-msgstr ""
+msgstr "玩具店"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__traces_async
@@ -48999,7 +49048,7 @@ msgstr "ウェブサイトプロファイル"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wedding_planner
 msgid "Wedding Planner"
-msgstr ""
+msgstr "ウェディングプランナー"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_yes
@@ -49019,7 +49068,7 @@ msgstr "週"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wellness_practitioner
 msgid "Wellness Practitioner"
-msgstr ""
+msgstr "ウェルネスプラクティショナー"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -49240,7 +49289,7 @@ msgstr "ウィンドウアクション"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wine_merchant
 msgid "Wine Shop"
-msgstr ""
+msgstr "ワインショップ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_account_withholding_tax
@@ -49362,7 +49411,7 @@ msgstr "書き込み"
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Write Access"
-msgstr "書き込みアクセス"
+msgstr "書込権限"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
@@ -49430,7 +49479,7 @@ msgstr "はい、私はリスクを理解しています"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_yoga_pilates
 msgid "Yoga & Pilates Studio"
-msgstr ""
+msgstr "ヨガ & ピラティススタジオ"
 
 #. module: base
 #. odoo-python
@@ -50195,7 +50244,7 @@ msgstr "Eラーニング"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_elearning_platform
 msgid "eLearning Platform"
-msgstr ""
+msgstr "eラーニングプラットフォーム"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_expenses
@@ -50392,7 +50441,7 @@ msgstr "一2多"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__others
 msgid "others"
-msgstr ""
+msgstr "その他"
 
 #. module: base
 #. odoo-python
@@ -50506,7 +50555,7 @@ msgstr "サブスクリプション"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_tests
 msgid "test"
-msgstr ""
+msgstr "テスト"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_module_install

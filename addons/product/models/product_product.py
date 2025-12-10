@@ -64,6 +64,7 @@ class ProductProduct(models.Model):
         comodel_name='product.pricelist.item',
         inverse_name='product_id',
         compute='_compute_pricelist_rule_ids',
+        inverse='_inverse_pricelist_rule_ids',
         readonly=False,
     )
 
@@ -138,14 +139,26 @@ class ProductProduct(models.Model):
             else:
                 record[variant_field] = record[template_field]
 
-    @api.depends('product_tmpl_id')
+    @api.depends('product_tmpl_id.pricelist_rule_ids')
     def _compute_pricelist_rule_ids(self):
         for product in self:
             if not product.id:
                 product.pricelist_rule_ids = False
                 continue
             product.pricelist_rule_ids = product.product_tmpl_id.pricelist_rule_ids.filtered(
-                lambda rule: not rule.product_id or rule.product_id == product.id
+                lambda rule: rule.product_id <= product,
+            )
+
+    def _inverse_pricelist_rule_ids(self):
+        for product in self:
+            template = product.product_tmpl_id
+            template.pricelist_rule_ids = (
+                product.pricelist_rule_ids
+                # We have to manually keep the rules the current variant
+                # wasn't aware of because they targeted other variants.
+                | template.pricelist_rule_ids.filtered(
+                    lambda rule: rule.product_id and rule.product_id != product
+                )
             )
 
     @api.depends("product_tmpl_id.write_date")
@@ -168,11 +181,14 @@ class ProductProduct(models.Model):
         compute method is not subject to this restriction.  It therefore
         works as intended :-)
         """
+        now = self.env.cr.now()
         for record in self:
             if not record.id:
                 record.write_date = record._origin.write_date
                 continue
-            record.write_date = max(record.write_date or self.env.cr.now(), record.product_tmpl_id.write_date)
+            record.write_date = max(
+                record.write_date or now, record.product_tmpl_id.write_date or now
+            )
 
     def _compute_image_1920(self):
         """Get the image from the template if no image is set on the variant."""

@@ -65,6 +65,8 @@ class Partner extends models.Model {
     };
 }
 
+onRpc("has_group", () => true);
+
 defineModels([Partner]);
 
 defineActions([
@@ -108,7 +110,7 @@ async function executeImport(data, shouldWait = false) {
             },
         ];
     }
-    if (data[3].skip + 1 < totalRows) {
+    if (data[3].limit + data[3].skip < totalRows) {
         res.nextrow = data[3].skip + data[3].limit;
     } else {
         res.nextrow = 0;
@@ -293,8 +295,8 @@ describe("Import view", () => {
         onRpc("partner", "get_import_templates", ({ route }) => {
             expect.step(route);
             return [
-              { label: "Some Import Template", template: templateURL },
-              { label: "Another Import Template", template: secondTemplateURL },
+                { label: "Some Import Template", template: templateURL },
+                { label: "Another Import Template", template: secondTemplateURL },
             ];
         });
         onRpc("base_import.import", "create", ({ route }) => expect.step(route));
@@ -308,18 +310,20 @@ describe("Import view", () => {
         expect(browser.location.href).toBe("https://www.hoot.test/odoo/action-2/import");
         expect(".o_import_action").toHaveCount(1);
         expect(".o_nocontent_help .btn-outline-primary").toHaveCount(2);
-        expect(
-          ".o_nocontent_help > div:nth-of-type(2) .btn-outline-primary"
-        ).toHaveText("Some Import Template");
-        expect(
-          ".o_nocontent_help > div:nth-of-type(2) .btn-outline-primary"
-        ).toHaveProperty("href", "https://www.hoot.test" + templateURL);
-        expect(
-          ".o_nocontent_help > div:nth-of-type(3) .btn-outline-primary"
-        ).toHaveText("Another Import Template");
-        expect(
-          ".o_nocontent_help > div:nth-of-type(3) .btn-outline-primary"
-        ).toHaveProperty("href", "https://www.hoot.test" + secondTemplateURL);
+        expect(".o_nocontent_help > div:nth-of-type(2) .btn-outline-primary").toHaveText(
+            "Some Import Template"
+        );
+        expect(".o_nocontent_help > div:nth-of-type(2) .btn-outline-primary").toHaveProperty(
+            "href",
+            "https://www.hoot.test" + templateURL
+        );
+        expect(".o_nocontent_help > div:nth-of-type(3) .btn-outline-primary").toHaveText(
+            "Another Import Template"
+        );
+        expect(".o_nocontent_help > div:nth-of-type(3) .btn-outline-primary").toHaveProperty(
+            "href",
+            "https://www.hoot.test" + secondTemplateURL
+        );
         expect(".o_control_panel button").toHaveCount(2);
     });
 
@@ -675,6 +679,28 @@ describe("Import view", () => {
         );
     });
 
+    test("import a CSV file with uppercase extension", async () => {
+        mockService("http", {
+            post(route, params) {
+                expect.step(route);
+                expect(params.ufile[0].name).toBe("fake_file.CSV");
+                return super.post(route, params);
+            },
+        });
+
+        await mountWebClient();
+        await getService("action").doAction(1);
+        await animationFrame();
+
+        const file = new File(["fake_file"], "fake_file.CSV", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        expect.verifySteps(["/base_import/set_file"]);
+        // Check formatting options appear
+        expect(".o_import_data_sidepanel .o_import_formatting").toHaveCount(1);
+    });
+
     test("additional options in debug", async () => {
         serverState.debug = "1";
 
@@ -705,6 +731,7 @@ describe("Import view", () => {
             },
         });
 
+        redirect("/odoo/action-2")
         await mountWebClient();
         onRpc("base_import.import", "parse_preview", ({ route }) => {
             expect.step(route);
@@ -1180,6 +1207,38 @@ describe("Import view", () => {
         });
     });
 
+    test("test in batches then reset starting row", async () => {
+        patchWithCleanup(ImportAction.prototype, {
+            get isBatched() {
+                // make sure the UI displays the batched import options
+                return true;
+            },
+        });
+
+        await mountWebClient();
+        onRpc("base_import.import", "execute_import", ({ args }) => executeImport(args, true));
+        await getService("action").doAction(1);
+
+        // Set and trigger the change of a file for the input
+        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+        await contains("input#o_import_batch_limit").edit(1);
+        await contains(".o_control_panel_main_buttons button:first").click();
+
+        await animationFrame();
+        expect("input#o_import_row_start").toHaveValue("2");
+        await animationFrame();
+        expect("input#o_import_row_start").toHaveValue("3");
+
+        await animationFrame();
+        expect(".o_import_data_content .alert-info").toHaveText("Everything seems valid.");
+        expect("input#o_import_row_start").toHaveValue("1", {
+            message: "the actual import will resume at line 1",
+        });
+    });
+
     test("relational fields correctly mapped on preview", async () => {
         await mountWebClient();
         onRpc("base_import.import", "parse_preview", ({ args }) =>
@@ -1411,6 +1470,7 @@ describe("Import view", () => {
 
     test("date format should be converted to strftime", async () => {
         let parseCount = 0;
+        redirect("/odoo/action-2")
         await mountWebClient();
         onRpc("base_import.import", "parse_preview", async ({ args }) => {
             parseCount++;
@@ -1448,30 +1508,26 @@ describe("Import view", () => {
             await contains(".o_control_panel_main_buttons button:contains(Import):eq(0)").click();
         }
         expect.verifySteps(["parse_preview", "parse_preview", "execute_import"]);
-        expect(".o_import_date_format").toHaveValue("YYYYMMDD", {
-            message: "UI displays the human formatted date",
-        });
+        await waitFor(".o_list_view");
     });
 });
 
-describe("Import action", () => {
-    test("field selection has a clear button", async () => {
-        await mountWebClient();
-        await getService("action").doAction(1);
+test("field selection has a clear button", async () => {
+    await mountWebClient();
+    await getService("action").doAction(1);
 
-        // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
-        await contains(".o_control_panel_main_buttons .o_import_file").click();
-        await setInputFiles([file]);
-        await animationFrame();
-        await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Bar");
-        expect(".o_select_menu_toggler_clear").toHaveCount(2, {
-            message: "clear button is present for each field to unselect it",
-        });
-
-        await contains(".o_select_menu_toggler_clear").click();
-        expect("tr:nth-child(2) .o_select_menu").toHaveText("To import, select a field...");
+    // Set and trigger the change of a file for the input
+    const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+    await contains(".o_control_panel_main_buttons .o_import_file").click();
+    await setInputFiles([file]);
+    await animationFrame();
+    await contains(".o_import_data_content .o_select_menu").selectDropdownItem("Bar");
+    expect(".o_select_menu_toggler_clear").toHaveCount(2, {
+        message: "clear button is present for each field to unselect it",
     });
+
+    await contains(".o_select_menu_toggler_clear").click();
+    expect("tr:nth-child(2) .o_select_menu").toHaveText("To import, select a field...");
 });
 
 describe("Import a CSV", () => {

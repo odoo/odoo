@@ -261,7 +261,31 @@ class MailTemplate(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        return [dict(vals, name=self.env._("%s (copy)", template.name)) for template, vals in zip(self, vals_list)]
+        for vals, template in zip(vals_list, self):
+            if 'name' not in (default or {}) and vals.get('name') == template.name:
+                vals['name'] = self.env._("%s (copy)", template.name)
+        return vals_list
+
+    def copy(self, default=None):
+        default = default or {}
+        copy_attachments = 'attachment_ids' not in default
+        if copy_attachments:
+            default['attachment_ids'] = False
+        copies = super().copy(default=default)
+
+        if copy_attachments:
+            for copy, original in zip(copies, self):
+                # copy attachments, to avoid ownership / ACLs issue
+                # anyway filestore should keep a single reference to content
+                if original.attachment_ids:
+                    copy.write({
+                        'attachment_ids': [
+                            (4, att_copy.id) for att_copy in (
+                                attachment.copy(default={'res_id': copy.id, 'res_model': original._name}) for attachment in original.attachment_ids
+                            )
+                        ]
+                    })
+        return copies
 
     def unlink_action(self):
         for template in self:

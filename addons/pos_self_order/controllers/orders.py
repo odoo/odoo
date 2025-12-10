@@ -60,6 +60,9 @@ class PosSelfOrderController(http.Controller):
         if amount_total == 0:
             order_ids._process_saved_order(False)
 
+        if preset_id and preset_id.mail_template_id:
+            order_ids._send_self_order_receipt()
+
         return self._generate_return_values(order_ids, pos_config)
 
     def _generate_return_values(self, order, config):
@@ -68,7 +71,6 @@ class PosSelfOrderController(http.Controller):
             'res.partner': self.env['res.partner']._load_pos_self_data_read(order.partner_id, config),
             'pos.order.line': self.env['pos.order.line']._load_pos_self_data_read(order.lines, config),
             'pos.payment': self.env['pos.payment']._load_pos_self_data_read(order.payment_ids, config),
-            'pos.payment.method': self.env['pos.payment.method']._load_pos_self_data_read(order.payment_ids.mapped('payment_method_id'), config),
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_self_data_read(order.lines.custom_attribute_value_ids, config),
         }
 
@@ -158,19 +160,25 @@ class PosSelfOrderController(http.Controller):
     @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
         pos_config = self._verify_pos_config(access_token)
+        table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
+        domain = False
 
-        domain = [
-            Domain([
+        if not table_identifier or pos_config.self_ordering_pay_after == 'each':
+            domain = [(False, '=', True)]
+        else:
+            domain = ['&', '&',
+                ('table_id', '=', table.id),
+                ('state', '=', 'draft'),
+                ('access_token', 'not in', [data.get('access_token') for data in order_access_tokens])
+            ]
+
+        for data in order_access_tokens:
+            domain = Domain.OR([domain, ['&',
                 ('access_token', '=', data['access_token']),
                 '|',
                 ('write_date', '>', data.get('write_date')),
                 ('state', '!=', data.get('state')),
-            ]) for data in order_access_tokens
-        ]
-
-        domain = Domain.OR(domain) if domain else False
-        if not domain:
-            return {}
+            ]])
 
         # Do not use session.order_ids, it may fail if there is shared sessions
         orders = pos_config.env['pos.order'].search(domain)

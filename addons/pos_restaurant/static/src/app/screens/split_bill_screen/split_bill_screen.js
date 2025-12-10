@@ -20,6 +20,7 @@ export class SplitBillScreen extends Component {
         this.ui = useService("ui");
         this.qtyTracker = useState({});
         this.priceTracker = useState({});
+        this.isTransferred = false;
         useRouterParamsChecker();
 
         onWillDestroy(() => {
@@ -52,7 +53,8 @@ export class SplitBillScreen extends Component {
             const currentQty = this.qtyTracker[uuid] || 0;
             const nextQty = currentQty === maxQty ? 0 : currentQty + 1;
             this.qtyTracker[uuid] = Math.min(nextQty, maxQty);
-            this.priceTracker[uuid] = (line.getPriceWithTax() / line.qty) * this.qtyTracker[uuid];
+            this.priceTracker[uuid] =
+                (line.prices.total_included / line.qty) * this.qtyTracker[uuid];
             this.setLineQtyStr(line);
         }
     }
@@ -101,11 +103,23 @@ export class SplitBillScreen extends Component {
         // Prevents triggering the 'startTransferOrder' event listener
         event.stopPropagation();
         if (this.getNumberOfProducts() > 0) {
+            this.isTransferred = true;
             await this.createSplittedOrder();
         }
         this.pos.startTransferOrder();
     }
-
+    getGlobalDiscountPc(order = this.currentOrder) {
+        return order.getDiscountLine()?.extra_tax_data?.discount_percentage;
+    }
+    async handleDiscountLines(originalOrder, newOrder) {
+        const discountPercentage = this.getGlobalDiscountPc(originalOrder);
+        if (discountPercentage) {
+            await this.pos.applyDiscount(discountPercentage, originalOrder);
+            if (!this.isTransferred) {
+                await this.pos.applyDiscount(discountPercentage, newOrder);
+            }
+        }
+    }
     async createSplittedOrder() {
         const curOrderUuid = this.currentOrder.uuid;
         const originalOrder = this.pos.models["pos.order"].find((o) => o.uuid === curOrderUuid);
@@ -186,6 +200,7 @@ export class SplitBillScreen extends Component {
         for (const line of lineToDel) {
             line.delete();
         }
+        await this.handleDiscountLines(originalOrder, newOrder);
 
         await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
         originalOrder.customer_count -= 1;

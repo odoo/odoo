@@ -37,14 +37,14 @@ $o-discuss-talkingColor: lighten($success, 10%);
         align-items: center;
         justify-content: center;
         padding: 3px 4px;
-    
+
         &.o-muted {
             --o-discuss-badge-bg: #{$gray-400};
         }
     }
 
     & .o-innerBadge {
-        min-width: 2.7ch; // same as .badge, without using .badge to keep semantics of a single .badge
+        min-width: $o-badge-min-width; // same as .badge, without using .badge to keep semantics of a single .badge
     }
 }
 
@@ -66,6 +66,20 @@ $o-discuss-talkingColor: lighten($success, 10%);
         select, .form-check-input {
             border-color: $gray-600;
         }
+
+        .form-select {
+            --#{$prefix}form-select-bg-img: #{escape-svg($form-select-indicator-dark)};
+        }
+
+        .form-switch .form-check-input {
+            &:not(:checked):not(:focus) {
+                --#{$prefix}form-switch-bg: #{escape-svg($form-switch-bg-image-dark)};
+            }
+        }
+
+        select option {
+            background-color: $gray-700;
+        }
     }
 
     .o_bottom_sheet_sheet:has(&) {
@@ -80,6 +94,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
 
 .o-discuss-separator {
     opacity: $hr-opacity / 2;
+}
+
+.o-discuss-text-body {
+    color: $gray-700;
 }
 
 .o-discuss-badge, .o-discuss-badgeShape {
@@ -272,6 +290,10 @@ $o-mail-utilities: map-merge(
     font-size: 0.5rem;
 }
 
+.o-xxxs {
+    font-size: 0.35rem;
+}
+
 .o-yellow {
     color: $yellow;
 }
@@ -332,6 +354,7 @@ $o-mail-utilities: map-merge(
 }
 
 a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention, a.o_message_redirect_transformed {
+    user-select: none;
     border-radius: $btn-border-radius-sm;
     padding: 0rem 0.1rem;
     margin: 0rem 0.0875rem;
@@ -396,4 +419,9 @@ a.o-discuss-mention {
 .o-mail-Discuss-threadActionPopover {
     width: Min(95vw, 400px);
     max-height: Min(50vh, 530px);
+}
+
+.o-mail-starred {
+    color: $o-main-favorite-color;
+    filter: drop-shadow(1px 1px 0px #000000b0);
 }

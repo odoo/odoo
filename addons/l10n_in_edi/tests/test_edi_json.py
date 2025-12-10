@@ -817,3 +817,83 @@ class TestEdiJson(L10nInTestInvoicingCommon):
                 },
                 "Indian EDI with global discount did not match"
             )
+
+        # =================================== Export without LUT Tax test =============================================
+        with self.subTest(scenario="Export Tax Invoice Without LUT and Include Tax"):
+            self.assertEqual(
+                self.invoice_with_export_without_lut_inc._l10n_in_edi_generate_invoice_json(),
+                {
+                  'Version': '1.1',
+                  'TranDtls': {
+                    'TaxSch': 'GST',
+                    'SupTyp': 'EXPWP',
+                    'RegRev': 'N',
+                    'IgstOnIntra': 'N'
+                  },
+                  'DocDtls': {
+                    'Typ': 'INV',
+                    'No': False,
+                    'Dt': '01/01/2019'
+                  },
+                  'SellerDtls': {
+                    'Addr1': 'Khodiyar Chowk',
+                    'Loc': 'Amreli',
+                    'Pin': 365220,
+                    'Stcd': '24',
+                    'Addr2': 'Sala Number 3',
+                    'LglNm': 'Default Company',
+                    'GSTIN': '24AAGCC7144L6ZE'
+                  },
+                  'BuyerDtls': {
+                    'Addr1': '351 Horner Chapel Rd',
+                    'Loc': 'Peebles',
+                    'Pin': 999999,
+                    'Stcd': '96',
+                    'POS': '96',
+                    'LglNm': 'Foreign Partner',
+                    'GSTIN': 'URP'
+                  },
+                  'ItemList': [
+                    {
+                      'SlNo': '1',
+                      'PrdDesc': 'product_a',
+                      'IsServc': 'N',
+                      'HsnCd': '111111',
+                      'Qty': 1.0,
+                      'Unit': 'UNT',
+                      'UnitPrice': 1000.00,
+                      'TotAmt': 1000.00,
+                      'Discount': 0.0,
+                      'AssAmt': 1000.00,
+                      'GstRt': 18.0,
+                      'IgstAmt': 180.0,
+                      'CgstAmt': 0.0,
+                      'SgstAmt': 0.0,
+                      'CesRt': 0.0,
+                      'CesAmt': 0.0,
+                      'CesNonAdvlAmt': 0.0,
+                      'StateCesRt': 0.0,
+                      'StateCesAmt': 0.0,
+                      'StateCesNonAdvlAmt': 0.0,
+                      'OthChrg': 0.0,
+                      'TotItemVal': 1000.0
+                    }
+                  ],
+                  'ValDtls': {
+                    'AssVal': 1000.0,
+                    'CgstVal': 0.0,
+                    'SgstVal': 0.0,
+                    'IgstVal': 180.0,
+                    'CesVal': 0.0,
+                    'StCesVal': 0.0,
+                    'Discount': 0.0,
+                    'RndOffAmt': 0.0,
+                    'TotInvVal': 1000.0
+                  },
+                  'ExpDtls': {
+                    'RefClm': 'Y',
+                    'ForCur': 'INR',
+                    'CntCode': 'US'
+                  }
+                }
+            )

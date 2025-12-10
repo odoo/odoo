@@ -3,7 +3,7 @@ import { BackgroundOption } from "@html_builder/plugins/background_option/backgr
 import { ParallaxOption } from "./parallax_option";
 import { useBackgroundOption } from "@html_builder/plugins/background_option/background_hook";
 
-export class WebsiteBackgroundOption extends BaseOptionComponent {
+export class BaseWebsiteBackgroundOption extends BaseOptionComponent {
     static template = "website.WebsiteBackgroundOption";
     static components = {
         ...BackgroundOption.components,
@@ -11,10 +11,16 @@ export class WebsiteBackgroundOption extends BaseOptionComponent {
     };
     static props = {
         ...BackgroundOption.props,
+        withColors: { type: Boolean, optional: true },
+        withImages: { type: Boolean, optional: true },
+        withColorCombinations: { type: Boolean, optional: true },
         withVideos: { type: Boolean, optional: true },
     };
     static defaultProps = {
         ...BackgroundOption.defaultProps,
+        withColors: true,
+        withImages: true,
+        withColorCombinations: true,
         withVideos: false,
     };
     setup() {

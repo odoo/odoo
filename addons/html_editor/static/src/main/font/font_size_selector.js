@@ -52,6 +52,7 @@ export class FontSizeSelector extends Component {
                     htmlStyle
                 );
                 const color = getCSSVariableValue("black", htmlStyle);
+                const fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);
                 Object.assign(iframeDoc.body.style, {
                     padding: "0",
                     margin: "0",
@@ -64,6 +65,7 @@ export class FontSizeSelector extends Component {
                     textAlign: "center",
                     backgroundColor: backgroundColor,
                     color: color,
+                    fontFamily: fontFamily,
                 });
                 this.fontSizeInput.type = "text";
                 this.fontSizeInput.name = "font-size-input";

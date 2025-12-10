@@ -67,17 +67,20 @@ class TestSnippets(HttpCase):
             'name': "Test Category",
         })
 
-        self.env['website'].get_current_website().domain = "http://www.example.com"
-
-        # Monkey patch get_base_url to test its usage
-        original_get_base_url = self.env['product.public.category'].sudo().get_base_url()
+        self.env.company.website_id = False
+        website = self.env.ref('website.default_website')
+        website.update({
+            'domain': "http://www.example.com",
+            'company_id': self.env.company.id,
+        })
 
         # Simulate a request with correct context
-        with MockRequest(self.env, website=self.env['website'].get_current_website()):
+        with MockRequest(self.env, website=website):
+            original_get_base_url = self.env['product.public.category'].sudo().get_base_url()
             data = self.env['website.snippet.filter'].sudo()._prepare_category_list_data(
                 parent_id=category.id,
             )
 
         # Assert that the returned cover_image uses the mocked base URL
         self.assertTrue(data[0]['cover_image'].startswith(original_get_base_url))
-        self.assertFalse(self.env['website'].get_current_website().domain in data[0]['cover_image'])
+        self.assertNotIn(website.domain, data[0]['cover_image'])

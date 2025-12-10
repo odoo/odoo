@@ -167,7 +167,7 @@ export class ImageField extends Component {
             const ctx = canvas.getContext("2d");
             ctx.drawImage(image, 0, 0);
 
-            info.data = canvas.toDataURL("image/webp", 0.75).split(",")[1];
+            info.data = canvas.toDataURL("image/webp").split(",")[1];
             info.type = "image/webp";
             info.name = info.name.replace(/\.[^/.]+$/, ".webp");
         }
@@ -177,7 +177,7 @@ export class ImageField extends Component {
             image.src = `data:image/webp;base64,${info.data}`;
             await new Promise((resolve) => image.addEventListener("load", resolve));
             const originalSize = Math.max(image.width, image.height);
-            const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
+            const smallerSizes = [1920, 1024, 512, 256, 128].filter((size) => size < originalSize);
             let referenceId = undefined;
             for (const size of [originalSize, ...smallerSizes]) {
                 const ratio = size / originalSize;
@@ -208,7 +208,7 @@ export class ImageField extends Component {
                             datas:
                                 size === originalSize
                                     ? info.data
-                                    : canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                                    : canvas.toDataURL("image/webp").split(",")[1],
                             res_id: referenceId,
                             res_model: "ir.attachment",
                             mimetype: "image/webp",
@@ -222,7 +222,7 @@ export class ImageField extends Component {
                         {
                             name: info.name.replace(/\.webp$/, ".jpg"),
                             description: "format: jpeg",
-                            datas: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
+                            datas: canvas.toDataURL("image/jpeg").split(",")[1],
                             res_id: resizedId,
                             res_model: "ir.attachment",
                             mimetype: "image/jpeg",
@@ -304,8 +304,8 @@ export const imageField = {
         zoomDelay: options.zoom_delay,
         previewImage: options.preview_image,
         acceptedFileExtensions: options.accepted_file_extensions,
-        width: options.size && Boolean(options.size[0]) ? options.size[0] : attrs.width,
-        height: options.size && Boolean(options.size[1]) ? options.size[1] : attrs.height,
+        width: options.size && Boolean(options.size[0]) ? options.size[0] : undefined,
+        height: options.size && Boolean(options.size[1]) ? options.size[1] : undefined,
         reload: "reload" in options ? Boolean(options.reload) : true,
     }),
 };

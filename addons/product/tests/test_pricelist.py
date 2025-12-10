@@ -4,13 +4,13 @@ from itertools import pairwise
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged, Form
+from odoo.tests import Form, tagged
 
-from odoo.addons.product.tests.common import ProductCommon
+from odoo.addons.product.tests.common import ProductVariantsCommon
 
 
 @tagged('post_install', '-at_install')
-class TestPricelist(ProductCommon):
+class TestPricelist(ProductVariantsCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -309,3 +309,67 @@ class TestPricelist(ProductCommon):
         with self.assertRaises(ValidationError):
             # C -> [B -> D -> A -> B -> _, D -> _] (recurs)
             Pricelist.item_ids.create(create_item_vals(pl_b, pl_d))
+
+    def test_pricelist_rule_linked_to_product_variant(self):
+        """Verify that pricelist rules assigned to a variant remain linked after write."""
+        self.product_sofa_red.pricelist_rule_ids = [
+            Command.create({
+                'applied_on': '0_product_variant',
+                'product_id': self.product_sofa_red.id,
+                'compute_price': 'fixed',
+                'fixed_price': 99.9,
+                'pricelist_id': self.pricelist.id,
+            }),
+            Command.create({
+                'applied_on': '0_product_variant',
+                'product_id': self.product_sofa_red.id,
+                'compute_price': 'fixed',
+                'fixed_price': 89.9,
+                'pricelist_id': self.pricelist.id,
+            }),
+        ]
+        self.assertEqual(len(self.product_sofa_red.pricelist_rule_ids), 2)
+        first_rule, second_rule = self.product_sofa_red.pricelist_rule_ids
+        self.product_sofa_red.pricelist_rule_ids = [
+            Command.update(first_rule.id, {'fixed_price': 79.9}),
+            Command.unlink(second_rule.id),
+        ]
+        self.assertEqual(len(self.product_sofa_red.pricelist_rule_ids), 1)
+        self.assertEqual(self.pricelist.item_ids.fixed_price, 79.9)
+        self.assertIn(self.product_sofa_red, self.pricelist.item_ids.product_id)
+
+        # Update of template-based rules through variant form
+        self.product_template_sofa.pricelist_rule_ids = [
+            # Template-based rule (can be edited through the variants)
+            Command.create({
+                'applied_on': '1_product',
+                'product_tmpl_id': self.product_template_sofa.id,
+                'pricelist_id': self.pricelist.id,
+            }),
+            # Rule on another variant than the one being edited. It cannot be edited through the
+            # current variant and therefore shouldn't change when another variant rules are edited.
+            Command.create({
+                'applied_on': '0_product_variant',
+                'product_id': self.product_sofa_blue.id,
+                'compute_price': 'fixed',
+                'fixed_price': 89.9,
+                'pricelist_id': self.pricelist.id,
+            })
+        ]
+        self.assertEqual(len(self.product_template_sofa.pricelist_rule_ids), 3)
+        template_rule = self.product_template_sofa.pricelist_rule_ids.filtered(
+            lambda item: not item.product_id
+        )
+        self.assertEqual(len(self.product_sofa_red.pricelist_rule_ids), 2)
+        self.product_sofa_red.pricelist_rule_ids = [
+            Command.update(template_rule.id, {'fixed_price': 133}),
+        ]
+        self.assertEqual(template_rule.fixed_price, 133)
+
+        self.product_sofa_red.pricelist_rule_ids = [
+            Command.unlink(template_rule.id),
+        ]
+        self.assertFalse(template_rule.exists())
+
+        self.assertTrue(self.product_sofa_blue.pricelist_rule_ids)
+        self.assertEqual(len(self.product_template_sofa.pricelist_rule_ids), 2)

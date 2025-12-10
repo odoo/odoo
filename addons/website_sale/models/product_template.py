@@ -1028,6 +1028,13 @@ class ProductTemplate(models.Model):
         if self.product_variant_count == 1:
             return self.product_variant_id._to_markup_data(website)
 
+        # perf: temporal solution to avoid slowness when product have many variants and pricelist rules
+        limit = self.env['ir.config_parameter'].sudo().get_param('website_sale.markup_data_limit_variants', False)
+        if limit:
+            product_variant_ids = self.product_variant_ids[:int(limit)]
+        else:
+            product_variant_ids = self.product_variant_ids
+
         base_url = website.get_base_url()
         markup_data = {
             '@context': 'https://schema.org/',
@@ -1035,7 +1042,7 @@ class ProductTemplate(models.Model):
             'name': self.name,
             'image': f'{base_url}{website.image_url(self, "image_1920")}',
             'url': f'{base_url}{self.website_url}',
-            'hasVariant': [product._to_markup_data(website) for product in self.product_variant_ids]
+            'hasVariant': [product._to_markup_data(website) for product in product_variant_ids]
         }
         if self.description_ecommerce:
             markup_data['description'] = text_from_html(self.description_ecommerce)
@@ -1057,7 +1064,7 @@ class ProductTemplate(models.Model):
         :rtype: `product.ribbon` recordset
         """
         variant = variant or self.product_variant_id
-        ribbon = variant.variant_ribbon_id or self.sudo().website_ribbon_id
+        ribbon = variant.sudo().variant_ribbon_id or self.sudo().website_ribbon_id
         if not ribbon:
             # The None check ensures that we do not recompute the ribbons when no ribbons were
             # previously found.
@@ -1075,7 +1082,7 @@ class ProductTemplate(models.Model):
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Instead of the classic form view, redirect to website if it is published. """
         self.ensure_one()
-        if force_website or self.website_published:
+        if force_website or (self.website_published and self.env.user.share):
             return {
                 "type": "ir.actions.act_url",
                 "url": self.website_url,

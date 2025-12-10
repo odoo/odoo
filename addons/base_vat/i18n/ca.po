@@ -14,13 +14,14 @@
 # martioodo hola, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-24 19:21+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 19:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/base_vat/"
 "ca/>\n"
 "Language: ca\n"
@@ -102,12 +103,12 @@ msgstr "Contacte"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__country_id
 #: model:ir.model.fields,field_description:base_vat.field_res_users__country_id
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #. module: base_vat
 #: model:ir.model,website_form_label:base_vat.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Crear un client"
 
 #. module: base_vat
 #. odoo-python
@@ -121,7 +122,7 @@ msgstr "DE123456788 o 12/345/67890"
 #: model:ir.model.fields,field_description:base_vat.field_res_country__display_name
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nom mostrat"
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
@@ -169,7 +170,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_vat.field_res_country__id
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -179,6 +180,13 @@ msgid ""
 msgstr ""
 "Si aquesta casella està marcada, la posició fiscal predeterminada s'aplicarà "
 "en funció del resultat de la verificació realitzada pel Servei Europeu VIES."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"If you are trying to input a European number, this is the expected format: "
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
@@ -229,6 +237,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"El Número d'Identificació Fiscal. Els valors aquí seran validats en funció "
+"del format del país. També pots utilitzar '/' per indicar que el contacte no "
+"està subjecte a impostos."
 
 #. module: base_vat
 #. odoo-python

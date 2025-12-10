@@ -135,6 +135,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         upgrade_modules: Collection[str] = (),
         reinit_modules: Collection[str] = (),
         new_db_demo: bool | None = None,
+        models_to_check: set[str] | None = None,
     ) -> Registry:
         """Create and return a new registry for the given database name.
 
@@ -172,6 +173,19 @@ class Registry(Mapping[str, type["BaseModel"]]):
         cls.registries[db_name] = registry  # pylint: disable=unsupported-assignment-operation
         try:
             registry.setup_signaling()
+            with registry.cursor() as cr:
+                # This transaction defines a critical section for multi-worker concurrency control.
+                # When the transaction commits, the first worker proceeds to upgrade modules. Other workers
+                # encounter a serialization error and retry, finding no upgrade marker in the database.
+                # This significantly reduces the likelihood of concurrent module upgrades across workers.
+                # NOTE: This block is intentionally outside the try-except below to prevent workers that fail
+                # due to serialization errors from calling `reset_modules_state` while the first worker is
+                # actively upgrading modules.
+                from odoo.modules import db  # noqa: PLC0415
+                if db.is_initialized(cr):
+                    cr.execute("DELETE FROM ir_config_parameter WHERE key='base.partially_updated_database'")
+                    if cr.rowcount:
+                        update_module = True
             # This should be a method on Registry
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
             exit_stack = ExitStack()
@@ -189,6 +203,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     install_modules=install_modules,
                     reinit_modules=reinit_modules,
                     new_db_demo=new_db_demo,
+                    models_to_check=models_to_check,
                 )
             except Exception:
                 reset_modules_state(db_name)

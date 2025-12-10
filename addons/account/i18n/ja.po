@@ -14,12 +14,13 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
 # Yoshi Tashiro <tashiro@quartile.co>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-18 14:56+0000\n"
-"PO-Revision-Date: 2025-10-21 08:01+0000\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
+"PO-Revision-Date: 2025-12-05 07:58+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/account/"
 "ja/>\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -220,18 +221,6 @@ msgstr "%(tag)s (%(country_code)s)"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_tax.py:0
-msgid ""
-"%(tax_account)s (%(account_name)s) should be an account of type \"%"
-"(receivable)s\" or \"%(payable)s\" with both options \"%"
-"(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
-msgstr ""
-"%(tax_account)s (%(account_name)s) は勘定科目タイプ \"%(receivable)s\" また"
-"は \"%(payable)s\" 両方のオプション \"%(allow_reconciliation)s\" および \"%"
-"(non_trade)s\" が有効化されている必要があります。"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "%(tax_name)s (rounding)"
 msgstr "%(tax_name)s (丸め)"
@@ -304,6 +293,18 @@ msgstr "'%(filename)s' ('%(root_filename)s' から抽出、タイプ=%(type)s)"
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (type=%(type)s)"
 msgstr "'%(filename)s' (タイプ=%(type)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "(*) Goods Delivered not Invoiced (perpetual valuation)"
+msgstr "(*) 納品済未請求品 (継続的評価)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+msgid "(*) Goods Invoiced not Delivered (perpetual valuation)"
+msgstr "(*) 請求済未納品品 (継続的評価)"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -1394,6 +1395,9 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        請求書の送付方法と電子フォーマットを選択できます。\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -2652,12 +2656,6 @@ msgid "Account Move Count"
 msgstr "会計仕訳数"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__line_ids
-msgid "Account Move Line Items"
-msgstr "会計仕訳明細項目"
-
-#. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
 msgstr "会計反対仕訳"
@@ -3061,11 +3059,11 @@ msgstr "経過勘定仕訳"
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid ""
-"Accrual entry created on %(date)s: %(accrual_entry)s.                    And "
-"its reverse entry: %(reverse_entry)s."
+"Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
+"reverse entry: %(reverse_entry)s."
 msgstr ""
-"%(date)s: %(accrual_entry)sに作成された未収計上。                  また、その"
-"逆仕訳：%(reverse_entry)s"
+"%(date)s: %(accrual_entry)sに作成された未収計上。                およびその逆"
+"仕訳: %(reverse_entry)s。"
 
 #. module: account
 #. odoo-python
@@ -3173,7 +3171,7 @@ msgstr "活動"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "例外活動文字装飾"
+msgstr "例外の活動を示す装飾"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_state
@@ -3184,7 +3182,7 @@ msgstr "例外活動文字装飾"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_state
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_state
 msgid "Activity State"
-msgstr "活動状態"
+msgstr "活動ステータス"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_type_icon
@@ -3279,8 +3277,6 @@ msgid "Add a rounding line"
 msgstr "丸め行を追加"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add a section"
 msgstr "セクションを追加"
@@ -4208,11 +4204,6 @@ msgid "Automatic Entry Default Journal"
 msgstr "自動入力のデフォルト仕訳帳"
 
 #. module: account
-#: model:account.fiscal.position,name:account.1_account_fiscal_position_avatax_us
-msgid "Automatic Tax Mapping (AvaTax)"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_sequence_mixin
 msgid "Automatic sequence"
 msgstr "自動付番"
@@ -4357,8 +4348,8 @@ msgstr "残高割合が0になることはありません"
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_44
-#: model:account.account,name:account.2_bank_journal_default_account_149
+#: model:account.account,name:account.1_bank_journal_default_account_45
+#: model:account.account,name:account.2_bank_journal_default_account_150
 #: model:account.journal,name:account.1_bank
 #: model:account.journal,name:account.2_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
@@ -4651,6 +4642,11 @@ msgid "Based on Payment"
 msgstr "支払いに基づく"
 
 #. module: account
+#: model:res.groups,name:account.group_account_basic
+msgid "Basic"
+msgstr "基本"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
 msgid "Batch Payment Sequence"
 msgstr "一括支払付番"
@@ -4659,6 +4655,25 @@ msgstr "一括支払付番"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
 msgstr "一括支払"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, activate the cron to enable "
+"batch sending of invoices."
+msgstr ""
+"請求書の一括送信は現在利用できません。一括送信を有効にするには、スケジュール"
+"済みアクション（cron）を有効化してください。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid ""
+"Batch invoice sending is unavailable. Please, contact your system "
+"administrator to activate the cron to enable batch sending of invoices."
+msgstr "一括請求書送信は利用できません。請求書の一括送信を有効にするには、システム管"
+"理者に cron を有効化するよう依頼してください。"
 
 #. module: account
 #. odoo-javascript
@@ -4789,11 +4804,6 @@ msgstr "不許可"
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body_has_template_value
 msgid "Body content is the same as the template"
 msgstr "本文はテンプレートと同じです。"
-
-#. module: account
-#: model:res.groups,name:account.group_account_user
-msgid "Bookkeeper"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__boolean
@@ -5066,8 +5076,8 @@ msgid ""
 "Capture invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
-"請求書をキャプチャしたり、支払を登録したり、仕入先とのコミュニケーションを追"
-"跡します。"
+"請求書を確定したり、支払を登録したり、仕入先とのコミュニケーションを追跡しま"
+"す。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__carryover_target
@@ -5077,6 +5087,7 @@ msgstr "以下へ繰越す："
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
+#: model:account.account,name:account.1_cash_journal_default_account_161
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5087,6 +5098,16 @@ msgstr "現金"
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
 msgstr "現金アカウント"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_158
+msgid "Cash Bakery"
+msgstr "現金 ベーカリー"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_160
+msgid "Cash Bar"
+msgstr "現金バー"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_exigibility
@@ -5124,6 +5145,11 @@ msgstr "現金主義税"
 #: model:ir.model.fields,field_description:account.field_account_tax__cash_basis_transition_account_id
 msgid "Cash Basis Transition Account"
 msgstr "現金基準移行勘定"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_157
+msgid "Cash Clothes Shop"
+msgstr "現金 洋服店"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
@@ -5183,10 +5209,20 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "現金値引損償却口座"
 
 #. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_156
+msgid "Cash Furn. Shop"
+msgstr "現金 家具屋"
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Cash Registers"
 msgstr "キャッシュレジスタ"
+
+#. module: account
+#: model:account.account,name:account.1_cash_journal_default_account_159
+msgid "Cash Restaurant"
+msgstr "現金レストラン"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
@@ -5419,7 +5455,7 @@ msgstr "閉じる"
 #. module: account
 #: model:ir.ui.menu,name:account.account_closing_menu
 msgid "Closing"
-msgstr "閉鎖"
+msgstr "期末処理"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code
@@ -5985,6 +6021,11 @@ msgstr "支払作成"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "Create Payments"
 msgstr "支払作成"
+
+#. module: account
+#: model:ir.model,website_form_label:account.model_res_partner
+msgid "Create a Customer"
+msgstr "顧客を作成する"
 
 #. module: account
 #. odoo-python
@@ -7012,7 +7053,7 @@ msgstr "プロダクト販売時に適用されるデフォルト税。"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
-msgstr ""
+msgstr "'%(record)s' に対する 'company_id' のデフォルト値が整数ではありません"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -7515,7 +7556,7 @@ msgstr "表示タイプ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__placeholder_code
 msgid "Display code"
-msgstr "コードを表示"
+msgstr "表示コード"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__preview_ready
@@ -8387,6 +8428,12 @@ msgid "Expired"
 msgstr "契約期間終了済"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "Export ZIP"
+msgstr "ZIPをエクスポート"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
 msgid "Expression Label"
 msgstr "表示ラベル"
@@ -9135,6 +9182,12 @@ msgstr "全体ロック日"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+msgid "Go to cron configuration"
+msgstr "cron設定に移動する"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/company.py:0
 msgid "Go to the configuration panel"
@@ -9260,10 +9313,15 @@ msgid "Has Iban Warning"
 msgstr "Ibanに関する警告あり"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__has_invalid_analytics
+msgid "Has Invalid Analytics"
+msgstr "無効な分析配分あり"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
 #: model:ir.model.fields,field_description:account.field_account_journal__has_invalid_statements
 msgid "Has Invalid Statements"
-msgstr ""
+msgstr "無効な取引明細あり"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__has_message
@@ -9345,6 +9403,8 @@ msgstr ""
 "アドレスでは、新規の請求書に関するメールのみを受け付けています:"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_composition
 msgid "Hide Composition"
 msgstr "構成を非表示"
@@ -9356,6 +9416,8 @@ msgid "Hide Post Button"
 msgstr "記帳ボタンを隠す"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_prices
 msgid "Hide Prices"
 msgstr "価格を非表示"
@@ -10244,14 +10306,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invalid Statement(s)"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_report.py:0
-msgid ""
-"Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
-msgstr "式'%(label)s'(明細'%(line)s'の)ドメインが無効です: %(formula)s"
+msgstr "無効な取引明細"
 
 #. module: account
 #. odoo-python
@@ -10260,7 +10315,16 @@ msgid "Invalid fiscal year last day"
 msgstr "無効な会計年度最終日"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+msgid ""
+"Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s"
+msgstr "行 '%(line)s' の式 '%(label)s' の式が無効です:%(formula)s"
+
+#. module: account
 #: model:account.account,name:account.2_account_account_us_inventory_valuation
+#: model:account.journal,name:account.1_inventory_valuation
+#: model:account.journal,name:account.2_inventory_valuation
 msgid "Inventory Valuation"
 msgstr "在庫評価"
 
@@ -10514,7 +10578,7 @@ msgstr "顧客請求書レポート"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_sending_method
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_sending_method
 msgid "Invoice sending"
-msgstr "顧客請求書送付中"
+msgstr "顧客請求書送付"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
@@ -10540,6 +10604,7 @@ msgstr "請求済"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/controllers/download_docs.py:0
 #: code:addons/account/controllers/portal.py:0
 #: model:ir.actions.act_window,name:account.action_move_out_invoice
 #: model:ir.actions.act_window,name:account.action_move_out_invoice_type
@@ -10645,11 +10710,6 @@ msgstr "顧客請求書/仕入先請求書/委任状"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
 msgstr "請求"
-
-#. module: account
-#: model:res.groups,name:account.group_account_basic
-msgid "Invoicing & Banks"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__invoicing_legacy
@@ -10981,8 +11041,8 @@ msgstr "仕訳明細ラベル"
 #: model:ir.actions.act_window,name:account.action_account_moves_all_grouped_matching
 #: model:ir.actions.act_window,name:account.action_account_moves_all_tree
 #: model:ir.actions.act_window,name:account.action_move_line_select
-#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
-#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__line_ids
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10990,6 +11050,12 @@ msgstr "仕訳明細ラベル"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
 msgstr "仕訳明細"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
+#: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
+msgid "Journal Items (DEPRECATED)"
+msgstr "仕訳帳項目 (非推奨)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -11318,7 +11384,7 @@ msgstr "遅延"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Late Activities"
-msgstr "遅れた活動"
+msgstr "期限超過の活動"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -12326,6 +12392,17 @@ msgid "Next Activity"
 msgstr "次の活動"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_date_deadline
@@ -13019,7 +13096,7 @@ msgstr "オペレーティング活動"
 #. module: account
 #: model:account.group,name:account.2_us_group_6
 msgid "Operating Expenses"
-msgstr "営業費用"
+msgstr "販管費"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -13778,7 +13855,7 @@ msgstr "30日以内の支払"
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
 msgid "Payment: Payment Receipt"
-msgstr "支払：支払領収書"
+msgstr "支払: 支払領収書"
 
 #. module: account
 #. odoo-python
@@ -13816,7 +13893,7 @@ msgstr "銀行口座が指定されていない取引先に関する支払いは
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "この請求書と消込済みの支払取引。"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_61
@@ -13965,6 +14042,7 @@ msgstr "ポータルアクセスURL"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Post"
 msgstr "記帳"
 
@@ -14369,13 +14447,13 @@ msgstr "購買ロック日"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_receipt
 msgid "Purchase Receipt"
-msgstr "購買領収書"
+msgstr "仕入伝票"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Purchase Receipt Created"
-msgstr "購買領収書が作成されました"
+msgstr "仕入伝票が作成されました"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -14385,13 +14463,13 @@ msgstr "購買担当者"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Purchase Tax"
-msgstr "購入税"
+msgstr "仕入税"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Purchase Taxes"
-msgstr "購買税"
+msgstr "仕入税"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -14494,6 +14572,20 @@ msgid "RD Expenses"
 msgstr "研究開発費"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_journal__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_move__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__rating_ids
+#: model:ir.model.fields,field_description:account.field_account_tax__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_company__rating_ids
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__rating_ids
+msgid "Ratings"
+msgstr "評価"
+
+#. module: account
 #: model:account.account,name:account.2_account_account_us_raw_materials
 msgid "Raw Materials"
 msgstr "原材料"
@@ -14502,11 +14594,6 @@ msgstr "原材料"
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Re-Sequence"
 msgstr "再付番"
-
-#. module: account
-#: model:res.groups,name:account.group_account_readonly
-msgid "Read-only"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__reason
@@ -14621,7 +14708,7 @@ msgstr "為替差損益を除く消込済仕訳明細"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "消込済の支払い"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -15096,6 +15183,7 @@ msgstr "取消日"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_audit_menu
+#: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Review"
 msgstr "レビュー"
 
@@ -15241,7 +15329,7 @@ msgstr "SO123"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr "標準的な販売条件"
+msgstr "販売に関する標準取引条件"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_salaries
@@ -15737,7 +15825,7 @@ msgstr "請求書送信中"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Sent"
-msgstr "送信日"
+msgstr "送信済"
 
 #. module: account
 #. odoo-python
@@ -15972,6 +16060,17 @@ msgid "Show Aba Routing"
 msgstr "ABAルーティング番号を表示"
 
 #. module: account
+#: model:res.groups,name:account.group_account_readonly
+msgid "Show Accounting Features - Readonly"
+msgstr "会計機能を表示する - 読み取り専用"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Composition"
+msgstr "構成を表示"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
 #: model:ir.model.fields,field_description:account.field_res_users__show_credit_limit
 msgid "Show Credit Limit"
@@ -15998,6 +16097,11 @@ msgstr "電子請求書ボタンを表示"
 #: model:ir.model.fields,field_description:account.field_account_journal__show_refresh_out_einvoices_status_button
 msgid "Show E-Invoice Status Buttons"
 msgstr "電子請求書ステータスボタンを表示"
+
+#. module: account
+#: model:res.groups,name:account.group_account_user
+msgid "Show Full Accounting Features"
+msgstr "全会計機能を表示"
 
 #. module: account
 #: model:res.groups,name:account.group_account_secured
@@ -16038,6 +16142,12 @@ msgstr "支払差異を表示"
 #: model:ir.model.fields,field_description:account.field_account_move__show_payment_term_details
 msgid "Show Payment Term Details"
 msgstr "支払条件詳細を表示する"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+msgid "Show Prices"
+msgstr "価格を表示"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -16210,7 +16320,7 @@ msgstr "標準コミュニケーション"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
 msgid "Starting Balance"
-msgstr "期首残高"
+msgstr "開始残高"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_lock_exception__state
@@ -16298,7 +16408,7 @@ msgstr "アメリカカウント"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Status"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__status_in_payment
@@ -16345,6 +16455,11 @@ msgstr "ステップ完了！"
 #: model:account.account,name:account.1_stock_valuation
 msgid "Stock Valuation"
 msgstr "在庫評価"
+
+#. module: account
+#: model:account.account,name:account.1_stock_variation
+msgid "Stock Variation"
+msgstr "在庫変動"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -17059,8 +17174,8 @@ msgid ""
 msgstr ""
 "システムが通常誤解する複雑な付番構成を強化するために使用される技術フィール"
 "ド。\n"
-"prefix1、year、prefix2、month、prefix3、seq、suffixのすべてのキャプチャグルー"
-"プを含めることができる正規表現です。\n"
+"prefix1、year、prefix2、month、prefix3、seq、suffixのすべての確定グループを含"
+"めることができる正規表現です。\n"
 "プレフィックス*グループは、年、月、および実際に増加する付番数（seq）の間の区"
 "切り文字です。\n"
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
@@ -17202,6 +17317,12 @@ msgid ""
 msgstr ""
 "利用可能範囲は '国一致' に設定されていますが、国フィールドが設定されていませ"
 "ん。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The Bill/Refund date is required to validate this document."
+msgstr "このドキュメントを有効化するには、請求/払い戻し日が必要です。"
 
 #. module: account
 #. odoo-python
@@ -18188,7 +18309,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "There are no journal items in the draft state to post."
-msgstr "記入できるドラフト状態の仕訳明細はありません。"
+msgstr "記入できるドラフトステータスの仕訳明細はありません。"
 
 #. module: account
 #. odoo-python
@@ -18602,8 +18723,8 @@ msgstr "この定期的な仕訳は当日を含めこの日付まで記帳され
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "This setting cannot be changed after an invoice is created."
-msgstr "顧客請求書作成後は、この設定を変更することはできません。"
+msgid "This setting locks once a journal entry is created."
+msgstr "この設定は、仕訳が作成されるとロックされます。"
 
 #. module: account
 #. odoo-python
@@ -20026,6 +20147,8 @@ msgid ""
 "You can not delete a transaction from a valid statement.\n"
 "If you want to delete it, please remove the statement first."
 msgstr ""
+"有効な明細からは取引を削除できません。\n"
+"取引を削除したい場合は、先にその明細を削除してください。"
 
 #. module: account
 #. odoo-python
@@ -20283,8 +20406,8 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
-"すでに投稿された状態のムーブを作成することはできません。ドラフトを作成して、"
-"後で投稿してください。"
+"投稿済ステータスの移動を作成することはできません。ドラフトを作成して、後で投"
+"稿してください。"
 
 #. module: account
 #. odoo-python
@@ -20824,19 +20947,6 @@ msgid "[Partner id]"
 msgstr "[Partner id]"
 
 #. module: account
-#: model:res.groups,comment:account.group_account_user
-msgid ""
-"access to all Accounting features, including reporting, asset management, "
-"analytic accounting, without configuration rights."
-msgstr ""
-
-#. module: account
-#: model:res.groups,comment:account.group_account_readonly
-msgid ""
-"access to all the accounting data but in readonly mode, no actions allowed."
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "account.move.line"
@@ -20851,11 +20961,6 @@ msgstr "請求書が使う通貨を有効にしてください"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "activate the currency of the invoice"
 msgstr "請求書が使う通貨を有効にしてください"
-
-#. module: account
-#: model:res.groups,comment:account.group_account_basic
-msgid "adds the accounting dashboard, bank management and follow-up reports."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -21403,6 +21508,63 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 自己請求書 (参照番号 {{ object.name or 'n/a' }})"
 
+#~ msgid "This setting cannot be changed after an invoice is created."
+#~ msgstr "顧客請求書作成後は、この設定を変更することはできません。"
+
+#~ msgid ""
+#~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"
+#~ "(receivable)s\" or \"%(payable)s\" with both options \"%"
+#~ "(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+#~ msgstr ""
+#~ "%(tax_account)s (%(account_name)s) は勘定科目タイプ \"%(receivable)s\" ま"
+#~ "たは \"%(payable)s\" 両方のオプション \"%(allow_reconciliation)s\" および "
+#~ "\"%(non_trade)s\" が有効化されている必要があります。"
+
+#~ msgid "Account Move Line Items"
+#~ msgstr "会計仕訳明細項目"
+
+#~ msgid ""
+#~ "Accrual entry created on %(date)s: %(accrual_entry)s.                    "
+#~ "And its reverse entry: %(reverse_entry)s."
+#~ msgstr ""
+#~ "%(date)s: %(accrual_entry)sに作成された未収計上。                  また、"
+#~ "その逆仕訳：%(reverse_entry)s"
+
+#~ msgid "Automatic Tax Mapping (AvaTax)"
+#~ msgstr "自動税マッピング（AvaTax）"
+
+#~ msgid "Bookkeeper"
+#~ msgstr "会計担当者"
+
+#~ msgid ""
+#~ "Invalid domain for expression '%(label)s' of line '%(line)s': %(formula)s"
+#~ msgstr "式'%(label)s'(明細'%(line)s'の)ドメインが無効です: %(formula)s"
+
+#~ msgid "Invoicing & Banks"
+#~ msgstr "請求と銀行"
+
+#~ msgid "Read-only"
+#~ msgstr "読取り専用"
+
+#~ msgid ""
+#~ "access to all Accounting features, including reporting, asset management, "
+#~ "analytic accounting, without configuration rights."
+#~ msgstr ""
+#~ "レポート作成、資産管理、分析会計などを含む、すべての会計機能へのアクセス権"
+#~ "を持ちます(ただし、設定権限は含まれません)。"
+
+#~ msgid ""
+#~ "access to all the accounting data but in readonly mode, no actions "
+#~ "allowed."
+#~ msgstr ""
+#~ "すべての会計データへの閲覧権限がありますが、読み取り専用モードのため操作は"
+#~ "できません。"
+
+#~ msgid ""
+#~ "adds the accounting dashboard, bank management and follow-up reports."
+#~ msgstr ""
+#~ "会計ダッシュボード、銀行管理、フォローアップレポートが追加されます。"
+
 #~ msgid ""
 #~ "<small class=\"form-text text-muted\">\n"
 #~ "                    You can choose how you want us to send your invoices, "
@@ -21412,39 +21574,6 @@ msgstr ""
 #~ "<small class=\"form-text text-muted\">\n"
 #~ "                    請求書の送付方法と電子フォーマットを選択できます。\n"
 #~ "                </small>"
-
-#~ msgid "Basic"
-#~ msgstr "基本"
-
-#~ msgid "Cash Bakery"
-#~ msgstr "現金 ベーカリー"
-
-#~ msgid "Cash Bar"
-#~ msgstr "現金バー"
-
-#~ msgid "Cash Clothes Shop"
-#~ msgstr "現金 洋服店"
-
-#~ msgid "Cash Furn. Shop"
-#~ msgstr "現金 家具屋"
-
-#~ msgid "Cash Restaurant"
-#~ msgstr "現金レストラン"
-
-#~ msgid "Create a Customer"
-#~ msgstr "顧客を作成する"
-
-#~ msgid "Next Activity Calendar Event"
-#~ msgstr "次の活動カレンダーイベント"
-
-#~ msgid "Ratings"
-#~ msgstr "評価"
-
-#~ msgid "Show Accounting Features - Readonly"
-#~ msgstr "会計機能を表示する - 読み取り専用"
-
-#~ msgid "Show Full Accounting Features"
-#~ msgstr "全会計機能を表示"
 
 #~ msgid "Warning"
 #~ msgstr "警告"
@@ -22689,9 +22818,6 @@ msgstr ""
 
 #~ msgid "Taxes set."
 #~ msgstr "税設定済"
-
-#~ msgid "The Bill/Refund date is required to validate this document."
-#~ msgstr "このドキュメントを有効化するには、請求/払い戻し日が必要です。"
 
 #~ msgid "The account %s (%s) is deprecated."
 #~ msgstr "アカウント%s (%s) が廃止されました。"

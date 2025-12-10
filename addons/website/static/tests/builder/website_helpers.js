@@ -34,6 +34,8 @@ import { WebsiteBuilderClientAction } from "@website/client_actions/website_prev
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
+import { BaseOptionComponent, revertPreview } from "@html_builder/core/utils";
+import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { WebsiteBuilder } from "@website/builder/website_builder";
 
 class Website extends models.Model {
@@ -146,6 +148,13 @@ export async function setupWebsiteBuilder(
             originalIframeLoaded = this.iframeLoaded;
             this.iframeLoaded = iframeLoaded;
         },
+        // Override for Firefox. Chrome doesn't load the initial iframe and
+        // never goes through this method. As Firefox does, it means it re-
+        // assigns `this.publicRootReady` to a deferred that is never resolved
+        // in tests, which prevents any Hoot builder test from working.
+        // Reimplement this method the day interactions within the iframe work
+        // with Hoot.
+        preparePublicRootReady() {},
         async loadAssetsEditBundle() {
             // To instantiate interactions in the iframe test we need to load
             // the frontend bundle in it. The problem is that Hoot does not have
@@ -198,7 +207,7 @@ export async function setupWebsiteBuilder(
 
     let lastUpdatePromise;
     const waitSidebarUpdated = async () => {
-        await editor.shared.operation.next();
+        await revertPreview(editor);
         // The tick ensures that lastUpdatePromise has correctly been assigned
         await tick();
         await lastUpdatePromise;
@@ -268,7 +277,11 @@ export async function setupWebsiteBuilder(
 
 async function openBuilderSidebar(editAssetsLoaded) {
     // The next line allow us to await asynchronous fetches and cache them before it is used
-    await Promise.all([getWebsiteSnippets(), loadBundle("website.website_builder_assets")]);
+    await Promise.all([
+        getWebsiteSnippets(),
+        loadBundle("website.website_builder_assets"),
+        loadBundle("html_editor.assets_image_cropper"),
+    ]);
 
     await click(".o-website-btn-custo-primary");
     await editAssetsLoaded;
@@ -288,79 +301,32 @@ export function addPlugin(...Plugin) {
     patchWithCleanup(WebsiteBuilder.prototype, {
         get builderProps() {
             const props = super.builderProps;
-            props.Plugins.push(...Plugin);
-            return props;
+            return { ...props, Plugins: [...props.Plugins, ...Plugin] };
         },
     });
 }
 
-export function addOption({
-    selector,
-    exclude,
-    applyTo,
-    template,
-    Component,
-    sequence,
-    cleanForSave,
-    props,
-    editableOnly,
-    title,
-    reloadTarget,
-}) {
+export function addOption(option) {
     const pluginId = uniqueId("test-option");
-    const Class = makeOptionPlugin({
-        pluginId,
-        OptionComponent: Component,
-        template,
-        selector,
-        exclude,
-        applyTo,
-        sequence,
-        cleanForSave,
-        props,
-        editableOnly,
-        title,
-        reloadTarget,
-    });
-    addPlugin(Class);
-}
-function makeOptionPlugin({
-    pluginId,
-    template,
-    selector,
-    exclude,
-    applyTo,
-    sequence,
-    OptionComponent,
-    cleanForSave,
-    props,
-    editableOnly,
-    title,
-    reloadTarget,
-}) {
-    const option = {
-        OptionComponent,
-        template,
-        selector,
-        exclude,
-        applyTo,
-        cleanForSave,
-        props,
-        editableOnly,
-        title,
-        reloadTarget,
-    };
+    const BaseComponent = option.Component || BaseOptionComponent;
+    class Option extends BaseComponent {
+        static components = { ...BaseComponent.components, BorderConfigurator };
+    }
+    const staticProps = { ...option };
+    const sequence = staticProps.sequence;
+    delete staticProps.Component;
+    delete staticProps.sequence;
+    Object.assign(Option, staticProps);
 
-    const Class = {
+    const P = {
         [pluginId]: class extends Plugin {
             static id = pluginId;
             resources = {
-                builder_options: sequence ? withSequence(sequence, option) : option,
+                builder_options: sequence ? withSequence(sequence, Option) : Option,
             };
         },
     }[pluginId];
-
-    return Class;
+    addPlugin(P);
 }
 
 export function addActionOption(actions = {}) {
@@ -464,7 +430,16 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
 export async function getStructureSnippet(snippetName) {
     const html = await getWebsiteSnippets();
     const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
-    return snippetsDocument.querySelector(`[data-snippet=${snippetName}]`).cloneNode(true);
+    const processors = registry.category("html_builder.snippetsPreprocessor").getAll();
+    for (const processor of Object.values(processors)) {
+        processor("website.snippets", snippetsDocument);
+    }
+    const snippetEl = snippetsDocument.querySelector(
+        `[data-snippet=${snippetName}]:not([data-snippet] [data-snippet])`
+    );
+    const el = snippetEl.cloneNode(true);
+    el.dataset.name = snippetEl.parentElement.getAttribute("name");
+    return el;
 }
 
 export async function insertStructureSnippet(editor, snippetName) {

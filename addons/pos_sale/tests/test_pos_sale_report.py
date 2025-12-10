@@ -4,10 +4,11 @@
 import odoo
 from odoo import fields
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPoSSaleReport(TestPoSCommon):
+class TestPoSSaleReport(TestPoSCommon, TestPointOfSaleHttpCommon):
 
     def setUp(self):
         super(TestPoSSaleReport, self).setUp()
@@ -50,6 +51,30 @@ class TestPoSSaleReport(TestPoSCommon):
         self.assertEqual(reports[0].volume, 4)
         self.assertEqual(reports[1].weight, 18)
         self.assertEqual(reports[1].volume, 24)
+
+    def test_refund_line_report_prices_sign(self):
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 10.00,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        current_session = self.main_pos_config.current_session_id
+
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'refund_multiple_products_amounts_compliance', login="pos_user")
+
+        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(
+            lambda payment: payment.payment_method_id.type == 'cash').mapped('amount')
+        )
+        current_session.post_closing_cash_details(total_cash_payment)
+        current_session.close_session_from_ui()
+        self.assertEqual(current_session.state, 'closed')
+
+        report = self.env['sale.report'].sudo().search([('product_id', '=', test_product.id), ('name', 'ilike', '% REFUND')], order='id', limit=1)
+        self.assertEqual(report.product_uom_qty, -2)
+        self.assertEqual(report.price_subtotal, report.product_uom_qty * test_product.list_price)
+        self.assertEqual(report.price_total, report.price_subtotal)
 
     def test_weight_and_volume_product_variant(self):
         colors = ['red', 'blue']
@@ -104,7 +129,7 @@ class TestPoSSaleReport(TestPoSCommon):
         })
         self.open_new_session()
 
-        data = self.create_ui_order_data([(product_0, 1)], self.customer, True)
+        data = self.create_ui_order_data([(product_0, 1)], {}, self.customer, True)
         data['lines'][0][2]['sale_order_origin_id'] = sale_order.id
         data['lines'][0][2]['sale_order_line_id'] = sale_order.order_line[0].id
         order_ids = self.env['pos.order'].sync_from_ui([data])
@@ -140,7 +165,7 @@ class TestPoSSaleReport(TestPoSCommon):
 
         orders = []
 
-        orders.append(self.create_ui_order_data([(self.product0, 5, 100), (self.product0, 3)], self.partner_1))
+        orders.append(self.create_ui_order_data([(self.product0, 5, 100), (self.product0, 3)], {}, self.partner_1))
         orders[0]['shipping_date'] = fields.Date.to_string(fields.Date.today())
 
         order = self.env['pos.order'].sync_from_ui(orders)

@@ -24,15 +24,14 @@
 </t>
 
 <t t-name="website.Configurator.DescriptionScreen">
-    <div class="o_configurator_screen h-100 d-flex flex-column o_description_screen">
+    <div class="o_configurator_screen h-100 d-flex flex-column o_description_screen"
+         t-on-focusin="onConfiguratorScreenFocusin">
         <div class="o_configurator_screen_content d-flex h-100 flex-grow-1">
             <div class="container align-self-center">
                 <div class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
                     <span>I want </span>
                     <div t-attf-class="dropdown o_configurator_type_dd d-inline-block {{state.selectedType ? 'o_step_completed' : 'o_step_todo show'}}"
-                         t-on-focusout="onDropdownFocusout"
-                         t-on-pointerdown="onDropdownPointerDown"
-                         t-on-pointerup="onDropdownPointerUp">
+                         t-on-focusout="onDropdownFocusout">
                         <button id="selectTypeToggle"
                                 class="o_btn_reset w-100 px-2"
                                 data-bs-toggle="dropdown"
@@ -85,9 +84,7 @@
                 <div t-if="state.selectedType and state.selectedIndustry" class="o_configurator_typing_text d-inline d-md-block mb-md-2 mb-lg-4 o_configurator_show">
                     <span>with the main objective to </span>
                     <div t-attf-class="dropdown d-inline-block o_configurator_purpose_dd {{state.selectedPurpose ? 'o_step_completed' : 'o_step_todo'}}"
-                         t-on-focusout="onDropdownFocusout"
-                         t-on-pointerdown="onDropdownPointerDown"
-                         t-on-pointerup="onDropdownPointerUp">
+                         t-on-focusout="onDropdownFocusout">
                         <button id="selectPurposeToggle"
                                 class="o_btn_reset w-100 px-2"
                                 data-bs-toggle="dropdown"

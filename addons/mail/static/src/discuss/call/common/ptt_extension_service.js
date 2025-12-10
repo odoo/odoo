@@ -5,9 +5,16 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
+/** In object so it's patchable */
+export const pttExtensionServiceInternal = {
+    onAnswerIsEnabled(pttService) {
+        pttService.isEnabled = true;
+    },
+};
+
 export const pttExtensionHookService = {
     start(env) {
-        const INITIAL_RELEASE_TIMEOUT = 500;
+        const INITIAL_RELEASE_TIMEOUT = 750;
         const COMMON_RELEASE_TIMEOUT = 200;
         // https://chromewebstore.google.com/detail/discuss-push-to-talk/mdiacebcbkmjjlpclnbcgiepgifcnpmg
         const EXT_ID = "mdiacebcbkmjjlpclnbcgiepgifcnpmg";
@@ -76,7 +83,7 @@ export const pttExtensionHookService = {
                     }
                     break;
                 case "answer-is-enabled":
-                    self.isEnabled = true;
+                    pttExtensionServiceInternal.onAnswerIsEnabled(self);
                     break;
             }
         });

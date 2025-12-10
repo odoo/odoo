@@ -38,7 +38,7 @@ patch(PaymentScreen.prototype, {
                     pi.payment_method_id.use_payment_terminal === "razorpay" &&
                     !transactionsIds.find((x) => x === pi.transaction_id)
             );
-            const currentDue = this.currentOrder.getDue();
+            const currentDue = this.currentOrder.remainingDue;
             if (!razorpayPaymentline || currentDue === 0) {
                 this.pos.notification.add(
                     _t(

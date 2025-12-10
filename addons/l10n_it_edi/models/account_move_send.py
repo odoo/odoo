@@ -102,7 +102,7 @@ class AccountMoveSend(models.AbstractModel):
         # Prepare attachment data
         for move, move_data in moves_data.items():
             if attachment := move.l10n_it_edi_attachment_file:
-                attachments_vals[move] = {'name': move.l10n_it_edi_attachment_name, 'raw': attachment}
+                attachments_vals[move] = {'name': move.l10n_it_edi_attachment_name, 'raw': base64.b64decode(attachment)}
                 moves |= move
             elif edi_values := move_data.get('l10n_it_edi_values'):
                 attachments_vals[move] = edi_values
@@ -122,7 +122,7 @@ class AccountMoveSend(models.AbstractModel):
                 attachment['raw'] = signed_data.encode()
                 # Show that those moves couldn't be sent
             if 'error_message' in attachment_data:
-                moves_data[move]['error'] = attachment_data['error_message']
+                moves_data[move]['error'] = {'error_title': attachment_data['error_message']}
 
     def _link_invoice_documents(self, invoices_data):
         # EXTENDS 'account'

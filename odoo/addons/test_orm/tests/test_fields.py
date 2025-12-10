@@ -1110,6 +1110,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertFalse(record.filtered_domain([('name', 'like', 'F')]))
         self.assertFalse(record.filtered_domain([('name', 'ilike', 'f')]))
 
+    def test_20_like_multiline(self):
+        """ test filtered_domain() on multiline fields. """
+        record = self.env['test_orm.mixed'].create({'comment1': 'Foo\nBar'})
+        self.assertTrue(record.filtered_domain([('comment1', 'like', 'Bar')]))
+        self.assertTrue(record.filtered_domain([('comment1', 'ilike', 'bar')]))
+
     def test_21_date(self):
         """ test date fields """
         record = self.env['test_orm.mixed'].create({})
@@ -3251,6 +3257,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(record.comment0, record_value)
         record.invalidate_recordset()
         self.assertEqual(record.comment0, record_value)
+
+    def test_related_column_type(self):
+        related_float_field = self.env['test_orm.related']._fields['foo_float_id']
+        self.assertEqual(related_float_field.column_type[1], 'numeric')
 
 
 class TestX2many(TransactionExpressionCase):

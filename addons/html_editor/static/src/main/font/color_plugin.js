@@ -5,6 +5,7 @@ import {
     hasAnyNodesColor,
     hasColor,
     TEXT_CLASSES_REGEX,
+    hasTextColorClass,
 } from "@html_editor/utils/color";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
@@ -30,6 +31,16 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
  * @property { ColorPlugin['getElementColors'] } getElementColors
  * @property { ColorPlugin['applyColor'] } applyColor
  */
+
+/**
+ * @typedef {((element: HTMLElement, cssProp: string, color: string) => boolean)[]} apply_color_style_overrides
+ * @typedef {((color: string, mode: "color" | "backgroundColor") => void)[]} color_apply_overrides
+ * @typedef {((color: string, mode: "color" | "backgroundColor") => string)[]} apply_background_color_processors
+ * @typedef {((color: string) => string)[]} get_background_color_processors
+ *
+ * @typedef {((el: HTMLElement, actionParam: string) => string)[]} color_combination_getters
+ */
+
 export class ColorPlugin extends Plugin {
     static id = "color";
     static dependencies = ["selection", "split", "history", "format"];
@@ -40,6 +51,7 @@ export class ColorPlugin extends Plugin {
         "getColorCombination",
         "applyColor",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
@@ -207,13 +219,19 @@ export class ColorPlugin extends Plugin {
 
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
+                // Invisible nodes like `feff`s can be removed during `splitAroundUntil`
+                // so we filter them out.
+                if (!node.isConnected) {
+                    return [];
+                }
                 let font =
                     closestElement(node, "font") ||
                     closestElement(
                         node,
                         '[style*="color"]:not(li), [style*="background-color"]:not(li), [style*="background-image"]:not(li)'
                     ) ||
-                    closestElement(node, "span");
+                    closestElement(node, "span") ||
+                    closestElement(node, (node) => hasTextColorClass(node, mode));
 
                 const faNodes = font?.querySelectorAll(".fa");
                 if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
@@ -232,7 +250,10 @@ export class ColorPlugin extends Plugin {
                 if (
                     font &&
                     font.nodeName !== "T" &&
-                    (font.nodeName !== "SPAN" || font.style[mode] || font.style.backgroundImage) &&
+                    (font.nodeName !== "SPAN" ||
+                        font.style[mode] ||
+                        font.style.backgroundImage ||
+                        hasTextColorClass(font, mode)) &&
                     (isColorGradient(color) ||
                         color === "" ||
                         !hasInlineGradient ||
@@ -254,6 +275,12 @@ export class ColorPlugin extends Plugin {
                                     font.style.removeProperty(style);
                                 }
                             }
+                            font.classList.forEach((className) => {
+                                if (TEXT_CLASSES_REGEX.test(className)) {
+                                    font.classList.remove(className);
+                                    newFont.classList.add(className);
+                                }
+                            });
                             newFont.append(...font.childNodes);
                             font.append(newFont);
                             font = newFont;
@@ -264,10 +291,13 @@ export class ColorPlugin extends Plugin {
                         );
                         const isGradientBeingUpdated = closestGradientEl && isColorGradient(color);
                         const splitnode = isGradientBeingUpdated ? closestGradientEl : font;
+                        const cursors = this.dependencies.selection.preserveSelection();
                         font = this.dependencies.split.splitAroundUntil(
                             selectedChildren,
-                            splitnode
+                            splitnode,
+                            cursors
                         );
+                        cursors.restore();
                         if (isGradientBeingUpdated) {
                             const classRegex =
                                 mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX;

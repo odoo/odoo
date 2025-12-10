@@ -49,7 +49,10 @@ export class ChatWindow extends Record {
     });
 
     computeCanShow() {
-        return !this.store.discuss?.isActive || this.store.env.services.ui.isSmall;
+        if (this.store.env.services.ui.isSmall) {
+            return !this.hubAsFolded || !this.store.discuss?.isActive;
+        }
+        return !this.store.discuss?.isActive;
     }
 
     async close(options = {}) {
@@ -93,6 +96,7 @@ export class ChatWindow extends Record {
         swapOpened = true,
     } = {}) {
         await this.store.chatHub.initPromise;
+        this.store.env.bus.trigger("ChatWindow:will-open");
         this.store.chatHub.folded.delete(this);
         if (swapOpened || !this.store.chatHub.opened.includes(this)) {
             this.store.chatHub.opened.delete(this);

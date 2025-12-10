@@ -68,6 +68,31 @@ test("Replace an image with link by a document should remove the link", async ()
     expect("p a[href='http://test.com']").toHaveCount(0);
 });
 
+test("Replace an image by icon should remove invalid classes", async () => {
+    onRpc("ir.attachment", "search_read", () => []);
+    const env = await makeMockEnv();
+    await setupEditor(`<p><img class="img-fluid w-100" src="/web/static/img/logo.png"></p>`, {
+        env,
+    });
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
+    expect("img[src='/web/static/img/logo.png']").toHaveClass("img-fluid w-100");
+    await click("img");
+    await tick(); // selectionchange
+    await waitFor(".o-we-toolbar");
+    expect("button[name='replace_image']").toHaveCount(1);
+    await click("button[name='replace_image']");
+    await animationFrame();
+    await click(".nav-link:contains('Icons')");
+    await animationFrame();
+    await click("span.fa-envelope-o");
+    await animationFrame();
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
+    expect("span").toHaveCount(1);
+    expect("span").toHaveClass("fa fa-envelope-o");
+    expect("span").not.toHaveClass("img-fluid");
+    expect("span").not.toHaveClass("w-100");
+});
+
 test.tags("focus required");
 test("Selection is collapsed after the image after replacing it", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -177,7 +202,7 @@ describe("(non-)editable media", () => {
             await animationFrame();
             await expectElementCount(".o-we-toolbar", 0);
             expect(getContent(editor.editable)).toBe(
-                `<div contenteditable="false">[<img src="${base64Img}">]</div>`
+                `<p data-selection-placeholder=""><br></p><div contenteditable="false">[<img src="${base64Img}">]</div><p data-selection-placeholder=""><br></p>`
             );
         });
         test("toolbar should open when clicking on an editable image in a non-editable context", async () => {
@@ -189,7 +214,9 @@ describe("(non-)editable media", () => {
             await expectElementCount(".o-we-toolbar", 1);
             // Now pressing the delete button should remove the image.
             await click(".o-we-toolbar button[name='image_delete']");
-            expect(getContent(editor.editable)).toBe(`<div contenteditable="false">[]<br></div>`);
+            expect(getContent(editor.editable)).toBe(
+                `<p data-selection-placeholder=""><br></p><div contenteditable="false">[]<br></div><p data-selection-placeholder=""><br></p>`
+            );
         });
     });
     describe("delete", () => {
