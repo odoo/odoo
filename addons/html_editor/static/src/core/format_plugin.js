@@ -7,12 +7,15 @@ import { closestBlock, isBlock } from "../utils/blocks";
 import { cleanTextNode, fillEmpty, removeClass, splitTextNode, unwrapContents } from "../utils/dom";
 import {
     areSimilarElements,
+    hasVisibleContent,
     isContentEditable,
     isElement,
     isEmptyBlock,
     isEmptyTextNode,
+    isPhrasingContent,
     isSelfClosingElement,
     isTextNode,
+    isVisible,
     isVisibleTextNode,
     isZwnbsp,
     isZWS,
@@ -526,7 +529,7 @@ export class FormatPlugin extends Plugin {
         const inlineElement = findFurthest(
             closestElement(anchorNode),
             blockEl,
-            (e) => !isBlock(e) && e.textContent === "\u200b"
+            (e) => isPhrasingContent(e) && !isVisible(e) && !hasVisibleContent(e)
         );
         if (
             this.lastEmptyInlineElement?.isConnected &&
