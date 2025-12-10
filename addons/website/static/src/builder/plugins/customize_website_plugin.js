@@ -13,11 +13,13 @@ import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { renderToElement } from "@web/core/utils/render";
 import { CompositeAction } from "@html_builder/core/composite_action_plugin";
+import { isBase64ImageSrc } from "@html_builder/plugins/image/image_size";
 
 /**
  * @typedef { Object } CustomizeWebsiteShared
  * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
  * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
+ * @property { CustomizeWebsitePlugin['getBase64ImageData'] } getBase64ImageData
  * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
  * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
  * @property { CustomizeWebsitePlugin['toggleTemplate'] } toggleTemplate
@@ -41,6 +43,7 @@ export class CustomizeWebsitePlugin extends Plugin {
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
+        "getBase64ImageData",
         "loadTemplateKey",
         "makeSCSSCusto",
         "toggleTemplate",
@@ -78,7 +81,29 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         save_handlers: this.onSave.bind(this),
+        before_save_handlers: this.normalizeBodyBackgroundImage.bind(this),
     };
+
+    async normalizeBodyBackgroundImage() {
+        // Some websites since 18.4 could have a base64 body backgrounds,
+        // this resolve them to an existing attachment URL.
+        const bodyImage = this.getWebsiteVariableValue("body-image");
+        const imageData = this.getBase64ImageData(bodyImage);
+        if (!imageData) {
+            return;
+        }
+        const attachment = await rpc("/html_editor/attachment/add_data", {
+            name: null,
+            data: imageData,
+            is_image: true,
+        });
+        if (attachment && !attachment.error) {
+            await this.customizeWebsiteVariables({
+                "body-image-type": "'image'",
+                "body-image": `'${attachment.image_src}'`,
+            });
+        }
+    }
 
     async onSave() {
         if (this.viewsToEnableOnSave.size || this.viewsToDisableOnSave.size) {
@@ -161,6 +186,23 @@ export class CustomizeWebsitePlugin extends Plugin {
         if (reloadBundles) {
             await this.reloadBundles();
         }
+    }
+    getBase64ImageData(value) {
+        if (!value) {
+            return;
+        }
+        let normalizedSrc = value;
+        if (normalizedSrc.startsWith("'") && normalizedSrc.endsWith("'")) {
+            normalizedSrc = normalizedSrc.substring(1, normalizedSrc.length - 1);
+        }
+        if (!isBase64ImageSrc(normalizedSrc)) {
+            return;
+        }
+        const [, imageData] = normalizedSrc.split("base64,");
+        if (!imageData) {
+            return;
+        }
+        return imageData;
     }
     debouncedSCSSVariablesCusto = debounce(async (nullValue) => {
         const variables = this.variablesToCustomize;
@@ -504,9 +546,26 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
                 "body-image": "",
             });
         } else {
-            const imageEl = historyImageSrc || (await getAction("replaceBgImage").load({ el }));
-            if (imageEl) {
-                imageSrc = imageEl.src;
+            if (historyImageSrc) {
+                imageSrc = historyImageSrc;
+            } else {
+                const imageEl = await getAction("replaceBgImage").load({ el });
+                const imageOriginalId = imageEl?.dataset?.originalId || null;
+                const mimetype = imageEl?.dataset?.mimetype;
+                const imageData = this.dependencies.customizeWebsite.getBase64ImageData(
+                    imageEl?.src
+                );
+                if (imageOriginalId && imageData && mimetype) {
+                    imageSrc = await rpc(
+                        `/html_editor/modify_image/${encodeURIComponent(imageOriginalId)}`,
+                        {
+                            data: imageData,
+                            mimetype: mimetype,
+                        }
+                    );
+                }
+            }
+            if (imageSrc) {
                 await this.dependencies.customizeWebsite.customizeWebsiteVariables({
                     "body-image-type": `'${value}'`,
                     "body-image": `'${imageSrc}'`,

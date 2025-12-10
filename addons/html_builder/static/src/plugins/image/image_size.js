@@ -33,7 +33,7 @@ export class ImageSize extends BaseOptionComponent {
         return `${(size / 1024).toFixed(1)} kB`;
     }
 }
-function isBase64ImageSrc(src) {
+export function isBase64ImageSrc(src) {
     // Check if it's a data URL with base64 encoding
     return src && src.startsWith("data:image/") && src.includes(";base64,");
 }
