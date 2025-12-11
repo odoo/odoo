@@ -86,7 +86,7 @@ export class PaymentMercadoPago extends PaymentInterface {
                 this.webhook_resolver = resolve;
             });
         } catch (error) {
-            this._showMsg(error, "System error");
+            this._showMsg(error, _t("System error"));
             return false;
         }
     }
@@ -191,7 +191,7 @@ export class PaymentMercadoPago extends PaymentInterface {
     // private methods
     _showMsg(msg, title) {
         this.env.services.dialog.add(AlertDialog, {
-            title: "Mercado Pago " + title,
+            title: _t("Mercado Pago %s", title),
             body: msg,
         });
     }
