@@ -179,7 +179,7 @@ export class FloorScreen extends Component {
                     }
                     const potentialParentElem = findIntersectingTableElem(element);
                     if (!potentialParentElem) {
-                        this.alert.add("Link Table");
+                        this.alert.add(_t("Link Table"));
                         return;
                     }
                     this.state.potentialLink = {
@@ -188,7 +188,10 @@ export class FloorScreen extends Component {
                         time: Date.now(),
                     };
                     this.alert.add(
-                        `Link Table ${table.table_number} with ${this.state.potentialLink.parent.table_number}`
+                        _t("Link Table %(sourceTable)s with %(destinationTable)s", {
+                            sourceTable: table.table_number,
+                            destinationTable: this.state.potentialLink.parent.table_number,
+                        })
                     );
                     return;
                 }
@@ -929,7 +932,7 @@ export class FloorScreen extends Component {
     }
     async deleteFloor() {
         const confirmed = await ask(this.dialog, {
-            title: `Removing floor ${this.activeFloor.name}`,
+            title: _t("Removing floor %s", this.activeFloor.name),
             body: _t(
                 "Removing a floor cannot be undone. Do you still want to remove %s?",
                 this.activeFloor.name
