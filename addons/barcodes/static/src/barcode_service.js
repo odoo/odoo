@@ -49,13 +49,19 @@ export const barcodeService = {
          * check if we have a barcode, and trigger appropriate events
          */
         function checkBarcode(ev) {
+            barcodeInput?.setAttribute("inputmode", "none");
+
             let str = barcodeInput ? barcodeInput.value : bufferedBarcode;
             str = barcodeService.cleanBarcode(str);
             if (str.length >= 3) {
                 if (ev) {
                     ev.preventDefault();
                 }
-                barcodeService.handleBarcode(bus, str, currentTarget);
+                str.split(';').forEach(value => {
+                    if (value) {
+                        barcodeService.handleBarcode(bus, value, currentTarget);
+                    }
+                });
             }
             if (barcodeInput) {
                 barcodeInput.value = "";
@@ -76,7 +82,8 @@ export const barcodeService = {
             // Notes:
             // - shiftKey is not ignored because it can be used by some barcode scanner for digits.
             // - altKey/ctrlKey are not ignored because it can be used in some barcodes (e.g. GS1 separator)
-            const isSpecialKey = !['Control', 'Alt'].includes(ev.key) && (ev.key.length > 1 || ev.metaKey);
+            // - Unidentified
+            const isSpecialKey = !['Control', 'Alt', 'Unidentified'].includes(ev.key) && (ev.key.length > 1 || ev.metaKey);
             const isEndCharacter = ev.key.match(/(Enter|Tab)/);
 
             // Don't catch non-printable keys except 'enter' and 'tab'
@@ -108,6 +115,7 @@ export const barcodeService = {
             if (document.activeElement && !document.activeElement.matches('input:not([type]), input[type="text"], textarea, [contenteditable], ' +
                 '[type="email"], [type="number"], [type="password"], [type="tel"], [type="search"]')) {
                 barcodeInput.focus();
+                barcodeInput.setAttribute("inputmode", "text");
             }
             keydownHandler(ev);
         }
