@@ -70,13 +70,12 @@
                <header>
                    <button name="action_validate" invisible="state != 'draft'" type="object" string="Confirm Repair" class="oe_highlight" data-hotkey="v"/>
                    <button name="action_repair_start" invisible="state != 'confirmed'" type="object" string="Start Repair" class="oe_highlight" data-hotkey="q"/>
-                   <button name="action_repair_end" invisible="state != 'under_repair' or not has_uncomplete_moves" type="object" string="End Repair" class="oe_highlight" data-hotkey="x" confirm="For some of the parts, there is a difference between the initial demand and the actual quantity that was used. Are you sure you want to confirm ?"/>
-                   <button name="action_repair_end" invisible="state != 'under_repair' or has_uncomplete_moves" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
+                   <button name="action_repair_end" invisible="state != 'under_repair'" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
                    <button name="action_assign" invisible="not reserve_visible" string="Check availability" type="object"/>
-                   <button name="action_unreserve" type="object" string="Unreserve" invisible="not unreserve_visible" data-hotkey="w"/>
-                   <button name="action_create_sale_order" type="object" string="Create Quotation" invisible="not partner_id or (state == 'cancel' or sale_order_id)"/>
-                   <button name="action_repair_cancel" string="Cancel Repair" type="object" invisible="state in ('done', 'cancel')" data-hotkey="l"/>
+                   <button name="action_create_sale_order" type="object" string="Quote" invisible="not can_create_sale_or_invoice"/>
+                   <button name="action_create_invoice" type="object" string="Invoice" invisible="not can_create_sale_or_invoice"/>
                    <button name="action_repair_cancel_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="z"/>
+                   <button name="action_repair_cancel" string="Cancel" type="object" invisible="state in ('done', 'cancel')" data-hotkey="l"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,under_repair,done"/>
                </header>
                <sheet string="Repairs order">
@@ -91,6 +90,13 @@
                             </div>
                         </button>
                         <button name="%(action_repair_move_lines)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" invisible="state not in ['done', 'cancel']"/>
+                        <button name="action_view_invoice"
+                            type="object"
+                            icon="fa-pencil-square-o"
+                            class="oe_stat_button"
+                            invisible="not invoice_count">
+                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <label class="o_form_label" for="name"/>
@@ -144,7 +150,6 @@
                                 </control>
                                 <field name="company_id" column_invisible="True"/>
                                 <field name="state" column_invisible="True"/>
-                                <field name="repair_line_type" required="1"/>
                                 <field name="picking_type_id" column_invisible="True"/>
                                 <field name="location_id" column_invisible="True"/>
                                 <field name="location_dest_id" column_invisible="True"/>
@@ -162,12 +167,12 @@
                                 <field name="description_picking" string="Description" optional="hide"/>
                                 <field name="date" optional="hide"/>
                                 <field name="date_deadline" optional="hide"/>
+                                <field name="repair_line_type" required="1"/>
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
                                 <field name="forecast_expected_date" column_invisible="True"/>
                                 <field name="product_qty" readonly="1" column_invisible="True"/>
-                                <field name="quantity" string="Quantity" readonly="not product_id"/>
+                                <field name="quantity" string="Reserved" readonly="not product_id" optional="hide"/>
                                 <field name="uom_id" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom"/>
-                                <field name="picked" string="Picked" optional='hide'/>
                                 <field name="lot_ids" widget="many2many_tags"
                                     groups="stock.group_production_lot"
                                     invisible="not show_details_visible or has_tracking != 'serial'"
@@ -376,6 +381,17 @@
                 Create a new tag
               </p>
             </field>
+        </record>
+
+        <record id="action_unreserve" model="ir.actions.server">
+            <field name="name">Unreserve</field>
+            <field name="model_id" ref="repair.model_repair_order"/>
+            <field name="binding_model_id" ref="repair.model_repair_order"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                records.action_unreserve()</field>
         </record>
 
         <menuitem id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="165"
