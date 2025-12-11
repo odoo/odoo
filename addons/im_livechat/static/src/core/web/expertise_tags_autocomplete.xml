@@ -2,11 +2,12 @@
 <templates xml:space="preserve">
     <t t-name="im_livechat.ExpertiseTagsAutocomplete">
         <div
-            class="o-livechat-ExpertiseTagsAutocomplete d-inline-flex o_tags_input o_input flex-wrap gap-1 mb-3"
+            class="o-livechat-ExpertiseTagsAutocomplete d-inline-flex o_tags_input flex-wrap gap-1 mb-3"
+            t-att-class="{'o_input': !props.disabled, 'o-disabled': props.disabled}"
             t-ref="root"
         >
             <TagsList displayText="true" tags="tags"/>
-            <div class="flex-grow-1 d-inline-flex w-100" style="flex-basis: 0;">
+            <div t-if="!props.disabled" class="flex-grow-1 d-inline-flex w-100" style="flex-basis: 0;" >
                 <Many2XAutocomplete
                     placeholder="placeholder"
                     resModel="'im_livechat.expertise'"

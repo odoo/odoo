@@ -20,7 +20,7 @@ registerThreadAction("livechat-status", {
     actionPanelComponent: LivechatChannelInfoList,
     condition: ({ owner, store, thread }) =>
         thread?.channel_type === "livechat" &&
-        store.self_partner?.main_user_id?.share === false &&
+        store.has_access_livechat &&
         !thread.livechat_end_dt &&
         !owner.isDiscussContent,
     dropdown: true,

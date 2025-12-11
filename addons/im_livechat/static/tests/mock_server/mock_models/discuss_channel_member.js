@@ -49,4 +49,7 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
             });
         }
     }
+    get _to_store_defaults() {
+        return super._to_store_defaults.concat(["livechat_member_type"]);
+    }
 }
