@@ -108,8 +108,8 @@
                         <field name="color" widget="color_picker"/>
                     </group>
                 </group>
-                 <footer>
-                    <button string="Create Mailing List" class="btn-primary" special="save" data-hotkey="q"/>
+                <footer>
+                    <button string="Create Mailing List" name="action_view_contacts" type="object" class="btn-primary" special="save" data-hotkey="q"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
@@ -122,6 +122,7 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="mailing_list_view_form_simplified"/>
         <field name="target">new</field>
+        <field name="context">{'dialog_size' : 'large'}</field>
     </record>
 
     <record id="mailing_list_view_kanban" model="ir.ui.view">
