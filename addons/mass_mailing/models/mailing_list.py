@@ -18,12 +18,9 @@ class MailingList(models.Model):
     # As this model has their own data merge, avoid to enable the generic data_merge on that model.
     _disable_data_merge = True
 
-    def _get_default_color(self):
-        return randint(1, 11)
-
     name = fields.Char(string='Mailing List', required=True)
     active = fields.Boolean(default=True)
-    color = fields.Integer(string='Color', default=_get_default_color)
+    color = fields.Integer(string='Color', default=0)
     contact_count = fields.Integer(compute="_compute_mailing_list_statistics", string='Number of Contacts')
     contact_count_email = fields.Integer(compute="_compute_mailing_list_statistics", string="Number of Emails")
     contact_count_opt_out = fields.Integer(compute="_compute_mailing_list_statistics", string="Number of Opted-out")
