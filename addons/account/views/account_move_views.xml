@@ -1250,7 +1250,11 @@
                                             </group>
                                             <group>
                                                 <field name="account_id" domain="[('deprecated', '=', False), ('company_ids', 'parent_of', company_id)]" options="{'no_create': True}" context="{'partner_id': partner_id, 'move_type': parent.move_type}"/>
-                                                <field name="tax_ids" widget="many2many_tags"/>
+                                                <field name="tax_ids" widget="many2many_tags"
+                                                    domain="[('type_tax_use', '=?', parent.invoice_filter_type_domain), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]"
+                                                    context="{'append_type_to_tax_name': not parent.invoice_filter_type_domain, 'active_test': True}"
+                                                    options="{'no_create': True}"
+                                                />
                                                 <field name="analytic_distribution" widget="analytic_distribution" groups="analytic.group_analytic_accounting"/>
                                             </group>
                                             <group>
