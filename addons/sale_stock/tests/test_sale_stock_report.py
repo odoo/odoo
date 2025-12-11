@@ -320,6 +320,40 @@ class TestSaleStockInvoices(TestSaleCommon):
         text = html2plaintext(html)
         self.assertRegex(text, r'Product By Lot\n4.00Units\nLOT0001', "There should be a line that specifies 4 x LOT0001")
 
+    def test_picking_description(self):
+        """
+        Verify that for a no-variant product, the product name is not included as the first element in the picking description,
+        as this avoids repeating the name on the delivery slip.
+        """
+
+        product_attr = self.env['product.attribute'].create({'name': 'Color', 'create_variant': 'no_variant'})
+        product_attrv1, product_attrv2 = self.env['product.attribute.value'].create([
+            {'name': 'Value1', 'attribute_id': product_attr.id},
+            {'name': 'Value2', 'attribute_id': product_attr.id},
+        ])
+        product_template_no_variant = self.env['product.template'].create({
+            'name': 'product name',
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': product_attr.id,
+                    'value_ids': [Command.set([product_attrv1.id, product_attrv2.id])],
+                })]
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'name': product_template_no_variant.name,
+                'product_id': product_template_no_variant.product_variant_id.id,
+                'product_uom_qty': 4,
+                'product_no_variant_attribute_value_ids': product_template_no_variant.product_variant_id.attribute_line_ids.product_template_value_ids
+                }),
+            ],
+        })
+        so.action_confirm()
+        picking = so.picking_ids[0]
+        picking_description = picking.move_ids._get_report_description_picking()
+        self.assertEqual(picking_description, 'Color: Value1\nColor: Value2')
+
     def test_backorder_and_several_invoices(self):
         """
         Suppose the lots are printed on the invoices.
