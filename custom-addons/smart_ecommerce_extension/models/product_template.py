@@ -8,6 +8,15 @@ from datetime import timedelta
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
+    # Seller relationship - links product to marketplace seller
+    seller_id = fields.Many2one(
+        'marketplace.seller',
+        string='Seller',
+        index=True,
+        tracking=True,
+        help='The marketplace seller who owns this product',
+    )
+    
     # Brand and Model fields
     brand = fields.Char(
         string='Brand',

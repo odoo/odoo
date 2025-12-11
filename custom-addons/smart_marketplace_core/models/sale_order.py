@@ -104,8 +104,10 @@ class SaleOrder(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Split Orders'),
             'res_model': 'sale.order',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
+            'views': [(False, 'list'), (False, 'form')],
             'domain': [('id', 'in', child_orders.ids)],
+            'target': 'current',
         }
 
 

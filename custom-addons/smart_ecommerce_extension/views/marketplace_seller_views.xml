@@ -11,6 +11,9 @@
         <field name="arch" type="xml">
             <form string="Seller">
                 <header>
+                    <button name="action_add_product" string="Add Product"
+                            type="object" class="btn-primary"
+                            invisible="state != 'approved'"/>
                     <button name="action_submit_for_approval" string="Submit for Approval"
                             type="object" class="btn-primary"
                             invisible="state != 'draft'"/>
@@ -35,8 +38,12 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-cubes" type="object"
+                                name="action_view_products">
+                            <field name="product_count" widget="statinfo" string="Products"/>
+                        </button>
                         <button class="oe_stat_button" icon="fa-shopping-cart" type="object"
-                                name="get_portal_dashboard_data">
+                                name="action_view_orders">
                             <field name="order_count" widget="statinfo" string="Orders"/>
                         </button>
                     </div>
@@ -75,6 +82,46 @@
                     </group>
                     
                     <notebook>
+                        <page string="Products" name="products">
+                            <field name="product_ids" mode="kanban" context="{'default_seller_id': id, 'default_sale_ok': True}">
+                                <kanban class="o_kanban_mobile">
+                                    <field name="id"/>
+                                    <field name="name"/>
+                                    <field name="list_price"/>
+                                    <field name="qty_available"/>
+                                    <field name="availability_status"/>
+                                    <field name="is_published"/>
+                                    <field name="image_128"/>
+                                    <templates>
+                                        <t t-name="card">
+                                            <div class="d-flex">
+                                                <field name="image_128" widget="image" class="o_kanban_image" options="{'size': [64, 64]}"/>
+                                                <div class="ms-2 flex-grow-1">
+                                                    <strong><field name="name"/></strong>
+                                                    <div class="text-primary fw-bold">
+                                                        <field name="list_price" widget="monetary"/>
+                                                    </div>
+                                                    <div class="mt-1">
+                                                        <span t-attf-class="badge #{record.availability_status.raw_value == 'in_stock' ? 'bg-success' : record.availability_status.raw_value == 'low_stock' ? 'bg-warning' : 'bg-danger'}">
+                                                            <field name="availability_status"/>
+                                                        </span>
+                                                        <span t-if="record.is_published.raw_value" class="badge bg-info ms-1">Published</span>
+                                                        <span t-if="!record.is_published.raw_value" class="badge bg-secondary ms-1">Draft</span>
+                                                    </div>
+                                                    <div class="text-muted small mt-1">
+                                                        Stock: <field name="qty_available"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                            <div class="text-center mt-3" invisible="product_ids">
+                                <p class="text-muted">No products yet. Click "Add Product" to create your first product.</p>
+                            </div>
+                        </page>
+                        
                         <page string="KYC &amp; Documents" name="documents">
                             <group>
                                 <group string="KYC Document">

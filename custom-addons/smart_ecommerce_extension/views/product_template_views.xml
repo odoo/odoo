@@ -23,10 +23,15 @@
             <xpath expr="//page[@name='sales']" position="after">
                 <page string="eCommerce Extension" name="ecommerce_extension">
                     <group>
+                        <group string="Marketplace">
+                            <field name="seller_id" options="{'no_create': True}" placeholder="Select seller..."/>
+                        </group>
                         <group string="Brand &amp; Model">
                             <field name="brand" placeholder="e.g., Samsung, Apple, Nike"/>
                             <field name="product_model" placeholder="e.g., Galaxy S23, iPhone 15"/>
                         </group>
+                    </group>
+                    <group>
                         <group string="Media">
                             <field name="video_url" placeholder="https://youtube.com/watch?v=..."/>
                             <field name="image_hover" widget="image" options="{'size': [128, 128]}"/>
@@ -61,6 +66,7 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='type']" position="after">
+                <field name="seller_id" optional="show"/>
                 <field name="public_categ_ids" widget="many2many_tags" string="Categories" optional="show"/>
                 <field name="brand" optional="show"/>
                 <field name="availability_status" widget="badge" 
@@ -80,6 +86,7 @@
         <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
+                <field name="seller_id" string="Seller"/>
                 <field name="brand" string="Brand"/>
                 <field name="public_categ_ids" string="Website Category"/>
             </xpath>
@@ -96,6 +103,7 @@
                 <filter string="Has Specifications" name="filter_has_specs" domain="[('specifications', '!=', False)]"/>
             </xpath>
             <xpath expr="//group" position="inside">
+                <filter string="Seller" name="group_by_seller" context="{'group_by': 'seller_id'}"/>
                 <filter string="Brand" name="group_by_brand" context="{'group_by': 'brand'}"/>
                 <filter string="Availability" name="group_by_availability" context="{'group_by': 'availability_status'}"/>
                 <filter string="Website Category" name="group_by_public_categ" context="{'group_by': 'public_categ_ids'}"/>
@@ -148,6 +156,7 @@
         <field name="arch" type="xml">
             <list string="Products" default_order="name">
                 <field name="name"/>
+                <field name="seller_id" optional="show"/>
                 <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                 <field name="brand" optional="show"/>
                 <field name="list_price" string="Price"/>
@@ -174,6 +183,7 @@
                 <field name="list_price"/>
                 <field name="qty_available"/>
                 <field name="brand"/>
+                <field name="seller_id"/>
                 <field name="availability_status"/>
                 <field name="public_categ_ids"/>
                 <field name="is_published"/>
@@ -182,6 +192,9 @@
                         <field name="image_128" widget="image" options="{'size': [100, 100]}"/>
                         <div class="ms-2 flex-grow-1">
                             <field name="name" class="fw-bold"/>
+                            <div t-if="record.seller_id.raw_value" class="text-muted small">
+                                <i class="fa fa-store"/> <field name="seller_id"/>
+                            </div>
                             <div t-if="record.brand.raw_value" class="text-muted small">
                                 <i class="fa fa-tag"/> <t t-esc="record.brand.value"/>
                             </div>
@@ -218,6 +231,7 @@
         <field name="arch" type="xml">
             <search string="Products">
                 <field name="name" string="Product" filter_domain="['|', '|', ('default_code', 'ilike', self), ('name', 'ilike', self), ('barcode', 'ilike', self)]"/>
+                <field name="seller_id"/>
                 <field name="brand"/>
                 <field name="public_categ_ids" string="Category"/>
                 <field name="categ_id" string="Internal Category"/>
@@ -232,7 +246,9 @@
                 <separator/>
                 <filter string="Has Video" name="filter_has_video" domain="[('video_url', '!=', False)]"/>
                 <filter string="Has Brand" name="filter_has_brand" domain="[('brand', '!=', False)]"/>
+                <filter string="Has Seller" name="filter_has_seller" domain="[('seller_id', '!=', False)]"/>
                 <group expand="0" string="Group By">
+                    <filter string="Seller" name="group_by_seller" context="{'group_by': 'seller_id'}"/>
                     <filter string="Category" name="group_by_public_categ" context="{'group_by': 'public_categ_ids'}"/>
                     <filter string="Brand" name="group_by_brand" context="{'group_by': 'brand'}"/>
                     <filter string="Availability" name="group_by_availability" context="{'group_by': 'availability_status'}"/>

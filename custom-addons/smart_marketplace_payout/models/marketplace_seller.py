@@ -27,7 +27,9 @@ class MarketplaceSeller(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Payouts'),
             'res_model': 'marketplace.payout.batch',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
+            'views': [(False, 'list'), (False, 'form')],
             'domain': [('seller_id', '=', self.id)],
+            'target': 'current',
         }
 

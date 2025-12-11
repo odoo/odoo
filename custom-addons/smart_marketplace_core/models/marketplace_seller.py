@@ -86,8 +86,10 @@ class MarketplaceSeller(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Products'),
             'res_model': 'product.template',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
+            'views': [(False, 'list'), (False, 'form')],
             'domain': [('seller_id', '=', self.id)],
+            'target': 'current',
         }
     
     def action_view_orders(self):
@@ -95,8 +97,10 @@ class MarketplaceSeller(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Orders'),
             'res_model': 'sale.order',
-            'view_mode': 'tree,form',
+            'view_mode': 'list,form',
+            'views': [(False, 'list'), (False, 'form')],
             'domain': [('seller_id', '=', self.id)],
+            'target': 'current',
         }
     
     @api.depends('kyc_documents', 'kyc_documents.state')

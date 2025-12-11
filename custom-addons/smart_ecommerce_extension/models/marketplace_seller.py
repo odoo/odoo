@@ -105,11 +105,18 @@ class MarketplaceSeller(models.Model):
         help='Platform commission percentage on each sale',
     )
     
+    # Products and Orders - One2many relationships
+    product_ids = fields.One2many(
+        'product.template',
+        'seller_id',
+        string='Products',
+        help='Products owned by this seller',
+    )
+    
     # Statistics (Computed)
     product_count = fields.Integer(
         string='Products',
         compute='_compute_statistics',
-        store=True,
     )
     order_count = fields.Integer(
         string='Orders',
@@ -156,23 +163,31 @@ class MarketplaceSeller(models.Model):
             else:
                 seller.name = _('New Seller')
 
-    @api.depends('user_id')
+    @api.depends('product_ids')
     def _compute_statistics(self):
         """Compute seller statistics"""
         for seller in self:
-            # Product count
-            if hasattr(self.env['product.template'], 'seller_id'):
-                seller.product_count = self.env['product.template'].search_count([
-                    ('seller_id', '=', seller.id)
-                ])
-            else:
-                seller.product_count = 0
+            # Product count - from One2many relationship
+            seller.product_count = len(seller.product_ids)
             
-            # Order statistics
-            domain = [('partner_id', '=', seller.partner_id.id), ('state', 'in', ['sale', 'done'])]
-            orders = self.env['sale.order'].sudo().search(domain)
-            seller.order_count = len(orders)
-            seller.total_sales = sum(orders.mapped('amount_total'))
+            # Order statistics - orders containing seller's products
+            if seller.product_ids:
+                product_variant_ids = seller.product_ids.mapped('product_variant_ids').ids
+                orders = self.env['sale.order'].sudo().search([
+                    ('order_line.product_id', 'in', product_variant_ids),
+                    ('state', 'in', ['sale', 'done']),
+                ])
+                seller.order_count = len(orders)
+                
+                # Calculate total sales from order lines with seller's products
+                order_lines = self.env['sale.order.line'].sudo().search([
+                    ('order_id', 'in', orders.ids),
+                    ('product_id', 'in', product_variant_ids),
+                ])
+                seller.total_sales = sum(order_lines.mapped('price_subtotal'))
+            else:
+                seller.order_count = 0
+                seller.total_sales = 0.0
 
     @api.constrains('commission_rate')
     def _check_commission_rate(self):
@@ -249,6 +264,72 @@ class MarketplaceSeller(models.Model):
             'kyc_verified_by': self.env.user.id,
         })
         self.message_post(body=_('KYC verified by %s') % self.env.user.name)
+
+    # ==========================================
+    # VIEW ACTIONS
+    # ==========================================
+
+    def action_view_products(self):
+        """Open list of seller's products"""
+        self.ensure_one()
+        return {
+            'name': _('Products - %s') % self.company_name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.template',
+            'view_mode': 'kanban,list,form',
+            'views': [(False, 'kanban'), (False, 'list'), (False, 'form')],
+            'domain': [('seller_id', '=', self.id)],
+            'context': {
+                'default_seller_id': self.id,
+                'default_sale_ok': True,
+                'default_type': 'consu',
+                'default_is_storable': True,
+            },
+            'target': 'current',
+        }
+
+    def action_view_orders(self):
+        """Open list of orders containing seller's products"""
+        self.ensure_one()
+        
+        order_ids = []
+        if self.product_ids:
+            product_variant_ids = self.product_ids.mapped('product_variant_ids').ids
+            if product_variant_ids:
+                orders = self.env['sale.order'].sudo().search([
+                    ('order_line.product_id', 'in', product_variant_ids),
+                ])
+                order_ids = orders.ids
+        
+        return {
+            'name': _('Orders - %s') % self.company_name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'view_mode': 'list,form',
+            'views': [(False, 'list'), (False, 'form')],
+            'domain': [('id', 'in', order_ids)],
+            'context': {'create': False},
+            'target': 'current',
+        }
+
+    def action_add_product(self):
+        """Quick action to add a new product"""
+        self.ensure_one()
+        return {
+            'name': _('New Product'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.template',
+            'view_mode': 'form',
+            'views': [(False, 'form')],
+            'context': {
+                'default_seller_id': self.id,
+                'default_sale_ok': True,
+                'default_is_published': True,
+                'default_type': 'consu',
+                'default_is_storable': True,
+            },
+            'target': 'current',
+        }
 
     # ==========================================
     # PORTAL METHODS
