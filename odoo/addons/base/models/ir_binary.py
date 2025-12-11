@@ -70,7 +70,7 @@ class IrBinary(models.AbstractModel):
             return record._to_http_stream()
 
         field = record._fields[field_name]
-        record._check_field_access(field, 'read')
+        record.check_field_access(field, 'read')
 
         if field.attachment:
             field_attachment = self.env['ir.attachment'].sudo().search(

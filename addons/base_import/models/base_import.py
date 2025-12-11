@@ -284,7 +284,7 @@ class Base_ImportImport(models.TransientModel):
             # ignore if you cannot access to the target model or the field definition
             if not target_model.has_access('read'):
                 continue
-            if not target_model._has_field_access(target_model._fields[definition_record_field], 'read'):
+            if not target_model.has_field_access(target_model._fields[definition_record_field], 'read'):
                 continue
 
             # Do not take into account the definition of archived parents,

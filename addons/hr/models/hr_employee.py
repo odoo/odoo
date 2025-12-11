@@ -304,7 +304,7 @@ class HrEmployee(models.Model):
         result = super()._prepare_create_values(vals_list)
         new_vals_list = []
         Version = self.env['hr.version']
-        version_fields = [fname for fname, field in Version._fields.items() if Version._has_field_access(field, 'write')]
+        version_fields = [fname for fname, field in Version._fields.items() if Version.has_field_access(field, 'write')]
         for vals in result:
             employee_vals = {}
             version_vals = {}
@@ -1514,7 +1514,7 @@ class HrEmployee(models.Model):
         self.env['hr.version'].new({
             f_name: value
             for f_name, value in version_vals.items()
-            if self.env['hr.version']._has_field_access(self.env['hr.version']._fields[f_name], 'read')
+            if self.env['hr.version'].has_field_access(self.env['hr.version']._fields[f_name], 'read')
         })
         return employee
 

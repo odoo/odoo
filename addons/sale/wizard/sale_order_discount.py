@@ -107,7 +107,7 @@ class SaleOrderDiscount(models.TransientModel):
             if (
                 self.env['product.product'].has_access('create')
                 and company.has_access('write')
-                and company._has_field_access(company._fields['sale_discount_product_id'], 'write')
+                and company.has_field_access(company._fields['sale_discount_product_id'], 'write')
             ):
                 company.sale_discount_product_id = self.env['product.product'].create(
                     self._prepare_discount_product_values()

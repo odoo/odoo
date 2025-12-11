@@ -2599,19 +2599,29 @@ class BaseModel(metaclass=MetaModel):
         for fname, field in self._fields.items():
             if allfields and fname not in allfields:
                 continue
-            if not self._has_field_access(field, 'read'):
+            if not self.has_field_access(field, 'read'):
                 continue
 
             description = field.get_description(self.env, attributes=attributes)
             if 'readonly' in description:
-                description['readonly'] = description['readonly'] or not self._has_field_access(field, 'write')
+                description['readonly'] = description['readonly'] or not self.has_field_access(field, 'write')
             res[fname] = description
 
         return res
 
     @api.model
-    def _has_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> bool:
+    def has_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> bool:
         """ Determine whether the user access rights on the given field for the given operation.
+
+        :param field: the field to check
+        :param operation: one of ``read``, ``write``
+        :return: whether the field is accessible
+        """
+        return self._has_field_access(field, operation)
+
+    @api.model
+    def _has_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> bool:
+        """ Actual implementation of :meth:`has_field_access`.
         You may override this method to customize the access to fields.
 
         :param field: the field to check
@@ -2625,7 +2635,7 @@ class BaseModel(metaclass=MetaModel):
         return self.env.user.has_groups(field.groups)
 
     @api.model
-    def _check_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> None:
+    def check_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> None:
         """Check the user access rights on the given field.
 
         :param field: the field to check
@@ -2671,6 +2681,11 @@ class BaseModel(metaclass=MetaModel):
             )
 
         raise AccessError(error_msg)
+
+    @api.model
+    @api.deprecated("Since 20.0, use check_field_access()")
+    def _check_field_access(self, field: Field, operation: typing.Literal['read', 'write']) -> None:
+        return self.check_field_access(field, operation)
 
     @api.readonly
     def read(self, fields: Sequence[str] | None = None, load: str = '_classic_read') -> list[ValuesType]:
@@ -2757,7 +2772,7 @@ class BaseModel(metaclass=MetaModel):
 
         self.check_access('write')
         field = self._fields[field_name]
-        self._check_field_access(field, 'write')
+        self.check_field_access(field, 'write')
 
         valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
         source_lang = source_lang or 'en_US'
@@ -2970,7 +2985,7 @@ class BaseModel(metaclass=MetaModel):
                 # select fields with the same prefetch group
                 if f.prefetch == field.prefetch
                 # discard fields with groups that the user may not access
-                if self._has_field_access(f, 'read')
+                if self.has_field_access(f, 'read')
             ]
             if field.name not in fnames:
                 fnames.append(field.name)
@@ -3053,7 +3068,7 @@ class BaseModel(metaclass=MetaModel):
             return [
                 field
                 for field in self._fields.values()
-                if field.prefetch is True and self._has_field_access(field, 'read')
+                if field.prefetch is True and self.has_field_access(field, 'read')
             ]
 
         if not field_names:
@@ -3067,7 +3082,7 @@ class BaseModel(metaclass=MetaModel):
                 field = self._fields[field_name]
             except KeyError as e:
                 raise ValueError(f"Invalid field {field_name!r} on {self._name!r}") from e
-            self._check_field_access(field, 'read')
+            self.check_field_access(field, 'read')
             fields_todo.append(field)
 
         while fields_todo:
@@ -3086,7 +3101,7 @@ class BaseModel(metaclass=MetaModel):
                     dep_field = self._fields[dotname.split('.', 1)[0]]
                     if (not dep_field.store) or (
                         dep_field.prefetch is True
-                        and self._has_field_access(dep_field, 'read')
+                        and self.has_field_access(dep_field, 'read')
                     ):
                         fields_todo.append(dep_field)
 
@@ -3643,7 +3658,7 @@ class BaseModel(metaclass=MetaModel):
         self.check_access('write')
         for field_name in vals:
             try:
-                self._check_field_access(self._fields[field_name], 'write')
+                self.check_field_access(self._fields[field_name], 'write')
             except KeyError as e:
                 raise ValueError(f"Invalid field {field_name!r} in {self._name!r}") from e
         env = self.env
@@ -3924,7 +3939,7 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields.get(field_name)
             if field is None:
                 raise ValueError(f"Invalid field {field_name!r} in {self._name!r}")
-            self._check_field_access(field, 'write')
+            self.check_field_access(field, 'write')
 
         new_vals_list = self._prepare_create_values(vals_list)
 

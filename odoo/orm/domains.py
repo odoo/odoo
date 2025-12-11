@@ -1001,7 +1001,7 @@ class DomainCondition(Domain):
         field = self._field(model)
         if not model.env.su:
             if self.operator not in ('any!', 'not any!'):
-                model._check_field_access(field, 'read')
+                model.check_field_access(field, 'read')
             if field.compute_sudo:
                 # run search in sudo because the compute is done in sudo as well
                 model = model.sudo()
@@ -1113,7 +1113,7 @@ class DomainCondition(Domain):
 
         model = table._model
         field = self._field(model)
-        model._check_field_access(field, 'read')
+        model.check_field_access(field, 'read')
         return field.condition_to_sql(table, field_expr, operator, value)
 
 

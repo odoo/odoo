@@ -151,7 +151,7 @@ class WebJsonController(http.Controller):
             domains.append([('activity_ids', '!=', False)])
             # add activity fields
             for field_name, field in model._fields.items():
-                if field_name.startswith('activity_') and field_name not in spec and model._has_field_access(field, 'read'):
+                if field_name.startswith('activity_') and field_name not in spec and model.has_field_access(field, 'read'):
                     spec[field_name] = {}
 
         # Group by

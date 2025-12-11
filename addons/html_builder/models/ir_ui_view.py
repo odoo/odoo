@@ -129,7 +129,7 @@ class IrUiView(models.Model):
         record_to.check_access('write')
         field_from = records_from._fields[name_field_from]
         field_to = record_to._fields[name_field_to]
-        record_to._check_field_access(field_to, 'write')
+        record_to.check_field_access(field_to, 'write')
 
         error_callable_msg = "'translate' property of field %r is not callable"
         if not callable(field_from.translate):

@@ -32,8 +32,8 @@ class IrWebsocket(models.AbstractModel):
                             document.check_access('read')
                             document.check_access('write')
                             if field := document._fields.get(field_name):
-                                document._check_field_access(field, 'read')
-                                document._check_field_access(field, 'write')
+                                document.check_field_access(field, 'read')
+                                document.check_field_access(field, 'write')
                         except AccessError:
                             continue
 

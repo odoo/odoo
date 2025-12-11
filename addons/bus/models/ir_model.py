@@ -26,7 +26,7 @@ class IrModel(models.Model):
                     inverse_fields = [
                         field for field in model.pool.field_inverses[model._fields[fname]]
                         if field.model_name in model_names_to_fetch
-                        and model.env[field.model_name]._has_field_access(field, 'read')
+                        and model.env[field.model_name].has_field_access(field, 'read')
                     ]
                     if inverse_fields:
                         field_data['inverse_fname_by_model_name'] = {field.model_name: field.name for field in inverse_fields}

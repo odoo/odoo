@@ -1345,7 +1345,7 @@ class MailMessage(models.Model):
             and (not self.subtype_id or not self.subtype_id.description)
             and not self.attachment_ids
             and not (
-                self._has_field_access(self._fields["tracking_value_ids"], "read")
+                self.has_field_access(self._fields["tracking_value_ids"], "read")
                 and self.tracking_value_ids
             )
             and not self.has_poll
