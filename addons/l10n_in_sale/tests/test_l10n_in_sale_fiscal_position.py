@@ -79,7 +79,7 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
 
             self.assertEqual(
                 sale_order.fiscal_position_id,
-                template.ref('fiscal_position_in_export')
+                template.ref('fiscal_position_in_sez')
             )
 
         # Sub-test: Manual Partner Fiscal Check
@@ -93,6 +93,35 @@ class TestSaleFiscal(L10nInTestInvoicingCommon):
                 fpos_ref='fiscal_position_in_export',
                 partner=self.partner_a.id,
             )
+
+    def test_l10n_in_sale_invoice_fiscal_position(self):
+        """Ensure the fiscal position is correctly compute from the sale order to the invoice."""
+        self.env.company = self.default_company
+
+        # Create a sale order with an intra-state fiscal position
+        sale_order = self._assert_order_fiscal_position(
+            fpos_ref='fiscal_position_in_intra_state',
+            partner=self.partner_a.id,
+            post=False,
+        )
+
+        # Change the `invoice_partner` to an inter-state and verify the updated fiscal position
+        sale_order.write({'partner_invoice_id': self.partner_b.id})
+        self.assertEqual(
+            sale_order.fiscal_position_id,
+            self.env['account.chart.template'].ref('fiscal_position_in_inter_state')
+        )
+
+        # Confirm SO and create invoice
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices()
+
+        # Force FP recompute on invoice by re-applying partner
+        invoice.write({'partner_id': self.partner_b.id})
+        self.assertEqual(
+            invoice.fiscal_position_id,
+            sale_order.fiscal_position_id,
+        )
 
     def test_foreign_partner_without_state_fiscal_position(self):
         """ Verify foreign partner without state gets export fiscal position """
