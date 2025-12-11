@@ -370,6 +370,25 @@ class AccountMove(models.Model):
         fields_list.append('l10n_it_edi_attachment_file')
         return fields_list
 
+    def _should_detach_attachments(self):
+        # EXTENDS account
+        return self.l10n_it_edi_is_self_invoice or super()._should_detach_attachments()
+
+    def _detach_attachments(self):
+        # EXTENDS account
+        moves_with_it_attachments = self.filtered(
+            lambda move: move.l10n_it_edi_attachment_name and move._should_detach_attachments()
+        )
+
+        super()._detach_attachments()
+
+        moves_with_it_attachments.invalidate_recordset(
+            fnames=['l10n_it_edi_attachment_name']
+        )
+        moves_with_it_attachments.filtered('l10n_it_edi_attachment_name').write({
+            'l10n_it_edi_attachment_name': False,
+        })
+
     # -------------------------------------------------------------------------
     # Business actions
     # -------------------------------------------------------------------------
