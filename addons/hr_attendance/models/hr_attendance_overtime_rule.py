@@ -451,3 +451,19 @@ class HrAttendanceOvertimeRule(models.Model):
                     )
                     continue
                 rule.information_display = timing_types[rule.timing_type]
+
+    @api.ondelete(at_uninstall=False)
+    def _check_default_overtime_rules_on_unlink(self):
+        xml_ids = [
+            'hr_attendance.hr_attendance_overtime_employee_schedule_rule',
+            'hr_attendance.hr_attendance_overtime_non_working_days_rule',
+        ]
+        for xml_id in xml_ids:
+            rule = self.env.ref(xml_id, raise_if_not_found=False)
+            if rule and rule in self:
+                raise ValidationError(
+                    self.env._(
+                        "You cannot delete the overtime rule '%s' because it is a part of default overtime ruleset.\nArchive the Ruleset instead.",
+                        rule.name,
+                    )
+                )
