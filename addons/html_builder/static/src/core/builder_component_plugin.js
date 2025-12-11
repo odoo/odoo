@@ -16,6 +16,7 @@ import { BuilderRange } from "./building_blocks/builder_range";
 import { BuilderContext } from "./building_blocks/builder_context";
 import { BasicMany2Many } from "./building_blocks/basic_many2many";
 import { BuilderMany2Many } from "./building_blocks/builder_many2many";
+import { BuilderOptionsSection } from "./building_blocks/builder_options_section";
 import { BuilderMany2One } from "./building_blocks/builder_many2one";
 import { ModelMany2Many } from "./building_blocks/model_many2many";
 import { Plugin } from "@html_editor/plugin";
@@ -42,6 +43,7 @@ export class BuilderComponentPlugin extends Plugin {
             BuilderFontFamilyPicker,
             BuilderRow,
             BuilderSlidingPanel,
+            BuilderOptionsSection,
             BuilderUrlPicker,
             Dropdown,
             DropdownItem,

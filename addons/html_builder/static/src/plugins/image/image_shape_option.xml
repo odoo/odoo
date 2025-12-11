@@ -5,18 +5,20 @@
     <BuilderRow label.translate="Shape">
         <div class="btn-group o-hb-button-group">
             <BuilderSlidingPanel
-                t-slot-scope="panel"
                 label.translate="Shape"
+                extraClasses="'btn-secondary'"
                 fullHeight="true"
-                darkBackground="true"
-                textContent="state.shapeLabel">
-                <ShapeSelector
-                    onClose="panel.close"
-                    shapeActionId="'setImageShape'"
-                    buttonWrapperClassName="'o-hb-img-shape-btn'"
-                    selectorTitle.translate="Shapes"
-                    shapeGroups="getFilteredGroups()"
-                />
+                darkBackground="true">
+                <t t-out="state.shapeLabel"/>
+                <t t-set-slot="content" t-slot-scope="panel">
+                    <ShapeSelector
+                        onClose="panel.close"
+                        shapeActionId="'setImageShape'"
+                        buttonWrapperClassName="'o-hb-img-shape-btn'"
+                        selectorTitle.translate="Shapes"
+                        shapeGroups="getFilteredGroups()"
+                    />
+                </t>
             </BuilderSlidingPanel>
             <BuilderButton
                 title.translate="Remove the shape"

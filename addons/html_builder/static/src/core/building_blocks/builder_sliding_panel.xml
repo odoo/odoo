@@ -5,9 +5,9 @@
     <button t-ref="openButton"
         class="o-hb-btn btn"
         t-on-click="showSlidingPanel"
-        t-att-class="props.class + (props.textContent ? '' : ' fa ' + props.icon)"
+        t-att-class="props.extraClasses"
     >
-        <t t-out="props.textContent"/>
+        <t t-slot="default"/>
     </button>
     <div t-ref="slidingPanel"
         class="hb-sliding-panel mb-1 h-100 d-none"
@@ -23,7 +23,7 @@
                     </button>
                 </div>
             </div>
-            <t t-slot="default" close="this.hideSlidingPanel.bind(this)"/>
+            <t t-slot="content" close="this.hideSlidingPanel.bind(this)"/>
         </div>
     </div>
 </t>

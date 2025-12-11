@@ -68,13 +68,13 @@ registerWebsitePreviewTour(
             run: checkFontSize,
         },
         {
-            content: "Open the color combinations area",
-            trigger: "div[data-label='Color Presets'] button",
+            content: "Open the theme color slider",
+            trigger: "button.o-hb-theme-color-slider-btn",
             run: "click",
         },
         {
             content: "Open a color combination",
-            trigger: "div[id^='builder_collapse_content'] button.o_hb_collapse_toggler",
+            trigger: "div[data-container-title='Color Presets'] button.o_hb_collapse_toggler",
             run: "click",
         },
         {

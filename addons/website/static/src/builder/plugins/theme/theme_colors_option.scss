@@ -24,3 +24,28 @@
     }
 
 }
+
+.o-hb-theme-color-slider-btn {
+    position: relative;
+    min-height: unset;
+    height: 22px;
+
+    &::after {
+        content: "";
+        @include o-position-absolute(1px, 1px, 1px, 1px);
+        outline: 1px solid rgba(white, 0.5);
+        border-radius: 3px;
+    }
+
+    &:hover::after {
+        outline: 1px solid rgba(white, 0.65);
+    }
+
+    &:focus-visible::after {
+        outline: 1px solid var(--o-hb-btn-active-color, $o-we-color-accent);;
+    }
+}
+
+.hb-sliding-panel .o_cc_preview_wrapper:hover {
+    cursor: pointer;
+}

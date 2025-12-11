@@ -1,13 +1,16 @@
 import { onMounted } from "@odoo/owl";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
+import { _t } from "@web/core/l10n/translation";
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";
+    static dependencies = ["themeTab"];
     setup() {
         super.setup();
         this.palettes = this.getPalettes();
         this.colorPresetToShow = this.env.colorPresetToShow;
+        this.grays = this.dependencies.themeTab.getGrays();
         this.state = useDomState(() => ({
             presets: this.getPresets(),
         }));
@@ -36,6 +39,10 @@ export class ThemeColorsOption extends BaseOptionComponent {
             palettes.push(palette);
         }
         return palettes;
+    }
+
+    getGrayTitle(grayCode) {
+        return _t("Gray %(grayCode)s", { grayCode });
     }
 
     getPresets() {

@@ -136,9 +136,13 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
     ]);
 
     await contains('.o-snippets-tabs button[data-name="theme"]').click();
-    await contains('.o_theme_tab div[data-label="Color Presets"] button').click();
-    await contains('div[id^="builder_collapse_content_"] button').click();
-    await contains('div[data-label="Background"] .o_we_color_preview').click();
+    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
+    await contains(
+        '.hb-sliding-panel-content button[aria-controls^="builder_collapse_content_"]'
+    ).click();
+    await contains(
+        '.hb-sliding-panel-content div[data-label="Background"] .o_we_color_preview'
+    ).click();
     await contains(".o-hb-colorpicker .custom-tab").click();
     await contains(".o_color_picker_inputs input.o_hex_input").edit("#77FF006E");
     await expect.waitForSteps([
@@ -146,9 +150,7 @@ test("BuilderColorPicker with action “customizeWebsiteColor” is correctly di
         '/website/static/src/scss/options/user_values.scss {"o-cc1-bg-gradient":"null"}',
         "asset reload",
     ]);
-    const colorPresetEl = document.querySelector(
-        'div[id^="builder_collapse_content_"] .o_cc_preview_wrapper div'
-    );
+    const colorPresetEl = document.querySelector("div .o_cc_preview_wrapper div");
     const presetElStyles = window.getComputedStyle(colorPresetEl, "::before");
     expect(presetElStyles.backgroundImage).toInclude("transparent.png");
     expect(presetElStyles.backgroundSize).toBe("32px");
