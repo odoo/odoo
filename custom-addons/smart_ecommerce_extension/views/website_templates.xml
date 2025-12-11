@@ -101,6 +101,103 @@
                     </div>
                 </div>
             </section>
+            
+            <!-- Featured Products Section -->
+            <section class="smart-featured-products py-5" style="background-color: #ffffff;">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h2 class="fw-bold" style="color:rgb(75, 113, 95);">
+                            <i class="fa fa-star me-2"/>Featured Products
+                        </h2>
+                        <p class="text-muted">Discover our best-selling and newest products</p>
+                    </div>
+                    
+                    <t t-set="products" t-value="request.env['product.template'].sudo().search([
+                        ('is_published', '=', True),
+                        ('sale_ok', '=', True),
+                        ('website_published', '=', True)
+                    ], limit=12, order='create_date desc')"/>
+                    
+                    <t t-if="products">
+                        <div class="row g-4">
+                            <t t-foreach="products" t-as="product">
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="card h-100 border-0 shadow-sm product-card" style="transition: transform 0.2s; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                                        <a t-att-href="product.website_url" class="text-decoration-none">
+                                            <div class="position-relative overflow-hidden" style="height: 200px; background-color: #f8f9fa;">
+                                                <t t-if="product.image_1920">
+                                                    <img t-att-src="'/web/image/product.template/%s/image_1920' % product.id" 
+                                                         t-att-alt="product.name"
+                                                         class="w-100 h-100" 
+                                                         style="object-fit: cover;"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <div class="d-flex align-items-center justify-content-center h-100">
+                                                        <i class="fa fa-image fa-3x text-muted"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="product.availability_status == 'in_stock'">
+                                                    <span class="badge bg-success position-absolute top-0 end-0 m-2">
+                                                        <i class="fa fa-check-circle me-1"/>In Stock
+                                                    </span>
+                                                </t>
+                                                <t t-elif="product.availability_status == 'low_stock'">
+                                                    <span class="badge bg-warning position-absolute top-0 end-0 m-2">
+                                                        <i class="fa fa-exclamation-triangle me-1"/>Low Stock
+                                                    </span>
+                                                </t>
+                                                <t t-elif="product.availability_status == 'out_of_stock'">
+                                                    <span class="badge bg-danger position-absolute top-0 end-0 m-2">
+                                                        <i class="fa fa-times-circle me-1"/>Out of Stock
+                                                    </span>
+                                                </t>
+                                            </div>
+                                            <div class="card-body">
+                                                <h6 class="card-title text-dark mb-2" style="min-height: 40px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                                    <t t-esc="product.name"/>
+                                                </h6>
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <span class="h6 mb-0 text-primary fw-bold">
+                                                        <t t-esc="product.list_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                    </span>
+                                                    <t t-if="product.brand">
+                                                        <span class="badge bg-secondary">
+                                                            <t t-esc="product.brand"/>
+                                                        </span>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="card-footer bg-white border-0 pt-0">
+                                            <form action="/shop/cart/update" method="post" class="d-grid">
+                                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                <input type="hidden" name="product_id" t-att-value="product.id"/>
+                                                <input type="hidden" name="add_qty" value="1"/>
+                                                <button type="submit" 
+                                                        class="btn btn-primary w-100 btn-sm">
+                                                    <i class="fa fa-shopping-cart me-2"/>Add to Cart
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        
+                        <div class="text-center mt-5">
+                            <a href="/shop" class="btn btn-outline-primary btn-lg">
+                                View All Products <i class="fa fa-arrow-right ms-2"/>
+                            </a>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="text-center py-5">
+                            <i class="fa fa-box-open fa-4x text-muted mb-3"/>
+                            <p class="text-muted">No products available at the moment.</p>
+                        </div>
+                    </t>
+                </div>
+            </section>
         </xpath>
     </template>
     

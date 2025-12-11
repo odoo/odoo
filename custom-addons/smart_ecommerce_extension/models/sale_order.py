@@ -84,15 +84,19 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.price_subtotal', 'currency_id', 'company_id', 'payment_term_id', 'computed_delivery_price')
     def _compute_amounts(self):
-        """Include computed delivery price in order totals"""
-        # First compute base amounts without delivery
+        """Compute order amounts - delivery line will be included automatically if it exists"""
+        # First compute base amounts - this will include delivery lines if they exist
         super()._compute_amounts()
+        
+        # For website orders with zone but no delivery line yet, add delivery to total
+        # This ensures the website shows the correct total before the line is created
         for order in self:
-            # Only add delivery price to total, not to untaxed (delivery is separate)
-            # The amount_delivery field will be computed separately
-            delivery_price = order.computed_delivery_price or 0.0
-            # Add delivery to total only (not untaxed, as delivery is a separate line item)
-            order.amount_total += delivery_price
+            if order.website_id and order.delivery_zone_id and not order.carrier_id:
+                delivery_lines = order.order_line.filtered('is_delivery')
+                if not delivery_lines:
+                    # No delivery line yet, add computed price to total for display
+                    delivery_price = order.computed_delivery_price or 0.0
+                    order.amount_total += delivery_price
 
     @api.depends('order_line.price_total', 'order_line.price_subtotal', 'computed_delivery_price', 'delivery_zone_id', 'website_id')
     def _compute_amount_delivery(self):
@@ -132,6 +136,98 @@ class SaleOrder(models.Model):
                     self._compute_delivery_info()
                     self._compute_amount_delivery()
                     self._compute_amounts()
+
+    def _get_delivery_product(self):
+        """Get or create a delivery product for zone-based delivery"""
+        self.ensure_one()
+        # Search for existing delivery product
+        delivery_product = self.env['product.product'].search([
+            ('type', '=', 'service'),
+            ('sale_ok', '=', True),
+            ('name', 'ilike', 'Delivery Service'),
+        ], limit=1)
+        
+        if not delivery_product:
+            # Create a delivery product if it doesn't exist
+            delivery_product = self.env['product.product'].create({
+                'name': _('Delivery Service'),
+                'type': 'service',
+                'sale_ok': True,
+                'purchase_ok': False,
+                'invoice_policy': 'order',
+                'uom_id': self.env.ref('uom.product_uom_unit').id,
+                'uom_po_id': self.env.ref('uom.product_uom_unit').id,
+            })
+        
+        return delivery_product
+
+    def _ensure_zone_delivery_line(self):
+        """Ensure delivery line exists for zone-based delivery (called before invoice creation)"""
+        for order in self:
+            if not order.website_id or not order.delivery_zone_id or order.carrier_id:
+                continue
+            
+            delivery_price = order.computed_delivery_price or 0.0
+            if delivery_price <= 0.0:
+                continue
+            
+            # Get delivery product
+            delivery_product = order._get_delivery_product()
+            
+            # Check if delivery line already exists
+            existing_line = order.order_line.filtered(
+                lambda l: l.is_delivery and l.product_id == delivery_product
+            )
+            
+            if existing_line:
+                # Update existing line if price changed
+                if abs(existing_line.price_unit - delivery_price) > 0.01:
+                    zone_name = order.delivery_zone_id.name
+                    existing_line.write({
+                        'name': _('Delivery: %s') % zone_name,
+                        'price_unit': delivery_price,
+                    })
+                continue
+            
+            # Create delivery line
+            zone_name = order.delivery_zone_id.name
+            line_name = _('Delivery: %s') % zone_name
+            
+            # Apply fiscal position for taxes
+            taxes = delivery_product.taxes_id._filter_taxes_by_company(order.company_id)
+            taxes_ids = taxes.ids
+            if order.partner_id and order.fiscal_position_id:
+                taxes_ids = order.fiscal_position_id.map_tax(taxes).ids
+            
+            line_vals = {
+                'order_id': order.id,
+                'name': line_name,
+                'price_unit': delivery_price,
+                'product_uom_qty': 1,
+                'product_uom': delivery_product.uom_id.id,
+                'product_id': delivery_product.id,
+                'tax_id': [(6, 0, taxes_ids)],
+                'is_delivery': True,
+            }
+            
+            if order.order_line:
+                line_vals['sequence'] = max(order.order_line.mapped('sequence')) + 1
+            else:
+                line_vals['sequence'] = 10
+            
+            self.env['sale.order.line'].create(line_vals)
+
+    def _prepare_invoice(self):
+        """Override to ensure delivery line exists before invoice creation"""
+        # Ensure delivery line is created before preparing invoice
+        self._ensure_zone_delivery_line()
+        return super()._prepare_invoice()
+
+    def action_confirm(self):
+        """Override to ensure delivery line exists before confirmation"""
+        # Ensure delivery line is created before confirming
+        self._ensure_zone_delivery_line()
+        return super().action_confirm()
 
     def get_delivery_info(self):
         """Get delivery information for API/template use"""

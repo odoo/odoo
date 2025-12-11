@@ -6,9 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 
 
 class MarketplaceSeller(models.Model):
-    _name = 'marketplace.seller'
-    _description = 'Marketplace Seller'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = 'marketplace.seller'
     _order = 'name'
 
     name = fields.Char(
@@ -132,10 +130,7 @@ class MarketplaceSeller(models.Model):
         default=0.0,
         digits=(2, 1),
     )
-    currency_id = fields.Many2one(
-        'res.currency',
-        default=lambda self: self.env.company.currency_id,
-    )
+    # currency_id is inherited from smart_marketplace_core as related field
     
     # Timestamps
     approved_date = fields.Datetime(string='Approved Date', readonly=True)

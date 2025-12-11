@@ -1,6 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <!-- Product Categories -->
+        <record id="demo_category_electronics" model="product.public.category">
+            <field name="name">Electronics</field>
+            <field name="sequence">10</field>
+        </record>
+        
+        <record id="demo_category_smartphones" model="product.public.category">
+            <field name="parent_id" ref="demo_category_electronics"/>
+            <field name="name">Smartphones</field>
+            <field name="sequence">11</field>
+        </record>
+        
+        <record id="demo_category_laptops" model="product.public.category">
+            <field name="parent_id" ref="demo_category_electronics"/>
+            <field name="name">Laptops</field>
+            <field name="sequence">12</field>
+        </record>
+        
+        <record id="demo_category_audio" model="product.public.category">
+            <field name="parent_id" ref="demo_category_electronics"/>
+            <field name="name">Audio &amp; Headphones</field>
+            <field name="sequence">13</field>
+        </record>
+        
+        <record id="demo_category_clothing" model="product.public.category">
+            <field name="name">Clothing &amp; Fashion</field>
+            <field name="sequence">20</field>
+        </record>
+        
+        <record id="demo_category_traditional" model="product.public.category">
+            <field name="parent_id" ref="demo_category_clothing"/>
+            <field name="name">Traditional Wear</field>
+            <field name="sequence">21</field>
+        </record>
+        
         <!-- Demo Products with eCommerce Extension Fields -->
         
         <!-- Samsung Galaxy Phone -->
@@ -16,6 +51,8 @@
             <field name="low_stock_threshold">5</field>
             <field name="is_published" eval="True"/>
             <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_smartphones')])]"/>
             <field name="specifications"><![CDATA[
                 <table class="table table-striped">
                     <tr><th>Display</th><td>6.8" Dynamic AMOLED 2X, 3088x1440</td></tr>
@@ -43,6 +80,8 @@
             <field name="low_stock_threshold">3</field>
             <field name="is_published" eval="True"/>
             <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_smartphones')])]"/>
             <field name="specifications"><![CDATA[
                 <table class="table table-striped">
                     <tr><th>Display</th><td>6.7" Super Retina XDR, ProMotion</td></tr>
@@ -68,6 +107,8 @@
             <field name="low_stock_threshold">5</field>
             <field name="is_published" eval="True"/>
             <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_smartphones')])]"/>
             <field name="specifications"><![CDATA[
                 <table class="table table-striped">
                     <tr><th>Display</th><td>6.73" LTPO AMOLED, 3200x1440</td></tr>
@@ -93,6 +134,8 @@
             <field name="low_stock_threshold">2</field>
             <field name="is_published" eval="True"/>
             <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_laptops')])]"/>
             <field name="specifications"><![CDATA[
                 <table class="table table-striped">
                     <tr><th>Chip</th><td>Apple M3 Max</td></tr>
@@ -119,6 +162,8 @@
             <field name="low_stock_threshold">10</field>
             <field name="is_published" eval="True"/>
             <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_audio')])]"/>
             <field name="specifications"><![CDATA[
                 <ul>
                     <li>Active Noise Cancellation</li>
@@ -144,6 +189,8 @@
             <field name="low_stock_threshold">5</field>
             <field name="is_published" eval="True"/>
             <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_traditional')])]"/>
             <field name="specifications"><![CDATA[
                 <table class="table table-striped">
                     <tr><th>Tissu</th><td>Bazin Riche - 100% Coton</td></tr>
@@ -154,6 +201,103 @@
                     <tr><th>Entretien</th><td>Lavage à la main recommandé</td></tr>
                 </table>
             ]]></field>
+        </record>
+        
+        <!-- Additional Products -->
+        <record id="demo_product_iphone_14" model="product.template">
+            <field name="name">iPhone 14 Pro</field>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">42000</field>
+            <field name="brand">Apple</field>
+            <field name="product_model">A2892</field>
+            <field name="shipping_weight_kg">0.20</field>
+            <field name="estimated_delivery_days">2</field>
+            <field name="low_stock_threshold">5</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_smartphones')])]"/>
+        </record>
+        
+        <record id="demo_product_samsung_galaxy_s23" model="product.template">
+            <field name="name">Samsung Galaxy S23</field>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">35000</field>
+            <field name="brand">Samsung</field>
+            <field name="product_model">SM-S911B</field>
+            <field name="shipping_weight_kg">0.30</field>
+            <field name="estimated_delivery_days">2</field>
+            <field name="low_stock_threshold">8</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_smartphones')])]"/>
+        </record>
+        
+        <record id="demo_product_macbook_air_m2" model="product.template">
+            <field name="name">MacBook Air 15" M2</field>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">120000</field>
+            <field name="brand">Apple</field>
+            <field name="product_model">MRY43LL/A</field>
+            <field name="shipping_weight_kg">1.51</field>
+            <field name="estimated_delivery_days">3</field>
+            <field name="low_stock_threshold">3</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_laptops')])]"/>
+        </record>
+        
+        <record id="demo_product_airpods_pro" model="product.template">
+            <field name="name">AirPods Pro (2nd Gen)</field>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">15000</field>
+            <field name="brand">Apple</field>
+            <field name="product_model">MTJV3AM/A</field>
+            <field name="shipping_weight_kg">0.05</field>
+            <field name="estimated_delivery_days">1</field>
+            <field name="low_stock_threshold">15</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_audio')])]"/>
+        </record>
+        
+        <record id="demo_product_boubou_femme" model="product.template">
+            <field name="name">Boubou Traditionnel Femme - Élégant</field>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">18000</field>
+            <field name="brand">Artisanat Mauritanien</field>
+            <field name="product_model">BTF-002</field>
+            <field name="shipping_weight_kg">0.7</field>
+            <field name="estimated_delivery_days">3</field>
+            <field name="low_stock_threshold">5</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_traditional')])]"/>
+        </record>
+        
+        <record id="demo_product_melhfa" model="product.template">
+            <field name="name">Melhfa Traditionnel - Premium</field>
+            <field name="type">consu</field>
+            <field name="is_storable" eval="True"/>
+            <field name="list_price">20000</field>
+            <field name="brand">Artisanat Mauritanien</field>
+            <field name="product_model">MEL-003</field>
+            <field name="shipping_weight_kg">0.6</field>
+            <field name="estimated_delivery_days">3</field>
+            <field name="low_stock_threshold">4</field>
+            <field name="is_published" eval="True"/>
+            <field name="sale_ok" eval="True"/>
+            <field name="website_published" eval="True"/>
+            <field name="public_categ_ids" eval="[(6, 0, [ref('demo_category_traditional')])]"/>
         </record>
     </data>
 </odoo>

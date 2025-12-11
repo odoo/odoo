@@ -64,6 +64,7 @@ Features:
         'sale_management',
         'stock',
         'delivery',
+        'smart_marketplace_core',
     ],
     'data': [
         # Security
