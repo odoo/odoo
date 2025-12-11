@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import {
     contains,
@@ -20,12 +20,12 @@ import { renderToString } from "@web/core/utils/render";
 defineWebsiteModels();
 
 test("BuilderButton with action “websiteConfig” are correctly displayed", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("/website/theme_customize_data_get", async (request) => {
         const { params } = await request.json();
         expect.step("theme_customize_data_get");
         expect(params.keys).toEqual(["test_template_1", "test_template_2"]);
-        await def;
+        await def.promise;
         return ["test_template_2"];
     });
     addOption({
@@ -116,12 +116,12 @@ test("click on BuilderSelectItem with action “websiteConfig”", async () => {
 });
 
 test("use isActiveItem base on BuilderButton with 'websiteConfig'", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("/website/theme_customize_data_get", async (request) => {
         const { params } = await request.json();
         expect.step("theme_customize_data_get");
         expect(params.keys).toEqual(["test_template_1"]);
-        await def;
+        await def.promise;
         return ["test_template_1"];
     });
     addOption({
@@ -143,12 +143,12 @@ test("use isActiveItem base on BuilderButton with 'websiteConfig'", async () => 
 });
 
 test("use isActiveItem base on BuilderCheckbox with 'websiteConfig'", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("/website/theme_customize_data_get", async (request) => {
         const { params } = await request.json();
         expect.step("theme_customize_data_get");
         expect(params.keys).toEqual(["test_template_1"]);
-        await def;
+        await def.promise;
         return ["test_template_1"];
     });
     addOption({

@@ -19,7 +19,6 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { RPCError } from "@web/core/network/rpc";
-import { Deferred } from "@web/core/utils/concurrency";
 import { uniqueId } from "@web/core/utils/functions";
 import { useChildRef, useService, useBus } from "@web/core/utils/hooks";
 import { effect } from "@web/core/utils/reactive";
@@ -163,7 +162,7 @@ export class WebsiteBuilderClientAction extends Component {
                 fn();
             }
         });
-        this.publicRootReady = new Deferred();
+        this.publicRootReady = Promise.withResolvers();
         this.setIframeLoaded();
         this.addSystrayItems();
         onWillDestroy(() => {
@@ -287,7 +286,7 @@ export class WebsiteBuilderClientAction extends Component {
 
         // Wait for navigation to complete if currently navigating
         if (this.isNavigatingToAnotherPage) {
-            await this.isNavigatingToAnotherPage;
+            await this.isNavigatingToAnotherPage.promise;
         }
 
         await this.loadIframeAndBundles(true);
@@ -307,7 +306,7 @@ export class WebsiteBuilderClientAction extends Component {
     async loadIframeAndBundles(isEditing) {
         await this.iframeLoaded;
         if (isEditing) {
-            await this.publicRootReady;
+            await this.publicRootReady.promise;
             await this.loadAssetsEditBundle();
         }
     }
@@ -470,7 +469,7 @@ export class WebsiteBuilderClientAction extends Component {
                     // This scenario triggers a navigation inside the iframe.
                     this.websiteService.websiteRootInstance = undefined;
 
-                    this.isNavigatingToAnotherPage = new Deferred();
+                    this.isNavigatingToAnotherPage = Promise.withResolvers();
                 }
             }
         });
@@ -600,7 +599,7 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     preparePublicRootReady() {
-        const deferred = new Deferred();
+        const deferred = Promise.withResolvers();
         this.publicRootReady = deferred;
         this.websiteContent.el.contentWindow.addEventListener(
             "PUBLIC-ROOT-READY",

@@ -3,7 +3,6 @@ import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import { GoogleMapsApiKeyDialog } from "./google_maps_api_key_dialog";
 import { GoogleMapsOption } from "./google_maps_option";
-import { Deferred } from "@web/core/utils/concurrency";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**
@@ -88,10 +87,10 @@ export class GoogleMapsOptionPlugin extends Plugin {
 
     async onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_google_map")) {
-            const deferredInit = new Deferred();
+            const deferredInit = Promise.withResolvers();
             this.recentlyDroppedSnippetDeferredInit.set(snippetEl, deferredInit);
             this.dependencies.edit_interaction.restartInteractions(snippetEl);
-            const initSuccess = await deferredInit;
+            const initSuccess = await deferredInit.promise;
             this.recentlyDroppedSnippetDeferredInit.delete(snippetEl);
             if (!initSuccess) {
                 return true; // cancel

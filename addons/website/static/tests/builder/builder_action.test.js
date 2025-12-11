@@ -1,14 +1,6 @@
 import { xml } from "@odoo/owl";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import {
-    advanceTime,
-    animationFrame,
-    click,
-    Deferred,
-    press,
-    queryOne,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { Plugin } from "@html_editor/plugin";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
@@ -99,11 +91,11 @@ test("getRecordInfo retrieves the info from the #wrap element", async () => {
 });
 
 test("elements within iframe can't be clicked while the builder is being set up", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         async loadIframeAndBundles(isEditing) {
             super.loadIframeAndBundles(isEditing);
-            await def;
+            await def.promise;
         },
     });
     await setupWebsiteBuilder(

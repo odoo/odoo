@@ -6,7 +6,7 @@ import {
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, delay } from "@odoo/hoot-dom";
+import { animationFrame, delay } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
@@ -71,7 +71,7 @@ describe("waitSidebarUpdated", () => {
                 }
                 async apply({ editingElement, value }) {
                     await delay(delayAmount);
-                    await deferred;
+                    await deferred.promise;
                     editingElement.dataset.value = value;
                 }
             },
@@ -86,7 +86,7 @@ describe("waitSidebarUpdated", () => {
                 super.setup();
                 this.state = useDomState(async (el) => {
                     await delay(delayAmount);
-                    await deferred;
+                    await deferred.promise;
                     return { value: el.dataset.value };
                 });
             }
@@ -112,7 +112,7 @@ describe("waitSidebarUpdated", () => {
                 super.setup();
                 this.state = useDomState(async (el) => {
                     await delay(delayAmount);
-                    await deferred;
+                    await deferred.promise;
                     return { value: el.dataset.value, showOther: el.dataset.value === "c" };
                 });
             }
@@ -122,7 +122,7 @@ describe("waitSidebarUpdated", () => {
             `<div class="test" data-value="a">a</div>`
         );
 
-        deferred = new Deferred();
+        deferred = Promise.withResolvers();
         await contains(":iframe div.test").click();
         expect(".test-value-parent").toHaveCount(0);
         deferred.resolve();
@@ -130,7 +130,7 @@ describe("waitSidebarUpdated", () => {
         await waitSidebarUpdated();
         expect(".test-value-parent").toHaveText("a");
 
-        deferred = new Deferred();
+        deferred = Promise.withResolvers();
         await contains(".test-button-1 button").click();
         expect(".test-value-parent").toHaveText("a");
         expect(".test-button-3").toHaveCount(0);
@@ -140,7 +140,7 @@ describe("waitSidebarUpdated", () => {
         expect(".test-value-parent").toHaveText("b");
         expect(".test-value-sub").toHaveCount(0);
 
-        deferred = new Deferred();
+        deferred = Promise.withResolvers();
         await contains(".test-button-2 button").click();
         expect(".test-value-parent").toHaveText("b");
         expect(".test-value-sub").toHaveCount(0);

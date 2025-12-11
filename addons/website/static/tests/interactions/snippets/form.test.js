@@ -2,7 +2,7 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, clear, click, fill, queryOne, setInputFiles } from "@odoo/hoot-dom";
-import { advanceTime, Deferred } from "@odoo/hoot-mock";
+import { advanceTime } from "@odoo/hoot-mock";
 
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 
@@ -409,14 +409,14 @@ test("(rpc) form checks conditions", async () => {
     await advanceTime(400); // Debounce delay.
 
     let rpcCheck = false;
-    const rpcDone = new Deferred();
+    const rpcDone = Promise.withResolvers();
     onRpc("/website/form/mail.mail", async (args) => {
         rpcCheck = true;
         rpcDone.resolve();
         return {};
     });
     await click("a.s_website_form_send");
-    await rpcDone;
+    await rpcDone.promise;
     expect(rpcCheck).toBe(true);
 });
 

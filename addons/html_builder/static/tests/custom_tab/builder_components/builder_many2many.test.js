@@ -5,7 +5,7 @@ import {
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
@@ -84,8 +84,8 @@ test("many2many: find tag, select tag, unselect tag", async () => {
 });
 
 test("many2many: async load", async () => {
-    const defWillLoad = new Deferred();
-    const defDidApply = new Deferred();
+    const defWillLoad = Promise.withResolvers();
+    const defDidApply = Promise.withResolvers();
     onRpc("test", "name_search", () => [
         [1, "First"],
         [2, "Second"],
@@ -96,7 +96,7 @@ test("many2many: async load", async () => {
             static id = "testAction";
             async load({ value }) {
                 expect.step("load");
-                await defWillLoad;
+                await defWillLoad.promise;
                 return value;
             }
             apply({ editingElement, value }) {
@@ -130,7 +130,7 @@ test("many2many: async load", async () => {
     expect.verifySteps(["load"]);
     expect(editableContent).toHaveInnerHTML(`<div class="test-options-target">b</div>`);
     defWillLoad.resolve();
-    await defDidApply;
+    await defDidApply.promise;
     expect(editableContent).toHaveInnerHTML(
         `<div class="test-options-target" data-test="[{&quot;id&quot;:1,&quot;display_name&quot;:&quot;First&quot;,&quot;name&quot;:&quot;First&quot;}]">b</div>`
     );

@@ -15,7 +15,7 @@ import {
     getSnippetView,
 } from "@html_builder/../tests/helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { animationFrame, Deferred, queryText, tick, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, queryText, tick, waitFor } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -343,12 +343,12 @@ test("applying option container button should wait for actions in progress", asy
         }
     }
     addPlugin(TestPlugin);
-    const customActionDef = new Deferred();
+    const customActionDef = Promise.withResolvers();
     addActionOption({
         customAction: class extends BuilderAction {
             static id = "customAction";
             load() {
-                return customActionDef;
+                return customActionDef.promise;
             }
             apply({ editingElement }) {
                 editingElement.classList.add("customAction");

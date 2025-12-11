@@ -7,7 +7,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { before, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, Deferred, hover, press, tick, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, hover, press, tick, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
@@ -127,7 +127,7 @@ test("apply custom action", async () => {
 });
 
 test("apply custom async action", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
@@ -135,7 +135,7 @@ test("apply custom async action", async () => {
                 return "";
             }
             async apply({ editingElement }) {
-                await def;
+                await def.promise;
                 editingElement.classList.add("applied");
             }
         },
