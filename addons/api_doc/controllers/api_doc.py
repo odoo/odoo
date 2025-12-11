@@ -139,7 +139,7 @@ class DocController(http.Controller):
                     for field in ir_model.field_id
                     # sorted(ir_model.field_id, key=partial(sort_key_field, modules, Model))
                     if field.name in Model._fields  # band-aid, see task 5172546
-                    if Model._has_field_access(Model._fields[field.name], 'read')
+                    if Model.has_field_access(Model._fields[field.name], 'read')
                 },
                 'methods': [
                     method_name

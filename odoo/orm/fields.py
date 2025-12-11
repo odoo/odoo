@@ -1233,7 +1233,7 @@ class Field(typing.Generic[T]):
         The query object is necessary for fields that need to add tables to the query.
         """
         model = table._model
-        model._check_field_access(self, 'read')
+        model.check_field_access(self, 'read')
         if self.compute_sql:
             if self.compute_sudo:
                 model = model.sudo()
@@ -1681,10 +1681,10 @@ class Field(typing.Generic[T]):
             return self         # the field is accessed through the owner class
 
         env = record.env
-        if not (env.su or record._has_field_access(self, 'read')):
-            # optimization: we called _has_field_access() to avoid an extra
-            # function call in _check_field_access()
-            record._check_field_access(self, 'read')
+        if not (env.su or record.has_field_access(self, 'read')):
+            # optimization: we called has_field_access() to avoid an extra
+            # function call in check_field_access()
+            record.check_field_access(self, 'read')
 
         record_len = len(record._ids)
         if record_len != 1:

@@ -835,7 +835,7 @@ class ProjectTask(models.Model):
             {
                 k: v
                 for k, v in vals.items()
-                if self._has_field_access(self._fields[k], 'read')
+                if self.has_field_access(self._fields[k], 'read')
             }
             for vals in vals_list
         ]
@@ -1081,7 +1081,7 @@ class ProjectTask(models.Model):
         # (portal) users that don't have write access can still create a task
         # in the project that will be checked using record rules
         new_context["default_create_in_project_id"] = default_project_id
-        if not self._has_field_access(self._fields['user_ids'], 'write'):
+        if not self.has_field_access(self._fields['user_ids'], 'write'):
             # remove user_ids if we have no access to it
             new_context.pop('default_user_ids', False)
         self_ctx = self.with_context(new_context)
@@ -1136,7 +1136,7 @@ class ProjectTask(models.Model):
         # create the task, write computed inaccessible fields in sudo
         for vals, computed_vals in zip(vals_list, additional_vals_list):
             for field_name in list(computed_vals):
-                if self_ctx._has_field_access(self_ctx._fields[field_name], 'write'):
+                if self_ctx.has_field_access(self_ctx._fields[field_name], 'write'):
                     vals[field_name] = computed_vals.pop(field_name)
         # no track when the portal user create a task to avoid using during tracking
         # process since the portal does not have access to tracking models

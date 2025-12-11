@@ -45,7 +45,7 @@ class CachedModel(Model):
 
     def _fetch_field(self, field):
         if any(self._ids) and field.name in self._cached_data_fields:
-            self._check_field_access(field, 'read')
+            self.check_field_access(field, 'read')
             data = self._cached_data()
             field._insert_cache(self.browse(data['id']), data[field.name])
             data_ids = set(data['id'])

@@ -529,7 +529,7 @@ class IrAttachment(models.Model):
                     except KeyError:
                         # field does not exist
                         field = None
-                    if field is None or not self._has_field_access(field, operation):
+                    if field is None or not self.has_field_access(field, operation):
                         forbidden_ids.add(att_id)
                         continue
             if res_model and res_id:
@@ -636,7 +636,7 @@ class IrAttachment(models.Model):
                         field.name
                         for field in comodel._fields.values()
                         if field.type == 'binary' or (field.relational and field.comodel_name == self._name)
-                        if comodel._has_field_access(field, 'read')
+                        if comodel.has_field_access(field, 'read')
                     ]
                     accessible_fields.append(False)
                     codomain &= Domain('res_field', 'in', accessible_fields)

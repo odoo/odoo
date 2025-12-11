@@ -50,7 +50,7 @@ class MailMessage(models.Model):
             return (
                 records
                 and issubclass(self.pool[records._name], self.pool["rating.mixin"])
-                and records._has_field_access(records._fields["rating_avg"], "read")
+                and records.has_field_access(records._fields["rating_avg"], "read")
             )
 
         for records in records_by_model.values():
