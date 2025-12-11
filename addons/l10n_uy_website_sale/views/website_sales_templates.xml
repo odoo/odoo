@@ -25,14 +25,14 @@
             <t t-else="">
                 <p
                     class="form-control"
-                    t-out="partner.l10n_latam_identification_type_id.name"
+                    t-out="partner_sudo.l10n_latam_identification_type_id.name"
                     readonly="1"
                     title="Changing Identification type is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."
                 />
                 <input
                     name="l10n_latam_identification_type_id"
                     class="form-control"
-                    t-att-value="partner.l10n_latam_identification_type_id.id"
+                    t-att-value="partner_sudo.l10n_latam_identification_type_id.id"
                     type='hidden'
                 />
             </t>
@@ -42,7 +42,7 @@
 
     <template id="address" inherit_id="website_sale.address">
         <div id="div_vat" position="before">
-            <t t-if="address_type == 'billing' and res_company.country_id.code == 'UY'">
+            <t t-if="(use_delivery_as_billing and address_type == 'delivery' or address_type == 'billing') and res_company.country_id.code == 'UY'">
                 <t t-call="l10n_uy_website_sale.partner_info"/>
             </t>
         </div>
