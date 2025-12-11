@@ -68,11 +68,12 @@ class ProductTemplate(models.Model):
         help='Product weight in kilograms for shipping calculations',
     )
 
-    @api.depends('qty_available', 'type', 'low_stock_threshold')
+    @api.depends('qty_available', 'is_storable', 'low_stock_threshold')
     def _compute_availability_status(self):
         """Compute availability status based on stock quantity"""
         for product in self:
-            if product.type != 'product':
+            # Only compute availability for storable products (products that track inventory)
+            if not product.is_storable:
                 product.availability_status = 'in_stock'
                 continue
             

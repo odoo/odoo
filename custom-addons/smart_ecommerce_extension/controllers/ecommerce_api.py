@@ -188,14 +188,14 @@ class SmartEcommerceAPI(http.Controller):
                     'id': cat.id,
                     'name': cat.name,
                 } for cat in product.public_categ_ids],
-                'qty_available': product.qty_available if product.type == 'product' else None,
+                'qty_available': product.qty_available if product.is_storable else None,
                 'delivery_estimate': delivery_info,
                 'variants': [{
                     'id': v.id,
                     'name': v.display_name,
                     'price': v.lst_price,
                     'sku': v.default_code or None,
-                    'qty_available': v.qty_available if product.type == 'product' else None,
+                    'qty_available': v.qty_available if product.is_storable else None,
                 } for v in product.product_variant_ids],
             })
             
@@ -425,7 +425,7 @@ class SmartEcommerceAPI(http.Controller):
             # Validate stock
             stock_errors = []
             for line in order.order_line:
-                if line.product_id.type == 'product':
+                if line.product_id.is_storable:
                     if line.product_id.qty_available < line.product_uom_qty:
                         stock_errors.append({
                             'product': line.product_id.name,

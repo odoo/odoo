@@ -52,9 +52,13 @@ publicWidget.registry.SmartDeliveryZoneSelector = publicWidget.Widget.extend({
         var $radio = $(ev.currentTarget);
         var zoneId = $radio.val();
         
-        // Update visual selection
+        // Show loading state
+        var $option = $radio.closest('.delivery-zone-option');
+        $option.addClass('loading').prop('disabled', true);
         this.$('.delivery-zone-option').removeClass('border-primary bg-light');
-        $radio.closest('.delivery-zone-option').addClass('border-primary bg-light');
+        
+        // Update visual selection immediately for better UX
+        $option.addClass('border-primary bg-light');
         
         // Update info display
         this._updateZoneInfo($radio);
@@ -63,32 +67,78 @@ publicWidget.registry.SmartDeliveryZoneSelector = publicWidget.Widget.extend({
         rpc('/shop/set_delivery_zone', {
             zone_id: parseInt(zoneId)
         }).then(function (result) {
+            $option.removeClass('loading').prop('disabled', false);
+            
             if (result.success) {
                 // Update any displayed delivery cost
                 if (result.delivery_price !== undefined) {
                     self.$('#selected_zone_price').text(result.delivery_price_formatted || result.delivery_price);
                 }
+                
+                // Update estimated delivery date if provided
+                if (result.estimated_date) {
+                    var date = new Date(result.estimated_date);
+                    var dateStr = date.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    self.$('#selected_zone_days').text(result.estimated_days + ' days (est. ' + dateStr + ')');
+                } else if (result.estimated_days) {
+                    self.$('#selected_zone_days').text(result.estimated_days + ' days');
+                }
+                
                 // Update the cart summary totals if provided
                 if (result.amounts) {
                     var amounts = result.amounts;
-                    // Delivery row
-                    $('#message_no_dm_set').addClass('d-none');
-                    $('#order_delivery .monetary_field').removeClass('d-none').text(amounts.delivery_formatted || amounts.delivery);
-                    // Subtotal, taxes, total
-                    $('#order_total_untaxed .monetary_field').text(amounts.untaxed_formatted || amounts.untaxed);
-                    $('#order_total_taxes .monetary_field').text(amounts.tax_formatted || amounts.tax);
-                    $('#order_total .monetary_field').text(amounts.total_formatted || amounts.total);
-                    $('#amount_total_summary').text(amounts.total_formatted || amounts.total);
+                    // Delivery row - animate the update
+                    var $deliveryRow = $('#order_delivery');
+                    var $deliveryPrice = $('#order_delivery .monetary_field');
+                    var $deliveryMessage = $('#message_no_dm_set');
+                    
+                    if ($deliveryMessage.length) {
+                        $deliveryMessage.addClass('d-none');
+                    }
+                    if ($deliveryPrice.length) {
+                        $deliveryPrice.removeClass('d-none');
+                        // Animate price change
+                        $deliveryPrice.fadeOut(100, function() {
+                            $(this).text(amounts.delivery_formatted || amounts.delivery).fadeIn(200);
+                        });
+                    }
+                    
+                    // Animate total updates
+                    self._animateAmountUpdate('#order_total_untaxed .monetary_field', amounts.untaxed_formatted || amounts.untaxed);
+                    self._animateAmountUpdate('#order_total_taxes .monetary_field', amounts.tax_formatted || amounts.tax);
+                    self._animateAmountUpdate('#order_total .monetary_field', amounts.total_formatted || amounts.total);
+                    self._animateAmountUpdate('#amount_total_summary', amounts.total_formatted || amounts.total);
                 }
-                // Show success message
-                self._showMessage('Delivery zone updated successfully', 'success');
+                
+                // Show success message with zone info
+                var message = 'Delivery zone updated: ' + result.zone_name;
+                if (result.is_free) {
+                    message += ' (Free delivery!)';
+                }
+                self._showMessage(message, 'success');
             } else {
+                // Revert selection on error
+                $option.removeClass('border-primary bg-light');
                 self._showMessage(result.error || 'Failed to update delivery zone', 'error');
             }
         }).catch(function (error) {
+            $option.removeClass('loading').prop('disabled', false);
             console.error('Failed to set delivery zone:', error);
-            self._showMessage('Failed to update delivery zone', 'error');
+            self._showMessage('Failed to update delivery zone. Please try again.', 'error');
         });
+    },
+    
+    _animateAmountUpdate: function (selector, newValue) {
+        var $element = $(selector);
+        if ($element.length) {
+            $element.fadeOut(100, function() {
+                $(this).text(newValue).fadeIn(200);
+            });
+        }
     },
     
     _updateZoneInfo: function ($radio) {
@@ -112,19 +162,21 @@ publicWidget.registry.SmartDeliveryZoneSelector = publicWidget.Widget.extend({
         this.$('.alert-smart').remove();
         
         var alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
+        var icon = type === 'success' ? '<i class="fa fa-check-circle me-2"></i>' : '<i class="fa fa-exclamation-circle me-2"></i>';
         var $alert = $('<div class="alert ' + alertClass + ' alert-dismissible fade show mt-2 alert-smart" role="alert">' +
-            message +
+            icon + message +
             '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' +
             '</div>');
         
         this.$('.delivery-zone-options').after($alert);
         
-        // Auto-dismiss after 3 seconds
+        // Auto-dismiss after 4 seconds for success, 6 seconds for errors
+        var timeout = type === 'success' ? 4000 : 6000;
         setTimeout(function () {
             $alert.fadeOut(function () {
                 $(this).remove();
             });
-        }, 3000);
+        }, timeout);
     }
 });
 

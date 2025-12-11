@@ -639,19 +639,71 @@
         border-radius: 0 0 12px 12px;
     }
     
+    .alert-smart {
+        border-radius: 8px;
+        animation: slideDown 0.3s ease-out;
+        
+        &.alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        
+        &.alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
     .delivery-zone-option {
         cursor: pointer;
         transition: all 0.2s ease;
+        position: relative;
         
-        &:hover {
+        &:hover:not(.loading) {
             border-color: #714B67 !important;
             background-color: rgba(113, 75, 103, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         &.selected, &:has(.form-check-input:checked), &.border-primary {
             border-color: #714B67 !important;
             border-width: 2px;
             background-color: rgba(113, 75, 103, 0.08);
+            box-shadow: 0 2px 8px rgba(113, 75, 103, 0.2);
+        }
+        
+        &.loading {
+            opacity: 0.7;
+            cursor: wait;
+            pointer-events: none;
+            
+            &::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                right: 1rem;
+                width: 20px;
+                height: 20px;
+                margin-top: -10px;
+                border: 2px solid #714B67;
+                border-top-color: transparent;
+                border-radius: 50%;
+                animation: spin 0.6s linear infinite;
+            }
         }
         
         .form-check-input {
@@ -666,6 +718,10 @@
                 box-shadow: 0 0 0 0.25rem rgba(113, 75, 103, 0.25);
             }
         }
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
     }
 }
 

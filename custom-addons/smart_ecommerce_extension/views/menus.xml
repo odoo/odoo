@@ -29,7 +29,8 @@
         <field name="domain">[('sale_ok', '=', True)]</field>
         <field name="context">{
             'default_sale_ok': True,
-            'default_type': 'product',
+            'default_type': 'consu',
+            'default_is_storable': True,
             'search_default_filter_to_sell': 1
         }</field>
         <field name="help" type="html">
@@ -55,7 +56,7 @@
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('sale_ok', '=', True), ('availability_status', '=', 'in_stock')]</field>
-        <field name="context">{'default_sale_ok': True, 'default_type': 'product'}</field>
+        <field name="context">{'default_sale_ok': True, 'default_type': 'consu', 'default_is_storable': True}</field>
     </record>
     
     <record id="action_products_low_stock" model="ir.actions.act_window">
@@ -63,7 +64,7 @@
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('sale_ok', '=', True), ('availability_status', '=', 'low_stock')]</field>
-        <field name="context">{'default_sale_ok': True, 'default_type': 'product'}</field>
+        <field name="context">{'default_sale_ok': True, 'default_type': 'consu', 'default_is_storable': True}</field>
     </record>
     
     <record id="action_products_out_of_stock" model="ir.actions.act_window">
@@ -71,7 +72,7 @@
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('sale_ok', '=', True), ('availability_status', '=', 'out_of_stock')]</field>
-        <field name="context">{'default_sale_ok': True, 'default_type': 'product'}</field>
+        <field name="context">{'default_sale_ok': True, 'default_type': 'consu', 'default_is_storable': True}</field>
     </record>
     
     <menuitem 

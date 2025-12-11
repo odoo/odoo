@@ -91,6 +91,13 @@ class WebsiteSaleExtension(WebsiteSale):
     @http.route('/shop/payment/validate', type='http', auth='public', website=True, sitemap=False)
     def shop_payment_validate(self, sale_order_id=None, **post):
         """Override to ensure order is properly confirmed and visible in backend"""
+        # Validate delivery zone before proceeding
+        order = request.website.sale_get_order()
+        if order and order._has_deliverable_products():
+            if not order.delivery_zone_id:
+                # Redirect back to checkout with error message
+                return request.redirect('/shop/checkout?error=delivery_zone_required')
+        
         response = super().shop_payment_validate(sale_order_id=sale_order_id, **post)
         
         # Get the confirmed order
@@ -113,6 +120,7 @@ class WebsiteSaleExtension(WebsiteSale):
                 f"Website Order Submitted: {order.name}, "
                 f"Customer: {order.partner_id.name}, "
                 f"Amount: {order.amount_total} {order.currency_id.name}, "
+                f"Delivery Zone: {order.delivery_zone_id.name if order.delivery_zone_id else 'None'}, "
                 f"State: {order.state}"
             )
         
@@ -186,45 +194,49 @@ class WebsiteSaleExtension(WebsiteSale):
                 'delivery_zone_id': zone.id,
             })
             
-            # Compute delivery price and refresh totals
-            delivery_price = zone.compute_delivery_price(
-                order.total_shipping_weight or 1.0,
-                order.amount_untaxed
-            )
-            # ensure computed fields are updated for this response
+            # Trigger recomputation of all related fields
             order.sudo()._compute_delivery_info()
+            order.sudo()._compute_amount_delivery()
             order.sudo()._compute_amounts()
             
-            # Format price for display
+            # Get the actual delivery price (may be 0 if free delivery threshold met)
+            delivery_price = order.computed_delivery_price or 0.0
+            amount_delivery = order.amount_delivery or 0.0
+            
+            # Format prices for display
             currency = order.currency_id
-            delivery_price_formatted = format_amount(request.env, delivery_price, currency=currency)
+            env = request.env
+            delivery_price_formatted = format_amount(env, amount_delivery, currency=currency)
+            
             amounts = {
-                'delivery': delivery_price,
+                'delivery': amount_delivery,
                 'delivery_formatted': delivery_price_formatted,
                 'untaxed': order.amount_untaxed,
-                'untaxed_formatted': format_amount(request.env, order.amount_untaxed, currency=currency),
+                'untaxed_formatted': format_amount(env, order.amount_untaxed, currency=currency),
                 'tax': order.amount_tax,
-                'tax_formatted': format_amount(request.env, order.amount_tax, currency=currency),
+                'tax_formatted': format_amount(env, order.amount_tax, currency=currency),
                 'total': order.amount_total,
-                'total_formatted': format_amount(request.env, order.amount_total, currency=currency),
+                'total_formatted': format_amount(env, order.amount_total, currency=currency),
             }
             
             _logger.info(
                 f"Delivery zone set for order {order.name}: "
-                f"Zone={zone.name}, Price={delivery_price}"
+                f"Zone={zone.name}, Price={amount_delivery}, Total={order.amount_total}"
             )
             
             return {
                 'success': True,
                 'zone_id': zone.id,
                 'zone_name': zone.name,
-                'delivery_price': delivery_price,
+                'delivery_price': amount_delivery,
                 'delivery_price_formatted': delivery_price_formatted,
                 'estimated_days': zone.estimated_days,
+                'estimated_date': order.estimated_delivery_date.strftime('%Y-%m-%d') if order.estimated_delivery_date else None,
+                'is_free': delivery_price == 0.0,
                 'amounts': amounts,
             }
         except Exception as e:
-            _logger.error(f"Failed to set delivery zone: {str(e)}")
+            _logger.error(f"Failed to set delivery zone: {str(e)}", exc_info=True)
             return {'success': False, 'error': str(e)}
 
     @http.route('/shop/get_delivery_zones', type='json', auth='public', website=True)
@@ -243,8 +255,35 @@ class WebsiteSaleExtension(WebsiteSale):
                 'base_price_formatted': f"{currency.symbol}{zone.base_price:.2f}",
                 'estimated_days': zone.estimated_days,
                 'free_threshold': zone.free_delivery_threshold,
-                'cities': zone.cities or '',
+                'cities': zone.city_ids or '',
             } for zone in zones],
             'selected_zone_id': order.delivery_zone_id.id if order and order.delivery_zone_id else None,
         }
+
+    @http.route('/shop/update_address', type='json', auth='public', website=True)
+    def shop_update_address(self, partner_id, address_type='billing', **kw):
+        """Override to auto-detect delivery zone when shipping address is updated"""
+        # Call parent method first
+        result = super().shop_update_address(partner_id, address_type=address_type, **kw)
+        
+        # Auto-detect delivery zone when shipping address changes
+        if address_type == 'delivery':
+            order = request.website.sale_get_order()
+            if order and order.partner_shipping_id:
+                partner = order.partner_shipping_id
+                if partner.city:
+                    DeliveryZone = request.env['delivery.zone'].sudo()
+                    zone = DeliveryZone.find_zone_for_city(partner.city)
+                    if zone and not order.delivery_zone_id:
+                        # Only auto-set if no zone is currently selected
+                        order.sudo().write({'delivery_zone_id': zone.id})
+                        order.sudo()._compute_delivery_info()
+                        order.sudo()._compute_amount_delivery()
+                        order.sudo()._compute_amounts()
+                        _logger.info(
+                            f"Auto-detected delivery zone '{zone.name}' for city '{partner.city}' "
+                            f"on order {order.name}"
+                        )
+        
+        return result
 

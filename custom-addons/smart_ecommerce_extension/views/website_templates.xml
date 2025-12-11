@@ -308,6 +308,15 @@
     <template id="checkout_delivery_zone" inherit_id="website_sale.checkout" name="Checkout Delivery Zone">
         <xpath expr="//div[@id='shop_checkout']" position="inside">
             <t t-set="delivery_zones" t-value="request.env['delivery.zone'].sudo().search([('active', '=', True)])"/>
+            <t t-set="error" t-value="request.params.get('error')"/>
+            
+            <!-- Error message for missing delivery zone -->
+            <t t-if="error == 'delivery_zone_required' and website_sale_order and website_sale_order._has_deliverable_products()">
+                <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                    <i class="fa fa-exclamation-triangle me-2"/>Please select a delivery zone before proceeding to payment.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </t>
             
             <!-- Use div.smart-zone-panel instead of div.card to avoid triggering address change handlers -->
             <div t-if="delivery_zones" class="smart-delivery-zone-section mt-4 mb-4">
@@ -315,11 +324,19 @@
                     <div class="smart-zone-header text-white p-3" style="background: linear-gradient(135deg, #714B67 0%, #9B6A8F 100%);">
                         <h5 class="mb-0">
                             <i class="fa fa-truck me-2"/>Select Delivery Zone
+                            <t t-if="website_sale_order and website_sale_order._has_deliverable_products() and not website_sale_order.delivery_zone_id">
+                                <span class="badge bg-warning text-dark ms-2">Required</span>
+                            </t>
                         </h5>
                     </div>
                     <div class="smart-zone-body p-3 bg-white">
                         <p class="text-muted mb-3">
-                            Choose your delivery zone to see accurate delivery costs and estimated delivery times.
+                            <t t-if="website_sale_order and website_sale_order.partner_shipping_id and website_sale_order.partner_shipping_id.city">
+                                <i class="fa fa-map-marker me-1 text-primary"/>Shipping to: <strong t-esc="website_sale_order.partner_shipping_id.city"/>
+                            </t>
+                            <t t-else="">
+                                Choose your delivery zone to see accurate delivery costs and estimated delivery times.
+                            </t>
                         </p>
                         
                         <div class="delivery-zone-options">
@@ -356,16 +373,36 @@
                         </div>
                         
                         <!-- Selected zone info display -->
-                        <div id="delivery_zone_info" class="mt-3 p-3 bg-light rounded d-none">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>Selected Zone: </strong><span id="selected_zone_name"></span>
+                        <div id="delivery_zone_info" class="mt-3 p-3 bg-light rounded" t-att-class="'d-none' if not (website_sale_order and website_sale_order.delivery_zone_id) else ''">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="mb-2 mb-md-0">
+                                    <strong><i class="fa fa-check-circle me-1 text-success"/>Selected Zone: </strong>
+                                    <span id="selected_zone_name" t-esc="website_sale_order.delivery_zone_id.name if website_sale_order and website_sale_order.delivery_zone_id else ''"/>
                                 </div>
-                                <div>
-                                    <span class="badge bg-info">Est. <span id="selected_zone_days"></span> days</span>
-                                    <span class="badge bg-success" id="selected_zone_price"></span>
+                                <div class="d-flex gap-2 flex-wrap">
+                                    <span class="badge bg-info">
+                                        <i class="fa fa-clock-o me-1"/>Est. <span id="selected_zone_days">
+                                            <t t-if="website_sale_order and website_sale_order.delivery_zone_id">
+                                                <t t-esc="website_sale_order.delivery_zone_id.estimated_days"/> day<t t-if="website_sale_order.delivery_zone_id.estimated_days != 1">s</t>
+                                            </t>
+                                        </span>
+                                    </span>
+                                    <span class="badge bg-success" id="selected_zone_price">
+                                        <t t-if="website_sale_order and website_sale_order.computed_delivery_price">
+                                            <t t-esc="website_sale_order.computed_delivery_price" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                                        </t>
+                                        <t t-else="">
+                                            -
+                                        </t>
+                                    </span>
                                 </div>
                             </div>
+                            <t t-if="website_sale_order and website_sale_order.estimated_delivery_date">
+                                <div class="mt-2 small text-muted">
+                                    <i class="fa fa-calendar me-1"/>Estimated delivery: 
+                                    <strong t-esc="website_sale_order.estimated_delivery_date" t-options="{'widget': 'date'}"/>
+                                </div>
+                            </t>
                         </div>
                     </div>
                 </div>

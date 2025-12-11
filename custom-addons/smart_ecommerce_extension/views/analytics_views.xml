@@ -22,11 +22,56 @@
         </field>
     </record>
     
-    <!-- Main Analytics Dashboard View (Graph) -->
+    <!-- Revenue Trend Line Chart -->
+    <record id="view_ecommerce_analytics_graph_revenue" model="ir.ui.view">
+        <field name="name">ecommerce.analytics.graph.revenue</field>
+        <field name="model">ecommerce.analytics</field>
+        <field name="type">graph</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <graph string="Revenue Trend" type="line" sample="1" stacked="0">
+                <field name="date" type="row"/>
+                <field name="total_revenue" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Orders Bar Chart -->
+    <record id="view_ecommerce_analytics_graph_orders" model="ir.ui.view">
+        <field name="name">ecommerce.analytics.graph.orders</field>
+        <field name="model">ecommerce.analytics</field>
+        <field name="type">graph</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <graph string="Orders Overview" type="bar" sample="1" stacked="1">
+                <field name="date" type="row"/>
+                <field name="confirmed_orders" type="measure"/>
+                <field name="cancelled_orders" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Customer Acquisition Line Chart -->
+    <record id="view_ecommerce_analytics_graph_customers" model="ir.ui.view">
+        <field name="name">ecommerce.analytics.graph.customers</field>
+        <field name="model">ecommerce.analytics</field>
+        <field name="type">graph</field>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+            <graph string="Customer Acquisition" type="line" sample="1">
+                <field name="date" type="row"/>
+                <field name="unique_customers" type="measure"/>
+                <field name="new_customers" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Combined Analytics Graph (default) -->
     <record id="view_ecommerce_analytics_graph" model="ir.ui.view">
         <field name="name">ecommerce.analytics.graph</field>
         <field name="model">ecommerce.analytics</field>
         <field name="type">graph</field>
+        <field name="priority">10</field>
         <field name="arch" type="xml">
             <graph string="E-commerce Analytics" type="line" sample="1">
                 <field name="date" type="row"/>
@@ -52,7 +97,7 @@
                 <field name="avg_order_value"/>
                 <field name="unique_customers"/>
                 <field name="products_sold" sum="Total Products"/>
-                <field name="total_delivery_revenue" sum="Delivery Revenue"/>
+                <field name="total_delivery_revenue" sum="Delivery Revenue" optional="show"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
         </field>
@@ -82,11 +127,11 @@
         </field>
     </record>
     
-    <!-- Main Analytics Action -->
+    <!-- Main Analytics Action with Dashboard Views -->
     <record id="action_ecommerce_analytics" model="ir.actions.act_window">
         <field name="name">Analytics Dashboard</field>
         <field name="res_model">ecommerce.analytics</field>
-        <field name="view_mode">list,graph,pivot</field>
+        <field name="view_mode">graph,list,pivot</field>
         <field name="context">{'search_default_last_30_days': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -96,6 +141,33 @@
                 Your e-commerce analytics will appear here once you have sales data.
             </p>
         </field>
+    </record>
+    
+    <!-- Revenue Dashboard Action -->
+    <record id="action_analytics_revenue" model="ir.actions.act_window">
+        <field name="name">Revenue Analytics</field>
+        <field name="res_model">ecommerce.analytics</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="view_id" ref="view_ecommerce_analytics_graph_revenue"/>
+        <field name="context">{'search_default_last_30_days': 1}</field>
+    </record>
+    
+    <!-- Orders Dashboard Action -->
+    <record id="action_analytics_orders" model="ir.actions.act_window">
+        <field name="name">Orders Analytics</field>
+        <field name="res_model">ecommerce.analytics</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="view_id" ref="view_ecommerce_analytics_graph_orders"/>
+        <field name="context">{'search_default_last_30_days': 1}</field>
+    </record>
+    
+    <!-- Customers Dashboard Action -->
+    <record id="action_analytics_customers" model="ir.actions.act_window">
+        <field name="name">Customer Analytics</field>
+        <field name="res_model">ecommerce.analytics</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="view_id" ref="view_ecommerce_analytics_graph_customers"/>
+        <field name="context">{'search_default_last_30_days': 1}</field>
     </record>
     
     <!-- ============================================================ -->
@@ -113,14 +185,14 @@
                 <field name="day_of_week"/>
                 <field name="total_orders"/>
                 <field name="confirmed_orders"/>
-                <field name="draft_orders"/>
-                <field name="cancelled_orders"/>
+                <field name="draft_orders" optional="hide"/>
+                <field name="cancelled_orders" optional="show"/>
                 <field name="gross_revenue" sum="Total Gross"/>
-                <field name="net_revenue" sum="Total Net"/>
-                <field name="total_tax" sum="Total Tax"/>
-                <field name="delivery_revenue" sum="Delivery Total"/>
+                <field name="net_revenue" sum="Total Net" optional="show"/>
+                <field name="total_tax" sum="Total Tax" optional="hide"/>
+                <field name="delivery_revenue" sum="Delivery Total" optional="show"/>
                 <field name="avg_order_value"/>
-                <field name="avg_items_per_order"/>
+                <field name="avg_items_per_order" optional="show"/>
                 <field name="unique_customers"/>
                 <field name="revenue_growth_pct" string="Growth %" widget="percentage"/>
                 <field name="currency_id" column_invisible="1"/>
@@ -134,6 +206,7 @@
         <field name="arch" type="xml">
             <pivot string="Daily Sales" sample="1">
                 <field name="date" type="row" interval="day"/>
+                <field name="day_of_week" type="col"/>
                 <field name="gross_revenue" type="measure"/>
                 <field name="total_orders" type="measure"/>
                 <field name="avg_order_value" type="measure"/>
@@ -141,14 +214,43 @@
         </field>
     </record>
     
+    <!-- Daily Revenue Line Chart -->
+    <record id="view_daily_sales_graph_line" model="ir.ui.view">
+        <field name="name">daily.sales.report.graph.line</field>
+        <field name="model">daily.sales.report</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <graph string="Revenue Trend" type="line" sample="1">
+                <field name="date" type="row"/>
+                <field name="gross_revenue" type="measure"/>
+                <field name="net_revenue" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Daily Orders Bar Chart -->
     <record id="view_daily_sales_graph" model="ir.ui.view">
         <field name="name">daily.sales.report.graph</field>
         <field name="model">daily.sales.report</field>
+        <field name="priority">2</field>
         <field name="arch" type="xml">
-            <graph string="Daily Sales" type="bar" sample="1">
+            <graph string="Daily Sales" type="bar" sample="1" stacked="1">
                 <field name="date" type="row"/>
+                <field name="confirmed_orders" type="measure"/>
+                <field name="cancelled_orders" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Weekly Performance Pie Chart -->
+    <record id="view_daily_sales_graph_pie" model="ir.ui.view">
+        <field name="name">daily.sales.report.graph.pie</field>
+        <field name="model">daily.sales.report</field>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+            <graph string="Sales by Day of Week" type="pie" sample="1">
+                <field name="day_of_week" type="row"/>
                 <field name="gross_revenue" type="measure"/>
-                <field name="total_orders" type="measure"/>
             </graph>
         </field>
     </record>
@@ -179,7 +281,8 @@
     <record id="action_daily_sales_report" model="ir.actions.act_window">
         <field name="name">Daily Sales Report</field>
         <field name="res_model">daily.sales.report</field>
-        <field name="view_mode">list,graph,pivot</field>
+        <field name="view_mode">graph,list,pivot</field>
+        <field name="view_id" ref="view_daily_sales_graph_line"/>
         <field name="context">{'search_default_last_30_days': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -201,16 +304,16 @@
         <field name="arch" type="xml">
             <list string="Top Selling Products" decoration-success="revenue_share_pct >= 10">
                 <field name="product_name"/>
-                <field name="brand"/>
+                <field name="brand" optional="show"/>
                 <field name="category_id"/>
                 <field name="total_quantity" sum="Total Qty"/>
                 <field name="total_revenue" sum="Total Revenue"/>
                 <field name="total_orders"/>
                 <field name="avg_price"/>
                 <field name="revenue_share_pct" string="Share %" widget="percentage"/>
-                <field name="first_sale_date"/>
-                <field name="last_sale_date"/>
-                <field name="days_since_launch"/>
+                <field name="first_sale_date" optional="hide"/>
+                <field name="last_sale_date" optional="show"/>
+                <field name="days_since_launch" optional="hide"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
         </field>
@@ -229,12 +332,40 @@
         </field>
     </record>
     
+    <!-- Top Products Bar Chart -->
     <record id="view_top_products_graph" model="ir.ui.view">
         <field name="name">top.selling.product.graph</field>
         <field name="model">top.selling.product</field>
+        <field name="priority">1</field>
         <field name="arch" type="xml">
-            <graph string="Top Products" type="bar" sample="1">
+            <graph string="Top Products by Revenue" type="bar" sample="1" order="desc">
                 <field name="product_name" type="row"/>
+                <field name="total_revenue" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Products by Category Pie Chart -->
+    <record id="view_top_products_graph_pie" model="ir.ui.view">
+        <field name="name">top.selling.product.graph.pie</field>
+        <field name="model">top.selling.product</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <graph string="Revenue by Category" type="pie" sample="1">
+                <field name="category_id" type="row"/>
+                <field name="total_revenue" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Products by Brand Pie Chart -->
+    <record id="view_top_products_graph_brand" model="ir.ui.view">
+        <field name="name">top.selling.product.graph.brand</field>
+        <field name="model">top.selling.product</field>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+            <graph string="Revenue by Brand" type="pie" sample="1">
+                <field name="brand" type="row"/>
                 <field name="total_revenue" type="measure"/>
             </graph>
         </field>
@@ -262,7 +393,8 @@
     <record id="action_top_selling_products" model="ir.actions.act_window">
         <field name="name">Top Products</field>
         <field name="res_model">top.selling.product</field>
-        <field name="view_mode">list,graph,pivot</field>
+        <field name="view_mode">graph,list,pivot</field>
+        <field name="view_id" ref="view_top_products_graph"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No product sales yet
@@ -285,8 +417,8 @@
                   decoration-bf="customer_tier == 'vip'"
                   decoration-success="customer_tier in ('vip', 'gold')">
                 <field name="partner_name"/>
-                <field name="partner_email"/>
-                <field name="partner_city"/>
+                <field name="partner_email" optional="show"/>
+                <field name="partner_city" optional="show"/>
                 <field name="customer_tier" widget="badge" 
                        decoration-danger="customer_tier == 'new'"
                        decoration-warning="customer_tier == 'bronze'"
@@ -297,11 +429,11 @@
                 <field name="confirmed_orders"/>
                 <field name="total_spent" sum="Total"/>
                 <field name="avg_order_value"/>
-                <field name="total_products"/>
-                <field name="first_order_date"/>
-                <field name="last_order_date"/>
-                <field name="days_as_customer"/>
-                <field name="avg_days_between_orders"/>
+                <field name="total_products" optional="hide"/>
+                <field name="first_order_date" optional="hide"/>
+                <field name="last_order_date" optional="show"/>
+                <field name="days_as_customer" optional="hide"/>
+                <field name="avg_days_between_orders" optional="hide"/>
                 <field name="currency_id" column_invisible="1"/>
             </list>
         </field>
@@ -320,12 +452,40 @@
         </field>
     </record>
     
+    <!-- Customer Tier Distribution Pie Chart -->
     <record id="view_top_sellers_graph" model="ir.ui.view">
         <field name="name">top.seller.graph</field>
         <field name="model">top.seller</field>
+        <field name="priority">1</field>
         <field name="arch" type="xml">
-            <graph string="Top Customers" type="pie" sample="1">
+            <graph string="Revenue by Customer Tier" type="pie" sample="1">
                 <field name="customer_tier" type="row"/>
+                <field name="total_spent" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Top Customers Bar Chart -->
+    <record id="view_top_sellers_graph_bar" model="ir.ui.view">
+        <field name="name">top.seller.graph.bar</field>
+        <field name="model">top.seller</field>
+        <field name="priority">2</field>
+        <field name="arch" type="xml">
+            <graph string="Top Customers by Spending" type="bar" sample="1" order="desc">
+                <field name="partner_name" type="row"/>
+                <field name="total_spent" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    
+    <!-- Customer Location Distribution -->
+    <record id="view_top_sellers_graph_location" model="ir.ui.view">
+        <field name="name">top.seller.graph.location</field>
+        <field name="model">top.seller</field>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+            <graph string="Customers by City" type="pie" sample="1">
+                <field name="partner_city" type="row"/>
                 <field name="total_spent" type="measure"/>
             </graph>
         </field>
@@ -358,7 +518,8 @@
     <record id="action_top_sellers" model="ir.actions.act_window">
         <field name="name">Top Customers</field>
         <field name="res_model">top.seller</field>
-        <field name="view_mode">list,graph,pivot</field>
+        <field name="view_mode">graph,list,pivot</field>
+        <field name="view_id" ref="view_top_sellers_graph"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No customer data yet
