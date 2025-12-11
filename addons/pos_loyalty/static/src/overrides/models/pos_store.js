@@ -14,6 +14,7 @@ import { omit } from "@web/core/utils/objects";
 let nextId = -1;
 const mutex = new Mutex();
 const updateRewardsMutex = new Mutex();
+const updateProgramsMutex = new Mutex();
 const pointsForProgramsCountedRules = {};
 const { DateTime } = luxon;
 
@@ -136,6 +137,13 @@ patch(PosStore.prototype, {
      * Update our couponPointChanges, meaning the points/coupons each program give etc.
      */
     async updatePrograms() {
+        return updateProgramsMutex.exec(async () => {
+            await this._updatePrograms();
+        });
+    },
+
+    // This method should never be called directly, use updatePrograms() instead
+    async _updatePrograms() {
         const order = this.get_order();
         // 'order.delivery_provider_id' check is used for UrbanPiper orders (as loyalty points and rewards are not allowed for UrbanPiper orders)
         if (!order || order.delivery_provider_id) {
