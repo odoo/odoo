@@ -2570,3 +2570,30 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             {'location_id': loc_perso.id, 'location_dest_id': out_location.id, 'quantity': 1},
             {'location_id': stock_location.id, 'location_dest_id': pack_location.id, 'quantity': 1},
         ])
+
+    def test_set_sale_on_delivery(self):
+        """
+        Check that linking a delivery to a sale order sets its procurement
+        group accordingly.
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.out_type_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [Command.create({
+                'name': self.product.name,
+                'product_id': self.product.id,
+                'product_uom_qty': 2,
+                'product_uom': self.product.uom_id.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })],
+        })
+        self.assertFalse(delivery.group_id | delivery.move_ids.group_id)
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        delivery.sale_id = sale_order
+        self.assertEqual(delivery.group_id.sale_id, sale_order)
+        self.assertEqual(delivery.move_ids.group_id, delivery.group_id)
