@@ -210,6 +210,7 @@
                     t-att-data-current-score="str(current_score)"
                     t-att-data-updated-score="str(round(score.get('updated_score', 0)))"
                     t-att-data-max-question-score="str(round(max_question_score))">
+                    <i class="o_survey_session_leaderboard_caret fa mt-1"/>
                     <div class="d-inline-block fw-bold align-top position-relative">
                         <div class="d-inline-block me-2 o_survey_session_leaderboard_position">
                             <t t-out="str(score_index + 1)"/>.
@@ -231,7 +232,7 @@
                         t-att-data-question-score="str(question_score)">
                     </div>
                     <div class="o_survey_session_leaderboard_score d-inline-block"
-                        t-out="'%.0f p' % score['scoring_total']"/>
+                        t-out="'%.0f' % score['scoring_total']"/>
                     <div class="o_survey_session_leaderboard_bar_question_score text-nowrap"></div>
                 </div>
             </t>

@@ -137,7 +137,7 @@ export class SurveySessionLeaderboard extends Interaction {
     animateScoreCounter(scoreEl, currentScore, totalScore, increment, plusSign) {
         this.waitForTimeout(() => {
             const nextScore = Math.min(totalScore, currentScore + increment);
-            scoreEl.textContent = `${plusSign ? "+ " : ""}${Math.round(nextScore)} p`;
+            scoreEl.textContent = `${plusSign ? "+ " : ""}${Math.round(nextScore)}`;
             if (nextScore < totalScore) {
                 this.animateScoreCounter(scoreEl, nextScore, totalScore, increment, plusSign);
             }
@@ -176,12 +176,20 @@ export class SurveySessionLeaderboard extends Interaction {
             const currentPosition = parseInt(item.dataset.currentPosition) + 1;
             const newPosition = parseInt(item.dataset.newPosition) + 1;
             if (currentPosition !== newPosition) {
-                const increment = newPosition > currentPosition ? 1 : -1;
+                const improved = newPosition < currentPosition;
+                const caretEl = item.querySelector(".o_survey_session_leaderboard_caret");
+                this.waitForTimeout(() => {
+                    if (improved) {
+                        caretEl.classList.add("fa-caret-up", "text-success");
+                    } else {
+                        caretEl.classList.add('fa-caret-down', 'text-danger');
+                    }
+                }, 25); // Sync with the label change below
                 this.animatePositionLabel(
                     item.querySelector(".o_survey_session_leaderboard_position"),
                     currentPosition,
                     newPosition,
-                    increment
+                    improved ? -1 : 1
                 );
             }
         });
@@ -272,7 +280,7 @@ export class SurveySessionLeaderboard extends Interaction {
                     ".o_survey_session_leaderboard_bar_question_score"
                 );
                 const questionScore = parseInt(itemEl.dataset.questionScore);
-                scoreEl.textContent = `+ ${questionScore || 0} p`;
+                scoreEl.textContent = `+ ${questionScore || 0}`;
             });
     }
 
