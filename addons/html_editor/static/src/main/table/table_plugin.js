@@ -1015,7 +1015,7 @@ export class TablePlugin extends Plugin {
                 this.selectTableCells(selection);
             }
         } else if (!targetedNodes.every((node) => closestElement(node.parentElement, "table"))) {
-            const endSelectionTable = closestElement(selection.focusNode, "table");
+            const endSelectionTable = closestElement(selection.endContainer, "table");
             const endSelectionTableTds = endSelectionTable && getTableCells(endSelectionTable);
             const targetedTds = new Set(
                 targetedNodes.map((node) => closestElement(node, isTableCell))
@@ -1025,16 +1025,22 @@ export class TablePlugin extends Plugin {
                 // Make sure all the cells are targeted in actual selection
                 // when selecting full table. If not, they will be selected
                 // forcefully and updateSelectionTable will be called again.
-                const targetTd =
-                    selection.direction === DIRECTIONS.RIGHT
-                        ? endSelectionTableTds.pop()
-                        : endSelectionTableTds.shift();
-                this.dependencies.selection.setSelection({
-                    anchorNode: selection.anchorNode,
-                    anchorOffset: selection.anchorOffset,
-                    focusNode: targetTd,
-                    focusOffset: selection.direction === DIRECTIONS.RIGHT ? nodeSize(targetTd) : 0,
-                });
+                const targetTd = endSelectionTableTds.pop();
+                if (selection.direction === DIRECTIONS.RIGHT) {
+                    this.dependencies.selection.setSelection({
+                        anchorNode: selection.anchorNode,
+                        anchorOffset: selection.anchorOffset,
+                        focusNode: targetTd,
+                        focusOffset: nodeSize(targetTd),
+                    });
+                } else {
+                    this.dependencies.selection.setSelection({
+                        anchorNode: targetTd,
+                        anchorOffset: nodeSize(targetTd),
+                        focusNode: selection.focusNode,
+                        focusOffset: selection.focusOffset,
+                    });
+                }
             }
             const targetedTables = new Set(
                 targetedNodes
