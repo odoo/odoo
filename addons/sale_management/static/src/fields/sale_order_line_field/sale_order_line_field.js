@@ -131,13 +131,16 @@ patch(SaleOrderLineListRenderer.prototype, {
             is_optional: setOptional,
         }))];
 
+        const proms = [];
         for (const sectionRecord of getSectionRecords(this.props.list, record)) {
             let changes = {};
 
             if (!sectionRecord.data.display_type) {
-                changes = setOptional
-                    ? { product_uom_qty: 0, price_total: 0, price_subtotal: 0 }
-                    : { product_uom_qty: sectionRecord.data.product_uom_qty || 1 };
+                if (setOptional) {
+                    changes = { product_uom_qty: 0, price_total: 0, price_subtotal: 0 }
+                } else {
+                    proms.push(sectionRecord._update({ product_uom_qty: sectionRecord.data.product_uom_qty || 1 }));
+                }
             } else if (this.isSubSection(sectionRecord)) {
                 changes = setOptional && {
                     collapse_composition: false,
@@ -156,6 +159,7 @@ patch(SaleOrderLineListRenderer.prototype, {
         }
 
         await this.props.list.applyCommands(commands, { sort: true });
+        await Promise.all(proms);
     },
 
     /**
