@@ -558,7 +558,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                     continue
                 if move_update.date_deadline and delta:
                     move_update.date_deadline -= delta
-                else:
+                elif not move_update.date_deadline or move_update.date_deadline != new_deadline:
                     move_update.date_deadline = new_deadline
 
     @api.depends('move_line_ids.lot_id', 'move_line_ids.quantity')
