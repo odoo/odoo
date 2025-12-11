@@ -1,7 +1,7 @@
 import { Countdown } from "./countdown";
 import { registry } from "@web/core/registry";
 
-const CountdownEdit = (I) =>
+export const CountdownEdit = (I) =>
     class extends I {
         setup() {
             super.setup();
@@ -17,7 +17,4 @@ const CountdownEdit = (I) =>
 registry.category("public.interactions.edit").add("website.countdown", {
     Interaction: Countdown,
     mixin: CountdownEdit,
-});
-registry.category("public.interactions.preview").add("website.countdown", {
-    Interaction: Countdown,
 });

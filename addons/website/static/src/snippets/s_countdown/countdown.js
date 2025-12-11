@@ -6,10 +6,16 @@ import { _t } from "@web/core/l10n/translation";
 import { isCSSColor } from "@web/core/utils/colors";
 import { verifyHttpsUrl } from "@website/utils/misc";
 
+// This Interaction is kept for compatibility with older versions of the
+// countdown.
 export class Countdown extends Interaction {
-    static selector = ".s_countdown";
+    static selector = ".s_countdown:not([data-vxml])";
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _wrapperEl: () => this.el.querySelector(".s_countdown_canvas_wrapper"),
+    };
     dynamicContent = {
-        ".s_countdown_canvas_wrapper": {
+        _wrapperEl: {
             "t-att-class": () => ({
                 "d-flex": true,
                 "justify-content-center": true,
@@ -21,24 +27,12 @@ export class Countdown extends Interaction {
         // Remove SVG previews (used to simulated canvas)
         this.el.querySelectorAll("svg").forEach((el) => el.parentNode.remove());
 
-        this.wrapperEl = this.el.querySelector(".s_countdown_canvas_wrapper");
+        this.wrapperEl = this.getCircleWrapperEl();
         this.hereBeforeTimerEnds = false;
         this.endAction = this.el.dataset.endAction;
         this.endTime = parseInt(this.el.dataset.endTime);
         this.size = parseInt(this.el.dataset.size);
         this.display = this.el.dataset.display;
-
-        if (!this.display && this.el.dataset.bsDisplay) {
-            // With the BS5 upgrade script of 16.0, countdowns' data-display may
-            // have been converted to data-bs-display by mistake. This will fix
-            // the DOM for good measures, maybe even allowing to remove this
-            // code in a few years as hopefully all current countdowns will have
-            // been removed or edited (or when a proper upgrade script in a
-            // future version of Odoo will be made, if necessary). TODO.
-            this.display = this.el.dataset.bsDisplay;
-            delete this.el.dataset.bsDisplay;
-            this.el.dataset.display = this.display;
-        }
 
         this.defaultColor = "rgba(0, 0, 0, 0)";
         this.layout = this.el.dataset.layout;
@@ -48,7 +42,6 @@ export class Countdown extends Interaction {
 
         this.layoutBackgroundColor = this.ensureCSSColor(this.el.dataset.layoutBackgroundColor);
         this.progressBarColor = this.ensureCSSColor(this.el.dataset.progressBarColor);
-        this.textColor = this.ensureCSSColor(this.el.dataset.textColor);
 
         this.onlyOneUnit = this.display === "d";
         this.width = this.size;
@@ -65,9 +58,17 @@ export class Countdown extends Interaction {
     destroy() {
         // The optional chaining is required because the queried element may not
         // exist anymore if the interaction target has just been deleted
-        this.el.querySelector(".s_countdown_canvas_wrapper")?.classList.remove("d-none");
+        this.wrapperEl?.classList.remove("d-none");
         clearInterval(this.setInterval);
         window.removeEventListener("resize", this.onResize);
+    }
+
+    getCircleWrapperEl() {
+        return this.el.querySelector(".s_countdown_canvas_wrapper");
+    }
+
+    get textColor() {
+        return this.ensureCSSColor(this.el.dataset.textColor);
     }
 
     /**
@@ -136,10 +137,13 @@ export class Countdown extends Interaction {
         const delta = this.getDelta();
         this.timeDiff = [];
         if (this.isUnitVisible("d") && !(this.onlyOneUnit && delta < 86400)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            let canvas;
+            if (this.layout !== "text") {
+                canvas = this.createCanvasWrapper();
+                this.insert(canvas, this.wrapperEl);
+            }
             this.timeDiff.push({
-                canvas: divEl,
+                canvas,
                 // There is no logical number of unit (total) on which day units
                 // can be compared against, so we use an arbitrary number.
                 total: 15,
@@ -148,30 +152,39 @@ export class Countdown extends Interaction {
             });
         }
         if (this.isUnitVisible("h") || (this.onlyOneUnit && delta < 86400 && delta > 3600)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            let canvas;
+            if (this.layout !== "text") {
+                canvas = this.createCanvasWrapper();
+                this.insert(canvas, this.wrapperEl);
+            }
             this.timeDiff.push({
-                canvas: divEl,
+                canvas,
                 total: 24,
                 label: _t("Hours"),
                 nbSeconds: 3600,
             });
         }
         if (this.isUnitVisible("m") || (this.onlyOneUnit && delta < 3600 && delta > 60)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            let canvas;
+            if (this.layout !== "text") {
+                canvas = this.createCanvasWrapper();
+                this.insert(canvas, this.wrapperEl);
+            }
             this.timeDiff.push({
-                canvas: divEl,
+                canvas,
                 total: 60,
                 label: _t("Minutes"),
                 nbSeconds: 60,
             });
         }
         if (this.isUnitVisible("s") || (this.onlyOneUnit && delta < 60)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            let canvas;
+            if (this.layout !== "text") {
+                canvas = this.createCanvasWrapper();
+                this.insert(canvas, this.wrapperEl);
+            }
             this.timeDiff.push({
-                canvas: divEl,
+                canvas,
                 total: 60,
                 label: _t("Seconds"),
                 nbSeconds: 1,
