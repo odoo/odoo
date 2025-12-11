@@ -27,15 +27,17 @@ class MailingContactToList(models.TransientModel):
                 }) for contact in contacts_to_add
             ]
         })
+        already_on_list_count = len(self.contact_ids) - len(contacts_to_add)
+        message = _("%(added_contacts_count)s Mailing Contacts have been added.", added_contacts_count=len(contacts_to_add))
+        if already_on_list_count:
+            message += _("\n\n%(already_on_list_count)s Mailing Contacts were already on this list.", already_on_list_count=already_on_list_count)
 
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
                 'type': 'info',
-                'message': _("%s Mailing Contacts have been added. ",
-                             len(contacts_to_add)
-                            ),
+                'message': message,
                 'sticky': False,
                 'next': action,
             }
