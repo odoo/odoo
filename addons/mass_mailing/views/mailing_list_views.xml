@@ -41,7 +41,7 @@
             <form string="Contact List">
                 <header>
                     <button name="action_open_import" string="Import Contacts"
-                        type="object" class="btn btn-secondary"/>
+                        type="object" class="btn btn-primary"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -129,8 +129,8 @@
         <field name="model">mailing.list</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile o_kanban_mailing_list" sample="1"
-                    on_create="mass_mailing.action_mailing_list_quick_create"
-                    highlight_color="color">
+                    on_create="mass_mailing.action_mailing_list_quick_create" highlight_color="color"
+                    action="action_view_contacts" type="object">
                 <field name="active"/>
                 <templates>
                     <t t-name="menu" t-if="!selection_mode">
