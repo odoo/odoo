@@ -6,9 +6,7 @@
             <div class="oe_structure oe_empty" id="oe_structure_website_partner_partner_1" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PARTNERS"/>
             <div class="container">
                 <div class="row">
-                    <t t-call="website_partner.partner_detail">
-                        <t t-set="contact_details" t-value="True"/>
-                    </t>
+                    <t t-call="website_partner.partner_detail" contact_details="True"/>
                 </div>
             </div>
             <div class="oe_structure oe_empty" id="oe_structure_website_partner_partner_2" data-editor-message.translate="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PARTNERS"/>

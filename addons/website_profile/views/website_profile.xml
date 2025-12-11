@@ -49,8 +49,8 @@
 
                                 <ul class="dropdown-menu">
                                     <a class="dropdown-item" t-att-href="home_url or '/'">Home</a>
-                                    <a class="dropdown-item" href="/profile/users">&#9492; Users</a>
-                                    <a t-if="view_user" class="dropdown-item">&#9492; <t t-out="view_user"/></a>
+                                    <a class="dropdown-item" href="/profile/users">└ Users</a>
+                                    <a t-if="view_user" class="dropdown-item">└ <t t-out="view_user"/></a>
                                 </ul>
                             </div>
 
@@ -91,9 +91,8 @@
 
     <template id="user_profile_header" name="Profile Page Header">
         <div class="o_wprofile_header o_wprofile_gradient position-relative text-white">
-            <t t-call="website_profile.user_profile_sub_nav">
-                <t t-set="view_user"><t t-out="user.name"/></t>
-            </t>
+            <t t-set="view_user"><t t-out="user.name"/></t>
+            <t t-call="website_profile.user_profile_sub_nav" view_user="view_user"/>
 
             <div class="container pb-3 pb-md-0 pt-2 pt-md-5">
                 <div class="row">
@@ -157,9 +156,8 @@
                         <div class="collapse d-md-block" id="o_wprofile_sidebar_collapse">
                             <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
                             <small t-if="next_rank_id" class="fw-bold mt-1">Next rank:</small>
-                            <t t-if="next_rank_id or user.rank_id" t-call="website_profile.profile_next_rank_card">
-                                <t t-set="img_max_width" t-value="'40%'"/>
-                            </t>
+                            <t t-if="next_rank_id or user.rank_id" t-call="website_profile.profile_next_rank_card"
+                                img_max_width.f="40%"/>
 
                             <table class="table table-sm w-100" id="o_wprofile_sidebar_table">
                                 <tbody>
@@ -187,14 +185,13 @@
                     <div class="tab-content py-4 o_wprofile_tabs_content mb-4" id="profile_extra_info_tabcontent">
                         <div role="tabpanel" t-attf-class="tab-pane #{ 'show active' if not active_tab or active_tab == 'about' else '' }" id="profile_tab_content_about">
                             <div class="o_wprofile_email_validation_container">
-                                <t t-call="website_profile.email_validation_banner">
-                                    <t t-set="redirect_url" t-value="'/profile/user/%s' % user.id"/>
-                                    <t t-set="additional_validation_email_message"/>
-                                </t>
+                                <t t-call="website_profile.email_validation_banner"
+                                    redirect_url="'/profile/user/%s' % user.id"
+                                    additional_validation_email_message.translate=""/>
                             </div>
                             <div id="profile_about_badge" class="mb32">
                                 <h5 class="border-bottom pb-1">Badges</h5>
-                                <t t-call="website_profile.user_badges"></t>
+                                <t t-call="website_profile.user_badges"/>
                             </div>
                             <div t-if="user.partner_id.website_description" class="mb32">
                                 <t t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()">
@@ -448,7 +445,7 @@
         <div class="container mb32">
             <div class="row mb-3">
                 <div class="col-md-4 d-flex flex-grow-1" t-foreach="top3_users" t-as="user" t-attf-onclick="location.href='/profile/user/#{user['id']}';">
-                    <t t-call="website_profile.top3_user_card"></t>
+                    <t t-call="website_profile.top3_user_card"/>
                 </div>
             </div>
             <div class="table-responsive" t-if="users">
@@ -465,8 +462,7 @@
                         </tr>
                         <t t-set='user' t-value='my_user'/>
                         <tr t-attf-onclick="location.href='/profile/user/#{user['id']}';" t-attf-class="o_wprofile_pointer bg-white o_wprofile_border_focus">
-                            <t t-call="website_profile.all_user_card">
-                            </t>
+                            <t t-call="website_profile.all_user_card"/>
                         </tr>
                     </t>
                 </table>

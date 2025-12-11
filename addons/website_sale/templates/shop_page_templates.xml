@@ -18,17 +18,16 @@
 
     <!-- Search Bar input-group template -->
     <template id="website_sale.search" name="Search Box" active="True">
-        <t t-call="website.website_search_box_input">
-            <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form me-auto flex-grow-1 {{_form_classes}}"/>
-            <t t-set="_submit_classes" t-valuef="btn btn-{{navClass}}"/>
-            <t t-set="_input_classes" t-valuef="border-0 text-bg-{{navClass}}"/>
-            <t t-set="search_type" t-valuef="products"/>
-            <t t-set="action" t-value="keep(search=0)"/>
-            <t t-set="display_image" t-valuef="true"/>
-            <t t-set="display_description" t-valuef="true"/>
-            <t t-set="display_extra_link" t-valuef="true"/>
-            <t t-set="display_detail" t-valuef="true"/>
-        </t>
+        <t t-call="website.website_search_box_input"
+            _form_classes.f="o_wsale_products_searchbar_form me-auto flex-grow-1 {{_form_classes}}"
+            _submit_classes.f="btn btn-{{navClass}}"
+            _input_classes.f="border-0 text-bg-{{navClass}}"
+            search_type.f="products"
+            action="keep(search=0)"
+            display_image.f="true"
+            display_description.f="true"
+            display_extra_link.f="true"
+            display_detail.f="true"/>
     </template>
 
     <template id="website_sale.product_variant_preview">
@@ -171,8 +170,12 @@
 
     <!-- /shop product listing -->
     <template id="website_sale.products" name="Products">
-        <t t-call="website.layout">
-            <t t-set="additional_title" t-value="category.name"/>
+        <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
+        <t t-call="website.layout"
+            additional_title="category.name"
+            opt_wsale_filter_tags="is_view_active('website_sale.filter_products_tags')"
+            website_sale_sortable="website_sale_sortable"
+            isSortingBy="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]">
             <t t-set="grid_block_name">Grid</t>
             <t t-set="product_block_name">Product</t>
 
@@ -185,7 +188,6 @@
             <t t-set="opt_wsale_categories" t-value="is_view_active('website_sale.products_categories')"/>
             <t t-set="opt_wsale_attributes" t-value="is_view_active('website_sale.products_attributes')"/>
             <t t-set="opt_wsale_filter_price" t-value="is_view_active('website_sale.filter_products_price')"/>
-            <t t-set="opt_wsale_filter_tags" t-value="is_view_active('website_sale.filter_products_tags')"/>
             <t t-set="opt_wsale_design_grid" t-value="'o_wsale_products_opt_design_grid' in website.shop_opt_products_design_classes"/>
 
             <t t-set="opt_wsale_categories_top" t-value="is_view_active('website_sale.products_categories_top')"/>
@@ -200,13 +202,11 @@
             <t t-set="opt_wsale_category_align" t-value="bool(category) and category.align_category_content"/>
 
             <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
-            <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
 
             <t t-set="hasLeftColumn" t-value="opt_wsale_categories or opt_wsale_attributes"/>
 
             <t t-set="isFilteringByPrice" t-if="opt_wsale_filter_price" t-value="float_round(available_min_price, 2) != float_round(min_price, 2) or float_round(available_max_price, 2) != float_round(max_price, 2)"/>
             <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
-            <t t-set="isSortingBy" t-value="[sort for sort in website_sale_sortable if sort[0]==request.params.get('order', '')]"/>
 
             <t
                 t-set="wsale_has_filters_btn"
@@ -276,11 +276,8 @@
                                 <t
                                     t-if="show_price_filter"
                                     t-call="website_sale.filter_products_price"
+                                    _classes.f="{{is_sidebar_collapsible and 'accordion accordion-flush'}} {{is_sidebar_collapsible and (opt_wsale_categories or len(attributes) > 0) and 'border-top'}}"
                                 >
-                                    <t
-                                        t-set="_classes"
-                                        t-valuef="{{is_sidebar_collapsible and 'accordion accordion-flush'}} {{is_sidebar_collapsible and (opt_wsale_categories or len(attributes) > 0) and 'border-top'}}"
-                                    />
                                 </t>
                                 <t t-call="website_sale.sidebar_dropzone_at_bottom"/>
                             </div>
@@ -304,12 +301,8 @@
                                     {{opt_wsale_show_shop_title and 'o_wsale_products_header_show_shop_title'}}
                                     {{opt_wsale_shop_title_align and 'o_wsale_products_header_shop_center_content'}}"
                             >
-                                <t t-if="category and not search" t-call="website_sale.products_breadcrumb">
-                                    <t
-                                        t-set="_classes"
-                                        t-valuef="w-100 p-0 mb-0 small {{not opt_wsale_show_category_title and 'mb-2 mb-lg-0'}}"
-                                    />
-                                </t>
+                                <t t-if="category and not search" t-call="website_sale.products_breadcrumb"
+                                    _classes.f="w-100 p-0 mb-0 small {{not opt_wsale_show_category_title and 'mb-2 mb-lg-0'}}"/>
                                 <h1
                                     t-if="category or search"
                                     t-attf-class="o_wsale_category_title d-flex gap-1 align-items-center mb-0 lh-lg {{search and bool(category) and 'mb-2'}} {{search and 'o_wsale_category_title_is_search base-fs font-sans-serif' or 'fs-3'}}"
@@ -405,8 +398,8 @@
                                             <t
                                                 t-if="hasPricelistDropdown"
                                                 t-call="website_sale.pricelist_list"
+                                                _classes.f="ms-auto"
                                             >
-                                                <t t-set="_classes" t-value="'ms-auto'"/>
                                             </t>
                                             <t
                                                 t-if="is_view_active('website_sale.sort')"
@@ -484,16 +477,9 @@
                                                     t-att-data-name="product_block_name"
                                                 >
                                                     <div t-attf-class="o_wsale_product_grid_wrapper position-relative h-100 o_wsale_product_grid_wrapper_#{td_product['x']}_#{td_product['y']}">
-                                                        <t t-call="website_sale.products_item">
-                                                            <t
-                                                                t-set="design_field"
-                                                                t-value="website.shop_opt_products_design_classes"
-                                                            />
-                                                            <t
-                                                                t-set="product_href"
-                                                                t-value="product._get_product_url(category, product_query_params, grouped_attributes_values)"
-                                                            />
-                                                        </t>
+                                                        <t t-call="website_sale.products_item"
+                                                            design_field="website.shop_opt_products_design_classes"
+                                                            product_href="product._get_product_url(category, product_query_params, grouped_attributes_values)"/>
                                                     </div>
                                                 </div>
                                             </t>
@@ -574,14 +560,14 @@
                 <div class="modal-dialog modal-lg pt-5">
                     <div class="modal-content mt-5 bg-transparent border-0">
                         <div class="o_container_small">
-                            <t t-call="website.website_search_box_input">
-                                <t t-set="default_style" t-valuef="true"/>
-                                <t t-set="search_type" t-valuef="products"/>
-                                <t t-set="_classes" t-valuef="input-group rounded o_cc o_cc1 mb-1"/>
-                                <t t-set="_input_classes" t-valuef="border-0 p-3"/>
-                                <t t-set="_submit_classes" t-valuef="px-4"/>
-                                <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
-                            </t>
+                            <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
+                            <t t-call="website.website_search_box_input"
+                                default_style.f="true"
+                                search_type.f="products"
+                                _classes.f="input-group rounded o_cc o_cc1 mb-1"
+                                _input_classes.f="border-0 p-3"
+                                _submit_classes.f="px-4"
+                                placeholder="placeholder"/>
                         </div>
                     </div>
                 </div>
@@ -926,9 +912,7 @@
                                 t-elif="a.display_type in ('radio', 'multi')"
                                 t-attf-class="{{'list-group list-group-flush' if isMobile else 'flex-column mb-3'}}"
                             >
-                                <t t-call="website_sale.filter_radio_and_multi_attributes">
-                                    <t t-set="isMobile" t-value="isMobile"/>
-                                </t>
+                                <t t-call="website_sale.filter_radio_and_multi_attributes" isMobile="isMobile"/>
                             </div>
                             <div
                                 t-elif="a.display_type == 'pills'"
@@ -967,9 +951,7 @@
                         >
                             <div class="accordion-body pt-0">
                                 <div class="list-group list-group-flush">
-                                    <t t-call="website_sale.filter_products_tags_list">
-                                        <t t-set="all_tags" t-value="all_tags"/>
-                                    </t>
+                                    <t t-call="website_sale.filter_products_tags_list" all_tags="all_tags"/>
                                 </div>
                             </div>
                         </div>
@@ -980,8 +962,8 @@
                 <t
                     t-if="opt_wsale_filter_tags and opt_wsale_attributes"
                     t-call="website_sale.filter_products_tags"
+                    all_tags="all_tags"
                 >
-                    <t t-set="all_tags" t-value="all_tags"/>
                 </t>
             </t>
         </form>
@@ -998,11 +980,11 @@
                 t-if="is_view_active('website_sale.search') and (opt_wsale_attributes or opt_wsale_attributes_top)"
                 class="offcanvas-body flex-grow-0 overflow-visible"
             >
-                <t t-call="website_sale.search">
-                    <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
-                    <t t-set="search" t-value="original_search or search"/>
-                    <t t-set="_s_searchbar_autocomplete_classes" t-valuef="bg-primary"> </t>
-                </t>
+                <t t-if="category" t-set="placeholder" t-valuef.translate="Search in {{category.name}}"/>
+                <t t-call="website_sale.search"
+                    placeholder="placeholder"
+                    search="original_search or search"
+                    _s_searchbar_autocomplete_classes.f="bg-primary"/>
             </div>
             <div id="o_wsale_offcanvas_content" class="accordion accordion-flush flex-grow-1 overflow-auto">
                 <!-- Show sorting only if it's not avavailbe in the topbar already -->
@@ -1058,26 +1040,19 @@
                          class="accordion-collapse collapse"
                          aria-labelledby="o_wsale_offcanvas_categories_header">
                         <div class="accordion-body pt-0">
-                            <t t-call="website_sale.products_categories_list">
-                                <t t-set="isOffcanvas" t-value="true"/>
-                                <t t-set="_titleClasses" t-valuef="d-none"/>
-                                <t t-set="_radioGroup" t-valuef="_offcanvas"/>
-                            </t>
+                            <t t-call="website_sale.products_categories_list"
+                                isOffcanvas="true"
+                                _titleClasses.f="d-none"
+                                _radioGroup.f="_offcanvas"/>
                         </div>
                     </div>
                 </div>
-                <t t-call="website_sale.product_attribute_filters_form">
-                    <t t-set="isMobile" t-value="True"/>
-                </t>
+                <t t-call="website_sale.product_attribute_filters_form" isMobile="True"/>
                 <t t-if="opt_wsale_filter_price and (opt_wsale_attributes or opt_wsale_attributes_top)"
-                   t-call="website_sale.filter_products_price">
-                    <t
-                        t-set="_classes"
-                        t-valuef="o_wsale_offcanvas_title accordion accordion-flush px-4"
-                    />
-                    <t t-set="_classes_title" t-valuef="ms-n1 pt-3 pb-2"/>
-                    <t t-set="isOffcanvas" t-value="True"/>
-                </t>
+                   t-call="website_sale.filter_products_price"
+                   _classes.f="o_wsale_offcanvas_title accordion accordion-flush px-4"
+                   _classes_title.f="ms-n1 pt-3 pb-2"
+                   isOffcanvas="True"/>
             </div>
             <div class="offcanvas-body d-flex justify-content-between flex-grow-0 border-top overflow-hidden">
                 <a t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2 {{(not attrib_values and not isFilteringByPrice and not tags) and 'disabled' }}"
@@ -1462,9 +1437,7 @@
         <xpath expr="//div[contains(@t-attf-class, 'products_attributes_filters')]" position="inside">
             <div t-if="attributes or all_tags" id="wsale_products_attributes_collapse"
                  class=" position-relative">
-                 <t t-call="website_sale.product_attribute_filters_form">
-                    <t t-set="isMobile" t-value="False"/>
-                </t>
+                 <t t-call="website_sale.product_attribute_filters_form" isMobile="False"/>
             </div>
         </xpath>
     </template>
@@ -1581,9 +1554,7 @@
             </div>
             <div id="o_wsale_tags_option_inner" class="accordion-collapse collapse show">
                 <div class="flex-column mb-3">
-                    <t t-call="website_sale.filter_products_tags_list">
-                        <t t-set="all_tags" t-value="all_tags"/>
-                    </t>
+                    <t t-call="website_sale.filter_products_tags_list" all_tags="all_tags"/>
                 </div>
             </div>
         </div>

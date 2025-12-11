@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="product_wishlist" inherit_id="website_sale_wishlist.product_wishlist">
-        <xpath expr="//t[@t-call='website_sale.products_item']" position="inside">
+        <xpath expr="//t[@t-call='website_sale.products_item']" position="before">
             <t t-set="product_extra_information">
                 <span
                     t-if="wish.product_id._is_sold_out() and not wish.product_id.allow_out_of_stock_order"
@@ -11,6 +11,9 @@
                     Out of stock
                 </span>
             </t>
+        </xpath>
+        <xpath expr="//t[@t-call='website_sale.products_item']" position="attributes">
+            <attribute name="product_extra_information">product_extra_information</attribute>
         </xpath>
         <button name="add_to_cart" position="attributes">
             <attribute name="t-att-disabled">wish.product_id._is_sold_out()</attribute>

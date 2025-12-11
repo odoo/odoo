@@ -51,27 +51,21 @@ according to the enabled options.
                 <span t-if="search" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                     <i class="fa fa-search me-2 text-muted"/>
                     <t t-out="search"/>
-                    <a t-att-href="blog_url(search=False, tag=tag)" class="btn border-0 py-1 post_link">&#215;</a>
+                    <a t-att-href="blog_url(search=False, tag=tag)" class="btn border-0 py-1 post_link">×</a>
                 </span>
                 <t t-if="tag">
                     <!-- Show active tags with a category set -->
                     <t t-foreach="tag_category" t-as="nav_tag_category">
-                        <t t-call="website_blog.tags_list">
-                            <t t-set='tags' t-value='nav_tag_category.tag_ids' />
-                            <t t-set='dismissibleBtn' t-value="True"/>
-                        </t>
+                        <t t-call="website_blog.tags_list" tags="nav_tag_category.tag_ids" dismissibleBtn="True"/>
                     </t>
 
                     <!-- Show active tags without a category set -->
-                    <t t-call="website_blog.tags_list">
-                        <t t-set='tags' t-value='other_tags'/>
-                        <t t-set='dismissibleBtn' t-value="True"/>
-                    </t>
+                    <t t-call="website_blog.tags_list" tags="other_tags" dismissibleBtn="True"/>
                 </t>
                 <span t-if="date_begin" class="align-items-baseline border d-inline-flex ps-2 rounded mb-2">
                     <i class="fa fa-calendar-o me-2 text-muted"/>
-                    <t t-out="date_begin" t-options="{'widget': 'date', 'format': 'MMM yyyy'}"></t>
-                    <a t-attf-href="#{blog_url(date_begin=False, date_end=False, tag=tag)}" class="btn border-0 py-1 post_link">&#215;</a>
+                    <t t-out="date_begin" t-options="{'widget': 'date', 'format': 'MMM yyyy'}"/>
+                    <a t-attf-href="#{blog_url(date_begin=False, date_end=False, tag=tag)}" class="btn border-0 py-1 post_link">×</a>
                 </span>
                 <hr class="mt-2"/>
             </div>
@@ -111,7 +105,7 @@ according to the enabled options.
                                 <t t-call="website_blog.post_heading"/>
                             </div>
                             <div t-if="not opt_blog_cards_design" class="py-2">
-                                <t t-call="website_blog.post_info"></t>
+                                <t t-call="website_blog.post_info"/>
                             </div>
                             <div t-if="opt_posts_loop_show_cover">
                                 <t t-call="website_blog.post_cover_image"/>
@@ -120,7 +114,7 @@ according to the enabled options.
                                 <t t-call="website_blog.post_teaser"/>
                             </div>
                             <div t-if="opt_blog_cards_design" t-att-class="opt_blog_cards_design and 'card-body pt-0 pb-2'">
-                                <t t-call="website_blog.post_info"></t>
+                                <t t-call="website_blog.post_info"/>
                             </div>
                             <div t-else="" class="mt-3">
                                 <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="btn btn-primary">
@@ -138,7 +132,7 @@ according to the enabled options.
                                 </div>
                             </div>
                             <div t-attf-class="o_wblog_normalize_font #{'card-footer px-2 pb-2' if opt_blog_cards_design else 'pe-2 pb-2'}">
-                                <t t-call="website_blog.post_info"></t>
+                                <t t-call="website_blog.post_info"/>
                             </div>
                         </t>
                         <!-- Add 'unpublished' or 'scheduled' badge -->
@@ -197,14 +191,13 @@ according to the enabled options.
        t-attf-class="text-decoration-none d-block #{classes or 'mb-2'}"
        t-att-style="not blog_post.website_published and 'opacity:0.6;'">
 
-        <t t-call="website.record_cover">
-            <t t-set="_record" t-value="blog_post"/>
-            <t t-set="additionnal_classes" t-value="'o_list_cover ' + (not opt_blog_cards_design and ' rounded overflow-hidden shadow mb-3' or '')"/>
+        <t t-call="website.record_cover"
+            _record="blog_post"
+            additionnal_classes="'o_list_cover ' + (not opt_blog_cards_design and ' rounded overflow-hidden shadow mb-3' or '')">
 
-            <t t-if="is_view_active('website_blog.opt_posts_loop_show_author')" t-call="website_blog.post_author">
-                <t t-set="additionnal_classes" t-value="'o_wblog_post_list_author o_list_cover d-flex text-white w-100 ' + ('p-3 h5 m-0' if opt_blog_list_view else 'px-2 pb-2 pt-3') "/>
-                <t t-set="hide_date" t-value="True"/>
-            </t>
+            <t t-if="is_view_active('website_blog.opt_posts_loop_show_author')" t-call="website_blog.post_author"
+                additionnal_classes="'o_wblog_post_list_author o_list_cover d-flex text-white w-100 ' + ('p-3 h5 m-0' if opt_blog_list_view else 'px-2 pb-2 pt-3') "
+                hide_date="True"/>
         </t>
     </a>
 </template>

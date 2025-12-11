@@ -2,26 +2,26 @@
 <odoo>
 
 <template id="event_track_main" name="Event Exhibitor">
-    <t t-call="website_event.layout">
-        <t t-set="navbar_back_url" t-value="'/event/%s/track' % (slug(event))"/>
-        <t t-set="navbar_back_title">Back to All Talks</t>
-        <t t-set="navbar_back_text">All Talks</t>
+    <t t-call="website_event.layout"
+        navbar_back_url="'/event/%s/track' % (slug(event))"
+        navbar_back_title.translate="Back to All Talks"
+        navbar_back_text.translate="All Talks">
         <!-- Set aside block only if there are filtered tracks -->
         <t t-set="has_ongoing_or_upcoming" t-value="any(track.is_track_live or track.track_start_remaining for track in tracks_other)"/>
         <t t-set="filtered_tracks_other" t-value="tracks_other.filtered(lambda track: not (has_ongoing_or_upcoming and track.is_track_done))"/>
 
         <div class="o_wevent_online o_wesession_index">
             <!-- Options -->
-            <t t-set="option_widescreen" t-value="option_widescreen or False"/>
+            <t t-set="has_ongoing_or_upcoming" t-value="any(track.is_track_live or track.track_start_remaining for track in tracks_other)"/>
+            <t t-set="filtered_tracks_other" t-value="tracks_other.filtered(lambda track: not (has_ongoing_or_upcoming and track.is_track_done))"/>
             <t t-set="option_track_wishlist" t-value="not event.is_done and is_view_active('website_event_track.session_topbar_wishlist')"/>
+            <t t-set="option_widescreen" t-value="option_widescreen or False"/>
             <!-- Drag/Drop Area -->
             <div id="oe_structure_wesession_track_index_1" class="oe_structure"/>
             <!-- Content -->
             <div t-att-class="'o_wevent_online_page_container py-3 %s' % ('container' if not option_widescreen else 'container-fluid')">
                 <div t-att-class="'row mb-5 mx-0 %s' % ('justify-content-center' if not filtered_tracks_other else '')">
-                        <t t-call="website_event_track.event_track_aside">
-                            <t t-set="tracks_other" t-value="filtered_tracks_other"/>
-                        </t>
+                        <t t-call="website_event_track.event_track_aside" tracks_other="filtered_tracks_other"/>
                     <!-- Main content -->
                     <t t-call="website_event_track.event_track_content"/>
                 </div>
@@ -77,9 +77,8 @@
             </div>
         </div>
         <div t-elif="track.track_start_remaining">
-            <t t-call="website_event.display_timer_alert_widget">
-                <t t-set="time_to_live" t-value="track.track_start_remaining"/>
-            </t>
+            <t t-call="website_event.display_timer_alert_widget"
+                time_to_live="track.track_start_remaining"/>
         </div>
         <!-- TRACK DESCRIPTION -->
         <div class="o_wesession_track_main_description overflow-auto">
@@ -173,14 +172,14 @@
             <div class="mx-2" t-if="track.date and track.website_cta">
                 <t t-set="cta_coundown" t-value="bool(track.website_cta_start_remaining)"/>
                 <div t-if="cta_coundown" class="text-center w-100 btn btn-primary d-none">
-                    <t t-call="website_event.display_timer_widget">
-                        <t t-set="pre_remaining_time" t-value="int(track.track_start_remaining)"/>
+                    <t t-call="website_event.display_timer_widget"
+                        pre_remaining_time="int(track.track_start_remaining)"
+                        pre_countdown_display="bool(False)"
+                        main_remaining_time="int(track.website_cta_start_remaining)"
+                        main_countdown_display="bool(False)"
+                        display_class.f=".o_event_cta_action">
                         <!--<t t-set="pre_countdown_text" t-value="'Talk starts in'"/>-->
-                        <t t-set="pre_countdown_display" t-value="bool(False)"/>
-                        <t t-set="main_remaining_time" t-value="int(track.website_cta_start_remaining)"/>
                         <!--<t t-set="main_countdown_text" t-value="'Magic happens in'"/>-->
-                        <t t-set="main_countdown_display" t-value="bool(False)"/>
-                        <t t-set="display_class" t-value="'.o_event_cta_action'"/>
                     </t>
                 </div>
                 <div t-att-class="'o_event_cta_action %s' % ('d-none' if cta_coundown else '')">

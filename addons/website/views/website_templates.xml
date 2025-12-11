@@ -349,8 +349,8 @@
         <t t-set="breadcrumb_text_color_style" t-value="(not breadcrumb_text_color_is_class) and breadcrumb_text_color or ''"/>
 
         <div groups="base.group_user" class="o_frontend_to_backend_nav position-fixed d-none">
-            <svg class="o_frontend_to_backend_icon position-absolute" width="24px" height="24px"
-                 viewBox="-7 -7 24 24" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin">
+            <svg xmlns="http://www.w3.org/2000/svg" class="o_frontend_to_backend_icon position-absolute" width="24px" height="24px"
+                 viewBox="-7 -7 24 24" preserveAspectRatio="xMinYMin">
                 <path fill="#FFF" d="M8 8V1a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1H1a1 1 0 1 1 0-2h7z"/>
             </svg>
             <div class="o_frontend_to_backend_buttons d-flex">
@@ -596,8 +596,8 @@
 <!-- "Default" template -->
 <template id="template_header_default" inherit_id="website.layout" name="Template Header Default" active="True">
     <xpath expr="//header//nav" position="replace">
-        <t t-call="website.navbar">
-            <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
+        <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
+        <t t-call="website.navbar" _navbar_classes="_navbar_classes">
 
             <div id="o_main_nav" t-attf-class="o_main_nav #{header_content_width}">
                 <!-- Brand -->
@@ -2966,7 +2966,7 @@
                                         "Content-Type": "application/json",
                                     },
                                     'body': JSON.stringify({'params': {'view_id': id, 'mode': mode}})
-                                }).then(() => window.location = redirect);
+                                }).then(() =&gt; window.location = redirect);
                             } else {
                                 input.val('').focus();
                             }
@@ -3381,7 +3381,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                 <div t-attf-class="s_text_block #{_div_class}" data-name="Text">
                     <a href="tel:+1 555-555-5556" class="nav-link o_nav-link_secondary">
                         <small>
-                            <i class="fa fa-1x fa-fw fa-phone me-1"/>&#847; <!-- Empty character needed to be able to delete the icon. -->
+                            <i class="fa fa-1x fa-fw fa-phone me-1"/>͏ <!-- Empty character needed to be able to delete the icon. -->
                             <span class="o_force_ltr">+1 555-555-5556</span>
                         </small>
                     </a>

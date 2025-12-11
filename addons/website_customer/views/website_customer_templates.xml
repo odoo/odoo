@@ -154,9 +154,7 @@
                     </t>
                 </div>
                 <div class="navbar">
-                    <t t-call="website.pager">
-                        <t t-set="classname" t-value="'mx-auto'"/>
-                    </t>
+                    <t t-call="website.pager" classname.f="mx-auto"/>
                 </div>
             </div>
         </div>
@@ -260,12 +258,10 @@
                 <div class="mt-4 mb-3" t-if="not edit_page">
                     <a t-attf-href="/customers" aria-label="Back to references list"><i class="oi oi-chevron-left me-2"/>Back to references</a>
                 </div>
-                <t t-call="website_partner.partner_detail">
-                    <t t-set="contact_details" t-value="True"/>
-                    <t t-set="right_column">
-                        <div id="right_column"><t t-call="website_customer.references_block"/></div>
-                    </t>
+                <t t-set="right_column">
+                    <div id="right_column"><t t-call="website_customer.references_block"/></div>
                 </t>
+                <t t-call="website_partner.partner_detail" contact_details="True" right_column="right_column"/>
             </div>
         </div>
         <div class="oe_structure oe_empty" id="oe_structure_website_customer_details_2"
@@ -275,9 +271,13 @@
 </template>
 
 <template id="partner_details" inherit_id="website_partner.partner_page" name="Partner Detail Columns">
- <xpath expr="//t[@t-call='website_partner.partner_detail']" position="inside">
-    <t t-set="left_column"><div id="left_column"><t t-call="website_customer.implemented_by_block"/></div></t>
+ <xpath expr="//t[@t-call='website_partner.partner_detail']" position="before">
+     <t t-set="left_column"><div id="left_column"><t t-call="website_customer.implemented_by_block"/></div></t>
     <t t-set="right_column"><div id="right_column"><t t-call="website_customer.references_block"/></div></t>
+ </xpath>
+ <xpath expr="//t[@t-call='website_partner.partner_detail']" position="attributes">
+     <attribute name="left_column">left_column</attribute>
+     <attribute name="right_column">right_column</attribute>
  </xpath>
 </template>
 

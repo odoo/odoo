@@ -15,21 +15,18 @@
                 <div class="s_pricelist_cafe_col col-lg-4 py-5 o_cc o_cc5 s_col_no_resize">
                     <h3>Coffees</h3>
                     <ul class="list-unstyled my-3">
-                        <t t-call="website.s_pricelist_cafe_item">
-                            <t t-set="name">Coffee Latte</t>
-                            <t t-set="price">$4.50</t>
-                            <t t-set="description">Sleek, minimalist space offering meticulously brewed coffee and espresso drinks using freshly roasted beans.</t>
-                        </t>
-                        <t t-call="website.s_pricelist_cafe_item">
-                            <t t-set="name">Cappuccino</t>
-                            <t t-set="price">$4.25</t>
-                            <t t-set="description">A vibrant spot known for its expertly crafted coffee, sourced directly from farmers and roasted to perfection.</t>
-                        </t>
-                        <t t-call="website.s_pricelist_cafe_item">
-                            <t t-set="name">Espresso</t>
-                            <t t-set="price">$4.10</t>
-                            <t t-set="description">Artisanal espresso with a focus on direct trade and exceptional quality in a chic, comfortable setting.</t>
-                        </t>
+                        <t t-call="website.s_pricelist_cafe_item"
+                            name.translate="Coffee Latte"
+                            price.translate="$4.50"
+                            description.translate="Sleek, minimalist space offering meticulously brewed coffee and espresso drinks using freshly roasted beans."/>
+                        <t t-call="website.s_pricelist_cafe_item"
+                            name.translate="Cappuccino"
+                            price.translate="$4.25"
+                            description.translate="A vibrant spot known for its expertly crafted coffee, sourced directly from farmers and roasted to perfection."/>
+                        <t t-call="website.s_pricelist_cafe_item"
+                            name.translate="Espresso"
+                            price.translate="$4.10"
+                            description.translate="Artisanal espresso with a focus on direct trade and exceptional quality in a chic, comfortable setting."/>
                     </ul>
                 </div>
                 <div class="s_pricelist_cafe_col col-lg-4 d-lg-block d-none o_snippet_mobile_invisible s_col_no_resize">
@@ -38,21 +35,18 @@
                 <div class="s_pricelist_cafe_col col-lg-4 py-5 o_cc o_cc1 s_col_no_resize">
                     <h3>Teas</h3>
                     <ul class="list-unstyled my-3">
-                        <t t-call="website.s_pricelist_cafe_item">
-                            <t t-set="name">Earl Grey</t>
-                            <t t-set="price">$3.50</t>
-                            <t t-set="description">A classic black tea blend infused with the aromatic essence of bergamot, offering a fragrant, citrusy flavor.</t>
-                        </t>
-                        <t t-call="website.s_pricelist_cafe_item">
-                            <t t-set="name">Jasmine Green Tea</t>
-                            <t t-set="price">$3.00</t>
-                            <t t-set="description">Delicate green tea scented with jasmine blossoms, providing a soothing and floral experience.</t>
-                        </t>
-                        <t t-call="website.s_pricelist_cafe_item">
-                            <t t-set="name">Chamomile Tea</t>
-                            <t t-set="price">$4.00</t>
-                            <t t-set="description">Herbal tea made from dried chamomile flowers, known for its calming properties and gentle, apple-like flavor.</t>
-                        </t>
+                        <t t-call="website.s_pricelist_cafe_item"
+                            name.translate="Earl Grey"
+                            price.translate="$3.50"
+                            description.translate="A classic black tea blend infused with the aromatic essence of bergamot, offering a fragrant, citrusy flavor."/>
+                        <t t-call="website.s_pricelist_cafe_item"
+                            name.translate="Jasmine Green Tea"
+                            price.translate="$3.00"
+                            description.translate="Delicate green tea scented with jasmine blossoms, providing a soothing and floral experience."/>
+                        <t t-call="website.s_pricelist_cafe_item"
+                            name.translate="Chamomile Tea"
+                            price.translate="$4.00"
+                            description.translate="Herbal tea made from dried chamomile flowers, known for its calming properties and gentle, apple-like flavor."/>
                     </ul>
                 </div>
             </div>

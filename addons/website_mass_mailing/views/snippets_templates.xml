@@ -97,12 +97,12 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                         <div class="s_media_list_body col-lg-8 p-3 p-md-5">
                             <h4>Don't miss our upcoming updates</h4>
                             <p class="text-muted">Get all the latest news, blog posts and product updates from our company, delivered directly to your inbox.</p>
-                            <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
-                                <t t-set="_input_classes" t-valuef="s_newsletter_subscribe_form_input_small"/>
-                                <t t-set="thank_you_message">
-                                    <p class="h6-fs text-success">Thanks for registering!</p>
-                                </t>
+                            <t t-set="thank_you_message">
+                                <p class="h6-fs text-success">Thanks for registering!</p>
                             </t>
+                            <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"
+                                _input_classes.f="s_newsletter_subscribe_form_input_small"
+                                thank_you_message="thank_you_message"/>
                         </div>
                     </div>
                 </div>
@@ -119,14 +119,13 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                     <div class="col-12 col-lg-6 offset-lg-3 pt16 pb16" data-name="Card">
                         <div class="s_card card o_cc o_cc1 my-0" data-vxml="001" data-snippet="s_card" data-name="Card">
                             <div class="card-body p-md-5">
-                                <p class="h1-fs" style="text-align: center;">&#9993;&#65039;</p>
+                                <p class="h1-fs" style="text-align: center;">✉️</p>
                                 <h3 class="card-title" style="text-align: center;">Subscribe to our newsletter</h3>
                                 <p class="card-text text-muted" style="text-align: center;">Get all the latest news, blog posts and product updates from our company, delivered directly to your inbox.</p>
                                 <p><br/></p>
-                                <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
-                                    <t t-set="_inputClasses" t-value="'o_subscribe_input'"/>
-                                    <t t-set="_wrapClasses" t-value="'input-group justify-content-center'"/>
-                                </t>
+                                <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"
+                                    _inputClasses.f="o_subscribe_input"
+                                    _wrapClasses.f="input-group justify-content-center"/>
                             </div>
                         </div>
                     </div>
@@ -142,12 +141,12 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                 <div class="o_grid_item o_grid_item_image g-col-lg-5 g-height-6 col-lg-5" style="z-index: 1; grid-area: 1 / 1 / 7 / 6;">
                     <h2 class="h1-fs">Subscribe to our newsletter</h2>
                     <p class="lead">Be the first to find out all the latest new, products and trends.</p>
-                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form">
-                        <t t-set="thank_you_message">
-                            <p class="h5-fs mt-4 text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>
-                        </t>
-                        <t t-set="_wrapClasses" t-value="'input-group input-group-lg'"/>
+                    <t t-set="thank_you_message">
+                        <p class="h5-fs mt-4 text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>
                     </t>
+                    <t t-snippet-call="website_mass_mailing.s_newsletter_subscribe_form"
+                        thank_you_message="thank_you_message"
+                        _wrapClasses.f="input-group input-group-lg"/>
                 </div>
                 <div class="o_grid_item o_grid_item_image g-height-5 g-col-lg-2 col-lg-2 d-lg-block d-none o_snippet_mobile_invisible" style="z-index: 3; grid-area: 5 / 8 / 10 / 10;" data-invisible="1">
                     <img class="img img-fluid rounded" src="/web/image/website.s_newsletter_grid_default_image_1" alt=""/>
@@ -268,7 +267,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
              data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" role="dialog">
             <div class="modal-dialog d-flex">
                 <div class="modal-content oe_structure">
-                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">&#215;</div>
+                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">×</div>
                     <section class="s_text_block oe_img_bg o_bg_img_center pt88 pb64" data-snippet="s_text_block" data-name="Text"
                              style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 0 100%;">
                         <div class="container s_allow_columns">

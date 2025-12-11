@@ -38,13 +38,13 @@
             <div class="o_wesponsor_topbar_filters o_wevent_index_topbar_filters d-flex gap-2"/>
         </form>
         <div class="d-flex w-100 w-lg-auto">
-            <t t-call="website.website_search_box_input">
-                <t t-set="_classes" t-valuef="o_wevent_event_sponsor_searchbar_form flex-grow-1"/>
-                <t t-set="search_type" t-translation="off">sponsor</t>
-                <t t-set="action" t-value="'/event/%s/exhibitors' % (slug(event))"/>
-                <t t-set="display_detail" t-valuef="false"/>
-                <t t-set="search" t-value="search or searches and searches['search']"/>
-                <t t-set="placeholder">Search an exhibitor ...</t>
+            <t t-call="website.website_search_box_input"
+                _classes.f="o_wevent_event_sponsor_searchbar_form flex-grow-1"
+                search_type.translate="sponsor"
+                action="'/event/%s/exhibitors' % (slug(event))"
+                display_detail.f="false"
+                search="search or searches and searches['search']"
+                placeholder.translate="Search an exhibitor ...">
                 <t t-foreach="searches" t-as="item">
                     <input t-if="item != 'search' and item_value != 'all'" type="hidden"
                         t-att-name="item" t-att-value="item_value"/>
@@ -304,7 +304,7 @@
                 <span t-att-data-post="'/event/%s/exhibitors?%s' % (
                     slug(event),
                     keep_query('*', countries=str((search_countries - country).ids)))"
-                    class="post_link cursor-pointer btn border-0 py-1 px-2">&#215;</span>
+                    class="post_link cursor-pointer btn border-0 py-1 px-2">×</span>
             </span>
         </t>
         <t t-foreach="search_sponsorships" t-as="sponsorship">
@@ -314,7 +314,7 @@
                 <span t-att-data-post="'/event/%s/exhibitors?%s' % (
                     slug(event),
                     keep_query('*', sponsorships=str((search_sponsorships - sponsorship).ids)))"
-                    class="post_link cursor-pointer btn border-0 py-1 px-2">&#215;</span>
+                    class="post_link cursor-pointer btn border-0 py-1 px-2">×</span>
             </span>
         </t>
     </div>

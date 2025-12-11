@@ -17,10 +17,7 @@
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="aside_slide.channel_id.enroll == 'payment'" class="text-decoration-none small">
             <i class="fa fa-download me-1"/>
-            <t t-call="website_sale_slides.course_buy_course_link">
-                <t t-set="for_resources" t-value="1"/>
-                <t t-set="slide" t-value="aside_slide"/>
-            </t>
+            <t t-call="website_sale_slides.course_buy_course_link" for_resources="1" slide="aside_slide"/>
         </li>
     </xpath>
 </template>
@@ -28,9 +25,7 @@
 <template name="Buy Course To Access Resources or Interact Slide Detail" id="slide_content_detailed_buy_course" inherit_id="website_slides.slide_content_detailed">
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')] //div[@t-else='']" position="before">
         <span t-elif="slide.channel_id.enroll == 'payment'" class="text-muted me-auto border-start ps-3">
-            <t t-call="website_sale_slides.course_buy_course_link">
-                <t t-set="for_resources" t-value="1"/>
-            </t>
+            <t t-call="website_sale_slides.course_buy_course_link" for_resources="1"/>
         </span>
     </xpath>
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access_comments')]" position="inside">
@@ -70,9 +65,7 @@
     <xpath expr="//div[hasclass('o_wslides_js_course_join') and hasclass('o_wslides_no_access')]" position="inside">
         <li t-elif="slide.channel_id.enroll == 'payment'" class="o_wslides_fs_slide_link mb-1">
             <i class="fa fa-download me-1"/>
-            <t t-call="website_sale_slides.course_buy_course_link">
-                <t t-set="for_resources" t-value="1"/>
-            </t>
+            <t t-call="website_sale_slides.course_buy_course_link" for_resources="1"/>
         </li>
     </xpath>
 </template>

@@ -42,13 +42,12 @@
                                 t-attf-data-downloadable="#{False}"
                                 t-att-data-defaultpage="page">
                             <t t-if="is_external_embed">
-                                <t t-call="website_slides.slide_share_modal">
-                                    <t t-set="record" t-value="slide"/>
-                                    <t t-set="email_sharing" t-value="slide.channel_id.share_slide_template_id"/>
-                                    <t t-set="website_share_url" t-value="slide.website_share_url"/>
-                                    <t t-set="include_embed" t-value="True"/>
-                                    <t t-set="embed_hide_starting_page" t-value="True"/>
-                                </t>
+                                <t t-call="website_slides.slide_share_modal"
+                                    record="slide"
+                                    email_sharing="slide.channel_id.share_slide_template_id"
+                                    website_share_url="slide.website_share_url"
+                                    include_embed="True"
+                                    embed_hide_starting_page="True"/>
                             </t>
                             <div id="slide_suggest" class="oe_slide_embed_option bg-300 container-fluid overflow-auto d-none">
                                 <div class="row">

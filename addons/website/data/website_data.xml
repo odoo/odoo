@@ -20,8 +20,8 @@
         </t>
     </template>
     <template id="website.contactus" name="Contact Us">
-        <t t-call="website.layout">
-            <t t-set="logged_partner" t-value="request.env['website.visitor']._get_visitor_from_request().partner_id"/>
+        <t t-call="website.layout"
+            logged_partner="request.env['website.visitor']._get_visitor_from_request().partner_id">
             <t t-set="contactus_form_values" t-value="{
                 'email_to': res_company.email,
                 'name': request.params.get('name', ''),

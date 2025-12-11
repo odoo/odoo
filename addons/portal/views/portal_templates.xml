@@ -19,16 +19,12 @@
                         <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                     </a>
                     <ul id="top_menu" class="nav navbar-nav ms-auto">
-                        <t t-call="portal.placeholder_user_sign_in">
-                            <t t-set="_item_class" t-value="'nav-item'"/>
-                            <t t-set="_link_class" t-value="'nav-link'"/>
-                        </t>
-                        <t t-call="portal.user_dropdown">
-                            <t t-set="_user_name" t-value="true"/>
-                            <t t-set="_item_class" t-value="'nav-item dropdown'"/>
-                            <t t-set="_link_class" t-value="'nav-link'"/>
-                            <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>
-                        </t>
+                        <t t-call="portal.placeholder_user_sign_in" _item_class.f="nav-item" _link_class.f="nav-link"/>
+                        <t t-call="portal.user_dropdown"
+                            _user_name="true"
+                            _item_class.f="nav-item dropdown"
+                            _link_class.f="nav-link"
+                            _dropdown_menu_class.f="dropdown-menu-end"/>
                     </ul>
                 </div>
             </nav>
@@ -141,8 +137,7 @@
     </template>
 
     <template id="portal_layout" name="Portal Layout">
-        <t t-call="portal.frontend_layout">
-            <t t-set="is_portal" t-value="True"/>
+        <t t-call="portal.frontend_layout" is_portal="True">
 
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">
@@ -170,9 +165,7 @@
                                 <t t-call="portal.side_content"/>
                             </div>
                             <div class="offcanvas offcanvas-start d-lg-none" id="accountOffCanvas">
-                                <t t-call="portal.side_content">
-                                    <t t-set="isOffcanvas" t-value="true"/>
-                                </t>
+                                <t t-call="portal.side_content" isOffcanvas="true"/>
                             </div>
                         </div>
                     </t>
@@ -201,8 +194,7 @@
     </template>
 
     <template id="portal_my_home" name="My Portal">
-        <t t-call="portal.portal_layout">
-            <t t-set="my_details" t-value="True"/>
+        <t t-call="portal.portal_layout" my_details="True">
             <div class="o_portal_my_home">
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                 <div class="o_portal_docs row g-2">
@@ -211,20 +203,18 @@
                     <div t-if="portal_service_category_enable" class="o_portal_category row g-2 mt-3" id="portal_service_category"/>
                     <div t-if="portal_vendor_category_enable" class="o_portal_category row g-2 mt-3" id="portal_vendor_category"/>
                     <div class="o_portal_category row g-2 mt-3" id="portal_common_category">
-                        <t t-call="portal.portal_docs_entry">
-                            <t t-set="icon" t-value="'/portal/static/src/img/portal-addresses.svg'"/>
-                            <t t-set="title">Addresses</t>
-                            <t t-set="text">Add, remove or modify your addresses</t>
-                            <t t-set="url" t-value="'/my/addresses'"/>
-                            <t t-set="config_card" t-value="True"/>
-                        </t>
-                        <t t-call="portal.portal_docs_entry">
-                            <t t-set="icon" t-value="'/portal/static/src/img/portal-connection.svg'"/>
-                            <t t-set="title">Connection &amp; Security</t>
-                            <t t-set="text">Configure your connection parameters</t>
-                            <t t-set="url" t-value="'/my/security'"/>
-                            <t t-set="config_card" t-value="True"/>
-                        </t>
+                        <t t-call="portal.portal_docs_entry"
+                            icon.f="/portal/static/src/img/portal-addresses.svg"
+                            title.translate="Addresses"
+                            text.translate="Add, remove or modify your addresses"
+                            url.f="/my/addresses"
+                            config_card="True"/>
+                        <t t-call="portal.portal_docs_entry"
+                            icon.f="/portal/static/src/img/portal-connection.svg"
+                            title.translate="Connection &amp; Security"
+                            text.translate="Configure your connection parameters"
+                            url.f="/my/security"
+                            config_card="True"/>
                     </div>
                     <div class="o_portal_doc_spinner spinner-border text-o-color-2 align-self-center mt-5"/>
                 </div>
@@ -428,9 +418,7 @@
     </template>
 
     <template id="portal_my_security">
-        <t t-call="portal.portal_layout"><div class="o_portal_security_body w-md-75 w-lg-50 pb-5">
-            <t t-set="additional_title">Security</t>
-            <t t-set="no_breadcrumbs" t-value="1"/>
+        <t t-call="portal.portal_layout" additional_title.translate="Security" no_breadcrumbs="1"><div class="o_portal_security_body w-md-75 w-lg-50 pb-5">
             <div class="alert alert-danger" role="alert" t-if="get_error(errors)">
                 <t t-out="errors"/>
             </div>

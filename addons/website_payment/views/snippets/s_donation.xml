@@ -65,9 +65,7 @@
                 <div class="col-lg-7 pt16 pb16">
                     <h2>Make a Donation</h2>
                     <p>Small or large, your contribution is essential.</p>
-                    <t t-snippet-call="website_payment.s_donation_button">
-                        <t t-set="display_options" t-value="'true'"/>
-                    </t>
+                    <t t-snippet-call="website_payment.s_donation_button" display_options.f="true"/>
                 </div>
                 <div class="col-lg-5 pt16 pb16 d-none d-md-block">
                     <img src="/html_editor/shape/website_payment/s_donation_gift.svg?c1=o-color-1" class="img img-fluid mx-auto" style="width: 75%;" alt=""/>

@@ -30,12 +30,12 @@
     <t t-call="website_event.event_details">
         <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
 
-        <t t-if="opt_event_description_cover_top" t-call="website.record_cover">
-            <t t-set="_record" t-value="event"/>
-            <t t-set="use_filters" t-value="True"/>
-            <t t-set="use_size" t-value="True"/>
-            <t t-set="use_text_align" t-value="True"/>
-            <t t-set="additionnal_classes" t-value="'o_wevent_event_main_cover o_wevent_event_main_cover_top overflow-hidden h-auto'"/>
+        <t t-if="opt_event_description_cover_top" t-call="website.record_cover"
+            _record="event"
+            use_filters="True"
+            use_size="True"
+            use_text_align="True"
+            additionnal_classes.f="o_wevent_event_main_cover o_wevent_event_main_cover_top overflow-hidden h-auto">
 
             <div class="container d-flex flex-grow-1 h-100 w-100">
                 <div id="o_wevent_event_main_cover_content" class="d-flex flex-column align-items-baseline w-100 py-3">
@@ -57,21 +57,20 @@
                         <t t-call="website_event.navbar"/>
                         <!-- Show the button tickets only on mobile -->
                         <div t-if="opt_event_registration_block" class="o_wevent_event_main_cta_block d-lg-none mb-3">
-                            <t t-call="website_event.registration_template">
-                                <t t-set="cta_additional_classes">w-100 py-sm-3 mt-sm-2</t>
-                            </t>
+                            <t t-call="website_event.registration_template"
+                                cta_additional_classes.translate="w-100 py-sm-3 mt-sm-2"/>
                         </div>
                         <!-- Description -->
                         <div id="o_wevent_event_main_col">
                             <div t-if="edition_cover_only" class="css_non_editable_mode_hidden o_not_editable bg-info-light border border-info border-bottom-0 rounded-top p-2">
                                 <em>Hidden for visitors</em>
                             </div>
-                            <t t-if="not opt_event_description_cover_top" t-call="website.record_cover">
-                                <t t-set="_record" t-value="event"/>
-                                <t t-set="use_filters" t-value="True"/>
-                                <t t-set="use_size" t-value="False"/>
-                                <t t-set="use_text_align" t-value="True"/>
-                                <t t-set="additionnal_classes" t-value="'o_wevent_event_main_cover overflow-hidden ' + ('css_non_editable_mode_hidden border border-info rounded-bottom' if edition_cover_only else 'd-none' if opt_event_description_cover_hidden else 'rounded')"/>
+                            <t t-if="not opt_event_description_cover_top" t-call="website.record_cover"
+                                _record="event"
+                                use_filters="True"
+                                use_size="False"
+                                use_text_align="True"
+                                additionnal_classes="'o_wevent_event_main_cover overflow-hidden ' + ('css_non_editable_mode_hidden border border-info rounded-bottom' if edition_cover_only else 'd-none' if opt_event_description_cover_hidden else 'rounded')">
 
                                 <div id="o_wevent_event_main_cover_content" class="p-3 mt-auto">
                                     <span t-if="event.is_participating" class="badge text-bg-success o_wevent_badge">
@@ -95,9 +94,7 @@
                         t-attf-class="col-lg-4 py-3 pb-lg-0 d-print-none {{'sticky-top align-self-start' if opt_event_fixed_sidebar else ''}}">
                         <!-- CTA (desktop only) -->
                         <div t-if="opt_event_registration_block" class="d-none d-lg-block mb-3">
-                            <t t-call="website_event.registration_template">
-                                <t t-set="cta_additional_classes">w-100</t>
-                            </t>
+                            <t t-call="website_event.registration_template" cta_additional_classes.translate="w-100"/>
                         </div>
                         <!-- Date & Time (desktop only) -->
                         <div t-if="opt_event_dates_block or opt_event_calendar_block" class="o_wevent_bordered_block pb-3 mb-4 d-none d-lg-block">
@@ -152,11 +149,10 @@
                                 <h6 class="o_wevent_sidebar_title">Share</h6>
                                 <p>Find out what people see and say about this event, and join the conversation.</p>
                             </div>
-                            <t t-snippet-call="website.s_share">
-                                <t t-set="_no_title" t-value="True"/>
-                                <t t-set="_classes" t-valuef="o_wevent_sidebar_social mx-n1"/>
-                                <t t-set="_link_classes" t-valuef="o_wevent_social_link"/>
-                            </t>
+                            <t t-snippet-call="website.s_share"
+                                _no_title="True"
+                                _classes.f="o_wevent_sidebar_social mx-n1"
+                                _link_classes.f="o_wevent_social_link"/>
                         </div>
                     </aside>
                 </div>
@@ -345,9 +341,7 @@
                                 <div class="row">
                                     <t t-foreach="event.specific_question_ids" t-as="question">
                                         <div class="col-lg-6 mt-2">
-                                            <t t-call="website_event.registration_event_question">
-                                                <t t-set="registration_index" t-value="counter"/>
-                                            </t>
+                                            <t t-call="website_event.registration_event_question" registration_index="counter"/>
                                         </div>
                                     </t>
                                 </div>
@@ -358,9 +352,7 @@
                         <div class="row">
                             <t t-foreach="event.general_question_ids" t-as="question">
                                 <div class="mt-2" t-att-class="question.question_type=='text_box' and 'col-lg-12' or 'col-lg-6'">
-                                    <t t-call="website_event.registration_event_question">
-                                        <t t-set="registration_index" t-value="0"/>
-                                    </t>
+                                    <t t-call="website_event.registration_event_question" registration_index="0"/>
                                 </div>
                             </t>
                         </div>

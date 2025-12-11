@@ -26,9 +26,8 @@
             <h2 class="h4-fs">Always First.</h2>
             <p class="text-muted">Be the first to find out all the latest news, products, and trends.</p>
         </div>
-        <t t-snippet-call="website_mass_mailing_sms.s_newsletter_subscribe_form">
-            <t t-set="_contentClasses" t-value="'col-lg-5 offset-lg-1'"/>
-        </t>
+        <t t-snippet-call="website_mass_mailing_sms.s_newsletter_subscribe_form"
+            _contentClasses.f="col-lg-5 offset-lg-1"/>
     </div>
 </template>
 
@@ -42,13 +41,13 @@
                 <div class="o_grid_item o_cc o_cc1 g-col-lg-4 g-height-7 col-lg-4 order-lg-0 rounded" style="order: 1; z-index: 1; grid-area: 1 / 5 / 8 / 9; --grid-item-padding-y: 64px; --grid-item-padding-x: 24px;">
                     <h2 class="h3-fs" style="text-align: center;">Stay in the Loop !<br/>Get the latest updates</h2>
                     <p style="text-align: center;">Be the first to find out all the latest new, products and trends.</p>
-                    <t t-snippet-call="website_mass_mailing_sms.s_newsletter_subscribe_form">
-                        <t t-set="thank_you_message">
-                            <p class="h6-fs d-flex flex-column mt-4 text-center text-success"><i class="fa fa-check-circle-o fa-lg" role="img"/> Thanks for registering!</p>
-                        </t>
-                        <t t-set="_wrapClasses" t-value="'d-flex flex-column gap-1'"/>
-                        <t t-set="_inputClasses" t-value="'text-center'"/>
+                    <t t-set="thank_you_message">
+                        <p class="h6-fs d-flex flex-column mt-4 text-center text-success"><i class="fa fa-check-circle-o fa-lg" role="img"/> Thanks for registering!</p>
                     </t>
+                    <t t-snippet-call="website_mass_mailing_sms.s_newsletter_subscribe_form"
+                        thank_you_message="thank_you_message"
+                        _wrapClasses.f="d-flex flex-column gap-1"
+                        _inputClasses.f="text-center"/>
                 </div>
                 <div class="o_grid_item g-height-6 o_grid_item_image o_grid_item_image_contain g-col-lg-8 col-lg-8 d-lg-block d-none o_snippet_mobile_invisible" style="z-index: 0; grid-area: 2 / 5 / 8 / 13;" data-invisible="1">
                     <img src="/html_editor/shape/website_mass_mailing_sms/s_newsletter_sms_notifications.svg?c1=o-color-1&amp;c2=o-color-5&amp;c4=o-color-4" alt="" class="img img-fluid"/>

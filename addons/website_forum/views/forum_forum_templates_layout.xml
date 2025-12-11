@@ -56,11 +56,10 @@
                                 data-bs-placement="top"
                                 title="Favorite"/>
                         </a>
-                        <t t-if="question.state == 'active'" t-call="website_forum.follow">
-                            <t t-set="object" t-value="question"/>
-                            <t t-set="icons_design" t-value="True"/>
-                            <t t-set="btn_classes" t-value="'opacity-50 opacity-100-hover' "/>
-                        </t>
+                        <t t-if="question.state == 'active'" t-call="website_forum.follow"
+                            object="question"
+                            icons_design="True"
+                            btn_classes="'opacity-50 opacity-100-hover' "/>
                     </div>
                 </div>
             </div>
@@ -96,7 +95,7 @@
             </div>
             <div t-if="tag or tags or search or question_count or page_name or website_forum_action" t-attf-class="d-flex justify-content-lg-end gap-2 flex-grow-1 flex-wrap flex-md-nowrap w-100 w-lg-auto #{'mw-xl-75' if search else 'mw-xl-50'}">
                 <span t-if="tag and not tags" class="btn btn-light rounded ps-2">
-                    <span t-if="tag"><i class="fa fa-tag me-1 opacity-50"/><t t-out="tag.name"></t></span>
+                    <span t-if="tag"><i class="fa fa-tag me-1 opacity-50"/><t t-out="tag.name"/></span>
                     <a t-attf-href="#{ url_for('/forum') }/#{ _forum_slug }?#{ keep_query('search', 'sorting', 'my', 'create_uid') }"
                        class="p-1 text-decoration-none text-reset opacity-50"><i class="oi oi-close d-inline-block"/></a>
                 </span>
@@ -158,7 +157,12 @@
                     </div>
                 </div>
                 <!-- 'Search Box' -->
-                <t t-if="question_count or tags" t-call="website.website_search_box_input">
+                <t t-if="question_count or tags" t-call="website.website_search_box_input"
+                    display_description.f="true"
+                    display_detail.f="true"
+                    _form_classes.f="flex-grow-1"
+                    _input_classes.f="border-0 bg-light"
+                    _submit_classes.f="btn-light">
                     <t t-if="_page_name == 'tags'">
                         <t t-set="search_type" t-value="'forum_tags_only'"/>
                         <t t-set="action" t-value="'/forum/%s/tag' % (_forum_slug)"/>
@@ -167,11 +171,6 @@
                         <t t-set="search_type" t-value="'forums'"/>
                         <t t-set="action" t-value="'/forum/%s' % (_forum_slug)"/>
                     </t>
-                    <t t-set="display_description" t-valuef="true"/>
-                    <t t-set="display_detail" t-valuef="true"/>
-                    <t t-set="_form_classes" t-valuef="flex-grow-1"/>
-                    <t t-set="_input_classes" t-valuef="border-0 bg-light"/>
-                    <t t-set="_submit_classes" t-valuef="btn-light"/>
                     <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
                     <input t-if="my" type="hidden" name="my" t-att-value="my"/>
                     <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
@@ -198,11 +197,11 @@
 </template>
 
 <template id="header" name="Forum Index">
-    <t t-call="website_forum.layout">
+    <t t-set="head" t-if="forum and not forum.active">
+        <meta name="robots" content="noindex, nofollow" />
+    </t>
+    <t t-call="website_forum.layout" head="head">
         <t t-if="forum and not forum.active">
-            <t t-set="head">
-                <meta name="robots" content="noindex, nofollow" />
-            </t>
             <div class="text-center text-muted">
                 <p class="css_editable_hidden"><h1 class="h2-fs">This forum has been archived.</h1></p>
             </div>
@@ -216,11 +215,10 @@
                 <t t-call="website_forum.user_sidebar_mobile"/>
                 <div class="o_wforum_content_wrapper col-lg-9">
                     <div class="o_wprofile_email_validation_container d-flex flex-column justify-content-center mb-3 mb-lg-5 mt-4">
-                        <t t-call="website_profile.email_validation_banner">
-                            <t t-set="redirect_url" t-value="'/forum/%s' % forum.id if forum else '/forum/all/'"/>
-                            <t t-set="additional_validation_email_message"> and join this Forum</t>
-                            <t t-set="additional_validated_email_message"> You may now participate in our forums.</t>
-                        </t>
+                        <t t-call="website_profile.email_validation_banner"
+                            redirect_url="'/forum/%s' % forum.id if forum else '/forum/all/'"
+                            additional_validation_email_message.translate="and join this Forum"
+                            additional_validated_email_message.translate="You may now participate in our forums."/>
                         <t t-call="website_forum.forum_model_nav"/>
                         <t t-out="0"/>
                     </div>
