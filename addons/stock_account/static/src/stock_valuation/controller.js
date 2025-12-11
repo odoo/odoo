@@ -70,7 +70,7 @@ export class StockValuationReportController {
 
     async setDate(date) {
         this.state.date = date;
-        this.dateAsString = date.toISO();
+        this.dateAsString = serializeDate(date);
         await this.loadReportData();
     }
 
