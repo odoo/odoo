@@ -5,6 +5,7 @@ import logging
 from odoo import http, fields, _
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.tools.misc import format_amount
 
 _logger = logging.getLogger(__name__)
 
@@ -185,15 +186,28 @@ class WebsiteSaleExtension(WebsiteSale):
                 'delivery_zone_id': zone.id,
             })
             
-            # Compute delivery price
+            # Compute delivery price and refresh totals
             delivery_price = zone.compute_delivery_price(
                 order.total_shipping_weight or 1.0,
                 order.amount_untaxed
             )
+            # ensure computed fields are updated for this response
+            order.sudo()._compute_delivery_info()
+            order.sudo()._compute_amounts()
             
             # Format price for display
             currency = order.currency_id
-            delivery_price_formatted = f"{currency.symbol}{delivery_price:.2f}"
+            delivery_price_formatted = format_amount(request.env, delivery_price, currency=currency)
+            amounts = {
+                'delivery': delivery_price,
+                'delivery_formatted': delivery_price_formatted,
+                'untaxed': order.amount_untaxed,
+                'untaxed_formatted': format_amount(request.env, order.amount_untaxed, currency=currency),
+                'tax': order.amount_tax,
+                'tax_formatted': format_amount(request.env, order.amount_tax, currency=currency),
+                'total': order.amount_total,
+                'total_formatted': format_amount(request.env, order.amount_total, currency=currency),
+            }
             
             _logger.info(
                 f"Delivery zone set for order {order.name}: "
@@ -207,6 +221,7 @@ class WebsiteSaleExtension(WebsiteSale):
                 'delivery_price': delivery_price,
                 'delivery_price_formatted': delivery_price_formatted,
                 'estimated_days': zone.estimated_days,
+                'amounts': amounts,
             }
         except Exception as e:
             _logger.error(f"Failed to set delivery zone: {str(e)}")

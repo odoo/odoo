@@ -78,6 +78,15 @@ class SaleOrder(models.Model):
                 order.computed_delivery_price = 0.0
                 order.estimated_delivery_date = fields.Date.today() + timedelta(days=5)
 
+    @api.depends('order_line.price_subtotal', 'currency_id', 'company_id', 'payment_term_id', 'computed_delivery_price')
+    def _compute_amounts(self):
+        """Include computed delivery price in order totals"""
+        super()._compute_amounts()
+        for order in self:
+            delivery_price = order.computed_delivery_price or 0.0
+            order.amount_untaxed += delivery_price
+            order.amount_total += delivery_price
+
     def get_delivery_info(self):
         """Get delivery information for API/template use"""
         self.ensure_one()

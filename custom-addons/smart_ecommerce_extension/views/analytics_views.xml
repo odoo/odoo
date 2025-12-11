@@ -8,6 +8,7 @@
     <record id="view_ecommerce_analytics_pivot" model="ir.ui.view">
         <field name="name">ecommerce.analytics.pivot</field>
         <field name="model">ecommerce.analytics</field>
+        <field name="type">pivot</field>
         <field name="arch" type="xml">
             <pivot string="E-commerce Analytics" sample="1">
                 <field name="date" type="row" interval="month"/>
@@ -25,6 +26,7 @@
     <record id="view_ecommerce_analytics_graph" model="ir.ui.view">
         <field name="name">ecommerce.analytics.graph</field>
         <field name="model">ecommerce.analytics</field>
+        <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="E-commerce Analytics" type="line" sample="1">
                 <field name="date" type="row"/>
@@ -38,6 +40,8 @@
     <record id="view_ecommerce_analytics_tree" model="ir.ui.view">
         <field name="name">ecommerce.analytics.list</field>
         <field name="model">ecommerce.analytics</field>
+        <field name="type">list</field>
+        <field name="priority" eval="1"/>
         <field name="arch" type="xml">
             <list string="E-commerce Analytics" decoration-success="confirmed_orders > 0">
                 <field name="date"/>
@@ -82,7 +86,7 @@
     <record id="action_ecommerce_analytics" model="ir.actions.act_window">
         <field name="name">Analytics Dashboard</field>
         <field name="res_model">ecommerce.analytics</field>
-        <field name="view_mode">graph,pivot,list</field>
+        <field name="view_mode">list,graph,pivot</field>
         <field name="context">{'search_default_last_30_days': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

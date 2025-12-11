@@ -67,11 +67,18 @@ publicWidget.registry.SmartDeliveryZoneSelector = publicWidget.Widget.extend({
                 // Update any displayed delivery cost
                 if (result.delivery_price !== undefined) {
                     self.$('#selected_zone_price').text(result.delivery_price_formatted || result.delivery_price);
-                    // Update the cart summary if it exists
-                    var $deliveryCost = $('[data-delivery-cost]');
-                    if ($deliveryCost.length) {
-                        $deliveryCost.text(result.delivery_price_formatted || result.delivery_price);
-                    }
+                }
+                // Update the cart summary totals if provided
+                if (result.amounts) {
+                    var amounts = result.amounts;
+                    // Delivery row
+                    $('#message_no_dm_set').addClass('d-none');
+                    $('#order_delivery .monetary_field').removeClass('d-none').text(amounts.delivery_formatted || amounts.delivery);
+                    // Subtotal, taxes, total
+                    $('#order_total_untaxed .monetary_field').text(amounts.untaxed_formatted || amounts.untaxed);
+                    $('#order_total_taxes .monetary_field').text(amounts.tax_formatted || amounts.tax);
+                    $('#order_total .monetary_field').text(amounts.total_formatted || amounts.total);
+                    $('#amount_total_summary').text(amounts.total_formatted || amounts.total);
                 }
                 // Show success message
                 self._showMessage('Delivery zone updated successfully', 'success');
