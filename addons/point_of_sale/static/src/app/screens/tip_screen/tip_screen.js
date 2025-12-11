@@ -35,7 +35,11 @@ export class TipScreen extends Component {
         const original = this.env.utils.formatCurrency(this.totalAmount);
         const tip = this.env.utils.formatCurrency(tipAmount);
         const overall = this.env.utils.formatCurrency(this.totalAmount + tipAmount);
-        return `${original} + ${tip} tip = ${overall}`;
+        return _t("%(original)s + %(tip)s tip = %(overall)s", {
+            original,
+            tip,
+            overall,
+        });
     }
     get totalAmount() {
         return this._totalAmount;
@@ -84,12 +88,25 @@ export class TipScreen extends Component {
         const maxTipAmount = (maxTipPercentage / 100) * this.totalAmount;
         if (amount > maxTipAmount) {
             const confirmed = await ask(this.dialog, {
+<<<<<<< a991a76192d153c993d6900ea4564b8e667f068e
                 title: _t("Are you sure?"),
                 body: _t(
                     "%s is more than %s% of the order's total amount. Are you sure of this tip amount?",
                     this.env.utils.formatCurrency(amount),
                     maxTipPercentage
                 ),
+||||||| 6c45c951201feacaa8665eb4716f8d4506d33a10
+                title: "Are you sure?",
+                body: `${this.env.utils.formatCurrency(
+                    amount
+                )} is more than 25% of the order's total amount. Are you sure of this tip amount?`,
+=======
+                title: _t("Are you sure?"),
+                body: _t(
+                    "%(amount)s is more than 25% of the order's total amount. Are you sure of this tip amount?",
+                    { amount: this.env.utils.formatCurrency(amount) }
+                ),
+>>>>>>> 12173f93e7e1aef4ca4ae178517c6a8941c4c9e3
             });
             if (!confirmed) {
                 return;

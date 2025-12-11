@@ -74,9 +74,12 @@ export class GloryAdminButtons extends Component {
     openAdminPage() {
         const gloryIp = this.props.record.data.glory_websocket_address;
         if (!gloryIp) {
-            this.notification.add("Please configure the IP address before opening the admin page", {
-                type: "warning",
-            });
+            this.notification.add(
+                _t("Please configure the IP address before opening the admin page"),
+                {
+                    type: "warning",
+                }
+            );
             return;
         }
         const protocol = window.location.protocol;
