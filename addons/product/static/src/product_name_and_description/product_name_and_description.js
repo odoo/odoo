@@ -1,11 +1,11 @@
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { Component, onMounted, onPatched, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useEffect, useRef, useState } from "@odoo/owl";
 import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { useProductAndLabelAutoresize } from "./product_and_label_autoresize";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { Many2OneProduct } from "@product/many2one_product/many2one_product";
+import { useProductAndLabelAutoresize } from "@product/product_name_and_description/product_and_label_autoresize";
+import { computeM2OProps } from "@web/views/fields/many2one/many2one";
 import { useInputField } from "@web/views/fields/input_field_hook";
 
 export const ProductNameAndDescriptionListRendererMixin = {
@@ -39,16 +39,15 @@ export const ProductNameAndDescriptionListRendererMixin = {
 };
 
 export class ProductNameAndDescriptionField extends Component {
-    static components = { Many2One };
+    static components = { Many2OneProduct };
     static props = { ...Many2OneField.props };
-    static template = Many2One.template;
+    static template = Many2OneProduct.template;
 
     static descriptionColumn = "";
 
     setup() {
         this.isPrintMode = useState({ value: false });
         this.labelVisibility = useState({ value: false });
-        this.switchToLabel = false;
         this.columnIsProductAndLabel = useState({ value: this.props.record.columnIsProductAndLabel });
         this.labelNode = useRef("labelNodeRef");
         useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
@@ -69,13 +68,6 @@ export class ProductNameAndDescriptionField extends Component {
             },
             () => [this.props.record.columnIsProductAndLabel]
         );
-
-        onPatched(() => {
-            if (this.labelNode.el && this.switchToLabel) {
-                this.switchToLabel = false;
-                this.labelNode.el.focus();
-            }
-        });
 
         this.onBeforePrint = () => {
             this.isPrintMode.value = true;
@@ -130,28 +122,20 @@ export class ProductNameAndDescriptionField extends Component {
         return this.props.record.evalContext.parent.state !== "draft";
     }
 
-    get showLabelVisibilityToggler() {
-        return !this.props.readonly && this.columnIsProductAndLabel.value && !this.label;
-    }
-
-    switchLabelVisibility() {
-        this.labelVisibility.value = !this.labelVisibility.value;
-        this.switchToLabel = true;
-    }
-
     parseLabel(value) {
         return value || this.productName;
     }
 
-    /**
-     * @param {KeyboardEvent} ev
-     */
-    onM2oInputKeydown(ev) {
-        const hotkey = getActiveHotkey(ev);
-        if (hotkey === "enter" && this.showLabelVisibilityToggler) {
-            this.switchLabelVisibility();
-            ev.stopPropagation();
-            ev.preventDefault();
+    onFocus() {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
         }
+        this.labelVisibility.value = true;
+    }
+
+    onBlur() {
+        this.timeout = setTimeout(() => {
+            this.labelVisibility.value = false;
+        }, 100)
     }
 }

@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
             trigger: "body:not(:has(.modal))",
         },
         ...tourUtils.clickSomewhereElse(),
-        tourUtils.editLineMatching("Event Registration", "VIP"),
+        tourUtils.editLineMatching("Event Registration"),
         tourUtils.editConfiguration(),
         {
             trigger: 'div[name="event_ticket_id"] input',
@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
             trigger: "body:not(:has(.modal))",
         },
         ...tourUtils.clickSomewhereElse(),
-        tourUtils.checkSOLDescriptionContains("Event Registration", "Standard"),
+        tourUtils.checkSOLDescriptionContains("Event Registration"),
         ...stepUtils.saveForm(),
     ],
 });

@@ -67,6 +67,26 @@ registry.category("web_tour.tours").add('account_tour', {
         content: _t("Add a line to your invoice"),
         run: "click",
     },
+    // Show product column if needed
+    {
+        content: "Open line fields list",
+        trigger: ".o_optional_columns_dropdown_toggle",
+        run: "click",
+    },
+    {
+        content: "Show product column",
+        trigger: '.o-dropdown-item input[name="product_id"]',
+        run: function (actions) {
+            if (!this.anchor.checked) {
+                actions.click();
+            }
+        },
+    },
+    {
+        content: "Close line fields list",
+        trigger: ".o_optional_columns_dropdown_toggle",
+        run: "click",
+    },
     {
         trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id]`,
         content: _t("Fill in the details of the product or see the suggestion."),
@@ -82,12 +102,6 @@ registry.category("web_tour.tours").add('account_tour', {
         isActive: ["auto"],
         trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] .o_m2o_dropdown_option_create a:contains(create)`,
         content: _t("Create the product."),
-        run: "click",
-    },
-    {
-        trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] button[id=labelVisibilityButtonId]`,
-        content: _t("Click here to add a description to your product."),
-        tooltipPosition: "bottom",
         run: "click",
     },
     {

@@ -28,34 +28,34 @@
                 />
             </t>
             <t t-else="">
-                <div class="d-flex align-items-center gap-1">
-                    <Many2One t-props="this.m2oProps" cssClass="'w-100'" t-on-keydown="onM2oInputKeydown"/>
-                    <t t-if="showLabelVisibilityToggler">
-                        <button
-                            class="btn fa fa-bars text-start o_external_button px-1"
-                            type="button"
-                            id="labelVisibilityButtonId"
-                            data-tooltip="Click or press enter to add a description"
-                            t-on-click="() => this.switchLabelVisibility()"
-                        />
-                    </t>
+                <div class="d-flex align-items-center gap-1" t-ref="productNodeRef">
+                    <Many2OneProduct
+                        t-props="this.m2oProps"
+                        cssClass="'w-100'"
+                        onFocus.bind="onFocus"
+                        onBlur.bind="onBlur"
+                    />
                 </div>
-                <div
-                    t-if="props.readonly"
-                    class="o_input d-print-none border-0 fst-italic"
-                    t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and label) }"
-                    t-out="label"
-                />
-                <textarea
-                    t-else=""
-                    class="o_input d-print-none border-0 fst-italic"
-                    placeholder="Enter a description"
-                    rows="1"
-                    type="text"
-                    t-att-class="{ ...sectionAndNoteClasses, 'd-none': !(columnIsProductAndLabel.value and (label or labelVisibility.value)) }"
-                    t-att-value="label"
-                    t-ref="labelNodeRef"
-                />
+                <t t-if="labelVisibility.value">
+                    <div
+                        t-if="props.readonly"
+                        class="o_input d-print-none border-0 fst-italic"
+                        t-att-class="sectionAndNoteClasses"
+                        t-out="label"
+                    />
+                    <textarea
+                        t-else=""
+                        class="o_input d-print-none border-0 fst-italic"
+                        placeholder="Enter a description"
+                        rows="1"
+                        type="text"
+                        t-att-class="sectionAndNoteClasses"
+                        t-att-value="label"
+                        t-ref="labelNodeRef"
+                        t-on-focus="onFocus"
+                        t-on-blur="onBlur"
+                    />
+                </t>
             </t>
             <t t-if="isPrintMode.value">
                 <div class="d-none d-print-block text-wrap" t-out="label"/>

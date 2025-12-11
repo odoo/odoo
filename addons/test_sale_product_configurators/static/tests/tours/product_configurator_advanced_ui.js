@@ -45,7 +45,6 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
         ...configuratorTourUtils.saveConfigurator(),
         tourUtils.checkSOLDescriptionContains(
             "Customizable Desk (TEST) (Custom, White, PAV9, PAV5, PAV1)",
-            "PA5: PAV1\nPA7: PAV1\nPA8: PAV1\nLegs: Custom: Custom 1\nPA1: PAV9: Custom 2\nPA4: PAV9: Custom 3",
         ),
         ...stepUtils.saveForm(),
     ],

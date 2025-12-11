@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="product.Many2OneProduct" t-inherit="web.Many2One" t-inherit-mode="primary">
+        <xpath expr="//Many2XAutocomplete" position="replace">
+            <Many2XAutocompleteProduct t-props="many2XAutocompleteProps"/>
+        </xpath>
+    </t>
+</templates>

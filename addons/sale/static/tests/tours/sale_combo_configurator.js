@@ -52,9 +52,7 @@ registry
             // Assert that the order's content is correct.
             ...comboConfiguratorTourUtils.saveConfigurator(),
             tourUtils.checkSOLDescriptionContains("Combo product x 3"),
-            tourUtils.checkSOLDescriptionContains(
-                "Product A1", "No variant attribute: B: Some custom value"
-            ),
+            tourUtils.checkSOLDescriptionContains("Product A1"),
             tourUtils.checkSOLDescriptionContains("Product B2"),
             {
                 content: "Verify the combo item quantities",

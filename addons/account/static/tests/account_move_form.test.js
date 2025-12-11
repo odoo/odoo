@@ -113,7 +113,6 @@ test("Update description on product line", async() => {
     });
 
     await click(".o_many2one");
-    await contains("#labelVisibilityButtonId").click()
     await insertText("textarea[placeholder='Enter a description']", "testDescription");
     await click(".o_form_button_save");
     await waitForSteps(["save"]);
