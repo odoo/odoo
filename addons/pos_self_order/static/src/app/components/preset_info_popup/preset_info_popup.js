@@ -263,7 +263,7 @@ export class PresetInfoPopup extends Component {
         return {
             record: this.addressRecord,
             name: "street",
-            placeholder: "Address",
+            placeholder: _t("Address"),
             addressFieldMap: {
                 street: "street",
                 city: "city",

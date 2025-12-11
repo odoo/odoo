@@ -60,7 +60,10 @@ export const useVivaApp = (validateCallback) => {
             line?.delete();
             dialog.add(AlertDialog, {
                 title: _t("Viva Wallet Payment Error"),
-                body: `Please note that your order has not been finalized, try again or choose another payment method. (${message})`,
+                body: _t(
+                    "Please note that your order has not been finalized, try again or choose another payment method. (%s)",
+                    message
+                ),
             });
         }
 

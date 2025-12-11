@@ -6,6 +6,7 @@ import { ProductCard } from "@point_of_sale/app/components/product_card/product_
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 import { isValidEmail } from "@point_of_sale/utils";
 
 export class EventRegistrationPopup extends Component {
@@ -159,8 +160,8 @@ export class EventRegistrationPopup extends Component {
 
         if (requiredByRegistration || requiredByOrder) {
             this.dialog.add(AlertDialog, {
-                title: "Oh snap !",
-                body: "Please fill in all required fields",
+                title: _t("Oh snap !"),
+                body: _t("Please fill in all required fields"),
             });
             return;
         }
