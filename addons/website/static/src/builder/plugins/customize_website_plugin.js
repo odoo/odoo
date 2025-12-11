@@ -7,7 +7,6 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { isColorGradient, isCSSColor } from "@web/core/utils/colors";
-import { Deferred } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -435,7 +434,7 @@ export class AddLanguageAction extends BuilderAction {
         this.preview = false;
     }
     async apply() {
-        const def = new Deferred();
+        const def = Promise.withResolvers();
         // Retrieve the website id to check by default the website checkbox in
         // the dialog box 'action_view_base_language_install'
         const websiteId = this.services.website.currentWebsite.id;
@@ -466,7 +465,7 @@ export class AddLanguageAction extends BuilderAction {
                         // dialog has been cancelled
                         onClose: (closeParams) => def.resolve(!!closeParams?.noReload),
                     });
-                    return await def;
+                    return await def.promise;
                 },
             })
         );
@@ -682,7 +681,7 @@ export class WebsiteConfigAction extends BuilderAction {
      * @returns {Promise} deferred function
      */
     async _customizeThemeData(isViewData, shouldReset, toEnable, toDisable) {
-        const def = new Deferred();
+        const def = Promise.withResolvers();
         this.dependencies.customizeWebsite.getPendingThemeRequests().push({
             isViewData,
             shouldReset,
@@ -728,7 +727,7 @@ export class WebsiteConfigAction extends BuilderAction {
                     .catch(() => Promise.all(defs.map((def) => def.reject())));
             }
         }, 0);
-        return def;
+        return def.promise;
     }
 }
 

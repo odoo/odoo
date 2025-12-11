@@ -2,7 +2,7 @@ import { Image } from "@html_builder/core/img";
 import { ImgGroup } from "@html_builder/core/img_group";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expect, test, describe } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -11,13 +11,13 @@ describe.current.tags("desktop");
 defineMailModels(); // meh
 test("ImgGroup's inner Image components should not be blocked before src load", async () => {
     const defs = {
-        img1: new Deferred(),
-        img2: new Deferred(),
-        img3: new Deferred(),
+        img1: Promise.withResolvers(),
+        img2: Promise.withResolvers(),
+        img3: Promise.withResolvers(),
     };
     patchWithCleanup(Image.prototype, {
         loadImage() {
-            const def = defs[this.props.class];
+            const { promise: def } = defs[this.props.class];
             return Promise.all([super.loadImage(), def]);
         },
     });

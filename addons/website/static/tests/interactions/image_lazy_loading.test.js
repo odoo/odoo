@@ -1,7 +1,7 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, queryOne, tick } from "@odoo/hoot-dom";
+import { queryOne, tick } from "@odoo/hoot-dom";
 
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { ImageLazyLoading } from "@website/interactions/image_lazy_loading";
@@ -12,10 +12,10 @@ setupInteractionWhiteList("website.image_lazy_loading");
 describe.current.tags("interaction_dev");
 
 test("images lazy loading removes height then restores it", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     patchWithCleanup(ImageLazyLoading.prototype, {
         async willStart() {
-            await def;
+            await def.promise;
         },
     });
     const { core } = await startInteractions(

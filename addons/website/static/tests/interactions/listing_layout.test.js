@@ -2,7 +2,6 @@ import { setupInteractionWhiteList, startInteractions } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 import { click, microTick, queryOne } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
 
@@ -11,7 +10,7 @@ setupInteractionWhiteList("website.listing_layout");
 describe.current.tags("interaction_dev");
 
 test("listing_layout toggle to list mode", async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     await startInteractions(`
         <div class="container o_website_listing_layout">
             <section>
@@ -56,12 +55,12 @@ test("listing_layout toggle to list mode", async () => {
         "px-2",
         "col-xs-12",
     ]);
-    await deferred;
+    await deferred.promise;
     expect.verifySteps(["rpc"]);
 });
 
 test("listing_layout toggle to grid mode", async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     await startInteractions(`
         <div class="container o_website_listing_layout">
             <section>
@@ -106,6 +105,6 @@ test("listing_layout toggle to grid mode", async () => {
         "px-2",
         "col-xs-12",
     ]);
-    await deferred;
+    await deferred.promise;
     expect.verifySteps(["rpc"]);
 });

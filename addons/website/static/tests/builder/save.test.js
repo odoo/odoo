@@ -1,7 +1,7 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, Deferred, queryOne, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, queryOne, waitFor } from "@odoo/hoot-dom";
 import {
     contains,
     defineActions,
@@ -65,8 +65,8 @@ test("nothing to save", async () => {
 
 test("failure to save does not block the builder", async () => {
     expect.errors(1);
-    let deferred = new Deferred();
-    onRpc("ir.ui.view", "save", async () => await deferred);
+    let deferred = Promise.withResolvers();
+    onRpc("ir.ui.view", "save", async () => await deferred.promise);
     const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
     await modifyText(getEditor(), getEditableContent());
 
@@ -80,7 +80,7 @@ test("failure to save does not block the builder", async () => {
     expect(".o-snippets-top-actions button:contains(Save)").not.toHaveClass("o_btn_loading");
     expect(".o-snippets-top-actions button:contains(Discard)").not.toHaveAttribute("disabled");
 
-    deferred = new Deferred();
+    deferred = Promise.withResolvers();
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect(".o-snippets-top-actions button:contains(Save)").toHaveClass("o_btn_loading");
     expect(".o-snippets-top-actions button:contains(Discard)").toHaveAttribute("disabled");
@@ -196,9 +196,9 @@ test("reload save with target, then discard and edit again should not reselect t
         template: xml`<BuilderButton action="'testAction'"/>`,
         reloadTarget: true,
     });
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     await setupWebsiteBuilder(`<div class="test-option">b</div>`, {
-        delayReload: async () => await deferred,
+        delayReload: async () => await deferred.promise,
     });
     await contains(":iframe .test-option").click();
     await contains("[data-action-id=testAction]").click();
@@ -246,10 +246,7 @@ test("preview shouldn't let o_dirty", async () => {
         template: xml`<BuilderButton action="'testAction'"/>`,
         reloadTarget: true,
     });
-    const deferred = new Deferred();
-    await setupWebsiteBuilder(`<div class="test-option">b</div>`, {
-        delayReload: async () => await deferred,
-    });
+    await setupWebsiteBuilder(`<div class="test-option">b</div>`);
     editorIsStart = true;
     await contains(":iframe .test-option").click();
     await contains("[data-action-id=testAction]").hover(); // preview
@@ -271,7 +268,7 @@ test("Drag and drop from sidebar should only mark the concerned elements as dirt
             <section class="s_dummy_snippet_2" style="height: 100px;">
                 <div><p>Hello</p></div>
             </section>
-        </div>    
+        </div>
     `);
 
     // Dragging in outer view then in inner view should only apply dirty on the
@@ -339,7 +336,7 @@ test("Drag and drop from the page should only mark the concerned elements as dir
             <section class="s_dummy_snippet_3" style="height: 100px;">
                 <div><p>Hello</p></div>
             </section>
-        </div>      
+        </div>
     `);
 
     // Drag and dropping at the same place should cancel everything and not mark
@@ -479,13 +476,13 @@ describe("Add Language", () => {
 
     test("should hide the sidebar, and should return to editor if save failed", async () => {
         expect.errors(1);
-        const deferSave = new Deferred();
+        const deferSave = Promise.withResolvers();
         addPlugin(
             class extends Plugin {
                 static id = "test";
                 resources = {
                     save_handlers: async () => {
-                        await deferSave;
+                        await deferSave.promise;
                         throw "save fails for the test";
                     },
                 };
@@ -539,11 +536,11 @@ test("attempt to prevent closing window with unsaved changes", async () => {
             expect.step(`defaultPrevented ${tag}`);
         }
     }
-    const deferSave = new Deferred();
+    const deferSave = Promise.withResolvers();
     addPlugin(
         class extends Plugin {
             static id = "test";
-            resources = { save_handlers: () => deferSave };
+            resources = { save_handlers: () => deferSave.promise };
         }
     );
     setupSaveAndReloadIframe();

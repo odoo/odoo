@@ -7,7 +7,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, Deferred, hover, runAllTimers } from "@odoo/hoot-dom";
+import { animationFrame, click, hover, runAllTimers } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 
@@ -800,7 +800,7 @@ test("do not load when an operation is cleaned", async () => {
 });
 
 test("click on BuilderButton with async action", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
@@ -808,7 +808,7 @@ test("click on BuilderButton with async action", async () => {
                 return editingElement.classList.contains("applied");
             }
             async apply({ editingElement }) {
-                await def;
+                await def.promise;
                 editingElement.classList.add("applied");
             }
         },

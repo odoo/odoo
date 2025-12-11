@@ -1,13 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import {
-    animationFrame,
-    click,
-    Deferred,
-    edit,
-    queryAll,
-    queryFirst,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { animationFrame, click, edit, queryAll, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -22,12 +14,12 @@ test("Using the Padding option should display a padding preview", async () => {
     await waitFor("[data-label='Padding'] input");
     await click(queryAll("[data-label='Padding'] input")[0]);
     await edit(20);
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     expect(queryFirst(":iframe .s_banner .o_grid_item")).toHaveClass("o_we_padding_highlight");
     queryFirst(":iframe .s_banner .o_grid_item").addEventListener("animationend", () => {
         def.resolve();
     });
-    await def;
+    await def.promise;
     await animationFrame();
     expect(queryFirst(":iframe .s_banner .o_grid_item")).not.toHaveClass("o_we_padding_highlight");
 });

@@ -8,7 +8,7 @@ import { Operation } from "@html_builder/core/operation";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, Deferred, delay, hover, press, tick } from "@odoo/hoot-dom";
+import { advanceTime, delay, hover, press, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -87,12 +87,12 @@ test("handle 3 concurrent cancellable operations (without delay)", async () => {
 
 describe("Block editable", () => {
     test("Doing an operation should block the editable during its execution", async () => {
-        const customActionDef = new Deferred();
+        const customActionDef = Promise.withResolvers();
         addBuilderAction({
             customAction: class extends BuilderAction {
                 static id = "customAction";
                 load() {
-                    return customActionDef;
+                    return customActionDef.promise;
                 }
                 apply({ editingElement }) {
                     editingElement.classList.add("custom-action");

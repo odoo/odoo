@@ -4,7 +4,6 @@ import {
     setupWebsiteBuilder,
 } from "@website/../tests/builder/website_helpers";
 import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
-import { Deferred } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
 
@@ -16,7 +15,7 @@ test("theme tab: warning on palette change", async () => {
         }
     }
     defineModels([WebsiteAssets]);
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("/website/theme_customize_bundle_reload", async (request) => {
         expect.step("asset reload");
         def.resolve();
@@ -41,7 +40,7 @@ test("theme tab: warning on palette change", async () => {
     await contains(`[data-action-value="'default-light-1'"] .o-color-palette-pill span`).click();
     expect(".o_dialog").toHaveCount(1);
     await contains(".o_dialog .btn-primary").click();
-    await def;
+    await def.promise;
     expect.verifySteps([
         `/website/static/src/scss/options/user_values.scss {"color-palettes-name":"'default-light-1'"}`,
         "asset reload",
@@ -56,7 +55,7 @@ test("theme tab: no warning on palette change", async () => {
         }
     }
     defineModels([WebsiteAssets]);
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("/website/theme_customize_bundle_reload", async (request) => {
         expect.step("asset reload");
         def.resolve();
@@ -69,7 +68,7 @@ test("theme tab: no warning on palette change", async () => {
         ".o_theme_tab [data-src='/website/static/src/img/snippets_options/palette.svg']"
     ).click();
     await contains(`[data-action-value="'default-light-1'"] .o-color-palette-pill span`).click();
-    await def;
+    await def.promise;
     expect(".o_dialog").toHaveCount(0);
     expect.verifySteps([
         `/website/static/src/scss/options/user_values.scss {"color-palettes-name":"'default-light-1'"}`,

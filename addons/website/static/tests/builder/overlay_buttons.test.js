@@ -2,7 +2,7 @@ import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { advanceTime, animationFrame, expect, test } from "@odoo/hoot";
-import { Deferred, tick, waitFor } from "@odoo/hoot-dom";
+import { tick, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
@@ -265,12 +265,12 @@ test("Applying an overlay button action should wait for the actions in progress"
         }
     }
     addPlugin(TestPlugin);
-    const customActionDef = new Deferred();
+    const customActionDef = Promise.withResolvers();
     addActionOption({
         customAction: class extends BuilderAction {
             static id = "customAction";
             load() {
-                return customActionDef;
+                return customActionDef.promise;
             }
             apply({ editingElement }) {
                 editingElement.classList.add("customAction");

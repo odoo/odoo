@@ -15,7 +15,6 @@ import {
     press,
     queryFirst,
 } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, models } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
@@ -108,7 +107,7 @@ test("input with classAction and styleAction", async () => {
 });
 
 test("input kept on async action", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
@@ -116,7 +115,7 @@ test("input kept on async action", async () => {
                 return editingElement.dataset.test;
             }
             async apply({ editingElement, value }) {
-                await def;
+                await def.promise;
                 editingElement.dataset.test = value;
             }
         },

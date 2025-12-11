@@ -6,15 +6,7 @@ import {
 import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin";
 import { Operation } from "@html_builder/core/operation";
 import { describe, expect, test } from "@odoo/hoot";
-import {
-    animationFrame,
-    click,
-    Deferred,
-    queryAll,
-    queryAllTexts,
-    queryOne,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { animationFrame, click, queryAll, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 
@@ -140,7 +132,7 @@ test("A snippet should appear disabled if there is nowhere to drop it", async ()
 
 test.tags("desktop");
 test("click just after drop is redispatched in next operation", async () => {
-    const nextDef = new Deferred();
+    const nextDef = Promise.withResolvers();
     patchWithCleanup(Operation.prototype, {
         next(fn, ...args) {
             const originalFn = fn;
@@ -192,7 +184,7 @@ test("click just after drop is redispatched in next operation", async () => {
     await waitFor(":iframe .o_loading_screen");
     await click(":iframe", { position: { x: 200, y: 50 }, relative: true });
     expect.verifySteps(["next"]); // On click
-    await nextDef;
+    await nextDef.promise;
     expect.verifySteps(["updateContainers"]); // End of drop, on addStep()
     await animationFrame();
     expect.verifySteps(["onClick", "next", "updateContainers"]); // On click redispatched
