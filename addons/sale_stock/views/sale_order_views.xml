@@ -75,9 +75,6 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//list/header/button[@name='deliver_sold_quantity']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
             <field name="delivery_date" position="attributes">
                 <attribute name="decoration-danger">
                     (
@@ -107,6 +104,10 @@
                 <filter string="Late Availability" name="late_availability" domain="[('late_availability', '=', True)]"/>
             </filter>
         </field>
+    </record>
+
+    <record id="sale.model_sale_order_action_deliver_sold_quantity" model="ir.actions.server">
+        <field name="binding_model_id" eval="False"/>
     </record>
 
 </odoo>

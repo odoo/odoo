@@ -12,6 +12,7 @@ When creating invoices from picking, the system is able to add and compute the s
 """,
     'depends': ['sale_stock', 'delivery'],
     'data': [
+        "data/mail_template_data.xml",
         'security/ir.model.access.csv',
         'views/product_template_view.xml',
         'views/delivery_view.xml',
