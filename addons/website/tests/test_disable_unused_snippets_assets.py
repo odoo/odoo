@@ -141,6 +141,10 @@ HOMEPAGE_OUTDATED = """
         <div class="container">
         </div>
       </section>
+      <section class="s_countdown pt48 pb48" data-snippet="s_countdown" data-name="Countdown">
+        <div class="container">
+        </div>
+      </section>
     </div>
   </t>
 </t>

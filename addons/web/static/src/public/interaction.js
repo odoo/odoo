@@ -273,6 +273,31 @@ export class Interaction {
     }
 
     /**
+     * Sets an interval with which to execute the given function (unless the
+     * interaction has been destroyed). The dynamic content is then applied.
+     * Also makes sure it is cleared upon destroy.
+     *
+     * @param {Function} fn
+     * @param {number} delay
+     * @returns {number} the interval id
+     */
+    setSafeInterval(fn, delay) {
+        fn = this.__colibri__.protectSyncAfterAsync(this, "setSafeInterval", fn);
+        const interval = setInterval(() => {
+            if (!this.isDestroyed) {
+                fn.call(this);
+                if (this.isReady) {
+                    this.updateContent();
+                }
+            }
+        }, parseInt(delay));
+        this.registerCleanup(() => {
+            clearInterval(interval);
+        });
+        return interval;
+    }
+
+    /**
      * Wait for a animation frame, then execute the given function (unless the
      * interaction has been destroyed). The dynamic content is then applied.
      */
