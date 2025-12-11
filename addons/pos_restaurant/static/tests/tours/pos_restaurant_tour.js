@@ -640,9 +640,11 @@ registry.category("web_tour.tours").add("test_preset_timing_restaurant", {
 registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway", {
     steps: () =>
         [
+            Chrome.freezeDateTime(1749981600000), // June 15, 2025 - 10:00
             Chrome.startPoS(),
             FloorScreen.isShown(),
             FloorScreen.clickTable("5"),
+            Chrome.presetTimingSlotHourNotExists("09:00"),
             Chrome.selectPresetTimingSlotHour("12:20"),
             Chrome.presetTimingSlotIs("12:20"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
