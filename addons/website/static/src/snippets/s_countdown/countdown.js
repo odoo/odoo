@@ -8,8 +8,15 @@ import { verifyHttpsUrl } from "@website/utils/misc";
 
 export class Countdown extends Interaction {
     static selector = ".s_countdown";
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _wrapperEl: () =>
+            this.el.querySelector(
+                this.isV001 ? ".s_countdown_wrapper" : ".s_countdown_canvas_wrapper"
+            ),
+    };
     dynamicContent = {
-        ".s_countdown_canvas_wrapper": {
+        _wrapperEl: {
             "t-att-class": () => ({
                 "d-flex": true,
                 "justify-content-center": true,
@@ -21,24 +28,16 @@ export class Countdown extends Interaction {
         // Remove SVG previews (used to simulated canvas)
         this.el.querySelectorAll("svg").forEach((el) => el.parentNode.remove());
 
-        this.wrapperEl = this.el.querySelector(".s_countdown_canvas_wrapper");
+        // Before 001, the canvases were drawn in the wrapper itself; from 001
+        // on, the circle layout has its own element inside of it.
+        this.wrapperEl = this.el.querySelector(
+            this.isV001 ? ".o_template_circle" : ".s_countdown_canvas_wrapper"
+        );
         this.hereBeforeTimerEnds = false;
         this.endAction = this.el.dataset.endAction;
         this.endTime = parseInt(this.el.dataset.endTime);
         this.size = parseInt(this.el.dataset.size);
         this.display = this.el.dataset.display;
-
-        if (!this.display && this.el.dataset.bsDisplay) {
-            // With the BS5 upgrade script of 16.0, countdowns' data-display may
-            // have been converted to data-bs-display by mistake. This will fix
-            // the DOM for good measures, maybe even allowing to remove this
-            // code in a few years as hopefully all current countdowns will have
-            // been removed or edited (or when a proper upgrade script in a
-            // future version of Odoo will be made, if necessary). TODO.
-            this.display = this.el.dataset.bsDisplay;
-            delete this.el.dataset.bsDisplay;
-            this.el.dataset.display = this.display;
-        }
 
         this.defaultColor = "rgba(0, 0, 0, 0)";
         this.layout = this.el.dataset.layout;
@@ -48,7 +47,6 @@ export class Countdown extends Interaction {
 
         this.layoutBackgroundColor = this.ensureCSSColor(this.el.dataset.layoutBackgroundColor);
         this.progressBarColor = this.ensureCSSColor(this.el.dataset.progressBarColor);
-        this.textColor = this.ensureCSSColor(this.el.dataset.textColor);
 
         this.onlyOneUnit = this.display === "d";
         this.width = this.size;
@@ -56,18 +54,43 @@ export class Countdown extends Interaction {
             this.width /= 1.75;
         }
         this.initTimeDiff();
-
         this.render();
 
-        this.setInterval = setInterval(this.render.bind(this), 1000);
+        // Then keep rendering every second at 000 milliseconds, so that the
+        // displayed values change at the same time as the actual ones.
+        this.waitForTimeout(() => {
+            this.render();
+            this.setInterval = this.setSafeInterval(this.render, 1000);
+        }, 1000 - (Date.now() % 1000));
     }
 
     destroy() {
         // The optional chaining is required because the queried element may not
         // exist anymore if the interaction target has just been deleted
-        this.el.querySelector(".s_countdown_canvas_wrapper")?.classList.remove("d-none");
-        clearInterval(this.setInterval);
+        this.wrapperEl?.classList.remove("d-none");
         window.removeEventListener("resize", this.onResize);
+    }
+
+    /**
+     * The markup changed with the version 001: both layouts now share the same
+     * wrapper, and the values are part of the templates, so that they can be
+     * edited.
+     *
+     * @returns {boolean}
+     * @todo remove legacy code with version 23.0: vxml 001 was introduced with
+     * 20.0, countdown snippets don't stay that long.
+     * 
+     */
+    get isV001() {
+        return this.el.dataset.vxml === "001";
+    }
+
+    get textColor() {
+        // Before 001, the color was kept in a data attribute; it is now taken
+        // from the element itself, so that it can be set with the text options.
+        return this.ensureCSSColor(
+            this.isV001 ? getComputedStyle(this.el).color : this.el.dataset.textColor
+        );
     }
 
     /**
@@ -135,11 +158,14 @@ export class Countdown extends Interaction {
     initTimeDiff() {
         const delta = this.getDelta();
         this.timeDiff = [];
+        let canvas;
         if (this.isUnitVisible("d") && !(this.onlyOneUnit && delta < 86400)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            if (this.layout !== "text") {
+                canvas = this.createCanvasWrapper();
+                this.insert(canvas, this.wrapperEl);
+            }
             this.timeDiff.push({
-                canvas: divEl,
+                canvas,
                 // There is no logical number of unit (total) on which day units
                 // can be compared against, so we use an arbitrary number.
                 total: 15,
@@ -148,36 +174,43 @@ export class Countdown extends Interaction {
             });
         }
         if (this.isUnitVisible("h") || (this.onlyOneUnit && delta < 86400 && delta > 3600)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            if (this.layout !== "text") {
+                canvas = this.createCanvasWrapper();
+                this.insert(canvas, this.wrapperEl);
+            }
             this.timeDiff.push({
-                canvas: divEl,
+                canvas,
                 total: 24,
                 label: _t("Hours"),
                 nbSeconds: 3600,
             });
         }
         if (this.isUnitVisible("m") || (this.onlyOneUnit && delta < 3600 && delta > 60)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            if (this.layout !== "text") {
+                canvas = this.createCanvasWrapper();
+                this.insert(canvas, this.wrapperEl);
+            }
             this.timeDiff.push({
-                canvas: divEl,
+                canvas,
                 total: 60,
                 label: _t("Minutes"),
                 nbSeconds: 60,
             });
         }
         if (this.isUnitVisible("s") || (this.onlyOneUnit && delta < 60)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            if (this.layout !== "text") {
+                canvas = this.createCanvasWrapper();
+                this.insert(canvas, this.wrapperEl);
+            }
             this.timeDiff.push({
-                canvas: divEl,
+                canvas,
                 total: 60,
                 label: _t("Seconds"),
                 nbSeconds: 1,
             });
         }
-        if (this.layout === "text") {
+        if (this.layout === "text" && !this.isV001) {
+            // From 001 on, the label is already split in the markup.
             this.timeDiff.forEach((metric) => {
                 if (metric.label) {
                     metric.label = this.wrapFirstLetter(metric.label);
@@ -222,22 +255,39 @@ export class Countdown extends Interaction {
         const restOfString = string.slice(1);
         return `<span class="o_first_letter">${firstLetter}</span><span class="o_other_letters">${restOfString}</span>`;
     }
-    /**
-     * Draws the whole countdown, including one countdown for each time unit.
-     */
-    render() {
-        if (this.onlyOneUnit && this.getDelta() < this.timeDiff[0].nbSeconds) {
-            this.el.querySelector(".s_countdown_canvas_flex").remove();
-            this.initTimeDiff();
-        }
-        this.updateTimediff();
 
+    /**
+     * Toggles the visibility of the countdown, depending on the layout it uses
+     * and on whether it should be hidden once finished.
+     */
+    updateWrappersVisibility() {
+        if (this.isV001) {
+            this.el
+                .querySelector(".s_countdown_wrapper")
+                .classList.toggle("d-none", this.shouldHideCountdown);
+            return;
+        }
+        // Before 001, both layouts had their own wrapper in the markup.
         this.el
             .querySelector(".s_countdown_inline_wrapper")
             ?.classList.toggle("d-none", this.layout !== "text" || this.shouldHideCountdown);
         this.el
             .querySelector(".s_countdown_canvas_wrapper")
             ?.classList.toggle("d-none", this.layout === "text");
+    }
+
+    /**
+     * Draws the whole countdown, including one countdown for each time unit.
+     */
+    render() {
+        if (this.onlyOneUnit && this.getDelta() < this.timeDiff[0].nbSeconds) {
+            this.el.querySelector(".s_countdown_canvas_flex")?.remove();
+            this.initTimeDiff();
+        }
+        this.updateTimediff();
+
+        this.updateWrappersVisibility();
+
         if (this.layout === "text") {
             this.countItemEls = this.el.querySelectorAll(".o_count_item");
             this.countItemNbsEls = this.el.querySelectorAll(".o_count_item_nbs");
@@ -256,15 +306,14 @@ export class Countdown extends Interaction {
                 metric.nb = String(metric.nb).padStart(2, "0");
                 // If the selected template have inner element, wrap each number in each of them
                 if (this.countItemNbEls.length > 0) {
+                    const numberEls =
+                        this.countItemNbsEls[index].querySelectorAll(".o_count_item_nb");
                     metric.nb.split("").forEach((number, i) => {
-                        this.countItemNbsEls[index].querySelectorAll("span")[i].textContent =
-                            number;
+                        this.setValue(numberEls[i], number);
                     });
                 } else {
-                    this.countItemNbsEls[index].textContent = String(metric.nb).padStart(2, "0");
+                    this.setValue(this.countItemNbsEls[index], metric.nb);
                 }
-                const fragmentEl = document.createRange().createContextualFragment(metric.label);
-                this.countItemLabelEls[index].replaceChildren(fragmentEl);
                 this.countItemEls[index].classList.remove("d-none");
             }
         } else {
@@ -306,6 +355,62 @@ export class Countdown extends Interaction {
                 window.addEventListener("resize", this.onResize);
             }
         }
+    }
+
+    /**
+     * Writes a value in an element, spread over the text nodes it is currently
+     * split into: the user can have styled only a part of it (e.g. "23" as
+     * `<span style="font-size: 20px">2</span>3`), and each piece has to keep
+     * its own part of the new value.
+     *
+     * @param {Element} el
+     * @param {string} value
+     */
+    setValue(el, value) {
+        if (!el || !this.shouldUpdateValue(el)) {
+            return;
+        }
+        if (!this.isV001) {
+            // The values were not editable before 001.
+            el.textContent = value;
+            return;
+        }
+        const textNodes = this.getTextNodes(el);
+        if (!textNodes.length) {
+            el.append(value);
+            return;
+        }
+        const lengths = textNodes.map((textNode) => textNode.length);
+        const fitsSplit = lengths.reduce((total, length) => total + length, 0) === value.length;
+        let index = 0;
+        for (const [i, textNode] of textNodes.entries()) {
+            let slice = value;
+            if (fitsSplit) {
+                slice = value.slice(index, index + lengths[i]);
+            } else if (i > 0) {
+                slice = "";
+            }
+            if (textNode.nodeValue !== slice) {
+                textNode.nodeValue = slice;
+            }
+            index += lengths[i];
+        }
+    }
+
+    /**
+     * Hook allowing the edit mode to not update the element's value.
+     *
+     * @param {Element} el
+     * @returns {boolean}
+     */
+    shouldUpdateValue(el) {
+        return true;
+    }
+
+    getTextNodes(node) {
+        return [...node.childNodes].flatMap((child) =>
+            child.nodeType === Node.TEXT_NODE ? child : this.getTextNodes(child)
+        );
     }
 
     /**
