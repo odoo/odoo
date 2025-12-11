@@ -715,3 +715,22 @@ registry.category("web_tour.tours").add("test_confirm_coupon_programs_one_by_one
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_race_conditions_update_program", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            {
+                trigger: "body",
+                run: async () => {
+                    // Check the number of lines in the order
+                    const line_count = document.querySelectorAll(".orderline").length;
+                    if (line_count !== 11) {
+                        throw new Error(`Expected 11 orderlines, found ${line_count}`);
+                    }
+                },
+            },
+        ].flat(),
+});
