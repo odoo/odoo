@@ -38,6 +38,12 @@
                                     <record id="tax_report_A1_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_A1.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_A1.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_A1_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_A1.balance_from_tags + box_A1.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -61,6 +67,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_A2_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_A2.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_A2.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_A2_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_A2.balance_from_tags + box_A2.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -86,6 +98,12 @@
                                     <record id="tax_report_A3_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_A3.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_A3.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_A3_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_A3.balance_from_tags + box_A3.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -109,6 +127,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_A4_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_A4.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_A4.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_A4_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_A4.balance_from_tags + box_A4.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -134,6 +158,12 @@
                                     <record id="tax_report_A5_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_A5.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_A5.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_A5_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_A5.balance_from_tags + box_A5.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -157,6 +187,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_B1_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_B1.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_B1.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_B1_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_B1.balance_from_tags + box_B1.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -182,6 +218,12 @@
                                     <record id="tax_report_B2_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_B2.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_B2.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_B2_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_B2.balance_from_tags + box_B2.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -205,6 +247,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_B3_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_B3.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_B3.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_B3_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_B3.balance_from_tags + box_B3.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -230,6 +278,12 @@
                                     <record id="tax_report_B4_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_B4.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_B4.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_B4_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_B4.balance_from_tags + box_B4.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -253,6 +307,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_B5_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_B5.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_B5.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_B5_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_B5.balance_from_tags + box_B5.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -284,6 +344,12 @@
                                     <record id="tax_report_E1_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_E1.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_E1.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_E1_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_E1.balance_from_tags + box_E1.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -307,6 +373,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_E2_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_E2.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_E2.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_E2_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_E2.balance_from_tags + box_E2.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -332,6 +404,12 @@
                                     <record id="tax_report_E3_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_E3.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_E3.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_E3_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_E3.balance_from_tags + box_E3.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -355,6 +433,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_E4_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_E4.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_E4.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_E4_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_E4.balance_from_tags + box_E4.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -380,6 +464,12 @@
                                     <record id="tax_report_E5_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_E5.balance_rounded + box_E5.adjustment</field>
+                                        <field name="subformula">if_other_expr_above(box_E5.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_E5_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_E5.balance_from_tags + box_E5.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -403,6 +493,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_E6_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_E6.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_E6.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_E6_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_E6.balance_from_tags + box_E6.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -428,6 +524,12 @@
                                     <record id="tax_report_F1_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_F1.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_F1.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_F1_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_F1.balance_from_tags + box_F1.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -451,6 +553,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_F2_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_F2.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_F2.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_F2_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_F2.balance_from_tags + box_F2.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -476,6 +584,12 @@
                                     <record id="tax_report_F3_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_F3.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_F3.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_F3_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_F3.balance_from_tags + box_F3.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -499,6 +613,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_F4_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_F4.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_F4.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_F4_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_F4.balance_from_tags + box_F4.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -524,6 +644,12 @@
                                     <record id="tax_report_F5_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_F5.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_F5.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_F5_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_F5.balance_from_tags + box_F5.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -547,6 +673,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_F6_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_F6.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_F6.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_F6_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_F6.balance_from_tags + box_F6.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -572,6 +704,12 @@
                                     <record id="tax_report_F7_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_F7.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_F7.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_F7_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_F7.balance_from_tags + box_F7.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -596,6 +734,12 @@
                                     <record id="tax_report_F8_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_7B.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_7B.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_F8_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_7B.balance_from_tags + box_7B.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -619,6 +763,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_F9_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_F9.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_F9.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_F9_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_F9.balance_from_tags + box_F9.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -661,6 +811,12 @@
                                     <record id="tax_report_08_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_08_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_08_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_08_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_08_base.balance_from_tags + box_08_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -685,6 +841,12 @@
                                     <record id="tax_report_08_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_08_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_08_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_08_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_08_base.balance * 0.2</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -702,6 +864,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_09_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_09_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_09_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_09_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_09_base.balance_from_tags + box_09_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -727,6 +895,12 @@
                                     <record id="tax_report_09_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_09_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_09_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_09_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_09_base.balance * 0.055</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -744,6 +918,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_9B_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_9B_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_9B_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_9B_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_9B_base.balance_from_tags + box_9B_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -769,6 +949,12 @@
                                     <record id="tax_report_9B_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_9B_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_9B_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_9B_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_9B_base.balance * 0.1</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -792,6 +978,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_10_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_10_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_10_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_10_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_10_base.balance_from_tags + box_10_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -817,6 +1009,12 @@
                                     <record id="tax_report_10_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_10_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_10_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_10_taxe_tag_balance" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_10_base.balance * 0.085</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -834,6 +1032,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_11_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_11_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_11_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_11_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_11_base.balance_from_tags + box_11_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -859,6 +1063,12 @@
                                     <record id="tax_report_11_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_11_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_11_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_11_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_11_base.balance * 0.021</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -882,6 +1092,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_T1_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_T1_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T1_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T1_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_T1_base.balance_from_tags + box_T1_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -907,6 +1123,12 @@
                                     <record id="tax_report_T1_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_T1_taxe.balance_rounded</field>
+                                       <field name="subformula">if_other_expr_above(box_T1_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T1_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_T1_base.balance * 0.0175</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -924,6 +1146,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_T2_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_T2_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T2_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T2_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_T2_base.balance_from_tags + box_T2_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -949,6 +1177,12 @@
                                     <record id="tax_report_T2_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_T2_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T2_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T2_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_T2_base.balance * 0.0105</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -966,6 +1200,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_T3_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_T3_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T3_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T3_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_T3_base.balance_from_tags + box_T3_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -991,6 +1231,12 @@
                                     <record id="tax_report_T3_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_T3_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T3_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T3_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_T3_base.balance * 0.1</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1008,6 +1254,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_T4_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_T4_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T4_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T4_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_T4_base.balance_from_tags + box_T4_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1033,6 +1285,12 @@
                                     <record id="tax_report_T4_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_T4_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T4_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T4_taxe_tag_balance" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_T4_base.balance * 0.021</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1050,6 +1308,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_T5_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_T5_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T5_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T5_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_T5_base.balance_from_tags + box_T5_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1075,6 +1339,12 @@
                                     <record id="tax_report_T5_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_T5_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T5_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T5_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_T5_base.balance * 0.009</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1092,6 +1362,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_T6_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_T6_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T6_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T6_base_tag_balance" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_T6_base.balance_from_tags + box_T6_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1117,6 +1393,12 @@
                                     <record id="tax_report_T6_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_T6_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T6_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T6_taxe_tag_balance" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_T6_base.balance * 0.021</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1134,6 +1416,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_T7_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_T7_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T7_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T7_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_T7_base.balance_from_tags + box_T7_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1158,6 +1446,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_T7_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_T7_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_T7_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_T7_taxe_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_T7_taxe.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_T7_taxe_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">T7_taxe</field>
                                     </record>
@@ -1170,6 +1470,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_13_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_13_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_13_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_13_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_13_base.balance_from_tags + box_13_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1194,6 +1500,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_13_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_13_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_13_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_13_taxe_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_13_taxe.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_13_taxe_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">13_taxe</field>
                                     </record>
@@ -1206,6 +1524,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_14_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_14_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_14_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_14_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_14_base.balance_from_tags + box_14_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1230,6 +1554,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_14_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_14_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_14_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_14_taxe_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_14_taxe.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_14_taxe_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">14_taxe</field>
                                     </record>
@@ -1248,6 +1584,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_P1_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_P1_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_P1_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_P1_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_P1_base.balance_from_tags + box_P1_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1273,6 +1615,12 @@
                                     <record id="tax_report_P1_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_P1_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_P1_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_P1_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_P1_base.balance * 0.2</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1290,6 +1638,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_P2_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_P2_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_P2_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_P2_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_P2_base.balance_from_tags + box_P2_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1315,6 +1669,12 @@
                                     <record id="tax_report_P2_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_P2_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_P2_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_P2_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_P2_base.balance * 0.13</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1338,6 +1698,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_I1_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_I1_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I1_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I1_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_I1_base.balance_from_tags + box_I1_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1363,6 +1729,12 @@
                                     <record id="tax_report_I1_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_I1_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I1_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I1_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_I1_base.balance * 0.2</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1380,6 +1752,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_I2_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_I2_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I2_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I2_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_I2_base.balance_from_tags + box_I2_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1405,6 +1783,12 @@
                                     <record id="tax_report_I2_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_I2_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I2_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I2_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_I2_base.balance * 0.1</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1422,6 +1806,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_I3_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_I3_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I3_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I3_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_I3_base.balance_from_tags + box_I3_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1447,6 +1837,12 @@
                                     <record id="tax_report_I3_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_I3_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I3_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I3_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_I3_base.balance * 0.085</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1464,6 +1860,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_I4_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_I4_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I4_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I4_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_I4_base.balance_from_tags + box_I4_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1489,6 +1891,12 @@
                                     <record id="tax_report_I4_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_I4_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I4_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I4_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_I4_base.balance * 0.055</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1506,6 +1914,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_I5_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_I5_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I5_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I5_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_I5_base.balance_from_tags + box_I5_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1531,6 +1945,12 @@
                                     <record id="tax_report_I5_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_I5_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I5_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I5_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_I5_base.balance * 0.021</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1548,6 +1968,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_I6_base_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_I6_base.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I6_base.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I6_base_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_I6_base.balance_from_tags + box_I6_base.adjustment</field>
                                         <field name="subformula">round(0)</field>
@@ -1573,6 +1999,12 @@
                                     <record id="tax_report_I6_taxe_tag" model="account.report.expression">
                                         <field name="label">balance</field>
                                         <field name="engine">aggregation</field>
+                                        <field name="formula">box_I6_taxe.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_I6_taxe.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_I6_taxe_tag_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
                                         <field name="formula">box_I6_base.balance * 0.0105</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
@@ -1590,6 +2022,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_15_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_15.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_15.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_15_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_15.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_15_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">15</field>
                                     </record>
@@ -1602,6 +2046,18 @@
                                         <field name="expression_ids">
                                             <record id="tax_report_15_1_tag" model="account.report.expression">
                                                 <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">box_15_1.balance_rounded</field>
+                                                <field name="subformula">if_other_expr_above(box_15_1.balance_rounded, EUR(0))</field>
+                                            </record>
+                                            <record id="tax_report_15_1_balance_rounded" model="account.report.expression">
+                                                <field name="label">balance_rounded</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">15_1</field>
+                                                <field name="subformula">round(0)</field>
+                                            </record>
+                                            <record id="tax_report_15_1_balance_from_tags" model="account.report.expression">
+                                                <field name="label">balance_from_tags</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">15_1</field>
                                             </record>
@@ -1614,6 +2070,18 @@
                                         <field name="expression_ids">
                                             <record id="tax_report_15_2_tag" model="account.report.expression">
                                                 <field name="label">balance</field>
+                                                <field name="engine">aggregation</field>
+                                                <field name="formula">box_15_2.balance_rounded</field>
+                                                <field name="subformula">if_other_expr_above(box_15_2.balance_rounded, EUR(0))</field>
+                                            </record>
+                                            <record id="tax_report_15_2_balance_rounded" model="account.report.expression">
+                                                <field name="label">balance_rounded</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">box_15_2.balance_from_tags</field>
+                                                <field name="subformula">round(0)</field>
+                                            </record>
+                                            <record id="tax_report_15_2_balance_from_tags" model="account.report.expression">
+                                                <field name="label">balance_from_tags</field>
                                                 <field name="engine">tax_tags</field>
                                                 <field name="formula">15_2</field>
                                             </record>
@@ -1628,6 +2096,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_5B_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_5B.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_5B.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_5B_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_5B.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_5B_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">5B</field>
                                     </record>
@@ -1637,7 +2117,6 @@
                                 <field name="name">16 - Total gross VAT due</field>
                                 <field name="name@fr">16 - Total de la TVA brute due</field>
                                 <field name="code">box_16</field>
-                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_16_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -1654,6 +2133,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_17_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_17.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_17.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_17_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_17.balance_from_tags</field>
+                                         <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_17_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">17</field>
                                     </record>
@@ -1666,6 +2157,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_18_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_18.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_18.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_18_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_18.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_18_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">18</field>
                                     </record>
@@ -1684,6 +2187,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_19_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_19.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_19.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_19_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_19.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_19_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">19</field>
                                     </record>
@@ -1696,6 +2211,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_20_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_20.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_20.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_20_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_20.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_20_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">20</field>
                                     </record>
@@ -1708,6 +2235,12 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_21_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_21.balance_from_tags</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_21_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">21</field>
                                     </record>
@@ -1729,11 +2262,17 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">22</field>
                                     </record>
-                                    <record id="tax_report_22_balance" model="account.report.expression">
-                                        <field name="label">balance</field>
+                                    <record id="tax_report_22_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
                                         <field name="formula">box_22.tag + box_22._applied_carryover_balance</field>
                                         <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_22_balance" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_22.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_22.balance_rounded, EUR(0))</field>
                                     </record>
                                 </field>
                             </record>
@@ -1744,6 +2283,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_2C_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_2C.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_2C.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_2C_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_2C.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_2C_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">2C</field>
                                     </record>
@@ -1756,6 +2307,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_22A_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_22A.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_22A.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_22A_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_22A.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_22A_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">22A</field>
                                     </record>
@@ -1765,7 +2328,6 @@
                                 <field name="name">23 - Total deductible VAT</field>
                                 <field name="name@fr">23 - Total TVA déductible</field>
                                 <field name="code">box_23</field>
-                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_23_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -1782,6 +2344,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_24_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_24.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_24.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_24_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_24.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_24_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">24</field>
                                     </record>
@@ -1794,6 +2368,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_2E_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_2E.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_2E.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_2E_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_2E.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_2E_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">2E</field>
                                     </record>
@@ -1885,7 +2471,6 @@
                                 <field name="name">Total</field>
                                 <field name="name@fr">Total</field>
                                 <field name="code">box_TIC_total</field>
-                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_TIC_total_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -1908,6 +2493,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_X1_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_X1.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_X1.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_X1_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_X1.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_X1_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">X1</field>
                                     </record>
@@ -1920,6 +2517,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_X2_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_X2.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_X2.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_X2_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_X2.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_X2_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">X2</field>
                                     </record>
@@ -1932,6 +2541,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_X3_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_X3.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_X3.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_X3_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_X3.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_X3_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">X3</field>
                                     </record>
@@ -1941,7 +2562,6 @@
                                 <field name="name">X4</field>
                                 <field name="name@fr">X4</field>
                                 <field name="code">box_X4</field>
-                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_X4_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -1961,7 +2581,6 @@
                                 <field name="name">Y1</field>
                                 <field name="name@fr">Y1</field>
                                 <field name="code">box_Y1</field>
-                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_Y1_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -1975,7 +2594,6 @@
                                 <field name="name">Y2</field>
                                 <field name="name@fr">Y2</field>
                                 <field name="code">box_Y2</field>
-                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_Y2_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -1989,7 +2607,6 @@
                                 <field name="name">Y3</field>
                                 <field name="name@fr">Y3</field>
                                 <field name="code">box_Y3</field>
-                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_Y3_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -2018,6 +2635,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_Z1_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_Z1.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_Z1.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_Z1_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_Z1.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_Z1_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">Z1</field>
                                     </record>
@@ -2030,6 +2659,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_Z2_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_Z2.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_Z2.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_Z2_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_Z2.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_Z2_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">Z2</field>
                                     </record>
@@ -2042,6 +2683,18 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_Z3_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_Z3.balance_rounded</field>
+                                        <field name="subformula">if_other_expr_above(box_Z3.balance_rounded, EUR(0))</field>
+                                    </record>
+                                    <record id="tax_report_Z3_balance_rounded" model="account.report.expression">
+                                        <field name="label">balance_rounded</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_Z3.balance_from_tags</field>
+                                        <field name="subformula">round(0)</field>
+                                    </record>
+                                    <record id="tax_report_Z3_balance_from_tags" model="account.report.expression">
+                                        <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">Z3</field>
                                     </record>
@@ -2051,7 +2704,6 @@
                                 <field name="name">Z4</field>
                                 <field name="name@fr">Z4</field>
                                 <field name="code">box_Z4</field>
-                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_Z4_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -2089,6 +2741,18 @@
                         <field name="expression_ids">
                             <record id="tax_report_AA_tag" model="account.report.expression">
                                 <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_AA.balance_rounded</field>
+                                <field name="subformula">if_other_expr_above(box_AA.balance_rounded, EUR(0))</field>
+                            </record>
+                            <record id="tax_report_AA_balance_rounded" model="account.report.expression">
+                                <field name="label">balance_rounded</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_AA.balance_from_tags</field>
+                                <field name="subformula">round(0)</field>
+                            </record>
+                            <record id="tax_report_AA_balance_from_tags" model="account.report.expression">
+                                <field name="label">balance_from_tags</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">AA</field>
                             </record>
@@ -2158,6 +2822,18 @@
                         <field name="expression_ids">
                             <record id="tax_report_29_tag" model="account.report.expression">
                                 <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_29.balance_rounded</field>
+                                <field name="subformula">if_other_expr_above(box_29.balance_rounded, EUR(0))</field>
+                            </record>
+                            <record id="tax_report_29_balance_rounded" model="account.report.expression">
+                                <field name="label">balance_rounded</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_29.balance_from_tags</field>
+                                <field name="subformula">round(0)</field>
+                            </record>
+                            <record id="tax_report_29_balance_from_tags" model="account.report.expression">
+                                <field name="label">balance_from_tags</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">29</field>
                             </record>
@@ -2178,7 +2854,6 @@
                         <field name="name">32 - Total payable</field>
                         <field name="name@fr">32 - Total à payer</field>
                         <field name="code">box_32</field>
-                        <field name="aggregation_formula"></field>
                         <field name="expression_ids">
                             <record id="tax_report_32_formula" model="account.report.expression">
                                 <field name="label">balance</field>
