@@ -18,6 +18,14 @@ export class SnippetModel extends Reactive {
         this.context = context;
         this.loadProm = null;
 
+        this.snippetsByName = {
+            snippet_groups: {},
+            snippet_custom: {},
+            snippet_structure: {},
+            snippet_content: {},
+            snippet_custom_content: {},
+        };
+
         this.snippetsByCategory = {
             snippet_groups: [],
             snippet_custom: [],
@@ -59,15 +67,11 @@ export class SnippetModel extends Reactive {
     }
 
     isCustomInnerContent(customSnippetName) {
-        return !!this.snippetsByCategory.snippet_content.find(
-            (snippet) => snippet.name === customSnippetName
-        );
+        return !!this.snippetsByName.snippet_content[customSnippetName];
     }
 
     isCustomStructure(customSnippetName) {
-        return !!this.snippetsByCategory.snippet_structure.find(
-            (snippet) => snippet.name === customSnippetName
-        );
+        return !!this.snippetsByName.snippet_structure[customSnippetName];
     }
 
     getSnippet(category, id) {
@@ -75,7 +79,7 @@ export class SnippetModel extends Reactive {
     }
 
     getSnippetByName(category, name) {
-        return this.snippetsByCategory[category].find((snippet) => snippet.name === name);
+        return this.snippetsByName[category][name];
     }
 
     installSnippetModule(snippet, installSnippetModule) {
@@ -209,6 +213,7 @@ export class SnippetModel extends Reactive {
                         break;
                 }
                 snippets.push(snippet);
+                this.snippetsByName[snippetCategory.id][snippet.name] = snippet;
             }
             this.snippetsByCategory[snippetCategory.id] = snippets;
         }
@@ -304,9 +309,11 @@ export class SnippetModel extends Reactive {
         if (!snippetKey) {
             return;
         }
-        return [...this.snippetStructures, ...this.snippetInnerContents].find(
-            (snippet) => snippet.name === snippetKey
-        );
+        const res =
+            this.snippetsByName.snippet_structure[snippetKey] ??
+            this.snippetsByName.snippet_custom[snippetKey] ??
+            this.snippetsByName.snippet_content[snippetKey];
+        return res;
     }
 
     /**
