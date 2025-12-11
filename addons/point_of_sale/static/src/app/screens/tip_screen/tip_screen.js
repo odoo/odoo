@@ -35,7 +35,11 @@ export class TipScreen extends Component {
         const original = this.env.utils.formatCurrency(this.totalAmount);
         const tip = this.env.utils.formatCurrency(tipAmount);
         const overall = this.env.utils.formatCurrency(this.totalAmount + tipAmount);
-        return `${original} + ${tip} tip = ${overall}`;
+        return _t("%(original)s + %(tip)s tip = %(overall)s", {
+            original,
+            tip,
+            overall,
+        });
     }
     get totalAmount() {
         return this._totalAmount;
