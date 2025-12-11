@@ -107,10 +107,7 @@ export class ImagePlugin extends Plugin {
             (targetedNodes) => {
                 if (
                     targetedNodes.length &&
-                    targetedNodes.every(
-                        // All nodes should be images or its ancestors
-                        (node) => node.nodeName === "IMG" || node.querySelector?.("img")
-                    )
+                    targetedNodes.every((node) => node.nodeName === "IMG")
                 ) {
                     return this.toolbarNamespace;
                 }
