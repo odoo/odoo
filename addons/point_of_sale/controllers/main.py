@@ -8,6 +8,7 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import format_amount, file_open
 from odoo.addons.account.controllers.portal import PortalAccount
+from odoo.exceptions import UserError
 from datetime import timedelta, datetime
 
 _logger = logging.getLogger(__name__)
@@ -229,13 +230,14 @@ class PosController(PortalAccount):
             })
             if not form_values.get('invalid_fields'):
                 return self._get_invoice(partner, invoice_values, pos_order, additional_invoice_fields, kwargs)
+            raise UserError(_(
+                "Message: %(messages)s\nPlease update the %(invalid_fields)s",
+                messages=form_values.get('messages'),
+                invalid_fields=form_values.get('invalid_fields'),
+            ))
 
         elif user_is_connected:
             return self._get_invoice(partner, {}, pos_order, additional_invoice_fields, kwargs)
-
-        # Most of the time, the country of the customer will be the same as the order. We can prefill it by default with the country of the company.
-        if 'country' not in form_values:
-            form_values['country'] = pos_order_country
 
         # Prefill the customer extra values if there is any and an user is connected
         if partner:
@@ -249,8 +251,17 @@ class PosController(PortalAccount):
             else:
                 form_values['partner_address'] = partner._display_address()
 
+        address_form_vals = self._prepare_address_form_values(partner, **kwargs)
+        # Most of the time, the country of the customer will be the same as the order. We can prefill it by default with the country of the company.
+        if not address_form_vals.get('country'):
+            address_form_vals['country'] = pos_order_country
+
+        # In POS most of the time user isn't logged in & the customer will be the same as the partner
+        if not address_form_vals.get('current_partner'):
+            address_form_vals['current_partner'] = partner
+
         return request.render("point_of_sale.ticket_validation_screen", {
-            **self._prepare_address_form_values(partner, **kwargs),
+            **address_form_vals,
             'partner': partner,
             'address_url': f'/my/account?redirect=/pos/ticket/validate?access_token={access_token}',
             'user_is_connected': user_is_connected,
