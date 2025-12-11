@@ -1,5 +1,6 @@
 import logging
 import requests
+from odoo import _
 
 _logger = logging.getLogger(__name__)
 
@@ -36,4 +37,4 @@ class MercadoPagoPosRequest:
             return {'errorMessage': str(error)}
         except ValueError as error:
             _logger.warning("Cannot decode response json. Error: %s", error)
-            return {'errorMessage': f"Cannot decode Mercado Pago POS response. Error: {error}"}
+            return {'errorMessage': _("Cannot decode Mercado Pago POS response. Error: %s", error)}

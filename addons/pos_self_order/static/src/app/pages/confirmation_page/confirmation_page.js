@@ -4,6 +4,7 @@ import { cookie } from "@web/core/browser/cookie";
 import { useService } from "@web/core/utils/hooks";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 import { OutOfPaperPopup } from "@pos_self_order/app/components/out_of_paper_popup/out_of_paper_popup";
 
 export class ConfirmationPage extends Component {
@@ -113,7 +114,10 @@ export class ConfirmationPage extends Component {
             } catch (e) {
                 if (e.errorCode === "EPTR_REC_EMPTY") {
                     this.dialog.add(OutOfPaperPopup, {
-                        title: `No more paper in the printer, please remember your order number: '${this.confirmedOrder.trackingNumber}'.`,
+                        title: _t(
+                            "No more paper in the printer, please remember your order number: %s.",
+                            this.confirmedOrder.trackingNumber
+                        ),
                         close: () => {
                             this.router.navigate("default");
                         },
