@@ -18,7 +18,11 @@ export class MailAttachments extends Component {
     }
 
     get attachments() {
-        const attachments = this.props.record.data[this.props.name] || [];
+        return this.props.record.data[this.props.name] || [];
+    }
+
+    get renderedAttachments() {
+        const attachments = JSON.parse(JSON.stringify(this.attachments));
         const attachmentsNotSupported = this.props.record.data.attachments_not_supported || {};
         for (const attachment of attachments) {
             if (attachment.id && attachment.id in attachmentsNotSupported) {
