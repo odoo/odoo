@@ -61,6 +61,12 @@
                 calc(var(--box-border-bottom-right-radius, 0px) - max(var(--box-border-bottom-width, 0px), var(--box-border-right-width, 0px)))
                 calc(var(--box-border-bottom-left-radius, 0px) - max(var(--box-border-bottom-width, 0px), var(--box-border-left-width, 0px)));
         }
+
+        // Override the grid item z-index if it has an open dropdown, so
+        // its content is always visible.
+        &.o_grid_item:has(.dropdown-menu.show, .o_dropdown_menu.show) {
+            z-index: $zindex-dropdown !important;
+        }
     }
 }
 
