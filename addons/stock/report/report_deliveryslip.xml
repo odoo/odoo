@@ -71,8 +71,8 @@
                             <tr t-foreach="lines" t-as="move">
                                 <td>
                                     <span t-field="move.product_id">Customizable Desk</span>
-                                    <p t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
-                                        <span t-field="move.description_picking">Description on transfer</span>
+                                    <p t-if="move.description_picking and move.description_picking != move.product_id.name and move._get_report_description_picking()">
+                                        <span t-out="move._get_report_description_picking()">Description on transfer</span>
                                     </p>
                                 </td>
                                 <td class="o_td_quantity text-end">
@@ -176,8 +176,8 @@
                                 <tr t-foreach="backorders.mapped('move_ids').filtered(lambda x: x.product_uom_qty)" t-as="bo_line">
                                     <td class="w-auto">
                                         <span t-field="bo_line.product_id">Office Chair</span>
-                                        <p t-if="bo_line.description_picking and bo_line.description_picking != bo_line.product_id.name and bo_line.description_picking != bo_line.product_id.display_name">
-                                            <span t-field="bo_line.description_picking">Description on transfer</span>
+                                        <p t-if="bo_line.description_picking and bo_line.description_picking != bo_line.product_id.name and bo_line._get_report_description_picking()">
+                                            <span t-out="bo_line._get_report_description_picking()">Description on transfer</span>
                                         </p>
                                     </td>
                                     <td/>
