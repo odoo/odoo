@@ -9,15 +9,15 @@ export class PurchaseSuggestCatalogSearchPanel extends AccountProductCatalogSear
     static template = "purchase_stock.ProductCatalogSearchPanel";
     static components = { TimePeriodSelectionField };
     static basedOnOptions = [
-        ["actual_demand", "Forecasted"],
-        ["one_week", "Last 7 days"],
-        ["30_days", "Last 30 days"],
-        ["three_months", "Last 3 months"],
-        ["one_year", "Last 12 months"],
-        ["last_year", "Same month last year"],
-        ["last_year_m_plus_1", "Next month last year"],
-        ["last_year_m_plus_2", "After next month last year"],
-        ["last_year_quarter", "Last year quarter"],
+        ["actual_demand", _t("Forecasted")],
+        ["one_week", _t("Last 7 days")],
+        ["30_days", _t("Last 30 days")],
+        ["three_months", _t("Last 3 months")],
+        ["one_year", _t("Last 12 months")],
+        ["last_year", _t("Same month last year")],
+        ["last_year_m_plus_1", _t("Next month last year")],
+        ["last_year_m_plus_2", _t("After next month last year")],
+        ["last_year_quarter", _t("Last year quarter")],
     ];
 
     setup() {
