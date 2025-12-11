@@ -5923,7 +5923,7 @@
             this.Root = Root;
             apps.add(this);
             if (config.test) {
-                this.dev = true;
+                this.dev = config.dev ?? true;
             }
             this.warnIfNoStaticProps = config.warnIfNoStaticProps || false;
             if (this.dev && !config.test && !hasBeenLogged) {
