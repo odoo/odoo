@@ -462,8 +462,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         # the cron is ran asynchronously and should be agnostic from the current self.env.company
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').with_company(company_2).method_direct_trigger()
-        # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should fail to send
-        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'error'])
+        # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should not be sent by Peppol
+        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', False])
 
     def test_available_peppol_sending_methods(self):
         company_us = self.setup_other_company()['company']  # not a valid Peppol country
