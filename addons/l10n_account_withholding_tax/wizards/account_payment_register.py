@@ -26,6 +26,12 @@ class AccountPaymentRegister(models.TransientModel):
         store=True,
         readonly=False,
     )
+    withholding_net_amount = fields.Monetary(
+        string='Net Amount',
+        help="Net amount after deducting the withholding lines",
+        compute='_compute_withholding_net_amount',
+        store=True,
+    )
     withhold_tax_amount = fields.Monetary(string="Withholding Tax Amount", compute='_compute_withhold_tax_amount')
     withhold_account_ids = fields.Many2many(
         comodel_name='account.account',
@@ -61,6 +67,15 @@ class AccountPaymentRegister(models.TransientModel):
     # --------------------------------
     # Compute, inverse, search methods
     # --------------------------------
+
+    @ api.depends('withholding_line_ids.amount', 'amount')
+    def _compute_withholding_net_amount(self):
+        """
+        The net amount is the one that will actually be paid by the payer.
+        It is simply the payment amount - the sum of withholding taxes.
+        """
+        for wizard in self:
+            wizard.withholding_net_amount = wizard.withhold_base_amount - wizard.withhold_tax_amount if wizard.should_withhold_tax else wizard.withhold_base_amount
 
     @api.depends('withhold_tax_id', 'should_withhold_tax')
     def _compute_withhold_base_amount(self):
@@ -164,30 +179,13 @@ class AccountPaymentRegister(models.TransientModel):
         if not self.should_withhold_tax:
             return payment_vals
 
-        # if self.withholding_net_amount < 0:
-        #     raise UserError(self.env._("The withholding net amount cannot be negative."))
+        if self.withholding_net_amount < 0:
+            raise UserError(self.env._("The withholding net amount cannot be negative."))
 
         # Prepare the withholding lines.
         withholding_account = self.company_id.withholding_tax_control_account_id
         if not withholding_account:
             raise UserError(self.env._("Please configure the withholding control account from the settings"))
-        # payment_vals['withholding_line_ids'] = [(Command.create({
-        #         'analytic_distribution': False,
-        #         'analytic_precision': 2,
-        #         'name': False,
-        #         'placeholder_type': 'given_by_sequence',
-        #         'previous_placeholder_type': False,
-        #         'tax_id': self.withhold_tax_id.id,
-        #         'source_base_amount_currency': self.withhold_base_amount,
-        #         'source_base_amount': self.withhold_base_amount,
-        #         'source_tax_amount_currency': self.withhold_tax_amount,
-        #         'source_tax_amount': self.withhold_tax_amount,
-        #         'source_currency_id': 1,
-        #         'source_tax_id': False,
-        #         'base_amount': self.withhold_base_amount,
-        #         'amount': self.withhold_tax_amount,
-        #         'account_id': withholding_account.id,
-        # }))]
         payment_vals['should_withhold_tax'] = self.should_withhold_tax
         payment_vals['withhold_base_amount'] = self.withhold_base_amount
         payment_vals['withhold_tax_amount'] = self.withhold_tax_amount

@@ -12,7 +12,6 @@ class AccountPayment(models.Model):
     should_withhold_tax = fields.Boolean(
         string='Apply Withholding Tax',
         help="Whether or not to apply withholding taxes on this payment.",
-        compute='_compute_should_withhold_tax',
         readonly=False,
         store=True,
         copy=False,
@@ -171,8 +170,6 @@ class AccountPayment(models.Model):
         if not self.withhold_tax_amount or not self.should_withhold_tax:
             return res
         res[1] = res[1].filtered(lambda line: not line.is_withhold_line)
-        print(res[1])
-        print(res[1])
         return res
 
 
@@ -201,19 +198,21 @@ class AccountPayment(models.Model):
             write_off_line_ids_commands = [
                 Command.create({
                     'quantity': 1.0,
-                    'price_unit': pay.withhold_base_amount,
-                    'debit': pay.withhold_base_amount,
+                    'price_unit': withhold_base_amount,
+                    'debit': withhold_base_amount,
                     'credit': 0.0,
                     'account_id': pay.company_id.withholding_tax_control_account_id.id,
                     'tax_ids': [Command.set([pay.withhold_tax_id.id])],
+                    'is_withhold_line': True,
                 }),
                 Command.create({
                     'quantity': 1.0,
-                    'price_unit': pay.withhold_base_amount,
+                    'price_unit': withhold_base_amount,
                     'debit': 0.0,
-                    'credit': pay.withhold_base_amount,
+                    'credit': withhold_base_amount,
                     'account_id': pay.company_id.withholding_tax_control_account_id.id,
                     'tax_ids': False,
+                    'is_withhold_line': True,
                 }),
                 Command.create({
                     'quantity': 1.0,
