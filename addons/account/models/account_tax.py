@@ -4219,14 +4219,7 @@ class AccountTax(models.Model):
                 taxes += gb_tax_data['tax']
             taxes = taxes.filtered(lambda tax: tax._can_be_discounted())
 
-            # Compute the raw totals implied by the base line.
-            raw_total_amount_currency = tax_details['raw_total_excluded_currency']
-            for gb_tax_data in taxes_data:
-                raw_total_amount_currency += gb_tax_data['raw_tax_amount_currency']
-
             discount_data = discount_data_per_taxes.setdefault(taxes, {
-                'raw_total_amount_currency': 0.0,
-                'base_lines_raw_total_amount_currency': [],
                 'base_lines': [],
                 'discount_base_lines': [],
             })
@@ -4239,27 +4232,17 @@ class AccountTax(models.Model):
             if base_line['special_type'] == 'global_discount':
                 discount_data['discount_base_lines'].append(new_base_line)
             else:
-                discount_data['raw_total_amount_currency'] += raw_total_amount_currency
                 discount_data['base_lines'].append(new_base_line)
-                discount_data['base_lines_raw_total_amount_currency'].append(raw_total_amount_currency)
             new_base_lines.append(new_base_line)
 
         # Split the discount base line accross the others.
         for discount_data in discount_data_per_taxes.values():
-            sum_raw_total_amount_currency = discount_data['raw_total_amount_currency']
             discount_data['target_factors'] = [
                 {
                     'base_line': base_line,
-                    'factor': (
-                        abs(raw_total_amount_currency / sum_raw_total_amount_currency)
-                        if sum_raw_total_amount_currency
-                        else 0.0
-                    ),
+                    'factor': base_line['tax_details']['raw_total_excluded_currency'],
                 }
-                for base_line, raw_total_amount_currency in zip(
-                    discount_data['base_lines'],
-                    discount_data['base_lines_raw_total_amount_currency'],
-                )
+                for base_line in discount_data['base_lines']
             ]
             if discount_data['target_factors']:
                 dispatched_neg_base_lines += discount_data['discount_base_lines']
