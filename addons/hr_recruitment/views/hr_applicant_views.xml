@@ -12,18 +12,10 @@
                         invisible="context.get('default_job_id') or not context.get('default_talent_pool_ids')"
                         type="object"
                     />
-                    <button
-                        name="action_talent_pool_add_applicants"
-                        type="object"
-                        class="btn-primary"
-                        string="Add Applicants "
-                        display="always"
-                        invisible="not context.get('default_talent_pool_ids')"
-                        groups="hr_recruitment.group_hr_recruitment_user"
-                    />
                     <button type="object" 
                         name="archive_applicant" 
                         string="Refuse" class="btn btn-secondary" 
+                        invisible="context.get('default_talent_pool_ids', False)"
                     />
                 </header>
                 <field name="message_needaction" column_invisible="True"/>
@@ -41,7 +33,8 @@
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="is_rotting" column_invisible="True"/>
                 <field name="rotting_days" column_invisible="True"/>
-                <field name="type_id" column_invisible="True"/>
+                <field name="type_id" optional="hide"/>
+                <field name="talent_pool_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                 <field name="application_status" optional="hide" invisible="application_status == 'ongoing'"/>
                 <field name="refuse_reason_id" optional='hide'/>
                 <field name="activity_ids" widget="list_activity" optional="hide"/>
@@ -270,6 +263,7 @@
                 <field name="stage_id" domain="[]"/>
                 <field name="categ_ids"/>
                 <field name="refuse_reason_id"/>
+                <field name="talent_pool_ids" string="Talent Pools" filter_domain="[('talent_pool_ids', '=', self)]"/>
                 <field name="application_status"/>
                 <field name="date_closed"/>
                 <field name="activity_user_id" string="Activities of"/>
@@ -278,25 +272,23 @@
                 <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
-                <filter string="Applicants" name="applicants" domain="[('talent_pool_ids', '=', False)]"/>
-                <filter string="Talents" name="talents" domain="[('talent_pool_ids', '!=', False)]"/>
+                <filter invisible="context.get('default_talent_pool_ids', False)" string="Applicants" name="applicants" domain="[('talent_pool_ids', '=', False)]"/>
+                <filter invisible="context.get('default_talent_pool_ids', False)" string="Talents" name="talents" domain="[('talent_pool_ids', '!=', False)]"/>
                 <separator/>
-                <filter string="In Progress" name="ongoing" domain="[('date_closed', '=', False), ('active', '=', True), ('refuse_reason_id', '=', False)]"/>
-                <filter string="Hired" name="hired" domain="[('date_closed', '!=', False)]"/>
+                <filter invisible="context.get('default_talent_pool_ids', False)" string="In Progress" name="ongoing" domain="[('date_closed', '=', False), ('active', '=', True), ('refuse_reason_id', '=', False)]"/>
+                <filter invisible="context.get('default_talent_pool_ids', False)" string="Hired" name="hired" domain="[('date_closed', '!=', False)]"/>
                 <separator/>
                 <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <filter string="Waiting" name="waiting" domain="[('kanban_state', '=', 'waiting')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
-                <filter string="Rotting" name="filter_rotting" domain="[('is_rotting', '=', True)]"/>
                 <separator/>
                 <filter string="Directly Available" name="applicant_availability" domain="['|',('availability', '&lt;=', 'today'),('availability','=', False)]"/>
                 <separator/>
                 <filter string="Creation Date" name="filter_create" date="create_date"/>
-                <filter string="Last Stage Update" name="filter_date_last_stage_update" date="date_last_stage_update"/>
+                <filter invisible="context.get('default_talent_pool_ids', False)" string="Last Stage Update" name="filter_date_last_stage_update" date="date_last_stage_update"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                 <separator/>
-                <filter string="Archived" name="inactive" domain="[('active', '=', False), ('refuse_reason_id', '=', False)]"/>
                 <filter string="Refused" name="refused" domain="[('active', '=', False), ('refuse_reason_id', '!=', False)]"/>
                 <separator/>
                 <filter invisible="1" string="My Activities" name="filter_activities_my"
@@ -319,7 +311,6 @@
                     <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>
                     <filter string="Talent Pool" name="talent_pool" domain="[]" context="{'group_by': 'talent_pool_ids'}"/>
                     <filter string="Creation Date" name="creation_date" context="{'group_by': 'create_date'}"/>
-                    <filter string="Hiring Date" name="hired_date" context="{'group_by': 'date_closed'}"/>
                     <filter string="Last Stage Update" name="last_stage_update" context="{'group_by': 'date_last_stage_update'}"/>
                     <filter string="Refuse Reason" name="refuse_reason_id" domain="[]" context="{'group_by': 'refuse_reason_id'}"/>
                     <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -374,17 +365,6 @@
         <field name="arch" type="xml">
             <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1" 
                 js_class="rotting_kanban">
-                <header>
-                    <button
-                        name="action_talent_pool_add_applicants"
-                        type="object"
-                        class="btn-primary"
-                        string="Add Applicants "
-                        display="always"
-                        invisible="not context.get('default_talent_pool_ids')"
-                        groups="hr_recruitment.group_hr_recruitment_user"
-                    />
-                </header>
                 <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Requirements"}}'/>
                 <field name="date_closed"/>
                 <field name="color"/>
@@ -489,14 +469,17 @@
         <field name="name">Talents</field>
         <field name="res_model">hr.applicant</field>
         <field name="domain">[
-            ('talent_pool_ids', '=', active_ids),
+            ('talent_pool_ids', '!=', False),
         ]</field>
         <field name="view_mode">list,kanban,form,graph,calendar,pivot,activity</field>
         <field name="view_ids" eval="[
             (5, 0, 0),
             (0, 0, {'view_mode': 'list'}),
             (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_kanban_view_applicant_talent_pool')})]"/>
-        <field name="context">{'default_talent_pool_ids': active_ids}</field>
+        <field name="context">{
+            'default_talent_pool_ids': active_ids,
+            'search_default_talent_pool_ids': active_ids,
+        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No Talents in the pool yet

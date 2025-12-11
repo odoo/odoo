@@ -54,6 +54,9 @@
             <xpath expr="//field[@name='email_from']" position="after">
                 <field name="applicant_skill_ids"/>
             </xpath>
+            <xpath expr="//filter[@name='talent_pool']" position="after">
+                <filter string="Skills" name="skill_ids" context="{'group_by': 'skill_ids'}"/>
+            </xpath>
         </field>
     </record>
 
@@ -78,8 +81,11 @@
         <field name="mode">extension</field>
         <field name="arch" type="xml">
             <field name="kanban_state" position="after">
-                <field name="matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}" invisible="not matching_score"/>
+                <field name="matching_score" string="Matching" widget="progressbar" options="{'overflow_class': 'bg-success'}" invisible="not matching_score" column_invisible="context.get('default_talent_pool_ids', False)"/>
             </field>
+            <xpath expr="//list" position="inside">
+                <field name="current_applicant_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide" string="Skills"/>
+            </xpath>
         </field>
     </record>
 
