@@ -22,35 +22,24 @@ export class FormModelWarningBanner extends BaseOptionComponent {
 
     async handleProps(props) {
         const el = this.env.getEditingElement();
-        if (!el) {
-            this.state.showWarning = false;
-            return;
-        }
-
         const model = props.activeForm;
-        if (!model) {
+
+        if (!el || !model) {
             this.state.showWarning = false;
             return;
         }
 
         const formInfo = await this.prepareFormModel(el, model);
-        if (!formInfo || !Array.isArray(formInfo.fields) || !formInfo.fields.length) {
-            this.state.showWarning = false;
-            return;
-        }
+        const field = formInfo?.fields?.[0];
 
-        const field = formInfo.fields[0];
         if (!field) {
-            this.state.showWarning = false;
             return;
         }
 
-        const hasNoRecords = !field.records || field.records.length === 0;
+        const hasNoRecords = !field.records?.length;
         if (hasNoRecords && field.noRecordMessage) {
             this.state.message = field.noRecordMessage;
             this.state.showWarning = true;
-        } else {
-            this.state.showWarning = false;
         }
     }
 }

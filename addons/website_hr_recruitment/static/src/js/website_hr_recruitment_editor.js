@@ -39,7 +39,6 @@ registry.category("website.form_editor_actions").add('apply_job', {
         type: 'many2one',
         relation: 'hr.job',
         required: true,
-        searchable: true,
         string: _t('Applied Job'),
         dialogTitle: _t('Create a Job position'),
         dialogDescription: _t("Your current changes will be saved and you'll be redirected to a new Job page"),

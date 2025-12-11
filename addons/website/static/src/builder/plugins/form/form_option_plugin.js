@@ -984,7 +984,7 @@ export class AddActionFieldAction extends BuilderAction {
             const dataForValues = getParsedDataFor(formId, el.ownerDocument);
             return dataForValues?.["email_to"] || DEFAULT_EMAIL_TO_VALUE;
         }
-        if (!value || (params.fieldType === "many2many" && !params.searchable)) {
+        if (!value || params.fieldType === "many2many") {
             return params.isSelect ? "0" : "";
         }
 
