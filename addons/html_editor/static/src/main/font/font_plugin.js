@@ -7,6 +7,7 @@ import {
     isEmptyBlock,
     isVisibleTextNode,
     isZWS,
+    isStylable,
 } from "@html_editor/utils/dom_info";
 import {
     ancestors,
@@ -166,6 +167,7 @@ export class FontPlugin extends Plugin {
                     },
                 },
                 isAvailable: this.blockFormatIsAvailable.bind(this),
+                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             }),
             withSequence(20, {
                 id: "font-size",
@@ -194,6 +196,7 @@ export class FontPlugin extends Plugin {
                     document: this.document,
                 },
                 isAvailable: isHtmlContentSupported,
+                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             }),
         ],
         powerbox_categories: withSequence(5, { id: "format", name: _t("Format") }),

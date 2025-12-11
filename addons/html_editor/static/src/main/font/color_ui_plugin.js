@@ -3,7 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "./color_selector";
 import { reactive } from "@odoo/owl";
-import { isTextNode } from "@html_editor/utils/dom_info";
+import { isStylable, isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { isCSSColor, RGBA_REGEX, rgbaToHex } from "@web/core/utils/colors";
 
@@ -30,6 +30,7 @@ export class ColorUIPlugin extends Plugin {
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("foreground"),
                 isAvailable: isHtmlContentSupported,
+                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             },
             {
                 id: "backcolor",
@@ -38,6 +39,7 @@ export class ColorUIPlugin extends Plugin {
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("background"),
                 isAvailable: isHtmlContentSupported,
+                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             },
         ],
         selectionchange_handlers: this.updateSelectedColor.bind(this),

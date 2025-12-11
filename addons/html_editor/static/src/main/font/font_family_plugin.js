@@ -5,6 +5,7 @@ import { reactive } from "@odoo/owl";
 import { closestElement } from "../../utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { isStylable } from "@html_editor/utils/dom_info";
 
 export const defaultFontFamily = {
     name: "Default system font",
@@ -52,6 +53,7 @@ export class FontFamilyPlugin extends Plugin {
                     },
                 },
                 isAvailable: isHtmlContentSupported,
+                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             }),
         ],
         /** Handlers */
