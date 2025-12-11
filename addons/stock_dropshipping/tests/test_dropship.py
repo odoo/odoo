@@ -588,3 +588,23 @@ class TestDropshipPostInstall(common.TransactionCase):
         return_picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
         self.assertEqual(purchase_order.order_line.qty_received, 0)
+
+    def test_so_cancel_creates_one_activity_on_po(self):
+        """
+        Create Sale order with dropshipping product, confirm it, confirm the generated
+        purchase order, then cancel the sale order. This should create an activity on the
+        purchase order.
+        """
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.dropship_product.id,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = self.env['purchase.order'].search([
+            ('origin', '=', sale_order.name)
+        ], limit=1)
+        purchase_order.button_confirm()
+        sale_order._action_cancel()
+        self.assertEqual(len(purchase_order.activity_ids), 1)
