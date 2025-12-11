@@ -8,6 +8,15 @@
             <field name="arch" type="xml">
                 <group name="bill" position="inside">
                     <field name="landed_cost_ok" invisible="type != 'service'"/>
+                    <label for="landed_cost_on_product_ids"
+                        invisible="not landed_cost_ok or type != 'service'"
+                        string="Apply On"/>
+                    <field name="landed_cost_on_product_ids"
+                        nolabel="1"
+                        invisible="not landed_cost_ok or type != 'service'"
+                        widget="many2many_tags"
+                        placeholder="All Products"
+                        context="{'search_default_group_by_categ_id': 1}"/>
                     <field name="split_method_landed_cost" invisible="not landed_cost_ok or type != 'service'"/>
                 </group>
             </field>
