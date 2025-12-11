@@ -45,6 +45,22 @@ export const busService = {
         const startedAt = luxon.DateTime.now().set({ milliseconds: 0 });
         let connectionInitializedDeferred;
 
+        let requestId = 0;
+        const requestResolverById = new Map();
+        /**
+         * @param {import("@bus/workers/websocket_worker").WorkerRequest} action
+         * @param {any} [param]
+         * @returns {Promise<any>} A promise resolving with the response
+         * from the worker.
+         */
+        function sendRequestToWorker(action, param) {
+            const reqId = requestId++;
+            const resolver = Promise.withResolvers();
+            requestResolverById.set(reqId, resolver);
+            workerService.send("BUS:REQUEST", { action, param, requestId: reqId });
+            return resolver.promise;
+        }
+
         /**
          * Handle messages received from the shared worker and fires an
          * event according to the message type.
@@ -172,11 +188,16 @@ export const busService = {
         );
         const state = reactive({
             addEventListener: bus.addEventListener.bind(bus),
+            /**
+             * @returns {Promise<boolean>} Resolves to `true` if the
+             * subscription was successful, `false` otherwise. Logging
+             * in or out after calling this method may cancel the
+             * subscription.
+             */
             addChannel: async (channel) => {
                 await ensureWorkerStarted();
-                workerService.send("BUS:ADD_CHANNEL", channel);
                 workerService.send("BUS:START");
-                state.isActive = true;
+                return sendRequestToWorker("BUS:ADD_CHANNEL", channel);
             },
             deleteChannel: (channel) => {
                 workerService.send("BUS:DELETE_CHANNEL", channel);
@@ -184,7 +205,13 @@ export const busService = {
             setLoggingEnabled: (isEnabled) =>
                 workerService.send("BUS:SET_LOGGING_ENABLED", isEnabled),
             downloadLogs: () => workerService.send("BUS:REQUEST_LOGS"),
-            forceUpdateChannels: () => workerService.send("BUS:FORCE_UPDATE_CHANNELS"),
+            /**
+             * @returns {Promise<boolean>} Resolves to `true` if the
+             * subscription was successful, `false` otherwise. Logging
+             * in or out after calling this method may cancel the
+             * subscription.
+             */
+            forceUpdateChannels: () => sendRequestToWorker("BUS:FORCE_UPDATE_CHANNELS"),
             trigger: bus.trigger.bind(bus),
             removeEventListener: bus.removeEventListener.bind(bus),
             send: (eventName, data) =>

@@ -7,9 +7,15 @@ import { debounce, Logger } from "@bus/workers/bus_worker_utils";
  */
 
 /**
+ * Type of requests that can be sent from the client to the worker.
+ *
+ * @typedef {'BUS:ADD_CHANNEL' | 'BUS:FORCE_UPDATE_CHANNELS'} WorkerRequest
+ */
+
+/**
  * Type of action that can be sent from the client to the worker.
  *
- * @typedef {'BUS:ADD_CHANNEL' | 'BUS:DELETE_CHANNEL' | 'BUS:FORCE_UPDATE_CHANNELS' | 'BUS:INITIALIZE_CONNECTION' | 'BUS:REQUEST_LOGS' | 'BUS:SEND' | 'BUS:SET_LOGGING_ENABLED' | 'BUS:LEAVE' | 'BUS:STOP' | 'BUS:START'} WorkerAction
+ * @typedef {'BUS:DELETE_CHANNEL' | 'BUS:INITIALIZE_CONNECTION' | 'BUS:REQUEST_LOGS' | 'BUS:SEND' | 'BUS:SET_LOGGING_ENABLED' | 'BUS:LEAVE' | 'BUS:STOP' | 'BUS:START'} WorkerAction
  */
 
 export const WEBSOCKET_CLOSE_CODES = Object.freeze({
@@ -69,7 +75,10 @@ export class WebsocketWorker {
         this.messageWaitQueue = [];
         this.name = name;
         this.newestStartTs = undefined;
+        this.nextSubscribeId = 0;
         this.state = WORKER_STATE.IDLE;
+        /** @type {Map<number,PromiseWithResolvers<boolean>>} */
+        this.subscribeResolverById = new Map();
         this.websocketURL = "";
 
         this._debouncedSendToServer = debounce(this._sendToServer, 300);
@@ -125,7 +134,7 @@ export class WebsocketWorker {
     /**
      * Send message to the given client.
      *
-     * @param {number} client
+     * @param {MessagePort} client
      * @param {WorkerEvent} type
      * @param {Object} data
      */
@@ -134,6 +143,16 @@ export class WebsocketWorker {
             this._logDebug("sendToClient", type, data);
         }
         client.postMessage({ type, data: data ? JSON.parse(JSON.stringify(data)) : undefined });
+    }
+
+    /**
+     * @param {MessagePort} client
+     * @param {number} requestId
+     * @param {any} [data]
+     */
+    resolveRequest(client, requestId, data = {}) {
+        data.requestId = requestId;
+        this.sendToClient(client, "BUS:RESOLVE_REQUEST", data);
     }
 
     //--------------------------------------------------------------------------
@@ -154,6 +173,9 @@ export class WebsocketWorker {
     _onClientMessage(client, { action, data }) {
         this._logDebug("_onClientMessage", action, data);
         switch (action) {
+            case "BUS:REQUEST":
+                this._handleRequest(client, data);
+                return;
             case "BUS:SEND": {
                 if (data["event_name"] === "update_presence") {
                     this._debouncedSendToServer(data);
@@ -199,6 +221,52 @@ export class WebsocketWorker {
                 break;
             case "BUS:INITIALIZE_CONNECTION":
                 return this._initializeConnection(client, data);
+        }
+    }
+
+    /**
+     * Handle an internal notification (i.e. a notification sent through)
+     * the websocket and not from the bus model.
+     *
+     * @param {{type: string, internal: true, payload: any}[]} notifications
+     */
+    _handleInternalNotifications(notifications) {
+        for (const notification of notifications) {
+            switch (notification.type) {
+                case "bus/subscribe_ack":
+                    this.subscribeResolverById.get(parseInt(notification.payload)).resolve(true);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Handle a request sent by the client. Client promise will resolve once
+     * the answer is received.
+     *
+     *
+     * @param {MessagePort} client
+     * @param {{action: WorkerRequest, param?: any, requestId: number }} param1
+     */
+    async _handleRequest(client, { action, param, requestId }) {
+        switch (action) {
+            case "BUS:ADD_CHANNEL": {
+                this._addChannel(client, param);
+                if (
+                    !this.lastChannelSubscription ||
+                    !this.lastChannelSubscription.includes(param)
+                ) {
+                    await this._waitNextSubscribe();
+                }
+                this.resolveRequest(client, requestId);
+                break;
+            }
+            case "BUS:FORCE_UPDATE_CHANNELS": {
+                this._forceUpdateChannels();
+                this._waitNextSubscribe();
+                this.resolveRequest(client, requestId);
+                break;
+            }
         }
     }
 
@@ -267,7 +335,7 @@ export class WebsocketWorker {
      *     - undefined: not available (e.g. livechat support page)
      * @param {Number} param0.startTs Timestamp of start of bus service sender.
      */
-    _initializeConnection(client, { db, debug, lastNotificationId, uid, websocketURL, startTs }) {
+    _initializeConnection(client, { db, lastNotificationId, uid, websocketURL, startTs }) {
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
             this.sendToClient(client, "BUS:INITIALIZED");
@@ -288,6 +356,7 @@ export class WebsocketWorker {
             if (this.websocket) {
                 this.websocket.close(WEBSOCKET_CLOSE_CODES.CLEAN);
             }
+            this.subscribeResolverById.forEach((value) => value.resolve(false));
             this.channelsByClient.forEach((_, key) => this.channelsByClient.set(key, []));
         }
         this.sendToClient(client, "BUS:WORKER_STATE_UPDATED", this.state);
@@ -365,10 +434,16 @@ export class WebsocketWorker {
      */
     _onWebsocketMessage(messageEv) {
         this._restartConnectionCheckInterval();
-        const notifications = JSON.parse(messageEv.data);
+        const data = JSON.parse(messageEv.data);
+        const notifications = Array.isArray(data) ? data : [data];
+        const business = notifications.filter((n) => !n.internal);
+        const internal = notifications.filter((n) => n.internal);
         this._logDebug("_onWebsocketMessage", notifications);
-        this.lastNotificationId = notifications[notifications.length - 1].id;
-        this.broadcast("BUS:NOTIFICATION", notifications);
+        if (business.length) {
+            this.lastNotificationId = business.at(-1)?.id;
+            this.broadcast("BUS:NOTIFICATION", notifications);
+        }
+        this._handleInternalNotifications(internal);
     }
 
     async _logDebug(title, ...args) {
@@ -542,7 +617,11 @@ export class WebsocketWorker {
             this.lastChannelSubscription = allTabsChannelsString;
             this._sendToServer({
                 event_name: "subscribe",
-                data: { channels: allTabsChannels, last: this.lastNotificationId },
+                data: {
+                    channels: allTabsChannels,
+                    last: this.lastNotificationId,
+                    subscribe_id: this.nextSubscribeId++,
+                },
             });
             this.firstSubscribeResolver.resolve();
         }
@@ -555,5 +634,17 @@ export class WebsocketWorker {
     _updateState(newState) {
         this.state = newState;
         this.broadcast("BUS:WORKER_STATE_UPDATED", newState);
+    }
+
+    /**
+     * Wait for the next subscribe to be acknowledged by the server.
+     * (i.e. `bus/subscribe_ack` event with the corresponding
+     * `subscribe_id` to be to be received)
+     */
+    async _waitNextSubscribe() {
+        if (!this.subscribeResolverById.has(this.nextSubscribeId)) {
+            this.subscribeResolverById.set(this.nextSubscribeId, Promise.withResolvers());
+        }
+        await this.subscribeResolverById.get(this.nextSubscribeId).promise;
     }
 }

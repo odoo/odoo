@@ -66,6 +66,7 @@ class IrWebsocket(models.AbstractModel):
         data = self._prepare_subscribe_data(og_data["channels"], og_data["last"])
         dispatch.subscribe(data["channels"], data["last"], self.env.registry.db_name, wsrequest.ws)
         self._after_subscribe_data(data)
+        wsrequest.ws.send("bus/subscribe_ack", og_data["subscribe_id"])
 
     def _on_websocket_closed(self, cookies):
         """Function invoked upon WebSocket termination.

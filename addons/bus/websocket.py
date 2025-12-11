@@ -207,7 +207,8 @@ _command_uid = count(0)
 
 class ControlCommand(IntEnum):
     CLOSE = 0
-    DISPATCH = 1
+    SEND = 1
+    DISPATCH = 2
 
 
 DATA_OP = {Opcode.TEXT, Opcode.BINARY}
@@ -367,6 +368,9 @@ class Websocket:
         will start in the subsequent iteration of the event loop.
         """
         self._send_control_command(ControlCommand.CLOSE, {'code': code, 'reason': reason})
+
+    def send(self, type, message):
+        self._send_control_command(ControlCommand.SEND, {"type": type, "internal": True, "payload": message})
 
     @classmethod
     def onopen(cls, func):
@@ -756,6 +760,8 @@ class Websocket:
                 self._dispatch_bus_notifications()
             case ControlCommand.CLOSE:
                 self._disconnect(data['code'], data.get('reason'))
+            case ControlCommand.SEND:
+                self._send(data)
 
     def _dispatch_bus_notifications(self):
         self._waiting_for_dispatch = False
@@ -958,7 +964,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "19.0-2"
+    _VERSION = "saas-19.1-1"
 
     @classmethod
     def websocket_allowed(cls, request):

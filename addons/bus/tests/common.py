@@ -35,6 +35,7 @@ class WebsocketCase(HttpCase):
 
     def setUp(self):
         super().setUp()
+        self._subscribe_id = 0
         self._websockets = set()
         # Used to ensure websocket connections have been closed
         # properly.
@@ -131,11 +132,15 @@ class WebsocketCase(HttpCase):
         with patch.object(Websocket, '_dispatch_bus_notifications', _mocked_dispatch_bus_notifications):
             sub = {'event_name': 'subscribe', 'data': {
                 'channels': channels or [],
+                'subscribe_id': self._subscribe_id,
             }}
+            self._subscribe_id += 1
             if last is not None:
                 sub['data']['last'] = last
             websocket.send(json.dumps(sub))
             if wait_for_dispatch:
+                ack = json.loads(websocket.recv())
+                self.assertEqual(ack['type'], 'bus/subscribe_ack')
                 dispatch_bus_notification_done.wait(timeout=5)
 
     def trigger_notification_dispatching(self, channels):
