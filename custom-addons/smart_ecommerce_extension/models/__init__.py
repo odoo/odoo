@@ -5,4 +5,5 @@ from . import product_template
 from . import delivery_zone
 from . import sale_order
 from . import analytics
+from . import marketplace_seller
 

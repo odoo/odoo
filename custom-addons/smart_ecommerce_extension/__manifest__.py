@@ -18,6 +18,7 @@ This module extends Odoo's eCommerce functionality with:
 - Dynamic estimated delivery date
 - Delivery zones with city-based pricing
 - REST API endpoints for products, cart, checkout, and payment
+- Marketplace seller management with KYC verification
 
 Features:
 ---------
@@ -45,11 +46,20 @@ Features:
    - GET/POST /smart/api/cart - Cart management
    - POST /smart/api/checkout - Checkout process
    - POST /smart/api/payment/callback - Payment webhook
+
+5. Marketplace Sellers
+   - Seller registration and profile management
+   - KYC document upload and verification
+   - Approval workflow (draft/pending/approved/suspended)
+   - Portal views: Dashboard, Orders, Payments
+   - Commission management
     """,
     'author': 'SMART Marketplace',
     'website': 'https://smartmarketplace.com',
     'depends': [
         'base',
+        'mail',
+        'portal',
         'website_sale',
         'sale_management',
         'stock',
@@ -70,10 +80,12 @@ Features:
         'views/delivery_zone_views.xml',
         'views/sale_order_views.xml',
         'views/analytics_views.xml',
+        'views/marketplace_seller_views.xml',
         'views/menus.xml',
         
         # Website Templates
         'views/website_templates.xml',
+        'views/seller_portal_templates.xml',
     ],
     'demo': [
         'demo/demo_data.xml',

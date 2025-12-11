@@ -404,6 +404,30 @@
         sequence="90"/>
     
     <!-- ============================================================ -->
+    <!-- MARKETPLACE SELLERS SECTION -->
+    <!-- ============================================================ -->
+    
+    <menuitem 
+        id="menu_smart_sellers"
+        name="Sellers"
+        parent="menu_smart_ecommerce_root"
+        sequence="60"/>
+    
+    <menuitem 
+        id="menu_smart_all_sellers"
+        name="All Sellers"
+        parent="menu_smart_sellers"
+        action="action_marketplace_sellers"
+        sequence="10"/>
+    
+    <menuitem 
+        id="menu_smart_pending_sellers"
+        name="Pending Approvals"
+        parent="menu_smart_sellers"
+        action="action_marketplace_sellers_pending"
+        sequence="20"/>
+    
+    <!-- ============================================================ -->
     <!-- CONFIGURATION SECTION -->
     <!-- ============================================================ -->
     

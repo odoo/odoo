@@ -1,0 +1,877 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- SELLER PORTAL TEMPLATES -->
+    <!-- ============================================================ -->
+    
+    <!-- Portal Home - Add Seller Links -->
+    <template id="portal_my_home_seller" name="Show Seller Section" inherit_id="portal.portal_my_home" priority="40">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="seller" t-value="request.env['marketplace.seller'].sudo().search([('user_id', '=', request.env.user.id)], limit=1)"/>
+            <t t-if="seller">
+                <h4 class="mt-4">Seller Portal</h4>
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 col-12 mb-3">
+                        <a href="/my/seller/dashboard" class="d-block text-decoration-none">
+                            <div class="card h-100 border-primary">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-dashboard fa-3x text-primary mb-3"/>
+                                    <h5 class="card-title">Dashboard</h5>
+                                    <p class="card-text text-muted small">View your seller statistics</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12 mb-3">
+                        <a href="/my/seller/orders" class="d-block text-decoration-none">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-shopping-cart fa-3x text-secondary mb-3"/>
+                                    <h5 class="card-title">Orders</h5>
+                                    <p class="card-text text-muted small">Manage your orders</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12 mb-3">
+                        <a href="/my/seller/payments" class="d-block text-decoration-none">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-money fa-3x text-success mb-3"/>
+                                    <h5 class="card-title">Payments</h5>
+                                    <p class="card-text text-muted small">View your earnings</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="alert alert-info mt-4">
+                    <i class="fa fa-info-circle me-2"/>
+                    Want to sell on our marketplace? 
+                    <a href="/my/seller/register" class="alert-link">Register as a seller</a>
+                </div>
+            </t>
+        </xpath>
+    </template>
+    
+    <!-- ============================================================ -->
+    <!-- SELLER DASHBOARD -->
+    <!-- ============================================================ -->
+    
+    <template id="seller_dashboard" name="Seller Dashboard">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Seller Dashboard</t>
+            </t>
+            
+            <div class="container py-4">
+                <!-- Status Banner -->
+                <t t-if="seller.state == 'pending'">
+                    <div class="alert alert-warning mb-4">
+                        <i class="fa fa-clock-o me-2"/>
+                        Your seller profile is pending approval. We'll notify you once it's reviewed.
+                    </div>
+                </t>
+                
+                <!-- Welcome Header -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="d-flex align-items-center">
+                            <t t-if="seller.store_logo">
+                                <img t-att-src="'data:image/png;base64,' + seller.store_logo.decode('utf-8')" 
+                                     class="rounded-circle me-3" style="width: 64px; height: 64px; object-fit: cover;"/>
+                            </t>
+                            <t t-else="">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                     style="width: 64px; height: 64px;">
+                                    <i class="fa fa-store text-white fa-2x"/>
+                                </div>
+                            </t>
+                            <div>
+                                <h2 class="mb-0" t-field="seller.company_name"/>
+                                <span class="badge" 
+                                      t-att-class="'bg-success' if seller.state == 'approved' else 'bg-warning' if seller.state == 'pending' else 'bg-secondary'"
+                                      t-field="seller.state"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Statistics Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3 col-6">
+                        <div class="card bg-primary text-white h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-white-50">Total Sales</h6>
+                                        <h3 class="mb-0" t-field="seller.total_sales" t-options="{'widget': 'monetary', 'display_currency': seller.currency_id}"/>
+                                    </div>
+                                    <i class="fa fa-money fa-2x opacity-50"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="card bg-success text-white h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-white-50">Products</h6>
+                                        <h3 class="mb-0" t-esc="dashboard.get('product_count', 0)"/>
+                                    </div>
+                                    <i class="fa fa-cubes fa-2x opacity-50"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="card bg-info text-white h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-white-50">Total Orders</h6>
+                                        <h3 class="mb-0" t-esc="dashboard.get('total_orders', 0)"/>
+                                    </div>
+                                    <i class="fa fa-shopping-cart fa-2x opacity-50"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="card bg-warning text-dark h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-dark-50">Pending Orders</h6>
+                                        <h3 class="mb-0" t-esc="dashboard.get('pending_orders', 0)"/>
+                                    </div>
+                                    <i class="fa fa-clock-o fa-2x opacity-50"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Quick Actions</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex flex-wrap gap-2">
+                                    <a href="/my/seller/orders" class="btn btn-outline-primary">
+                                        <i class="fa fa-list me-2"/>View All Orders
+                                    </a>
+                                    <a href="/my/seller/payments" class="btn btn-outline-success">
+                                        <i class="fa fa-money me-2"/>View Payments
+                                    </a>
+                                    <a href="/my/seller/profile" class="btn btn-outline-secondary">
+                                        <i class="fa fa-cog me-2"/>Edit Profile
+                                    </a>
+                                    <t t-if="seller.state == 'draft'">
+                                        <form action="/my/seller/submit" method="post" class="d-inline">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fa fa-paper-plane me-2"/>Submit for Approval
+                                            </button>
+                                        </form>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Orders -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Recent Orders</h5>
+                                <a href="/my/seller/orders" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <t t-if="recent_orders">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Order #</th>
+                                                <th>Date</th>
+                                                <th>Customer</th>
+                                                <th>Amount</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="recent_orders" t-as="order">
+                                                <tr>
+                                                    <td>
+                                                        <a t-att-href="'/my/seller/orders/' + str(order.id)" t-field="order.name"/>
+                                                    </td>
+                                                    <td t-field="order.date_order" t-options="{'widget': 'date'}"/>
+                                                    <td t-field="order.partner_id.name"/>
+                                                    <td t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
+                                                    <td>
+                                                        <span class="badge"
+                                                              t-att-class="'bg-success' if order.state == 'done' else 'bg-primary' if order.state == 'sale' else 'bg-secondary'"
+                                                              t-field="order.state"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </t>
+                                <t t-else="">
+                                    <div class="text-center py-4 text-muted">
+                                        <i class="fa fa-inbox fa-3x mb-3"/>
+                                        <p>No orders yet</p>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- Seller Not Approved Page -->
+    <template id="seller_not_approved" name="Seller Not Approved">
+        <t t-call="portal.portal_layout">
+            <div class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 text-center">
+                        <t t-if="seller.state == 'draft'">
+                            <i class="fa fa-file-text-o fa-5x text-muted mb-4"/>
+                            <h3>Complete Your Profile</h3>
+                            <p class="text-muted">Please complete your seller profile and submit it for approval.</p>
+                            <a href="/my/seller/profile" class="btn btn-primary">Complete Profile</a>
+                        </t>
+                        <t t-elif="seller.state == 'rejected'">
+                            <i class="fa fa-times-circle fa-5x text-danger mb-4"/>
+                            <h3>Application Rejected</h3>
+                            <p class="text-muted">Unfortunately, your seller application was rejected.</p>
+                            <t t-if="seller.rejection_reason">
+                                <div class="alert alert-danger text-start">
+                                    <strong>Reason:</strong> <t t-esc="seller.rejection_reason"/>
+                                </div>
+                            </t>
+                            <a href="/contactus" class="btn btn-outline-primary">Contact Support</a>
+                        </t>
+                        <t t-elif="seller.state == 'suspended'">
+                            <i class="fa fa-ban fa-5x text-warning mb-4"/>
+                            <h3>Account Suspended</h3>
+                            <p class="text-muted">Your seller account has been suspended.</p>
+                            <t t-if="seller.suspension_reason">
+                                <div class="alert alert-warning text-start">
+                                    <strong>Reason:</strong> <t t-esc="seller.suspension_reason"/>
+                                </div>
+                            </t>
+                            <a href="/contactus" class="btn btn-outline-primary">Contact Support</a>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- ============================================================ -->
+    <!-- SELLER REGISTRATION -->
+    <!-- ============================================================ -->
+    
+    <template id="seller_register" name="Seller Registration">
+        <t t-call="portal.portal_layout">
+            <div class="container py-4">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h4 class="mb-0">
+                                    <i class="fa fa-store me-2"/>Become a Seller
+                                </h4>
+                            </div>
+                            <div class="card-body">
+                                <t t-if="error == 'missing_fields'">
+                                    <div class="alert alert-danger">
+                                        <i class="fa fa-exclamation-triangle me-2"/>
+                                        Please fill in all required fields.
+                                    </div>
+                                </t>
+                                <t t-if="error == 'company_exists'">
+                                    <div class="alert alert-danger">
+                                        <i class="fa fa-exclamation-triangle me-2"/>
+                                        This store name is already taken. Please choose another.
+                                    </div>
+                                </t>
+                                
+                                <form action="/my/seller/register/submit" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    
+                                    <h5 class="mb-3">Store Information</h5>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Store/Company Name *</label>
+                                            <input type="text" name="company_name" class="form-control" required="" 
+                                                   placeholder="Your store name"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Phone *</label>
+                                            <input type="tel" name="phone" class="form-control" required="" 
+                                                   placeholder="+222 XX XX XX XX"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">City *</label>
+                                            <input type="text" name="city" class="form-control" required="" 
+                                                   placeholder="Your city"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Country</label>
+                                            <select name="country_id" class="form-select">
+                                                <option value="">Select country</option>
+                                                <t t-foreach="countries" t-as="country">
+                                                    <option t-att-value="country.id" t-esc="country.name"/>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Street Address</label>
+                                        <input type="text" name="street" class="form-control" 
+                                               placeholder="Street address"/>
+                                    </div>
+                                    
+                                    <hr class="my-4"/>
+                                    <h5 class="mb-3">Business Details</h5>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Tax ID / VAT Number</label>
+                                            <input type="text" name="tax_id" class="form-control" 
+                                                   placeholder="Tax identification number"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">KYC Document</label>
+                                            <input type="file" name="kyc_doc" class="form-control" 
+                                                   accept=".pdf,.jpg,.jpeg,.png"/>
+                                            <small class="text-muted">ID card, passport, or business license</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <hr class="my-4"/>
+                                    <h5 class="mb-3">Banking Information</h5>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Bank Name</label>
+                                            <input type="text" name="bank_name" class="form-control" 
+                                                   placeholder="Bank name"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Account Number</label>
+                                            <input type="text" name="bank_account" class="form-control" 
+                                                   placeholder="Bank account number"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <hr class="my-4"/>
+                                    <h5 class="mb-3">Store Branding</h5>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Store Logo</label>
+                                            <input type="file" name="store_logo" class="form-control" 
+                                                   accept=".jpg,.jpeg,.png"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label">Store Description</label>
+                                        <textarea name="store_description" class="form-control" rows="4" 
+                                                  placeholder="Tell customers about your store..."/>
+                                    </div>
+                                    
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary btn-lg">
+                                            <i class="fa fa-check me-2"/>Create Seller Account
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- ============================================================ -->
+    <!-- SELLER ORDERS LIST -->
+    <!-- ============================================================ -->
+    
+    <template id="seller_orders" name="Seller Orders">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">My Orders</t>
+            </t>
+            
+            <div class="container py-4">
+                <!-- Filters -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="btn-group" role="group">
+                            <t t-foreach="searchbar_filters.items()" t-as="filter_item">
+                                <a t-att-href="'/my/seller/orders?filterby=' + filter_item[0]"
+                                   t-att-class="'btn btn-outline-secondary' + (' active' if filterby == filter_item[0] else '')"
+                                   t-esc="filter_item[1]['label']"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Sort by: <t t-esc="searchbar_sortings[sortby]['label']"/>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <t t-foreach="searchbar_sortings.items()" t-as="sort_item">
+                                    <li>
+                                        <a class="dropdown-item" t-att-href="'/my/seller/orders?sortby=' + sort_item[0]"
+                                           t-esc="sort_item[1]['label']"/>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Orders Table -->
+                <div class="card">
+                    <div class="card-body p-0">
+                        <t t-if="orders">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Order #</th>
+                                        <th>Date</th>
+                                        <th>Customer</th>
+                                        <th>Items</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="orders" t-as="order">
+                                        <tr>
+                                            <td>
+                                                <a t-att-href="'/my/seller/orders/' + str(order.id)" t-field="order.name"/>
+                                            </td>
+                                            <td t-field="order.date_order" t-options="{'widget': 'date'}"/>
+                                            <td t-field="order.partner_id.name"/>
+                                            <td t-esc="len(order.order_line)"/>
+                                            <td t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
+                                            <td>
+                                                <span class="badge"
+                                                      t-att-class="'bg-success' if order.state == 'done' else 'bg-primary' if order.state == 'sale' else 'bg-warning' if order.state == 'draft' else 'bg-danger' if order.state == 'cancel' else 'bg-secondary'"
+                                                      t-field="order.state"/>
+                                            </td>
+                                            <td>
+                                                <a t-att-href="'/my/seller/orders/' + str(order.id)" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fa fa-eye"/>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <div class="text-center py-5 text-muted">
+                                <i class="fa fa-inbox fa-4x mb-3"/>
+                                <p class="h5">No orders found</p>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                
+                <!-- Pager -->
+                <t t-if="pager">
+                    <div class="d-flex justify-content-center mt-4">
+                        <t t-call="portal.pager"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+    
+    <!-- ============================================================ -->
+    <!-- SELLER ORDER DETAIL -->
+    <!-- ============================================================ -->
+    
+    <template id="seller_order_detail" name="Seller Order Detail">
+        <t t-call="portal.portal_layout">
+            <div class="container py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>
+                        Order <t t-esc="order.name"/>
+                        <span class="badge ms-2"
+                              t-att-class="'bg-success' if order.state == 'done' else 'bg-primary' if order.state == 'sale' else 'bg-secondary'"
+                              t-field="order.state"/>
+                    </h2>
+                    <a href="/my/seller/orders" class="btn btn-outline-secondary">
+                        <i class="fa fa-arrow-left me-2"/>Back to Orders
+                    </a>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-8">
+                        <!-- Order Lines -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Order Items</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Product</th>
+                                            <th class="text-center">Quantity</th>
+                                            <th class="text-end">Unit Price</th>
+                                            <th class="text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="order.order_line" t-as="line">
+                                            <tr>
+                                                <td>
+                                                    <strong t-field="line.product_id.name"/>
+                                                    <t t-if="line.name != line.product_id.name">
+                                                        <br/><small class="text-muted" t-field="line.name"/>
+                                                    </t>
+                                                </td>
+                                                <td class="text-center" t-field="line.product_uom_qty"/>
+                                                <td class="text-end" t-field="line.price_unit" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
+                                                <td class="text-end" t-field="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-end"><strong>Subtotal</strong></td>
+                                            <td class="text-end" t-field="order.amount_untaxed" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" class="text-end">Tax</td>
+                                            <td class="text-end" t-field="order.amount_tax" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/>
+                                        </tr>
+                                        <tr class="table-primary">
+                                            <td colspan="3" class="text-end"><strong>Total</strong></td>
+                                            <td class="text-end"><strong t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <!-- Order Info -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0">Order Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <dl class="row mb-0">
+                                    <dt class="col-sm-4">Date</dt>
+                                    <dd class="col-sm-8" t-field="order.date_order" t-options="{'widget': 'datetime'}"/>
+                                    
+                                    <dt class="col-sm-4">Customer</dt>
+                                    <dd class="col-sm-8" t-field="order.partner_id.name"/>
+                                    
+                                    <t t-if="order.partner_id.email">
+                                        <dt class="col-sm-4">Email</dt>
+                                        <dd class="col-sm-8" t-field="order.partner_id.email"/>
+                                    </t>
+                                    
+                                    <t t-if="order.partner_id.phone">
+                                        <dt class="col-sm-4">Phone</dt>
+                                        <dd class="col-sm-8" t-field="order.partner_id.phone"/>
+                                    </t>
+                                </dl>
+                            </div>
+                        </div>
+                        
+                        <!-- Shipping Address -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Shipping Address</h5>
+                            </div>
+                            <div class="card-body">
+                                <address class="mb-0">
+                                    <strong t-field="order.partner_shipping_id.name"/><br/>
+                                    <t t-if="order.partner_shipping_id.street">
+                                        <span t-field="order.partner_shipping_id.street"/><br/>
+                                    </t>
+                                    <t t-if="order.partner_shipping_id.city">
+                                        <span t-field="order.partner_shipping_id.city"/>
+                                    </t>
+                                    <t t-if="order.partner_shipping_id.country_id">
+                                        , <span t-field="order.partner_shipping_id.country_id.name"/>
+                                    </t>
+                                </address>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+    
+    <!-- ============================================================ -->
+    <!-- SELLER PAYMENTS -->
+    <!-- ============================================================ -->
+    
+    <template id="seller_payments" name="Seller Payments">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Payments &amp; Earnings</t>
+            </t>
+            
+            <div class="container py-4">
+                <!-- Summary Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-success text-white h-100">
+                            <div class="card-body">
+                                <h6 class="text-white-50">Total Earnings</h6>
+                                <h3 class="mb-0" t-esc="'%.2f' % total_earnings"/> <small t-esc="seller.currency_id.symbol"/>
+                                <small class="d-block mt-1 text-white-50">After <t t-esc="commission_rate"/>% commission</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-primary text-white h-100">
+                            <div class="card-body">
+                                <h6 class="text-white-50">Total Sales</h6>
+                                <h3 class="mb-0" t-field="seller.total_sales" t-options="{'widget': 'monetary', 'display_currency': seller.currency_id}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-secondary text-white h-100">
+                            <div class="card-body">
+                                <h6 class="text-white-50">Platform Commission</h6>
+                                <h3 class="mb-0" t-esc="'%.2f' % total_commission"/> <small t-esc="seller.currency_id.symbol"/>
+                                <small class="d-block mt-1 text-white-50"><t t-esc="commission_rate"/>% of sales</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payments Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Payment History</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <t t-if="payments">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Order</th>
+                                        <th>Date</th>
+                                        <th class="text-end">Sale Amount</th>
+                                        <th class="text-end">Commission</th>
+                                        <th class="text-end">Net Earnings</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="payments" t-as="payment">
+                                        <tr>
+                                            <td>
+                                                <a t-att-href="'/my/seller/orders/' + str(payment['order_id'])" t-esc="payment['order_ref']"/>
+                                            </td>
+                                            <td t-esc="payment['date'].strftime('%Y-%m-%d') if payment['date'] else '-'"/>
+                                            <td class="text-end" t-esc="'%.2f %s' % (payment['amount'], payment['currency'])"/>
+                                            <td class="text-end text-danger" t-esc="'-%.2f %s' % (payment['commission'], payment['currency'])"/>
+                                            <td class="text-end text-success fw-bold" t-esc="'%.2f %s' % (payment['net_amount'], payment['currency'])"/>
+                                            <td>
+                                                <span class="badge"
+                                                      t-att-class="'bg-success' if payment['state'] == 'paid' else 'bg-warning'"
+                                                      t-esc="payment['state'].title()"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <div class="text-center py-5 text-muted">
+                                <i class="fa fa-money fa-4x mb-3"/>
+                                <p class="h5">No payments yet</p>
+                                <p>Your earnings will appear here once you start making sales.</p>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+                
+                <!-- Pager -->
+                <t t-if="pager and payments">
+                    <div class="d-flex justify-content-center mt-4">
+                        <t t-call="portal.pager"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+    
+    <!-- ============================================================ -->
+    <!-- SELLER PROFILE EDIT -->
+    <!-- ============================================================ -->
+    
+    <template id="seller_profile" name="Seller Profile">
+        <t t-call="portal.portal_layout">
+            <div class="container py-4">
+                <h2 class="mb-4">Edit Profile</h2>
+                
+                <t t-if="success == 'updated'">
+                    <div class="alert alert-success">
+                        <i class="fa fa-check me-2"/>Profile updated successfully.
+                    </div>
+                </t>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <form action="/my/seller/profile/update" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-3 text-center">
+                                    <t t-if="seller.store_logo">
+                                        <img t-att-src="'data:image/png;base64,' + seller.store_logo.decode('utf-8')" 
+                                             class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                                             style="width: 150px; height: 150px;">
+                                            <i class="fa fa-store fa-4x text-white"/>
+                                        </div>
+                                    </t>
+                                    <div>
+                                        <label class="btn btn-outline-primary btn-sm">
+                                            <i class="fa fa-camera me-1"/> Change Logo
+                                            <input type="file" name="store_logo" class="d-none" accept=".jpg,.jpeg,.png"/>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <h4 t-field="seller.company_name"/>
+                                    <p class="text-muted">
+                                        <i class="fa fa-user me-1"/> <t t-field="seller.user_id.name"/>
+                                    </p>
+                                    <span class="badge"
+                                          t-att-class="'bg-success' if seller.state == 'approved' else 'bg-warning' if seller.state == 'pending' else 'bg-secondary'"
+                                          t-field="seller.state"/>
+                                </div>
+                            </div>
+                            
+                            <hr/>
+                            
+                            <h5 class="mb-3">Contact Information</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone</label>
+                                    <input type="tel" name="phone" class="form-control" t-att-value="seller.phone or ''"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">City</label>
+                                    <input type="text" name="city" class="form-control" t-att-value="seller.city or ''"/>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Street Address</label>
+                                    <input type="text" name="street" class="form-control" t-att-value="seller.street or ''"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Country</label>
+                                    <select name="country_id" class="form-select">
+                                        <option value="">Select country</option>
+                                        <t t-foreach="countries" t-as="country">
+                                            <option t-att-value="country.id" 
+                                                    t-att-selected="seller.country_id.id == country.id"
+                                                    t-esc="country.name"/>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <hr/>
+                            
+                            <h5 class="mb-3">Business Details</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Tax ID</label>
+                                    <input type="text" name="tax_id" class="form-control" t-att-value="seller.tax_id or ''"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">KYC Document</label>
+                                    <input type="file" name="kyc_doc" class="form-control" accept=".pdf,.jpg,.jpeg,.png"/>
+                                    <t t-if="seller.kyc_doc">
+                                        <small class="text-success">
+                                            <i class="fa fa-check me-1"/>Document uploaded
+                                            <t t-if="seller.kyc_verified"> (Verified)</t>
+                                        </small>
+                                    </t>
+                                </div>
+                            </div>
+                            
+                            <hr/>
+                            
+                            <h5 class="mb-3">Banking Information</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Bank Name</label>
+                                    <input type="text" name="bank_name" class="form-control" t-att-value="seller.bank_name or ''"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Account Number</label>
+                                    <input type="text" name="bank_account" class="form-control" t-att-value="seller.bank_account or ''"/>
+                                </div>
+                            </div>
+                            
+                            <hr/>
+                            
+                            <h5 class="mb-3">Store Description</h5>
+                            <div class="mb-4">
+                                <textarea name="store_description" class="form-control" rows="4" 
+                                          t-esc="seller.store_description or ''"/>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save me-2"/>Save Changes
+                                </button>
+                                <a href="/my/seller/dashboard" class="btn btn-outline-secondary">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
+

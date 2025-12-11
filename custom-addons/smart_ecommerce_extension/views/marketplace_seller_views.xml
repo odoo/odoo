@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!-- MARKETPLACE SELLER VIEWS -->
+    <!-- ============================================================ -->
+    
+    <!-- Seller Form View -->
+    <record id="view_marketplace_seller_form" model="ir.ui.view">
+        <field name="name">marketplace.seller.form</field>
+        <field name="model">marketplace.seller</field>
+        <field name="arch" type="xml">
+            <form string="Seller">
+                <header>
+                    <button name="action_submit_for_approval" string="Submit for Approval"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Approve"
+                            type="object" class="btn-success"
+                            invisible="state != 'pending'"
+                            groups="sales_team.group_sale_manager"/>
+                    <button name="action_reject" string="Reject"
+                            type="object" class="btn-danger"
+                            invisible="state != 'pending'"
+                            groups="sales_team.group_sale_manager"/>
+                    <button name="action_suspend" string="Suspend"
+                            type="object" class="btn-warning"
+                            invisible="state != 'approved'"
+                            groups="sales_team.group_sale_manager"/>
+                    <button name="action_reactivate" string="Reactivate"
+                            type="object" class="btn-success"
+                            invisible="state != 'suspended'"
+                            groups="sales_team.group_sale_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,pending,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-shopping-cart" type="object"
+                                name="get_portal_dashboard_data">
+                            <field name="order_count" widget="statinfo" string="Orders"/>
+                        </button>
+                    </div>
+                    <field name="store_logo" widget="image" class="oe_avatar" options="{'preview_image': 'store_logo', 'size': [128, 128]}"/>
+                    <div class="oe_title">
+                        <label for="company_name"/>
+                        <h1>
+                            <field name="company_name" placeholder="Store/Company Name"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Account Information">
+                            <field name="user_id" options="{'no_create': True}"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                        <group string="Business Information">
+                            <field name="tax_id"/>
+                            <field name="commission_rate"/>
+                            <field name="rating" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="Address">
+                            <field name="street"/>
+                            <field name="city"/>
+                            <field name="country_id"/>
+                        </group>
+                        <group string="Banking">
+                            <field name="bank_name"/>
+                            <field name="bank_account"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="KYC &amp; Documents" name="documents">
+                            <group>
+                                <group string="KYC Document">
+                                    <field name="kyc_doc" filename="kyc_doc_filename"/>
+                                    <field name="kyc_doc_filename" invisible="1"/>
+                                    <field name="kyc_verified"/>
+                                    <field name="kyc_verified_date" invisible="not kyc_verified"/>
+                                    <field name="kyc_verified_by" invisible="not kyc_verified"/>
+                                    <button name="action_verify_kyc" string="Verify KYC"
+                                            type="object" class="btn-primary"
+                                            invisible="kyc_verified or not kyc_doc"
+                                            groups="sales_team.group_sale_manager"/>
+                                </group>
+                                <group string="Business License">
+                                    <field name="business_license" filename="business_license_filename"/>
+                                    <field name="business_license_filename" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Store Settings" name="store">
+                            <group>
+                                <field name="store_description" widget="html"/>
+                            </group>
+                            <group>
+                                <group>
+                                    <field name="store_banner" widget="image" options="{'size': [300, 100]}"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Statistics" name="stats">
+                            <group>
+                                <group>
+                                    <field name="total_sales"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </group>
+                                <group>
+                                    <field name="approved_date"/>
+                                    <field name="approved_by"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Status History" name="history"
+                              invisible="state not in ('rejected', 'suspended')">
+                            <group invisible="state != 'rejected'">
+                                <field name="rejection_reason" readonly="1"/>
+                            </group>
+                            <group invisible="state != 'suspended'">
+                                <field name="suspension_reason" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Seller List View -->
+    <record id="view_marketplace_seller_tree" model="ir.ui.view">
+        <field name="name">marketplace.seller.list</field>
+        <field name="model">marketplace.seller</field>
+        <field name="arch" type="xml">
+            <list string="Sellers" 
+                  decoration-muted="state == 'suspended'"
+                  decoration-success="state == 'approved'"
+                  decoration-warning="state == 'pending'"
+                  decoration-danger="state == 'rejected'">
+                <field name="company_name"/>
+                <field name="user_id"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="city"/>
+                <field name="kyc_verified" widget="boolean"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'pending'"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state in ('suspended', 'rejected')"/>
+                <field name="product_count"/>
+                <field name="total_sales" sum="Total Sales"/>
+                <field name="rating" widget="priority"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+    
+    <!-- Seller Kanban View -->
+    <record id="view_marketplace_seller_kanban" model="ir.ui.view">
+        <field name="name">marketplace.seller.kanban</field>
+        <field name="model">marketplace.seller</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_mobile">
+                <field name="id"/>
+                <field name="company_name"/>
+                <field name="user_id"/>
+                <field name="state"/>
+                <field name="store_logo"/>
+                <field name="product_count"/>
+                <field name="total_sales"/>
+                <field name="rating"/>
+                <field name="kyc_verified"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex">
+                            <field name="store_logo" widget="image" class="o_kanban_image" options="{'size': [64, 64]}"/>
+                            <div class="ms-2 flex-grow-1">
+                                <strong><field name="company_name"/></strong>
+                                <div class="text-muted small">
+                                    <field name="user_id"/>
+                                </div>
+                                <div class="mt-1">
+                                    <span class="badge bg-primary">
+                                        <i class="fa fa-cubes me-1"/><field name="product_count"/> products
+                                    </span>
+                                    <span t-if="record.kyc_verified.raw_value" class="badge bg-success ms-1">
+                                        <i class="fa fa-check me-1"/>KYC
+                                    </span>
+                                </div>
+                                <div class="mt-1">
+                                    <field name="rating" widget="priority"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    
+    <!-- Seller Search View -->
+    <record id="view_marketplace_seller_search" model="ir.ui.view">
+        <field name="name">marketplace.seller.search</field>
+        <field name="model">marketplace.seller</field>
+        <field name="arch" type="xml">
+            <search string="Search Sellers">
+                <field name="company_name"/>
+                <field name="user_id"/>
+                <field name="email"/>
+                <field name="city"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Pending" name="pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Suspended" name="suspended" domain="[('state', '=', 'suspended')]"/>
+                <separator/>
+                <filter string="KYC Verified" name="kyc_verified" domain="[('kyc_verified', '=', True)]"/>
+                <filter string="KYC Pending" name="kyc_pending" domain="[('kyc_verified', '=', False), ('kyc_doc', '!=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="City" name="group_city" context="{'group_by': 'city'}"/>
+                    <filter string="Country" name="group_country" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Seller Action -->
+    <record id="action_marketplace_sellers" model="ir.actions.act_window">
+        <field name="name">Sellers</field>
+        <field name="res_model">marketplace.seller</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_approved': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No sellers registered yet
+            </p>
+            <p>
+                Marketplace sellers will appear here once they register.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Pending Sellers Action -->
+    <record id="action_marketplace_sellers_pending" model="ir.actions.act_window">
+        <field name="name">Pending Approvals</field>
+        <field name="res_model">marketplace.seller</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('state', '=', 'pending')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No pending seller approvals
+            </p>
+        </field>
+    </record>
+    
+    <!-- ============================================================ -->
+    <!-- WIZARD VIEWS -->
+    <!-- ============================================================ -->
+    
+    <!-- Reject Wizard -->
+    <record id="view_marketplace_seller_reject_wizard_form" model="ir.ui.view">
+        <field name="name">marketplace.seller.reject.wizard.form</field>
+        <field name="model">marketplace.seller.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Seller">
+                <group>
+                    <field name="seller_id" readonly="1"/>
+                    <field name="reason" placeholder="Please provide a reason for rejection..."/>
+                </group>
+                <footer>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Suspend Wizard -->
+    <record id="view_marketplace_seller_suspend_wizard_form" model="ir.ui.view">
+        <field name="name">marketplace.seller.suspend.wizard.form</field>
+        <field name="model">marketplace.seller.suspend.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Suspend Seller">
+                <group>
+                    <field name="seller_id" readonly="1"/>
+                    <field name="reason" placeholder="Please provide a reason for suspension..."/>
+                </group>
+                <footer>
+                    <button name="action_suspend" string="Suspend" type="object" class="btn-warning"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+
