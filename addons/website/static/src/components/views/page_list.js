@@ -72,7 +72,7 @@ export class PageListController extends listView.Controller {
                 this.dialog.add(DuplicatePageDialog, {
                     pageIds: resIds,
                     onDuplicate: () => {
-                        this.model.load();
+                        this.env.searchModel.refreshFilterForAllWebsites();
                     },
                 });
             };

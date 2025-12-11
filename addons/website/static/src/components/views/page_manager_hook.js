@@ -60,10 +60,6 @@ export function usePageManager({ resModel, createAction }) {
         }
     }
 
-    function selectWebsite(website) {
-        state.activeWebsite = website;
-        env.searchModel.notifyWebsiteChange(website.id);
-    }
     return {
         get websites() {
             const activeId = state.activeWebsite.id;
@@ -73,6 +69,5 @@ export function usePageManager({ resModel, createAction }) {
             });
         },
         createWebsiteContent,
-        selectWebsite,
     };
 }
