@@ -94,8 +94,6 @@ def _mock_button_verify_partner_endpoint(func, self, *args, **kwargs):
     state = _mock_get_peppol_verification_state(func, self, endpoint, eas, edi_format)
     self.with_company(company).peppol_verification_state = state
     self._log_verification_state_update(company, old_value, state)
-    if state == 'valid':
-        self.with_company(company).invoice_sending_method = 'peppol'
 
 
 def _mock_get_peppol_verification_state(func, self, *args, **kwargs):
