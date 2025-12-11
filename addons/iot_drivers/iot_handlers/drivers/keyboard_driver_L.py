@@ -6,7 +6,7 @@ import json
 import logging
 from lxml import etree
 import os
-from queue import Queue, Empty
+from queue import Queue
 import re
 import requests
 import subprocess
@@ -14,12 +14,9 @@ from threading import Lock
 import time
 from usb import util
 
-from odoo import http
-from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.driver import Driver
 from odoo.addons.iot_drivers.event_manager import event_manager
-from odoo.addons.iot_drivers.main import iot_devices
-from odoo.addons.iot_drivers.tools import helpers, route, system
+from odoo.addons.iot_drivers.tools import helpers, system
 
 _logger = logging.getLogger(__name__)
 xlib = ctypes.cdll.LoadLibrary('libX11.so.6')
@@ -84,12 +81,6 @@ class KeyboardUSBDriver(Driver):
                     device.interface_protocol = itf.bInterfaceProtocol
                     return True
         return False
-
-    @classmethod
-    def get_status(self):
-        """Allows `hw_proxy.Proxy` to retrieve the status of the scanners"""
-        status = 'connected' if any(iot_devices[d].device_type == "scanner" for d in iot_devices) else 'disconnected'
-        return {'status': status, 'messages': ''}
 
     @classmethod
     @helpers.require_db
@@ -347,37 +338,3 @@ class KeyboardUSBDriver(Driver):
             modifiers += 2
 
         return modifiers
-
-    def read_next_barcode(self):
-        """Get the value of the last barcode that was scanned but not sent yet
-        and not older than 5 seconds. This function is used in Community, when
-        we don't have access to the IoTLongpolling.
-
-        Returns:
-            str: The next barcode to be read or an empty string.
-        """
-
-        # Previous query still running, stop it by sending a fake barcode
-        if self.read_barcode_lock.locked():
-            self._barcodes.put((time.time(), ""))
-
-        with self.read_barcode_lock:
-            try:
-                timestamp, barcode = self._barcodes.get(True, 55)
-                if timestamp > time.time() - 5:
-                    return barcode
-            except Empty:
-                return ''
-
-
-proxy_drivers['scanner'] = KeyboardUSBDriver
-
-
-class KeyboardUSBController(http.Controller):
-    @route.iot_route('/hw_proxy/scanner', type='jsonrpc', cors='*')
-    def get_barcode(self):
-        scanners = [iot_devices[d] for d in iot_devices if iot_devices[d].device_type == "scanner"]
-        if scanners:
-            return scanners[0].read_next_barcode()
-        time.sleep(5)
-        return None

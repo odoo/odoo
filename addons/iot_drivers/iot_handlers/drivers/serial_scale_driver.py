@@ -3,20 +3,13 @@
 import logging
 import re
 import serial
-import threading
 import time
 
-from odoo import http
-from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.event_manager import event_manager
 from odoo.addons.iot_drivers.iot_handlers.drivers.serial_driver_base import SerialDriver, SerialProtocol, serial_connection
 
 
 _logger = logging.getLogger(__name__)
-
-# Only needed to expose scale via hw_proxy (used by Community edition)
-ACTIVE_SCALE = None
-new_weight_event = threading.Event()
 
 # 8217 Mettler-Toledo (Weight-only) Protocol, as described in the scale's Service Manual.
 #    e.g. here: https://www.manualslib.com/manual/861274/Mettler-Toledo-Viva.html?page=51#manual
@@ -43,15 +36,6 @@ Toledo8217Protocol = SerialProtocol(
 )
 
 
-# HW Proxy is used by Community edition
-class ScaleReadHardwareProxy(http.Controller):
-    @http.route('/hw_proxy/scale_read', type='jsonrpc', auth='none', cors='*')
-    def scale_read(self):
-        if ACTIVE_SCALE:
-            return {'weight': ACTIVE_SCALE._scale_read_hw_proxy()}
-        return None
-
-
 class ScaleDriver(SerialDriver):
     """Abstract base class for scale drivers."""
     last_sent_value = None
@@ -61,19 +45,6 @@ class ScaleDriver(SerialDriver):
         self.device_type = 'scale'
         self._set_actions()
         self._is_reading = True
-
-        # The HW Proxy can only expose one scale,
-        # only the last scale connected is kept
-        global ACTIVE_SCALE  # noqa: PLW0603
-        ACTIVE_SCALE = self
-        proxy_drivers['scale'] = ACTIVE_SCALE
-
-    # Used by the HW Proxy in Community edition
-    def get_status(self):
-        """Allows `hw_proxy.Proxy` to retrieve the status of the scales"""
-
-        status = self._status
-        return {'status': status['status'], 'messages': [status['message_title']]}
 
     def _set_actions(self):
         """Initializes `self._actions`, a map of action keys sent by the frontend to backend action methods."""
@@ -132,13 +103,6 @@ class ScaleDriver(SerialDriver):
             })
         else:
             self._read_status(answer)
-
-    # Ensures compatibility with Community edition
-    def _scale_read_hw_proxy(self):
-        """Used when the iot app is not installed"""
-        with self._device_lock:
-            self._read_weight()
-        return self.data['result']
 
     def _take_measure(self):
         """Reads the device's weight value, and pushes that value to the frontend."""
