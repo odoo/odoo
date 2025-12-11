@@ -104,10 +104,20 @@ registry.category("fields").add("many2one_uom", {
     fieldDependencies: ({ type, options }) => {
         const deps = [];
         if (options.product_field) {
-            deps.push({
+            const productDep = {
                 name: options.product_field,
                 type,
-            });
+            }
+            // Deduce the field relation (see getProductRelatedModel) so that the widget can work
+            // out of the box even if the specified product field is not present in the view.
+            // If we cannot deduce the field relation, the field has to be specified in the view
+            // for the client to know its relation already (and for the widget to work).
+            if (options.product_field === 'product_id') {
+                productDep.relation = 'product.product';
+            } else if (['product_tmpl_id', 'product_template_id'].includes(options.product_field)) {
+                productDep.relation = 'product.template';
+            }
+            deps.push(productDep);
         }
         if (options.quantity_field) {
             deps.push({
