@@ -29,7 +29,7 @@ export class PaymentStripe extends PaymentInterface {
             return data.secret;
         } catch (error) {
             const message = error.code === 200 ? error.data.message : error.message;
-            this._showError(message, "Fetch Token");
+            this._showError(message, _t("Fetch Token"));
             this.terminal = false;
         }
     }
@@ -253,7 +253,7 @@ export class PaymentStripe extends PaymentInterface {
             return data;
         } catch (error) {
             const message = error.code === 200 ? error.data.message : error.message;
-            this._showError(message, "Capture Payment");
+            this._showError(message, _t("Capture Payment"));
             return false;
         }
     }
@@ -271,7 +271,7 @@ export class PaymentStripe extends PaymentInterface {
             return data.client_secret;
         } catch (error) {
             const message = error.code === 200 ? error.data.message : error.message;
-            this._showError(message, "Fetch Secret");
+            this._showError(message, _t("Fetch Secret"));
             return false;
         }
     }
