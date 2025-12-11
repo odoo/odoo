@@ -3,7 +3,7 @@
 
 {
     'name': 'Expenses',
-    'version': '2.0',
+    'version': '2.1',
     'category': 'Human Resources/Expenses',
     'sequence': 70,
     'summary': 'Submit, validate and reinvoice employee expenses',
@@ -37,6 +37,7 @@ This module also uses analytic accounting and is compatible with the invoice on 
         'data/hr_expense_sequence.xml',
         'data/hr_expense_data.xml',
         'data/hr_expense_tour.xml',
+        'data/hr_expense_cron.xml',
         'wizard/hr_expense_refuse_reason_views.xml',
         'wizard/hr_expense_approve_duplicate_views.xml',
         'wizard/hr_expense_split_wizard_views.xml',

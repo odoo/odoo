@@ -1011,7 +1011,7 @@ class HrExpense(models.Model):
         expenses_submitted_to_review = self.env['hr.expense']
         for expense in self:
             if expense.state == 'submitted':
-                expense.activity_schedule(
+                expense.with_context(mail_activity_quick_update=True).activity_schedule(
                     'hr_expense.mail_act_expense_approval',
                     user_id=expense.manager_id.id or
                     expense.sudo()._get_default_responsible_for_approval().id or
@@ -1028,45 +1028,56 @@ class HrExpense(models.Model):
             expenses_activity_done.activity_feedback(['hr_expense.mail_act_expense_approval'])
         if expenses_activity_unlink:
             expenses_activity_unlink.activity_unlink(['hr_expense.mail_act_expense_approval'])
-        # Avoid sending yourself mails
-        expenses_submitted_to_review = expenses_submitted_to_review.filtered(lambda expense: expense.manager_id != self.env.user)
+
+        # TODO: Remove in master
+        # Note: field latest_version of model ir.module.module is the installed version
+        installed_module_version = self.sudo().env.ref('base.module_hr_expense').latest_version
+        if expenses_submitted_to_review and parse_version(installed_module_version)[2:] < parse_version('2.1'):
+            self._send_submitted_expenses_mail()
+
+    @api.model
+    def _cron_send_submitted_expenses_mail(self):
+        expenses_submitted_to_review = self.search([('state', '=', 'submitted')])
         if expenses_submitted_to_review:
-            new_mails = []
-            for company, expenses_submitted_per_company in expenses_submitted_to_review.grouped('company_id').items():
-                parent_company_mails = company.parent_ids[::-1].mapped('email_formatted')
-                mail_from = (
-                        self.env.user.email
-                        or company.email_formatted
-                        or (parent_company_mails and parent_company_mails[0])
+            expenses_submitted_to_review._send_submitted_expenses_mail()
+
+    def _send_submitted_expenses_mail(self):
+        new_mails = []
+        for company, expenses_submitted_per_company in self.grouped('company_id').items():
+            parent_company_mails = company.parent_ids[::-1].mapped('email_formatted')
+            mail_from = (
+                    self.env.user.email
+                    or company.email_formatted
+                    or (parent_company_mails and parent_company_mails[0])
+            )
+
+            if not mail_from:  # We can't send a mail without sender
+                _logger.warning(_("Failed to send mails for submitted expenses. No valid email was found for the company"))
+                continue
+
+            for manager, expenses_submitted in expenses_submitted_per_company.grouped('manager_id').items():
+                manager_langs = tuple(lang for lang in manager.partner_id.mapped('lang') if lang)
+                mail_lang = (manager_langs and manager_langs[0]) or self.env.lang or 'en_US'
+                departments = expenses_submitted.department_id
+                if len(departments) > 1:
+                    url = '/expenses-to-process'
+                else:
+                    url = f'/departments/{departments.id}/expenses-to-approve'
+                body = self.env['ir.qweb']._render(
+                    template='hr_expense.hr_expense_template_submitted_expenses',
+                    values={'manager_name': manager.name, 'url': url},
+                    lang=mail_lang,
                 )
-
-                if not mail_from:  # We can't send a mail without sender
-                    _logger.warning(_("Failed to send mails for submitted expenses. No valid email was found for the company"))
-                    continue
-
-                for manager, expenses_submitted in expenses_submitted_per_company.grouped('manager_id').items():
-                    manager_langs = tuple(lang for lang in manager.partner_id.mapped('lang') if lang)
-                    mail_lang = (manager_langs and manager_langs[0]) or self.env.lang or 'en_US'
-                    departments = expenses_submitted.department_id
-                    if len(departments) > 1:
-                        url = '/expenses-to-process'
-                    else:
-                        url = f'/departments/{departments.id}/expenses-to-approve'
-                    body = self.env['ir.qweb']._render(
-                        template='hr_expense.hr_expense_template_submitted_expenses',
-                        values={'manager_name': manager.name, 'url': url},
-                        lang=mail_lang,
-                    )
-                    new_mails.append({
-                        'author_id': self.env.user.partner_id.id,
-                        'auto_delete': True,
-                        'body_html': body,
-                        'email_from': mail_from,
-                        'email_to': manager.employee_id.work_email or manager.email,
-                        'subject': _("New expenses waiting for your approval"),
-                    })
-                if new_mails:
-                    self.env['mail.mail'].sudo().create(new_mails).send()
+                new_mails.append({
+                    'author_id': self.env.user.partner_id.id,
+                    'auto_delete': True,
+                    'body_html': body,
+                    'email_from': mail_from,
+                    'email_to': manager.employee_id.work_email or manager.email,
+                    'subject': _("New expenses waiting for your approval"),
+                })
+            if new_mails:
+                self.env['mail.mail'].sudo().create(new_mails).send()
 
     @api.model
     def get_empty_list_help(self, help_message):

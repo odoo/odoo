@@ -1,12 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.mail.tests.common import MailCase
 from odoo import fields
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged
 
 
 @tagged('-at_install', 'post_install')
-class TestExpensesStates(TestExpenseCommon):
+class TestExpensesStates(TestExpenseCommon, MailCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -195,8 +196,32 @@ class TestExpensesStates(TestExpenseCommon):
         self.assertSequenceEqual(['approved', 'approved'], self.expenses_all.mapped('state'))
 
     def test_expense_next_activity(self):
-        """ Test the auto-validation flow skips 'submitted' state when there is no manager"""
+        """ Test next activity is assigned to the right manager, no notification is sent, but validation email is sent"""
         self.expenses_employee.manager_id = self.expense_user_manager_2
-        self.expenses_all.action_submit()
+        with self.mock_mail_gateway():
+            self.expenses_employee.action_submit()
+            self.env['hr.expense']._cron_send_submitted_expenses_mail()
         mail_activity = self.env['mail.activity'].search([('res_model', '=', 'hr.expense'), ('res_id', '=', self.expenses_employee.id)])
         self.assertEqual(mail_activity.user_id.id, self.expense_user_manager_2.id)
+        # No notification should be sent
+        notification_message = self.env['mail.message'].search([('partner_ids', 'in', self.expense_user_manager_2.partner_id.ids), ('display_name', '=', mail_activity.res_name)])
+        self.assertFalse(notification_message)
+        # Expenses submitted email is sent via cron
+        expenses_submitted = self.env['mail.mail'].search([('email_to', '=', self.expense_user_manager_2.email)])
+        self.assertEqual(expenses_submitted.subject, "New expenses waiting for your approval")
+
+    def test_expense_no_notification_on_state_change(self):
+        """ Test no notification is sent to the manager when the state changes"""
+        context_mail = {'tracking_disable': False}
+        self.expenses_employee = self.expenses_employee.with_context(context_mail)
+        self.expenses_employee.manager_id = self.expense_user_manager_2
+        with self.mock_mail_gateway():
+            # Submission is not tracked by a subtype
+            self.expenses_employee.action_submit()
+            self.expenses_employee.action_approve()
+            self.flush_tracking()
+        mail = self.env['mail.mail'].sudo().search(
+            [('notified_partner_ids', 'in', self.expense_user_manager_2.partner_id.ids),
+            ('subtype_id', '=', self.env.ref('hr_expense.mt_expense_approved').id)]
+        )
+        self.assertFalse(mail)
