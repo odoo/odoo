@@ -25,13 +25,11 @@ const getTemplate = function (options = { endAction: "nothing", endTime: "987654
             data-text-color="o-color-1"
             data-layout-background-color="400"
             data-progress-bar-color="o-color-1"
-            data-end-time="${options.endTime}">
+            data-end-time="${options.endTime}"
+            data-vxml="001">
                 <div class="container">
-                    <div class="s_countdown_canvas_wrapper"
-                    style="
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;">
+                    <div class="s_countdown_wrapper">
+                        <div class="o_template_circle d-inline-flex gap-1">
                     </div>
                 </div>
                 ${["message", "message_no_countdown"].includes(options.endAction) ? endMessage : ""}
@@ -159,7 +157,7 @@ test("countdown is stopped correctly", async () => {
     await advanceTime(0);
     expect(queryAll(".s_countdown_canvas_flex")).toHaveLength(4);
     core.stopInteractions();
-    expect(queryOne(".s_countdown_canvas_wrapper")).not.toBe(null);
+    expect(queryOne(".s_countdown_wrapper")).not.toBe(null);
     expect(queryAll(".s_countdown_canvas_flex")).toHaveLength(0);
     expect(queryAll(".s_countdown_end_message")).toHaveLength(0);
     expect(queryAll(".s_countdown_text_wrapper")).toHaveLength(0);
@@ -176,13 +174,11 @@ test("Countdown snippet exists, when the colors are not defined", async () => {
             data-progress-bar-style="surrounded"
             data-progress-bar-weight="thin"
             id="countdown-section"
-            data-end-time="1749351790.469224">
+            data-end-time="1749351790.469224"
+            data-vxml="001">
                 <div class="container">
-                    <div class="s_countdown_canvas_wrapper"
-                    style="
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;">
+                    <div class="s_countdown_wrapper">
+                        <div class="o_template_circle d-inline-flex gap-1">
                     </div>
                 </div>
             </section>`;
