@@ -63,6 +63,8 @@ export class PageListController extends PageControllerMixin(listView.Controller)
                     pageId: 0, // Ignored but mandatory
                     pageIds: resIds,
                     onDuplicate: () => {
+                        const websiteId = this.state.activeWebsite.id;
+                        this.env.searchModel.notifyWebsiteChange(websiteId);
                         this.model.load();
                     },
                 });
