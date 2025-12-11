@@ -304,7 +304,7 @@ export class ListRenderer extends Component {
                     this.focusCell(column, forward);
                 } else {
                     const column = this.lastEditedCell?.column || this.columns[0];
-                    if (column.widget !== "daterange" || !this.editedRecord.data[column.name]) {
+                    if (!this.widgetsToIgnore.includes(column.widget) || !this.editedRecord.data[column.name]) {
                         this.focusCell(column);
                     }
                 }
@@ -335,6 +335,10 @@ export class ListRenderer extends Component {
             }
             return true;
         });
+    }
+
+    get widgetsToIgnore() {
+        return ["daterange"];
     }
 
     get hasSelectors() {
