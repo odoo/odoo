@@ -34,4 +34,9 @@ export class LocalOverlayPlugin extends Plugin {
         }
         return container;
     }
+
+    destroy() {
+        this.localOverlayContainer?.replaceChildren();
+        super.destroy();
+    }
 }
