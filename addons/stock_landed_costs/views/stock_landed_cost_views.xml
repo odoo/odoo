@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Landed Costs">
                     <field name="company_id" invisible="1"/>
+                    <field name="allowed_product_ids" invisible="1"/>
                     <header>
                         <button name="button_validate" string="Validate" invisible="state != 'draft'" class="oe_highlight" type="object"/>
                         <button name="button_cancel" string="Cancel" invisible="state != 'draft'" type="object"/>
@@ -68,6 +69,11 @@
                                             context="{'default_landed_cost_ok': True, 'default_type': 'service'}"/>
                                         <field name="name"/>
                                         <field name="account_id" options="{'no_create': True}"/>
+                                        <field name="apply_on_product_ids"
+                                            options="{'no_create': True}"
+                                            widget="many2many_tags"
+                                            domain="[('id', 'in', parent.allowed_product_ids)]"
+                                            placeholder="All Products"/>
                                         <field name="split_method"/>
                                         <field name="price_unit"/>
                                         <field name="currency_id" column_invisible="True"/>

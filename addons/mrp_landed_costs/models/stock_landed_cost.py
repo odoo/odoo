@@ -29,6 +29,10 @@ class StockLandedCost(models.Model):
         )
 
     @api.depends('mrp_production_ids')
+    def _compute_allowed_product_ids(self):
+        super()._compute_allowed_product_ids()
+
+    @api.depends('mrp_production_ids')
     def _compute_mrp_productions_count(self):
         for cost in self:
             cost.mrp_productions_count = len(cost.mrp_production_ids)
