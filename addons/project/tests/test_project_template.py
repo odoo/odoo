@@ -238,3 +238,46 @@ class TestProjectTemplates(TestProjectCommon):
 
         self.assertEqual(new_project.date_start, new_start, "Start date should be the one provided")
         self.assertEqual(new_project.date, new_end, "End date should be the one provided")
+
+    def test_create_from_template_with_default_roles(self):
+        developer_role, team_leader_role = self.env['project.role'].create([
+            {'name': 'Developer', 'user_ids': (self.user_projectuser + self.user_projectmanager).ids},
+            {'name': 'Team Leader', 'user_ids': self.user_projectmanager.ids},
+        ])
+        self.task_inside_template.role_ids = team_leader_role
+        self.task_template_inside_template.role_ids = team_leader_role
+        new_project = self.project_template.action_create_from_template({
+            'name': 'New Project',
+        })
+        self.assertFalse(new_project.is_template)
+        new_tasks = new_project.task_ids
+        task = new_tasks.filtered(lambda t: t.name == self.task_inside_template.name)
+        task_template = new_tasks - task
+        self.assertEqual(
+            task.user_ids,
+            self.user_projectmanager,
+        )
+        self.assertFalse(task.is_template)
+        self.assertFalse(task.role_ids)
+        self.assertTrue(task_template.is_template)
+        self.assertFalse(task_template.user_ids)
+        self.assertEqual(task_template.role_ids, self.task_template_inside_template.role_ids)
+
+        self.task_inside_template.role_ids += developer_role
+        self.task_template_inside_template.role_ids += developer_role
+        new_project = self.project_template.action_create_from_template({
+            'name': 'New Project',
+        })
+        self.assertFalse(new_project.is_template)
+        new_tasks = new_project.task_ids
+        task = new_tasks.filtered(lambda t: t.name == self.task_inside_template.name)
+        task_template = new_tasks - task
+        self.assertFalse(task.is_template)
+        self.assertEqual(
+            task.user_ids,
+            self.user_projectmanager + self.user_projectuser,
+        )
+        self.assertFalse(task.role_ids)
+        self.assertTrue(task_template.is_template)
+        self.assertEqual(task_template.role_ids, self.task_template_inside_template.role_ids)
+        self.assertFalse(task_template.user_ids)

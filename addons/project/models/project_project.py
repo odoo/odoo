@@ -1442,15 +1442,12 @@ class ProjectProject(models.Model):
             for key, value in self.env.context.items()
             if key.startswith('default_') and key.removeprefix('default_') in self._get_template_default_context_whitelist()
         } | values
-        project = self.with_context(copy_from_template=True, copy_from_project_template=True).copy(default=default)
+        context = {
+            'copy_from_template': True,
+            'copy_from_project_template': self.id,
+        }
+        if role_to_users_mapping is not None:
+            context['role_to_users_mapping'] = {entry.role_id.id: entry.user_ids.ids for entry in role_to_users_mapping if entry.user_ids}
+        project = self.with_context(**context).copy(default=default)
         project.message_post(body=self.env._("Project created from template %(name)s.", name=self.name))
-
-        # Tasks dispatching using project roles
-        if role_to_users_mapping and (mapping := role_to_users_mapping.filtered(lambda entry: entry.user_ids)):
-            for new_task in project.task_ids:
-                for entry in mapping:
-                    if entry.role_id in new_task.role_ids:
-                        new_task.user_ids |= entry.user_ids
-
-        project.task_ids.role_ids = False
         return project

@@ -3,6 +3,7 @@
 import re
 from collections import defaultdict
 from datetime import timedelta, datetime, time, UTC
+from random import shuffle
 
 from lxml import html
 
@@ -829,6 +830,8 @@ class ProjectTask(models.Model):
             'depend_on_ids': False,
             'dependent_ids': False,
         })
+        copy_from_template = self.env.context.get('copy_from_template')
+        project_template = self.env['project.project'].browse(self.env.context.get('copy_from_project_template', False))
         vals_list = super().copy_data(default=default)
         # filter only readable fields
         vals_list = [
@@ -845,14 +848,14 @@ class ProjectTask(models.Model):
         if not has_default_users:
             active_users = self.user_ids.filtered('active')
         milestone_mapping = self.env.context.get('milestone_mapping', {})
+        role_to_users_mapping = self.env.context.get('role_to_users_mapping')
         for task, vals in zip(self, vals_list):
-
             if not default.get('stage_id'):
                 vals['stage_id'] = task.stage_id.id
             if 'active' not in default and not task['active'] and not self.env.context.get('copy_project'):
                 vals['active'] = True
             if not default.get('name'):
-                vals['name'] = task.name if self.env.context.get('copy_project') or self.env.context.get('copy_from_template') else _("%s (copy)", task.name)
+                vals['name'] = task.name if self.env.context.get('copy_project') or copy_from_template else _("%s (copy)", task.name)
             if task.recurrence_id and not default.get('recurrence_id'):
                 vals['recurrence_id'] = task.recurrence_id.copy().id
             if task.allow_milestones:
@@ -862,16 +865,35 @@ class ProjectTask(models.Model):
                     'parent_id': False,
                 }
                 current_task = task
-                if self.env.context.get('copy_from_template'):
+                if copy_from_template:
                     current_task = current_task.with_context(active_test=True)
                 child_ids = current_task.child_ids
                 vals['child_ids'] = [Command.create(child_id.copy_data(default)[0]) for child_id in child_ids]
             if not has_default_users and vals['user_ids']:
                 task_active_users = task.user_ids & active_users
                 vals['user_ids'] = [Command.set(task_active_users.ids)]
-            if self.env.context.get('copy_from_template') and not self.env.context.get('copy_from_project_template'):
-                vals['is_template'] = False
-            if self.env.context.get('copy_from_template'):
+            if copy_from_template:
+                if not project_template:
+                    vals['is_template'] = False
+                if not task.is_template:
+                    vals['role_ids'] = False
+                    if project_template and task.project_id == project_template:
+                        user_ids = set()
+                        if role_to_users_mapping:
+                            for role in task.role_ids:
+                                user_ids |= set(role_to_users_mapping.get(role.id, []))
+                        elif role_to_users_mapping is None and task.role_ids.user_ids:
+                            for role in task.role_ids:
+                                if (
+                                    role.user_ids
+                                    and (candidat_ids := list(set(role.user_ids.ids) - user_ids))
+                                ):
+                                    shuffle(candidat_ids)
+                                    user_ids.add(candidat_ids[0])
+                        if user_ids:
+                            if 'user_ids' not in vals:
+                                vals['user_ids'] = []
+                            vals['user_ids'] += [Command.link(user_id) for user_id in user_ids]
                 for field in set(self._get_template_field_blacklist()) & set(vals.keys()):
                     del vals[field]
         return vals_list
