@@ -1,23 +1,23 @@
+import { browser } from "@web/core/browser/browser";
+import { makeContext } from "@web/core/context";
+import { Domain } from "@web/core/domain";
 import {
-    serializeDate,
-    serializeDateTime,
     deserializeDate,
     deserializeDateTime,
+    serializeDate,
+    serializeDateTime,
 } from "@web/core/l10n/dates";
-import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { KeepLast } from "@web/core/utils/concurrency";
-import { Model } from "@web/model/model";
-import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
-import { browser } from "@web/core/browser/browser";
-import { makeContext } from "@web/core/context";
 import { groupBy, intersection } from "@web/core/utils/arrays";
 import { Cache } from "@web/core/utils/cache";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { formatFloat } from "@web/core/utils/numbers";
 import { useDebounced } from "@web/core/utils/timing";
+import { Model } from "@web/model/model";
+import { extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
 import { computeAggregatedValue } from "@web/views/utils";
 
 const { DateTime } = luxon;
@@ -740,6 +740,18 @@ export class CalendarModel extends Model {
         await this.orm.write(this.meta.resModel, [eventId], {
             [date_stop]: serializeDateTime(end),
             [date_start]: serializeDateTime(start),
+        });
+        await this.load();
+    }
+    /**
+     * @protected
+     * @param {Number} eventId
+     */
+    async unscheduleEvent(eventId) {
+        const { date_start, date_stop } = this.meta.fieldMapping;
+        await this.orm.write(this.meta.resModel, [eventId], {
+            [date_stop]: false,
+            [date_start]: false,
         });
         await this.load();
     }

@@ -2,7 +2,10 @@
 <templates xml:space="preserve">
     <t t-name="web.CalendarSidePanel">
         <div class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
-            <div class="o_calendar_sidebar">
+            <div t-if="props.model.meta.canScheduleEvents and state.isDragging" class="d-flex o_calendar_unschedule_zone m-3 align-items-center justify-content-center">
+                <b>Drop here to unschedule</b>
+            </div>
+            <div class="o_calendar_sidebar" t-att-class="{ 'd-none': props.model.meta.canScheduleEvents and state.isDragging }">
                 <DatePicker t-if="showDatePicker" t-props="datePickerProps" />
                 <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
                     <FilterSection model="props.model" section="section"/>
