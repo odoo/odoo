@@ -6,6 +6,7 @@ import { ProductCard } from "@point_of_sale/app/generic_components/product_card/
 import { NumericInput } from "@point_of_sale/app/generic_components/inputs/numeric_input/numeric_input";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 export class EventRegistrationPopup extends Component {
     static template = "pos_event.EventRegistrationPopup";
@@ -78,8 +79,8 @@ export class EventRegistrationPopup extends Component {
 
         if (requiredByRegistration || requiredByOrder) {
             this.dialog.add(AlertDialog, {
-                title: "Error",
-                body: "Please fill in all required fields",
+                title: _t("Error"),
+                body: _t("Please fill in all required fields"),
             });
             return;
         }
