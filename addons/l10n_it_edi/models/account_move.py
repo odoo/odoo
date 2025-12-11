@@ -195,6 +195,10 @@ class AccountMove(models.Model):
         fields_list.append('l10n_it_edi_attachment_file')
         return fields_list
 
+    def _get_condition_to_detach(self):
+        # EXTENDS account
+        return self.l10n_it_edi_is_self_invoice or super()._get_condition_to_detach()
+
     # -------------------------------------------------------------------------
     # Business actions
     # -------------------------------------------------------------------------

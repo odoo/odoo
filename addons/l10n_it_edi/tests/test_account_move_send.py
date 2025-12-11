@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -244,3 +246,88 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             self.assertFalse(invoices[1].l10n_it_edi_state)
             self.assertFalse(invoices[1].l10n_it_edi_transaction)
             self.assertTrue(invoices[1].l10n_it_edi_header)
+
+    def test_detach_invoice(self):
+        # Prepare an invoice
+        invoice = self.init_invoice(self.italian_partner_a)
+        self.italian_partner_a.with_company(invoice.company_id).invoice_edi_format = 'it_edi_xml'
+
+        def _get_default_extra_edis(self, move):
+            return {}
+
+        # Fake sending to the EDI and reset to draft
+        with patch(
+            'odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis',
+            _get_default_extra_edis
+        ):
+            self.env['account.move.send']._generate_and_send_invoices(invoice)
+        attachment_name = invoice.l10n_it_edi_attachment_id.name
+        invoice.button_draft()
+
+        self.assertNotEqual(invoice.l10n_it_edi_attachment_id.name, attachment_name)
+        self.assertTrue('detached' in invoice.l10n_it_edi_attachment_id.name.lower())
+
+    def test_detach_bill_fails(self):
+        # Fake an exported bill by manually attaching its export
+        values = {
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.italian_partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "Product A",
+                    'price_unit': 800.40,
+                })
+            ],
+        }
+        bill = self.env['account.move'].with_company(self.company).create({'move_type': 'in_invoice', **values})
+
+        # Post it, add an attachment, revert to draft
+        bill.action_post()
+        bill.l10n_it_edi_attachment_file = base64.b64encode(bill._l10n_it_edi_render_xml())
+        attachment_name = bill.l10n_it_edi_attachment_id.name
+        bill.button_draft()
+
+        self.assertEqual(bill.l10n_it_edi_attachment_id.name, attachment_name)
+        self.assertFalse('detached' in bill.l10n_it_edi_attachment_id.name.lower())
+
+    def test_detach_reverse_charged_bill(self):
+        # Create a reverse charged tax
+        purchase_rc_tax = self.env['account.tax'].with_company(self.company).create({
+            'name': 'Tax 4% (Goods) Reverse Charge',
+            'amount': 4.0,
+            'amount_type': 'percent',
+            'type_tax_use': 'purchase',
+            'invoice_repartition_line_ids': self.repartition_lines(
+                self.RepartitionLine(100, 'base', ('+03', '+vj9')),
+                self.RepartitionLine(100, 'tax', ('+5v',)),
+                self.RepartitionLine(-100, 'tax', ('-4v',))),
+            'refund_repartition_line_ids': self.repartition_lines(
+                self.RepartitionLine(100, 'base', ('-03', '-vj9')),
+                self.RepartitionLine(100, 'tax', False),
+                self.RepartitionLine(-100, 'tax', False)),
+        })
+
+        # Create a reverse charged bill
+        bill = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'partner_id': self.american_partner.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "Product A",
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(purchase_rc_tax.ids)],
+                })
+            ],
+        })
+
+        # Post it, add an attachment, revert to draft
+        bill.action_post()
+        bill.l10n_it_edi_attachment_file = base64.b64encode(bill._l10n_it_edi_render_xml())
+        attachment_name = bill.l10n_it_edi_attachment_id.name
+        bill.button_draft()
+
+        self.assertNotEqual(bill.l10n_it_edi_attachment_id.name, attachment_name)
+        self.assertTrue('detached' in bill.l10n_it_edi_attachment_id.name.lower())
