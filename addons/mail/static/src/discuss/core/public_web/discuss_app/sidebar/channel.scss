@@ -19,7 +19,7 @@
     
         &:hover, &:active, &:focus-visible, &.o-showingActions {
             --border-opacity: 1;
-            --border-color: #{$o-action};
+            --border-color: #{rgba($o-action, var(--o-mail-DiscussSidebar-borderOpacity, 1))};
         }
     }
 }

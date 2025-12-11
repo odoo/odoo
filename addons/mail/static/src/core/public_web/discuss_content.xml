@@ -4,7 +4,7 @@
 <t t-name="mail.DiscussContent">
     <t t-set="partitionedActions" t-value="threadActions.partition"/>
     <div class="o-mail-DiscussContent d-flex flex-column h-100 w-100 overflow-auto o-scrollbar-thin" t-ref="root">
-        <div class="o-mail-DiscussContent-header py-1 ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-secondary gap-1 z-1 flex-grow-0" t-ref="header">
+        <div class="o-mail-DiscussContent-header py-1 ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-ref="header">
             <t t-if="thread">
                 <div t-if="showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
                     <img class="rounded-2 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
@@ -71,7 +71,7 @@
                             <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent"/></t>
                             <Composer t-if="thread.model !== 'mail.box' or thread.composer.replyToMessage" t-key="thread.localId" composer="thread.composer" autofocus="true" onDiscardCallback="() => (thread.composer.replyToMessage = undefined)" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="root" type="thread.composer.replyToMessage ? (thread.composer.replyToMessage.isNote ? 'note' : 'message') : undefined"/>
                         </div>
-                        <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-secondary flex-shrink-0" t-att-class="{ 'w-100': ui.isSmall }">
+                        <div t-if="threadActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ threadActions.activeAction.actionPanelOuterClass }}" class="o-mail-DiscussContent-panelContainer o-mail-discussSidebarBgColor h-100 border-start border-dark o-border-opacity-15 flex-shrink-0" t-att-class="{ 'w-100': ui.isSmall }">
                             <t t-component="threadActions.activeAction.actionPanelComponent" t-props="threadActions.activeAction.actionPanelComponentProps"/>
                         </div>
                     </t>
