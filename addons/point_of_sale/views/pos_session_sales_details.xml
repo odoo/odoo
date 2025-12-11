@@ -343,6 +343,18 @@
                         </div>
                     </div>
                     <br/>
+                    <t t-if="global_discount_number">
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>Number of global discounts</strong>: <t t-out="global_discount_number"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>Amount of global discounts</strong>: <t t-out="global_discount_amount" t-options="{'widget': 'monetary', 'display_currency': currency.get('user_currency')}"/>
+                            </div>
+                        </div>
+                    </t>
                 </div>
                 <div class="oe_structure"></div>
 

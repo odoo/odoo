@@ -531,6 +531,23 @@ export class PosOrderline extends PosOrderlineAccounting {
             ) || 0
         );
     }
+
+    isGlobalDiscountApplicable() {
+        return !(
+            // Ignore existing discount line as not removing it before adding new discount line successfully
+            (
+                (this.config.tip_product_id &&
+                    this.product_id.id === this.config.tip_product_id?.id) ||
+                (this.config.discount_product_id &&
+                    this.product_id.id === this.config.discount_product_id?.id)
+            )
+        );
+    }
+    get isDiscountLine() {
+        return (
+            this.config.iface_discount && this.product_id.id === this.config.discount_product_id?.id
+        );
+    }
 }
 
 registry.category("pos_available_models").add(PosOrderline.pythonModel, PosOrderline);

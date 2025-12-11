@@ -49,7 +49,7 @@ class ResConfigSettings(models.TransientModel):
     pos_use_presets = fields.Boolean(related='pos_config_id.use_presets', readonly=False)
     pos_default_preset_id = fields.Many2one('pos.preset', related='pos_config_id.default_preset_id', readonly=False)
     pos_available_preset_ids = fields.Many2many('pos.preset', related='pos_config_id.available_preset_ids', readonly=False)
-    pos_module_pos_discount = fields.Boolean(related='pos_config_id.module_pos_discount', readonly=False)
+    pos_iface_discount = fields.Boolean(related='pos_config_id.iface_discount', readonly=False)
     pos_module_pos_hr = fields.Boolean(related='pos_config_id.module_pos_hr', readonly=False)
     pos_module_pos_restaurant = fields.Boolean(related='pos_config_id.module_pos_restaurant', readonly=False)
     pos_module_pos_appointment = fields.Boolean(related="pos_config_id.module_pos_appointment", readonly=False)
@@ -121,6 +121,9 @@ class ResConfigSettings(models.TransientModel):
     pos_epson_printer_ip = fields.Char(related='pos_config_id.epson_printer_ip', readonly=False)
     pos_use_fast_payment = fields.Boolean(related='pos_config_id.use_fast_payment', readonly=False)
     pos_fast_payment_method_ids = fields.Many2many(related='pos_config_id.fast_payment_method_ids', readonly=False)
+
+    pos_discount_pc = fields.Float(related='pos_config_id.discount_pc', readonly=False)
+    pos_discount_product_id = fields.Many2one('product.product', compute='_compute_pos_discount_product_id', store=True, readonly=False)
 
     def open_payment_method_form(self):
         bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
@@ -361,3 +364,13 @@ class ResConfigSettings(models.TransientModel):
         for rec in self:
             if rec.pos_epson_printer_ip:
                 rec.pos_epson_printer_ip = format_epson_certified_domain(rec.pos_epson_printer_ip)
+
+    @api.depends('company_id', 'pos_iface_discount', 'pos_config_id')
+    def _compute_pos_discount_product_id(self):
+        default_product = self.env.ref("point_of_sale.product_product_consumable", raise_if_not_found=False) or self.env['product.product']
+        for res_config in self:
+            discount_product = res_config.pos_config_id.discount_product_id or default_product
+            if res_config.pos_iface_discount and (not discount_product.company_id or discount_product.company_id == res_config.company_id):
+                res_config.pos_discount_product_id = discount_product
+            else:
+                res_config.pos_discount_product_id = False
