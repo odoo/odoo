@@ -3,7 +3,31 @@
     <!-- syntax highlighting template -->
     <t t-name="html_editor.EmbeddedSyntaxHighlighting">
         <CodeToolbar target="state.host" currentLanguage="embeddedState.languageId"
-            getContent="() => this.textarea.value" onLanguageChange="onLanguageChange.bind(this)"/>
+            getContent="this.getContent.bind(this)" onLanguageChange="onLanguageChange.bind(this)"/>
+        <t t-if="this.embeddedState.languageId === 'plaintext'">
+            <EmbeddedSyntaxPlainInput
+                host="this.props.host"
+                embeddedState="this.embeddedState"
+                onFocus="props.onTextareaFocus" 
+            />
+        </t>
+        <t t-else="">
+            <EmbeddedSyntaxHighlightingInput
+                host="this.props.host"
+                embeddedState="this.embeddedState"
+                onTextareaFocus="props.onTextareaFocus" 
+            />
+        </t>
+    </t>
+    
+    <t t-name="html_editor.EmbeddedSyntaxPlainInput">
+        <pre data-oe-protected="false" t-ref="pre" contenteditable="true"
+            t-on-focus="props.onFocus"
+            t-on-input="onInput"
+        />
+    </t>
+
+    <t t-name="html_editor.EmbeddedSyntaxHighlightingInput">
         <pre t-ref="pre"/>
         <textarea t-ref="textarea" class="o_prism_source" contenteditable="true"
             t-on-input="onInput"

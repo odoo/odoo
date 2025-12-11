@@ -32,7 +32,23 @@ export class SyntaxHighlightingPlugin extends Plugin {
 
         /** Handlers */
         mount_component_handlers: this.setupNewCodeBlock.bind(this),
-        normalize_handlers: (root) => this.addCodeBlocks(root, true),
+        normalize_handlers: [
+            (root) => this.addCodeBlocks(root, true),
+            (root, type) => {
+                if (type !== "original") {
+                    return;
+                }
+                // Called from history_plugin's addStep before inspecting mutations.
+                if (root.matches("[data-embedded-props*='plaintext'] pre")) {
+                    // Apply changes into embedded properties.
+                    root.dispatchEvent(new InputEvent("input"));
+                }
+                for (const pre of root.querySelectorAll("[data-embedded-props*='plaintext'] pre")) {
+                    // Apply changes into embedded properties.
+                    pre.dispatchEvent(new InputEvent("input"));
+                }
+            },
+        ],
         post_undo_handlers: () => this.addCodeBlocks(this.editable, true),
         post_redo_handlers: () => this.addCodeBlocks(this.editable, true),
         clean_for_save_handlers: withSequence(0, ({ root }) => this.cleanForSave(root)),
@@ -60,6 +76,8 @@ export class SyntaxHighlightingPlugin extends Plugin {
             const embeddedProps = getEmbeddedProps(codeBlock);
             const value = embeddedProps.value;
             pre.dataset.languageId = embeddedProps.languageId;
+            delete pre.dataset.oeProtected;
+            pre.removeAttribute("contenteditable");
             codeBlock.before(pre);
             codeBlock.remove();
             // Remove highlighting.
@@ -93,7 +111,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
                 { embeddedProps },
                 () => {
                     if (preserveFocus && isPreInSelection) {
-                        const textarea = codeBlock.querySelector("textarea");
+                        const textarea = codeBlock.querySelector("textarea, pre");
                         if (textarea !== codeBlock.ownerDocument.activeElement) {
                             textarea.focus();
                             this.dependencies.history.stageFocus();

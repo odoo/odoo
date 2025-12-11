@@ -23,7 +23,12 @@ export class ReadonlySyntaxHighlightingComponent extends Component {
             const owlRoot = [...(this.props.host.children || [])].find(
                 (child) => child.nodeName === "OWL-ROOT"
             );
-            highlightPre(owlRoot || this.props.host, this.props.value, this.props.languageId);
+            const pre = owlRoot || this.props.host;
+            if (this.props.languageId === "plaintext") {
+                pre.innerHTML = this.props.value;
+                return;
+            }
+            highlightPre(pre, this.props.value, this.props.languageId);
         });
     }
 }
@@ -34,6 +39,9 @@ export const readonlySyntaxHighlightingEmbedding = {
     getProps: (host) => ({
         host,
         languageId: host.dataset.languageId || DEFAULT_LANGUAGE_ID,
-        value: getPreValue(host),
+        value:
+            (host.dataset.languageId || DEFAULT_LANGUAGE_ID) === "plaintext"
+                ? host.innerText
+                : getPreValue(host),
     }),
 };
