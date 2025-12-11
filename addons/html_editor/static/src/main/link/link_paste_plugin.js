@@ -114,12 +114,15 @@ export class LinkPastePlugin extends Plugin {
             cleanZWChars(selection.textContent()) === cleanZWChars(link.innerText) &&
             !this.dependencies.delete.isUnremovable(link)
         ) {
-            this.dependencies.selection.setSelection({
-                anchorNode: link.parentElement,
-                anchorOffset: childNodeIndex(link) + (selection.direction ? 0 : 1),
-                focusNode: link.parentElement,
-                focusOffset: childNodeIndex(link) + (selection.direction ? 1 : 0),
-            });
+            this.dependencies.selection.setSelection(
+                {
+                    anchorNode: link.parentElement,
+                    anchorOffset: childNodeIndex(link) + (selection.direction ? 0 : 1),
+                    focusNode: link.parentElement,
+                    focusOffset: childNodeIndex(link) + (selection.direction ? 1 : 0),
+                },
+                { normalize: false }
+            );
         }
     }
 }
