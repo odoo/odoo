@@ -51,8 +51,8 @@ export class Chrome extends Component {
         onWillStart(this.pos._loadFonts);
         onMounted(this.props.disableLoader);
         effect(
-            batched(() => {
-                this.onPosChanges(arguments);
+            batched((pos) => {
+                this.onPosChanges(pos);
             }),
             [this.pos]
         );
