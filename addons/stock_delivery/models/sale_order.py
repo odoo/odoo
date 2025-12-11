@@ -6,6 +6,9 @@ from odoo import _, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    def _compute_show_ship_button(self):
+        self.show_ship_button = False  # Revert to Delivery smart button for stock module
+
     def set_delivery_line(self, carrier, amount):
         res = super().set_delivery_line(carrier, amount)
         for order in self:

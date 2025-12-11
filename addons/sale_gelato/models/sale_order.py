@@ -29,6 +29,16 @@ def post_commit(func):
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    # === COMPUTE METHODS === #
+
+    @api.depends("order_line.product_id")
+    def _compute_show_ship_button(self):
+        """Override of `sale` to hide the 'Deliver' button when the order contains Gelato products."""
+        super()._compute_show_ship_button()
+        for order in self:
+            if any(order.order_line.product_id.mapped("gelato_product_uid")):
+                order.show_ship_button = False
+
     # === CRUD METHODS === #
 
     def _prevent_mixing_gelato_and_non_gelato_products(self):

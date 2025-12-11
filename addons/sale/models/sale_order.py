@@ -446,7 +446,7 @@ class SaleOrder(models.Model):
         string="Is Expired", compute="_compute_is_expired", search="_search_is_expired"
     )
     partner_credit_warning = fields.Text(compute="_compute_partner_credit_warning")
-    show_deliver_button = fields.Boolean(compute="_compute_show_deliver_button")
+    show_ship_button = fields.Boolean(compute="_compute_show_ship_button")
     tax_calculation_rounding_method = fields.Selection(
         related="company_id.tax_calculation_rounding_method", depends=["company_id"]
     )
@@ -1062,19 +1062,8 @@ class SaleOrder(models.Model):
             return expired_domain
         return ["!", "&"] + expired_domain
 
-    @api.depends("order_line.qty_delivered")
-    def _compute_show_deliver_button(self):
-        for order in self:
-            order.show_deliver_button = (
-                order.state == "sale"
-                and any(
-                    line.qty_delivered < line.product_uom_qty
-                    if line.product_uom_qty > 0
-                    else line.qty_delivered > line.product_uom_qty
-                    for line in order.order_line
-                )
-                and all(line.qty_delivered_method == "manual" for line in order.order_line)
-            )
+    def _compute_show_ship_button(self):
+        self.show_ship_button = False
 
     @api.depends("company_id", "fiscal_position_id")
     def _compute_tax_country_id(self):

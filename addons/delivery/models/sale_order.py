@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Command
 
 
 class SaleOrder(models.Model):
@@ -46,6 +47,25 @@ class SaleOrder(models.Model):
         delivery_line = self.order_line.filtered("is_delivery")
         if delivery_line:
             self.recompute_delivery_price = True
+
+    @api.depends("state", "delivery_set", "order_line")
+    def _compute_show_ship_button(self):
+        """Compute the show_ship_button field to display the ship button on the SO.
+
+        The button is shown there is at least one 'consu' product with a 'manual' qty_delivered
+        method and if the line is not fully delivered.
+        """
+        for order in self:
+            order.show_ship_button = (
+                order.state == "sale"
+                and order.delivery_set
+                and any(
+                    line.product_id.type == "consu"
+                    and line.qty_delivered < line.product_uom_qty
+                    and line.qty_delivered_method == "manual"
+                    for line in order.order_line
+                )
+            )
 
     def _get_update_prices_lines(self):
         """Exclude delivery lines from pricelist recomputation based on product instead of
@@ -112,6 +132,25 @@ class SaleOrder(models.Model):
                 "default_carrier_id": carrier.id,
                 "default_total_weight": self._get_estimated_weight(),
             },
+        }
+
+    def action_open_delivery_note_wizard(self):
+        self.ensure_one()
+        context = {
+            "default_dm_id": self.carrier_id.id,
+            "default_so_id": self.id,
+            "default_note_line_ids": [
+                Command.create({"sol_id": line.id})
+                for line in self.order_line.filtered(lambda line: line.product_id.type == "consu")
+            ],
+        }
+        return {
+            "name": self.env._("Ship Order %s", self.name),
+            "type": "ir.actions.act_window",
+            "res_model": "delivery.note.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": context,
         }
 
     def _prepare_delivery_line_vals(self, carrier, price_unit):

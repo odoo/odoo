@@ -194,10 +194,6 @@ class SaleOrder(models.Model):
             })
             order.show_json_popover = bool(late_stock_picking)
 
-    @api.depends('order_line.qty_delivered')
-    def _compute_show_deliver_button(self):
-        self.show_deliver_button = False  # Revert to Delivery smart button for stock module
-
     def _action_confirm(self):
         self.order_line._action_launch_stock_rule()
         return super(SaleOrder, self)._action_confirm()
