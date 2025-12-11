@@ -6182,3 +6182,48 @@ test(`no event to schedule`, async () => {
     expect(".o_calendar_sidebar div:contains(Good job, everything is scheduled!)").toHaveCount(1);
     expect.verifySteps(["search_read", "fetch events to schedule"]);
 });
+
+test.tags("desktop");
+test(`drag and drop to unschedule`, async () => {
+    onRpc("event", "search_read", () => {
+        expect.step("search_read");
+    });
+    onRpc("event", "web_search_read", () => {
+        expect.step("fetch events to schedule");
+    });
+    onRpc("event", "write", ({ args }) => {
+        expect(args[0][0]).toBe(2);
+        expect(args[1]).toEqual({
+            start: false,
+            stop: false,
+        });
+        expect.step("write");
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar schedule="1" date_start="start" date_stop="stop" mode="week" color="partner_id">
+                <filter name="user_id" avatar_field="image"/>
+            </calendar>
+        `,
+    });
+    expect(".o_calendar_unschedule_zone").toHaveCount(0);
+    expect(
+        ".o_calendar_sidebar div.text-muted:contains(Good job, everything is scheduled!)"
+    ).toBeVisible();
+    expect.verifySteps(["search_read", "fetch events to schedule"]);
+    const { drop } = await contains('.o_event[data-event-id="2"]').drag();
+    expect(".o_calendar_unschedule_zone").toHaveCount(1);
+    expect(".o_calendar_unschedule_zone").toHaveText("Drop here to unschedule");
+    expect(
+        ".o_calendar_sidebar div.text-muted:contains(Good job, everything is scheduled!)"
+    ).not.toBeVisible();
+    await drop(queryFirst(".o_calendar_unschedule_zone"));
+    expect.verifySteps(["write", "search_read", "fetch events to schedule"]);
+    expect(".o_event_to_schedule_draggable").toHaveCount(1);
+    expect(".o_event_to_schedule_draggable").toHaveText("event 2");
+    expect(
+        ".o_calendar_sidebar div.text-muted:contains(Good job, everything is scheduled!)"
+    ).toHaveCount(0);
+});

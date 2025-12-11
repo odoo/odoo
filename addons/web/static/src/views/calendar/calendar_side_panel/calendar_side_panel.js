@@ -1,5 +1,6 @@
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
+import { useBus } from "@web/core/utils/hooks";
 import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
 import { CalendarScheduleSection } from "@web/views/calendar/calendar_schedule_section/calendar_schedule_section";
 
@@ -11,6 +12,13 @@ export class CalendarSidePanel extends Component {
     };
     static template = "web.CalendarSidePanel";
     static props = ["model", "editRecord"];
+
+    setup() {
+        this.state = useState({ isDragging: false });
+        useBus(this.props.model.bus, "CALENDAR_EVENT_DRAG", ({ detail }) => {
+            this.state.isDragging = detail.dragging;
+        });
+    }
 
     get datePickerProps() {
         return {

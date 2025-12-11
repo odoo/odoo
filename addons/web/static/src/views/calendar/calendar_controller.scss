@@ -54,6 +54,15 @@ $o-cw-filter-avatar-size: 20px;
 
     flex: 0 0 auto;
 
+    .o_calendar_unschedule_zone {
+        width: $o-datetime-picker-width;
+        height: stretch;
+        min-height: 200px; // Fallback for firefox < 146
+        border: 1px solid rgba($o-enterprise-action-color, 0.4);
+        border-radius: 10px;
+        background-color: mix($o-enterprise-action-color, $o-view-background-color, 10%);
+    }
+
     .o_calendar_sidebar {
         @include o-webclient-padding($top: $o-horizontal-padding/2);
         width: calc(#{$o-datetime-picker-width} + 2 * #{map-get($spacers, 3)});
