@@ -1,19 +1,25 @@
 import { onMounted } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";
+    static dependencies = ["themeTab"];
     setup() {
         super.setup();
+        this.panelTriggerLabel = _t("Colors");
         this.palettes = this.getPalettes();
         this.colorPresetToShow = this.env.colorPresetToShow;
         this.state = useDomState(() => ({
             presets: this.getPresets(),
+            paletteColors: this.getPaletteColors(),
         }));
+        this.grays = this.dependencies.themeTab.getGrays();
         onMounted(() => {
-            this.iframeDocument = document.querySelector("iframe").contentWindow.document;
+            this.iframeDocument = document.querySelector("iframe")?.contentWindow?.document;
             this.state.presets = this.getPresets();
+            this.state.paletteColors = this.getPaletteColors();
             this.colorPresetToShow = null;
         });
     }
@@ -36,6 +42,22 @@ export class ThemeColorsOption extends BaseOptionComponent {
             palettes.push(palette);
         }
         return palettes;
+    }
+
+    getPaletteColors() {
+        const topStyle = this.getTopStyle();
+        const hbCpColors = [1, 2, 3, 4, 5].map((index) =>
+            getCSSVariableValue(`hb-cp-o-color-${index}`, topStyle)
+        );
+        if (hbCpColors.every((c) => !!c)) {
+            return hbCpColors;
+        }
+        // Mirror the exact values used by the color pickers (o-color-1..5) as fallback.
+        return [1, 2, 3, 4, 5].map((index) => this.getColor(`o-color-${index}`));
+    }
+
+    getGrayTitle(grayCode) {
+        return _t("Gray %(grayCode)s", { grayCode });
     }
 
     getPresets() {
@@ -66,14 +88,19 @@ export class ThemeColorsOption extends BaseOptionComponent {
     }
 
     getColor(color) {
-        if (!this.iframeDocument) {
-            return "";
+        const style = this.iframeDocument
+            ? this.iframeStyle ||
+              (this.iframeStyle = this.iframeDocument.defaultView.getComputedStyle(
+                  this.iframeDocument.documentElement
+              ))
+            : this.getTopStyle();
+        return getCSSVariableValue(color, style);
+    }
+
+    getTopStyle() {
+        if (!this.topStyle) {
+            this.topStyle = window.getComputedStyle(document.documentElement);
         }
-        if (!this.iframeStyle) {
-            this.iframeStyle = this.iframeDocument.defaultView.getComputedStyle(
-                this.iframeDocument.documentElement
-            );
-        }
-        return getCSSVariableValue(color, this.iframeStyle);
+        return this.topStyle;
     }
 }

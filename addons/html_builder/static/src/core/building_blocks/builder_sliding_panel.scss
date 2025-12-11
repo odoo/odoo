@@ -1,5 +1,11 @@
 .hb-sliding-panel {
     background-color: $o-we-bg-darker;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: $o-we-sidebar-width;
+    height: 100%;
     z-index: 10;
 
     .hb-sliding-panel-header {
@@ -46,13 +52,9 @@
     animation: 0.2s ease-in-out;
 
     &.hb-panel-slide-in {
-        width: $o-we-sidebar-width;
-        position: absolute;
         animation-name: o_hb_sliding_panel_anim_show;
     }
     &.hb-panel-slide-out {
-        width: $o-we-sidebar-width;
-        position: absolute;
         animation-name: o_hb_sliding_panel_anim_hide;
     }
 }
@@ -73,4 +75,9 @@
     .hb-sliding-panel.hb-panel-slide-out
 ) {
     overflow: hidden;
+}
+
+.o_customize_tab,
+.o_theme_tab {
+    position: relative;
 }

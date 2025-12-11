@@ -19,7 +19,11 @@
                 <div class="hb-sliding-panel-label d-flex align-items-center p-2">
                     <button class="btn p-1" t-on-click="hideSlidingPanel" aria-label="close" tabindex="0" >
                         <i class="oi oi-chevron-left me-1" role="presentation"/>
-                        <t t-out="state.optionContainerName + ' / ' + props.label"/>
+                        <t t-set="panelTitle"
+                           t-value="state.optionContainerName and state.optionContainerName !== props.label
+                                ? state.optionContainerName + ' / ' + props.label
+                                : (props.label || state.optionContainerName)"/>
+                        <t t-out="panelTitle"/>
                     </button>
                 </div>
             </div>
