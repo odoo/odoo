@@ -2542,3 +2542,28 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so.action_confirm()
 
         self.assertRecordValues(so.picking_ids.move_ids.rule_id, [{'route_id': route_so.id}] * 2)
+
+    def test_set_sale_reference_on_delivery(self):
+        """
+        Check that linking a delivery to a sale order sets its reference accordingly
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.out_type_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 2,
+                'product_uom': self.product.uom_id.id,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })],
+        })
+        self.assertFalse(delivery.reference_ids | delivery.move_ids.reference_ids)
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        delivery.sale_id = sale_order
+        self.assertEqual(delivery.reference_ids.sale_ids, sale_order)
+        self.assertEqual(delivery.move_ids.reference_ids, delivery.reference_ids)
