@@ -664,7 +664,7 @@ class PosSession(models.Model):
             return {
                 'successful': False,
                 'type': 'alert',
-                'title': 'Session already closed',
+                'title': _('Session already closed'),
                 'message': _("The session has been already closed by another User. "
                             "All sales completed in the meantime have been saved in a "
                             "Rescue Session, which can be reviewed anytime and posted "

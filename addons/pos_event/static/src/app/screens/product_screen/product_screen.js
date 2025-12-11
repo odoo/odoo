@@ -30,7 +30,7 @@ patch(ProductScreen.prototype, {
         }
 
         if (product.event_id.seats_available === 0 && product.event_id.seats_limited) {
-            this.notification.add("No more seats available for this event", {
+            this.notification.add(_t("No more seats available for this event"), {
                 type: "danger",
             });
             return;

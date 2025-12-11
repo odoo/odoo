@@ -1,6 +1,7 @@
 import { loadAllImages } from "@point_of_sale/utils";
 
 import { Reactive } from "@web/core/utils/reactive";
+import { _t } from "@web/core/l10n/translation";
 
 export const printerService = {
     dependencies: ["renderer"],
@@ -34,7 +35,7 @@ export class PrinterService extends Reactive {
             return true;
         }
         throw {
-            title: printResult.message.title || "Error",
+            title: printResult.message.title || _t("Error"),
             body: printResult.message.body,
             errorCode: printResult.errorCode,
         };
