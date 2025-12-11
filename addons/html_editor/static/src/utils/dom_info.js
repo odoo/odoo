@@ -883,6 +883,19 @@ export function isContentEditableAncestor(node) {
     return node.isContentEditable && node.matches("[contenteditable]");
 }
 
+const QWEB_STYLE_ATTRS = ["t-att-class", "t-attf-class", "t-att-style", "t-attf-style"];
+
+/**
+ * @param {Node} node
+ * @returns {boolean}
+ */
+export function isStylable(node) {
+    if (!isElement(node) && node.parentNode) {
+        node = node.parentNode;
+    }
+    return !QWEB_STYLE_ATTRS.some((att) => node.hasAttribute(att));
+}
+
 /**
  * Checks if all classes in node are present in node2 (subset check)
  */

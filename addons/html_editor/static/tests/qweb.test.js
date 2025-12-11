@@ -1,8 +1,16 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { click, dblclick, queryAll, queryAllTexts, queryOne, select } from "@odoo/hoot-dom";
+import { describe, expect, runAllTimers, test } from "@odoo/hoot";
+import {
+    click,
+    dblclick,
+    queryAll,
+    queryAllTexts,
+    queryOne,
+    select,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
-import { getContent, setSelection } from "./_helpers/selection";
+import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { dispatchCleanForSave } from "./_helpers/dispatch";
@@ -365,4 +373,43 @@ test("cleaning does not remove t-out links", async () => {
     expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
         '<ul> <li><a href="xyz" t-out="xyz"></a></li> </ul>'
     );
+});
+
+test("formatting toolbar items are disabled on t-att-class and t-att-style (and their format counterparts)", async () => {
+    const { el } = await setupEditor(`<p>[<t>foo</t>]</p>`, {
+        config,
+    });
+
+    await waitFor(".o-we-toolbar button[name=expand_toolbar]");
+    await click(".o-we-toolbar button[name=expand_toolbar]");
+    await waitFor("button[name=remove_format]");
+
+    expect(`button[name="bold"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="italic"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="underline"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="strikethrough"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="font"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="font_family"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="font_size_selector"]`).not.toHaveAttribute("disabled");
+    expect(`button[title="Apply Font Color"]`).not.toHaveAttribute("disabled");
+    expect(`button[title="Apply Background Color"]`).not.toHaveAttribute("disabled");
+    expect(`button[name="link"]`).not.toHaveAttribute("disabled");
+
+    setContent(el, `<p>[<t t-att-class="expr_class">foo</t>]</p>`);
+    await animationFrame();
+    await runAllTimers();
+    await waitFor("button[name=remove_format]");
+
+    expect(`button[name="font"]`).toHaveAttribute("disabled");
+    expect(`button[name="font_family"]`).toHaveAttribute("disabled");
+    expect(`button[name="font_size_selector"]`).toHaveAttribute("disabled");
+    expect(`button[title="Apply Font Color"]`).toHaveAttribute("disabled");
+    expect(`button[title="Apply Background Color"]`).toHaveAttribute("disabled");
+    expect(`button[name="link"]`).toHaveAttribute("disabled");
+
+    // These buttons are hidden since the command is not available
+    expect(`button[name="bold"]`).toHaveCount(0);
+    expect(`button[name="italic"]`).toHaveCount(0);
+    expect(`button[name="underline"]`).toHaveCount(0);
+    expect(`button[name="strikethrough"]`).toHaveCount(0);
 });
