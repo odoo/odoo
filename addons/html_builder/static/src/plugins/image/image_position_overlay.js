@@ -34,7 +34,7 @@ export class ImagePositionOverlay extends Component {
 
         this.iframeEl = this.props.editable.ownerDocument.defaultView.frameElement;
         this.builderOverlayContainerEl = document.querySelector(
-            "[data-oe-local-overlay-id='builder-overlay-container']:not(:empty)"
+            "[data-oe-local-overlay-id='builder-overlay-container']"
         );
 
         this._dimensionOverlay = this.dimensionOverlay.bind(this);
