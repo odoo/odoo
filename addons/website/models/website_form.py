@@ -55,7 +55,7 @@ class IrModel(models.Model):
         model = self.env[model_name]
         fields_get = model.fields_get(attributes=[
             'required', 'domain', 'readonly', 'type', 'relation',
-            'definition_record', 'definition_record_field', 'string',
+            'definition_record', 'definition_record_field', 'string', 'selection',
         ])
 
         for val in model._inherits.values():
