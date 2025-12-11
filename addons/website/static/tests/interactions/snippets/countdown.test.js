@@ -27,7 +27,7 @@ const getTemplate = function (options = { endAction: "nothing", endTime: "987654
             data-progress-bar-color="o-color-1"
             data-end-time="${options.endTime}">
                 <div class="container">
-                    <div class="s_countdown_canvas_wrapper"
+                    <div class="s_countdown_wrapper"
                     style="
                         display: flex;
                         justify-content: center;
@@ -159,7 +159,7 @@ test("countdown is stopped correctly", async () => {
     await advanceTime(0);
     expect(queryAll(".s_countdown_canvas_flex")).toHaveLength(4);
     core.stopInteractions();
-    expect(queryOne(".s_countdown_canvas_wrapper")).not.toBe(null);
+    expect(queryOne(".s_countdown_wrapper")).not.toBe(null);
     expect(queryAll(".s_countdown_canvas_flex")).toHaveLength(0);
     expect(queryAll(".s_countdown_end_message")).toHaveLength(0);
     expect(queryAll(".s_countdown_text_wrapper")).toHaveLength(0);
@@ -178,7 +178,7 @@ test("Countdown snippet exists, when the colors are not defined", async () => {
             id="countdown-section"
             data-end-time="1749351790.469224">
                 <div class="container">
-                    <div class="s_countdown_canvas_wrapper"
+                    <div class="s_countdown_wrapper"
                     style="
                         display: flex;
                         justify-content: center;

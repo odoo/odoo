@@ -25,7 +25,7 @@ const getTemplate = function (options = { endAction: "nothing", endTime: "987654
             data-progress-bar-color="o-color-1"
             data-end-time="${options.endTime}">
                 <div class="container">
-                    <div class="s_countdown_canvas_wrapper"
+                    <div class="s_countdown_wrapper"
                     style="
                         display: flex;
                         justify-content: center;

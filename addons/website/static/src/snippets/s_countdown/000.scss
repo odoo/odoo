@@ -1,5 +1,9 @@
-.s_countdown_inline {
+.s_countdown_wrapper {
     font-variant-numeric: tabular-nums;
+
+    .countdown_metrics {
+        outline: none;
+    }
 
     .o_skeletton {
         display: block;
@@ -13,35 +17,9 @@
         border: $border-width solid $border-color;
     }
 
-    // Defines color classes based on $theme-colors
-    @each $-state, $-value in $theme-colors {
-        &.o_countdown_#{$-state} {
-            .o_colored_item {
-                border-color: $-value;
-                background: $-value;
-                color: color-contrast($-value);
-            }
-
-            &.o_countdown_subtle {
-                .o_colored_item {
-                    border-color: var(--#{$prefix}#{$-state}-border-subtle);
-                    background: var(--#{$prefix}#{$-state}-bg-subtle);
-                    color: var(--#{$prefix}#{$-state}-text-emphasis);
-
-                    a {
-                        color: var(--#{$prefix}#{$-state}-text-emphasis);
-                    }
-                }
-            }
-
-            .o_colored_text {
-                color: $-value;
-            }
-        }
-    }
-
     .o_count_item {
         display: inline-flex;
+        align-items: baseline;
     }
 
     .o_count_item_nbs {
@@ -90,7 +68,7 @@
             .o_count_item {
                 // Replace "," separator with ":" when labels are hidden.
                 &:where(:not(:first-of-type)):before {
-                    content: ':\00a0';
+                    content: '\00a0:\00a0';
                 }
 
                 &::after {
@@ -106,7 +84,7 @@
         }
     }
 
-    &.o_countdown_default .o_template_dominoes {
+    &.o_countdown_no_bg_color .o_template_dominoes {
         .o_count_item_nb {
             &:after {
                 position: absolute;
@@ -119,7 +97,7 @@
         }
     }
 
-    &:not(.o_countdown_default) .o_template_dominoes {
+    &:not(.o_countdown_no_bg_color) .o_template_dominoes {
         .o_count_item_nb {
             // Simulates the horizontal line in the middle of the domino.
             clip-path: polygon(0 0, 100% 0, 100% calc(50% - 0.5px), 0 calc(50% - 0.5px), 0 calc(50% + 0.5px), 100% calc(50% + 0.5px), 100% 100%, 0 100%);
@@ -128,13 +106,16 @@
 
     .o_template_wrapped_numbers {
         .o_count_item_nbs {
-            width: map-get($spacers, 5);
+            min-width: map-get($spacers, 5);
+            width: 3em;
             aspect-ratio: 1 / 1;
+            display: inline-flex;
         }
 
         .o_count_separator {
             display: flex;
-            height: map-get($spacers, 5);
+            min-height: map-get($spacers, 5);
+            height: 3em;
         }
     }
 }

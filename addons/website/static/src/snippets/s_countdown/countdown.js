@@ -9,7 +9,7 @@ import { verifyHttpsUrl } from "@website/utils/misc";
 export class Countdown extends Interaction {
     static selector = ".s_countdown";
     dynamicContent = {
-        ".s_countdown_canvas_wrapper": {
+        ".s_countdown_wrapper": {
             "t-att-class": () => ({
                 "d-flex": true,
                 "justify-content-center": true,
@@ -21,7 +21,7 @@ export class Countdown extends Interaction {
         // Remove SVG previews (used to simulated canvas)
         this.el.querySelectorAll("svg").forEach((el) => el.parentNode.remove());
 
-        this.wrapperEl = this.el.querySelector(".s_countdown_canvas_wrapper");
+        this.wrapperEl = this.el.querySelector(".s_countdown_wrapper");
         this.hereBeforeTimerEnds = false;
         this.endAction = this.el.dataset.endAction;
         this.endTime = parseInt(this.el.dataset.endTime);
@@ -48,24 +48,17 @@ export class Countdown extends Interaction {
 
         this.layoutBackgroundColor = this.ensureCSSColor(this.el.dataset.layoutBackgroundColor);
         this.progressBarColor = this.ensureCSSColor(this.el.dataset.progressBarColor);
-        this.textColor = this.ensureCSSColor(this.el.dataset.textColor);
 
         this.onlyOneUnit = this.display === "d";
         this.width = this.size;
-        if (this.layout === "boxes") {
-            this.width /= 1.75;
-        }
         this.initTimeDiff();
 
         this.render();
-
         this.setInterval = setInterval(this.render.bind(this), 1000);
     }
 
     destroy() {
-        // The optional chaining is required because the queried element may not
-        // exist anymore if the interaction target has just been deleted
-        this.el.querySelector(".s_countdown_canvas_wrapper")?.classList.remove("d-none");
+        this.el.querySelector(".s_countdown_wrapper")?.classList.remove("d-none");
         clearInterval(this.setInterval);
         window.removeEventListener("resize", this.onResize);
     }
@@ -81,6 +74,10 @@ export class Countdown extends Interaction {
             return color;
         }
         return getCSSVariableValue(color, getHtmlStyle(document)) || this.defaultColor;
+    }
+
+    get textColor() {
+        return this.ensureCSSColor(getComputedStyle(this.el).color);
     }
 
     /**
@@ -134,8 +131,11 @@ export class Countdown extends Interaction {
         const delta = this.getDelta();
         this.timeDiff = [];
         if (this.isUnitVisible("d") && !(this.onlyOneUnit && delta < 86400)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            // Only create canvas elements if we are using the circle layout
+            const divEl = this.layout === "circle" ? this.createCanvasWrapper() : null;
+            if (divEl) {
+                this.insert(divEl, this.wrapperEl);
+            }
             this.timeDiff.push({
                 canvas: divEl,
                 // There is no logical number of unit (total) on which day units
@@ -146,8 +146,10 @@ export class Countdown extends Interaction {
             });
         }
         if (this.isUnitVisible("h") || (this.onlyOneUnit && delta < 86400 && delta > 3600)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            const divEl = this.layout === "circle" ? this.createCanvasWrapper() : null;
+            if (divEl) {
+                this.insert(divEl, this.wrapperEl);
+            }
             this.timeDiff.push({
                 canvas: divEl,
                 total: 24,
@@ -156,8 +158,10 @@ export class Countdown extends Interaction {
             });
         }
         if (this.isUnitVisible("m") || (this.onlyOneUnit && delta < 3600 && delta > 60)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            const divEl = this.layout === "circle" ? this.createCanvasWrapper() : null;
+            if (divEl) {
+                this.insert(divEl, this.wrapperEl);
+            }
             this.timeDiff.push({
                 canvas: divEl,
                 total: 60,
@@ -166,20 +170,15 @@ export class Countdown extends Interaction {
             });
         }
         if (this.isUnitVisible("s") || (this.onlyOneUnit && delta < 60)) {
-            const divEl = this.createCanvasWrapper();
-            this.insert(divEl, this.wrapperEl);
+            const divEl = this.layout === "circle" ? this.createCanvasWrapper() : null;
+            if (divEl) {
+                this.insert(divEl, this.wrapperEl);
+            }
             this.timeDiff.push({
                 canvas: divEl,
                 total: 60,
                 label: _t("Seconds"),
                 nbSeconds: 1,
-            });
-        }
-        if (this.layout === "text") {
-            this.timeDiff.forEach((metric) => {
-                if (metric.label) {
-                    metric.label = this.wrapFirstLetter(metric.label);
-                }
             });
         }
     }
@@ -225,17 +224,18 @@ export class Countdown extends Interaction {
      */
     render() {
         if (this.onlyOneUnit && this.getDelta() < this.timeDiff[0].nbSeconds) {
-            this.el.querySelector(".s_countdown_canvas_flex").remove();
+            // In circle mode, we remove the canvas flex wrapper.
+            // In text mode, the structure is different, but onlyOneUnit isn't usually combined with complex text templates in the same way.
+            if (this.layout !== "text") {
+                this.el.querySelector(".s_countdown_canvas_flex").remove();
+            }
             this.initTimeDiff();
         }
         this.updateTimediff();
 
-        this.el
-            .querySelector(".s_countdown_inline_wrapper")
-            ?.classList.toggle("d-none", this.layout !== "text" || this.shouldHideCountdown);
-        this.el
-            .querySelector(".s_countdown_canvas_wrapper")
-            ?.classList.toggle("d-none", this.layout === "text");
+        // We toggle the wrapper visibility if the countdown is finished.
+        this.wrapperEl?.classList.toggle("d-none", this.shouldHideCountdown);
+
         if (this.layout === "text") {
             this.countItemEls = this.el.querySelectorAll(".o_count_item");
             this.countItemNbsEls = this.el.querySelectorAll(".o_count_item_nbs");
@@ -259,10 +259,27 @@ export class Countdown extends Interaction {
                             number;
                     });
                 } else {
-                    this.countItemNbsEls[index].textContent = String(metric.nb).padStart(2, "0");
+                    let itemNumber = this.countItemNbsEls[index];
+                    while (itemNumber.firstElementChild) {
+                        itemNumber = itemNumber.firstElementChild;
+                    }
+                    itemNumber.textContent = String(metric.nb).padStart(2, "0");
                 }
-                const fragmentEl = document.createRange().createContextualFragment(metric.label);
-                this.countItemLabelEls[index].replaceChildren(fragmentEl);
+                const labelEl = this.countItemLabelEls[index];
+                const firstLetterEl = labelEl.querySelector(".o_first_letter");
+                const otherLettersEl = labelEl.querySelector(".o_other_letters");
+                if (firstLetterEl && otherLettersEl) {
+                    if (firstLetterEl.textContent !== metric.label[0]) {
+                        firstLetterEl.textContent = metric.label[0];
+                    }
+                    if (otherLettersEl.textContent !== metric.label.slice(1)) {
+                        otherLettersEl.textContent = metric.label.slice(1);
+                    }
+                } else {
+                    if (labelEl.textContent !== metric.label) {
+                        labelEl.textContent = metric.label;
+                    }
+                }
                 this.countItemEls[index].classList.remove("d-none");
             }
         } else {
@@ -291,7 +308,6 @@ export class Countdown extends Interaction {
                 if (this.progressBarStyle !== "none") {
                     this.drawProgressBar(ctx, val.nb, val.total, this.progressBarWeight === "thin");
                 }
-                val.canvas.classList.toggle("mx-1", this.layout === "boxes");
             }
         }
 
@@ -337,21 +353,6 @@ export class Countdown extends Interaction {
             canvas.height / dpr / 2 + nbSize / 1.5,
             this.width
         );
-
-        if (
-            this.layout === "boxes" &&
-            this.layoutBackground !== "none" &&
-            this.progressBarStyle === "none"
-        ) {
-            let barWidth = this.size / (this.progressBarWeight === "thin" ? 31 : 10);
-            if (full) {
-                barWidth = 0;
-            }
-            ctx.beginPath();
-            ctx.moveTo(barWidth, this.size / 2);
-            ctx.lineTo(this.width - barWidth, this.size / 2);
-            ctx.stroke();
-        }
     }
 
     /**
@@ -370,23 +371,6 @@ export class Countdown extends Interaction {
             }
             ctx.arc(this.size / 2, this.size / 2, rayon, 0, Math.PI * 2);
             ctx.fill();
-        } else if (this.layout === "boxes") {
-            let barWidth = this.size / (this.progressBarWeight === "thin" ? 31 : 10);
-            if (full) {
-                barWidth = 0;
-            }
-
-            ctx.fillStyle = this.layoutBackgroundColor;
-            ctx.rect(barWidth, barWidth, this.width - barWidth * 2, this.size - barWidth * 2);
-            ctx.fill();
-
-            const gradient = ctx.createLinearGradient(0, this.width, 0, 0);
-            gradient.addColorStop(0, "#ffffff24");
-            gradient.addColorStop(1, this.layoutBackgroundColor);
-            ctx.fillStyle = gradient;
-            ctx.rect(barWidth, barWidth, this.width - barWidth * 2, this.size - barWidth * 2);
-            ctx.fill();
-            ctx.canvas.style.borderRadius = "8px";
         }
     }
 
@@ -409,48 +393,6 @@ export class Countdown extends Interaction {
                 Math.PI * 2 * (nbUnit / totalUnit) + Math.PI / -2
             );
             ctx.stroke();
-        } else if (this.layout === "boxes") {
-            ctx.lineWidth *= 2;
-            let pc = (nbUnit / totalUnit) * 100;
-
-            // Lines: Top(x1,y1,x2,y2) Right(x1,y1,x2,y2) Bottom(x1,y1,x2,y2) Left(x1,y1,x2,y2)
-            const linesCoordFuncs = [
-                (linePc) => [
-                    0 + ctx.lineWidth / 2,
-                    0,
-                    ((this.width - ctx.lineWidth / 2) * linePc) / 25 + ctx.lineWidth / 2,
-                    0,
-                ],
-                (linePc) => [
-                    this.width,
-                    0 + ctx.lineWidth / 2,
-                    this.width,
-                    ((this.size - ctx.lineWidth / 2) * linePc) / 25 + ctx.lineWidth / 2,
-                ],
-                (linePc) => [
-                    this.width -
-                        ((this.width - ctx.lineWidth / 2) * linePc) / 25 -
-                        ctx.lineWidth / 2,
-                    this.size,
-                    this.width - ctx.lineWidth / 2,
-                    this.size,
-                ],
-                (linePc) => [
-                    0,
-                    this.size - ((this.size - ctx.lineWidth / 2) * linePc) / 25 - ctx.lineWidth / 2,
-                    0,
-                    this.size - ctx.lineWidth / 2,
-                ],
-            ];
-            while (pc > 0 && linesCoordFuncs.length) {
-                const linePc = Math.min(pc, 25);
-                const lineCoord = linesCoordFuncs.shift()(linePc);
-                ctx.beginPath();
-                ctx.moveTo(lineCoord[0], lineCoord[1]);
-                ctx.lineTo(lineCoord[2], lineCoord[3]);
-                ctx.stroke();
-                pc -= linePc;
-            }
         }
     }
 
@@ -466,23 +408,6 @@ export class Countdown extends Interaction {
             ctx.beginPath();
             ctx.arc(this.size / 2, this.size / 2, this.size / 2 - this.size / 20, 0, Math.PI * 2);
             ctx.stroke();
-        } else if (this.layout === "boxes") {
-            ctx.lineWidth *= 2;
-
-            // Lines: Top(x1,y1,x2,y2) Right(x1,y1,x2,y2) Bottom(x1,y1,x2,y2) Left(x1,y1,x2,y2)
-            const points = [
-                [0 + ctx.lineWidth / 2, 0, this.width, 0],
-                [this.width, 0 + ctx.lineWidth / 2, this.width, this.size],
-                [0, this.size, this.width - ctx.lineWidth / 2, this.size],
-                [0, 0, 0, this.size - ctx.lineWidth / 2],
-            ];
-            while (points.length) {
-                const point = points.shift();
-                ctx.beginPath();
-                ctx.moveTo(point[0], point[1]);
-                ctx.lineTo(point[2], point[3]);
-                ctx.stroke();
-            }
         }
         ctx.globalAlpha = 1;
     }
