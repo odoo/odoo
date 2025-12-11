@@ -13,6 +13,10 @@ class ProductTemplate(models.Model):
     split_method_landed_cost = fields.Selection(
         SPLIT_METHOD, string="Default Split Method",
         help="Default Split Method when used for Landed Cost")
+    landed_cost_on_product_ids = fields.Many2many(
+        'product.product', string="Apply Landed Cost On", domain=[('type', '=', 'consu')],
+        help="The landed cost is by default applied only on these products, if they are included in the transfer.\n"
+             "Even if landed costs can be applied on all goods, only products valued using the AVCO or FIFO methods will have their calculated value affected by landed costs.")
 
     def write(self, vals):
         for product in self:
