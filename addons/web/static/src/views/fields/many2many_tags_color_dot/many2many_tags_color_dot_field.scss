@@ -1,0 +1,9 @@
+.o_field_many2many_tags_color_dot .o_tag {
+    $basic-bg: #f0f0f0;
+    $basic-text: #333333;
+
+    &, &::after {
+        @include o-print-color($basic-bg, background-color, bg-opacity);
+        @include o-print-color($basic-text, color, text-opacity);
+    }
+}
