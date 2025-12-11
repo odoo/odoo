@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div t-if="!ui.isSmall" class="desktop-format w-75 d-flex gap-3 flex-row align-items-center justify-content-around p-2">
-                <button t-att-disabled="state.loading || currentOrder.state == 'draft'" class="print-ticket-button button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3" t-on-click.stop="() => this.clickPrint()"><i class="fa fa-print" role="img" aria-label="Print" title="Print"></i> Print</button>
+                <button t-if="canPrintReceipt" t-att-disabled="state.loading || currentOrder.state == 'draft'" class="print-ticket-button button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3" t-on-click.stop="() => this.clickPrint()"><i class="fa fa-print" role="img" aria-label="Print" title="Print"></i> Print</button>
                 <button t-if="canSendReceipt" t-att-disabled="state.loading || currentOrder.state == 'draft'" class="send-receipt button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3" t-on-click.stop="() => this.clickSend()"><i class="fa fa-paper-plane" role="img" aria-label="Send" title="Send"></i> Send Receipt</button>
                 <button t-if="canEditPayment" t-att-disabled="state.loading" class="button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3 edit-order-payment" t-on-click.stop="() => this.clickEditPayment()"><i class="fa fa-pencil-square-o" role="img" aria-label="Edit" title="Edit"></i> Edit</button>
                 <button t-att-disabled="state.loading" class="validation button btn btn-primary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3" t-on-click.stop="() => this.onClick(true)">

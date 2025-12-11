@@ -119,6 +119,10 @@ export class FeedbackScreen extends Component {
         return true;
     }
 
+    get canPrintReceipt() {
+        return true;
+    }
+
     get canEditPayment() {
         return !this.pos.config.iface_print_auto && this.currentOrder.nb_print === 0;
     }
