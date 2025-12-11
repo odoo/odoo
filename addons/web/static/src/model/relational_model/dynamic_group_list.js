@@ -288,7 +288,8 @@ export class DynamicGroupList extends DynamicList {
     }
 
     _createGroupDatapoint(data) {
-        return new this.model.constructor.Group(this.model, this.config.groups[data.value], data);
+        const config = this.config.groups[data.value];
+        return new this.model.constructor.Group(this.model, config, data, { parent: this });
     }
 
     async _deleteGroups(groups) {
@@ -360,6 +361,34 @@ export class DynamicGroupList extends DynamicList {
             group.list._selectDomain(value);
         }
         super._selectDomain(value);
+    }
+
+    /**
+     * Opens or folds all groups.
+     *
+     * @param {boolean} [fold=false] true to fold all groups, false to open them
+     * @returns {Promise}
+     */
+    _toggleAllGroups(fold = false) {
+        if (fold) {
+            this.groups.forEach((group) => {
+                if (!group.isFolded) {
+                    group.toggle();
+                }
+            });
+        } else {
+            const nextGroupConfig = Object.fromEntries(
+                Object.entries(this.config.groups).map(([groupId, groupConfig]) => [
+                    groupId,
+                    Object.assign({}, groupConfig, { isFolded: fold }),
+                ])
+            );
+            return this.model._updateConfig(
+                this.config,
+                { groups: nextGroupConfig },
+                { commit: this._setData.bind(this) }
+            );
+        }
     }
 
     async _toggleSelection() {
