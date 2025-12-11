@@ -107,6 +107,16 @@ describe("visibility", () => {
 });
 
 describe.tags("desktop");
+describe("cleanup", () => {
+    test("power buttons overlay is removed when editor is destroyed", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        expect("[data-oe-local-overlay-id='oe-power-buttons-overlay']").toHaveCount(1);
+        editor.destroy();
+        expect("[data-oe-local-overlay-id='oe-power-buttons-overlay']").toHaveCount(0);
+    });
+});
+
+describe.tags("desktop");
 describe("buttons", () => {
     test("should create a numbered list using power buttons", async () => {
         const { el } = await setupEditor("<p>[]<br></p>");
