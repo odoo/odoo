@@ -65,6 +65,8 @@ export class PageListController extends PageControllerMixin(listView.Controller)
                 this.dialog.add(DuplicatePageDialog, {
                     pageIds: resIds,
                     onDuplicate: () => {
+                        const websiteId = this.state.activeWebsite.id;
+                        this.env.searchModel.notifyWebsiteChange(websiteId);
                         this.model.load();
                     },
                 });
