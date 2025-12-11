@@ -314,13 +314,9 @@ class ProductProduct(models.Model):
         avco_total_value = 0
 
         if method == "realtime":
-            moves_full_domain = moves_domain & Domain([
-                '|',
-                '|', ('is_in', '=', True),
-                ('is_out', '=', True),
-                ('is_dropship', '=', True)
-            ])
-            moves = self.env['stock.move'].search_fetch(moves_full_domain, field_names=move_fields, order='date, id')
+            moves_full_domain = moves_domain & Domain([('is_out', '=', True)])
+            moves = moves_in | self.env['stock.move'].search_fetch(moves_full_domain, field_names=move_fields)
+            moves = moves.sorted('date, id')
         else:
             # no needed to join + reorder
             moves = moves_in
