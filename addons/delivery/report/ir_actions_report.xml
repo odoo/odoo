@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_deliveryslip" model="ir.actions.report">
+        <field name="name">Delivery Slip</field>
+        <field name="model">delivery.note</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">delivery.report_deliveryslip</field>
+        <field name="report_file">delivery.report_deliveryslip</field>
+        <field name="print_report_name">'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)</field>
+        <field name="binding_model_id" ref="model_delivery_note"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

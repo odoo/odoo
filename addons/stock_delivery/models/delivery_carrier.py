@@ -70,18 +70,6 @@ class DeliveryCarrier(models.Model):
     def _get_delivery_doc_prefix(self):
         return 'ShippingDoc-%s' % self.delivery_type
 
-    def get_tracking_link(self, picking):
-        ''' Ask the tracking link to the service provider
-
-        :param picking: record of stock.picking
-        :returns: an URL containing the tracking link or None
-        :rtype: str | None
-        '''
-        self.ensure_one()
-        if hasattr(self, '%s_get_tracking_link' % self.delivery_type):
-            return getattr(self, '%s_get_tracking_link' % self.delivery_type)(picking)
-        return None
-
     def cancel_shipment(self, pickings):
         ''' Cancel a shipment
 
@@ -251,11 +239,6 @@ class DeliveryCarrier(models.Model):
                           'tracking_number': False}]
         return res
 
-    def fixed_get_tracking_link(self, picking):
-        if self.tracking_url and picking.carrier_tracking_ref:
-            return self.tracking_url.replace("<shipmenttrackingnumber>", picking.carrier_tracking_ref)
-        return False
-
     def fixed_cancel_shipment(self, pickings):
         raise NotImplementedError()
 
@@ -272,11 +255,6 @@ class DeliveryCarrier(models.Model):
             res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
                           'tracking_number': False}]
         return res
-
-    def base_on_rule_get_tracking_link(self, picking):
-        if self.tracking_url and picking.carrier_tracking_ref:
-            return self.tracking_url.replace("<shipmenttrackingnumber>", picking.carrier_tracking_ref)
-        return False
 
     def base_on_rule_cancel_shipment(self, pickings):
         raise NotImplementedError()

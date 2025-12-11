@@ -340,13 +340,6 @@
                     data-hotkey="q"
                     invisible="invoice_status != 'no' or state != 'sale'"/>
                 <button
-                    string="Deliver"
-                    id="deliver_quantities"
-                    name="deliver_sold_quantity"
-                    type="object"
-                    invisible="not show_deliver_button"
-                    data-hotkey="d"/>
-                <button
                     string="Send"
                     id="quotation_send_primary"
                     name="action_quotation_send"
@@ -1306,6 +1299,15 @@
         <field name="binding_view_types">form</field>
         <field name="state">code</field>
         <field name="code">action = records.action_share()</field>
+    </record>
+
+    <record id="model_sale_order_action_deliver_sold_quantity" model="ir.actions.server">
+        <field name="name">Deliver</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">records.deliver_sold_quantity()</field>
     </record>
 
     <record id="model_sale_order_send_mail" model="ir.actions.server">
