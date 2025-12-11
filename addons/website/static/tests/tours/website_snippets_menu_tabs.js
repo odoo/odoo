@@ -9,7 +9,7 @@ registerWebsitePreviewTour(
     () => [
         ...goToTheme(),
         {
-            trigger: "div[data-container-title='Colors'] div.we-bg-options-container",
+            trigger: "div[data-container-title='Website'] div.we-bg-options-container",
         },
         {
             content: "Click on the empty 'DRAG BUILDING BLOCKS HERE' area.",

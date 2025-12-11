@@ -27,7 +27,7 @@
 
     // Dark
     &.hb-sliding-panel-dark {
-        .hb-sliding-panel-content {
+        .hb-sliding-panel-content, .hb-sliding-panel-header {
             background-color: $o-we-bg-darker;
         }
     }
@@ -60,8 +60,8 @@
 // The .options-container elements are hidden when a .hb-sliding-panel is opened 
 // in order to prevent the user from accessing them with keyboard navigation.
 // It is also required since we only use "position: absolute" while sliding.
-.o_customize_tab:has(.hb-sliding-panel.d-block) {
-    .options-container {
+[role="tabpanel"]:has(.hb-sliding-panel.d-block) {
+    :not(.hb-sliding-panel-content) > .options-container {
         display: none;
     }
 }

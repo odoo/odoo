@@ -5,20 +5,22 @@
     <BuilderRow label.translate="Shape">
         <div class="btn-group o-hb-button-group">
             <BuilderSlidingPanel
-                t-slot-scope="panel"
                 label.translate="Shape"
+                extraClasses="'btn-secondary'"
                 fullHeight="true"
-                darkBackground="true"
-                textContent="state.shapeName">
-                <BackgroundShapeSelector
-                    onClose="panel.close"
-                    shapeActionId="'setBackgroundShape'"
-                    buttonWrapperClassName="'o-hb-bg-shape-btn'"
-                    selectorTitle.translate="Background Shapes"
-                    shapeGroups="getBackgroundShapeGroups()"
-                    imgThroughDiv="true"
-                    getShapeUrl="getShapeStyleUrl"
-                />
+                darkBackground="true">
+                <t t-out="state.shapeName"/>
+                <t t-set-slot="content" t-slot-scope="panel">
+                    <BackgroundShapeSelector
+                        onClose="panel.close"
+                        shapeActionId="'setBackgroundShape'"
+                        buttonWrapperClassName="'o-hb-bg-shape-btn'"
+                        selectorTitle.translate="Background Shapes"
+                        shapeGroups="getBackgroundShapeGroups()"
+                        imgThroughDiv="true"
+                        getShapeUrl="getShapeStyleUrl"
+                    />
+                </t>
             </BuilderSlidingPanel>
             <BuilderButton 
                 title.translate="Remove the shape"

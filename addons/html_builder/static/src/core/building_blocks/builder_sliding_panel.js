@@ -11,18 +11,14 @@ export class BuilderSlidingPanel extends Component {
     static props = {
         ...basicContainerBuilderComponentProps,
         label: { type: String, optional: false },
-        class: { type: String, optional: true },
-        icon: { type: String, optional: true },
-        textContent: { type: String, optional: true },
+        extraClasses: { type: String, optional: true },
         fullHeight: { type: Boolean, optional: true },
         darkBackground: { type: Boolean, optional: true },
         openByDefault: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
     };
     static defaultProps = {
-        class: "btn-secondary",
-        icon: "fa-paint-brush",
-        textContent: "",
+        extraClasses: "",
         fullHeight: false,
         darkBackground: false,
         openByDefault: false,
@@ -36,8 +32,6 @@ export class BuilderSlidingPanel extends Component {
             optionContainerName: "",
         });
         onMounted(() => {
-            this.optionsContainerEls = document.querySelectorAll("div.options-container");
-
             const slidingPanelEl = this.slidingPanelRef.el;
             const optionsContainerEl = slidingPanelEl.closest("div.options-container");
             this.state.optionContainerName = optionsContainerEl.dataset.containerTitle;

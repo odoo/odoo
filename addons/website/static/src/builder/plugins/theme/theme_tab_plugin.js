@@ -68,18 +68,13 @@ export class ThemeTabPlugin extends Plugin {
         },
         theme_options: [
             withSequence(
-                OPTION_POSITIONS.COLORS,
-                this.getThemeOptionBlock("theme-colors", _t("Colors"), ThemeColorsOption)
-            ),
-            withSequence(
                 OPTION_POSITIONS.SETTINGS,
-                this.getThemeOptionBlock(
-                    "website-settings",
-                    _t("Website"),
+                this.getThemeOptionBlock("website-settings", _t("Website"), [
+                    ThemeColorsOption,
                     class ThemeWebsiteSettingsOption extends BaseOptionComponent {
                         static template = "website.ThemeWebsiteSettingsOption";
-                    }
-                )
+                    },
+                ])
             ),
             withSequence(
                 OPTION_POSITIONS.PARAGRAPH,
@@ -238,7 +233,10 @@ export class ThemeTabPlugin extends Plugin {
         el.dataset.name = name;
         this.document.body.appendChild(el); // Currently editingElement needs to be isConnected
 
-        options.selector = "*";
+        const optionsArray = Array.isArray(options) ? options : [options];
+        optionsArray.forEach((option) => {
+            option.selector = "*";
+        });
 
         return {
             id: id,
@@ -247,7 +245,7 @@ export class ThemeTabPlugin extends Plugin {
             headerMiddleButton: false,
             isClonable: false,
             isRemovable: false,
-            options: [options],
+            options: optionsArray,
             optionsContainerTopButtons: [],
             snippetModel: {},
         };

@@ -26,6 +26,7 @@ test("theme tab: warning on palette change", async () => {
         styleContent: 'body { --has-customized-colors: "true"; }',
     });
     await contains(".o-snippets-tabs button[data-name=theme]").click();
+    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
     await contains(
         ".o_theme_tab [data-src='/website/static/src/img/snippets_options/palette.svg']"
     ).click();
@@ -64,6 +65,7 @@ test("theme tab: no warning on palette change", async () => {
 
     await setupWebsiteBuilder("");
     await contains(".o-snippets-tabs button[data-name=theme]").click();
+    await contains(".o-tab-content .o-hb-theme-color-slider-btn").click();
     await contains(
         ".o_theme_tab [data-src='/website/static/src/img/snippets_options/palette.svg']"
     ).click();

@@ -18,6 +18,11 @@ registerWebsitePreviewTour(
     () => [
         ...goToTheme(),
         {
+            content: "Open the theme color slider",
+            trigger: "button.o-hb-theme-color-slider-btn",
+            run: "click",
+        },
+        {
             content: "Toggle gray color palette",
             trigger: ".we-bg-options-container [data-label=Grays] div",
             run: "click",
