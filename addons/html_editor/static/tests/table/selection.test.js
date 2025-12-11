@@ -126,9 +126,9 @@ describe("select a full table on cross over", () => {
                 contentAfterEdit:
                     '<p data-selection-placeholder=""><br></p>' +
                     '<table class="o_selected_table"><tbody><tr>' +
-                    '<td class="o_selected_td">ab</td>' +
+                    '<td class="o_selected_td">[ab</td>' +
                     '<td class="o_selected_td">cd</td>' +
-                    '<td class="o_selected_td">e[f</td></tr></tbody></table><p>a]bc</p>',
+                    '<td class="o_selected_td">ef</td></tr></tbody></table><p>a]bc</p>',
             });
         });
 
@@ -366,13 +366,13 @@ describe("select a full table on cross over", () => {
                     <table class="o_selected_table">
                         <tbody><tr>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">ab</font>
+                                <font style="color: aquamarine;">[ab</font>
                             </td>
                             <td class="o_selected_td">
                                 <font style="color: aquamarine;">cd</font>
                             </td>
                             <td class="o_selected_td">
-                                <font style="color: aquamarine;">e[f</font>
+                                <font style="color: aquamarine;">ef</font>
                             </td>
                         </tr></tbody>
                     </table>
