@@ -184,6 +184,11 @@ class RepairOrder(models.Model):
     picking_product_ids = fields.One2many('product.product', compute='_compute_picking_product_ids')
     picking_product_id = fields.Many2one(related="picking_id.product_id")
     allowed_lot_ids = fields.One2many('stock.lot', compute='_compute_allowed_lot_ids')
+
+    # Invoice Binding
+    invoice_count = fields.Integer(string='Invoice Count', compute='_compute_invoice_count')
+    invoice_ids = fields.One2many('account.move', 'repair_order_id', string='Invoice', copy=False)
+
     # UI Fields
     has_uncomplete_moves = fields.Boolean(compute='_compute_has_uncomplete_moves')
     unreserve_visible = fields.Boolean(
@@ -193,6 +198,7 @@ class RepairOrder(models.Model):
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
         help='Technical field to check when we can reserve quantities')
     picking_type_visible = fields.Boolean(compute='_compute_picking_type_visible')
+    can_create_sale_or_invoice = fields.Boolean(compute='_compute_can_create_sale_or_invoice')
 
     def _compute_picking_type_visible(self):
         repair_type_by_company = dict(self.env['stock.picking.type']._read_group([
@@ -237,6 +243,21 @@ class RepairOrder(models.Model):
             if repair.picking_id:
                 domain &= Domain('id', 'in', repair.picking_id.move_ids.lot_ids.ids)
             repair.allowed_lot_ids = self.env['stock.lot'].search(domain)
+
+    @api.depends('invoice_ids', 'invoice_ids.state')
+    def _compute_invoice_count(self):
+        for repair in self:
+            repair.invoice_count = len(repair.invoice_ids)
+
+    @api.depends('invoice_ids', 'invoice_ids.state', 'partner_id', 'sale_order_id', 'state')
+    def _compute_can_create_sale_or_invoice(self):
+        for repair in self:
+            repair.can_create_sale_or_invoice = (
+                repair.partner_id
+                and all(invoice.state == "cancel" for invoice in repair.invoice_ids)
+                and not repair.sale_order_id
+                and repair.state != "cancel"
+            )
 
     @api.depends('product_id', 'product_id.uom_id')
     def compute_uom_id(self):
@@ -411,6 +432,7 @@ class RepairOrder(models.Model):
                 (repair.move_id + repair.move_ids).filtered(lambda m: m.state not in ('done', 'cancel')).write({'date': repair.schedule_date})
             if 'under_warranty' in vals:
                 repair._update_sale_order_line_price()
+                repair._update_invoice_line_price()
         if moves_to_reassign:
             moves_to_reassign._do_unreserve()
             moves_to_reassign = moves_to_reassign._filtered_for_assign()
@@ -480,6 +502,36 @@ class RepairOrder(models.Model):
                 repair.sale_order_line_id.write({'product_uom_qty': 0.0})  # Quantity of the product that generated the RO is set to 0
         self.move_ids._action_cancel()  # Quantity of parts added from the RO to the SO is set to 0
         return self.write({'state': 'cancel'})
+
+    def action_create_invoice(self):
+        self.ensure_one()
+        invoice_line_vals = []
+        for move in self.move_ids:
+            if move.repair_line_type != 'add':
+                continue
+            invoice_line_vals.append(Command.create({
+                'product_id': move.product_id.id,
+                'quantity': move.product_qty,
+                'price_unit': 0 if self.under_warranty else move.product_id.lst_price,
+            }))
+        invoice = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_id.id,
+                'repair_order_id': self.id,
+                'invoice_line_ids': invoice_line_vals,
+            })
+        return self.action_view_invoice(invoice)
+
+    def action_view_invoice(self, invoice=False):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('account.action_move_out_invoice_type')
+        action.update({
+            'views': [[False, 'form']] if invoice else [[False, 'list'], [False, 'form']],
+            'domain': [('id', 'in', self.invoice_ids.ids)],
+            'res_id': invoice.id if invoice else False,
+            'context': {'create': False},
+        })
+        return action
 
     def action_repair_cancel_draft(self):
         if self.filtered(lambda repair: repair.state != 'cancel'):
@@ -580,6 +632,8 @@ class RepairOrder(models.Model):
                 partial_moves.add(move.id)
             if move.picked:
                 picked_moves.add(move.id)
+            if move.product_uom_qty > move.quantity:
+                move.quantity = move.product_uom_qty
         return self.action_repair_done()
 
     def action_repair_start(self):
@@ -664,6 +718,15 @@ class RepairOrder(models.Model):
                 add_moves.sale_line_id.write({'price_unit': 0.0, 'technical_price_unit': 0.0})
             else:
                 add_moves.sale_line_id._compute_price_unit()
+
+    def _update_invoice_line_price(self):
+        invoice = self.invoice_ids.filtered(lambda inv: inv.state == 'draft')
+        if not invoice:
+            return
+        if self.under_warranty:
+            invoice.invoice_line_ids.write({'price_unit': 0.0})
+        else:
+            invoice.invoice_line_ids._compute_price_unit()
 
     # -------------------------------------------------------------------------
     # CATALOG

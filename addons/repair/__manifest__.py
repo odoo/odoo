@@ -29,6 +29,7 @@ The following topics are covered by this module:
         'views/stock_lot_views.xml',
         'views/stock_picking_views.xml',
         'views/stock_warehouse_views.xml',
+        'views/account_move_views.xml',
         'report/repair_reports.xml',
         'report/repair_templates_repair_order.xml',
         'data/repair_data.xml',
