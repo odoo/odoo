@@ -95,6 +95,8 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _get_ubl_available_attachments(self, mail_attachments_widget, invoice_edi_format):
+        if not invoice_edi_format or not mail_attachments_widget:
+            return self.env['ir.attachment'], self.env['ir.attachment']
         attachment_ids = [values['id'] for values in mail_attachments_widget if values.get('manual')]
         attachments = self.env['ir.attachment'].browse(attachment_ids)
 
