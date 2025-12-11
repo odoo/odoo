@@ -6464,13 +6464,17 @@ class AccountMove(models.Model):
         """
         return ['invoice_pdf_report_file']
 
+    def _should_detach_attachments(self):
+        return self.is_sale_document()
+
     def _detach_attachments(self):
         """
         Called by button_draft to detach specific attachments for the current journal entries to allow regeneration.
         """
-        files_to_detach = self.sudo().env['ir.attachment'].search([
+        moves = self.filtered(lambda move: move._should_detach_attachments())
+        files_to_detach = self.env['ir.attachment'].sudo().search([
             ('res_model', '=', 'account.move'),
-            ('res_id', 'in', self.ids),
+            ('res_id', 'in', moves.ids),
             ('res_field', 'in', self._get_fields_to_detach()),
         ])
         if files_to_detach:
