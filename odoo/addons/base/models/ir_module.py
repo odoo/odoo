@@ -157,15 +157,15 @@ XML_DECLARATION = (
 )
 
 
-class IrModuleModule(models.Model):
+class IrModuleModule(models.ValueModel):
     _name = 'ir.module.module'
     _rec_name = "shortdesc"
     _rec_names_search = ('name', 'shortdesc', 'summary')
     _description = "Module"
     _order = 'application desc,sequence,name'
     _allow_sudo_commands = False
-    _clear_cache_name = 'stable'      # cache to clear on create/write/update
-    _clear_cache_on_fields = ('name', 'state')
+    _code_field = 'name'
+    _cached_data_fields = [*_rec_names_search, 'application', 'sequence', 'state']
 
     @classmethod
     def get_module_info(cls, name):
@@ -904,19 +904,12 @@ class IrModuleModule(models.Model):
             if not module.description_html:
                 _logger.warning('module %s: description is empty!', module.name)
 
+    @api.model
     def _get(self, name):
         """ Return the (sudoed) `ir.module.module` record with the given name.
         The result may be an empty recordset if the module is not found.
         """
-        model_id = self._get_id(name) if name else False
-        return self.browse(model_id).sudo()
-
-    @api.ormcache('name', cache='stable')
-    def _get_id(self, name):
-        self.flush_model(['name'])
-        self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
-        result = self.env.cr.fetchone()
-        return result and result[0]
+        return self.sudo().get(name)
 
     @api.model
     @api.ormcache(cache='stable')
