@@ -92,15 +92,25 @@ export class ImportAction extends Component {
     }
 
     async onWillStart() {
-        this.action = await this.actionService.currentAction;
-        if (!this.action) {
-            return this.env.config.historyBack();
+        const action = await this.actionService.currentAction;
+        const activeModel = this.props.action.params?.active_model;
+        if (activeModel) {
+            this.resModel = activeModel;
+            if (action?.type === "ir.actions.act_window" && action?.res_model === this.resModel) {
+                this.action = action;
+            } else {
+                this.props.updateActionState({ active_model: this.resModel });
+            }
+        } else {
+            if (!action) {
+                return this.env.config.historyBack();
+            }
+            if (action.type !== "ir.actions.act_window") {
+                return this.actionService.restore(this.actionService.currentController.jsId);
+            }
+            this.action = action;
+            this.resModel = this.action.res_model;
         }
-        if (this.action.type !== "ir.actions.act_window") {
-            return this.actionService.restore(this.actionService.currentController.jsId);
-        }
-
-        this.resModel = this.action.res_model;
         this.model.setResModel(this.resModel);
         return this.model.init();
     }
@@ -114,8 +124,8 @@ export class ImportAction extends Component {
             type: "ir.actions.act_window",
             name: _t("Imported records"),
             res_model: this.model.resModel,
-            view_mode: this.action.view_mode || "list,form",
-            views: this.action.views || [
+            view_mode: this.action?.view_mode || "list,form",
+            views: this.action?.views || [
                 [false, "list"],
                 [false, "form"],
             ],
