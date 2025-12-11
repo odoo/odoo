@@ -57,7 +57,6 @@ registry.category("website.form_editor_actions").add("create_task", {
             string: _t("Project"),
             domain: [["is_template", "=", false], ["active", "=", true]],
             orderBy: "id asc",
-            searchable: true,
             dialogTitle: _t("Create a Project"),
             dialogDescription: _t("Your current changes will be saved and you'll be redirected to the 'Project' app"),
             noRecordMessage: _t("To create a Task, You must create a Project."),
