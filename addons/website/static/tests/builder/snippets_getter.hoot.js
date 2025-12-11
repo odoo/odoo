@@ -15,15 +15,14 @@ function removeImageSrc(xmlString) {
 }
 
 let websiteSnippetsPromise;
-export const getWebsiteSnippets = async () => {
+export const getWebsiteSnippets = () => {
     if (!websiteSnippetsPromise) {
         websiteSnippetsPromise = unmockedOrm(
             "ir.ui.view",
             "render_public_asset",
             ["website.snippets"],
             {}
-        );
+        ).then((snippets) => removeImageSrc(snippets.trim()));
     }
-    const str = await websiteSnippetsPromise;
-    return removeImageSrc(str.trim());
+    return websiteSnippetsPromise;
 };
