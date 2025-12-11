@@ -324,6 +324,19 @@
             .o_group_caret {
                 margin-inline-start: calc(var(--o-list-group-level, 0) * #{map-get($spacers, 4)});
             }
+
+            &.o_multi_group_expand_available {
+                background-color: rgba(0, 0, 0, 0.1);
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.5);
+                    .o_multi_group_expand_tooltip {
+                        display: block !important;
+                        transform: translate(-50%, -50%);
+                        background: white;
+                        color: black;
+                    }
+                }
+            }
         }
         tbody + tbody {
             border-top: none; // Override bootstrap for grouped list views

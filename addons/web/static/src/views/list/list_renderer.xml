@@ -204,7 +204,7 @@
     </t>
 
     <t t-name="web.ListRenderer.GroupRow">
-        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer {{ canResequenceRows and group_index > 0 ? 'o_row_draggable' : '' }}"
+        <tr t-attf-class="{{group.count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group.isFolded ? 'o_group_open' : ''}} cursor-pointer {{ canResequenceRows and group_index > 0 ? 'o_row_draggable' : '' }} {{state.altKeyMode ? 'o_multi_group_expand_available' : ''}}"
             t-att-data-group-id="group.id"
             t-on-click="(ev) => this.onGroupHeaderClicked(ev, group)"
         >
@@ -212,6 +212,10 @@
                 tabindex="-1"
                 t-attf-class="o_group_name fs-6 fw-bold {{!group.isFolded ? 'text-black' : 'text-body'}}"
                 t-att-colspan="getGroupNameCellColSpan(group)">
+                <div t-if="state.altKeyMode" class="o_multi_group_expand_tooltip d-none position-absolute rounded-3 p-1 start-50 top-50 fw-normal">
+                    <t t-if="group.isFolded">Click to expand all groups</t>
+                    <t t-else="">Click to collapse all groups</t>
+                </div>
                 <div class="d-flex align-items-center">
                     <span t-attf-class="o_group_caret fa fa-fw {{group.isFolded ? 'fa-caret-right' : 'fa-caret-down' }} me-1"
                         t-attf-style="--o-list-group-level: {{getGroupLevel(group)}}"/>

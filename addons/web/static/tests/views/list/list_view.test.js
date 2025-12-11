@@ -8130,6 +8130,81 @@ test(`groupby node with subfields, and onchange`, async () => {
 });
 
 test.tags("desktop");
+test(`alt click to toggle multiple groups (1 level of groupby)`, async () => {
+    stepAllNetworkCalls();
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/><field name="int_field"/></list>`,
+        groupBy: ["m2o"],
+    });
+
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "get_views",
+        "web_read_group",
+        "has_group",
+    ]);
+
+    expect(".o_group_header").toHaveCount(2);
+    expect(".o_data_row").toHaveCount(0);
+
+    await keyDown("alt");
+    await animationFrame();
+    expect(".o_group_header").toHaveClass("o_multi_group_expand_available");
+    expect(`.o_multi_group_expand_available`).toHaveCount(2);
+    await contains(".o_group_header").click();
+    expect(".o_data_row").toHaveCount(4);
+    expect.verifySteps(["web_read_group"]);
+
+    await contains(".o_group_header").click();
+    expect(".o_data_row").toHaveCount(0);
+    expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test(`alt click to toggle multiple groups (2 levels of groupby)`, async () => {
+    stepAllNetworkCalls();
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list><field name="foo"/><field name="int_field"/></list>`,
+        groupBy: ["m2o", "int_field"],
+    });
+
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "get_views",
+        "web_read_group",
+        "has_group",
+    ]);
+
+    expect(".o_group_header").toHaveCount(2);
+    expect(".o_group_header.o_group_open").toHaveCount(0);
+    expect(".o_data_row").toHaveCount(0);
+
+    await keyDown("alt");
+    await animationFrame();
+    expect(".o_group_header").toHaveClass("o_multi_group_expand_available");
+    expect(`.o_multi_group_expand_available`).toHaveCount(2);
+    await contains(".o_group_header").click();
+    expect(".o_group_header").toHaveCount(6);
+    expect(".o_group_header.o_group_open").toHaveCount(2);
+    expect(".o_data_row").toHaveCount(0);
+    expect.verifySteps(["web_read_group"]);
+
+    await contains(".o_group_header:eq(1)").click();
+    expect(".o_group_header").toHaveCount(6);
+    expect(".o_group_header.o_group_open").toHaveCount(5);
+    expect(".o_data_row").toHaveCount(3);
+    expect.verifySteps(["web_read_group"]);
+});
+
+test.tags("desktop");
 test(`list view, editable, without data`, async () => {
     Foo._records = [];
     Foo._fields.date = fields.Date({ default: "2017-02-10" });

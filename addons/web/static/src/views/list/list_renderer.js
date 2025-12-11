@@ -199,7 +199,10 @@ export class ListRenderer extends Component {
         this.multiCurrencyPopover = usePopover(MultiCurrencyPopover, {
             position: "right",
         });
-        this.state = useState({ showGroupInput: false });
+        this.state = useState({
+            showGroupInput: false,
+            altKeyMode: false,
+        });
         this.currencyRates = null;
         onWillStart(async () => {
             const needsCurrencyRates = this.props.archInfo.columns.some((column) => {
@@ -279,9 +282,11 @@ export class ListRenderer extends Component {
         }));
 
         useExternalListener(window, "keydown", (ev) => {
+            this.state.altKeyMode = ev.altKey;
             this.shiftKeyMode = ev.shiftKey;
         });
         useExternalListener(window, "keyup", (ev) => {
+            this.state.altKeyMode = ev.altKey;
             this.shiftKeyMode = ev.shiftKey;
             const hotkey = getActiveHotkey(ev);
             if (hotkey === "shift") {
@@ -2022,7 +2027,11 @@ export class ListRenderer extends Component {
     async onGroupHeaderClicked(_ev, group) {
         const left = await this.props.list.leaveEditMode();
         if (left) {
-            this.toggleGroup(group);
+            if (this.state.altKeyMode) {
+                group.toggleAll();
+            } else {
+                this.toggleGroup(group);
+            }
         }
     }
 
