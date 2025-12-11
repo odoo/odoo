@@ -55,6 +55,7 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
             'city': 'Copenhagen',
             'country_id': cls.env.ref('base.dk').id,
             'invoice_sending_method': 'nemhandel',
+            'invoice_edi_format': 'oioubl_21',
             'vat': 'DK12345674',
         }, {
             'name': 'Molly',
@@ -63,6 +64,7 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
             'email': 'Namur@company.com',
             'country_id': cls.env.ref('base.dk').id,
             'invoice_sending_method': 'nemhandel',
+            'invoice_edi_format': 'oioubl_21',
             'vat': 'DK12345666',
         }])
 
@@ -297,6 +299,7 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
             'city': 'Copenhagen',
             'country_id': self.env.ref('base.dk').id,
             'invoice_sending_method': 'nemhandel',
+            'invoice_edi_format': 'oioubl_21',
 
         })
         self.assertRecordValues(

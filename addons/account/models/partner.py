@@ -589,8 +589,11 @@ class ResPartner(models.Model):
     invoice_edi_format = fields.Selection(
         string="eInvoice format",
         selection=[],  # to extend
-        compute='_compute_invoice_edi_format',
-        inverse='_inverse_invoice_edi_format',
+        company_dependent=True,
+    )
+    invoice_edi_format_placeholder = fields.Char(
+        default="XML file",
+        compute='_compute_invoice_edi_format_placeholder',
         compute_sudo=True,
     )
     invoice_edi_format_store = fields.Char(company_dependent=True)
@@ -662,21 +665,13 @@ class ResPartner(models.Model):
 
     @api.depends_context('company')
     @api.depends('country_code')
-    def _compute_invoice_edi_format(self):
+    def _compute_invoice_edi_format_placeholder(self):
         for partner in self:
             if not partner.commercial_partner_id or partner.commercial_partner_id.invoice_edi_format_store == 'none':
-                partner.invoice_edi_format = False
+                partner.invoice_edi_format_placeholder = False
             else:
-                partner.invoice_edi_format = partner.commercial_partner_id.invoice_edi_format_store or partner.commercial_partner_id._get_suggested_invoice_edi_format()
-
-    def _inverse_invoice_edi_format(self):
-        for partner in self:
-            if partner.invoice_edi_format == partner._get_suggested_invoice_edi_format():
-                partner.invoice_edi_format_store = False
-            elif not partner.invoice_edi_format:
-                partner.invoice_edi_format_store = 'none'
-            else:
-                partner.invoice_edi_format_store = partner.invoice_edi_format
+                edi_formats = dict(self._fields['invoice_edi_format'].selection)
+                partner.invoice_edi_format_placeholder = partner.commercial_partner_id.invoice_edi_format_store or edi_formats.get(partner.commercial_partner_id._get_suggested_invoice_edi_format())
 
     @api.depends_context('company')
     def _compute_use_partner_credit_limit(self):
@@ -714,6 +709,19 @@ class ResPartner(models.Model):
     def _find_accounting_partner(self, partner):
         ''' Find the partner for which the accounting entries will be created '''
         return partner.commercial_partner_id
+
+    def _update_invoice_edi_format_store(self):
+        for partner in self:
+            if partner.invoice_edi_format == partner._get_suggested_invoice_edi_format():
+                partner.invoice_edi_format_store = False
+            elif not partner.invoice_edi_format:
+                partner.invoice_edi_format_store = 'none'
+            else:
+                partner.invoice_edi_format_store = partner.invoice_edi_format
+
+    @api.onchange('invoice_edi_format')
+    def _onchange_invoice_edi_format(self):
+        self._update_invoice_edi_format_store()
 
     @api.model
     def _commercial_fields(self):
@@ -767,6 +775,9 @@ class ResPartner(models.Model):
 
         res = super().write(vals)
 
+        if 'invoice_edi_format' in vals:
+            self._update_invoice_edi_format_store()
+
         if 'parent_id' in vals:
             for partner, move_lines in partner2move_lines.items():
                 partner._compute_commercial_partner()
@@ -789,7 +800,9 @@ class ResPartner(models.Model):
                     vals['customer_rank'] = 1
                 elif is_supplier and 'supplier_rank' not in vals:
                     vals['supplier_rank'] = 1
-        return super().create(vals_list)
+        partners = super().create(vals_list)
+        partners._update_invoice_edi_format_store()
+        return partners
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_partner_in_account_move(self):

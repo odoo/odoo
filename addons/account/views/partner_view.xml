@@ -217,8 +217,9 @@
                                    string="Customer Invoices"
                                    groups="account.group_account_invoice,account.group_account_readonly">
                                 <field name="invoice_sending_method" placeholder="e-Invoicing &amp; Email"/>
+                                <field name="invoice_edi_format_placeholder" invisible="1"/>
                                 <field name="invoice_edi_format"
-                                       placeholder="XML format"
+                                       options="{'placeholder_field': 'invoice_edi_format_placeholder'}"
                                        invisible="not display_invoice_edi_format"/>
                                 <field name="invoice_template_pdf_report_id"
                                        invisible="not display_invoice_template_pdf_report_id"
