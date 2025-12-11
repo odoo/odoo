@@ -188,6 +188,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['sender', 'receiver'])])
         edi_users._peppol_reset_webhook()
 
+    def _cron_peppol_update_metadata(self):
+        edi_users = self.search([('proxy_type', '=', 'peppol')])
+        for edi_user in edi_users:
+            edi_user._peppol_update_metadata()
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -577,3 +582,21 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     def _peppol_reset_webhook(self):
         for edi_user in self:
             edi_user._call_peppol_proxy('/api/peppol/2/set_webhook', params={'webhook_url': edi_user.company_id._get_peppol_webhook_endpoint(), 'token': edi_user._generate_webhook_token()})
+
+    def _peppol_update_metadata(self):
+        self.ensure_one()
+        try:
+            features_flags = self._call_peppol_proxy(
+                '/api/peppol/1/get_features',
+                params={
+                    'client_features': list(self.company_id._peppol_get_default_feature_flags().keys())
+                }
+            )
+        except AccountEdiProxyError:
+            features_flags = {}  # fallback to default if error occurs
+        out = self.company_id.sudo().peppol_metadata or {}
+
+        out['features'] = self.company_id._peppol_get_default_feature_flags() | features_flags
+
+        self.company_id.sudo().peppol_metadata = out
+        self.company_id.sudo().peppol_metadata_updated_at = self.env.cr.now()

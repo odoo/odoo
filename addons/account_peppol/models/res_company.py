@@ -2,19 +2,28 @@
 
 import contextlib
 import re
+import logging
+from functools import wraps
+from typing import Optional
+
 import requests
 from lxml import etree
-from stdnum import get_cc_module, ean
+from stdnum import ean, get_cc_module
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
+
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 try:
     import phonenumbers
 except ImportError:
     phonenumbers = None
+
+
+_logger = logging.getLogger(__name__)
 
 
 def _cc_checker(country_code, code_type):
@@ -49,6 +58,32 @@ PEPPOL_ENDPOINT_SANITIZERS = {
     '0208': _re_sanitizer(r'\d{10}'),
 }
 TIMEOUT = 10
+
+
+def peppol_feature(code: str, /, *, expected_kwargs=()):
+    assert isinstance(expected_kwargs, (list, tuple)), "expected_kwargs must be a list or tuple of strings"
+    expected = tuple(expected_kwargs or ())
+
+    def deco(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            self.ensure_one()
+
+            all_features = (self.sudo().peppol_metadata or {}).get('features', None) or self._peppol_get_default_feature_flags()
+            if not (feat := all_features.get(code, {})):
+                return
+
+            if isinstance(feat, bool):
+                if expected:
+                    return
+                return func(self, *args, **kwargs)
+            if isinstance(feat, dict):
+                if any(k not in feat for k in expected):
+                    return
+                return func(self, *args, **kwargs, **{k: feat[k] for k in expected})
+            return
+        return wrapper
+    return deco
 
 
 class ResCompany(models.Model):
@@ -94,9 +129,10 @@ class ResCompany(models.Model):
     peppol_external_provider = fields.Char(tracking=True)
     peppol_can_send = fields.Boolean(compute='_compute_peppol_can_send')
     peppol_parent_company_id = fields.Many2one(comodel_name='res.company', compute='_compute_peppol_parent_company_id')
-    # IAP-driven metadata with additive keys
-    peppol_metadata = fields.Json(string='Peppol Metadata')
-    peppol_metadata_updated_at = fields.Datetime(string='Peppol meta updated at')
+
+    # schema: {"features": {"feature1": true, "feature2": {"arg1": "value"}}, "state": {"key": "value"}}
+    peppol_metadata = fields.Json(string='Peppol Metadata', groups='base.group_system')
+    peppol_metadata_updated_at = fields.Datetime(string='Peppol meta updated at', groups='base.group_system')
 
     peppol_activate_self_billing_sending = fields.Boolean(
         string="Activate self-billing sending",
@@ -152,6 +188,7 @@ class ResCompany(models.Model):
         self.account_peppol_proxy_state = 'not_registered'
         self.account_peppol_migration_key = False
         if not soft:
+            self.sudo().peppol_metadata = {}
             self.peppol_external_provider = False
             self.peppol_eas = False
             self.peppol_endpoint = False
@@ -446,3 +483,47 @@ class ResCompany(models.Model):
             return
 
         mail_template.send_mail(self.id, force_send=True)
+
+    def _peppol_get_default_feature_flags(self):
+        self.ensure_one()
+        return {
+            'rate_limiting_ui': True,
+            'proactive_peppol_prompt_countries': {
+                'country_codes': [
+                    'BE', 'FI', 'LU', 'LV', 'NL', 'NO', 'SE',
+                ]
+            }
+        }
+
+    @peppol_feature('rate_limiting_ui', expected_kwargs=('help_url',))
+    def _peppol_get_rate_limiting_doc_url(self, help_url: Optional[str]) -> Optional[str]:
+        return help_url
+
+    @peppol_feature('proactive_peppol_prompt_countries', expected_kwargs=('country_codes',))
+    def _peppol_get_proactive_peppol_prompt_countries(self, country_codes: Optional[list[str]]) -> Optional[list[str]]:
+        return country_codes
+
+    @peppol_feature('rate_limiting_ui')
+    def _peppol_get_remaining_send_quota(self) -> int | None:
+        # this is not accessed often, but needs to be up-to-date when accessed
+        # so we keep it in the metadata state, and update it if the result is older than 1 min
+        metadata = self.sudo().peppol_metadata or {}
+        quota = metadata.setdefault('state', {}).setdefault('quota', {})
+
+        # use transaction time to avoid fetching multiple times in the same transaction
+        if quota.get('last_update', 0) < self.env.cr.now().timestamp() - 30:
+            try:
+                quota_info = self.account_peppol_edi_user._call_peppol_proxy('/api/peppol/1/get_quota')
+            except AccountEdiProxyError as e:
+                _logger.error('Error while fetching Peppol quota information: %s', e)
+                return
+            else:
+                if (remaining_quota := quota_info.get('remaining_quota')) is not None:
+                    quota.update({
+                        'remaining_quota': remaining_quota,
+                        'last_update': self.env.cr.now().timestamp(),
+                    })
+                    self.sudo().peppol_metadata = metadata
+
+        if 'remaining_quota' in quota:
+            return quota['remaining_quota']

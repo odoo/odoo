@@ -38,17 +38,18 @@ class AccountMoveSendBatchWizard(models.TransientModel):
         sending_methods['manual'] = _('Manually')  # in batch sending, everything is done asynchronously, we never "Download"
 
         for wizard in self:
+            moves_data = {move: self._get_default_sending_settings(move) for move in wizard.move_ids._origin}
+            self._apply_sending_method_rate_limits(moves_data)
+
             edi_counter = Counter()
             sending_method_counter = Counter()
 
-            for move in wizard.move_ids._origin:
-                edi_counter += Counter([edi for edi in self._get_default_extra_edis(move)])
-                sending_settings = self._get_default_sending_settings(move)
-                sending_method_counter += Counter([
-                    sending_method
-                    for sending_method in self._get_default_sending_methods(move)
-                    if self._is_applicable_to_move(sending_method, move, **sending_settings)
-                ])
+            for move, move_data in moves_data.items():
+                edi_counter.update(move_data['extra_edis'])
+                sending_method_counter.update(
+                    sending_method for sending_method in move_data['sending_methods']
+                    if self._is_applicable_to_move(sending_method, move, **move_data)
+                )
 
             summary_data = dict()
             for edi, edi_count in edi_counter.items():
@@ -62,6 +63,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
     def _compute_alerts(self):
         for wizard in self:
             moves_data = {move: self._get_default_sending_settings(move) for move in wizard.move_ids._origin}
+            self._apply_sending_method_rate_limits(moves_data)
             wizard.alerts = self._get_alerts(wizard.move_ids._origin, moves_data)
 
     # -------------------------------------------------------------------------

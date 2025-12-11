@@ -91,6 +91,7 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
         'add_services': lambda _user: {},
         'get_services': lambda _user:  {'services': self.env['res.company']._peppol_supported_document_types()},
         'remove_services': lambda _user: {},
+        'get_features': lambda _user: {},
     }[endpoint](self)
 
 

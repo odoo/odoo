@@ -772,6 +772,12 @@ class AccountMoveSend(models.AbstractModel):
         ) if 'sending_methods' in custom_settings else True
 
     @api.model
+    def _apply_sending_method_rate_limits(self, moves_data: dict) -> None:
+        # TO EXTEND
+        # a hook to fallback to another sending method early if a rate limit would be exceeded
+        return
+
+    @api.model
     def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
         """ Generate and send the moves given custom_settings if provided, else their default configuration set on related partner/company.
         :param moves: account.move to process

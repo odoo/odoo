@@ -1,5 +1,7 @@
 from base64 import b64encode
 from datetime import timedelta
+from functools import reduce
+from operator import or_
 
 from odoo import api, fields, models, _
 
@@ -21,6 +23,35 @@ class AccountMoveSend(models.AbstractModel):
             return {'email', 'peppol'}
 
         return {'email'}
+
+    @api.model
+    def _apply_sending_method_rate_limits(self, moves_data):
+        # EXTENDS 'account'
+        # fallback to mail if by sending the whole
+        super()._apply_sending_method_rate_limits(moves_data)
+
+        peppol_moves_data = {move: data for move, data in moves_data.items() if 'peppol' in data['sending_methods']}
+
+        if not peppol_moves_data:
+            return
+
+        peppol_moves_by_company = reduce(or_, peppol_moves_data.keys(), self.env['account.move']).grouped('company_id')
+
+        for company, moves in peppol_moves_by_company.items():
+            if not company.peppol_can_send or not (remaining_quota := company._peppol_get_remaining_send_quota()):
+                continue
+
+            if remaining_quota >= len(moves):
+                continue
+
+            # Fallback to email for moves of THIS company only
+            for move in moves:
+                data = moves_data[move]
+                data['sending_methods'].discard('peppol')
+                if not data['sending_methods']:
+                    data['sending_methods'].add('email')
+
+                data['peppol_rate_limited'] = True
 
     @api.model
     def _get_move_constraints(self, move):
@@ -69,12 +100,30 @@ class AccountMoveSend(models.AbstractModel):
                 },
             },
         }
-        info_always_on_countries = {'BE', 'FI', 'LU', 'LV', 'NL', 'NO', 'SE'}
         any_moves_not_sent_peppol = any(move.peppol_move_state not in ('processing', 'done') for move in moves)
         always_on_companies = moves.company_id.filtered(
-            lambda c: c.country_code in info_always_on_countries and not c.peppol_can_send
+            lambda c: c.country_code in (c._peppol_get_proactive_peppol_prompt_countries() or []) and not c.peppol_can_send
         )
-        if all((
+        rate_limited_count = sum(1 for m in moves if moves_data[m].get('peppol_rate_limited'))
+        if rate_limited_count:
+            if rate_limited_count == 1:
+                msg = self.env._("You reached today's Peppol sending limit.")
+            else:
+                msg = self.env._("You either reached or will reach your Peppol daily limit by sending these invoices")
+            alerts['account_peppol_warning_quota'] = {
+                'level': 'warning',
+                'message': msg,
+            }
+            if help_url := next((c._peppol_get_rate_limiting_doc_url() for c in moves.company_id), None):
+                alerts['account_peppol_warning_quota'].update({
+                    'action_text': self.env._("Check out why"),
+                    'action': {
+                        'type': 'ir.actions.act_url',
+                        'target': 'new',
+                        'url': help_url,
+                    },
+                })
+        elif all((
             always_on_companies,
             any_moves_not_sent_peppol,
             not filter_peppol_state(moves, ['not_valid', 'not_verified']),
