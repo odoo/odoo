@@ -84,7 +84,7 @@ class _Outcome(object):
         # method since the error does not comme especially from the test method.
         while tb:
             code = tb.tb_frame.f_code
-            if PurePath(code.co_filename).name == 'case.py' and code.co_name in ('_callTestMethod', '_callSetUp', '_callTearDown', '_callCleanup'):
+            if code.co_name in ('_callTestMethod', '_callSetUp', '_callTearDown', '_callCleanup'):
                 return tb.tb_next
             tb = tb.tb_next
 
