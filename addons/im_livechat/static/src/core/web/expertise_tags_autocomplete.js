@@ -15,7 +15,7 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
  */
 export class ExpertiseTagsAutocomplete extends Component {
     static template = "im_livechat.ExpertiseTagsAutocomplete";
-    static props = ["channel"];
+    static props = ["channel", "disabled?"];
     static components = { TagsList, Many2XAutocomplete };
 
     setup() {
