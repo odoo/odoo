@@ -56,7 +56,8 @@ class GattBtManager(Gatt_DeviceManager):
 
 
 class BtManager(Thread):
-    daemon = True
+    def __init__(self):
+        super().__init__(daemon=True)
 
     def run(self):
         dm = GattBtManager(adapter_name='hci0')

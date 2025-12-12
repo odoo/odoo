@@ -24,11 +24,10 @@ unsupported_devices = {}
 
 
 class Manager(Thread):
-    daemon = True
     ws_channel = ""
 
     def __init__(self):
-        super().__init__()
+        super().__init__(daemon=True)
         self.identifier = system.IOT_IDENTIFIER
         self.domain = self._get_domain()
         self.version = system.get_version(detailed_version=True)

@@ -42,7 +42,7 @@ class IoTRestart(Thread):
     Thread to restart odoo server in IoT Box when we must return a answer before
     """
     def __init__(self, delay):
-        Thread.__init__(self)
+        super().__init__(daemon=True)
         self.delay = delay
 
     def run(self):
