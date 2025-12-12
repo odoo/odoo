@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from freezegun import freeze_time
 from lxml import etree
-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_my_edi.tests.test_file_generation import NS_MAP
+
+from odoo import Command
 from odoo.tests import Form, tagged
 
 
@@ -144,6 +145,46 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'cbc:InvoiceTypeCode',
             '02',
             attributes={'listVersionID': '1.1'},
+        )
+
+    def test_10_downpayment(self):
+        """Test that a downpayment line will have their classification code correctly set to 022 (other)"""
+        self.ensure_installed('sale')
+        so = self.env["sale.order"].create(
+            {
+                "partner_id": self.partner_b.id,
+                "order_line": [Command.create({"product_id": self.product_a.id})],
+            }
+        )
+        so.action_confirm()
+
+        context = {
+            "active_model": "sale.order",
+            "active_ids": so.ids,
+            "active_id": so.id,
+        }
+        downpayment_wizard = (
+            self.env["sale.advance.payment.inv"]
+            .with_context(context)
+            .create(
+                {
+                    "advance_payment_method": "percentage",
+                    "amount": 50,
+                }
+            )
+        )
+        invoice = downpayment_wizard._create_invoices(sale_orders=so)
+        invoice.action_post()
+
+        file, errors = invoice._l10n_my_edi_generate_invoice_xml()
+        self.assertFalse(errors)
+        root = etree.fromstring(file)
+
+        self._assert_node_values(
+            root,
+            "cac:InvoiceLine/cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode",
+            "022",
+            attributes={"listID": "CLASS"},
         )
 
     def _assert_node_values(self, root, node_path, text, attributes=None):
