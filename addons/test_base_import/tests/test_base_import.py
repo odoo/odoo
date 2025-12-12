@@ -780,6 +780,52 @@ foo3,US,0,persons\n""",
         self.assertEqual(tag3, partners[1].category_id)
         self.assertEqual(tag1 | tag3, partners[2].category_id)
 
+    def test_rollback_sequence(self):
+        """Test that sequence numbers don't increase during a test import."""
+        sequence = self.env['ir.sequence'].create({
+            'name': "Test Import Sequence",
+            'implementation': 'standard',
+            'code': base_import_model('preview'),
+            'prefix': "TEST/",
+        })
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': base_import_model('preview'),
+            'file': 'name,somevalue,othervalue\n'
+                    '"foo",1,2\n'
+                    '"bar",5,6\n',
+            'file_type': 'text/csv',
+        })
+        dryrun = import_wizard.execute_import(
+            fields=[False, "somevalue", "othervalue"],
+            columns=[],
+            options={'quoting': '"', 'separator': ',', 'has_headers': True},
+            dryrun=True,
+        )
+        self.assertFalse(dryrun['messages'], "Test import should happen without errors.")
+        self.assertFalse(
+            self.env[base_import_model('preview')].browse(dryrun['ids']).exists(),
+            "No records should be created in a dryrun."
+        )
+        sequence.invalidate_recordset(['implementation', 'number_next_actual'])
+        self.assertEqual(sequence.implementation, 'standard')
+        self.assertEqual(sequence.number_next_actual, 1, "Next number shouldn't increase.")
+
+        wetrun = import_wizard.execute_import(
+            fields=[False, "somevalue", "othervalue"],
+            columns=[],
+            options={'quoting': '"', 'separator': ',', 'has_headers': True},
+            dryrun=False,
+        )
+        self.assertFalse(wetrun['messages'], "Real import should happen without errors.")
+        self.assertTrue(
+            self.env[base_import_model('preview')].browse(wetrun['ids']).exists(),
+            "Records should be created.",
+        )
+        sequence.invalidate_recordset(['implementation', 'number_next_actual'])
+        self.assertEqual(sequence.implementation, 'standard')
+        self.assertEqual(sequence.number_next_actual, 3, "Next number should increase.")
+
+
 class TestBatching(TransactionCase):
     def _makefile(self, rows):
         f = io.BytesIO()
