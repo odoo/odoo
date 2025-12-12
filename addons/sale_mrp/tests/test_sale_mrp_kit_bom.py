@@ -958,3 +958,72 @@ class TestSaleMrpKitBom(TransactionCase):
         move = delivery_picking.move_ids[0]
         move.product_packaging_id = False
         self.assertEqual(move.move_line_ids.product_packaging_qty, 0.0)
+
+    def test_kit_product_packaging_qty_rounding(self):
+        """
+        Test that when selling a kit and the componenet product is delivered using multiple lots
+        that the product packaging quantity is rounded correctly.
+        """
+        self.env.user.write({'groups_id': [Command.link(self.ref('product.group_stock_packaging'))]})
+
+        kit_product = self._create_product('Kit', 'product', 1)
+        product_packaging = self.env['product.packaging'].create({
+            'name': "pack of 9",
+            'product_id': kit_product.id,
+            'qty': 9.0,
+        })
+
+        comp_product = self._create_product('Component', 'product', 1)
+        comp_product.tracking = 'lot'
+
+        lot1 = self.env['stock.lot'].create({
+            'name': 'lot1',
+            'product_id': comp_product.id,
+            'company_id': self.env.company.id,
+        })
+        lot2 = self.env['stock.lot'].create({
+            'name': 'lot2',
+            'product_id': comp_product.id,
+            'company_id': self.env.company.id,
+        })
+
+        warehouse = self.env["stock.warehouse"].create({
+            'name': 'WH',
+            'code': 'WH Test',
+        })
+        stock_location = warehouse.lot_stock_id
+
+        self.env['stock.quant']._update_available_quantity(comp_product, stock_location, 9.0, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(comp_product, stock_location, 12.6, lot_id=lot2)
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': comp_product.id,
+                    'product_qty': 0.1,
+                }),
+            ]
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'name': kit_product.name,
+                    'product_id': kit_product.id,
+                    'product_uom_qty': 216,
+                    'product_packaging_id': product_packaging.id
+                }),
+            ],
+            'warehouse_id': warehouse.id,
+        })
+        so.action_confirm()
+
+        so.picking_ids.button_validate()
+
+        self.assertEqual(len(so.picking_ids.move_ids.move_line_ids), 2)
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[0].product_packaging_qty, 10)
+        self.assertEqual(so.picking_ids.move_ids.move_line_ids[1].product_packaging_qty, 14)
