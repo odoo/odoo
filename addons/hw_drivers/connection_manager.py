@@ -14,10 +14,9 @@ _logger = logging.getLogger(__name__)
 
 
 class ConnectionManager(Thread):
-    daemon = True
 
     def __init__(self):
-        super().__init__()
+        super().__init__(daemon=True)
         self.pairing_code = False
         self.pairing_uuid = False
         self.pairing_code_expired = False
