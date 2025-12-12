@@ -5965,7 +5965,6 @@ class AccountMove(models.Model):
                 )
         container = {'records': self}
         with self._check_balanced(container), self._sync_dynamic_lines(container):
-            self.env.add_to_compute(lines_to_recompute._fields['price_unit'], lines_to_recompute)
             self.env.add_to_compute(self.invoice_line_ids._fields['tax_ids'], self.invoice_line_ids)
             self.env.add_to_compute(self.line_ids._fields['account_id'], self.line_ids)
 
