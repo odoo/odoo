@@ -19,6 +19,8 @@ export class ProgressBarField extends Component {
         isMaxValueEditable: { type: Boolean, optional: true },
         title: { type: String, optional: true },
         overflowClass: { type: String, optional: true },
+        progressColorClass: { type: String, optional: true },
+        progressBarInnerLabel: { type: String, optional: true },
     };
 
     setup() {
@@ -66,7 +68,7 @@ export class ProgressBarField extends Component {
     }
 
     get progressBarColorClass() {
-        return this.currentValue > this.maxValue ? this.props.overflowClass : "bg-primary";
+        return this.currentValue > this.maxValue ? this.props.overflowClass : this.props.progressColorClass;
     }
 
     formatCurrentValue(humanReadable = !this.state.isEditing) {
@@ -150,6 +152,18 @@ export const progressBarField = {
             ),
             default: "bg-secondary",
         },
+        {
+            label: _t("Progress bar color"),
+            name: "color_class",
+            type: "string",
+            help: _t("CSS class used to style the progress bar background."),
+        },
+        {
+            label: _t("Progress bar inner label"),
+            name: "inner_label",
+            type: "string",
+            help: _t("Text displayed inside the progress bar alongside the value."),
+        },
     ],
     supportedTypes: ["integer", "float"],
     extractProps: ({ attrs, options }) => ({
@@ -160,6 +174,8 @@ export const progressBarField = {
         isMaxValueEditable: options.editable && options.edit_max_value,
         title: attrs.title,
         overflowClass: options.overflow_class || "bg-secondary",
+        progressColorClass: options.color_class || "bg-primary",
+        progressBarInnerLabel: options.inner_label,
     }),
 };
 

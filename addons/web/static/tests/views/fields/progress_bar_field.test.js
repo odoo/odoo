@@ -405,3 +405,23 @@ test("ProgressBarField: color is correctly set when value > max value", async ()
         message: "As the value has excedded the max value, the color should be set to bg-warning",
     });
 });
+
+test("ProgressBarField: apply custom background colour and render the label inside the bar", async () => {
+    Partner._records[0].int_field = 75;
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `
+            <form>
+                <field name="int_field" widget="progressbar" options="{'color_class': 'bg-success', 'inner_label': 'on-time'}"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect(".o_progressbar .bg-success").toHaveCount(1, {
+        message: "Custom background color class is applied to the progress bar",
+    });
+    expect(".o_progress").toHaveText("75\n% on-time", {
+        message: "Progress value and inner label are rendered inside the progress bar",
+    });
+});
