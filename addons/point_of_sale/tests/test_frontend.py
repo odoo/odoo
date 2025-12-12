@@ -2948,13 +2948,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertIn(children_categs[1].id, category_id, "Child category is available and should appear in the POS")
 
     def test_pos_order_shipping_date(self):
-        self.env['res.partner'].create({
-            'name': 'Partner Test with Address',
-            'street': 'test street',
-            'zip': '1234',
-            'city': 'test city',
-            'country_id': self.env.ref('base.us').id
-        })
         self.main_pos_config.write({'ship_later': True})
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
@@ -2962,6 +2955,9 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_pos_order_shipping_date",
             login="pos_user",
         )
+        next_year = date.today().year + 1
+        pos_order = self.env['pos.order'].search([('partner_id', '=', self.partner_full.id)], limit=1)
+        self.assertEqual(pos_order.shipping_date, date(next_year, 5, 30))
 
     def test_fast_payment_validation_from_product_screen_without_automatic_receipt_printing(self):
         self.preset_delivery = self.env['pos.preset'].create({
