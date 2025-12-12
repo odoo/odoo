@@ -31,6 +31,7 @@ from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimety
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
+from odoo.addons.web_editor.tools import get_video_thumbnail_url
 from odoo.addons.website.tools import get_base_domain
 
 logger = logging.getLogger(__name__)
@@ -948,6 +949,16 @@ class Website(Home):
                     return action_res
 
         return request.redirect('/')
+
+    # ------------------------------------------------------
+    # Video information
+    # ------------------------------------------------------
+
+    @http.route('/website/get_video_thumbnail_url', type='json', auth='user', website=True)
+    def get_video_thumb_url(self, video_url):
+        if not request.env.user.has_group('website.group_website_restricted_editor'):
+            raise werkzeug.exceptions.Forbidden()
+        return get_video_thumbnail_url(video_url)
 
 
 class WebsiteBinary(Binary):
