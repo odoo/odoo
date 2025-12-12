@@ -838,8 +838,10 @@ registry.category("web_tour.tours").add("test_product_create_update_from_fronten
                 ),
             ]),
             ProductScreen.longPressProduct("Test Frontend Product Edited"),
-            // Edit button should be disabled (cause we cannot edit a product which is in the cart)
-            Dialog.footerBtnIsDisabled("Edit"),
+            Dialog.confirm("Edit", ".btn-secondary"),
+            Dialog.is({ title: "Edit Product" }),
+            // Product 'taxes_id' field should be reaonly (cause already in the cart)
+            ProductScreen.ensureTaxesInputIsReadonly(),
             Chrome.endTour(),
         ].flat(),
 });
