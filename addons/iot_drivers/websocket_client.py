@@ -109,7 +109,7 @@ class WebsocketClient(Thread):
         self.websocket_url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
         self.db_name = helpers.get_conf('db_name') or ''
         self.session_id = ''
-        super().__init__()
+        super().__init__(daemon=True)
 
     def run(self):
         if self.db_name:
