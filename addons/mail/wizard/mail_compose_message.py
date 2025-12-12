@@ -53,8 +53,9 @@ class MailComposer(models.TransientModel):
         may have to give a huge list of IDs that won't fit into res_ids field.
         """
         # support subtype xmlid, like ``message_post``, when easier than using ``ref``
+        composer = self
         if self.env.context.get('default_subtype_xmlid'):
-            self = self.with_context(
+            composer = composer.with_context(
                 default_subtype_id=self.env['ir.model.data']._xmlid_to_res_id(
                     self.env.context['default_subtype_xmlid']
                 )
@@ -62,8 +63,17 @@ class MailComposer(models.TransientModel):
         # deprecated record context management
         if 'default_res_id' in self.env.context:
             raise ValueError(_("Deprecated usage of 'default_res_id', should use 'default_res_ids'."))
+        if (
+            'body' in fields_list
+            and self.env.context.get('default_body')
+            and self.env.context.get('body_contains_signature_only')
+            and super().default_get(['template_id']).get('template_id')
+        ):
+            ctx = dict(composer.env.context)
+            ctx.pop('default_body', None)
+            composer = composer.with_context(ctx)
 
-        result = super().default_get(fields_list)
+        result = super(MailComposer, composer).default_get(fields_list)
 
         # when being in new mode, create_uid is not granted -> ACLs issue may arise
         if 'create_uid' in fields_list and 'create_uid' not in result:
