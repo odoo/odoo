@@ -9,7 +9,7 @@
         >
             <button
                 t-if="isPermissionGranted(props.kind)"
-                class="o-mail-DeviceSelect-button btn cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret"
+                class="o-mail-DeviceSelect-button btn cursor-pointer border-1 border-secondary align-items-center d-flex w-100 mw-100 shadow-sm o-dropdown--no-caret overflow-hidden"
                 t-att-data-kind="props.kind"
                 t-attf-class="{{ props.roundedType === 'pill' ? 'rounded-pill' : 'rounded' }}"
              >
