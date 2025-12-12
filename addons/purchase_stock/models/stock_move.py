@@ -194,8 +194,9 @@ class StockMove(models.Model):
         returned_move = self.origin_returned_move_id
         move = (self | returned_move).with_prefetch(self._prefetch_ids)
         pdiff_exists = bool(move.stock_valuation_layer_ids.stock_valuation_layer_ids.account_move_line_id)
+        cost_method = self.product_id.categ_id.property_cost_method
 
-        if not am_vals_list or not self.purchase_line_id or pdiff_exists or float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding):
+        if not am_vals_list or not self.purchase_line_id or pdiff_exists or float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding) or cost_method != 'fifo':
             return am_vals_list
 
         layer = self.env['stock.valuation.layer'].browse(svl_id)

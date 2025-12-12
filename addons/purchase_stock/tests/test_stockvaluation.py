@@ -3736,3 +3736,44 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'debit': 0.0, 'credit': 100.0, 'reconciled': True},
             {'debit': 100.0, 'credit': 0.0, 'reconciled': True},
         ])
+
+    def test_standard_valuation_return_twice(self):
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'standard'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.standard_price = 10
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 1.0,
+                    'product_uom': self.product1.uom_po_id.id,
+                    'price_unit': 100.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        # 1st transfer incoming
+        receipt = po.picking_ids[0]
+        receipt.button_validate()
+
+        # 2nd transfer outgoing (return)
+        receipt_return = self._return(receipt)
+
+        # 3rd transfer incoming (return of return)
+        self._return(receipt_return)
+
+        in_stock_amls = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)], order='id')
+        self.assertRecordValues(in_stock_amls, [
+            # Receive 1 @ 10
+            {'debit': 0.0, 'credit': 10.0, 'reconciled': True},
+            # Return 1 @ 10
+            {'debit': 10.0, 'credit': 0.0, 'reconciled': True},
+            # Return of Return 1 @ 10
+            {'debit': 0.0, 'credit': 10.0, 'reconciled': False},
+        ])
