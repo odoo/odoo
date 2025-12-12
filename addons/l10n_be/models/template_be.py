@@ -76,6 +76,15 @@ class AccountChartTemplate(models.AbstractModel):
         be_account = self.with_company(company).ref('a6560', raise_if_not_found=False)
         return be_account or super()._get_bank_fees_reco_account(company)
 
+    def _load(self, template_code, company, install_demo, force_create=True):
+        # OVERRIDE
+        if template_code and company.chart_template and template_code != company.chart_template:
+            for status in ['be_asso', 'be_comp']:
+                if company.chart_template.startswith(status) and template_code.startswith(status):
+                    company.chart_template = template_code
+                    return
+        return super()._load(template_code, company, install_demo, force_create)
+
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)
         belgian_codes = ('be_comp_full_cap', 'be_comp_full_con', 'be_comp_abbr_cap', 'be_comp_abbr_con', 'be_asso_full', 'be_asso_abbr')

@@ -33,6 +33,7 @@ class ResConfigSettings(models.TransientModel):
         check_company=True,
         domain="[('account_type', '=', 'expense')]")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
+    has_locked_package = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company cannot switch its package')
     chart_template = fields.Selection(selection=lambda self: self.env.company._chart_template_selection(), default=lambda self: self.env.company.chart_template)
     sale_tax_id = fields.Many2one(
         'account.tax',
@@ -245,6 +246,7 @@ class ResConfigSettings(models.TransientModel):
     def _compute_has_chart_of_accounts(self):
         self.has_chart_of_accounts = bool(self.company_id.chart_template)
         self.has_accounting_entries = self.company_id.root_id._existing_accounting()
+        self.has_locked_package = len(self.company_id._chart_template_selection()) <= 1
 
     @api.depends('module_account_extract')
     def _compute_module_account_invoice_extract(self):
