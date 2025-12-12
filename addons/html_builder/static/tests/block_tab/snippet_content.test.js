@@ -20,11 +20,13 @@ import { loadBundle } from "@web/core/assets";
 
 describe.current.tags("desktop");
 
+const buttonA = "/website/static/src/img/snippets_thumbs/s_cover.svg";
+const buttonB = "/website/static/src/img/snippets_thumbs/s_three_columns.svg";
 const snippetContent = [
-    `<div name="Button A" data-oe-thumbnail="buttonA.svg" data-oe-snippet-id="123">
+    `<div name="Button A" data-oe-thumbnail="${buttonA}" data-oe-snippet-id="123">
         <a class="btn btn-primary" href="#" data-snippet="s_button">Button A</a>
     </div>`,
-    `<div name="Button B" data-oe-thumbnail="buttonB.svg" data-oe-snippet-id="123">
+    `<div name="Button B" data-oe-thumbnail="${buttonB}" data-oe-snippet-id="123">
         <a class="btn btn-primary" href="#" data-snippet="s_button">Button B</a>
     </div>`,
 ];
@@ -47,7 +49,7 @@ test("Display inner content snippet", async () => {
     const thumbnailImgUrls = queryAll(
         `${snippetInnerContentSelector} .o_snippet_thumbnail_img`
     ).map((thumbnail) => thumbnail.style.backgroundImage);
-    expect(thumbnailImgUrls).toEqual(['url("buttonA.svg")', 'url("buttonB.svg")']);
+    expect(thumbnailImgUrls).toEqual([`url("${buttonA}")`, `url("${buttonB}")`]);
 });
 
 test("Drag & drop inner content block", async () => {

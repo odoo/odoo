@@ -25,6 +25,9 @@ import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 
+const dummySnippetGroup =
+    '<div name="A" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_cover.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>';
+
 export function patchWithCleanupImg() {
     const defaultImg =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==";
@@ -206,9 +209,7 @@ export async function setupHTMLBuilder(
 
     if (!snippets) {
         snippets = {
-            snippet_groups: [
-                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
-            ],
+            snippet_groups: [dummySnippetGroup],
             snippet_structure: [
                 getSnippetStructure({
                     name: "Test",
@@ -518,9 +519,7 @@ export async function setupHTMLBuilderWithDummySnippet(content) {
 
     const snippetsStructure = {
         snippets: {
-            snippet_groups: [
-                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
-            ],
+            snippet_groups: [dummySnippetGroup],
             snippet_structure: snippetsDescription.map((snippetDesc) =>
                 getSnippetStructure(snippetDesc)
             ),
