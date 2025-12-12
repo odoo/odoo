@@ -256,6 +256,18 @@ class TestUi(TestUICommon):
             },
         )
 
+    def test_slides_review_highlight(self):
+        message = self.env["mail.message"].create(
+            {
+                "author_id": self.user_admin.partner_id.id,
+                "body": "Test Message",
+                "model": self.channel._name,
+                "res_id": self.channel.id,
+                "subtype_id": self.ref("mail.mt_comment"),
+            }
+        )
+        self.start_tour(f"/mail/message/{message.id}", "slides_review_highlight_tour", login="portal")
+
     def test_course_review_modification(self):
         self.user_portal.karma = 20
         self.start_tour("/slides", "course_review_modification", login=self.user_portal.login)
