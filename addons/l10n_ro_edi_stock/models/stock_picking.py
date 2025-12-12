@@ -409,7 +409,9 @@ class Picking(models.Model):
         # EXTENDS 'stock'
 
         # Validate the carrier first because it cannot be changed after the super call
-        self._l10n_ro_edi_stock_validate_carrier()
+        # validation should not be blocking demo data or unit tests of other modules
+        if not self.env.context.get('demo_mode', False):
+            self._l10n_ro_edi_stock_validate_carrier()
 
         return super().button_validate()
 
