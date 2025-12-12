@@ -269,11 +269,16 @@ export class FileSelector extends Component {
     }
 
     get attachmentsDomain() {
-        const domain = [
-            "&",
-            ["res_model", "=", this.props.resModel],
-            ["res_id", "=", this.props.resId || 0],
-        ];
+        let domain;
+        if (this.props.resId) {
+            domain = [
+                "&",
+                ["res_model", "=", this.props.resModel],
+                ["res_id", "=", this.props.resId],
+            ];
+        } else {
+            domain = [["id", "in", this.props.pendingAttachments]];
+        }
         domain.unshift("|", ["public", "=", true]);
         domain.push(["name", "ilike", this.state.needle]);
         return domain;

@@ -113,6 +113,7 @@ export class MediaDialog extends Component {
                 onAttachmentChange: this.props.onAttachmentChange,
                 errorMessages: (errorMessage) => (this.errorMessages[tab.id] = errorMessage),
                 modalRef: this.modalRef,
+                pendingAttachments: this.props.pendingAttachments,
             },
         });
     }
