@@ -150,7 +150,8 @@ class AccountMoveSend(models.AbstractModel):
             self._postprocess_invoice_ubl_xml(invoice, invoice_data)
 
         # Always silently generate a Factur-X and embed it inside the PDF for inter-portability
-        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx':
+        ubl_cii_format = invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format')
+        if ubl_cii_format == 'facturx':
             xml_facturx = invoice_data['ubl_cii_xml_attachment_values']['raw']
         else:
             xml_facturx = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
@@ -177,15 +178,14 @@ class AccountMoveSend(models.AbstractModel):
 
         writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml')
 
-        # PDF-A.
-        if invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') == 'facturx' \
-                and not writer.is_pdfa:
+        # PDF-A: Required for Factur-X and XRechnung
+        if ubl_cii_format in ('facturx', 'xrechnung') and not writer.is_pdfa:
             try:
                 writer.convert_to_pdfa()
             except Exception:
                 _logger.exception("Error while converting to PDF/A")
 
-            # Extra metadata to be Factur-x PDF-A compliant.
+            # Extra metadata to be Factur-x/XRechnung PDF-A compliant.
             content = self.env['ir.qweb']._render(
                 'account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata',
                 {
