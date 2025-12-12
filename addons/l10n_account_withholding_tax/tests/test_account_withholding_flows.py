@@ -57,7 +57,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({})
         with Form(payment_register) as payment_register_form:
-            payment_register_form.should_withhold_tax = True
+            payment_register_form.apply_withhold_tax = True
             with payment_register_form.withholding_line_ids.new() as line:
                 line.tax_id = withholding_tax
                 line.base_amount = 1000.0
@@ -103,7 +103,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({})
         with Form(payment_register) as payment_register_form:
-            payment_register_form.should_withhold_tax = True
+            payment_register_form.apply_withhold_tax = True
             with payment_register_form.withholding_line_ids.new() as line:
                 line.tax_id = withholding_tax
                 line.base_amount = 1000.0
@@ -400,7 +400,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({})
         with Form(payment_register) as payment_register_form:
-            payment_register_form.should_withhold_tax = True
+            payment_register_form.apply_withhold_tax = True
             with payment_register_form.withholding_line_ids.new() as line:
                 line.tax_id = withholding_tax
                 line.base_amount = 1000.0
@@ -485,7 +485,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({})
         with Form(payment_register) as payment_register_form:
-            payment_register_form.should_withhold_tax = True
+            payment_register_form.apply_withhold_tax = True
             with payment_register_form.withholding_line_ids.new() as line:
                 line.tax_id = withholding_tax
                 line.base_amount = 1000.0
@@ -809,7 +809,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({})
         with Form(payment_register) as payment_register_form:
-            payment_register_form.should_withhold_tax = True
+            payment_register_form.apply_withhold_tax = True
             with payment_register_form.withholding_line_ids.new() as line:
                 line.tax_id = withholding_tax
                 line.base_amount = 1000.0

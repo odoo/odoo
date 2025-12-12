@@ -10,8 +10,8 @@ class AccountPaymentRegister(models.TransientModel):
     # Fields declaration
     # ------------------
 
-    should_withhold_tax = fields.Boolean(
-        string='Withhold Tax Amounts',
+    apply_withhold_tax = fields.Boolean(
+        string='Apply Withholding Tax',
         readonly=False,
         store=True,
         copy=False,
@@ -75,9 +75,9 @@ class AccountPaymentRegister(models.TransientModel):
         It is simply the payment amount - the sum of withholding taxes.
         """
         for wizard in self:
-            wizard.withholding_net_amount = wizard.withhold_base_amount - wizard.withhold_tax_amount if wizard.should_withhold_tax else wizard.withhold_base_amount
+            wizard.withholding_net_amount = wizard.withhold_base_amount - wizard.withhold_tax_amount if wizard.apply_withhold_tax else wizard.withhold_base_amount
 
-    @api.depends('withhold_tax_id', 'should_withhold_tax')
+    @api.depends('withhold_tax_id', 'apply_withhold_tax')
     def _compute_withhold_base_amount(self):
         for wizard in self:
             base = 0.0
@@ -88,7 +88,7 @@ class AccountPaymentRegister(models.TransientModel):
                         base = amount
             wizard.withhold_base_amount = abs(base)
 
-    @api.depends('should_withhold_tax')
+    @api.depends('apply_withhold_tax')
     def _compute_withhold_tax_id(self):
         for wizard in self:
             tax = self.env['account.tax']
@@ -104,7 +104,7 @@ class AccountPaymentRegister(models.TransientModel):
                     tax = applied_withhold_taxes[0]
             wizard.withhold_tax_id = tax
 
-    @api.depends('should_withhold_tax')
+    @api.depends('apply_withhold_tax')
     def _compute_withhold_account_ids(self):
         for wizard in self:
             accounts = wizard.line_ids.move_id._get_withhold_account_by_sum().keys()
@@ -124,9 +124,9 @@ class AccountPaymentRegister(models.TransientModel):
                 )
                 tax_amount = taxes_res['total_included'] - taxes_res['total_excluded']
             wizard.withhold_tax_amount = abs(tax_amount)
-            wizard.amount = wizard.withhold_base_amount - wizard.withhold_tax_amount if wizard.should_withhold_tax else wizard.withhold_base_amount
+            wizard.amount = wizard.withhold_base_amount - wizard.withhold_tax_amount if wizard.apply_withhold_tax else wizard.withhold_base_amount
 
-    @api.depends('withholding_payment_account_id', 'should_withhold_tax')
+    @api.depends('withholding_payment_account_id', 'apply_withhold_tax')
     def _compute_withholding_outstanding_account_id(self):
         """
         We propose a default account by getting one from the latest payment which:
@@ -135,7 +135,7 @@ class AccountPaymentRegister(models.TransientModel):
          - Yet the payment has an outstanding_account_id
          """
         for wizard in self:
-            if not wizard.should_withhold_tax:
+            if not wizard.apply_withhold_tax:
                 wizard.withholding_outstanding_account_id = False
                 continue
             if wizard.withholding_payment_account_id:
@@ -176,7 +176,7 @@ class AccountPaymentRegister(models.TransientModel):
         # EXTEND 'account'
         payment_vals = super()._create_payment_vals_from_wizard(batch_result)
 
-        if not self.should_withhold_tax:
+        if not self.apply_withhold_tax:
             return payment_vals
 
         if self.withholding_net_amount < 0:
@@ -186,7 +186,7 @@ class AccountPaymentRegister(models.TransientModel):
         withholding_account = self.company_id.withholding_tax_control_account_id
         if not withholding_account:
             raise UserError(self.env._("Please configure the withholding control account from the settings"))
-        payment_vals['should_withhold_tax'] = self.should_withhold_tax
+        payment_vals['apply_withhold_tax'] = self.apply_withhold_tax
         payment_vals['withhold_base_amount'] = self.withhold_base_amount
         payment_vals['withhold_tax_amount'] = self.withhold_tax_amount
         payment_vals['withhold_tax_id'] = self.withhold_tax_id.id

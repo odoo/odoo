@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
             <group name="group1" position="inside">
-                <field name="should_withhold_tax"/>
-                <field name="withhold_tax_id" invisible="not should_withhold_tax"/>
-                <field name="withhold_base_amount" invisible="not should_withhold_tax"/>
-                <field name="withhold_tax_amount" invisible="not should_withhold_tax"/>
+                <field name="apply_withhold_tax"/>
+                <field name="withhold_tax_id" invisible="not apply_withhold_tax"/>
+                <field name="withhold_base_amount" invisible="not apply_withhold_tax"/>
+                <field name="withhold_tax_amount" invisible="not apply_withhold_tax"/>
             </group>
             <xpath expr="//group[@name='group2']/label[@for='amount']" position="replace">
                 <label for="amount">Amount After Tax</label>

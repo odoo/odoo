@@ -6,10 +6,10 @@
         <field name="inherit_id" ref="account.view_account_payment_form"/>
         <field name="arch" type="xml">
             <field name="memo" position="after">
-                <field name="should_withhold_tax" readonly="state != 'draft'"/>
-                <field name="withhold_base_amount" invisible="not should_withhold_tax" readonly="state != 'draft'"/>
-                <field name="withhold_tax_id" invisible="not should_withhold_tax" readonly="state != 'draft'"/>
-                <field name="withhold_tax_amount" invisible="not should_withhold_tax" readonly="state != 'draft'"/>
+                <field name="apply_withhold_tax" readonly="state != 'draft'"/>
+                <field name="withhold_base_amount" invisible="not apply_withhold_tax" readonly="state != 'draft'"/>
+                <field name="withhold_tax_id" invisible="not apply_withhold_tax" readonly="state != 'draft'"/>
+                <field name="withhold_tax_amount" invisible="not apply_withhold_tax" readonly="state != 'draft'"/>
             </field>
         </field>
     </record>

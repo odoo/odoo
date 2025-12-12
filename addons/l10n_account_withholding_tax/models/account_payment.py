@@ -9,7 +9,7 @@ class AccountPayment(models.Model):
     # Fields declaration
     # ------------------
 
-    should_withhold_tax = fields.Boolean(
+    apply_withhold_tax = fields.Boolean(
         string='Apply Withholding Tax',
         help="Whether or not to apply withholding taxes on this payment.",
         readonly=False,
@@ -80,9 +80,9 @@ class AccountPayment(models.Model):
         for payment in self:
             payment.withholding_hide_tax_base_account = bool(payment.company_id.withholding_tax_control_account_id)
 
-    @api.depends('should_withhold_tax')
+    @api.depends('apply_withhold_tax')
     def _compute_outstanding_account_id(self):
-        """ Update the computation to reset the account when should_withhold_tax is unchecked. """
+        """ Update the computation to reset the account when apply_withhold_tax is unchecked. """
         super()._compute_outstanding_account_id()
 
     # -----------------------
@@ -162,12 +162,12 @@ class AccountPayment(models.Model):
     @api.model
     def _get_trigger_fields_to_synchronize(self):
         # EXTEND account to add the withholding fields in the list.
-        # return super()._get_trigger_fields_to_synchronize() + ('withholding_line_ids', 'should_withhold_tax')
-        return super()._get_trigger_fields_to_synchronize() + ('should_withhold_tax','withhold_tax_id','withhold_base_amount','withhold_tax_amount')
+        # return super()._get_trigger_fields_to_synchronize() + ('withholding_line_ids', 'apply_withhold_tax')
+        return super()._get_trigger_fields_to_synchronize() + ('apply_withhold_tax','withhold_tax_id','withhold_base_amount','withhold_tax_amount')
 
     def _seek_for_lines(self):
         res = super()._seek_for_lines()
-        if not self.withhold_tax_amount or not self.should_withhold_tax:
+        if not self.withhold_tax_amount or not self.apply_withhold_tax:
             return res
         res[1] = res[1].filtered(lambda line: not line.is_withhold_line)
         return res
@@ -234,10 +234,6 @@ class AccountPayment(models.Model):
                     'is_withhold_line': True,
                 }),
             ]
-            # for line_values in withholding_line_values_list:
-            #     write_off_line_ids_commands.append(Command.create(line_values))
-            #     liquidity_line_balance -= line_values['balance']
-            #     liquidity_line_amount_currency -= line_values['amount_currency']
             if liquidity_line_balance > 0.0:
                 liquidity_line_values['debit'] = liquidity_line_balance
                 liquidity_line_values['credit'] = 0.0
@@ -273,7 +269,7 @@ class AccountPayment(models.Model):
         """ Ensure that the generated payment entry takes into account the withholding lines. """
         # EXTEND account
         move_vals = super()._generate_move_vals(write_off_line_vals=write_off_line_vals, force_balance=force_balance, line_ids=line_ids)
-        if not self.withhold_tax_amount or not self.should_withhold_tax:
+        if not self.withhold_tax_amount or not self.apply_withhold_tax:
             return move_vals
         withhold_vals = []
         tax_amount = self.withhold_tax_amount
