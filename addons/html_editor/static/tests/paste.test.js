@@ -4622,6 +4622,130 @@ describe("onDrop", () => {
             `<p>ab<img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]c</p>`
         );
     });
+    test("should drag and drop an image after another image", async () => {
+        const base64Image =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+        const base64Image2 =
+            "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
+        const { el } = await setupEditor(
+            `<p>[<img class="img-fluid" data-file-name="image.png" src="${base64Image}">]<img class="img-fluid" data-file-name="image.png" src="${base64Image2}"></p>`
+        );
+        const pElement = el.firstChild;
+        const firstImage = pElement.childNodes[0];
+
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({
+                offsetNode: pElement,
+                offset: pElement.childNodes.length,
+            }),
+        });
+
+        const dragdata = new DataTransfer();
+        await dispatch(firstImage, "dragstart", { dataTransfer: dragdata });
+        await animationFrame();
+        const imageHTML = dragdata.getData("application/vnd.odoo.odoo-editor");
+        expect(imageHTML).toBe(
+            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image}"></p>`
+        );
+
+        const dropData = new DataTransfer();
+        dropData.setData(
+            "text/html",
+            `<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"><img src="${base64Image}">`
+        );
+        // Simulate the application/vnd.odoo.odoo-editor data that the browser would do.
+        dropData.setData("application/vnd.odoo.odoo-editor", imageHTML);
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image2}"><img class="img-fluid" data-file-name="image.png" src="${base64Image}">[]</p>`
+        );
+    });
+    test("should drag and drop third image after first image", async () => {
+        const base64Image1 =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFUlEQVR42mP8z8BQz0AEYBxVSF+FABJADveWkH6oAAAAAElFTkSuQmCC";
+        const base64Image2 =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+        const base64Image3 =
+            "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
+        const { el } = await setupEditor(
+            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image1}"><img class="img-fluid" data-file-name="image.png" src="${base64Image2}">[<img class="img-fluid" data-file-name="image.png" src="${base64Image3}">]</p>`
+        );
+        const pElement = el.firstChild;
+        const firstImage = pElement.childNodes[0];
+
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: pElement, offset: 1 }),
+        });
+
+        const dragdata = new DataTransfer();
+        await dispatch(firstImage, "dragstart", { dataTransfer: dragdata });
+        await animationFrame();
+        const imageHTML = dragdata.getData("application/vnd.odoo.odoo-editor");
+        expect(imageHTML).toBe(
+            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image3}"></p>`
+        );
+
+        const dropData = new DataTransfer();
+        dropData.setData(
+            "text/html",
+            `<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"><img src="${base64Image3}">`
+        );
+        // Simulate the application/vnd.odoo.odoo-editor data that the browser would do.
+        dropData.setData("application/vnd.odoo.odoo-editor", imageHTML);
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image1}"><img class="img-fluid" data-file-name="image.png" src="${base64Image3}">[]<img class="img-fluid" data-file-name="image.png" src="${base64Image2}"></p>`
+        );
+    });
+    test("should drag and drop multiple images after another image", async () => {
+        const base64Image1 =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFUlEQVR42mP8z8BQz0AEYBxVSF+FABJADveWkH6oAAAAAElFTkSuQmCC";
+        const base64Image2 =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+        const base64Image3 =
+            "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
+        const { el } = await setupEditor(
+            `<p>[<img class="img-fluid" data-file-name="image.png" src="${base64Image1}"><img class="img-fluid" data-file-name="image.png" src="${base64Image2}">]<img class="img-fluid" data-file-name="image.png" src="${base64Image3}"></p>`
+        );
+        const pElement = el.firstChild;
+        const firstImage = pElement.childNodes[0];
+
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({
+                offsetNode: pElement,
+                offset: pElement.childNodes.length,
+            }),
+        });
+
+        const dragdata = new DataTransfer();
+        await dispatch(firstImage, "dragstart", { dataTransfer: dragdata });
+        await animationFrame();
+        const imageHTML = dragdata.getData("application/vnd.odoo.odoo-editor");
+        expect(imageHTML).toBe(
+            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image1}"><img class="img-fluid" data-file-name="image.png" src="${base64Image2}"></p>`
+        );
+
+        const dropData = new DataTransfer();
+        dropData.setData(
+            "text/html",
+            `<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"><img src="${base64Image1}"><img src="${base64Image2}">`
+        );
+        // Simulate the application/vnd.odoo.odoo-editor data that the browser would do.
+        dropData.setData("application/vnd.odoo.odoo-editor", imageHTML);
+        await dispatch(pElement, "drop", { dataTransfer: dropData });
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            `<p><img class="img-fluid" data-file-name="image.png" src="${base64Image3}"><img class="img-fluid" data-file-name="image.png" src="${base64Image1}"><img class="img-fluid" data-file-name="image.png" src="${base64Image2}">[]</p>`
+        );
+    });
     test("should drag and drop banner", async () => {
         const { el } = await setupEditor(
             `<p>[a</p>
