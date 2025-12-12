@@ -285,11 +285,13 @@ class AccountTestInvoicingCommon(ProductCommon):
             'default_account_revenue': AccountAccount.search([
                     *account_company_domain,
                     ('account_type', '=', 'income'),
+                    ('deprecated', '=', False),
                     ('id', '!=', company.account_journal_early_pay_discount_gain_account_id.id)
                 ], limit=1),
             'default_account_expense': AccountAccount.search([
                     *account_company_domain,
                     ('account_type', '=', 'expense'),
+                    ('deprecated', '=', False),
                     ('id', '!=', company.account_journal_early_pay_discount_loss_account_id.id)
                 ], limit=1),
             'default_account_receivable': cls.env['res.partner']._fields['property_account_receivable_id'].get_company_dependent_fallback(
@@ -297,21 +299,25 @@ class AccountTestInvoicingCommon(ProductCommon):
             ),
             'default_account_payable': AccountAccount.search([
                     *account_company_domain,
-                    ('account_type', '=', 'liability_payable')
+                    ('account_type', '=', 'liability_payable'),
+                    ('deprecated', '=', False),
                 ], limit=1),
             'default_tax_account_receivable': company.account_purchase_tax_id.tax_group_id.tax_receivable_account_id,
             'default_tax_account_payable': company.account_sale_tax_id.tax_group_id.tax_payable_account_id,
             'default_account_assets': AccountAccount.search([
                     *account_company_domain,
-                    ('account_type', '=', 'asset_fixed')
+                    ('account_type', '=', 'asset_fixed'),
+                    ('deprecated', '=', False),
                 ], limit=1),
             'default_account_deferred_expense': AccountAccount.search([
                     *account_company_domain,
-                    ('account_type', '=', 'asset_current')
+                    ('account_type', '=', 'asset_current'),
+                    ('deprecated', '=', False),
                 ], limit=1),
             'default_account_deferred_revenue': AccountAccount.search([
                     *account_company_domain,
-                    ('account_type', '=', 'liability_current')
+                    ('account_type', '=', 'liability_current'),
+                    ('deprecated', '=', False),
                 ], limit=1),
             'default_account_tax_sale': company.account_sale_tax_id.mapped('invoice_repartition_line_ids.account_id'),
             'default_account_tax_purchase': company.account_purchase_tax_id.mapped('invoice_repartition_line_ids.account_id'),
