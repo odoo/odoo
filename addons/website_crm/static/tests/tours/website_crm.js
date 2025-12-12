@@ -122,7 +122,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Select 'Sales' as Sales Team",
-            trigger: ".o_popover [data-action-id='addActionField']:contains(Test Sales Team)",
+            trigger: ".o-dropdown-item :contains(Test Sales Team)",
             run: "click",
         },
         {

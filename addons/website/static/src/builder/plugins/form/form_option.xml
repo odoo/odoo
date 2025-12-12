@@ -2,6 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.s_website_form_form_option">
+    <FormModelWarningBanner models="state.models" activeForm="state.activeForm"/>
     <BuilderRow t-if="!modelCantChange and this.state.models"
             label.translate="Action" preview="false">
         <BuilderSelect>
@@ -50,19 +51,28 @@
     <t t-if="state.formInfo.fields">
         <t t-foreach="state.formInfo.fields" t-as="field" t-key="field.name">
             <BuilderRow t-if="field.type === 'many2one'" label="field.string" preview="false">
-                <BuilderSelect actionParam="{ isSelect: true, fieldName: field.name }">
-                    <BuilderSelectItem t-if="!field.required" action="'addActionField'" actionValue="'0'">
-                        None
-                    </BuilderSelectItem>
-                    <BuilderSelectItem t-foreach="field.records" t-as="record" t-key="record.id"
-                        action="'addActionField'" actionValue="record.id.toString()"
-                    >
-                        <t t-out="record.display_name"/>
-                    </BuilderSelectItem>
-                </BuilderSelect>
-                <BuilderButton t-if="field.createAction" className="'fa fa-fw fa-plus'"
+                <BuilderMany2One
+                    t-if="state.showSearchableDropdown"
+                    action="'addActionField'"
+                    actionParam="{ isSelect: true, fieldName: field.name, fieldType: field.type }"
+                    model="field.relation"
+                    domain="field.domain"
+                    allowUnselect="field.required ? false : true"
+                />
+                <BuilderButton
+                    t-if="field.createAction"
+                    className="`fa fa-fw fa-plus ${
+                        !state.showSearchableDropdown &amp;&amp; field.required
+                            ? 'w-100 btn-success'
+                            : ''
+                        }`"
                     title.translate="Create New"
-                    action="'promptSaveRedirect'" actionParam="field.createAction"
+                    action="'promptSaveRedirect'"
+                    actionParam="{
+                        createAction: field.createAction,
+                        dialogTitle: field.dialogTitle,
+                        dialogDescription: field.dialogDescription
+                    }"
                 />
             </BuilderRow>
             <!-- TODO className="'o_we_large'" -->
@@ -422,6 +432,14 @@
             <BuilderDateTimePicker t-if="domStateDependency.isFormDate and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
                 id="'hidden_condition_date_between'" dataAttributeAction="'visibilityBetween'" type="'date'"
             />
+        </div>
+    </t>
+</t>
+
+<t t-name="website.FormModelWarningBanner">
+    <t t-if="state.showWarning">
+        <div class="alert alert-info mb-1">
+            <t t-out="state.message"/>
         </div>
     </t>
 </t>
