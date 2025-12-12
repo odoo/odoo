@@ -434,8 +434,8 @@ class HrVersion(models.Model):
                     if version.date_generated_from != version.date_generated_to:
                         domain_to_nullify |= Domain([
                             ('version_id', '=', version.id),
-                            ('date', '>', version_stop),
-                            ('date', '<=', date_stop),
+                            ('date', '>', version_stop.astimezone(tz)),
+                            ('date', '<=', date_stop.astimezone(tz)),
                             ('state', '!=', 'validated'),
                         ])
                 if date_start > version_stop or date_stop < version_start:
