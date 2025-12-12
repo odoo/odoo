@@ -117,7 +117,7 @@
                             <record id="tax_monthly_report_line_vp4_debit" model="account.report.expression">
                                 <field name="label">debit</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">4v</field>
+                                <field name="formula">-4v</field>
                             </record>
                         </field>
                     </record>
@@ -148,15 +148,15 @@
                             <record id="tax_monthly_report_line_vp6_vp6a_debit" model="account.report.expression">
                                 <field name="label">debit</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">VP4.debit + VP5.credit</field>
-                                <field name="subformula">if_below(EUR(0))</field>
+                                <field name="formula">VP4.debit - VP5.credit</field>
+                                <field name="subformula">if_above(EUR(0))</field>
                                 <field name="blank_if_zero" eval="True"/>
                             </record>
                             <record id="tax_monthly_report_line_vp6_vp6b_credit" model="account.report.expression">
                                 <field name="label">credit</field>
                                 <field name="engine">aggregation</field>
-                                <field name="formula">VP4.debit + VP5.credit</field>
-                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="formula">VP4.debit - VP5.credit</field>
+                                <field name="subformula">if_below(EUR(0))</field>
                                 <field name="blank_if_zero" eval="True"/>
                             </record>
                         </field>
@@ -313,7 +313,7 @@
                                 <field name="label">_carryover_debit</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">VP14.debit</field>
-                                <field name="subformula">if_between(EUR(0), EUR(25.82))</field>
+                                <field name="subformula">if_between(EUR(0), EUR(100.00))</field>
                                 <field name="carryover_target">VP7._applied_carryover_debit</field>
                             </record>
                             <record id="tax_monthly_report_line_vp14_vp14b_credit" model="account.report.expression">
