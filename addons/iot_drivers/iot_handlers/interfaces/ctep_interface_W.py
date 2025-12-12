@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ctypes
-from pathlib import Path
 import os
 import logging
 
 from odoo.addons.iot_drivers.interface import Interface
 from odoo.addons.iot_drivers.tools.helpers import download_from_url, unzip_file
+from odoo.addons.iot_drivers.tools.system import path_file
 from odoo.addons.iot_drivers.iot_handlers.drivers.ctypes_terminal_driver import (
     import_ctypes_library,
     create_ctypes_string_buffer
@@ -14,7 +14,7 @@ from odoo.addons.iot_drivers.iot_handlers.drivers.ctypes_terminal_driver import 
 
 _logger = logging.getLogger(__name__)
 
-libPath = Path('odoo/addons/iot_drivers/iot_handlers/drivers')
+libPath = path_file('odoo/addons/iot_drivers/iot_handlers/drivers')
 easyCTEPPath = libPath / 'ctep_w/libeasyctep.dll'
 zipPath = libPath / 'ctep_w.zip'
 
