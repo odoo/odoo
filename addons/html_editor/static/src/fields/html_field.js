@@ -109,6 +109,7 @@ export class HtmlField extends Component {
                 this.editor.shared.dynamicPlaceholder?.updateDphDefaultModel(value);
             }
         });
+        this.remappedAttachmentIds = new Set();
     }
 
     get value() {
@@ -154,6 +155,31 @@ export class HtmlField extends Component {
             this.isDirty = true;
         });
         this.props.record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
+        const { resId, resModel } = this.props.record;
+        await this.remapAttachmentsToResource(this.editor?.editable, resId, resModel);
+    }
+
+    /**
+     * Attachments that were linked to res_id 0 we update them
+     * when the record have a valid res_id
+     */
+    async remapAttachmentsToResource(content, resId, resModel) {
+        if (!resId || !content) {
+            return;
+        }
+        const attachmentIds = [...content.querySelectorAll('img[src^="/web/image/"]')]
+            .map((img) => img.src.match(/\/web\/image\/(\d+)-/)?.[1])
+            .filter(Boolean)
+            .map((id) => parseInt(id))
+            .filter((id) => !this.remappedAttachmentIds.has(id));
+        if (attachmentIds.length) {
+            await this.ormService.write("ir.attachment", attachmentIds, {
+                res_id: resId,
+                res_model: resModel,
+            });
+            attachmentIds.forEach((id) => this.remappedAttachmentIds.add(id));
+        }
+        return;
     }
 
     async getEditorContent() {
@@ -162,17 +188,17 @@ export class HtmlField extends Component {
         // Update the actual editable if still in the DOM.
         if (this.editor.editable && oldSrcToNewSrcMap) {
             this.editor.editable
-                .querySelectorAll('.o_b64_image_to_save, .o_modified_image_to_save')
-              .forEach((unsavedImage) => {
-                const oldSrc = unsavedImage.getAttribute('src');
-                if (oldSrcToNewSrcMap.has(oldSrc)) {
-                  unsavedImage.setAttribute(
-                    'src',
-                    oldSrcToNewSrcMap.get(oldSrc)
-                  );
-                }
-                unsavedImage.classList.remove("o_b64_image_to_save", "o_modified_image_to_save");
-              });
+                .querySelectorAll(".o_b64_image_to_save, .o_modified_image_to_save")
+                .forEach((unsavedImage) => {
+                    const oldSrc = unsavedImage.getAttribute("src");
+                    if (oldSrcToNewSrcMap.has(oldSrc)) {
+                        unsavedImage.setAttribute("src", oldSrcToNewSrcMap.get(oldSrc));
+                    }
+                    unsavedImage.classList.remove(
+                        "o_b64_image_to_save",
+                        "o_modified_image_to_save"
+                    );
+                });
         }
         return content;
     }
