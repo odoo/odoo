@@ -7,7 +7,7 @@ import { FollowerList } from "@mail/core/web/follower_list";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
-import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
+import { useHover } from "@mail/utils/common/hooks";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { RecipientsInput } from "@mail/core/web/recipients_input";
 import { SearchMessageInput } from "@mail/core/common/search_message_input";
@@ -50,7 +50,6 @@ Chatter.props.push(
     "hasParentReloadOnAttachmentsChanged?",
     "hasParentReloadOnFollowersUpdate?",
     "hasParentReloadOnMessagePosted?",
-    "highlightMessageId?",
     "isAttachmentBoxVisibleInitially?",
     "isChatterAside?",
     "isInFormSheetBg?",
@@ -77,7 +76,6 @@ Object.assign(Chatter.defaultProps, {
  */
 const chatterPatch = {
     setup() {
-        this.messageHighlight = useMessageScrolling();
         super.setup(...arguments);
         this.orm = useService("orm");
         this.keepLastSuggestedRecipientsUpdate = new KeepLast();
@@ -245,7 +243,7 @@ const chatterPatch = {
     },
 
     get childSubEnv() {
-        const res = Object.assign(super.childSubEnv, { messageHighlight: this.messageHighlight });
+        const res = super.childSubEnv;
         assignGetter(res.inChatter, { aside: () => this.props.isChatterAside });
         Object.assign(res.inChatter, { toggleComposer: this.toggleComposer.bind(this) });
         return res;
@@ -378,13 +376,6 @@ const chatterPatch = {
     onFollowerChanged() {
         document.body.click(); // hack to close dropdown
         this.reloadParentView();
-    },
-
-    _onMounted() {
-        super._onMounted();
-        if (this.state.thread && this.props.highlightMessageId) {
-            this.state.thread.highlightMessage = this.props.highlightMessageId;
-        }
     },
 
     onPostCallback() {

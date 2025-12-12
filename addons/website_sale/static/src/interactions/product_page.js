@@ -1,5 +1,6 @@
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
+import { router } from '@web/core/browser/router';
 import { localization } from '@web/core/l10n/localization';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
@@ -30,6 +31,7 @@ export class ProductPage extends Interaction {
         this._applySearchParams();
         this._triggerVariantChange(this.el);
         this._startZoom();
+        this._highlightReviewMessage();
     }
 
     destroy() {
@@ -98,13 +100,20 @@ export class ProductPage extends Interaction {
         this._throttledGetCombinationInfo(parent.dataset.uniqueId)(ev);
     }
 
+    _highlightReviewMessage() {
+        if (router.current.highlight_message_id) {
+            this.onClickReviewsLink();
+        }
+    }
+
     /**
      * Uncollapse the reviews.
      */
     onClickReviewsLink() {
-        window.Collapse.getOrCreateInstance(
-            document.querySelector('#o_product_page_reviews_content')
-        ).show();
+        const reviewsContent = document.querySelector('#o_product_page_reviews_content');
+        if (reviewsContent) {
+            window.Collapse.getOrCreateInstance(reviewsContent).show();
+        }
     }
 
     /**
