@@ -82,7 +82,7 @@ class WebsocketClient(Thread):
         self.db_name = system.get_conf('db_name') or ''
         self.session_id = ''
         self.last_message_id = 0
-        super().__init__()
+        super().__init__(daemon=True)
 
     def run(self):
         if self.db_name:

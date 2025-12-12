@@ -14,11 +14,10 @@ _logger = logging.getLogger(__name__)
 class Driver(Thread):
     """Hook to register the driver into the drivers list"""
     connection_type = ''
-    daemon = True
     priority = 0
 
     def __init__(self, identifier, device):
-        super().__init__()
+        super().__init__(daemon=True)
         self.dev = device
         self.device_identifier = identifier
         self.device_name = ''
