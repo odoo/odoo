@@ -227,6 +227,22 @@ registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_so_downpayment_with_avatax", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.downPaymentFirstOrder("+10"),
+            ProductScreen.selectedOrderlineHas("Down Payment (POS)"),
+            ProductScreen.totalAmountIs(10.0),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            Chrome.endTour(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_settle_so_with_non_pos_groupable_uom", {
     steps: () =>
         [

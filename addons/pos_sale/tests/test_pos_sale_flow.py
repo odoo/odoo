@@ -653,6 +653,26 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSSaleOrderWithDownpayment', login="accountman")
 
+    def test_so_downpayment_with_avatax(self):
+        self.product_a.available_in_pos = True
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.product_a.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.main_pos_config.module_pos_avatax = True
+        self.main_pos_config.open_ui()
+        self.start_pos_tour("test_so_downpayment_with_avatax", login="accountman")
+
     def test_downpayment_with_taxed_product(self):
         tax_1 = self.env['account.tax'].create({
             'name': '10',
