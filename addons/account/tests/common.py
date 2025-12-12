@@ -236,11 +236,13 @@ class AccountTestInvoicingCommon(TransactionCase):
             'default_account_revenue': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
                     ('account_type', '=', 'income'),
+                    ('deprecated', '=', False),
                     ('id', '!=', company.account_journal_early_pay_discount_gain_account_id.id)
                 ], limit=1),
             'default_account_expense': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
                     ('account_type', '=', 'expense'),
+                    ('deprecated', '=', False),
                     ('id', '!=', company.account_journal_early_pay_discount_loss_account_id.id)
                 ], limit=1),
             'default_account_receivable': cls.env['ir.property'].with_company(company)._get(
@@ -248,19 +250,22 @@ class AccountTestInvoicingCommon(TransactionCase):
             ),
             'default_account_payable': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
-                    ('account_type', '=', 'liability_payable')
+                    ('account_type', '=', 'liability_payable'),
+                    ('deprecated', '=', False),
                 ], limit=1),
             'default_account_assets': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
-                    ('account_type', '=', 'asset_fixed')
+                    ('account_type', '=', 'asset_fixed'),
                 ], limit=1),
             'default_account_deferred_expense': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
-                    ('account_type', '=', 'asset_current')
+                    ('account_type', '=', 'asset_current'),
+                    ('deprecated', '=', False),
                 ], limit=1),
             'default_account_deferred_revenue': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
-                    ('account_type', '=', 'liability_current')
+                    ('account_type', '=', 'liability_current'),
+                    ('deprecated', '=', False),
                 ], limit=1),
             'default_account_tax_sale': company.account_sale_tax_id.mapped('invoice_repartition_line_ids.account_id'),
             'default_account_tax_purchase': company.account_purchase_tax_id.mapped('invoice_repartition_line_ids.account_id'),
