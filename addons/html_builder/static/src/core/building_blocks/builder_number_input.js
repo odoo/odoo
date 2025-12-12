@@ -86,7 +86,7 @@ export class BuilderNumberInput extends Component {
         this.updateUnitVisibility(e.target.value);
     }
 
-    onKeydown(e) {
+    onKeydownArrow(e) {
         this.debouncedCommitValue();
     }
 
