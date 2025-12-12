@@ -37,6 +37,7 @@
             <field name="arch" type="xml">
                 <list string="Mailings" sample="1" class="o_mass_mailing_mailing_tree">
                     <field name="calendar_date" string="Date" widget="datetime"/>
+                    <field name="name" optional="hide"/>
                     <field name="subject" readonly="state in ('sending', 'done')"/>
                     <field name="mailing_model_id" string="Recipients" optional="hide"/>
                     <field name="user_id" widget="many2one_avatar_user"/>
@@ -67,11 +68,11 @@
                             />
                         <button name="action_schedule" type="object" class="btn-secondary" string="Schedule"
                             invisible="state in ('in_queue', 'sending', 'done')" data-hotkey="v"/>
+                        <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" string="Retry" data-hotkey="y"/>
                         <button name="action_duplicate" type="object" class="btn-secondary" string="Duplicate"
                             data-hotkey="d" invisible="state != 'done'"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="k"/>
                         <button name="action_cancel" type="object" invisible="state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
-                        <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" class="oe_highlight" string="Retry" data-hotkey="y"/>
                         <button type="object"
                             name="action_set_favorite"
                             class="btn-secondary"
@@ -233,7 +234,7 @@
                                             <field name="contact_list_ids" widget="many2many_tags"
                                                 placeholder="Select recipients..." class="oe_inline mb-0"
                                                 context="{'form_view_ref': 'mass_mailing.mailing_list_view_form_simplified'}"
-                                                readonly="state in ('sending', 'done')"/>
+                                                readonly="state in ('sending', 'done')" options="{'color_field': 'color'}"/>
                                             <button icon="fa-user-plus" type="object" class="btn btn-secondary py-0 px-1 ms-1"
                                                 invisible="not contact_list_ids or not contact_list_ids or state in ('sending', 'done')"
                                                 name="action_view_mailing_contacts" title="Add Mailing Contacts"/>

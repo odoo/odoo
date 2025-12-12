@@ -83,6 +83,10 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
             .o_kanban_record {
                 width: 100%;
                 margin: 0;
+                border-top: 0 !important;
+                &::after {
+                    border-right-width: ($border-width * 3);
+                }
             }
         }
         @mixin kanban-stats-button-style {
@@ -140,6 +144,13 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
                         color: rgb(113, 75, 103) !important;
                     }
                 }
+            }
+        }
+        .o_dropdown_kanban {
+            visibility: visible;
+            @include media-breakpoint-up(lg) {
+                top: 50% !important;
+                transform: translateY(-50%) !important;
             }
         }
     }

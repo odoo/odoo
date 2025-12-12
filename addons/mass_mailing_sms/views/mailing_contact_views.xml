@@ -34,10 +34,12 @@
         <field name="inherit_id" ref="mass_mailing.mailing_contact_view_tree"/>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='country_id']" position="after">
+            <xpath expr="//field[@name='email']" position="after">
                 <field name="mobile" class="o_force_ltr" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='is_blacklisted']" position="after">
                 <field name="phone_sanitized" column_invisible="True"/>
-                <field name="phone_sanitized_blacklisted"/>
+                <field name="phone_sanitized_blacklisted" string="&#x1F4DE; Blacklisted"/>
             </xpath>
         </field>
     </record>
@@ -54,7 +56,7 @@
                         title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
                         type="object" context="{'default_phone': mobile}" groups="base.group_user"
                         invisible="not phone_blacklisted"/>
-                    <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
+                    <field name="mobile" string="Phone" widget="phone" options="{'enable_sms': True}"/>
                     <field name="phone_sanitized" invisible="1"/>
                 </div>
             </xpath>
@@ -66,8 +68,11 @@
         <field name="model">mailing.contact</field>
         <field name="inherit_id" ref="mass_mailing.mailing_contact_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='email']" position="after">
-                <field name="mobile" class="fw-bolder"/>
+           <xpath expr="//t[@t-name='card']/div[@name='contact_email']" position="after">
+               <div invisible="not mobile">
+                   <i class="fa fa-phone text-primary me-2" title="Phone"/>
+                   <field name="mobile"/>
+               </div>
             </xpath>
         </field>
     </record>
