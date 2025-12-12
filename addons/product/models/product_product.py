@@ -272,18 +272,30 @@ class ProductProduct(models.Model):
             domain.append(('company_id', 'in', (False, company_id)))
         return domain
 
-    def _check_duplicated_product_barcodes(self, barcodes_within_company, company_id):
+    def _get_duplicated_barcodes(self, barcodes_within_company, company_id):
+        """Return duplicated products grouped by barcode."""
         domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
         products_by_barcode = self.sudo()._read_group(
             domain, ['barcode'], ['id:recordset'], having=[('__count', '>', 1)],
         )
 
+        duplicated_barcodes = [
+            (barcode, accessible_products)
+            for barcode, products in products_by_barcode
+            if (accessible_products := products._filtered_access('read'))
+        ]
+
+        return duplicated_barcodes
+
+    def _check_duplicated_product_barcodes(self, barcodes_within_company, company_id):
+        duplicated_barcodes = self._get_duplicated_barcodes(barcodes_within_company, company_id)
+
         duplicates_as_str = "\n".join(
             self.env._(
                 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s",
-                barcode=barcode, product_list=duplicate_products._filtered_access('read').mapped('display_name'),
+                barcode=barcode, product_list=duplicate_products.mapped('display_name'),
             )
-            for barcode, duplicate_products in products_by_barcode
+            for barcode, duplicate_products in duplicated_barcodes
         )
         if duplicates_as_str:
             duplicates_as_str += _(

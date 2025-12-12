@@ -2148,6 +2148,7 @@ export class PosStore extends WithLazyGetterTrap {
                 additionalContext: {
                     taxes_readonly: orderContainsProduct,
                     pos_session_id: this.session.id,
+                    is_pos_product_action: true,
                 },
             }
         );
