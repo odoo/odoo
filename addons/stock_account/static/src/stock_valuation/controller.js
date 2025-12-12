@@ -1,6 +1,6 @@
 import { reactive } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { serializeDate } from "@web/core/l10n/dates";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
 
@@ -70,7 +70,7 @@ export class StockValuationReportController {
 
     async setDate(date) {
         this.state.date = date;
-        this.dateAsString = serializeDate(date);
+        this.dateAsString = serializeDateTime(date);
         await this.loadReportData();
     }
 
