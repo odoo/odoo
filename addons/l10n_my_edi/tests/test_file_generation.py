@@ -3,10 +3,11 @@ from datetime import datetime
 
 from freezegun import freeze_time
 from lxml import etree
-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tools import file_open
+
+from odoo import Command
 from odoo.tests import Form, tagged
+from odoo.tools import file_open
 
 NS_MAP = {
     'cac': 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
@@ -719,6 +720,47 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             root,
             'cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID',
             'Initial Reference',
+        )
+
+    def test_13_downpayment(self):
+        """Test that a downpayment line will have their classification code correctly set to 022 (other)"""
+        self.ensure_installed('sale')
+        so = self.env["sale.order"].sudo().create(
+            {
+                "partner_id": self.partner_b.id,
+                "order_line": [Command.create({"product_id": self.product_a.id})],
+            }
+        )
+        so.action_confirm()
+
+        context = {
+            "active_model": "sale.order",
+            "active_ids": so.ids,
+            "active_id": so.id,
+        }
+        downpayment_wizard = (
+            self.env["sale.advance.payment.inv"]
+            .sudo()
+            .with_context(context)
+            .create(
+                {
+                    "advance_payment_method": "percentage",
+                    "amount": 50,
+                }
+            )
+        )
+        invoice = downpayment_wizard._create_invoices(sale_orders=so)
+        invoice.action_post()
+
+        file, errors = invoice._l10n_my_edi_generate_invoice_xml()
+        self.assertFalse(errors)
+        root = etree.fromstring(file)
+
+        self._assert_node_values(
+            root,
+            "cac:InvoiceLine/cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode",
+            "022",
+            attributes={"listID": "CLASS"},
         )
 
     def _assert_node_values(self, root, node_path, text, attributes=None):
