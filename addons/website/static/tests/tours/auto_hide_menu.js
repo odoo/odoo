@@ -1,7 +1,5 @@
-import {
-    clickOnEditAndWaitEditMode,
-    registerWebsitePreviewTour,
-} from "@website/js/tours/tour_utils";
+import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 let numNavChildren;
 
@@ -67,10 +65,18 @@ registerWebsitePreviewTour(
             content: "Check that modal has disappeared",
             trigger: "body:not(:has(.modal))",
         },
+        stepUtils.waitIframeIsReady(),
         {
             trigger: `:iframe .o_homepage_editor_welcome_message:contains(welcome to your homepage)`,
         },
-        ...clickOnEditAndWaitEditMode(),
+        {
+            trigger: "body .o_menu_systray .o_menu_systray_item.o_edit_website_container button",
+            run: "click",
+        },
+        {
+            content: "Check that we are in edit mode",
+            trigger: ".o_builder_sidebar_open",
+        },
         getTheLayoutChildren,
         {
             content: "Click on the navbar",
