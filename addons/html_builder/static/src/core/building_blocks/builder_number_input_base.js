@@ -4,6 +4,7 @@ export class BuilderNumberInputBase extends BuilderInputBase {
     static template = "html_builder.BuilderNumberInputBase";
     static props = {
         ...super.props,
+        onKeydownArrow: { type: Function, optional: true },
         clampValue: { type: Function, optional: false },
         composable: { type: Boolean, optional: true },
         min: { type: Number, optional: true },
@@ -26,8 +27,8 @@ export class BuilderNumberInputBase extends BuilderInputBase {
             });
             e.target.value = values.join(" ");
             this.props.preview(e.target.value);
+            this.props.onKeydownArrow?.(e);
         }
-        this.props.onKeydown?.(e);
     }
 
     onBeforeInput(e) {

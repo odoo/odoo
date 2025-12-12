@@ -213,10 +213,7 @@ test("should syncronize previews", async () => {
 
     // Slider changes are committed automatically after a short delay
     await advanceTime(1200);
-    await expect.verifySteps([
-        "customAction isPreviewing: false",
-        "customAction isPreviewing: false",
-    ]);
+    await expect.verifySteps(["customAction isPreviewing: false"]);
     await expect(".options-container input[type='number']").toHaveProperty("value", 10);
 });
 
