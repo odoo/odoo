@@ -595,3 +595,13 @@ registry.category("web_tour.tours").add("test_ecommerce_unpaid_order_is_shown_in
             PosSale.checkOrdersListNotEmpty(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settle_groupable_lot_total_amount", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            Order.hasTotal("12.00"),
+        ].flat(),
+});
