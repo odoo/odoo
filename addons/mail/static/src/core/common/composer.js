@@ -590,6 +590,7 @@ export class Composer extends Component {
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             mail_post_autofollow: this.thread.hasWriteAccess,
+            is_body_empty: !body || body.trim().length === 0,
         };
         const action = {
             name: this.props.type === "note" ? _t("Log note") : _t("Compose Email"),
