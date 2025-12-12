@@ -1738,3 +1738,62 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.env.flush_all()
         refund_payment.with_context(**payment_context).check()
         self.assertEqual(sale_order.order_line.qty_invoiced, 0)
+
+    def test_settle_groupable_lot_total_amount(self):
+        groupable_uom_unit = self.env['uom.uom'].create({
+            'name': 'Groupable Unit',
+            'is_pos_groupable': True,
+        })
+
+        groupable_uom_dozens = self.env['uom.uom'].create({
+            'name': 'Groupable Dozens',
+            'relative_factor': 12,
+            'relative_uom_id': groupable_uom_unit.id,
+        })
+
+        self.product = self.env['product.product'].create({
+            'name': 'Product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 1.0,
+            'taxes_id': False,
+            'categ_id': self.product_category.id,
+            'tracking': 'lot',
+            'uom_id': groupable_uom_unit.id,
+        })
+
+        self.warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        self.shelf = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'usage': 'internal',
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
+
+        quants = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'inventory_quantity': 10_000,
+            'location_id': self.shelf.id,
+            'lot_id': self.env['stock.lot'].create({
+                'name': '1001',
+                'product_id': self.product.id,
+                'location_id': self.shelf.id,
+            }).id,
+        })
+
+        quants.action_apply_inventory()
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+                'name': self.product.name,
+                'product_uom_qty': 1,
+                'product_uom_id': groupable_uom_dozens.id,
+                'price_unit': 12.0,
+            })],
+        })
+
+        sale_order.action_confirm()
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_groupable_lot_total_amount', login="accountman")
