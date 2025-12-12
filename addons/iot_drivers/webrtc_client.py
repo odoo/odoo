@@ -12,10 +12,8 @@ _logger = logging.getLogger(__name__)
 
 
 class WebRtcClient(Thread):
-    daemon = True
-
     def __init__(self):
-        super().__init__()
+        super().__init__(daemon=True)
         self.connections: set[RTCDataChannel] = set()
         self.chunked_message_in_progress: dict[RTCDataChannel, str] = {}
         self.event_loop = asyncio.new_event_loop()
