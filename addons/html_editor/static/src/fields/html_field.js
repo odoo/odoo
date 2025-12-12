@@ -85,6 +85,7 @@ export class HtmlField extends Component {
         );
         this.busService = this.env.services.bus_service;
         this.ormService = useService("orm");
+        this.pendingAttachmentsService = useService("pending_attachment_service");
 
         this.isDirty = false;
         this.lastChangeId = 0;
@@ -128,6 +129,25 @@ export class HtmlField extends Component {
                 this.editor.trigger("on_model_changed_handlers", value);
             }
         });
+
+        const onRecordDiscarded = model.hooks.onRecordDiscarded;
+        const onWillSaveRecord = model.hooks.onWillSaveRecord;
+        const onRecordSaved = model.hooks.onRecordSaved;
+        model.hooks.onRecordDiscarded = (...args) => {
+            if (this.props.record.isNew) {
+                this.pendingAttachmentsService.unlinkPendingAttachments(this.props.record?.resId);
+            }
+            return onRecordDiscarded(...args);
+        };
+        model.hooks.onWillSaveRecord = (...args) => {
+            this.pendingAttachmentsService.addAttachmentsIdsToContext(this.props.record);
+            return onWillSaveRecord(...args);
+        };
+        model.hooks.onRecordSaved = (...args) => {
+            this.pendingAttachmentsService.clearPendingAttachments(false);
+            this.pendingAttachmentsService.clearAttachmentsIdsFromContext(this.props.record);
+            return onRecordSaved(...args);
+        };
     }
 
     get value() {
@@ -223,6 +243,10 @@ export class HtmlField extends Component {
             }
             const changeId = this.lastChangeId;
             const el = await this.getEditorContent();
+            this.pendingAttachmentsService.addPendingAttachments(
+                this.props.record?.resId,
+                this.editor?.shared?.media?.extractUnmappedAttachmentsIds(this.editor.editable)
+            );
             const content = el.innerHTML;
             this.clearElementToCompare(el);
             const comparisonValue = el.innerHTML;
@@ -300,6 +324,15 @@ export class HtmlField extends Component {
                 return { resModel, resId, data, fields, id };
             },
             resources: {},
+            getPendingAttachmentsIds: () => {
+                this.pendingAttachmentsService.addPendingAttachments(
+                    this.props.record?.resId,
+                    this.editor?.shared?.media?.extractUnmappedAttachmentsIds(this.editor.editable)
+                );
+                return this.pendingAttachmentsService.pendingAttachmentIds[
+                    this.props.record?.resId
+                ];
+            },
             ...this.props.editorConfig,
         };
 
@@ -457,3 +490,43 @@ export function setHtmlFieldMetadata(content, metadata) {
     }
     return contentDocument.body.innerHTML;
 }
+
+const pendingAttachmentsService = {
+    dependencies: ["orm"],
+    start(env, { orm }) {
+        const pendingAttachmentIds = {};
+        async function unlinkPendingAttachments(recordId) {
+            if (pendingAttachmentIds[recordId]?.length) {
+                orm.unlink("ir.attachment", [...new Set(pendingAttachmentIds[recordId])]);
+                clearPendingAttachments(recordId);
+            }
+        }
+        function addPendingAttachments(recordId, ids) {
+            if (!pendingAttachmentIds[recordId]) {
+                pendingAttachmentIds[recordId] = [];
+            }
+            pendingAttachmentIds[recordId].push(...ids);
+        }
+        function clearPendingAttachments(recordId) {
+            delete pendingAttachmentIds[recordId];
+        }
+        function addAttachmentsIdsToContext(record) {
+            if (pendingAttachmentIds[record?.resId]) {
+                record.context["pending_attachment_ids"] = pendingAttachmentIds[record?.resId];
+            }
+        }
+        function clearAttachmentsIdsFromContext(record) {
+            delete record.context["pending_attachment_ids"];
+        }
+        return {
+            unlinkPendingAttachments,
+            addPendingAttachments,
+            clearPendingAttachments,
+            pendingAttachmentIds,
+            addAttachmentsIdsToContext,
+            clearAttachmentsIdsFromContext,
+        };
+    },
+};
+
+registry.category("services").add("pending_attachment_service", pendingAttachmentsService);

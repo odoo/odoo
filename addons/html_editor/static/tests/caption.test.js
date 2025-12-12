@@ -595,7 +595,7 @@ test("replace an image with a caption", async () => {
         // TODO: fix the weird final selection
         contentAfter: unformat(
             `<figure>
-                <img src="/web/static/img/logo2.png" alt="" data-attachment-id="1" class="img img-fluid o_we_custom_image">
+                <img src="/web/static/img/logo2.png" alt="" data-attachment-id="1" class="img img-fluid o_we_custom_image o_attachment_pending_record_id">
                 <figcaption>Hello</figcaption>
             </figure>
             <h1>[]Heading</h1>`
@@ -678,7 +678,7 @@ test("edit caption after replacing image", async () => {
         },
         contentAfter: unformat(
             `<figure>
-                [<img src="/web/static/img/logo2.png" alt="" data-attachment-id="1" class="img img-fluid o_we_custom_image">]
+                [<img src="/web/static/img/logo2.png" alt="" data-attachment-id="1" class="img img-fluid o_we_custom_image o_attachment_pending_record_id">]
                 <figcaption>abc</figcaption>
             </figure>
             <h1>Heading</h1>`

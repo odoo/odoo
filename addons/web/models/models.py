@@ -27,6 +27,7 @@ if typing.TYPE_CHECKING:
 _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 MAX_NUMBER_OPENED_GROUPS = 10
+PENDING_ATTACHMENTS_KEY = "pending_attachment_ids"
 
 
 class lazymapping(defaultdict):
@@ -215,13 +216,25 @@ class Base(models.AbstractModel):
             currently saved record.
         :return: A list of dictionaries representing the requested records.
         """
-        if self:
-            self.write(vals)
+        ctx = self.env.context
+        attachments = self.env['ir.attachment'].browse(ctx.get(PENDING_ATTACHMENTS_KEY, ()))
+        if attachments:
+            attachments.check_access('read')
+            ctx = {k: v for k, v in ctx.items() if k != PENDING_ATTACHMENTS_KEY}
+        record = self.with_context(ctx)
+        if record:
+            record.write(vals)
         else:
-            self = self.create(vals)
+            record = record.create(vals)
+
+        if attachments and len(record) == 1:
+            attachments.filtered(lambda a: not a.res_id).write({
+                'res_model': record._name,
+                'res_id': record.id,
+            })
         if next_id:
-            self = self.browse(next_id)
-        return self.with_context(bin_size=True).web_read(specification)
+            record = record.browse(next_id)
+        return record.with_context(bin_size=True).web_read(specification)
 
     def web_save_multi(self, vals_list: list[dict], specification: dict[str, dict]) -> list[dict]:
         """
