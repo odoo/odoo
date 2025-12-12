@@ -7,10 +7,10 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    @template('be_comp', 'account.cash.rounding')
-    def _get_be_comp_account_cash_rounding(self):
+    @template('be_asso', 'account.cash.rounding')
+    def _get_be_asso_account_cash_rounding(self):
         return {
-            'cash_rounding_be_comp_05': {
+            'cash_rounding_be_asso_05': {
                 'name': "Round to 0.05",
                 'name@fr': "Arrondi à 0.05",
                 'name@nl': "Afronding tot 0.05",
@@ -20,21 +20,20 @@ class AccountChartTemplate(models.AbstractModel):
                 'company_id': self.env.company.id,
                 'rounding_method': 'HALF-UP',
                 'profit_account_id': 'a743',
-                'loss_account_id': 'a643',
+                'loss_account_id': 'a644',
             },
         }
 
-    @template('be_comp')
-    def _get_be_comp_template_data(self):
+    @template('be_asso_abbr')
+    def _get_be_asso_abbr_template_data(self):
         return {
-            'name': _('Companies'),
+            'name': _('Associations and Foundations (Abbreviated)'),
             'parent': 'be',
             'code_digits': '6',
-            'sequence': 0,
         }
 
-    @template('be_comp', 'res.company')
-    def _get_be_comp_res_company(self):
+    @template('be_asso_abbr', 'res.company')
+    def _get_be_asso_abbr_res_company(self):
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.be',

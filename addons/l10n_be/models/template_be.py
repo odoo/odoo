@@ -78,7 +78,8 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)
-        if template_code in ('be_comp', 'be_asso') and \
+        belgian_codes = ('be_comp_full_cap', 'be_comp_full_con', 'be_comp_abbr_cap', 'be_comp_abbr_con', 'be_asso_full', 'be_asso_abbr')
+        if template_code in belgian_codes and \
                 (purchase_journal := self.ref('purchase', raise_if_not_found=False)) and \
                 (non_deductible_account := self.ref('a416', raise_if_not_found=False)):
             purchase_journal.non_deductible_account_id = non_deductible_account

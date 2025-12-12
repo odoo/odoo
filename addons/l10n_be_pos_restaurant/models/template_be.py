@@ -13,5 +13,5 @@ class AccountChartTemplate(models.AbstractModel):
         # Filter out taxes that already exist
         existing_tax_names = set(existing_taxes.mapped('name'))
         taxes_to_create = {name: tax for name, tax in be_restaurant_tax.items() if tax['name'] not in existing_tax_names}
-        self._deref_account_tags('be_comp', be_restaurant_tax)
+        self._deref_account_tags('be_comp_abbr_con', be_restaurant_tax)
         return taxes_to_create
