@@ -1071,7 +1071,7 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_07_product_combo(self):
         self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 4
         setup_product_combo_items(self)
-        combo_product_sofa = self.env["product.product"].create(
+        combo_product_sofa = self.env["product.template"].create(
             {
                 "name": "Combo product Sofa",
                 "is_storable": True,
@@ -1094,7 +1094,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         product_attribute_size = self.env['product.template.attribute.line'].create({
-            'product_tmpl_id': combo_product_sofa.product_tmpl_id.id,
+            'product_tmpl_id': combo_product_sofa.id,
             'attribute_id': sofa_size_attribute.id,
             'value_ids': [(6, 0, [sofa_size_M.id, sofa_size_L.id])],
 
@@ -1106,11 +1106,11 @@ class TestUi(TestPointOfSaleHttpCommon):
                 "name": "Chairs Combo",
                 "combo_item_ids": [
                     Command.create({
-                        "product_id": combo_product_sofa.product_tmpl_id.product_variant_ids[0].id,
+                        "product_id": combo_product_sofa.product_variant_ids[0].id,
                         "extra_price": 5,
                     }),
                     Command.create({
-                        "product_id": combo_product_sofa.product_tmpl_id.product_variant_ids[1].id,
+                        "product_id": combo_product_sofa.product_variant_ids[1].id,
                         "extra_price": 10,
                     }),
                 ],
