@@ -724,3 +724,65 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
             'cac:BillingReference/cac:InvoiceDocumentReference/cbc:ID',
             'Initial Reference',
         )
+
+    def test_18_downpayment(self):
+        """Test that a downpayment line will have their classification code correctly set to 022 (other)"""
+        self.ensure_installed('sale')
+        so = self.env["sale.order"].sudo().create(
+            {
+                "partner_id": self.partner_b.id,
+                "order_line": [Command.create({"product_id": self.product_a.id})],
+            }
+        )
+        so.action_confirm()
+
+        context = {
+            "active_model": "sale.order",
+            "active_ids": so.ids,
+            "active_id": so.id,
+        }
+        downpayment_wizard = (
+            self.env["sale.advance.payment.inv"]
+            .sudo()
+            .with_context(context)
+            .create(
+                {
+                    "advance_payment_method": "percentage",
+                    "amount": 50,
+                }
+            )
+        )
+        invoice = downpayment_wizard._create_invoices(sale_orders=so)
+        invoice.action_post()
+        myinvois_document = invoice._create_myinvois_document()
+
+        file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertFalse(errors)
+        root = etree.fromstring(file)
+
+        self._assert_node_values(
+            root,
+            "cac:InvoiceLine/cac:Item/cac:CommodityClassification/cbc:ItemClassificationCode",
+            "022",
+            attributes={"listID": "CLASS"},
+        )
+
+    def _assert_node_values(self, root, node_path, text, attributes=None):
+        node = root.xpath(node_path, namespaces=NS_MAP)
+
+        assert node, f'The requested node has not been found: {node_path}'
+
+        # Ensure that we don't have duplicated nodes. As of writing, all tested nodes are expected to exist only once in the result.
+        node = root.xpath(node_path, namespaces=NS_MAP)
+        self.assertEqual(len(node), 1, f"The node {node[0].tag} has been found {len(node)} time in the file")
+
+        self.assertEqual(
+            node[0].text,
+            text,
+        )
+        if attributes:
+            for attribute, value in attributes.items():
+                self.assertEqual(
+                    node[0].attrib[attribute],
+                    value,
+                )
