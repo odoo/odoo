@@ -23,13 +23,13 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <list string="Mailing Lists" sample="1">
-                <field name="name"/>
-                <field name="is_public"/>
-                <field name="mailing_count" string="Mailings"/>
-                <field name="contact_pct_bounce" string="Bounce (%)"/>
-                <field name="contact_pct_opt_out" string="Opt-out (%)"/>
-                <field name="contact_pct_blacklisted" string="Blacklist (%s)"/>
-                <field name="contact_count" string="Recipients"/>
+                <field name="name" string="Name"/>
+                <field name="is_public" width="150"/>
+                <field name="contact_count" string="Recipients" sum="Total"/>
+                <field name="mailing_count" string="Mailings" sum="Total"/>
+                <field name="contact_pct_bounce" string="Bounce (%)" avg="Average"/>
+                <field name="contact_pct_opt_out" string="Opt-out (%)" avg="Average"/>
+                <field name="contact_pct_blacklisted" string="Blacklist (%s)" avg="Average"/>
             </list>
         </field>
     </record>
@@ -76,8 +76,12 @@
                         </h1>
                     </div>
                     <group>
-                        <field name="active" invisible="1"/>
-                        <field name="is_public"/>
+                        <group>
+                            <field name="is_public"/>
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -91,25 +95,53 @@
         <field name="arch" type="xml">
             <form string="Contact List">
                 <div class="oe_title">
-                    <label for="name"/>
+                    <label for="name" string="List Name"/>
                     <h1>
-                        <field name="name" placeholder="e.g. Consumer Newsletter"/>
+                        <field name="name" placeholder="e.g. Monthly Newsletter"/>
                     </h1>
                 </div>
                 <group>
-                    <field name="is_public"/>
+                    <group>
+                        <field name="is_public" widget="boolean_toggle" options="{'autosave': False}"/>
+                    </group>
+                    <group>
+                        <field name="color" widget="color_picker"/>
+                    </group>
                 </group>
+                 <footer>
+                    <button string="Create Mailing List" class="btn-primary" special="save" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
             </form>
         </field>
+    </record>
+
+    <record id="action_mailing_list_quick_create" model="ir.actions.act_window">
+        <field name="name">Create a Mailing List</field>
+        <field name="res_model">mailing.list</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mailing_list_view_form_simplified"/>
+        <field name="target">new</field>
     </record>
 
     <record id="mailing_list_view_kanban" model="ir.ui.view">
         <field name="name">mailing.list.view.kanban</field>
         <field name="model">mailing.list</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile o_kanban_mailing_list" sample="1">
+            <kanban class="o_kanban_mobile o_kanban_mailing_list" sample="1"
+                    on_create="mass_mailing.action_mailing_list_quick_create"
+                    highlight_color="color">
                 <field name="active"/>
                 <templates>
+                    <t t-name="menu" t-if="!selection_mode">
+                        <a role="menuitem" name="action_send_mailing" type="object" class="dropdown-item">Send Mailing</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <a role="menuitem" name="action_archive" type="object" class="dropdown-item" t-if="record.active.raw_value">Archive</a>
+                        <a role="menuitem" name="action_unarchive" type="object" class="dropdown-item" t-if="!record.active.raw_value">Unarchive</a>
+                        <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item text-danger">Delete</a>
+                        <div role="separator" class="dropdown-divider"></div>
+                        <field name="color" widget="kanban_color_picker"/>
+                    </t>
                     <t t-name="card">
                         <div class="d-flex gap-1 flex-row justify-content-between align-items-center flex-wrap">
                             <div class="col-lg-3 col-sm-6 col-12 py-0 my-auto">
@@ -170,14 +202,10 @@
                                     <span class="text-muted">Blacklist</span>
                                 </a>
                             </div>
-                            <div class="order-3 order-lg-4 col-5 col-lg-2 py-0 my-auto d-none d-md-flex flex-wrap justify-content-end gap-1">
+                            <div class="order-3 order-lg-4 py-0 my-auto me-lg-4 d-none d-md-block">
                                 <button name="action_open_import" string="Import Contacts"
-                                    type="object" class="btn btn-secondary text-nowrap">
+                                    type="object" class="btn btn-primary text-nowrap">
                                     Import Contacts
-                                </button>
-                                <button name="action_send_mailing" string="Send Mailing"
-                                    type="object" class="btn btn-secondary text-nowrap">
-                                    Send Mailing
                                 </button>
                             </div>
                         </div>

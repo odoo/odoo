@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
+from random import randint
 
 from odoo import _, api, Command, fields, models, tools
 from odoo.exceptions import UserError
@@ -17,8 +18,12 @@ class MailingList(models.Model):
     # As this model has their own data merge, avoid to enable the generic data_merge on that model.
     _disable_data_merge = True
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     name = fields.Char(string='Mailing List', required=True)
     active = fields.Boolean(default=True)
+    color = fields.Integer(string='Color', default=_get_default_color)
     contact_count = fields.Integer(compute="_compute_mailing_list_statistics", string='Number of Contacts')
     contact_count_email = fields.Integer(compute="_compute_mailing_list_statistics", string="Number of Emails")
     contact_count_opt_out = fields.Integer(compute="_compute_mailing_list_statistics", string="Number of Opted-out")
@@ -123,9 +128,13 @@ class MailingList(models.Model):
         return super().write(vals)
 
     @api.depends('contact_count')
+    @api.depends_context('formatted_display_name')
     def _compute_display_name(self):
         for mailing_list in self:
-            mailing_list.display_name = f"{mailing_list.name} ({mailing_list.contact_count})"
+            if self.env.context.get('formatted_display_name'):
+                mailing_list.display_name = f"{mailing_list.name}\t --{mailing_list.contact_count} {_('Recipients')}--"
+            else:
+                mailing_list.display_name = mailing_list.name
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

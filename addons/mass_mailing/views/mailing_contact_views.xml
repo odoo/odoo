@@ -50,15 +50,16 @@
                         context="{'from_mailing_list_ids': context.get('active_ids') if context.get('active_model') == 'mailing.list' else False}"/>
                     <button name="action_add_to_mailing_list" string="Add to List" type="object"/>
                 </header>
-                <field name="create_date" optional="show"/>
+                <field name="create_date" string="Create Date" optional="show"/>
                 <field name="name" optional="show" readonly="1"/>
-                <field name="company_name"/>
+                <field name="company_name" optional="hide"/>
                 <field name="email" readonly="1"/>
-                <field name="is_blacklisted" string="Email Blacklisted"/>
+                <field name="is_blacklisted" string="&#x2709; Blacklisted"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                 <field name="country_id" optional="hide"/>
-                <field name="message_bounce" sum="Total Bounces" readonly="1"/>
+                <field name="message_bounce" sum="Total Bounces" readonly="1" optional="hide"/>
                 <field name="opt_out" readonly="1" column_invisible="'default_list_ids' not in context"/>
-                <field name="list_ids" widget="many2many_tags" optional="hide"/>
+                <field name="list_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                 <field name="properties" optional="hide"/>
             </list>
         </field>
@@ -75,14 +76,12 @@
                 </header>
                 <templates>
                     <t t-name="card">
-                        <div class="d-flex">
-                            <field name="name" class="fw-bolder fs-5"/>
-                            <div class="badge rounded-pill ms-auto" title="Number of bounced email.">
-                                <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning"/> <field name="message_bounce"/>
-                            </div>
+                        <field name="name" class="fw-bolder fs-5 mb-1"/>
+                        <div name="contact_email" invisible="not email">
+                            <i class="fa fa-envelope text-primary me-2" title="Email"/>
+                            <field name="email"/>
                         </div>
-                        <field name="tag_ids"/>
-                        <field name="email" class="fw-bolder"/>
+                        <field name="tag_ids" class="mb-1" options="{'color_field': 'color'}"/>
                         <field name="company_name" class="ms-auto"/>
                         <field name="properties" widget="properties"/>
                     </t>
@@ -116,14 +115,14 @@
                                 <field name="email" widget="email"/>
                                 <field name="is_blacklisted" invisible="1"/>
                             </div>
-                            <field name="company_name"/>
-                            <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
+                                   placeholder="e.g. Roadshow"/>
                         </group>
                         <group>
-                            <field name="create_date" readonly="1" invisible="not id"/>
-                            <field name="message_bounce" readonly="1" invisible="not id"/>
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
-                                   placeholder="e.g. &quot;VIP&quot;, &quot;Roadshow&quot;, ..." style="width: 100%"/>
+                            <field name="company_name" placeholder="e.g. Azure Interior"/>
+                            <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="create_date" string="Create Date" readonly="1" invisible="not id"/>
+                            <field name="message_bounce" readonly="1" invisible="message_bounce == 0"/>
                         </group>
                     </group>
                     <div class="d-flex">
@@ -134,10 +133,10 @@
                             <field name="subscription_ids">
                                 <list editable="bottom">
                                     <field name="list_id"/>
-                                    <field name="opt_out_datetime" readonly="1"/>
-                                    <field name="opt_out"/>
-                                    <field name="opt_out_reason_id"/>
                                     <field name="create_date" string="Subscription Date"/>
+                                    <field name="opt_out_datetime" readonly="1"/>
+                                    <field name="opt_out" optional="hide"/>
+                                    <field name="opt_out_reason_id" optional="hide"/>
                                 </list>
                             </field>
                         </page>
