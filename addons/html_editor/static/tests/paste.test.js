@@ -272,7 +272,7 @@ describe("Simple text", () => {
             });
         });
 
-        test("should paste text and understand \\n newlines within UNBREAKABLE node", async () => {
+        test("should paste text and understand \\n newlines within UNSPLITTABLE node", async () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable">[]<br></div>`,
                 stepFunction: async (editor) => {
@@ -282,7 +282,7 @@ describe("Simple text", () => {
             });
         });
 
-        test("should paste text and understand \\n newlines within UNBREAKABLE node(2)", async () => {
+        test("should paste text and understand \\n newlines within UNSPLITTABLE node(2)", async () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable"><span style="font-size: 9px;">a[]</span></div>`,
                 stepFunction: async (editor) => {
@@ -1479,7 +1479,7 @@ describe("Complex html p", () => {
             });
         });
 
-        test("should paste a text when selection leave a span (5) unbreakable", async () => {
+        test("should paste a text when selection leave a span (5) unsplittable", async () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable">1ab<span class="a">c[d</span>e]f</div>`,
                 stepFunction: async (editor) => {
@@ -1537,7 +1537,7 @@ describe("Complex html p", () => {
             });
         });
 
-        test("should paste a text when selection across two element (6) unbreakable", async () => {
+        test("should paste a text when selection across two element (6) unsplittable", async () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable">2a<span class="a">b[c</span><p>d]e</p>f</div>`,
                 stepFunction: async (editor) => {
@@ -1667,7 +1667,7 @@ describe("Complex html 3 p", () => {
             });
         });
 
-        test("should paste a text when selection leave a span (7) unbreakable", async () => {
+        test("should paste a text when selection leave a span (7) unsplittable", async () => {
             await testEditor({
                 contentBefore: '<div class="oe_unbreakable">1ab<span class="a">c[d</span>e]f</div>',
                 stepFunction: async (editor) => {
@@ -1841,7 +1841,7 @@ describe("Complex html p+i", () => {
             });
         });
 
-        test("should paste a text when selection leave a span (9) unbreakable", async () => {
+        test("should paste a text when selection leave a span (9) unsplittable", async () => {
             await testEditor({
                 contentBefore: '<div class="oe_unbreakable">1ab<span class="a">c[d</span>e]f</div>',
                 stepFunction: async (editor) => {
@@ -1898,7 +1898,7 @@ describe("Complex html p+i", () => {
             });
         });
 
-        test("should paste a text when selection across two element (10) unbreakable", async () => {
+        test("should paste a text when selection across two element (10) unsplittable", async () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable">2a<span class="a">b[c</span><p>d]e</p>f</div>`,
                 stepFunction: async (editor) => {
@@ -2021,7 +2021,7 @@ describe("Complex html 3p+b", () => {
             });
         });
 
-        test("should paste a text when selection leave a span (11) unbreakable", async () => {
+        test("should paste a text when selection leave a span (11) unsplittable", async () => {
             await testEditor({
                 contentBefore: '<div class="oe_unbreakable">1ab<span class="a">c[d</span>e]f</div>',
                 stepFunction: async (editor) => {

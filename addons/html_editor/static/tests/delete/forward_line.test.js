@@ -73,7 +73,7 @@ test("should not remove an unremovable element on CTRL+SHIFT+DELETE", async () =
     });
 });
 
-test("should not merge an unbreakable element on CTRL+SHIFT+DELETE", async () => {
+test("should not merge an unsplittable element on CTRL+SHIFT+DELETE", async () => {
     await testEditor({
         contentBefore: unformat(`
             <div class="oe_unbreakable">abc[]</div>
@@ -85,7 +85,7 @@ test("should not merge an unbreakable element on CTRL+SHIFT+DELETE", async () =>
     });
 });
 
-test("should not merge an unbreakable element on CTRL+SHIFT+DELETE (2)", async () => {
+test("should not merge an unsplittable element on CTRL+SHIFT+DELETE (2)", async () => {
     await testEditor({
         contentBefore: unformat(`
             <p>abc[]</p>

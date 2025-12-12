@@ -491,7 +491,7 @@ describe("Selection collapsed", () => {
             // skipping these tests cause with the link isolation the cursor can be put
             // inside/outside the link so the user can choose where to insert the line break
             // see `anchor.nodeName === "A" && brEls.includes(anchor.firstChild)` in line_break_plugin.js
-            test("should insert line breaks outside the edges of an anchor in unbreakable", async () => {
+            test("should insert line breaks outside the edges of an anchor in unsplittable", async () => {
                 await testEditor({
                     contentBefore: `<div class="oe_unbreakable">ab<a href="http://test.test/">[]cd</a></div>`,
                     stepFunction: splitBlockA,

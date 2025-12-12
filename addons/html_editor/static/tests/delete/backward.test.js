@@ -74,8 +74,8 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p>ab c[]</p>",
                 stepFunction: deleteBackward,
-                // The space should be converted to an unbreakable space
-                // so it is visible.
+                // The space should be converted to a non-breaking space so it
+                // is visible.
                 contentAfter: "<p>ab&nbsp;[]</p>",
             });
         });
@@ -365,7 +365,7 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should unwrap a block next to an inline unbreakable element", async () => {
+        test("should unwrap a block next to an inline unsplittable element", async () => {
             await testEditor({
                 contentBefore: `<div><p>abc</p><div class="o_image"></div><p>[]def</p></div>`,
                 stepFunction: async (editor) => {
@@ -375,7 +375,7 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should remove an inline unbreakable contenteditable='false' sibling element", async () => {
+        test("should remove an inline unsplittable contenteditable='false' sibling element", async () => {
             await testEditor({
                 contentBefore: `<div><p>abc</p><div class="o_image"></div>[]def</div>`,
                 stepFunction: async (editor) => {
