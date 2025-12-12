@@ -191,9 +191,9 @@ describe("collapsed selection", () => {
         );
     });
 
-    test("should not unwrap table in unbreakable paragraph find a suitable spot to insert table element", async () => {
+    test("should not unwrap table in unsplittable paragraph find a suitable spot to insert table element", async () => {
         // P elements' content can only be "phrasing" content
-        // Adding a table within an unbreakable p is not possible
+        // Adding a table within an unsplittable p is not possible
         // We have to find a better spot to insert the table
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
         // https://developer.mozilla.org/en-US/docs/Web/HTML/Content_categories#phrasing_content
@@ -223,7 +223,7 @@ describe("collapsed selection", () => {
         );
     });
 
-    test("Should ensure a paragraph after an inserted unbreakable (add)", async () => {
+    test("Should ensure a paragraph after an inserted unsplittable (add)", async () => {
         const { editor } = await setupEditor(`<p>cont[]</p>`, {});
         insertHTML(`<p class="oe_unbreakable">1</p>`)(editor);
         expect(getContent(editor.editable)).toBe(
@@ -232,7 +232,7 @@ describe("collapsed selection", () => {
         );
     });
 
-    test("Should ensure a paragraph after an inserted unbreakable (keep)", async () => {
+    test("Should ensure a paragraph after an inserted unsplittable (keep)", async () => {
         const { editor } = await setupEditor(`<p>cont[]</p><p>+</p>`, {});
         insertHTML(`<p class="oe_unbreakable">1</p>`)(editor);
         expect(getContent(editor.editable)).toBe(
@@ -240,7 +240,7 @@ describe("collapsed selection", () => {
         );
     });
 
-    test("Should ensure a paragraph after inserting multiple unbreakables (add)", async () => {
+    test("Should ensure a paragraph after inserting multiple unsplittables (add)", async () => {
         const { editor } = await setupEditor(`<p>cont[]</p>`, {});
         editor.shared.dom.insert(
             parseHTML(
@@ -257,7 +257,7 @@ describe("collapsed selection", () => {
         );
     });
 
-    test("Should ensure a paragraph after inserting multiple unbreakables (keep)", async () => {
+    test("Should ensure a paragraph after inserting multiple unsplittables (keep)", async () => {
         const { editor } = await setupEditor(`<p>cont[]</p><p>+</p>`, {});
         editor.shared.dom.insert(
             parseHTML(

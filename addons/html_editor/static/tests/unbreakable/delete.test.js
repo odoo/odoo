@@ -6,21 +6,21 @@ import { unformat } from "../_helpers/format";
 describe("backward", () => {
     describe("selection collapsed", () => {
         describe("start empty", () => {
-            test("should delete empty p after an unbreakable (backward)", async () => {
+            test("should delete empty p after an unsplittable (backward)", async () => {
                 await testEditor({
                     contentBefore: `<div class="oe_unbreakable">a</div><p>[]<br></p>`,
                     stepFunction: deleteBackward,
                     contentAfter: `<div class="oe_unbreakable">a[]</div>`,
                 });
             });
-            test("should delete empty p/br after an unbreakable (backward)", async () => {
+            test("should delete empty p/br after an unsplittable (backward)", async () => {
                 await testEditor({
                     contentBefore: `<div class="oe_unbreakable">a</div><p>[]<br></p>`,
                     stepFunction: deleteBackward,
                     contentAfter: `<div class="oe_unbreakable">a[]</div>`,
                 });
             });
-            test("should delete empty unbreakable (backward)", async () => {
+            test("should delete empty unsplittable (backward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                     <div>
@@ -36,7 +36,7 @@ describe("backward", () => {
                     </div>`),
                 });
             });
-            test("should not delete an empty unbreakable when there is no elements to delete before (backward)", async () => {
+            test("should not delete an empty unsplittable when there is no elements to delete before (backward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
@@ -54,14 +54,14 @@ describe("backward", () => {
         });
 
         describe("start text", () => {
-            test("should not merge p with an unbreakable (backward)", async () => {
+            test("should not merge p with an unsplittable (backward)", async () => {
                 await testEditor({
                     contentBefore: `<div class="oe_unbreakable">b</div><p>[]a</p>`,
                     stepFunction: deleteBackward,
                     contentAfter: `<div class="oe_unbreakable">b</div><p>[]a</p>`,
                 });
             });
-            test("should not merge unbreakable before an unbreakable (backward)", async () => {
+            test("should not merge unsplittable before an unsplittable (backward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
@@ -76,7 +76,7 @@ describe("backward", () => {
                         </div>`),
                 });
             });
-            test("should not merge unbreakable before a p (backward)", async () => {
+            test("should not merge unsplittable before a p (backward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
@@ -91,7 +91,7 @@ describe("backward", () => {
                         </div>`),
                 });
             });
-            test("should not merge unbreakable before an empty unbreakable (backward)", async () => {
+            test("should not merge unsplittable before an empty unsplittable (backward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
@@ -106,7 +106,7 @@ describe("backward", () => {
                         </div>`),
                 });
             });
-            test("should not merge unbreakable before an empty p (backward)", async () => {
+            test("should not merge unsplittable before an empty p (backward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
@@ -126,7 +126,7 @@ describe("backward", () => {
     describe("selection not collapsed", () => {
         describe("monolevel", () => {
             describe("anchor start", () => {
-                test("should remove sandwitched unbreakable (anchor start, focus start) (backward)", async () => {
+                test("should remove sandwitched unsplittable (anchor start, focus start) (backward)", async () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
@@ -141,7 +141,7 @@ describe("backward", () => {
                             </div>`),
                     });
                 });
-                test("should remove sandwitched unbreakable (anchor start, focus between) (backward)", async () => {
+                test("should remove sandwitched unsplittable (anchor start, focus between) (backward)", async () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
@@ -159,7 +159,7 @@ describe("backward", () => {
             });
 
             describe("anchor between", () => {
-                test("should remove sandwitched unbreakable (anchor between, focus between) (backward)", async () => {
+                test("should remove sandwitched unsplittable (anchor between, focus between) (backward)", async () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
@@ -175,7 +175,7 @@ describe("backward", () => {
                             </div>`),
                     });
                 });
-                test("should remove sandwitched unbreakable (anchor between, focus end) (backward)", async () => {
+                test("should remove sandwitched unsplittable (anchor between, focus end) (backward)", async () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
@@ -195,7 +195,7 @@ describe("backward", () => {
 
         describe("multilevel", () => {
             describe("anchor start", () => {
-                test("should remove sandwitched unbreakable (multilevel, anchor start, focus between) (backward)", async () => {
+                test("should remove sandwitched unsplittable (multilevel, anchor start, focus between) (backward)", async () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
@@ -217,7 +217,7 @@ describe("backward", () => {
                 });
             });
             describe("anchor between", () => {
-                test("should remove sandwitched unbreakable (multilevel, anchor between, focus between) (backward)", async () => {
+                test("should remove sandwitched unsplittable (multilevel, anchor between, focus between) (backward)", async () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
@@ -240,7 +240,7 @@ describe("backward", () => {
                             </div>`),
                     });
                 });
-                test("should remove sandwitched unbreakable (multilevel, anchor between, focus end) (backward)", async () => {
+                test("should remove sandwitched unsplittable (multilevel, anchor between, focus end) (backward)", async () => {
                     await testEditor({
                         contentBefore: unformat(`
                             <div>
@@ -263,7 +263,7 @@ describe("backward", () => {
             });
         });
 
-        test("should delete last character of paragraph but not merge it with unbreakable", async () => {
+        test("should delete last character of paragraph but not merge it with unsplittable", async () => {
             await testEditor({
                 contentBefore: `<p>ab[c</p><p class="oe_unbreakable">]def</p>`,
                 stepFunction: deleteBackward,
@@ -271,7 +271,7 @@ describe("backward", () => {
             });
         });
 
-        test("should delete last character of paragraph and fully selected empty unbreakable", async () => {
+        test("should delete last character of paragraph and fully selected empty unsplittable", async () => {
             await testEditor({
                 contentBefore: `<p>ab[c</p><p class="oe_unbreakable">]<br></p><p>def</p>`,
                 stepFunction: deleteBackward,
@@ -279,7 +279,7 @@ describe("backward", () => {
             });
         });
 
-        test("should delete first character of unbreakable, ignoring selected paragraph break (backward)", async () => {
+        test("should delete first character of unsplittable, ignoring selected paragraph break (backward)", async () => {
             await testEditor({
                 contentBefore: `<p>abc[</p><p class="oe_unbreakable">d]ef</p>`,
                 stepFunction: deleteBackward,
@@ -291,21 +291,21 @@ describe("backward", () => {
 describe("forward", () => {
     describe("selection collapsed", () => {
         describe("start empty", () => {
-            test("should delete empty p just before an unbreakable (forward)", async () => {
+            test("should delete empty p just before an unsplittable (forward)", async () => {
                 await testEditor({
                     contentBefore: `<p>[]</p><div class="oe_unbreakable">a</div>`,
                     stepFunction: deleteForward,
                     contentAfter: `<div class="oe_unbreakable">[]a</div>`,
                 });
             });
-            test("should delete empty p/br just before an unbreakable (forward)", async () => {
+            test("should delete empty p/br just before an unsplittable (forward)", async () => {
                 await testEditor({
                     contentBefore: `<p><br>[]</p><div class="oe_unbreakable">a</div>`,
                     stepFunction: deleteForward,
                     contentAfter: `<div class="oe_unbreakable">[]a</div>`,
                 });
             });
-            test("should delete empty unbreakables (forward)", async () => {
+            test("should delete empty unsplittables (forward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                     <div>
@@ -319,7 +319,7 @@ describe("forward", () => {
                     </div>`),
                 });
             });
-            test("should not delete an empty unbreakable when there is no elements to delete after (forward)", async () => {
+            test("should not delete an empty unsplittable when there is no elements to delete after (forward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
@@ -337,14 +337,14 @@ describe("forward", () => {
         });
 
         describe("start text", () => {
-            test("should not merge p with an unbreakable (forward)", async () => {
+            test("should not merge p with an unsplittable (forward)", async () => {
                 await testEditor({
                     contentBefore: `<p>a[]</p><div class="oe_unbreakable">b</div>`,
                     stepFunction: deleteForward,
                     contentAfter: `<p>a[]</p><div class="oe_unbreakable">b</div>`,
                 });
             });
-            test("should not remove unbreakable after an unbreakable (forward)", async () => {
+            test("should not remove unsplittable after an unsplittable (forward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
@@ -359,7 +359,7 @@ describe("forward", () => {
                         </div>`),
                 });
             });
-            test("should not merge unbreakable after a p (forward)", async () => {
+            test("should not merge unsplittable after a p (forward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
@@ -374,7 +374,7 @@ describe("forward", () => {
                         </div>`),
                 });
             });
-            test("should not merge unbreakable after an empty unbreakable (forward)", async () => {
+            test("should not merge unsplittable after an empty unsplittable (forward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
@@ -389,7 +389,7 @@ describe("forward", () => {
                         </div>`),
                 });
             });
-            test("should not merge unbreakable after an empty p (forward)", async () => {
+            test("should not merge unsplittable after an empty p (forward)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <div>
@@ -409,7 +409,7 @@ describe("forward", () => {
     // Only few tests are made with the selection not collapsed it should use the
     // same logic as for the backward (deleteRange).
     describe("selection not collapsed", () => {
-        test("should not break unbreakables (delete forward) (1)", async () => {
+        test("should not break unsplittables (delete forward) (1)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                         <div>
@@ -425,7 +425,7 @@ describe("forward", () => {
             });
         });
 
-        test("should not break unbreakables (delete forward) (2)", async () => {
+        test("should not break unsplittables (delete forward) (2)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                         <p class="oe_unbreakable">a[b</p>
@@ -437,7 +437,7 @@ describe("forward", () => {
             });
         });
 
-        test("should delete first character of unbreakable, ignoring selected paragraph break (forward)", async () => {
+        test("should delete first character of unsplittable, ignoring selected paragraph break (forward)", async () => {
             await testEditor({
                 contentBefore: '<p>abc[</p><p class="oe_unbreakable">d]ef</p>',
                 stepFunction: deleteForward,
@@ -449,7 +449,7 @@ describe("forward", () => {
 
 describe("list", () => {
     describe("selection collapsed", () => {
-        test("should not outdent while nested within a list item if the list is unbreakable", async () => {
+        test("should not outdent while nested within a list item if the list is unsplittable", async () => {
             // Only one LI.
             await testEditor({
                 contentBefore: '<p>abc</p><ol class="oe_unbreakable"><li>[]def</li></ol>',
@@ -547,7 +547,7 @@ describe("list", () => {
         });
     });
     describe("selection not collapsed", () => {
-        test("shoud not merge list item in the previous unbreakable sibling (1)", async () => {
+        test("shoud not merge list item in the previous unsplittable sibling (1)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                         <p class="oe_unbreakable">a[bc</p>
@@ -565,7 +565,7 @@ describe("list", () => {
             });
         });
 
-        test("shoud not merge list item in the previous unbreakable sibling (2)", async () => {
+        test("shoud not merge list item in the previous unsplittable sibling (2)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                         <div class="oe_unbreakable">

@@ -153,7 +153,7 @@ test("should add font size in selected table cells with h1 as first child", asyn
     });
 });
 
-test("should apply font size in unbreakable span with class", async () => {
+test("should apply font size in unsplittable span with class", async () => {
     await testEditor({
         contentBefore: `<h1><span class="oe_unbreakable">some [text]</span></h1>`,
         stepFunction: setFontSize("18px"),
@@ -161,17 +161,17 @@ test("should apply font size in unbreakable span with class", async () => {
     });
 });
 
-test("should apply font size in unbreakable span without class", async () => {
+test("should apply font size in unsplittable span without class", async () => {
     class AddUnsplittableRulePlugin extends Plugin {
         static id = "addUnsplittableRule";
         resources = {
-            unsplittable_node_predicates: (node) => node.getAttribute?.("t") === "unbreakable",
+            unsplittable_node_predicates: (node) => node.getAttribute?.("t") === "unsplittable",
         };
     }
     await testEditor({
-        contentBefore: `<h1><span t="unbreakable">some [text]</span></h1>`,
+        contentBefore: `<h1><span t="unsplittable">some [text]</span></h1>`,
         stepFunction: setFontSize("18px"),
-        contentAfter: `<h1><span t="unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
+        contentAfter: `<h1><span t="unsplittable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
         config: { Plugins: [...MAIN_PLUGINS, AddUnsplittableRulePlugin] },
     });
 });

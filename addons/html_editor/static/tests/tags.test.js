@@ -131,7 +131,7 @@ describe("to paragraph", () => {
         });
     });
 
-    test("should not turn an unbreakable div into a paragraph", async () => {
+    test("should not turn an unsplittable div into a paragraph", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[ab]</div>`,
             stepFunction: setTag("p"),
@@ -139,7 +139,7 @@ describe("to paragraph", () => {
         });
     });
 
-    test("should not turn an unbreakable div into a paragraph, with line breaks", async () => {
+    test("should not turn an unsplittable div into a paragraph, with line breaks", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("p"),
@@ -405,7 +405,7 @@ describe("to heading 1", () => {
         });
     });
 
-    test("should not turn an unbreakable div into a heading 1, with line breaks", async () => {
+    test("should not turn an unsplittable div into a heading 1, with line breaks", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("h1"),
@@ -538,7 +538,7 @@ describe("to heading 2", () => {
         });
     });
 
-    test("should not turn an unbreakable div into a heading 2, with line breaks", async () => {
+    test("should not turn an unsplittable div into a heading 2, with line breaks", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("h2"),
@@ -667,7 +667,7 @@ describe("to heading 3", () => {
         });
     });
 
-    test("should not turn an unbreakable div into a heading 3, with line breaks", async () => {
+    test("should not turn an unsplittable div into a heading 3, with line breaks", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("h3"),
@@ -938,7 +938,7 @@ describe("to blockquote", () => {
         });
     });
 
-    test("should not turn an unbreakable div into a blockquote, with line breaks", async () => {
+    test("should not turn an unsplittable div into a blockquote, with line breaks", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b]</div>`,
             stepFunction: setTag("blockquote"),

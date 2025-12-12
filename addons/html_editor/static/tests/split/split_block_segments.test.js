@@ -34,8 +34,8 @@ describe("basic", () => {
     });
 });
 
-describe("unbreakable", () => {
-    test("should isolate a line in an unbreakable block", async () => {
+describe("unsplittable", () => {
+    test("should isolate a line in an unsplittable block", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">a<br>b<br>[c]<br>d<br>e</div>`,
             stepFunction: splitBlockSegments,
@@ -43,7 +43,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate a line in an unbreakable block (collapsed)", async () => {
+    test("should isolate a line in an unsplittable block (collapsed)", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">a<br>b<br>[]c<br>d<br>e</div>`,
             stepFunction: splitBlockSegments,
@@ -51,7 +51,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate multiple lines in an unbreakable block", async () => {
+    test("should isolate multiple lines in an unsplittable block", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">a<br>b<br>[c<br>d]<br>e<br>f</div>`,
             stepFunction: splitBlockSegments,
@@ -59,7 +59,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate all lines in an unbreakable block", async () => {
+    test("should isolate all lines in an unsplittable block", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable">[a<br>b<br>c<br>d<br>e]</div>`,
             stepFunction: splitBlockSegments,
@@ -67,7 +67,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate a line in an unbreakable block starting with a block (do not wrap said block)", async () => {
+    test("should isolate a line in an unsplittable block starting with a block (do not wrap said block)", async () => {
         await testEditor({
             contentBefore: unformat(
                 `<div class="oe_unbreakable">
@@ -87,7 +87,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate a line in an unbreakable block ending with a block (do not wrap said block)", async () => {
+    test("should isolate a line in an unsplittable block ending with a block (do not wrap said block)", async () => {
         await testEditor({
             contentBefore: unformat(
                 `<div class="oe_unbreakable">
@@ -107,7 +107,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate a line in an unbreakable block starting and ending with a block (do not wrap said blocks)", async () => {
+    test("should isolate a line in an unsplittable block starting and ending with a block (do not wrap said blocks)", async () => {
         await testEditor({
             contentBefore: unformat(
                 `<div class="oe_unbreakable">
@@ -129,7 +129,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate a line in an unbreakable block containing blocks (do not wrap said blocks)", async () => {
+    test("should isolate a line in an unsplittable block containing blocks (do not wrap said blocks)", async () => {
         await testEditor({
             contentBefore: unformat(
                 `<div class="oe_unbreakable">
@@ -155,7 +155,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate all lines in an unbreakable block containing blocks (do not wrap said blocks)", async () => {
+    test("should isolate all lines in an unsplittable block containing blocks (do not wrap said blocks)", async () => {
         await testEditor({
             contentBefore: unformat(
                 `<div class="oe_unbreakable">
@@ -183,7 +183,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should not isolate a line in an unbreakable node that doesn't accept paragraph-related elements (inline)", async () => {
+    test("should not isolate a line in an unsplittable node that doesn't accept paragraph-related elements (inline)", async () => {
         await testEditor({
             contentBefore: `<p>a<br><span class="oe_unbreakable">b<br>[c]<br>d</span><br>e</p>`,
             stepFunction: splitBlockSegments,
@@ -191,7 +191,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should not isolate a line in an unbreakable node that doesn't accept paragraph-related elements (paragraph)", async () => {
+    test("should not isolate a line in an unsplittable node that doesn't accept paragraph-related elements (paragraph)", async () => {
         await testEditor({
             contentBefore: `<p class="oe_unbreakable">a<br>b<br>[c]<br>d<br>e</p>`,
             stepFunction: splitBlockSegments,
@@ -199,7 +199,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate a line in an unbreakable block (deep)", async () => {
+    test("should isolate a line in an unsplittable block (deep)", async () => {
         await testEditor({
             contentBefore: `<div class="oe_unbreakable"><span>a<br>b<br>[c]<br>d<br>e</span></div>`,
             stepFunction: splitBlockSegments,
@@ -213,7 +213,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate lines in and out of an unbreakable block (at start)", async () => {
+    test("should isolate lines in and out of an unsplittable block (at start)", async () => {
         await testEditor({
             contentBefore: unformat(
                 `<div class="oe_unbreakable">
@@ -239,7 +239,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate lines in and out of an unbreakable block (at end)", async () => {
+    test("should isolate lines in and out of an unsplittable block (at end)", async () => {
         await testEditor({
             contentBefore: unformat(
                 `<p>
@@ -265,7 +265,7 @@ describe("unbreakable", () => {
         });
     });
 
-    test("should isolate lines in and out of an unbreakable block (at start and end)", async () => {
+    test("should isolate lines in and out of an unsplittable block (at start and end)", async () => {
         await testEditor({
             contentBefore: unformat(
                 `<div class="oe_unbreakable">

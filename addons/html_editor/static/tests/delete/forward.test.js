@@ -76,8 +76,8 @@ describe("Selection collapsed", () => {
             await testEditor({
                 contentBefore: "<p>ab []c</p>",
                 stepFunction: deleteForward,
-                // The space should be converted to an unbreakable space
-                // so it is visible.
+                // The space should be converted to a non-breaking space so it
+                // is visible.
                 contentAfter: "<p>ab&nbsp;[]</p>",
             });
         });
