@@ -22,11 +22,10 @@ unsupported_devices = {}
 
 
 class Manager(Thread):
-    daemon = True
     ws_channel = ""
 
     def __init__(self):
-        super().__init__()
+        super().__init__(daemon=True)
         self.hostname = helpers.get_hostname()
         self.identifier = helpers.get_identifier()
         self.domain = self._get_domain()
