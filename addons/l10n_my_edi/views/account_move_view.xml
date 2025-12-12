@@ -21,7 +21,7 @@
             </xpath>
             <!-- There are quite a few fields, and with other modules adding some too it would be too messy to not put them in a tab. -->
             <xpath expr="//notebook" position="inside">
-                <page string="MyInvois" invisible="country_code != 'MY'">
+                <page string="MyInvois" invisible="country_code != 'MY' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')">
                     <group>
                         <group>
                             <!-- Only displayed if the invoice contains a tax of type Exempt -->
