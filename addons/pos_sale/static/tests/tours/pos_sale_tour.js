@@ -590,3 +590,13 @@ registry.category("web_tour.tours").add("test_selected_partner_quotation_loading
             ProductScreen.selectedOrderlineHas("Product B", "2.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_settle_groupable_lot_total_amount", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1, { loadSN: true }),
+            Order.hasTotal("12.00"),
+        ].flat(),
+});
