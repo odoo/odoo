@@ -27,6 +27,9 @@
                         </div>
                 </button>
             </xpath>
+            <group name="transaction" position="attributes">
+                <attribute name="invisible">False</attribute>
+            </group>
             <group name="transaction" position="inside">
                 <field name="sale_order_id"/>
                 <field name="sale_order_line_id" readonly="1" invisible="not sale_order_id"/>
