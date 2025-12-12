@@ -350,7 +350,7 @@ class ResCompany(models.Model):
                 year = datetime.now().year
 
             max_day = calendar.monthrange(year, int(rec.fiscalyear_last_month))[1]
-            if rec.fiscalyear_last_day > max_day:
+            if rec.fiscalyear_last_day <= 0 or rec.fiscalyear_last_day > max_day:
                 raise ValidationError(_("Invalid fiscal year last day"))
 
     def _compute_force_restrictive_audit_trail(self):
