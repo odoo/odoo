@@ -105,7 +105,7 @@ class StockMoveLine(models.Model):
             # calculate the number of kit on the move line according to the number of comp
             kit_qty = qty_bom_uom / kit_ratio
             # calculate the quantity needed of packaging
-            move_line.product_packaging_qty = kit_qty / move_line.move_id.product_packaging_id.qty
+            move_line.product_packaging_qty = move_line.move_id.product_packaging_id._compute_qty(kit_qty)
         super(StockMoveLine, self - kit_lines)._compute_product_packaging_qty()
 
     @api.model
