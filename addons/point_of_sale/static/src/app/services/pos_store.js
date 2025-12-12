@@ -2254,6 +2254,7 @@ export class PosStore extends WithLazyGetterTrap {
      * @param {import("@point_of_sale/app/models/product_product").ProductProduct?} product leave undefined to create a new product
      */
     async editProduct(product) {
+        const orderContainsProduct = product && this.orderContainsProduct(product);
         this.action.doAction(
             product
                 ? "point_of_sale.product_template_action_edit_pos"
@@ -2270,6 +2271,9 @@ export class PosStore extends WithLazyGetterTrap {
                             type: "ir.actions.act_window_close",
                         });
                     },
+                },
+                additionalContext: {
+                    taxes_readonly: orderContainsProduct,
                 },
             }
         );
