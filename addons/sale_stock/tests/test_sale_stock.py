@@ -2288,6 +2288,44 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so.action_confirm()
         self.assertEqual(so.picking_ids.move_ids.description_picking, 'No variant: extra\nDeliver with care')
 
+    def test_move_description_uses_custom_attribute_values(self):
+        """
+        Check that the move description of prodcut variants uses
+        the custom attribute values as expected.
+        """
+        self.env['res.lang']._activate_lang('fr_FR')
+        product = self.new_product
+        product.with_context(lang='fr_FR').name = "French Sofa"
+        self.partner_b.lang = 'fr_FR'
+        attribute_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': self.product_template_sofa.id,
+            'attribute_id': self.no_variant_attribute.id,
+            'value_ids': [
+                Command.set([self.no_variant_attribute.value_ids[0].id])
+            ],
+        })
+        order_line_vals = {
+            'product_id': product.id,
+            'product_custom_attribute_value_ids': [
+                Command.create({
+                    'custom_product_template_attribute_value_id':
+                        attribute_line.product_template_value_ids.id,
+                    'custom_value': 'Best',
+                })
+            ]
+        }
+        sale_orders = self.env['sale.order'].create([
+            {
+                'partner_id': partner.id,
+                'order_line': [Command.create(order_line_vals)],
+            } for partner in [self.partner_a, self.partner_b]
+        ])
+        sale_orders.action_confirm()
+        self.assertEqual(
+            sale_orders.picking_ids.move_ids.mapped('description_picking'),
+            ['No variant: extra: Best', 'No variant: extra: Best\nFrench Sofa']
+        )
+
     def test_multicompany_transit_with_one_company_for_user(self):
         """ Check that the inter-company transit location is created when
         user has only one allowed company. """
