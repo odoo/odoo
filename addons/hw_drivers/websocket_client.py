@@ -116,7 +116,7 @@ class WebsocketClient(Thread):
         url_parsed = urllib.parse.urlsplit(server_url)
         scheme = url_parsed.scheme.replace("http", "ws", 1)
         self.url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
-        super().__init__()
+        super().__init__(daemon=True)
 
     def run(self):
         self.ws = websocket.WebSocketApp(self.url,
