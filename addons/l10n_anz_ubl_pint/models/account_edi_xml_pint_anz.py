@@ -193,6 +193,9 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
     def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
         # EXTENDS account.edi.xml.ubl_bis3
         grouping_key = super()._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+        if not grouping_key:
+            return
+
         grouping_key['scheme_id'] = 'GST'
 
         # A business not registered for GST cannot issue tax invoices.
