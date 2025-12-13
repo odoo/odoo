@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
 # Bayarkhuu Bataa, 2024
 # Onii Onii <onii0223@yahoo.com>, 2024
@@ -14,19 +14,19 @@
 # Batmunkh Ganbat <batmunkh2522@gmail.com>, 2024
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2024
 # Насан-Очир <nasaaskii@gmail.com>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Насан-Очир <nasaaskii@gmail.com>, 2024\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: mn\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_management
@@ -216,8 +216,7 @@ msgstr "Харагдах хэлбэр"
 #. odoo-python
 #: code:addons/sale_management/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
-"Хандах эрх алга, энэ өгөгдлийг мэдээ илгээх имэйл жагсаалт руу хийхгүй"
+msgstr "Хандах эрх алга, энэ өгөгдлийг мэдээ илгээх имэйл жагсаалт руу хийхгүй"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -461,8 +460,7 @@ msgstr ""
 msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
-msgstr ""
-"Захиалагч руу захиалгыг онлайн төлбөрөөр баталгаажуулах хүсэлт илгээх."
+msgstr "Захиалагч руу захиалгыг онлайн төлбөрөөр баталгаажуулах хүсэлт илгээх."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -559,8 +557,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
-"Борлуулалтыг батлах үед энэхүү загвар бүхий имэйл илгээгдэнэ. Юу ч илгээхгүй"
-" байх бол хоосон үлдээнэ үү."
+"Борлуулалтыг батлах үед энэхүү загвар бүхий имэйл илгээгдэнэ. Юу ч илгээхгүй "
+"байх бол хоосон үлдээнэ үү."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -609,12 +607,16 @@ msgstr "Хэмжих нэгж"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Загвар ашиглан мэргэжлийн төвшинд чанартай үнийн саналыг хормын дотор бүтээнэ үү.\n"
-"                 Энэ үнийн саналыг имэйлээр илгээж захиалагчаараа онлайн гарын үсэг зуруулах боломжтой.\n"
-"                 Нэмэлт бараа болон хөнгөлөлт санал болгож борлуулалтаа өсгөн нэмэгдүүлнэ үү."
+"Загвар ашиглан мэргэжлийн төвшинд чанартай үнийн саналыг хормын дотор "
+"бүтээнэ үү.\n"
+"                 Энэ үнийн саналыг имэйлээр илгээж захиалагчаараа онлайн "
+"гарын үсэг зуруулах боломжтой.\n"
+"                 Нэмэлт бараа болон хөнгөлөлт санал болгож борлуулалтаа "
+"өсгөн нэмэгдүүлнэ үү."
 
 #. module: sale_management
 #. odoo-python
@@ -637,22 +639,41 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
-msgstr ""
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
 msgstr ""
 
 #. module: sale_management

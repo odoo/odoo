@@ -7,13 +7,15 @@
 # Wil Odoo, 2024
 # Aleš Pipan, 2025
 # Edi Šuc <edi@guru.si>, 2025.
+# Tadej Vengust <tadej.vengust@implex.si>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-24 18:37+0000\n"
-"PO-Revision-Date: 2025-12-01 16:28+0000\n"
-"Last-Translator: Edi Šuc <edi@guru.si>\n"
+"POT-Creation-Date: 2025-12-12 18:37+0000\n"
+"PO-Revision-Date: 2025-12-13 16:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/pos_hr/"
 "sl/>\n"
 "Language: sl\n"
@@ -49,7 +51,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Advanced rights"
-msgstr ""
+msgstr "Napredne pravice"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -66,7 +68,7 @@ msgstr "Postavka bančnega izpiska"
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Basic rights"
-msgstr ""
+msgstr "Osnovne pravice"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.view_pos_daily_sales_reports_wizard
@@ -110,7 +112,7 @@ msgstr "Spremeni prodajalca"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Closed Register"
-msgstr ""
+msgstr "Zaprta blagajna"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_res_config_settings
@@ -172,12 +174,14 @@ msgid ""
 "Employees linked to users with the PoS Manager role are automatically added "
 "to this list"
 msgstr ""
+"Zaposleni, ki imajo povezane uporabnike s pravicami PoS Manager, bodo "
+"avtomatsko dodani na ta seznam"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "Employees with basic access"
-msgstr ""
+msgstr "Zaposleni z osnovnimi pravicami"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__advanced_employee_ids
@@ -195,7 +199,7 @@ msgstr "Vnesi PIN"
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "If left empty, all employees can log in to PoS"
-msgstr ""
+msgstr "Če pustite prazno, bodo vsi zaposleni lahko odpirali PoS"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -207,6 +211,14 @@ msgstr "Zakleni"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/select_cashier_mixin.js:0
 msgid "No Cashiers"
+msgstr ""
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/overrides/screens/login_screen/login_screen.js:0
+msgid ""
+"Only the cashier linked to the logged-in user (%s) can proceed to the "
+"Backend."
 msgstr ""
 
 #. module: pos_hr

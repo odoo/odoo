@@ -1,25 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2024
 # Larisa_nexterp, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larisa_nexterp, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
+"2:1));\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -126,8 +127,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversia între Unitățile de Măsură poate avea loc doar dacă acestea aparțin"
-" aceleiași categorii. Conversia se va face pe baza rapoartelor."
+"Conversia între Unitățile de Măsură poate avea loc doar dacă acestea aparțin "
+"aceleiași categorii. Conversia se va face pe baza rapoartelor."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -232,8 +233,7 @@ msgstr "Oferă ordinea secvenței la afișarea unei liste de produse opționale.
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
 msgstr ""
-"Oferă ordinea secvenței la afișarea unei liste de linii de ofertă de "
-"vânzare."
+"Oferă ordinea secvenței la afișarea unei liste de linii de ofertă de vânzare."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -450,8 +450,7 @@ msgid ""
 "Request a online signature to the customer in order to confirm orders "
 "automatically."
 msgstr ""
-"Solicitați o semnătură online clientului pentru a confirma automat "
-"comenzile."
+"Solicitați o semnătură online clientului pentru a confirma automat comenzile."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
@@ -509,9 +508,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
-"Vindeți același produs în diferite dimensiuni sau culori? Încercați grila de"
-" produse și completați comenzile cu cantități multiple din fiecare variantă."
-" Această funcționalitate există și în aplicația Achiziții."
+"Vindeți același produs în diferite dimensiuni sau culori? Încercați grila de "
+"produse și completați comenzile cu cantități multiple din fiecare variantă. "
+"Această funcționalitate există și în aplicația Achiziții."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -527,8 +526,8 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
-"Vă confruntați cu un catalog de produse complex? Încercați Configuratorul de"
-" produse pentru a ajuta vânzările să configureze un produs cu diferite "
+"Vă confruntați cu un catalog de produse complex? Încercați Configuratorul de "
+"produse pentru a ajuta vânzările să configureze un produs cu diferite "
 "opțiuni: culori, dimensiuni, capacitate etc. Faceți introducerea comenzilor "
 "de vânzare mai ușoară și fără erori."
 
@@ -615,11 +614,14 @@ msgstr "UM"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Utilizați șabloane pentru a crea oferte profesionale, finisate, în câteva minute.\n"
-"Trimiteți aceste oferte prin e-mail și permiteți clienților să semneze online.\n"
+"Utilizați șabloane pentru a crea oferte profesionale, finisate, în câteva "
+"minute.\n"
+"Trimiteți aceste oferte prin e-mail și permiteți clienților să semneze "
+"online.\n"
 "Folosiți vânzarea încrucișată și reducerile pentru a vă crește vânzările."
 
 #. module: sale_management
@@ -642,27 +644,46 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"Oferta dvs. conține produse de la compania %(product_company)s, în timp ce oferta aparține companiei %(quote_company)s.\n"
-" Vă rugăm să schimbați compania ofertei sau să eliminați produsele din alte companii (%(bad_products)s)."
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "Șablonul dvs. nu poate conține produse de la mai multe companii."
+"Oferta dvs. conține produse de la compania %(product_company)s, în timp ce "
+"oferta aparține companiei %(quote_company)s.\n"
+" Vă rugăm să schimbați compania ofertei sau să eliminați produsele din alte "
+"companii (%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Șablonul dvs. conține produse de la compania %(product_company)s, în timp ce șablonul aparține companiei %(template_company)s.\n"
-" Vă rugăm să schimbați compania șablonului sau să eliminați produsele din alte companii."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -673,3 +694,17 @@ msgstr "zile"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "ex: Pachet standard de consultanță"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "Șablonul dvs. nu poate conține produse de la mai multe companii."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Șablonul dvs. conține produse de la compania %(product_company)s, în timp "
+#~ "ce șablonul aparține companiei %(template_company)s.\n"
+#~ " Vă rugăm să schimbați compania șablonului sau să eliminați produsele din "
+#~ "alte companii."

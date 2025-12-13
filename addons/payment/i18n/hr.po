@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:37+0000\n"
-"PO-Revision-Date: 2025-12-02 08:22+0000\n"
+"PO-Revision-Date: 2025-12-09 08:21+0000\n"
 "Last-Translator: Ana Matulin <ana@uvid.hr>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/payment/"
 "hr/>\n"
@@ -1113,6 +1113,9 @@ msgid ""
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
 msgstr ""
+"Brzo plaćanje omogućuje kupcima bržu uplatu korištenjem metode plaćanja koja "
+"pruža sve potrebne podatke za naplatu i dostavu, čime se omogućuje "
+"preskakanje standardnog procesa naplate."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_fps
@@ -2275,6 +2278,8 @@ msgid ""
 "Refund is a feature allowing to refund customers directly from the payment "
 "in Odoo."
 msgstr ""
+"Povrat sredstava je funkcija koja omogućuje vraćanje novca kupcima izravno "
+"putem plaćanja u Odoo-u."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2582,6 +2587,9 @@ msgid ""
 "provider allows it). In other countries, this payment method is not "
 "available to customers."
 msgstr ""
+"Popis zemalja u kojima se ova metoda plaćanja može koristiti "
+"(ako to pružatelj omogućuje). U drugim zemljama, ova metoda plaćanja nije "
+"dostupna kupcima."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
@@ -2597,7 +2605,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method."
-msgstr ""
+msgstr "Popis pružatelja koji podržavaju ovu metodu plaćanja."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -2692,7 +2700,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__payment_method_code
 msgid "The technical code of this payment method."
-msgstr ""
+msgstr "Tehnički kod ove metode plaćanja."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -2853,6 +2861,9 @@ msgid ""
 "Tokenization is the process of saving the payment details as a token that "
 "can later be reused without having to enter the payment details again."
 msgstr ""
+"Tokenizacija je proces spremanja podataka o plaćanju kao tokena koji se "
+"kasnije može ponovno koristiti bez potrebe za ponovnim unosom podataka o "
+"plaćanju."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_toss_pay
@@ -3319,4 +3330,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "tokenization without payment no supported"
-msgstr ""
+msgstr "Tokenizacija bez plaćanja nije podržana"

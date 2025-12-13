@@ -9,13 +9,14 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Jan Zorko <jan.zorko@implex.si>, 2025.
+# Tadej Vengust <tadej.vengust@implex.si>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-11 02:17+0000\n"
-"PO-Revision-Date: 2025-11-27 16:49+0000\n"
-"Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
+"PO-Revision-Date: 2025-12-11 17:24+0000\n"
+"Last-Translator: Tadej Vengust <tadej.vengust@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/"
 "product/sl/>\n"
 "Language: sl\n"
@@ -150,6 +151,13 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- Takoj: Vse možne variante so ustvarjene takoj, ko so lastnosti in njihove "
+"vrednosti dodane na artikel.\n"
+"        - Dinamično: Vsaka varianta je ustvarjena šele, ko so soležne "
+"lastnosti in vrednosti dodane na naročilo.\n"
+"        - Nikoli: Variante niso nikoli ustvarjene za to lastnost.\n"
+"        Opomba: ni spremenljivo, po tem, ko je lastnost enkrat uporabljena "
+"na artiklu."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_5
@@ -852,7 +860,7 @@ msgstr "Kombinirani indeksi"
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__combo
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Combo"
-msgstr ""
+msgstr "Kombo"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
@@ -865,17 +873,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__combo_ids
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_tree
 msgid "Combo Choices"
-msgstr ""
+msgstr "Kombo izbire"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
 msgid "Combo Item"
-msgstr ""
+msgstr "Kombo izdelek"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
 msgid "Combo Price"
-msgstr ""
+msgstr "Cena kombinacije"
 
 #. module: product
 #. odoo-python
@@ -1367,7 +1375,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
-msgstr ""
+msgstr "Dinamično"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
@@ -1821,7 +1829,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
 msgid "Instantly"
-msgstr ""
+msgstr "Takoj"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3706,7 +3714,7 @@ msgstr "Število različic"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "Stvaritev variant"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920

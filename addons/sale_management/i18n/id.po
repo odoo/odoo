@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
+"Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: id\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_management
@@ -523,8 +523,8 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
-"Kerepotan menggunakan katalog produk yang kompleks? Coba Konfigurator Produk"
-" untuk membantu sales mengonfigurasi produk dengan beragam opsi: warna, "
+"Kerepotan menggunakan katalog produk yang kompleks? Coba Konfigurator Produk "
+"untuk membantu sales mengonfigurasi produk dengan beragam opsi: warna, "
 "ukuran, kapasitas, dsb. Membuat encoding sale order lebih mudah dan bebas "
 "kesalahan."
 
@@ -612,12 +612,16 @@ msgstr "Satuan Ukuran"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Gunakan templat untuk membuat quote yang rapih dan professional dalam hitungan menit.\n"
-"                Kirim quote ini melalui email dan biarkan pelanggan Anda tanda tangan online.\n"
-"                Lakukan cross-selling dan berikan diskon untuk mendorong sales Anda."
+"Gunakan templat untuk membuat quote yang rapih dan professional dalam "
+"hitungan menit.\n"
+"                Kirim quote ini melalui email dan biarkan pelanggan Anda "
+"tanda tangan online.\n"
+"                Lakukan cross-selling dan berikan diskon untuk mendorong "
+"sales Anda."
 
 #. module: sale_management
 #. odoo-python
@@ -639,28 +643,46 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"Quotation Anda memiliki produk dari perusahaan %(product_company)s sedangkan quotation Anda merupakan milik perusahaan %(quote_company)s.\n"
-"Mohon ganti perusahaan quotation Anda atau hapus produk dari perusahaan lain (%(bad_products)s)."
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr ""
-"Templat Anda tidak boleh memiliki produk dari lebih dari satu perusahaan."
+"Quotation Anda memiliki produk dari perusahaan %(product_company)s sedangkan "
+"quotation Anda merupakan milik perusahaan %(quote_company)s.\n"
+"Mohon ganti perusahaan quotation Anda atau hapus produk dari perusahaan lain "
+"(%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Templat Anda memiliki produk dari perusahaan %(product_company)s sedangkan templat Anda merupakan milik perusahaan %(template_company)s. \n"
-" Mohon ganti perusahaan templat Anda atau hapus produk dari perusahaan lain."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -671,3 +693,18 @@ msgstr "hari"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "contoh Paket Konsultansi Standar"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr ""
+#~ "Templat Anda tidak boleh memiliki produk dari lebih dari satu perusahaan."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Templat Anda memiliki produk dari perusahaan %(product_company)s "
+#~ "sedangkan templat Anda merupakan milik perusahaan %(template_company)s. \n"
+#~ " Mohon ganti perusahaan templat Anda atau hapus produk dari perusahaan "
+#~ "lain."

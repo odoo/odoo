@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
-"PO-Revision-Date: 2025-12-06 17:08+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
+"PO-Revision-Date: 2025-12-13 16:38+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-18/account/pt_BR/>\n"
@@ -1918,6 +1918,14 @@ msgid "Account Chart Template"
 msgstr "Modelo de plano da contas"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_code_mapping.py:0
+msgid ""
+"Account Code Mapping cannot be accessed directly. It is designed to be used "
+"only through the Chart of Accounts."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
 msgid "Account Codes Formula Shortcut"
 msgstr "Atalho de fórmula para códigos de conta"
@@ -2405,6 +2413,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Lançamento de provisão criado em %(date)s: %(accrual_entry)s. E o lançamento "
+"reverso: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3913,6 +3923,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"O envio de faturas em lote não está disponível. Ative o cron para permitir o "
+"envio de faturas em lote."
 
 #. module: account
 #. odoo-python
@@ -3921,6 +3933,9 @@ msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
+"O envio de faturas em lote não está disponível. Entre em contato com o "
+"administrador do sistema para ativar o cron e permitir o envio de faturas em "
+"lote."
 
 #. module: account
 #. odoo-javascript
@@ -6225,6 +6240,7 @@ msgstr "Impostos padrões usados na venda do produto"
 #: code:addons/account/models/account_move.py:0
 msgid "Default value for 'company_id' for %(record)s is not an integer"
 msgstr ""
+"O valor padrão para \"company_id\" para %(record)s não é um número inteiro"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -8058,7 +8074,7 @@ msgstr "Data de travamento geral"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Ir para a configuração do cron"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
@@ -9189,11 +9205,6 @@ msgstr "Pagamento online da fatura"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_outstanding_credits_debits_widget
 msgid "Invoice Outstanding Credits Debits Widget"
 msgstr "Widget de faturamento de créditos e débitos pendentes"
-
-#. module: account
-#: model:ir.actions.report,name:account.account_invoices
-msgid "Invoice PDF"
-msgstr "Invoice PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
@@ -11898,6 +11909,7 @@ msgstr "PAY001"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.actions.report,name:account.account_invoices
 msgid "PDF"
 msgstr "PDF"
 
@@ -12487,7 +12499,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Pagamentos que foram reconciliados com esta fatura."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -13164,7 +13176,7 @@ msgstr "Tipo de faturas reconciliadas"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Pagamentos reconciliados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -17046,6 +17058,7 @@ msgstr "Esta movimentação recorrente será lançada até e incluindo sua data.
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
 msgstr ""
+"Essa configuração é bloqueada assim que um lançamento no diário é criado."
 
 #. module: account
 #. odoo-python
@@ -19791,6 +19804,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} recibo de pagamento (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "Invoice PDF"
+#~ msgstr "Invoice PDF"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr ""

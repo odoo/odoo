@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2025-11-19 09:16+0000\n"
 "Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
@@ -219,8 +219,8 @@ msgstr "Visningstyp"
 #: code:addons/sale_management/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Saknar åtkomsträttighet, hoppa över denna data för användarens sammanställda"
-" utskick"
+"Saknar åtkomsträttighet, hoppa över denna data för användarens sammanställda "
+"utskick"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -513,8 +513,8 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
-"Säljer du samma produkt i olika storlekar eller färger? Prova produktgallret"
-" och fyll dina beställningar med flera kvantiteter av varje variant. Denna "
+"Säljer du samma produkt i olika storlekar eller färger? Prova produktgallret "
+"och fyll dina beställningar med flera kvantiteter av varje variant. Denna "
 "funktion finns också i inköpsapplikationen."
 
 #. module: sale_management
@@ -533,8 +533,8 @@ msgid ""
 msgstr ""
 "Kämpar du med en komplex produktkatalog? Prova Produktkonfiguratorn för att "
 "hjälpa försäljningen att konfigurera en produkt med olika alternativ: "
-"färger, storlek, kapacitet, etc. Gör inmatning av försäljningsordrar enklare"
-" och felfri."
+"färger, storlek, kapacitet, etc. Gör inmatning av försäljningsordrar enklare "
+"och felfri."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -567,8 +567,7 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
-"Denna e-postmall kommer att skickas vid bekräftelse. Lämna blank utan "
-"åtgärd."
+"Denna e-postmall kommer att skickas vid bekräftelse. Lämna blank utan åtgärd."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -619,10 +618,12 @@ msgstr "Måttenhet"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Använd mallar för att skapa fina, professionella offertförslag inom minuter.\n"
+"Använd mallar för att skapa fina, professionella offertförslag inom "
+"minuter.\n"
 "Skicka dessa offertförslag via e-post och låt dina kunder signera online.\n"
 "Använd korsförsäljning och rabatter för att driva och öka dina försäljningar."
 
@@ -639,34 +640,53 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Du kan inte ändra typen på en rad för en säljoffert. Istället bör du ta bort"
-" den aktuella raden och skapa en ny rad av rätt typ."
+"Du kan inte ändra typen på en rad för en säljoffert. Istället bör du ta bort "
+"den aktuella raden och skapa en ny rad av rätt typ."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"Ditt erbjudande innehåller produkter från företaget %(product_company)s medan ditt erbjudande tillhör företaget %(quote_company)s. \n"
-" Var god ändra företaget för ditt erbjudande eller ta bort produkterna från andra företag (%(bad_products)s)."
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "Din mall kan inte innehålla produkter från flera företag."
+"Ditt erbjudande innehåller produkter från företaget %(product_company)s "
+"medan ditt erbjudande tillhör företaget %(quote_company)s. \n"
+" Var god ändra företaget för ditt erbjudande eller ta bort produkterna från "
+"andra företag (%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Din mall innehåller produkter från företaget %(product_company)s medan din mall tillhör företaget %(template_company)s. \n"
-" Vänligen ändra företaget för din mall eller ta bort produkterna från andra företag."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -677,3 +697,17 @@ msgstr "dagar"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "t.ex. Standardkonsultpaket"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "Din mall kan inte innehålla produkter från flera företag."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Din mall innehåller produkter från företaget %(product_company)s medan "
+#~ "din mall tillhör företaget %(template_company)s. \n"
+#~ " Vänligen ändra företaget för din mall eller ta bort produkterna från "
+#~ "andra företag."
