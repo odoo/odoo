@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-26 18:37+0000\n"
-"PO-Revision-Date: 2025-12-06 11:09+0000\n"
+"PO-Revision-Date: 2025-12-10 16:44+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/stock/"
 "hi/>\n"
@@ -55,6 +55,22 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    अगर एक से ज़्यादा प्रॉडक्ट का शुरुआती हिस्सा (प्रीफ़िक्स) एक जैसा है, तो उनका नंबरिंग क्रम (सीक्वेंस) भी "
+"एक ही रहेगा. अगर प्रीफ़िक्स अलग है, तो नंबरिंग क्रम सिर्फ़ उसी प्रॉडक्ट के लिए इस्तेमाल होगा.\n"
+"\n"
+"    * प्रीफ़िक्स में इस्तेमाल होने वाले संकेतों का अर्थ:\n"
+"    - सदी के साथ वर्तमान वर्ष: %(year)s\n"
+"    - सदी के बिना वर्तमान वर्ष: %(y)s\n"
+"    - महीना: %(month)s\n"
+"    - दिन: %(day)s\n"
+"    - वर्ष का दिन: %(doy)s\n"
+"    - वर्ष का सप्ताह: %(woy)s\n"
+"    - सप्ताह का दिन (0:सोमवार): %(weekday)s\n"
+"    - घंटा 00->24: %(h24)s\n"
+"    - घंटा 00->12: %(h12)s\n"
+"    - मिनट: %(min)s\n"
+"    - सेकंड: %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -2387,6 +2403,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__qty_available
+#, fuzzy
 msgid ""
 "Current quantity of products.\n"
 "In a context with a single Stock Location, this includes goods stored at "
@@ -2398,6 +2415,13 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"प्रॉडक्ट की मौजूदा क्वांटिटी.\n"
+"अगर आप सिर्फ एक स्टॉक लोकेशन को देखते हैं, तो इसमें उस लोकेशन या उससे जुड़ी किसी भी छोटी जगह में रखा सामान "
+"शामिल करें.\n"
+"अगर आप सिर्फ एक वेयरहाउस को देखते हैं, तो इसमें उस वेयरहाउस के स्टॉक लोकेशन या उससे जुड़ी किसी भी छोटी "
+"जगह में रखा सामान शामिल करें.\n"
+"इस दुकान के वेयरहाउस के स्टॉक लोकेशन या उससे जुड़ी किसी भी छोटी जगह में रखा सामान शामिल करें.\n"
+"बाकी सभी स्थितियों में, इसमें 'आंतरिक' प्रकार वाले किसी भी स्टॉक लोकेशन में रखा सामान शामिल करें।"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__custom
@@ -5409,6 +5433,10 @@ msgid ""
 "to appear as a third party in the context of any claim for damages filed "
 "against the client by an end consumer."
 msgstr ""
+"My Company (Chicago) यह वादा करती है कि वह तय समय के अंदर अच्छा काम करके देगी. लेकिन, इसका "
+"मतलब यह नहीं है कि वे मनचाहे नतीजे की गारंटी लेते हैं (वे केवल कोशिश करने की गारंटी लेते हैं, नतीजे की नहीं). "
+"अगर ग्राहक का कोई कस्टमर ग्राहक पर हर्जाने का दावा करता है, तो ग्राहक उस मामले में My Company "
+"(Chicago) को घसीट नहीं सकता या उसे बीच में नहीं ला सकता।"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view

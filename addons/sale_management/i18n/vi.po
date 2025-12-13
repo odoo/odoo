@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
 # Thi Huong Nguyen, 2025
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:27+0000\n"
+"POT-Creation-Date: 2025-12-12 18:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_management
@@ -215,8 +215,8 @@ msgstr "Chip bổ sung"
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
-"Sản phẩm bị cấm, số lượng và đơn vị tính cho dòng báo giá bán hàng không thể"
-" ghi sổ"
+"Sản phẩm bị cấm, số lượng và đơn vị tính cho dòng báo giá bán hàng không thể "
+"ghi sổ"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -452,8 +452,7 @@ msgstr "Yêu cầu ký tên online của khách hàng để xác thực đơn h�
 msgid ""
 "Request an online payment to the customer in order to confirm orders "
 "automatically."
-msgstr ""
-"Yêu cầu thanh toán online từ khách hàng để xác nhận đơn hàng tự động. "
+msgstr "Yêu cầu thanh toán online từ khách hàng để xác nhận đơn hàng tự động. "
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -504,8 +503,8 @@ msgid ""
 "feature also exists in the Purchase application."
 msgstr ""
 "Bạn đang bán sản phẩm có màu sắc, kích thước khác nhau? Hãy thử lưới sản "
-"phẩm và đa dạng hóa đơn hàng với nhiều biến thể. Tính năng này cũng có trong"
-" ứng dụng Mua hàng. "
+"phẩm và đa dạng hóa đơn hàng với nhiều biến thể. Tính năng này cũng có trong "
+"ứng dụng Mua hàng. "
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -603,12 +602,14 @@ msgstr "Đơn giá:"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
 "Dùng mẫu để tạo báo giá chuyên nghiệp, đẹp mắt chỉ trong vài phút.\n"
 "                Gửi báo giá qua email và cho phép khách hàng ký online. \n"
-"                Dùng bán chéo và chiết khấu để thúc đẩy và gia tăng doanh số. "
+"                Dùng bán chéo và chiết khấu để thúc đẩy và gia tăng doanh "
+"số. "
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -635,27 +636,46 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"Báo giá của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi báo giá của bạn thuộc về công ty %(quote_company)s. \n"
-" Vui lòng thay đổi công ty trong báo giá hoặc xóa sản phẩm từ các công ty khác (%(bad_products)s)."
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "Mẫu của bạn không thể chứa sản phẩm từ môi trường đa công ty. "
+"Báo giá của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi "
+"báo giá của bạn thuộc về công ty %(quote_company)s. \n"
+" Vui lòng thay đổi công ty trong báo giá hoặc xóa sản phẩm từ các công ty "
+"khác (%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Mẫu của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi mẫu này thuộc về công ty %(template_company)s. \n"
-" Vui lòng thay đổi công ty của mẫu hoặc xóa sản phẩm từ các công ty khác. "
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -666,3 +686,16 @@ msgstr "ngày"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "ví dụ: Gói tư vấn tiêu chuẩn"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "Mẫu của bạn không thể chứa sản phẩm từ môi trường đa công ty. "
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Mẫu của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi "
+#~ "mẫu này thuộc về công ty %(template_company)s. \n"
+#~ " Vui lòng thay đổi công ty của mẫu hoặc xóa sản phẩm từ các công ty khác. "
