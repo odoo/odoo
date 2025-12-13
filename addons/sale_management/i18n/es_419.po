@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
-"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
+"Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/"
+"41243/es_419/)\n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: es_419\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -214,8 +216,8 @@ msgstr "Chips adicionales "
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
-"Producto, cantidad y unidades de medida prohibidos en la línea de cotización"
-" de la venta no contabilizada"
+"Producto, cantidad y unidades de medida prohibidos en la línea de cotización "
+"de la venta no contabilizada"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -321,8 +323,7 @@ msgstr "Nota"
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
-msgstr ""
-"Número de días para el cálculo de la fecha de validez de la cotización"
+msgstr "Número de días para el cálculo de la fecha de validez de la cotización"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -513,9 +514,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
-"¿Vende el mismo producto en diferentes tamaños o colores? Pruebe la tabla de"
-" productos y cree órdenes con diversas variantes. Esta función también "
-"existe en la aplicación de Compras."
+"¿Vende el mismo producto en diferentes tamaños o colores? Pruebe la tabla de "
+"productos y cree órdenes con diversas variantes. Esta función también existe "
+"en la aplicación de Compras."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -552,8 +553,8 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
-"El administrador puede establecer los términos y condiciones predeterminados"
-" en la configuración de ventas. En cambio, si selecciona esta plantilla de "
+"El administrador puede establecer los términos y condiciones predeterminados "
+"en la configuración de ventas. En cambio, si selecciona esta plantilla de "
 "cotización, se mostrarán los términos establecidos aquí."
 
 #. module: sale_management
@@ -615,11 +616,14 @@ msgstr "Precio unitario:"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Utilice las plantillas para crear cotizaciones profesionales en cuestión de minutos.\n"
-"Envíe estas cotizaciones por correo electrónico y permita que sus clientes firmen en línea.\n"
+"Utilice las plantillas para crear cotizaciones profesionales en cuestión de "
+"minutos.\n"
+"Envíe estas cotizaciones por correo electrónico y permita que sus clientes "
+"firmen en línea.\n"
 "Utilice ventas cruzadas y los descuentos para aumentar sus ventas."
 
 #. module: sale_management
@@ -640,35 +644,53 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"No se puede cambiar el tipo de una línea de la cotización de la venta. En su"
-" lugar, debe eliminar la línea actual y crear una nueva con el tipo "
-"adecuado."
+"No se puede cambiar el tipo de una línea de la cotización de la venta. En su "
+"lugar, debe eliminar la línea actual y crear una nueva con el tipo adecuado."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"Su cotización incluye productos de la empresa%(product_company)s pero la cotización pertenece a la empresa %(quote_company)s. \n"
-"Cambie la empresa de su cotización o elimine los productos que pertenecen a otras empresas (%(bad_products)s)."
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "Su plantilla no puede contener productos de diferentes empresas."
+"Su cotización incluye productos de la empresa%(product_company)s pero la "
+"cotización pertenece a la empresa %(quote_company)s. \n"
+"Cambie la empresa de su cotización o elimine los productos que pertenecen a "
+"otras empresas (%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Su plantilla incluye productos de la empresa %(product_company)s y su plantilla pertenece a la empresa %(template_company)s.\n"
-"Cambie la empresa de su plantilla o elimine los productos de otras empresas."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -679,3 +701,17 @@ msgstr "días"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "Por ejemplo, Paquete estándar de consultoría"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "Su plantilla no puede contener productos de diferentes empresas."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Su plantilla incluye productos de la empresa %(product_company)s y su "
+#~ "plantilla pertenece a la empresa %(template_company)s.\n"
+#~ "Cambie la empresa de su plantilla o elimine los productos de otras "
+#~ "empresas."

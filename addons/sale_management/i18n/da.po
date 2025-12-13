@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2025-11-15 10:21+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-2/"
@@ -306,8 +306,7 @@ msgstr "Linjer"
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
-"Mangler påkrævet produkt og måleenhed på ansvarlig salgs tilbud linje."
+msgstr "Mangler påkrævet produkt og måleenhed på ansvarlig salgs tilbud linje."
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -545,14 +544,13 @@ msgid ""
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
 "Administratoren kan angive standard Vilkår & Betingelser i Salg "
-"indstillingerne. Vilkår angivet her vil vises i stedet, hvis du vælger denne"
-" tilbuds skabelon."
+"indstillingerne. Vilkår angivet her vil vises i stedet, hvis du vælger denne "
+"tilbuds skabelon."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr ""
-"Den procentdel af beløbet, der skal betales for at bekræfte tilbuddet."
+msgstr "Den procentdel af beløbet, der skal betales for at bekræfte tilbuddet."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
@@ -560,8 +558,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
-"Denne emailskabelon vil blive sendt ved bekræftelse. Lad stå tom for ikke at"
-" sende noget."
+"Denne emailskabelon vil blive sendt ved bekræftelse. Lad stå tom for ikke at "
+"sende noget."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -607,11 +605,14 @@ msgstr "Enhedspris:"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Brug skabelon til at oprette finpudsede, professionelle tilbud på få minutter.\n"
-"               Send disse tilbud per email og lad din kunde skrive under online.\n"
+"Brug skabelon til at oprette finpudsede, professionelle tilbud på få "
+"minutter.\n"
+"               Send disse tilbud per email og lad din kunde skrive under "
+"online.\n"
 "               Brug kryds-salg og rabatter til at sætte skub i dit salg."
 
 #. module: sale_management
@@ -639,27 +640,46 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"Dit tilbud indeholder produkter fra virksomheden %(product_company)s, hvorimod dit tilbud tilhører virksomheden %(quote_company)s.\n"
-"  Vær venlig at ændre virksomheden for dit tilbud, eller fjern produkter fra andre virksomheder (%(bad_products)s)."
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "Din skabelon kan ikke indeholde produkter fra flere virksomheder."
+"Dit tilbud indeholder produkter fra virksomheden %(product_company)s, "
+"hvorimod dit tilbud tilhører virksomheden %(quote_company)s.\n"
+"  Vær venlig at ændre virksomheden for dit tilbud, eller fjern produkter fra "
+"andre virksomheder (%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Din skabelon inderholder produkter fra virksomheden %(product_company)s hvorimod din skabelon tilhører virksomheden %(template_company)s.\n"
-"Vær venlig at ændre virksomheden på din skabelon, eller fjern produkterne fra andre virksomheder."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -670,3 +690,17 @@ msgstr "dage"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "f.eks. Standardkonsulentpakke"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "Din skabelon kan ikke indeholde produkter fra flere virksomheder."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Din skabelon inderholder produkter fra virksomheden %(product_company)s "
+#~ "hvorimod din skabelon tilhører virksomheden %(template_company)s.\n"
+#~ "Vær venlig at ændre virksomheden på din skabelon, eller fjern produkterne "
+#~ "fra andre virksomheder."

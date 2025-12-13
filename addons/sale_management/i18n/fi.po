@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Dylan Kiss, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Dylan Kiss, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
+"Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_management
@@ -506,8 +506,8 @@ msgid ""
 "feature also exists in the Purchase application."
 msgstr ""
 "Myytkö samaa tuotetta eri ko'oissa tai eri väreissä? Kokeile tuoteruudukkoa "
-"ja täytä tilauksesi suurella määrällä kutakin varianttia. Tämä ominaisuus on"
-" myös Ostot-sovelluksessa."
+"ja täytä tilauksesi suurella määrällä kutakin varianttia. Tämä ominaisuus on "
+"myös Ostot-sovelluksessa."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -523,8 +523,8 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
-"Ongelmia monimutkaisen tuoteluettelon kanssa? Kokeile Tuotekonfiguraattoria,"
-" joka auttaa myyntitiimiä tuotteen eri vaihtoehtojen määrittämisessä: väri, "
+"Ongelmia monimutkaisen tuoteluettelon kanssa? Kokeile Tuotekonfiguraattoria, "
+"joka auttaa myyntitiimiä tuotteen eri vaihtoehtojen määrittämisessä: väri, "
 "koko, kapasiteetti jne. Tee myyntitilausten koodauksesta helppoa ja "
 "virheetöntä."
 
@@ -544,8 +544,8 @@ msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
 msgstr ""
-"Ylläpitäjä voi asettaa oletusehdot myyntiasetuksissa. Ehdot, jotka asetetaan"
-" tässä, näkyvät, jos valitset tämän tarjousmallin."
+"Ylläpitäjä voi asettaa oletusehdot myyntiasetuksissa. Ehdot, jotka asetetaan "
+"tässä, näkyvät, jos valitset tämän tarjousmallin."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
@@ -606,12 +606,16 @@ msgstr "Yksikköhinta:"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Käytä mallipohjia hiottujen, ammattimaisten tarjousten luomiseen minuuteissa.\n"
-"                 Lähetä tarjoukset sähköpostitse ja anna asiakkaidesi allekirjoittaa verkossa.\n"
-"                 Käytä ristiin myymistä ja alennuksia kasvattaaksesi myyntiäsi."
+"Käytä mallipohjia hiottujen, ammattimaisten tarjousten luomiseen "
+"minuuteissa.\n"
+"                 Lähetä tarjoukset sähköpostitse ja anna asiakkaidesi "
+"allekirjoittaa verkossa.\n"
+"                 Käytä ristiin myymistä ja alennuksia kasvattaaksesi "
+"myyntiäsi."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -631,34 +635,53 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Et voi muuttaa myyntitarjouksen rivin tyyppiä. Sinun tulisi poistaa nykyinen"
-" rivi ja luoda uusi oikean tyyppinen rivi."
+"Et voi muuttaa myyntitarjouksen rivin tyyppiä. Sinun tulisi poistaa nykyinen "
+"rivi ja luoda uusi oikean tyyppinen rivi."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"Tarjous sisältää tuotteita yrityksestä %(product_company)s, kun taas tarjouksesi kuuluu yritykselle %(quote_company)s. \n"
-"Vaihda tarjouksesi yritystä tai poista muiden yritysten tuotteet (%(bad_products)s)."
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "Malli ei voi sisältää useiden yritysten tuotteita."
+"Tarjous sisältää tuotteita yrityksestä %(product_company)s, kun taas "
+"tarjouksesi kuuluu yritykselle %(quote_company)s. \n"
+"Vaihda tarjouksesi yritystä tai poista muiden yritysten tuotteet (%"
+"(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Mallipohjasi sisältää yrityksen %(product_company)s tuotteita, vaikka se kuuluu yritykselle %(template_company)s.\n"
-" Vaihda mallipohjasi yritys tai poista muiden yritysten tuotteet."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -669,3 +692,16 @@ msgstr "päivää"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "esim. vakiokonsultointipaketti"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "Malli ei voi sisältää useiden yritysten tuotteita."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Mallipohjasi sisältää yrityksen %(product_company)s tuotteita, vaikka se "
+#~ "kuuluu yritykselle %(template_company)s.\n"
+#~ " Vaihda mallipohjasi yritys tai poista muiden yritysten tuotteet."
