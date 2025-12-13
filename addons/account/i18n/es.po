@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
-"PO-Revision-Date: 2025-12-06 17:08+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
+"PO-Revision-Date: 2025-12-13 16:38+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-18/account/"
 "es/>\n"
@@ -997,6 +997,10 @@ msgid ""
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Puedes elegir cómo quieres enviarnos tus facturas y "
+"en qué formato electrónico.\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1936,6 +1940,14 @@ msgstr "Redondeo de efectivo de la cuenta"
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Plantilla de plan contable"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_code_mapping.py:0
+msgid ""
+"Account Code Mapping cannot be accessed directly. It is designed to be used "
+"only through the Chart of Accounts."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -9218,11 +9230,6 @@ msgid "Invoice Outstanding Credits Debits Widget"
 msgstr "Widget de créditos y débitos de factura pendientes"
 
 #. module: account
-#: model:ir.actions.report,name:account.account_invoices
-msgid "Invoice PDF"
-msgstr "PDF de la factura"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
@@ -11926,6 +11933,7 @@ msgstr "PAY001"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.actions.report,name:account.account_invoices
 msgid "PDF"
 msgstr "PDF"
 
@@ -19833,6 +19841,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Comprobante de pago (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "Invoice PDF"
+#~ msgstr "PDF de la factura"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "No puede cambiar esta configuración después de crear una factura."

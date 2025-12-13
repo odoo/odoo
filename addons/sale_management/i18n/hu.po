@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
 # Tamás Dombos, 2024
 # Martin Trigaux, 2024
@@ -9,19 +9,19 @@
 # Tamás Németh <ntomasz81@gmail.com>, 2024
 # krnkris, 2024
 # gezza <geza.nagy@oregional.hu>, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_management
@@ -564,8 +564,8 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
-"Ez az email sablon kerül kiküldésre rendelés megerősítésekor. Hagyja üresen,"
-" ha nem szeretne küldeni emailt."
+"Ez az email sablon kerül kiküldésre rendelés megerősítésekor. Hagyja üresen, "
+"ha nem szeretne küldeni emailt."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -573,8 +573,7 @@ msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
 msgstr ""
-"Ez a mező be lesz jelölve, ha az opció sor terméke már szerepel az "
-"ajánlaton."
+"Ez a mező be lesz jelölve, ha az opció sor terméke már szerepel az ajánlaton."
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
@@ -587,8 +586,7 @@ msgstr "Tipp: az Odoo támogatja a konfigurálható termékeket"
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
 msgstr ""
-"Tipp: Értékesítsen vagy vásároljon termékeket tömegesen táblázat "
-"segítségével"
+"Tipp: Értékesítsen vagy vásároljon termékeket tömegesen táblázat segítségével"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -618,12 +616,15 @@ msgstr "M.e."
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
 "Használjon sablonokat letisztult, profi ajánlatok gyorsllétrehozásához.\n"
-"                Küldje ki az ajánlatokat emailben és tegye lehetővé, hogy a vevői online aláírhassák.\n"
-"                Használjon keresztértékesítést és kedvezményeket az értékesítés növeléséhez."
+"                Küldje ki az ajánlatokat emailben és tegye lehetővé, hogy a "
+"vevői online aláírhassák.\n"
+"                Használjon keresztértékesítést és kedvezményeket az "
+"értékesítés növeléséhez."
 
 #. module: sale_management
 #. odoo-python
@@ -638,34 +639,53 @@ msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Nem lehet megváltoztatni az ajánlati sor típusát. Inkább törölje a jelenlegi"
-" sort és hozzon létre egy újat a megfelelő típussal."
+"Nem lehet megváltoztatni az ajánlati sor típusát. Inkább törölje a jelenlegi "
+"sort és hozzon létre egy újat a megfelelő típussal."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"Az ajánlat a(z) %(product_company)s vállalathoz tartozó termékeket tartalmaz, de az ajánlat a(z) %(quote_company)svállalathoz tartozik. \n"
-" Kérjük, változtassa meg az ajánlaton a vállalatot vagy távolítsa el a más vállalatokhoz tartozó termékeket (%(bad_products)s)."
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "A sablon nem tartalmazhat különböző vállalatokhoz tartozó termékeket."
+"Az ajánlat a(z) %(product_company)s vállalathoz tartozó termékeket "
+"tartalmaz, de az ajánlat a(z) %(quote_company)svállalathoz tartozik. \n"
+" Kérjük, változtassa meg az ajánlaton a vállalatot vagy távolítsa el a más "
+"vállalatokhoz tartozó termékeket (%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"A sablon tartalmaz olyan termékeket, melyek ehhez a(z) %(product_company)s vállalathoz tartoznak, de maga a sablon ehhez a vállalathoz tartozik: %(template_company)s. \n"
-" Kérjük, változtassa meg a sablon vállalatát vagy távolítsa el belőle a más vállalathoz tartozó termékeket."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -676,3 +696,19 @@ msgstr "nap"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "pl.: sztenderd tanácsadói csomag"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr ""
+#~ "A sablon nem tartalmazhat különböző vállalatokhoz tartozó termékeket."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "A sablon tartalmaz olyan termékeket, melyek ehhez a(z) %"
+#~ "(product_company)s vállalathoz tartoznak, de maga a sablon ehhez a "
+#~ "vállalathoz tartozik: %(template_company)s. \n"
+#~ " Kérjük, változtassa meg a sablon vállalatát vagy távolítsa el belőle a "
+#~ "más vállalathoz tartozó termékeket."

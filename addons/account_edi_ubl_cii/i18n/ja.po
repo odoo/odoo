@@ -7,12 +7,14 @@
 # Junko Augias, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
-"PO-Revision-Date: 2025-12-06 17:08+0000\n"
+"POT-Creation-Date: 2025-12-12 18:37+0000\n"
+"PO-Revision-Date: 2025-12-13 16:37+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-18/"
 "account_edi_ubl_cii/ja/>\n"
@@ -132,6 +134,11 @@ msgid "BIS3 DE (XRechnung)"
 msgstr "BIS3 DE (XRechnung)"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
+msgid "Base helpers for UBL"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0208
 msgid "Belgian Company Registry"
 msgstr "ベルギー会社登記"
@@ -193,6 +200,7 @@ msgstr "EDIドキュメントの共通機能：データの生成、制約など
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 msgid "Conditional cash/payment discount"
 msgstr "条件付き現金/支払割引"
@@ -287,6 +295,12 @@ msgstr "デンマーク SE"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0130
 msgid "Directorates of the European Commission"
 msgstr "Directorates of the European Commission"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid "Discount"
+msgstr "値引"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_efff
@@ -396,7 +410,7 @@ msgstr "域内供給については、実際の納品日または請求期間を
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "For intracommunity supply, the delivery address should be included."
-msgstr "域内供給については、配送先住所を含める必要があります。"
+msgstr "域内供給については、配送先を含める必要があります。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -682,7 +696,8 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid ""
 "Please install the french Chorus pro module to have all the specific rules."
-msgstr ""
+msgstr "すべての特定のルールを利用するには、フランス語版Chorus proモジュールをインス"
+"トールしてください。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
@@ -875,7 +890,7 @@ msgstr "受取銀行には「Sanitized Account Number」フィールドが必要
 msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
-msgstr "請求書が貸方票に変換され、数量が元に戻されました。"
+msgstr "請求書はクレジットノートに変換され、数量が元に戻されました。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952

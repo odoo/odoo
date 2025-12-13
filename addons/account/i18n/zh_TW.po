@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2025-12-06 17:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -1859,6 +1859,14 @@ msgstr "賬戶現金捨入"
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "賬目總表範本"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_code_mapping.py:0
+msgid ""
+"Account Code Mapping cannot be accessed directly. It is designed to be used "
+"only through the Chart of Accounts."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -8924,11 +8932,6 @@ msgid "Invoice Outstanding Credits Debits Widget"
 msgstr "應收憑單未付款信用借記小工具"
 
 #. module: account
-#: model:ir.actions.report,name:account.account_invoices
-msgid "Invoice PDF"
-msgstr "發票 PDF"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
@@ -11569,6 +11572,7 @@ msgstr "PAY001"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.actions.report,name:account.account_invoices
 msgid "PDF"
 msgstr "PDF"
 
@@ -19020,6 +19024,9 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} 付款收據(編號 {{ object.name 或 'n/a' }})"
+
+#~ msgid "Invoice PDF"
+#~ msgstr "發票 PDF"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "建立發票後，將無法更改此設定。"

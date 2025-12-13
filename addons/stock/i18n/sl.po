@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-27 01:48+0000\n"
-"PO-Revision-Date: 2025-12-01 12:44+0000\n"
+"PO-Revision-Date: 2025-12-11 21:00+0000\n"
 "Last-Translator: Jan Zorko <jan.zorko@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-18/stock/"
 "sl/>\n"
@@ -4372,7 +4372,7 @@ msgstr "Datum inventure"
 #: model:ir.model.fields,field_description:stock.field_stock_quant__cyclic_inventory_frequency
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Inventory Frequency"
-msgstr ""
+msgstr "Frekvenca inventure"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
@@ -4409,7 +4409,7 @@ msgstr "Pregled zaloge"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_set
 msgid "Inventory Quantity Set"
-msgstr "Nabor količin zalog"
+msgstr "Prešteta količina nastavljena"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__inventory_adjustment_name
@@ -5772,19 +5772,19 @@ msgstr "Zaloga"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
-msgstr ""
+msgstr "Količina"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "On hand Quantity"
-msgstr ""
+msgstr "Količina"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
 msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
-msgstr ""
+msgstr "Količina, ki ni rezervirana na prenosu, v privzeti enoti mere izdelka"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -8223,7 +8223,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 msgid "Set to quantity on hand"
-msgstr ""
+msgstr "Nastavi na razpoložljivo količino"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_config_settings
@@ -9032,7 +9032,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
-msgstr ""
+msgstr "Frekvenca inventure (v dneh) za lokacijo ne sme biti negativna"
 
 #. module: stock
 #. odoo-python
@@ -9156,6 +9156,7 @@ msgid ""
 "The selected Inventory Frequency (Days) creates a date too far into the "
 "future."
 msgstr ""
+"Izbrana Frekvenca inventure (v dneh) ustvari datum predaleč v prihodnosti."
 
 #. module: stock
 #. odoo-python
@@ -10833,8 +10834,9 @@ msgid ""
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
 msgstr ""
-"Merske enote ne morete spreminjati, ker ima ta izdelek že zalogo. Če želite "
-"spremeniti enoto mere, morate ta izdelek arhivirati in ustvariti novega."
+"Merske enote ne morete spreminjati, ker ima ta izdelek že premike zaloge. Če "
+"želite spremeniti enoto mere, morate ta izdelek arhivirati in ustvariti "
+"novega."
 
 #. module: stock
 #. odoo-python
