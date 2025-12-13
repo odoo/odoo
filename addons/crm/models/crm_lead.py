@@ -799,6 +799,10 @@ class CrmLead(models.Model):
                 vals['website'] = self.env['res.partner']._clean_website(vals['website'])
         leads = super().create(vals_list)
 
+        # handling a date_closed value if the lead is directly created in the won stage
+        won_to_set = leads.filtered(lambda l: not l.date_closed and l.stage_id.is_won)
+        won_to_set.write({'date_closed': fields.Datetime.now()})
+
         if self.default_get(['partner_id']).get('partner_id') is None:
             commercial_partner_ids = [vals['commercial_partner_id'] for vals in vals_list if vals.get('commercial_partner_id')]
             CommercialPartners = self.env['res.partner'].with_prefetch(commercial_partner_ids)
@@ -1191,16 +1195,16 @@ class CrmLead(models.Model):
         tz_midnight_in_utc = tz_midnight.astimezone(pytz.UTC).replace(tzinfo=None)
         query = f"""
         SELECT
-            MAX(CASE WHEN team_id = %(team_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '31 days' AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_team_31,
-            MAX(CASE WHEN team_id = %(team_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '7 days'  AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_team_7,
-            MAX(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '31 days' AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_user_31,
-            MAX(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '7 days'  AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_user_7,
-            MIN(CASE WHEN date_closed >= %(tz_midnight)s - INTERVAL '31 days' THEN day_close ELSE 31 END) AS min_day_close_31,
+            MAX(CASE WHEN team_id = %(team_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '31 days' AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_team_31,
+            MAX(CASE WHEN team_id = %(team_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '7 days'  AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_team_7,
+            MAX(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '31 days' AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_user_31,
+            MAX(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '7 days'  AND id <> %(lead_id)s THEN expected_revenue ELSE 0 END) AS max_user_7,
+            MIN(CASE WHEN COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '31 days' THEN day_close ELSE 31 END) AS min_day_close_31,
             COUNT(CASE WHEN user_id = %(user_id)s THEN 1 ELSE NULL END) AS count_user_closed_year,
-            COUNT(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '3 days' AND date_closed < %(tz_midnight)s - INTERVAL '2 days' THEN 1 ELSE NULL END) AS count_user_closed_minus3day,
-            COUNT(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '2 days' AND date_closed < %(tz_midnight)s - INTERVAL '1 days' THEN 1 ELSE NULL END) AS count_user_closed_minus2day,
-            COUNT(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s - INTERVAL '1 days' AND date_closed < %(tz_midnight)s THEN 1 ELSE NULL END) AS count_user_closed_yesterday,
-            COUNT(CASE WHEN user_id = %(user_id)s AND date_closed >= %(tz_midnight)s THEN 1 ELSE NULL END) AS count_user_closed_today,
+            COUNT(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '3 days' AND COALESCE(date_closed, create_date) < %(tz_midnight)s - INTERVAL '2 days' THEN 1 ELSE NULL END) AS count_user_closed_minus3day,
+            COUNT(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '2 days' AND COALESCE(date_closed, create_date) < %(tz_midnight)s - INTERVAL '1 days' THEN 1 ELSE NULL END) AS count_user_closed_minus2day,
+            COUNT(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s - INTERVAL '1 days' AND COALESCE(date_closed, create_date) < %(tz_midnight)s THEN 1 ELSE NULL END) AS count_user_closed_yesterday,
+            COUNT(CASE WHEN user_id = %(user_id)s AND COALESCE(date_closed, create_date) >= %(tz_midnight)s THEN 1 ELSE NULL END) AS count_user_closed_today,
             COUNT(CASE WHEN {source_case} THEN 1 ELSE NULL END) AS count_source_closed_year,
             COUNT(CASE WHEN {country_case} THEN 1 ELSE NULL END) AS count_country_closed_year
             FROM crm_lead
@@ -1211,7 +1215,7 @@ class CrmLead(models.Model):
             AND
                 probability = 100
             AND
-                DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', %(tz_midnight)s)
+                DATE_TRUNC('year', COALESCE(date_closed, create_date)) = DATE_TRUNC('year', %(tz_midnight)s)
             AND
                 (user_id = %(user_id)s OR team_id = %(team_id)s)
         """
@@ -1239,7 +1243,7 @@ class CrmLead(models.Model):
             return _('You\'re on a winning streak. 3 deals in 3 days, congrats!')
         # check that at least one minute has elapsed since record creation to only account for 'real' leads
         elif query_result['min_day_close_31'] == self.day_close and self.day_close < 31 \
-            and (self.date_closed - self.create_date).total_seconds() > 60:
+            and self.date_closed and (self.date_closed - self.create_date).total_seconds() > 60:
             return _('Wow, that was fast. That deal didn’t stand a chance!')
         # use duration tracking field to determine if the task jumped from first to last stage
         # only takes into accounts stages on which the lead has spent at least a minute,

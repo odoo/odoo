@@ -987,3 +987,37 @@ class TestExpenses(TestExpenseCommon):
             expense.account_move_id,
             [{'amount_total': 500.0, 'currency_id': expense.account_move_id.company_currency_id.id}],
         )
+
+    def test_company_expense_sepa_ct_trust_bypass(self):
+        """
+        Ensure company-paid expenses using SEPA CT post without requiring a trusted recipient bank account.
+        This validates the bypass in account.payment.action_post for expense-originated payments.
+        """
+        self.env.ref('base.EUR').active = True
+        bank_journal = self.company_data['default_journal_bank']
+        bank = self.env['res.bank'].create({
+            'name': 'BNP Paribas',
+            'bic': 'GEBABEBB',
+        })
+        bank_journal.write({
+            'bank_id': bank.id,
+            'bank_acc_number': 'BE48363523682327',
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+        sepa_ct_line = bank_journal.outbound_payment_method_line_ids.filtered(lambda l: l.code == 'sepa_ct')
+        if not sepa_ct_line:
+            self.skipTest("SEPA Credit Transfer payment method not available (account_sepa module not installed)")
+
+        expense = self.create_expenses({
+            'name': 'Hotel',
+            'payment_mode': 'company_account',
+            'payment_method_line_id': sepa_ct_line.id,
+            'total_amount_currency': 100.00,
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+        expense.action_submit()
+        expense.action_approve()
+        # Should not raise trust validation error despite missing recipient partner bank
+        expense.action_post()

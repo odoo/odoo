@@ -417,6 +417,49 @@ class TestDropship(common.TransactionCase):
             self.env.ref('stock.stock_location_customers')
         )
 
+    def test_non_dropship_mtso_unaffected_by_dropship_logic(self):
+        '''
+        When using MTSO routes, ensure that purchases are only created for the
+        difference between stock and SO qty, instead of the full SO qty.
+        '''
+        # Make delivery default to MTSO
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_route_id.rule_ids.procure_method = 'mts_else_mto'
+
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'is_storable': "True",
+            'lst_price': 100.0,
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'seller_ids': [
+                Command.create({
+                    'partner_id': self.supplier.id,
+                    'price': 4
+                }),
+            ],
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': product.id,
+            'inventory_quantity': 5,
+            'location_id': warehouse.lot_stock_id.id,
+        }).action_apply_inventory()
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 6,
+            })],
+        })
+        sale_order.action_confirm()
+        po = sale_order._get_purchase_orders()
+        self.assertTrue(po)
+        po.button_confirm()
+        sale_order.order_line.product_uom_qty = 8
+        po = sorted(sale_order._get_purchase_orders(), key=lambda order: order.id)
+        self.assertEqual(len(po), 2)
+        self.assertEqual(po[1].order_line.product_uom_qty, 2)
+
 
 @tagged('post_install', '-at_install')
 class TestDropshipPostInstall(common.TransactionCase):

@@ -82,6 +82,58 @@ test("a selection placeholder is inserted between two tables, and removed on cle
     });
 });
 
+test("a selection placeholder is inserted inside a <td> before and after a contenteditable=false element, and removed on clean", async () => {
+    await testEditor({
+        contentBefore: unformat(
+            `<table class="table o_table table-bordered">
+                <tbody><tr><td><div contenteditable="false">X</div></td></tr></tbody>
+            </table>`
+        ),
+        contentBeforeEdit: unformat(
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table o_table table-bordered">
+                <tbody><tr><td>
+                    <p data-selection-placeholder=""><br></p>
+                    <div contenteditable="false">X</div>
+                    <p data-selection-placeholder=""><br></p>
+                </td></tr></tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        ),
+        contentAfter: unformat(
+            `<table class="table o_table table-bordered">
+                <tbody><tr><td><div contenteditable="false">X</div></td></tr></tbody>
+            </table>`
+        ),
+    });
+});
+
+test("a selection placeholder is inserted inside a <th> before and after a contenteditable=false element, and removed on clean", async () => {
+    await testEditor({
+        contentBefore: unformat(
+            `<table class="table o_table table-bordered">
+                <tbody><tr><th><div contenteditable="false">X</div></th></tr></tbody>
+            </table>`
+        ),
+        contentBeforeEdit: unformat(
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table o_table table-bordered">
+                <tbody><tr><th>
+                    <p data-selection-placeholder=""><br></p>
+                    <div contenteditable="false">X</div>
+                    <p data-selection-placeholder=""><br></p>
+                </th></tr></tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        ),
+        contentAfter: unformat(
+            `<table class="table o_table table-bordered">
+                <tbody><tr><th><div contenteditable="false">X</div></th></tr></tbody>
+            </table>`
+        ),
+    });
+});
+
 test.tags("focus required");
 test("can navigate in and out of selection placeholders", async () => {
     await testEditor({

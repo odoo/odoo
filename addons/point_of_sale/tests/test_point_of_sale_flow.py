@@ -425,6 +425,52 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         self.pos_config_usd.current_session_id.action_pos_session_closing_control()
 
+    def test_order_to_invoice_uses_correct_shipping_address(self):
+        """
+        Test that invoice created from POS uses the correct shipping address
+        same as selected in the POS order.
+        """
+        _, delivery2 = self.env["res.partner"].create([{
+                'name': f"Delivery Address {i + 1}",
+                'type': 'delivery',
+                'parent_id': self.partner.id,
+            } for i in range(2)]
+        )
+
+        self.pos_config_eur.open_ui()
+        current_session = self.pos_config_eur.current_session_id
+        untax, tax = self.compute_tax(self.product, 100, 1)
+
+        pos_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': delivery2.id,
+            'pricelist_id': self.partner.property_product_pricelist.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product.id,
+                'price_unit': 100,
+                'qty': 1.0,
+                'tax_ids': [(6, 0, self.product.taxes_id.ids)],
+                'price_subtotal': untax,
+                'price_subtotal_incl': untax + tax,
+            })],
+            'amount_tax': tax,
+            'amount_total': untax + tax,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}'
+        })
+
+        pos_order.action_pos_order_invoice()
+        invoice = pos_order.account_move
+
+        self.assertEqual(
+            invoice.partner_shipping_id.id,
+            delivery2.id,
+            "The shipping address should be 'Delivery Address 2' as selected in the POS order."
+        )
+
     def test_order_with_deleted_tax(self):
         order, _ = self.create_backend_pos_order({
             'line_data': [
@@ -1971,3 +2017,32 @@ class TestPointOfSaleFlow(CommonPosTest):
             and l.partner_id == self.partner
         ).balance
         self.assertEqual(order_balance + payment_balance, 0)
+
+    def test_draft_orders_products_loading(self):
+        """ Test that products are correctly loaded when limited product loading is enabled and there are draft orders. """
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', 1)
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        self.env['pos.order'].create([{
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner.id,
+            'lines': [
+                Command.create({
+                    'product_id': product.id,
+                    'qty': 1,
+                    'price_subtotal': 1,
+                    'price_subtotal_incl': 1,
+                }),
+            ],
+            'amount_tax': 0.0,
+            'amount_total': 1,
+            'amount_paid': 1,
+            'amount_return': 0.0,
+            'state': 'draft',
+        } for product in (self.product_a, self.product_b)])
+
+        data = current_session.with_context(pos_limited_loading=True).load_data([])
+        loaded_product_ids = [p['id'] for p in data['product.product']]
+        self.assertIn(self.product_a.id, loaded_product_ids)
+        self.assertIn(self.product_b.id, loaded_product_ids)

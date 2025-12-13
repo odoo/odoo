@@ -88,3 +88,29 @@ class TestUsersHttp(HttpCase):
         self.env.ref('base.ir_cron_res_users_deletion').method_direct_trigger()
         # Assert the account is completely deleted
         self.assertFalse(portal_user.exists())
+
+    def test_submit_address_from_anonymous_partner(self):
+        login = 'test_portal_user'
+        mail_new_test_user(self.env, login, name='Portal User')
+        self.authenticate(login, login)
+        anonymous_partner = self.env['res.partner'].create({'type': 'invoice'})
+        common_data = {
+            'phone': '1234567890',
+            'email': 'anonymous-user@example.com',
+            'street': '123 Street Name',
+            'city': 'City',
+            'zipcode': '12345',
+            'country_id': self.env.ref('base.us').id,
+            'state_id': self.env.ref('base.state_us_5').id,
+        }
+        new_name = 'Secret Name'
+        self.url_open(
+            url='/my/address/submit',
+            data={
+                **common_data,
+                'name': new_name,
+                'partner_id': str(anonymous_partner.id),
+                'csrf_token': Request.csrf_token(self)
+            }
+        )
+        self.assertEqual(anonymous_partner.name, new_name)

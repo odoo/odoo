@@ -560,7 +560,7 @@ export class Store extends BaseStore {
 
     getMentionsFromText(
         body,
-        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [] } = {}
+        { mentionedChannels = [], mentionedPartners = [], mentionedRoles = [], thread } = {}
     ) {
         const validMentions = {};
         validMentions.threads = mentionedChannels.filter((thread) => {
@@ -572,7 +572,7 @@ export class Store extends BaseStore {
             return body.includes(`#${thread.displayName}`);
         });
         validMentions.partners = mentionedPartners.filter((partner) =>
-            body.includes(`@${partner.name}`)
+            body.includes(`@${thread?.getPersonaName(partner) ?? partner.name}`)
         );
         validMentions.roles = mentionedRoles.filter((role) => body.includes(`@${role.name}`));
         validMentions.specialMentions = this.specialMentions
@@ -599,6 +599,7 @@ export class Store extends BaseStore {
             mentionedChannels,
             mentionedPartners,
             mentionedRoles,
+            thread,
         });
         const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
         const role_ids = validMentions?.roles.map((role) => role.id) ?? [];
