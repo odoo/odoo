@@ -15,6 +15,7 @@ import {
     MockEventTarget,
     setSyncValue,
 } from "../hoot_utils";
+import { ensureTest } from "../main_runner";
 
 /**
  * @typedef {ResponseInit & {
@@ -265,8 +266,8 @@ let getNetworkDelay = null;
 let mockFetchFn = null;
 /** @type {((websocket: ServerWebSocket) => any) | null} */
 let mockWebSocketConnection = null;
-/** @type {Array<(worker: MockSharedWorker | MockWorker) => any>} */
-let mockWorkerConnection = [];
+/** @type {((worker: MockSharedWorker | MockWorker) => any)[]} */
+const mockWorkerConnections = [];
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -276,7 +277,7 @@ export function cleanupNetwork() {
     // Mocked functions
     mockFetchFn = null;
     mockWebSocketConnection = null;
-    mockWorkerConnection = [];
+    mockWorkerConnections.length = 0;
 
     // Network instances
     for (const instance of openNetworkInstances) {
@@ -312,9 +313,14 @@ export function cleanupNetwork() {
 /** @type {typeof fetch} */
 export async function mockedFetch(input, init) {
     const strInput = String(input);
+    const isInternalUrl = R_INTERNAL_URL.test(strInput);
     if (!mockFetchFn) {
+        if (isInternalUrl) {
+            // Internal URL without mocked 'fetch': directly handled by the browser
+            return fetch(input, init);
+        }
         throw new Error(
-            `Can't make a request when fetch is not mocked.\nReceived fetch call to: "${strInput}"`
+            `Could not fetch "${strInput}": cannot make a request when fetch is not mocked`
         );
     }
     const controller = markOpen(new AbortController());
@@ -367,7 +373,7 @@ export async function mockedFetch(input, init) {
         throw error;
     }
 
-    if (isNil(result) && R_INTERNAL_URL.test(strInput)) {
+    if (isInternalUrl && isNil(result)) {
         // Internal URL without mocked result: directly handled by the browser
         return fetch(input, init);
     }
@@ -449,6 +455,7 @@ export async function mockedFetch(input, init) {
  *  });
  */
 export function mockFetch(fetchFn) {
+    ensureTest("mockFetch");
     mockFetchFn = fetchFn;
 }
 
@@ -460,6 +467,7 @@ export function mockFetch(fetchFn) {
  * @param {typeof mockWebSocketConnection} [onWebSocketConnected]
  */
 export function mockWebSocket(onWebSocketConnected) {
+    ensureTest("mockWebSocket");
     mockWebSocketConnection = onWebSocketConnected;
 }
 
@@ -469,7 +477,7 @@ export function mockWebSocket(onWebSocketConnected) {
  *  (see {@link mockFetch});
  *  - the `onWorkerConnected` callback will be called after a worker has been created.
  *
- * @param {typeof mockWorkerConnection} [onWorkerConnected]
+ * @param {typeof mockWorkerConnections[number]} [onWorkerConnected]
  * @example
  *  mockWorker((worker) => {
  *      worker.addEventListener("message", (event) => {
@@ -478,7 +486,8 @@ export function mockWebSocket(onWebSocketConnected) {
  *  });
  */
 export function mockWorker(onWorkerConnected) {
-    mockWorkerConnection.push(onWorkerConnected);
+    ensureTest("mockWorker");
+    mockWorkerConnections.push(onWorkerConnected);
 }
 
 /**
@@ -486,6 +495,17 @@ export function mockWorker(onWorkerConnected) {
  */
 export function throttleNetwork(...args) {
     getNetworkDelay = parseNetworkDelay(...args);
+}
+
+/**
+ * @param {typeof mockFetchFn} fetchFn
+ * @param {() => void} callback
+ */
+export async function withFetch(fetchFn, callback) {
+    mockFetchFn = fetchFn;
+    const result = await callback();
+    mockFetchFn = null;
+    return result;
 }
 
 export class MockBlob extends Blob {
@@ -929,7 +949,7 @@ export class MockSharedWorker extends MockEventTarget {
         // First port has to be started manually
         this._messageChannel.port2.start();
 
-        for (const onWorkerConnected of mockWorkerConnection) {
+        for (const onWorkerConnected of mockWorkerConnections) {
             onWorkerConnected(this);
         }
     }
@@ -1036,7 +1056,7 @@ export class MockWorker extends MockEventTarget {
             this.dispatchEvent(new MessageEvent("message", { data: ev.data }));
         });
 
-        for (const onWorkerConnected of mockWorkerConnection) {
+        for (const onWorkerConnected of mockWorkerConnections) {
             onWorkerConnected(this);
         }
     }

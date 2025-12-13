@@ -434,7 +434,7 @@ Versions:
                 holiday.date_from = False
                 continue
 
-            if not holiday.request_unit_half and not holiday.request_unit_hours and not holiday.request_date_to:
+            if not holiday.request_date_to:
                 holiday.date_to = False
                 continue
 

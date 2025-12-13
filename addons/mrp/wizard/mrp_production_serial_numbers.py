@@ -73,3 +73,14 @@ class MrpProductionSerials(models.TransientModel):
         if self.production_id.qty_producing != len(self.production_id.lot_producing_ids):
             self.production_id.qty_producing = len(self.production_id.lot_producing_ids)
         (self.workorder_id or self.production_id).set_qty_producing()
+
+        print_actions = self.production_id._autoprint_mass_generated_lots()
+        if print_actions:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'do_multi_print',
+                'context': {},
+                'params': {
+                    'reports': print_actions,
+                }
+            }

@@ -221,6 +221,10 @@ class ProductTemplate(models.Model):
         if products.filtered(lambda p: p.pos_optional_product_ids):
             products |= products.mapped("pos_optional_product_ids")
 
+        # Ensure products from loaded orders are loaded
+        if data.get('pos.order.line'):
+            products += self.env['product.product'].browse([l['product_id'] for l in data['pos.order.line']]).product_tmpl_id
+
         return self._load_pos_data_read(products, config)
 
     @api.model

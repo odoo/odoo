@@ -957,6 +957,7 @@
                         <field name="show_delivery_date" invisible="1"/>
                         <field name="is_being_sent" invisible="1"/>
                         <field name="show_update_fpos" invisible="1"/>
+                        <field name="is_sale_installed" invisible="1"/> <!-- Needed in the view to trigger the compute for the ProductLabelSectionAndNoteListRender in JS -->
 
                         <div class="oe_title">
                             <span class="o_form_label">
@@ -1083,7 +1084,7 @@
                                          groups="base.group_multi_currency"
                                          class="d-flex flex-column mx-3 text-center"
                                          style="width: 6ch;"
-                                         invisible="move_type == 'entry'">
+                                         invisible="move_type == 'entry' or not show_journal">
                                         <div>in</div>
                                         <div class="d-flex flex-column justify-content-center flex-grow-1"
                                              invisible="state != 'draft' or invoice_currency_rate == expected_currency_rate">
@@ -1111,8 +1112,16 @@
                                             <span>1</span>
                                             <field name="company_currency_id" readonly="True" options="{'no_open': True}" class="w-auto"/>
                                             <span>=</span>
-                                            <field name="invoice_currency_rate" digits="[12,6]" readonly="state != 'draft'"/>
+                                            <field name="invoice_currency_rate" digits="[12,6]" readonly="state != 'draft'" style="max-width: 21ch;"/>
                                             <field name="currency_id" readonly="True" options="{'no_open': True}" class="w-auto"/>
+                                            <div
+                                             invisible="show_journal or state != 'draft' or invoice_currency_rate == expected_currency_rate">
+                                            <button type="object"
+                                                    name="refresh_invoice_currency_rate"
+                                                    icon="fa-refresh"
+                                                    title="Reset the currency rate to the default accordingly to the invoice date"
+                                                    class="btn btn-link p-0"/>
+                                        </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1174,8 +1183,8 @@
                                                optional="show"
                                                options="{'product_field': 'product_id', 'account_field': 'account_id', 'amount_field': 'price_subtotal'}"
                                                business_domain_compute="parent.move_type in ['out_invoice', 'out_refund', 'out_receipt'] and 'invoice' or parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] and 'bill' or 'general'"/>
-                                        <field name="quantity" optional="show"/>
-                                        <field name="product_uom_id" groups="uom.group_uom" optional="show" width="92px" options="{'no_create': True, 'quantity_field': 'quantity'}" widget="many2one_uom"/>
+                                        <field name="quantity" optional="conditional"/>
+                                        <field name="product_uom_id" groups="uom.group_uom" optional="conditional" width="92px" options="{'no_create': True, 'quantity_field': 'quantity'}" widget="many2one_uom"/>
                                         <!-- /l10n_in_edi.test_edi_json -->
                                         <!-- required for @api.onchange('product_id') -->
                                         <field name="product_uom_id" column_invisible="True"/>

@@ -2,6 +2,7 @@
 
 import { getTimeOffset, isTimeFrozen, resetTimeOffset } from "@web/../lib/hoot-dom/helpers/time";
 import { createMock, HootError, isNil } from "../hoot_utils";
+import { ensureTest } from "../main_runner";
 
 /**
  * @typedef DateSpecs
@@ -170,6 +171,7 @@ export function cleanupDate() {
  *  mockDate("2019-02-11 09:30:00.001", +2);
  */
 export function mockDate(date, tz) {
+    ensureTest("mockDate");
     setDateParams(date ? parseDateParams(date) : DEFAULT_DATE);
     if (!isNil(tz)) {
         setTimeZone(tz);
@@ -187,6 +189,7 @@ export function mockDate(date, tz) {
  *  mockTimeZone("ja-JP"); // UTC + 9
  */
 export function mockLocale(newLocale) {
+    ensureTest("mockLocale");
     locale = newLocale;
 
     if (!isNil(locale) && isNil(timeZoneName)) {
@@ -213,6 +216,7 @@ export function mockLocale(newLocale) {
  *  mockTimeZone(null) // Resets to test default (+1)
  */
 export function mockTimeZone(tz) {
+    ensureTest("mockTimeZone");
     setTimeZone(tz);
 }
 

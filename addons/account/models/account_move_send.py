@@ -75,9 +75,18 @@ class AccountMoveSend(models.AbstractModel):
             'author_partner_id': get_setting('author_partner_id', from_cron=from_cron) or self.env.user.partner_id.id,
         }
         vals['invoice_edi_format'] = get_setting('invoice_edi_format', default_value=self._get_default_invoice_edi_format(move, sending_methods=vals['sending_methods']))
+        mail_template = get_setting('mail_template') or self._get_default_mail_template_id(move)
         if 'email' in vals['sending_methods']:
-            mail_template = get_setting('mail_template') or self._get_default_mail_template_id(move)
             mail_lang = get_setting('mail_lang') or self._get_default_mail_lang(move, mail_template)
+            vals.update({
+                'mail_template': mail_template,
+                'mail_lang': mail_lang,
+                'mail_body': get_setting('mail_body', default_value=self._get_default_mail_body(move, mail_template, mail_lang)),
+                'mail_subject': get_setting('mail_subject', default_value=self._get_default_mail_subject(move, mail_template, mail_lang)),
+                'mail_partner_ids': get_setting('mail_partner_ids', default_value=self._get_default_mail_partner_ids(move, mail_template, mail_lang).ids),
+            })
+        # Add mail attachments if sending methods support them
+        if self._display_attachments_widget(vals['invoice_edi_format'], vals['sending_methods']):
             mail_attachments_widget = self._get_default_mail_attachments_widget(
                 move,
                 mail_template,
@@ -85,14 +94,7 @@ class AccountMoveSend(models.AbstractModel):
                 extra_edis=vals['extra_edis'],
                 pdf_report=vals['pdf_report'],
             )
-            vals.update({
-                'mail_template': mail_template,
-                'mail_lang': mail_lang,
-                'mail_body': get_setting('mail_body', default_value=self._get_default_mail_body(move, mail_template, mail_lang)),
-                'mail_subject': get_setting('mail_subject', default_value=self._get_default_mail_subject(move, mail_template, mail_lang)),
-                'mail_partner_ids': get_setting('mail_partner_ids', default_value=self._get_default_mail_partner_ids(move, mail_template, mail_lang).ids),
-                'mail_attachments_widget': get_setting('mail_attachments_widget', default_value=mail_attachments_widget),
-            })
+            vals['mail_attachments_widget'] = get_setting('mail_attachments_widget', default_value=mail_attachments_widget)
         return vals
 
     # -------------------------------------------------------------------------
@@ -351,6 +353,10 @@ class AccountMoveSend(models.AbstractModel):
             return error['error_title']
         errors = Markup().join(Markup("<li>%s</li>") % error for error in error['errors'])
         return Markup("%s<ul>%s</ul>") % (error['error_title'], errors)
+
+    @api.model
+    def _display_attachments_widget(self, edi_format, sending_methods):
+        return 'email' in sending_methods
 
     # -------------------------------------------------------------------------
     # SENDING METHODS

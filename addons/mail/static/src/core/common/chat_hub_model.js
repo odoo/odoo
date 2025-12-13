@@ -21,7 +21,7 @@ export class ChatHub extends Record {
         const chatHub = super.new(...arguments);
         browser.addEventListener("storage", (ev) => {
             if (ev.key === CHAT_HUB_KEY) {
-                chatHub.load(ev.newValue);
+                chatHub.load(ev.newValue || undefined);
             } else if (ev.key === null) {
                 chatHub.load();
             }
@@ -95,6 +95,14 @@ export class ChatHub extends Record {
     async _load(str) {
         /** @type {{ opened: Object[], folded: Object[] }} */
         const { opened = [], folded = [] } = JSON.parse(str);
+        const hasInvalidData =
+            opened.some((data) => !data.id || !data.model) ||
+            folded.some((data) => !data.id || !data.model);
+        if (hasInvalidData) {
+            opened.length = 0;
+            folded.length = 0;
+            browser.localStorage.removeItem(CHAT_HUB_KEY);
+        }
         const getThread = (data) => this.store.Thread.getOrFetch(data, ["display_name"]);
         const openPromises = opened.map(getThread);
         const foldPromises = folded.map(getThread);

@@ -2115,3 +2115,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_req_form.employee_id = self.employee_responsible
 
         self.assertFalse(leave_req_form.can_approve)
+
+    def test_change_leave_type_on_leave_req_without_end_date(self):
+        """Test changing the leave type on a leave request without an end date."""
+        leave_req_form = Form(self.env['hr.leave'].with_user(self.user_hrmanager_id))
+        leave_req_form.request_date_to = False
+        leave_req_form.holiday_status_id = self.holidays_type_hours
+
+        self.assertFalse(leave_req_form.date_to)
