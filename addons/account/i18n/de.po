@@ -28,8 +28,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:35+0000\n"
-"PO-Revision-Date: 2025-12-04 14:03+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"PO-Revision-Date: 2025-12-12 09:27+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/account/"
 "de/>\n"
@@ -54,7 +54,7 @@ msgstr ""
 "\n"
 "        Wählen Sie „Verkauf“ für Journale für Kundenrechnungen. \n"
 "        Wählen Sie „Einkauf“ für Journale für Lieferantenrechnungen. \n"
-"        Wählen Sie „Bargeld“ oder „Bank“ für Journale für Kunden- bzw. "
+"        Wählen Sie „Kasse“ oder „Bank“ für Journale für Kunden- bzw. "
 "Lieferantenzahlungen. \n"
 "        Wählen Sie „Allgemein“ für Journale bei sonstigen "
 "Geschäftsvorgängen.\n"
@@ -76,11 +76,11 @@ msgid ""
 msgstr ""
 "\n"
 "    - Steuergruppen: Die Steuer ist eine Gruppe von Untersteuern.\n"
-"- Fest: Der Steuerbetrag bleibt unabhängig vom Preis gleich.\n"
-"- Prozentsatz: Der Steuerbetrag ist ein Prozentsatz des Preises:\n"
+"    - Fest: Der Steuerbetrag bleibt unabhängig vom Preis gleich.\n"
+"    - Prozentsatz: Der Steuerbetrag ist ein Prozentsatz des Preises:\n"
 "   z. B. 100 * (1 + 10 %) = 110 (nicht im Preis enthalten)\n"
 "   z. B. 110 / (1 + 10 %) = 100 (im Preis enthalten)\n"
-"- Prozentsatz inkusive Steuern: Der Steuerbetrag ist eine Division des "
+"    - Prozentsatz inkusive Steuern: Der Steuerbetrag ist eine Division des "
 "Preises:\n"
 "   z. B. 180 / (1 - 10 %) = 200 (nicht im Preis enthalten)\n"
 "   z. B. 200 * (1 - 10 %) = 180 (im Preis enthalten)\n"
@@ -815,7 +815,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_wizard_preview_inherit_account
 msgid "<br/> on this account:"
-msgstr "<br/> Überweidung auf folgendes Konto:"
+msgstr "<br/> Überweisung auf folgendes Konto:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_self_billing_credit_note
@@ -879,7 +879,7 @@ msgstr ""
 "                hier ist Ihre\n"
 "                <t t-if=\"object.name\">\n"
 "                    selbstfakturierte Gutschrift <span style=\"font-"
-"weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"weight:bold;\" t-out=\"object.name or ''\">RG/2021/05/0001</span>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
 "                    selbstfakturierte Gutschrift\n"
@@ -2317,10 +2317,10 @@ msgid ""
 "cash\n"
 "                payments on a daily basis."
 msgstr ""
-"Eine Registrierkasse ermöglicht Ihnen die Verwaltung von Bargeldeinträgen in "
+"Eine Registrierkasse ermöglicht Ihnen die Verwaltung von Kassenbuchungen in "
 "Ihren\n"
-"Kassajournalen. Mit dieser Funktion können Sie ganz einfach Ihre täglichen "
-"Bargeldbewegungen verfolgen."
+"Kassenjournalen. Mit dieser Funktion können Sie ganz einfach Ihre täglichen "
+"Kassnebewegungen verfolgen."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
@@ -2604,6 +2604,14 @@ msgstr "Bargeldrundung"
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Kontenplanvorlage"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_code_mapping.py:0
+msgid ""
+"Account Code Mapping cannot be accessed directly. It is designed to be used "
+"only through the Chart of Accounts."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -4186,6 +4194,11 @@ msgid "Attachments"
 msgstr "Dateianhänge"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
+msgid "Attachments Not Supported"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
 #: model:ir.ui.menu,name:account.account_audit_trail_menu
 msgid "Audit Trail"
@@ -4456,13 +4469,13 @@ msgstr "Bank"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank & Cash"
-msgstr "Bank & Bargeld"
+msgstr "Bank & Kasse"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Bank & Cash accounts cannot be shared between companies."
-msgstr "Bank- & Kassakonten können nicht zwischen Unternehmen geteilt werden."
+msgstr "Bank- & Kassenkonten können nicht zwischen Unternehmen geteilt werden."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_account_id
@@ -4636,7 +4649,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_bank_cash
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_cash
 msgid "Bank and Cash"
-msgstr "Bank und Bargeld"
+msgstr "Bank und Kasse"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -5203,12 +5216,12 @@ msgstr "Übertragen nach"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Cash"
-msgstr "Bargeld"
+msgstr "Kasse"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Cash Account"
-msgstr "Kassakonto"
+msgstr "Kassenkonto"
 
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_158
@@ -5265,7 +5278,7 @@ msgstr "Bargeld (Kleidergeschäft)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
 msgid "Cash Difference Expense"
-msgstr "Bargelddifferenz Aufwand"
+msgstr "Kassendifferenz Aufwand"
 
 #. module: account
 #. odoo-python
@@ -5273,12 +5286,12 @@ msgstr "Bargelddifferenz Aufwand"
 #: model:account.account,name:account.1_cash_diff_income
 #: model:account.account,name:account.2_account_account_us_cash_diff_income
 msgid "Cash Difference Gain"
-msgstr "Bargelddifferenz Gewinn"
+msgstr "Kassendifferenz Gewinn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income"
-msgstr "Bargelddifferenz Ertrag"
+msgstr "Kassendifferenz Ertrag"
 
 #. module: account
 #. odoo-python
@@ -5368,7 +5381,7 @@ msgstr "Übergangskonto für Ist-Versteuerung"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Cash: Balance"
-msgstr "Bargeld: Saldo"
+msgstr "Kasse: Saldo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -5674,12 +5687,12 @@ msgstr "Stammaktien"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
 msgid "Communication Standard"
-msgstr "Standardreferenz"
+msgstr "Mitteilungsstandard"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_type
 msgid "Communication Type"
-msgstr "Referenzart"
+msgstr "Mitteilungsart"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -7037,7 +7050,7 @@ msgstr "Gesonderter Nummerkreis für Gutschriften"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
 msgid "Dedicated Payment Sequence"
-msgstr "Individuelle Zahlungssequenz"
+msgstr "Gesonderter Nummerkreis für Zahlungen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__deductible_amount
@@ -7529,6 +7542,11 @@ msgstr "Feld für alternative Steuern anzeigen"
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
 msgid "Display Amount"
 msgstr "Betrag anzeigen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
+msgid "Display Attachments Widget"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -9668,6 +9686,11 @@ msgstr ""
 "Wie der gesamte Steuerbetrag in Aufträgen und Rechnungen berechnet wird"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "ICE:"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
 #: model:ir.model.fields,field_description:account.field_account_account_tag__id
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__id
@@ -11048,6 +11071,12 @@ msgstr "Ist Erstattung"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__is_register_payment_on_draft
 msgid "Is Register Payment On Draft"
 msgstr "Ist Zahlungsregistrierung auf Entwurf"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_sale_installed
+#: model:ir.model.fields,field_description:account.field_account_move__is_sale_installed
+msgid "Is Sale Installed"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_same_currency
@@ -18166,7 +18195,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr "Die folgenden Journalbuchungen werden erstellt"
+msgstr "Die folgenden Journalbuchungen werden generiert"
 
 #. module: account
 #. odoo-python
@@ -18529,7 +18558,7 @@ msgid ""
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
 "Das ausgewählte Zielkonto ist auf eine bestimmte Währung eingestellt. Jede "
-"Buchung, die auf dieses Konto überwiesen wird, wird in diese Währung "
+"Buchung, die auf dieses Konto übertragen wird, wird in diese Währung "
 "umgerechnet, wodurch\n"
 "bereits vorhandene Fremdwährungsbeträge verloren gehen."
 
@@ -21087,16 +21116,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You cannot have more than one account with \"Current Year Earnings\" as "
-"type. (accounts: %s)"
-msgstr ""
-"Sie können nicht mehr als ein Konto mit dem Typ „Erträge des laufenden "
-"Jahres“ haben. (Konten: %s)"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
@@ -22066,8 +22085,8 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Zahlungseingang "
-"(Ref. {{ object.name or 'k. A.' }})"
+"{{ object.company_id.name }} Zahlungseingang (Ref. {{ object.name or 'k. "
+"A.' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_credit_note
@@ -22086,6 +22105,13 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selbstfakturierte Rechnung (Ref. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid ""
+#~ "You cannot have more than one account with \"Current Year Earnings\" as "
+#~ "type. (accounts: %s)"
+#~ msgstr ""
+#~ "Sie können nicht mehr als ein Konto mit dem Typ „Erträge des laufenden "
+#~ "Jahres“ haben. (Konten: %s)"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr ""

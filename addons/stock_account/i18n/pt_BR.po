@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-12-05 12:35+0000\n"
+"PO-Revision-Date: 2025-12-12 15:40+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/stock_account/pt_BR/>\n"
@@ -442,7 +442,6 @@ msgstr "Conta de despesas"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
-#, fuzzy
 msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
 "this location"
@@ -588,12 +587,12 @@ msgstr "É valorado"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_internal
 msgid "Is valued inside the company"
-msgstr ""
+msgstr "É valorizado dentro da empresa"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_external
 msgid "Is valued outside the company"
-msgstr ""
+msgstr "É valorado fora da empresa"
 
 #. module: stock_account
 #. odoo-python
@@ -602,6 +601,8 @@ msgid ""
 "It exists closing entries after the selected date. Cancel them before "
 "generate an entry prior to them"
 msgstr ""
+"Existem lançamentos de fechamento após a data selecionada. Cancele-os antes "
+"de gerar um lançamento anterior a eles"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
@@ -662,7 +663,7 @@ msgstr "Manual"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_manual
 msgid "Manual Value"
-msgstr ""
+msgstr "Valor manual"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
@@ -681,6 +682,8 @@ msgid ""
 "Only the value 'periodic' and 'real_time' are accepted to search on "
 "valuation field."
 msgstr ""
+"Apenas os valores “periódico” e “tempo real” são aceitos para pesquisa no "
+"campo de avaliação."
 
 #. module: stock_account
 #. odoo-javascript
@@ -693,7 +696,7 @@ msgstr "Opções"
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__periodic
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__periodic
 msgid "Periodic (at closing)"
-msgstr ""
+msgstr "Periódico (no fechamento)"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -704,13 +707,18 @@ msgid ""
 "inventory when a product is billed or invoiced.\n"
 "        "
 msgstr ""
+"Periódico: os lançamentos contábeis são sugeridos manualmente no relatório "
+"de avaliação do inventário.\n"
+"Perpétuo: um lançamento contábil é criado automaticamente para avaliar o "
+"inventário quando um produto é faturado ou cobrado.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__real_time
 msgid "Perpetual (at invoicing)"
-msgstr ""
+msgstr "Perpétua (no faturamento)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -721,14 +729,14 @@ msgstr "Tipo de separação"
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Please set the Journal for Inventory Valuation in the settings."
-msgstr ""
+msgstr "Defina o Diário para Valoração de Inventário nas Definições."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid ""
 "Please set the Valuation Account for Inventory Valuation in the settings."
-msgstr ""
+msgstr "Defina a conta de Valoração de inventário nas definições."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
@@ -746,7 +754,7 @@ msgstr "Preço unitário"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Price update from %(old_price)s to %(new_price)s by %(user)s"
-msgstr ""
+msgstr "Atualização de preços de %(old_price)s para %(new_price)s por %(user)s"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -781,7 +789,7 @@ msgstr "Quantidade de produtos atualizada"
 #: model:ir.model,name:stock_account.model_product_value
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__product_value
 msgid "Product Value"
-msgstr ""
+msgstr "Valor do produto"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product

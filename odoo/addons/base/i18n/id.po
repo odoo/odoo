@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-12-04 14:03+0000\n"
+"PO-Revision-Date: 2025-12-12 06:42+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/base/"
 "id/>\n"
@@ -6456,15 +6456,14 @@ msgstr ""
 "\n"
 "In the electronic journals if you validate an invoice this one will be "
 "validated in both Odoo and ARCA. This validation is\n"
-"made at the instant and we recieve and "
-"\"approved/approved with observation/rejected\" state from ARCA. If the "
-"invoice has\n"
+"made at the instant and we recieve and \"approved/approved with observation/"
+"rejected\" state from ARCA. If the invoice has\n"
 "been rejected by ARCA will not be post in the system and a pop up message "
 "will be shown with both the error detail (reject reasons)\n"
 "we recieve and a HINT about what the problem could be.\n"
 "\n"
-"For auditing and troubleshooting purposes we also add a menu "
-"\"Consulit Invoice in ARCA\" that let us to consult invoices previously\n"
+"For auditing and troubleshooting purposes we also add a menu \"Consulit "
+"Invoice in ARCA\" that let us to consult invoices previously\n"
 "sent to ARCA and last number used as support for any possible issues on the "
 "sequences synchronization between Odoo and ARCA.\n"
 "\n"
@@ -6474,8 +6473,8 @@ msgstr ""
 "\n"
 "From vendor bills, we have added a functionality that can be configured in "
 "the accounting settings to be able to verify\n"
-"vendor bills in ARCA to check if the vendor bills are real "
-"(more information please review the setting description).\n"
+"vendor bills in ARCA to check if the vendor bills are real (more information "
+"please review the setting description).\n"
 "\n"
 "Configuration:\n"
 "\n"
@@ -6521,13 +6520,13 @@ msgstr ""
 "Technical\n"
 "---------\n"
 "\n"
-"The web services that are implemented are the ones that are the most common:"
-"\n"
+"The web services that are implemented are the ones that are the most "
+"common:\n"
 "\n"
 "* wsfev1 - \"Factura Electrónica\" (Electronic Invoice)\n"
 "* wsbfev1 - \"Bono Fiscal Electrónico\" (Electronic Fiscal Bond)\n"
-"* wsfexv1 - \"Factura de Exportación Electrónica\" "
-"(Electronic Exportation Invoice - same as Export Voucher)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\" (Electronic Exportation "
+"Invoice - same as Export Voucher)\n"
 "* wscdc - \"Constatación de Comprobantes\" (Invoices Verification)\n"
 "\n"
 "For Development information go to http://www.afip.gob.ar/fe/documentos/"
@@ -31384,6 +31383,17 @@ msgstr "Locator Tidak Valid"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value in Default Value field. Expected type '%(field_type)s' for "
+"'%(model_name)s.%(field_name)s'."
+msgstr ""
+"Value tidak valid di field Value Default. Tipe yang diharapkan '%(field_type)"
+"s' untuk '%(model_name)s.%(field_name)s'."
+
+#. module: base
+#. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Invalid attributes %s in element <attribute>"
 msgstr "Atribut %s tidak valid di elemen <attribute>"
@@ -38178,7 +38188,7 @@ msgstr "Hanya satu nilai tukar mata uang per hari yang diizinkan!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_properties_base_definition_unique_properties_field_id
 msgid "Only one definition per properties field"
-msgstr ""
+msgstr "Hanya satu definisi per field properti"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_decimal_precision_name_uniq
@@ -41084,12 +41094,12 @@ msgstr "Properti"
 #: model:ir.model.fields,field_description:base.field_res_partner__properties_base_definition_id
 #: model:ir.model.fields,field_description:base.field_res_users__properties_base_definition_id
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "Definisi Dasar Properti"
 
 #. module: base
 #: model:ir.model,name:base.model_properties_base_definition_mixin
 msgid "Properties Base Definition Mixin"
-msgstr ""
+msgstr "Mixin Definisi Dasar Properti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_properties_base_definition__properties_definition
@@ -43655,12 +43665,12 @@ msgstr "Tindakan Server"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server_history
 msgid "Server Action History"
-msgstr ""
+msgstr "Riwayat Tindakan Server"
 
 #. module: base
 #: model:ir.model,name:base.model_server_action_history_wizard
 msgid "Server Action History Wizard"
-msgstr ""
+msgstr "Wizard Riwayat Tindakan Server"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action

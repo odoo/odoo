@@ -4,22 +4,23 @@
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Dorin Hongu <dhongu@gmail.com>, 2025.
+# Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-25 02:34+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"PO-Revision-Date: 2025-12-09 14:08+0000\n"
+"Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "google_gmail/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
-"20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : "
+"(n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -89,7 +90,7 @@ msgstr "Activ"
 #. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
 msgid "An error occurred during the authentication process."
-msgstr ""
+msgstr "A apărut o eroare în timpul procesului de autentificare."
 
 #. module: google_gmail
 #. odoo-python
@@ -145,7 +146,7 @@ msgstr "Nume afișat"
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__res_users__outgoing_mail_server_type__gmail
 msgid "Gmail"
-msgstr ""
+msgstr "Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
@@ -155,7 +156,7 @@ msgstr "Id client Gmail"
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_secret
 msgid "Gmail Client Secret"
-msgstr ""
+msgstr "Secretul clientului Gmail"
 
 #. module: google_gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
@@ -219,6 +220,8 @@ msgstr "Numai administratorul poate conecta un server de e-mail de tip Gmail."
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Oops, we could not authenticate you. Please try again later."
 msgstr ""
+"Ne pare rău, nu am putut să vă autentificăm. Vă rugăm să încercați din nou "
+"mai târziu."
 
 #. module: google_gmail
 #. odoo-python
@@ -227,11 +230,14 @@ msgid ""
 "Oops, you're creating an authorization to send from %(email_login)s but your "
 "address is %(email_server)s. Make sure your addresses match!"
 msgstr ""
+"Ne pare rău, creați o autorizație pentru a trimite de la %(email_login)s, "
+"dar adresa dvs. este %(email_server)s. Asigurați-vă că adresele dvs. se "
+"potrivesc!"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_users__outgoing_mail_server_type
 msgid "Outgoing Mail Server Type"
-msgstr ""
+msgstr "Tipul serverului de e-mail de ieșire"
 
 #. module: google_gmail
 #. odoo-python
@@ -243,7 +249,7 @@ msgstr "Vă rugăm să vă configurați credențialele Gmail."
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Please enter a valid email address."
-msgstr ""
+msgstr "Vă rugăm să introduceți o adresă de e-mail validă."
 
 #. module: google_gmail
 #. odoo-python
@@ -304,7 +310,7 @@ msgstr "Tip de server"
 #. odoo-python
 #: code:addons/google_gmail/tools.py:0
 msgid "Something went wrong. Try again later"
-msgstr ""
+msgstr "A apărut o eroare. Încercați din nou mai târziu."
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
@@ -329,4 +335,4 @@ msgstr "Utilizator"
 #. odoo-python
 #: code:addons/google_gmail/tools.py:0
 msgid "You don't have an active subscription"
-msgstr ""
+msgstr "Nu aveți un abonament activ"

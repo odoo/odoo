@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-12-05 07:58+0000\n"
+"PO-Revision-Date: 2025-12-11 13:00+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/ja/>\n"
@@ -1060,7 +1060,6 @@ msgstr "矢印アイコン"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
-#, fuzzy
 msgid ""
 "As Time Off Responsible, you can only use the allocation mode 'By Employee'."
 msgstr "休暇管理責任者として、割り当てモードは「従業員別」のみ使用できます。"
@@ -1610,7 +1609,7 @@ msgstr "日付"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to_period
 msgid "Date Period End"
-msgstr ""
+msgstr "期間終了日"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_from_period
@@ -1892,7 +1891,7 @@ msgstr "期間(時間)"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__request_unit
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__request_unit
 msgid "Duration Type"
-msgstr ""
+msgstr "期間タイプ"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days
@@ -1903,12 +1902,12 @@ msgstr "日単位の期間。必要に応じて使用する参照フィールド
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__elligible_for_accrual_rate
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__elligible_for_accrual_rate
 msgid "Eligible for Accrual Rate"
-msgstr ""
+msgstr "繰越(付与)率の対象"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_sa_leave_type_emergency
 msgid "Emergency Leave"
-msgstr ""
+msgstr "緊急休暇"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee
@@ -2081,7 +2080,7 @@ msgstr ""
 msgid ""
 "For your reference, the equivalent times in your timezone are displayed "
 "below."
-msgstr ""
+msgstr "ご参考までに、あなたのタイムゾーンでの同等の時刻が以下に表示されます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__frequency
@@ -2199,7 +2198,7 @@ msgstr "香港 父親休暇"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_hk_leave_type_paternity_leave_80
 msgid "HK Paternity Leaves 80%"
-msgstr ""
+msgstr "香港 父親育児休暇 80%"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_hk_leave_type_sick_leave
@@ -2397,7 +2396,7 @@ msgstr "例外活動を示すアイコン"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_sa_leave_type_iddah
 msgid "Iddah Leave"
-msgstr ""
+msgstr "イドダ休暇"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2425,13 +2424,14 @@ msgstr "選択されている場合、一部のメッセージで配信エラー
 msgid ""
 "If checked, this time off type will be taken into account for accruals "
 "computation."
-msgstr ""
+msgstr "選択すると、この休暇タイプが累積休暇の計算に含まれます。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allow_request_on_top
 msgid ""
 "If checked, users can request another leave on top of the ones of this type."
-msgstr ""
+msgstr "チェックされている場合、ユーザはこのタイプの休暇に加えて別の休暇を申請できま"
+"す。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__allows_negative
@@ -3308,7 +3308,7 @@ msgstr "概要"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_pl_leave_type_sick_leave
 msgid "PL Sick Leaves 80% "
-msgstr ""
+msgstr "有給 病気休暇 80% "
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_paid_sick_time_off
@@ -3346,7 +3346,7 @@ msgstr "期間"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_jo_leave_type_pilgrimage
 msgid "Pilgrimage Leave"
-msgstr ""
+msgstr "巡礼休暇"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__planned
@@ -3702,7 +3702,7 @@ msgstr "次回活動日が過去のすべてのレコードを表示"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_sa_leave_type_sick_leave_100
 msgid "Sick Leave (100% Paid)"
-msgstr ""
+msgstr "病気休暇 (100% 有給)"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_sick_leave_75
@@ -3719,7 +3719,7 @@ msgstr "病気休暇 (無給)"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_jo_leave_type_unpaid_sick
 msgid "Sick Leave (Unpaid)"
-msgstr ""
+msgstr "病気休暇 (無給)"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_ae_leave_type_sick_leave_0
@@ -3757,6 +3757,10 @@ msgid ""
 "during batch generation. Conflicting time off:\n"
 "%s"
 msgstr ""
+"一部の従業員には、選択した期間と重複する時間単位の休暇申請がすでに存在します"
+"。Odooは一括作成時に時間単位の休暇を自動調整または分割することはできません。"
+"競合している休暇申請:\n"
+"%s"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3858,7 +3862,7 @@ msgstr "ストライキ"
 #: model:hr.leave.type,name:hr_holidays.l10n_jo_leave_type_study
 #: model:hr.leave.type,name:hr_holidays.l10n_sa_leave_type_study
 msgid "Study Leave"
-msgstr ""
+msgstr "研修休暇"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5044,7 +5048,7 @@ msgstr "この休暇は承認できません。"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "You cannot allow requests on top of leaves of type 'Absence'."
-msgstr ""
+msgstr "「欠勤」タイプの休暇に重ねて申請を許可することはできません。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5126,6 +5130,8 @@ msgid ""
 "You do not have any allocation for this time off type.\n"
 "Please request an allocation before submitting your time off request."
 msgstr ""
+"この休暇タイプには割当がありません。\n"
+"休暇申請を提出する前に、割当を申請してください。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5137,7 +5143,7 @@ msgstr "休暇申請時に2回目の承認を申請する権利がありませ�
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_my_days_off_dashboard_calendar
 msgid "You have no time off yet!"
-msgstr ""
+msgstr "まだ休暇がありません!"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
@@ -5179,7 +5185,7 @@ msgstr "あなたの休暇"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Your Timezone"
-msgstr ""
+msgstr "あなたのタイムゾーン"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5242,7 +5248,7 @@ msgstr "ここをクリック"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
-msgstr ""
+msgstr "日付"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5347,7 +5353,7 @@ msgstr "ID"
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid ""
 "leaves of type 'Worked Time' should be always eligible for accrual rate."
-msgstr ""
+msgstr "「勤務時間」タイプの休暇は、常に休暇累積(付与)率の対象である必要があります。"
 
 #. module: hr_holidays
 #. odoo-javascript
