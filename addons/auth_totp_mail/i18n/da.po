@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-12-06 13:25+0000\n"
+"PO-Revision-Date: 2025-12-11 01:37+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "auth_totp_mail/da/>\n"
@@ -51,6 +51,30 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hej <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> har bedt dig aktivere "
+"totrinsbekræftelse for at sikre din konto.<br/><br/>\n"
+"        Totrinsbekræftelse (\"2FA\") er en metode, hvor du bekræfter din "
+"identitet i to separate trin.\n"
+"        Først logger du ind med din adgangskode, og derefter indtaster du en "
+"kode, som genereres i en dedikeret mobil app.\n"
+"        Blandt de mest populære apps er Authy, Google Authenticator og "
+"Microsoft Authenticator.\n"
+"\n"
+"        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-style"
+"=\"background-color:{{object.company_id.email_secondary_color or '#875A7B'}};"
+" padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">"
+"\n"
+"                Aktivér min totrinsbekræftelse\n"
+"            </a>\n"
+"        </p>\n"
+"    \n"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_mail_code
@@ -91,6 +115,47 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Hej <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"<p>Nogen forsøger at få adgang til din konto fra en ny enhed.</p>\n"
+"<ul>\n"
+"    <t t-set=\"not_available\">N/A</t>\n"
+"    <li>Sted: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"    <li>Enhhed: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"    <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"    <li>IP-adresse: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"</ul>\n"
+"<p>Hvis det er dig, skal du indtaste koden nedenfor for at fuldføre "
+"login:</p>\n"
+"<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
+"#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
+"radius: 5px;\"/>\n"
+"</div>\n"
+"<small>Bemærk, at koden udløber om <t t-out=\"expiration\"/>.</small>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    Hvis du IKKE har foretaget dette login,\n"
+"    bør du straks ændre dit kodeord for at beskytte din konto.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    Vi anbefaler på det kraftigste, at du aktiverer totrinsbekræftelse via "
+"en bekræftelsesapp for at beskytte din konto.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
+"        Aktivér min totrinsbekræftelse\n"
+"    </a>\n"
+"</p>\n"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -98,17 +163,20 @@ msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                For at logge ind skal du nedenfor indtaste den sekscifrede "
+"godkendelseskode, som netop er sendt via e-mail til"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
 msgid "<span>Consider also</span>"
-msgstr ""
+msgstr "<span>Overvej også</span>"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "A new device was used to sign in to your account."
-msgstr ""
+msgstr "Der er logget ind på din konto fra en ny enhed."
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -116,12 +184,13 @@ msgstr ""
 msgid ""
 "A trusted device has just been removed from your account: %(device_names)s"
 msgstr ""
+"En pålidelig enhed er netop blevet fjernet fra din konto: %(device_names)s"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Account Security"
-msgstr "Konto sikkerhed"
+msgstr "Kontosikkerhed"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
@@ -131,13 +200,13 @@ msgstr "Alle brugere"
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_auth_totp_device
 msgid "Authentication Device"
-msgstr "Godkendelsesenhed"
+msgstr "Bekræftelsesenhed"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
-msgstr "Kan ikke sende email: bruger %s har ikke nogen email adresse."
+msgstr "E-mail kan ikke sendes: Bruger %s har ikke nogen e-mailadresse."
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_config_settings
@@ -154,7 +223,7 @@ msgstr "Vis navn"
 #. module: auth_totp_mail
 #: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__employee_required
 msgid "Employees only"
-msgstr ""
+msgstr "Kun medarbejdere"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_config_settings_view_form
@@ -163,11 +232,13 @@ msgid ""
 "users (including portal users) if they didn't enable any other two-factor "
 "authentication method."
 msgstr ""
+"Krav om totrinsbekræftelse via e-mail for medarbejdere eller alle brugere "
+"(inklusive portalbrugere), hvis de ikke har en anden aktiveret metode."
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
-msgstr ""
+msgstr "Påkræv aktivering af totrinsbekræftelse"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
@@ -179,7 +250,7 @@ msgstr "ID"
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
 msgid "Invitation to activate two-factor authentication on your Odoo account"
-msgstr "Invitation til at aktivere 2-trins godkendelse på din Odoo konto"
+msgstr "Invitation til at aktivere totrinsbekræftelse på din Odoo-konto"
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -188,23 +259,22 @@ msgid ""
 "Invitation to use two-factor authentication sent for the following user(s): "
 "%s"
 msgstr ""
-"Invitation til at bruge 2-trins godkendelse og afsendt til følgende "
-"bruger(e): %s"
+"Invitation til at bruge totrinsbekræftelse sendt til følgende bruger(e): %s"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
 msgid "Invite to use 2FA"
-msgstr "Inviter til at bruge 2FA"
+msgstr "Invitér til at bruge 2FA"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
 msgid "Invite to use two-factor authentication"
-msgstr "Inviter til at bruge 2-trins godkendelse"
+msgstr "Invitér til at bruge totrinsbekræftelse"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid "Learn More"
-msgstr "Lær mere"
+msgstr "Få mere at vide"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
@@ -215,62 +285,62 @@ msgstr "Navn"
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "New Connection to your Account"
-msgstr "Ny forbindelse til din konto"
+msgstr "Ny loginaktivitet på din konto"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
 msgid "Open two-factor authentication configuration"
-msgstr "Åben 2-trins godkendelses konfiguration"
+msgstr "Åbn konfiguration for totrinsbekræftelse"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
 msgid "Re-send email"
-msgstr ""
+msgstr "Gensend e-mail"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Activated"
-msgstr ""
+msgstr "Sikkerhedsopdatering: 2FA aktiveret"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Security Update: 2FA Deactivated"
-msgstr ""
+msgstr "Sikkerhedsopdatering: 2FA deaktiveret"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/auth_totp_device.py:0
 msgid "Security Update: Device Removed"
-msgstr ""
+msgstr "Sikkerhedsopdatering: Enhed fjernet"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
 msgid "Settings: 2Fa Invitation"
-msgstr ""
+msgstr "Indstillinger: 2FA-invitation"
 
 #. module: auth_totp_mail
 #: model:mail.template,name:auth_totp_mail.mail_template_totp_mail_code
 msgid "Settings: 2Fa New Login"
-msgstr ""
+msgstr "Indstillinger for 2FA: Nyt login"
 
 #. module: auth_totp_mail
 #: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr ""
+msgstr "Retningslinjer for krav om totrinsbekræftelse"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been activated on your account"
-msgstr "To-faktor-godkendelse er blevet aktiveret på din konto"
+msgstr "Totrinsbekræftelse er blevet aktiveret på din konto"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "Two-factor authentication has been deactivated on your account"
-msgstr "To-faktor-godkendelse er blevet deaktiveret på din konto"
+msgstr "Totrinsbekræftelse er blevet deaktiveret på din konto"
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
@@ -289,13 +359,16 @@ msgid ""
 "We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
+"Vi anbefaler på det kraftigste, at du aktiverer totrinsbekræftelse via en "
+"bekræftelsesapp for at beskytte din konto.\n"
+"                <br/>"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
-msgstr "Din to-faktor godkendelseskode"
+msgstr "Din totrinsbekræftelseskode"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
 msgid "activating Two-factor Authentication"
-msgstr "Aktivering af 2-trins godkendelse"
+msgstr "at aktivere totrinsbekræftelse"

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-07-01 09:07+0000\n"
-"PO-Revision-Date: 2025-12-06 13:25+0000\n"
+"PO-Revision-Date: 2025-12-11 01:37+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "auth_totp/da/>\n"
@@ -31,13 +31,13 @@ msgstr "%(browser)s på %(platform)s"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "2-Factor Setup Wizard"
-msgstr "2-trins opsætningsguide"
+msgstr "Assistent til konfiguration af totrinsbekræftelse"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 msgid "2-Factor authentication is now enabled."
-msgstr "2-trins godkendelse er nu aktiveret."
+msgstr "Totrinsbekræftelse er nu aktiveret."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -45,8 +45,10 @@ msgid ""
 "<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
 "                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
 msgstr ""
-"<span class=\"d-md-none d-block\">Eller installer en autentificerings applikation</span>\n"
-"                                        <span class=\"d-none d-md-block\">Installer en autentificerings applikation på din mobile enhed</span>"
+"<span class=\"d-md-none d-block\">Eller installér en "
+"autentificeringsapp</span>\n"
+"                                        <span class=\"d-none d-md-block\""
+">Installér en autentificeringsapp på din mobile enhed</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -54,8 +56,10 @@ msgid ""
 "<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
 "                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
 msgstr ""
-"<span class=\"d-none d-md-block\">Når der anmodes om det, scan da stregkoden nedenfor</span>\n"
-"                                    <span class=\"d-block d-md-none\">Når der anmodes om det, kopier da nøglen nedenfor</span>"
+"<span class=\"d-none d-md-block\">Scan stregkoden nedenfor, når der anmodes "
+"om det.</span>\n"
+"                                    <span class=\"d-block d-md-none\">Kopiér "
+"nøglen nedenfor, når der anmodes om det</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -63,8 +67,8 @@ msgid ""
 "<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
 "or the Microsoft Authenticator.</span>"
 msgstr ""
-"<span class=\"text-muted\">Populære applikationer er Authy, Google "
-"Authenticato, eller Microsoft Authenticator applikationerne.</span>"
+"<span class=\"text-muted\">Blandt de mest populære er Authy, Google "
+"Authenticator og Microsoft Authenticator.</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -88,7 +92,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Added On"
-msgstr "Tilføjet Den"
+msgstr "Tilføjet den"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -96,6 +100,8 @@ msgid ""
 "Are you sure? The user may be asked to enter two-factor codes again on those"
 " devices"
 msgstr ""
+"Er du sikker? Brugeren kan blive bedt om at indtaste "
+"totrinsbekræftelseskoder igen på disse enheder"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -103,21 +109,23 @@ msgid ""
 "Are you sure? You may be asked to enter two-factor codes again on those "
 "devices"
 msgstr ""
+"Er du sikker? Du kan blive bedt om at indtaste totrinsbekræftelseskoder igen "
+"på disse enheder"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Authentication Code"
-msgstr "Godkendelseskode"
+msgstr "Bekræftelseskode"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
 msgid "Authentication Device"
-msgstr "Godkendelsesenhed"
+msgstr "Bekræftelsesenhed"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Authenticator App Setup"
-msgstr "Opsætning af godkendelsesappen"
+msgstr "Opsætning af bekræftelsesappen"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -128,17 +136,17 @@ msgstr "Annullér"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
-msgstr "Kan den ikke scannes?"
+msgstr "Kan du ikke scanne?"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Click on this link to open your authenticator app"
-msgstr "Klik på dette link for at åbne din autentificerings applikation"
+msgstr "Klik på dette link for at åbne din bekræftelsesapp"
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
 msgid "Code Checking"
-msgstr ""
+msgstr "Kontrollerer kode"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__create_uid
@@ -172,12 +180,12 @@ msgstr "Enhed"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Disable 2FA"
-msgstr "Deaktiver 2FA"
+msgstr "Deaktivér 2FA"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr "Deaktiver 2-trins godkendelse"
+msgstr "Deaktivér totrinsbekræftelse"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -196,17 +204,17 @@ msgstr "Spørg ikke igen på denne enhed"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Enable 2FA"
-msgstr "Aktiver 2FA"
+msgstr "Aktivér 2FA"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enable Two-Factor Authentication"
-msgstr ""
+msgstr "Aktivér totrinsbekræftelse"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enter your six-digit code below"
-msgstr "Angiv din seks-cifrede kode nedenfor"
+msgstr "Angiv din sekssifrede kode nedenfor"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
@@ -225,7 +233,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/auth_totp/controllers/home.py:0
 msgid "Invalid authentication code format."
-msgstr "Ugyldig godkendelses kodeformat."
+msgstr "Formatet på bekræftelseskoden er ugyldigt."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__ip
@@ -249,12 +257,12 @@ msgstr "Sidst opdateret den"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Learn More"
-msgstr "Lær mere"
+msgstr "Få mere at vide"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__limit_type
 msgid "Limit Type"
-msgstr ""
+msgstr "Begrænsningstype"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -264,7 +272,7 @@ msgstr "Log ind"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Look for an \"Add an account\" button"
-msgstr "Se efter en \"Tilføj en konto\" knap"
+msgstr "Se efter en 'Tilføj en konto'-knap"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -279,7 +287,7 @@ msgstr "På Google Play"
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
 msgid "Qrcode"
-msgstr "Qrkode"
+msgstr "QR-kode"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -291,12 +299,12 @@ msgstr "Tilbagekald"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Revoke All"
-msgstr "Tilbagekald Alle"
+msgstr "Tilbagekald alle"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
 msgid "Scope"
-msgstr "Anvendelsesområde"
+msgstr "Gyldighedsområde"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
@@ -311,13 +319,13 @@ msgstr "Send e-mail"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_rate_limit_log
 msgid "TOTP rate limit logs"
-msgstr ""
+msgstr "Protokoller til kvotebegrænsning af TOTP"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 msgid "The verification code should only contain numbers"
-msgstr "Bekræftelses koden bør kun indeholde tal"
+msgstr "Bekræftelseskoden bør udelukkende bestå af tal"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -325,38 +333,39 @@ msgid ""
 "To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
 "                        <br/>"
 msgstr ""
-"For at logge ind, skal du nedenfor angive den seks-cifrede autentificeringskode tildelt via Autentificerings applikationen.\n"
+"For at logge ind skal du nedenfor indtaste den sekscifrede bekræftelseskode, "
+"der er genereret i din bekræftelsesapp.\n"
 "                       <br/>"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_last_counter
 msgid "Totp Last Counter"
-msgstr ""
+msgstr "Sidste TOPT-tæller"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
-msgstr "Totp Hemmelig"
+msgstr "TOPT-hemmelig"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Trusted Devices"
-msgstr "Betroede Enheder"
+msgstr "Pålidelige enheder"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-Factor Authentication Activation"
-msgstr "Aktivering af 2-trins godkendelse"
+msgstr "Aktivering af totrinsbekræftelse"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
-msgstr "2-trins godkendelse"
+msgstr "Totrinsbekræftelse"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -366,44 +375,50 @@ msgid ""
 "                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"Totrinsbekræftelse (2FA) er en metode, hvor du bekræfter din identitet i to "
+"separate trin.\n"
+"                        Først logger du ind med din adgangskode, og derefter "
+"indtaster du en kode, som genereres i en dedikeret autentificeringsapp.\n"
+"                        Blandt de mest populære apps er Authy, Google "
+"Authenticator og Microsoft Authenticator."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
-msgstr "2-trins godkendelse"
+msgstr "Totrinsbekræftelse"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Disabled"
-msgstr "2-trins godkendelse deaktiveret"
+msgstr "Totrinsbekræftelse deaktiveret"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Enabled"
-msgstr "2-trins godkendelse aktiveret"
+msgstr "Totrinsbekræftelse aktiveret"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication already enabled"
-msgstr "2-trins godkendelse allerede aktiveret"
+msgstr "Totrinsbekræftelse allerede aktiveret"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr "2-trins godkendelse kan kun aktiveres for dig selv"
+msgstr "Totrinsbekræftelse kan kun aktiveres for dig selv"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication disabled for the following user(s): %s"
-msgstr "2-trins godkendelse deaktiveret for følgende bruger(e): %s"
+msgstr "Totrinsbekræftelse deaktiveret for følgende bruger(e): %s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
 msgid "Url"
-msgstr "Adresse"
+msgstr "URL"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_res_users
@@ -417,7 +432,7 @@ msgstr "Bruger"
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__code
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Verification Code"
-msgstr "Bekræftelses kode"
+msgstr "Bekræftelseskode"
 
 #. module: auth_totp
 #. odoo-python
@@ -430,7 +445,7 @@ msgstr "Bekræftelse slog fejl, vær venlig at tjekke den 6-cifrede kode"
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Verification failed, please use the latest 6-digit code"
-msgstr ""
+msgstr "Verificeringen mislykkedes. Kontrollér venligst den sekscifrede kode"
 
 #. module: auth_totp
 #. odoo-python
@@ -439,6 +454,8 @@ msgid ""
 "You reached the limit of authentication mails sent for your account, please "
 "try again later."
 msgstr ""
+"Du har nået grænsen for, hvor mange godkendelsesmails der kan sendes til din "
+"konto. Prøv igen senere."
 
 #. module: auth_totp
 #. odoo-python
@@ -447,6 +464,8 @@ msgid ""
 "You reached the limit of code verifications for your account, please try "
 "again later."
 msgstr ""
+"Du har nået grænsen for kodeverifikationer på din konto. Prøv venligst igen "
+"senere."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-20 10:02+0000\n"
-"PO-Revision-Date: 2025-12-06 13:24+0000\n"
+"PO-Revision-Date: 2025-12-08 15:00+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "auth_ldap/da/>\n"
@@ -38,25 +38,44 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    Dette filter bruges til at søge efter brugerkonti i LDAP-databasen. Det "
+"skal angives som et    vilkårligt LDAP-filter i strengform. Alle `%s`-"
+"pladsholdere    erstattes automatisk med det login (identifikator), som "
+"brugeren indtaster. Filteret    skal indeholde mindst én sådan pladsholder.\n"
+"\n"
+"    Filteret skal returnere præcis ét (1) resultat; ellers betragtes    "
+"loginet som ugyldigt.\n"
+"\n"
+"    Eksempel "
+"(faktiske attributter afhænger af LDAP-serveren og den konkrete opsætning):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "An error occurred: %(error)s"
-msgstr ""
+msgstr "Der opstod en fejl: %(error)s"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
 msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
-msgstr "Opretter automatisk ny lokal bruger når ny bruger logger på via LDAP"
+msgstr "Opret automatisk brugerkonti for nye brugere, der logger ind via LDAP"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Cannot contact LDAP server at %(server)s:%(port)d"
 msgstr ""
+"Det er ikke muligt at oprette forbindelse til LDAP-serveren på %(server)s:%"
+"(port)d"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -71,7 +90,7 @@ msgstr "Virksomhed"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr "Virksomhed LDAP konfiguration"
+msgstr "LDAP-konfiguration for virksomheder"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
@@ -82,19 +101,19 @@ msgstr "Konfigurationsindstillinger"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection Test Failed!"
-msgstr ""
+msgstr "Forbindelsestest mislykkedes!"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection Test Successful!"
-msgstr "Forbindelsestest Vellykket!"
+msgstr "Forbindelsestest lykkedes!"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection to LDAP server at %(server)s:%(port)d timed out"
-msgstr ""
+msgstr "Forbindelsen til LDAP-server på %(server)s:%(port)d er udløbet"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -117,8 +136,7 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
-"DN for brugersøgningsomfanget: alle efterkommere af denne base vil blive "
-"søgt efter brugere."
+"DN for bruger-søgning: Søgningen omfatter alle objekter under denne base."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
@@ -140,54 +158,54 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Invalid credentials for bind DN %(binddn)s"
-msgstr ""
+msgstr "Ugyldige legitimationsoplysninger for bind DN %(binddn)s"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "LDAP Configuration"
-msgstr "LDAP konfiguration"
+msgstr "LDAP-konfiguration"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
 msgid "LDAP Parameters"
-msgstr "LDAP parametre"
+msgstr "LDAP-parametre"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_config_settings_view_form
 msgid "LDAP Server"
-msgstr "LDAP Server"
+msgstr "LDAP-server"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr "LDAP server adresse"
+msgstr "LDAP-serveradresse"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr "LDAP server port"
+msgstr "LDAP-serverport"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
-msgstr "LDAP base"
+msgstr "LDAP-base"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr "LDAP bind dn"
+msgstr "LDAP-binddn"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
 msgid "LDAP filter"
-msgstr "LDAP filter"
+msgstr "LDAP-filter"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_password
 msgid "LDAP password"
-msgstr "LDAP kodeord"
+msgstr "LDAP-adgangskode"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
@@ -202,20 +220,20 @@ msgstr "Sidst opdateret den"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr "Login-information"
+msgstr "Loginoplysninger"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
-"Ingen lokal bruger er fundet for LDAP login og den er ikke konfigureret til "
-"at oprette en"
+"Ingen lokal bruger fundet for LDAP-login, og automatisk oprettelse af bruger "
+"er ikke konfigureret"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr "Proces parametre"
+msgstr "Procesparameter"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
@@ -224,8 +242,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
-"Kræv sikker TLS/SSL kryptering ved tilslutning til LDAP server. Denne option "
-"kræver server med STARTTLS aktiveret, ellers fejler godkendelse."
+"Kræv sikker TLS/SSL-kryptering ved forbindelse til LDAP-serveren. Denne "
+"indstilling kræver en server med STARTTLS aktiveret; ellers vil "
+"autentificeringen fejle."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -235,35 +254,37 @@ msgstr "Sekvens"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Server Information"
-msgstr "Serverinformation"
+msgstr "Serveroplysninger"
 
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr "Indstillinger for LDAP-server"
+msgstr "Opsætning af din LDAP-server"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Successfully connected to LDAP server at %(server)s:%(port)d"
-msgstr ""
+msgstr "Forbindelsen til LDAP-server lykkedes på %(server)s:%(port)d"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
 msgid "Template User"
-msgstr "Skabelon bruger"
+msgstr "Brugerskabelon"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Test Connection"
-msgstr "Test forbindelse"
+msgstr "Testforbindelse"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
 msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
-msgstr "Brugers kodeord på LDAP server, bruges ved søgning i directory"
+msgstr ""
+"Adgangskoden til brugerkontoen på LDAP-serveren, som anvendes til opslag i "
+"telefonbogen."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
@@ -271,8 +292,8 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
-"Bruger konto på LDAP server bruges ved søgning i directory. Hvis tomt logges"
-" på anonymt."
+"LDAP-brugerkontoen anvendes til opslag i telefonbogen. Lad feltet stå tomt "
+"for at logge på anonymt."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
@@ -287,9 +308,9 @@ msgstr "Bruger"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr "Brugerinformation"
+msgstr "Brugeroplysninger"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
-msgstr "Kopier fra bruger ved oprettelse af ny bruger"
+msgstr "Bruger, der kopieres ved oprettelse af nye brugere"

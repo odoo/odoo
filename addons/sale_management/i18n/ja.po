@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:06+0000\n"
-"PO-Revision-Date: 2025-11-21 07:22+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"PO-Revision-Date: 2025-12-11 04:32+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s18-4/"
 "sale_management/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -204,7 +204,9 @@ msgstr "表示タイプ"
 #. odoo-python
 #: code:addons/sale_management/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "アクセス権がありません。ユーザのレポートメール用にこのデータをスキップしてください"
+msgstr ""
+"アクセス権がありません。ユーザのレポートメール用にこのデータをスキップしてく"
+"ださい"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -250,14 +252,16 @@ msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
 msgstr ""
-"設定した場合には、このテンプレートを使用した販売オーダは、この仕訳帳に請求されます。 それ以外の場合は、最も低い順序の販売仕訳帳が使用されます。"
+"設定した場合には、このテンプレートを使用した販売オーダは、この仕訳帳に請求さ"
+"れます。 それ以外の場合は、最も低い順序の販売仕訳帳が使用されます。"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
 msgid ""
 "If unchecked, it will allow you to hide the quotation template without "
 "removing it."
-msgstr "チェックを外すと、見積テンプレートを削除せずに非表示にすることができます"
+msgstr ""
+"チェックを外すと、見積テンプレートを削除せずに非表示にすることができます"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
@@ -497,7 +501,9 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
-"同じプロダクトを異なるサイズや色で販売していますか？プロダクトグリッドを試して、各バリアントを複数の数量でオーダを追加して下さい。この機能は購買アプリケーションにもあります。"
+"同じプロダクトを異なるサイズや色で販売していますか？プロダクトグリッドを試し"
+"て、各バリアントを複数の数量でオーダを追加して下さい。この機能は購買アプリ"
+"ケーションにもあります。"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -513,7 +519,9 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
-"複雑なプロダクトカタログでお困りですか？色、サイズ、容量など、さまざまなオプションでプロダクトを構成できるプロダクト設定をお試しし下さい。販売オーダのエンコーディングをより簡単に、ミスのないものにしましょう。"
+"複雑なプロダクトカタログでお困りですか？色、サイズ、容量など、さまざまなオプ"
+"ションでプロダクトを構成できるプロダクト設定をお試しし下さい。販売オーダのエ"
+"ンコーディングをより簡単に、ミスのないものにしましょう。"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -523,33 +531,40 @@ msgstr "諸条件"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__note
 msgid "Terms and conditions"
-msgstr "諸条件"
+msgstr "取引条件"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid ""
 "The Administrator can set default Terms & Conditions in Sales Settings. "
 "Terms set here will show up instead if you select this quotation template."
-msgstr "管理者はデフォルトの諸条件を販売の設定でセットできます。この見積テンプレートを選択した場合、ここで設定した条件が代わりに表示されます。"
+msgstr ""
+"管理者はデフォルトの諸条件を販売の設定でセットできます。この見積テンプレート"
+"を選択した場合、ここで設定した条件が代わりに表示されます。"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
-msgstr "見積書を確定するために顧客が支払わなければならない必要金額のパーセンテージ。"
+msgstr ""
+"見積書を確定するために顧客が支払わなければならない必要金額のパーセンテージ。"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
 msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
-msgstr "この電子メールテンプレートは確認時に送信されます。 何も送らないようにするには空のままにしておきます。"
+msgstr ""
+"この電子メールテンプレートは確認時に送信されます。 何も送らないようにするには"
+"空のままにしておきます。"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
 msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
-msgstr "このフィールドは、オプション明細のプロダクトがすでに見積書に存在する場合にチェックされます。"
+msgstr ""
+"このフィールドは、オプション明細のプロダクトがすでに見積書に存在する場合に"
+"チェックされます。"
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
@@ -586,10 +601,12 @@ msgstr "単価:"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"テンプレートを使って、洗練されたプロフェッショナルな見積書を数分で作成できます。\n"
+"テンプレートを使って、洗練されたプロフェッショナルな見積書を数分で作成できま"
+"す。\n"
 "これらの見積書をEメールで送信し、顧客にオンラインで署名してもらいましょう。\n"
 "クロスセルや値引を利用して、売上をアップしましょう。"
 
@@ -610,33 +627,54 @@ msgstr "確認済みの注文にオプションを追加することはできま
 msgid ""
 "You cannot change the type of a sale quote line. Instead you should delete "
 "the current line and create a new line of the proper type."
-msgstr "販売見積書明細のタイプを変更することはできません。代わりに、現在の明細を削除し、適切なタイプの新しい明細を作成する必要があります。"
+msgstr ""
+"販売見積書明細のタイプを変更することはできません。代わりに、現在の明細を削除"
+"し、適切なタイプの新しい明細を作成する必要があります。"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"見積もりには会社%(product_company)sのプロダクトが含まれていますが、見積もりは会社%(quote_company)sに属しています。\n"
-"見積もりの 会社を変更するか、他の会社からプロダクトを削除してください(%(bad_products)s)。"
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "テンプレートに複数の企業のプロダクトを含めることはできません。"
+"見積もりには会社%(product_company)sのプロダクトが含まれていますが、見積もりは"
+"会社%(quote_company)sに属しています。\n"
+"見積もりの 会社を変更するか、他の会社からプロダクトを削除してください(%"
+"(bad_products)s)。"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"テンプレートには会社のプロダクト%(product_company)sが含まれていますが、テンプレートは会社%(template_company)sに属しています。\n"
-"テンプレートの会社を変更するか、他の会社のプロダクトを削除して下さい。"
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -647,3 +685,16 @@ msgstr "日"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "例：標準コンサルティング・パッケージ"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "テンプレートに複数の企業のプロダクトを含めることはできません。"
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "テンプレートには会社のプロダクト%(product_company)sが含まれていますが、テ"
+#~ "ンプレートは会社%(template_company)sに属しています。\n"
+#~ "テンプレートの会社を変更するか、他の会社のプロダクトを削除して下さい。"

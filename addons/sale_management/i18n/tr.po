@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 09:06+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
 "PO-Revision-Date: 2025-07-01 13:07+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: sale_management
@@ -519,8 +519,8 @@ msgid ""
 msgstr ""
 "Karmaşık bir ürün kataloğuyla mı mücadele ediyorsunuz? Satışların bir ürünü "
 "farklı seçeneklerle yapılandırmasına yardımcı olmak için Ürün "
-"Yapılandırıcısını deneyin: renkler, boyut, kapasite, vb. Satış siparişlerini"
-" kodlamayı daha kolay ve hatasız hale getirin."
+"Yapılandırıcısını deneyin: renkler, boyut, kapasite, vb. Satış siparişlerini "
+"kodlamayı daha kolay ve hatasız hale getirin."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -598,12 +598,16 @@ msgstr "Birim Fiyat:"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
-"Birkaç dakika içinde özenilmiş, profesyonel teklifler oluşturmak için şablonları kullanın.\n"
-"                Bu teklifleri e-postayla gönderin ve müşterilerinizin çevrimiçi olarak imzalamasına izin verin.\n"
-"                Satışlarınızı artırmak ve güçlendirmek için çapraz satış ve indirimleri kullanın."
+"Birkaç dakika içinde özenilmiş, profesyonel teklifler oluşturmak için "
+"şablonları kullanın.\n"
+"                Bu teklifleri e-postayla gönderin ve müşterilerinizin "
+"çevrimiçi olarak imzalamasına izin verin.\n"
+"                Satışlarınızı artırmak ve güçlendirmek için çapraz satış ve "
+"indirimleri kullanın."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -630,27 +634,46 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"Teklifiniz %(product_company)s şirketindeki ürünleri içerirken, teklifiniz%(quote_company)s. \n"
-"şirketine aittir. Lütfen teklifinizin şirketini değiştirin veya ürünleri diğer şirketlerden kaldırın (%(bad_products)s)."
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "Şablonunuz birden fazla şirketten ürün içeremez."
+"Teklifiniz %(product_company)s şirketindeki ürünleri içerirken, teklifiniz%"
+"(quote_company)s. \n"
+"şirketine aittir. Lütfen teklifinizin şirketini değiştirin veya ürünleri "
+"diğer şirketlerden kaldırın (%(bad_products)s)."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-" Şablonunuz %(product_company)s şirketten ürünler içeriyor,  şablonunuz %(template_company)s şirkete aitken. \n"
-" Lütfen şablonunuzun firmasını değiştirin veya diğer firmalardan ürünleri kaldırın."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -661,3 +684,17 @@ msgstr "gün"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "örn. Standart Danışmanlık Paketi"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "Şablonunuz birden fazla şirketten ürün içeremez."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ " Şablonunuz %(product_company)s şirketten ürünler içeriyor,  şablonunuz %"
+#~ "(template_company)s şirkete aitken. \n"
+#~ " Lütfen şablonunuzun firmasını değiştirin veya diğer firmalardan ürünleri "
+#~ "kaldırın."

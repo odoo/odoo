@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-03 08:43+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, "
 "2022\n"
@@ -85,17 +85,17 @@ msgid "All Sales"
 msgstr "Sve prodaje"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr ""
+
+#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Archived"
 msgstr "Arhivirano"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_uom_category_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_category_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid "Category"
-msgstr "Kategorija"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_company
@@ -103,6 +103,7 @@ msgid "Companies"
 msgstr "Preduzeća"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__company_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__company_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__company_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__company_id
@@ -119,17 +120,6 @@ msgstr "Podešavanje konfiguracije"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
 msgid "Confirmation Mail"
 msgstr "Mail za potvrdu"
-
-#. module: sale_management
-#: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
-#: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Do konverzije između mernih jedinica može doć́i samo ako pripadaju istoj "
-"kategoriji. Konverzija će se izvršiti na osnovu odnosa."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -194,6 +184,11 @@ msgid "Discount (%)"
 msgstr "Popust (%)"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:sale_management.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_name
@@ -240,6 +235,11 @@ msgid "Group By"
 msgstr "Grupiši po"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_digest_digest__id
+#: model:ir.model.fields,field_description:sale_management.field_res_company__id
+#: model:ir.model.fields,field_description:sale_management.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__id
@@ -272,11 +272,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
 msgid "Kpi All Sale Total Value"
 msgstr "Kpi Ukupna vrednost svih prodaja"
-
-#. module: sale_management
-#: model:sale.order.template.line,name:sale_management.sale_order_template_line_1
-msgid "Large Meeting Table"
-msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__write_uid
@@ -322,11 +317,6 @@ msgstr "Beleška"
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__number_of_days
 msgid "Number of days for the validity date computation of the quotation"
 msgstr "Broj dana za računanje validnosti ponude"
-
-#. module: sale_management
-#: model:sale.order.template.option,name:sale_management.sale_order_template_option_1
-msgid "Office Chair"
-msgstr "Kancelarijska stolica"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__require_payment
@@ -595,6 +585,13 @@ msgid "Tip: Sell or buy products in bulk with matrixes"
 msgstr "Savet: Prodajte ili kupujte proizvode na veliko sa matricama"
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
+msgid "Unit"
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -605,18 +602,6 @@ msgstr "Jedinična cena"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 msgid "Unit Price:"
 msgstr "Jedinična cena:"
-
-#. module: sale_management
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
-#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
-msgid "Unit of Measure"
-msgstr "Jedinica Mere"
-
-#. module: sale_management
-#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
-msgid "UoM"
-msgstr "JM"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
@@ -632,6 +617,11 @@ msgstr ""
 "da ih potpišu online.\n"
 "                Koristite cross-selling i popuste da biste pogurali i "
 "pojačali vašu prodaju."
+
+#. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+msgid "Visible to all"
+msgstr ""
 
 #. module: sale_management
 #. odoo-python
@@ -666,22 +656,33 @@ msgstr ""
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "Vaš šablon ne može da sadrži proizvod od više kompanija."
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas "
-"your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from "
-"other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Vaš šablon sadrži proizvode od kompanije %(product_company)s dok vaš šablon "
-"pripada kompaniji %(template_company)s. \n"
-" Molimo promenite kompaniju svog šablona ili uklonite proizvode drugih "
-"kompanija."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -692,6 +693,39 @@ msgstr "dana"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "npr. Standardni konsalting paket"
+
+#~ msgid "Category"
+#~ msgstr "Kategorija"
+
+#~ msgid ""
+#~ "Conversion between Units of Measure can only occur if they belong to the "
+#~ "same category. The conversion will be made based on the ratios."
+#~ msgstr ""
+#~ "Do konverzije između mernih jedinica može doć́i samo ako pripadaju istoj "
+#~ "kategoriji. Konverzija će se izvršiti na osnovu odnosa."
+
+#~ msgid "Office Chair"
+#~ msgstr "Kancelarijska stolica"
+
+#~ msgid "Unit of Measure"
+#~ msgstr "Jedinica Mere"
+
+#~ msgid "UoM"
+#~ msgstr "JM"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "Vaš šablon ne može da sadrži proizvod od više kompanija."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Vaš šablon sadrži proizvode od kompanije %(product_company)s dok vaš "
+#~ "šablon pripada kompaniji %(template_company)s. \n"
+#~ " Molimo promenite kompaniju svog šablona ili uklonite proizvode drugih "
+#~ "kompanija."
 
 #~ msgid "4 Person Desk"
 #~ msgstr "Sto za 4 osobe"
