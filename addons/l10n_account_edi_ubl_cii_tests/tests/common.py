@@ -17,7 +17,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.other_currency = cls.setup_other_currency('USD', rounding=0.001)
+        cls.other_currency = cls.setup_other_currency('USD')
 
         # Required for `product_uom_id` to be visible in the form views
         cls.env.user.groups_id += cls.env.ref('uom.group_uom')

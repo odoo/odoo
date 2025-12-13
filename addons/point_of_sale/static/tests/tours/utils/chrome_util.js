@@ -91,6 +91,12 @@ export function clickBtn(name, { expectUnloadPage = false } = {}) {
         expectUnloadPage,
     };
 }
+export function hasBtn(name) {
+    return {
+        content: `Check button ${name} exist`,
+        trigger: `body button:contains(${name})`,
+    };
+}
 export function fillTextArea(target, value) {
     return {
         content: `Fill text area with ${value}`,

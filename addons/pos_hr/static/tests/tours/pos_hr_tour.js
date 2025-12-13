@@ -257,3 +257,54 @@ registry.category("web_tour.tours").add("pos_hr_go_backend_opened_registered", {
             Chrome.clickMenuOption("Backend", { expectUnloadPage: true }),
         ].flat(),
 });
+
+registry
+    .category("web_tour.tours")
+    .add("pos_hr_go_backend_opened_registered_different_user_logged", {
+        steps: () =>
+            [
+                Chrome.clickBtn("Unlock Register"),
+                PosHr.clickLoginButton(),
+
+                // Employee, connected user
+                SelectionPopup.has("Pos Employee1", { run: "click" }),
+                PosHr.enterPin("2580"),
+                Chrome.existMenuOption("Backend"),
+
+                // Manager that opened the session, not connected user
+                PosHr.clickCashierName(),
+                SelectionPopup.has("Test Manager 1", { run: "click" }),
+                PosHr.enterPin("5651"),
+                Chrome.notExistMenuOption("Backend"),
+            ].flat(),
+    });
+
+registry.category("web_tour.tours").add("test_maximum_closing_difference", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            ProductScreen.enterOpeningAmount("10"),
+            Chrome.clickBtn("Open Register"),
+
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Manager 2", { run: "click" }),
+            PosHr.enterPin("5652"),
+            Chrome.clickMenuOption("Close Register"),
+            Chrome.clickBtn("Close Register"),
+            {
+                trigger: negate(`button:contains("Proceed anyway")`),
+            },
+            Chrome.clickBtn("Ok"),
+            Chrome.clickBtn("Discard"),
+
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Chrome.clickMenuOption("Close Register"),
+            Chrome.clickBtn("Close Register"),
+            Chrome.hasBtn("Proceed anyway"),
+            Chrome.clickBtn("Proceed anyway"),
+            PosHr.loginScreenIsShown(),
+        ].flat(),
+});

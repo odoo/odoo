@@ -399,6 +399,7 @@ export const accountTaxHelpers = {
 
         // Mark the base to be computed in the descending order. The order doesn't matter for no special mode or 'total_excluded' but
         // it must be in the reverse order when special_mode is 'total_included'.
+        const subsequent_taxes = [];
         for (const tax of sorted_taxes.toReversed()) {
             const tax_data = taxes_data[tax.id];
             if (!("tax_amount" in tax_data)) {
@@ -428,10 +429,21 @@ export const accountTaxHelpers = {
             }
             tax_data.base = base;
 
+            // Subsequence taxes.
+            tax_data.taxes = [];
+            if (tax.include_base_amount) {
+                tax_data.taxes.push(...subsequent_taxes);
+            }
+
             // Reverse charge.
             if (tax.has_negative_factor) {
                 const reverse_charge_tax_data = reverse_charge_taxes_data[tax.id];
                 reverse_charge_tax_data.base = base;
+                reverse_charge_tax_data.taxes = tax_data.taxes;
+            }
+
+            if (tax.is_base_affected) {
+                subsequent_taxes.push(tax);
             }
         }
 
@@ -554,7 +566,7 @@ export const accountTaxHelpers = {
             || {}
         )
 
-        return {
+        const base_line = {
             ...kwargs,
             record: record,
             id: load('id', 0),
@@ -574,6 +586,17 @@ export const accountTaxHelpers = {
             manual_tax_amounts: load("manual_tax_amounts", null),
             filter_tax_function: load("filter_tax_function", null),
         }
+
+        // Propagate custom values.
+        if (record && typeof record === "object") {
+            for (const [k, v] of Object.entries(record)) {
+                if (k && typeof k === "string" && k.startsWith("_") && !(k in base_line)) {
+                    base_line[k] = v;
+                }
+            }
+        }
+
+        return base_line;
     },
 
     /**
@@ -647,6 +670,17 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
+    normalize_target_factors(target_factors) {
+        const factors = target_factors.map((x, i) => [i, Math.abs(x.factor)]);
+        factors.sort((a, b) => b[1] - a[1]);
+        const sum_of_factors = factors.reduce((sum, x) => sum + x[1], 0.0);
+        return factors.map((x) => [x[0], sum_of_factors ? x[1] / sum_of_factors : 0.0]);
+    },
+
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
     distribute_delta_amount_smoothly(precision_digits, delta_amount, target_factors) {
         const precision_rounding = Number(`1e-${precision_digits}`);
         const amounts_to_distribute = target_factors.map((x) => 0.0);
@@ -658,27 +692,27 @@ export const accountTaxHelpers = {
         const nb_of_errors = Math.round(Math.abs(delta_amount / precision_rounding));
         let remaining_errors = nb_of_errors;
 
-        // Take absolute value of factors and sort them by largest absolute value first
-        const factors = target_factors.map((x, i) => [i, Math.abs(x.factor)]);
-        factors.sort((a, b) => b[1] - a[1]);
-        const sum_of_factors = factors.reduce((sum, x) => sum + x[1], 0.0);
-        if (sum_of_factors === 0.0) {
-            return amounts_to_distribute;
-        }
-
+        // Distribute using the factor first.
+        const factors = this.normalize_target_factors(target_factors);
         for (const [i, factor] of factors) {
-            if (remaining_errors === 0) {
+            if (!remaining_errors) {
                 break;
             }
 
             const nb_of_amount_to_distribute = Math.min(
-                Math.ceil(Math.abs(factor / sum_of_factors * nb_of_errors)),
+                Math.round(factor * nb_of_errors),
                 remaining_errors
             );
-
             remaining_errors -= nb_of_amount_to_distribute;
             const amount_to_distribute = sign * nb_of_amount_to_distribute * precision_rounding;
             amounts_to_distribute[i] += amount_to_distribute;
+        }
+
+        // Distribute the remaining cents across the factors.
+        // There are sorted by the biggest first.
+        // Since the factors are normalized, the residual number of cents can't be higher than the number of factors.
+        for (let i = 0; i < remaining_errors; i++) {
+            amounts_to_distribute[factors[i][0]] += sign * precision_rounding;
         }
 
         return amounts_to_distribute;
@@ -811,7 +845,7 @@ export const accountTaxHelpers = {
             return {
                 is_refund: base_line.is_refund,
                 currency: base_line.currency_id,
-            }
+            };
         }
 
         const base_lines_aggregated_values = this.aggregate_base_lines_tax_details(
@@ -1042,7 +1076,7 @@ export const accountTaxHelpers = {
                 return;
             }
             return tax_data.tax.tax_group_id;
-        }
+        };
 
         base_lines_aggregated_values = this.aggregate_base_lines_tax_details(base_lines, tax_group_grouping_function);
         values_per_grouping_key = this.aggregate_base_lines_aggregated_values(base_lines_aggregated_values);
@@ -1255,7 +1289,11 @@ export const accountTaxHelpers = {
 
             let raw_grouping_key = grouping_function(base_line, tax_data);
             let grouping_key;
-            if (raw_grouping_key && typeof raw_grouping_key === "object" && "raw_grouping_key" in raw_grouping_key) {
+            if (
+                raw_grouping_key &&
+                typeof raw_grouping_key === "object" &&
+                "raw_grouping_key" in raw_grouping_key
+            ) {
                 // TODO: TO BE REMOVED IN MASTER (here for retro-compatibility)
                 // There is no FrozenDict in javascript.
                 // When the key is a record, it can't be jsonified so this is a trick to provide both the

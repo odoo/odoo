@@ -1499,6 +1499,7 @@ class AccountMove(models.Model):
             rate=rate,
             sign=sign,
             special_mode=False if is_invoice else 'total_excluded',
+            name=product_line.name,
         )
 
     def _prepare_epd_base_line_for_taxes_computation(self, epd_line):
@@ -5085,7 +5086,10 @@ class AccountMove(models.Model):
             # lines are recomputed accordingly.
             if not invoice.invoice_date:
                 if invoice.is_sale_document(include_receipts=True):
+                    invoice_currency_rate_inserted = invoice.invoice_currency_rate
                     invoice.invoice_date = fields.Date.context_today(self)
+                    if invoice_currency_rate_inserted != invoice.expected_currency_rate:
+                        invoice.invoice_currency_rate = invoice_currency_rate_inserted
                 elif invoice.is_purchase_document(include_receipts=True):
                     validation_msgs.add(_("The Bill/Refund date is required to validate this document."))
 

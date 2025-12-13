@@ -72,7 +72,7 @@ paymentForm.include({
             const paypalSDKURL = this.paypalData[paymentOptionId]['sdkURL']
             const enabledButton = this.paypalData[paymentOptionId]['enabledButton']
             const disabledButton = this.paypalData[paymentOptionId]['disabledButton']
-            await loadJS(paypalSDKURL);
+            await this._paypalLoadSDK(paypalSDKURL);
             enabledButton?.show();
             disabledButton?.show(); // TODO Compatibility layer; remove the ? in master.
         }
@@ -89,7 +89,7 @@ paymentForm.include({
             const paypalSDKURL = `https://www.paypal.com/sdk/js?client-id=${
                 client_id}&components=buttons&currency=${currency_code}&intent=capture`
             this.paypalData[paymentOptionId]['sdkURL'] = paypalSDKURL;
-            await loadJS(paypalSDKURL);
+            await this._paypalLoadSDK(paypalSDKURL);
 
             // Create the two PayPal buttons. See https://developer.paypal.com/sdk/js/reference.
             const enabledButton = paypal.Buttons({
@@ -133,6 +133,22 @@ paymentForm.include({
         document.getElementById('o_paypal_button')?.classList.remove('d-none'); // TODO Compatibility layer; to remove in master.
         document.getElementById('o_paypal_button_container')?.classList.remove('d-none');  // TODO Compatibility layer; remove the ? in master.
         this.selectedOptionId = paymentOptionId;
+    },
+
+    /**
+     * Load the JS from the PayPal SDK URL and set an identifier dedicated to Odoo, for PayPal to be 
+     * able to recognize which transactions are originating from Odoo.
+     * 
+     * @private
+     * @param {string} paypalSDKURL - The SDK URL that needs to be loaded on the page.
+     * @return {void}
+     */
+    async _paypalLoadSDK(paypalSDKURL) {
+        await loadJS(paypalSDKURL);
+        const paypalSDKs = document.querySelectorAll(`script[src="${paypalSDKURL}"]`);
+        [...paypalSDKs].forEach(sdk => {
+            sdk.setAttribute('data-partner-attribution-id', 'OdooInc_SP_EC');
+        });
     },
 
     // #=== PAYMENT FLOW ===#

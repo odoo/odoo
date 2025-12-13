@@ -9,6 +9,7 @@ class TestUBLROCommon(TestUBLCommon):
     @TestUBLCommon.setup_country('ro')
     def setUpClass(cls):
         super().setUpClass()
+        cls.other_currency = cls.setup_other_currency('EUR')
         cls.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'False')
         cls.company_data['company'].write({
             'country_id': cls.env.ref('base.ro').id,  # needed to compute peppol_endpoint based on VAT

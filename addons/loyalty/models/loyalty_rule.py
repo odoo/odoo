@@ -86,16 +86,22 @@ class LoyaltyRule(models.Model):
             if rule.reward_point_split and (rule.program_id.applies_on == 'both' or rule.program_id.program_type == 'ewallet'):
                 raise ValidationError(_('Split per unit is not allowed for Loyalty and eWallet programs.'))
 
-    @api.constrains('code')
+    @api.constrains('code', 'active')
     def _constrains_code(self):
-        mapped_codes = self.filtered('code').mapped('code')
+        mapped_codes = self.filtered(lambda r: r.code and r.active).mapped('code')
         # Program code must be unique
         if len(mapped_codes) != len(set(mapped_codes)) or\
-            self.env['loyalty.rule'].search_count(
-                [('mode', '=', 'with_code'), ('code', 'in', mapped_codes), ('id', 'not in', self.ids)]):
+            self.env['loyalty.rule'].search_count([
+                ('mode', '=', 'with_code'),
+                ('code', 'in', mapped_codes),
+                ('id', 'not in', self.ids),
+                ('active', '=', True),
+            ]):
             raise ValidationError(_('The promo code must be unique.'))
         # Prevent coupons and programs from sharing a code
-        if self.env['loyalty.card'].search_count([('code', 'in', mapped_codes)]):
+        if self.env['loyalty.card'].search_count([
+            ('code', 'in', mapped_codes), ('active', '=', True)
+        ]):
             raise ValidationError(_('A coupon with the same code was found.'))
 
     @api.depends('mode')
