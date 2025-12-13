@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="via_suite_base.list">
+      <field name="name">via_suite_base list</field>
+      <field name="model">via_suite_base.via_suite_base</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </list>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="via_suite_base.action_window">
+      <field name="name">via_suite_base window</field>
+      <field name="res_model">via_suite_base.via_suite_base</field>
+      <field name="view_mode">list,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="via_suite_base.action_server">
+      <field name="name">via_suite_base server</field>
+      <field name="model_id" ref="model_via_suite_base_via_suite_base"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="via_suite_base" id="via_suite_base.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="via_suite_base.menu_1" parent="via_suite_base.menu_root"/>
+    <menuitem name="Menu 2" id="via_suite_base.menu_2" parent="via_suite_base.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="via_suite_base.menu_1_list" parent="via_suite_base.menu_1"
+              action="via_suite_base.action_window"/>
+    <menuitem name="Server to list" id="via_suite_base" parent="via_suite_base.menu_2"
+              action="via_suite_base.action_server"/>
+-->
+  </data>
+</odoo>
