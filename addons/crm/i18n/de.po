@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-12-04 14:03+0000\n"
+"PO-Revision-Date: 2025-12-12 11:22+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/crm/de/>\n"
 "Language: de\n"
@@ -28,17 +28,17 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
 msgid "# Leads/Opps assigned this month"
-msgstr "# diesen Monat zugewiesenen Leads/Verkaufschancen"
+msgstr "Anzahl der diesen Monat zugewiesenen Leads/Verkaufschancen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__number_of_months
 msgid "# Months"
-msgstr "# Monate"
+msgstr "Anzahl Monate"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
 msgid "# Unassigned Leads"
-msgstr "# Nicht zugewiesene Leads"
+msgstr "Anzahl nicht zugewiesener Leads"
 
 #. module: crm
 #. odoo-python
@@ -171,8 +171,8 @@ msgid ""
 "<i title=\"Update now\" role=\"img\" aria-label=\"Update now\" class=\"fa fa-"
 "fw fa-refresh\"/>"
 msgstr ""
-"<i title=\"Update now\" role=\"img\" aria-label=\"Jetzt aktualisieren\" "
-"class=\"fa fa-fw fa-refresh\"/>"
+"<i title=\"Jetzt aktualisieren\" role=\"img\" aria-label="
+"\"Jetzt aktualisieren\" class=\"fa fa-fw fa-refresh\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -181,9 +181,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "invisible=\"not partner_email_update\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
-"title=\"Wenn Sie diese Änderung speichern, wird die E-Mail-Adresse des "
-"Kunden ebenfalls aktualisiert.\" invisible=\"not partner_email_update\"/>"
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title="
+"\"Wenn Sie diese Änderung speichern, wird die E-Mail-Adresse des Kunden "
+"ebenfalls aktualisiert.\" invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -192,8 +192,8 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
-"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
-"title=\"Wenn Sie diese Änderung speichern, wird die Telefonnummer des Kunden "
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" title="
+"\"Wenn Sie diese Änderung speichern, wird die Telefonnummer des Kunden "
 "ebenfalls aktualisiert.\" invisible=\"not partner_phone_update\"/>"
 
 #. module: crm
@@ -204,10 +204,10 @@ msgid ""
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; "
-"2\">Ähnliche Leads</span>\n"
-"                                    <span class=\"o_stat_text\" "
-"invisible=\"duplicate_lead_count &gt; 1\">Ähnlicher Lead</span>"
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\""
+">Ähnliche Leads</span>\n"
+"                                    <span class=\"o_stat_text\" invisible="
+"\"duplicate_lead_count &gt; 1\">Ähnlicher Lead</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -254,7 +254,8 @@ msgstr "<span class=\"opacity-50 p-2\"> %</span>"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span> leads assigned the last 30 days out of a maximum of </span>"
 msgstr ""
-"<span> in den letzten 30 Tagen zugewiesene Leads bei einem Maximum von</span>"
+"<span> in den letzten 30 Tagen zugewiesene Leads bei einem Maximum von "
+"</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -263,7 +264,7 @@ msgid ""
 "                            on a maximum of </span>"
 msgstr ""
 "<span> diesen Monat zugewiesene Leads bei\n"
-"                            einem Maximum von</span>"
+"                            einem Maximum von </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -287,12 +288,12 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
-"<span>Weisen Sie regelmäßig Leads basierend auf Prioritäten und Filtern zu</"
-"span><br/>\n"
-"                                <span invisible=\"not "
-"crm_use_auto_assignment\">\n"
-"                                    Alle Verkaufsteams werden diese "
-"Einstellung standardmäßig verwenden, sofern\n"
+"<span>Weisen Sie regelmäßig Leads basierend auf Prioritäten und Filtern "
+"zu.</span><br/>\n"
+"                                <span invisible="
+"\"not crm_use_auto_assignment\">\n"
+"                                    Diese Einstellung wird standardmäßig auf "
+"alle Verkaufsteams angewendet, sofern\n"
 "                                    nicht anders angegeben.\n"
 "                                </span>"
 
@@ -581,7 +582,7 @@ msgstr "KI"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "AI-computed chances of winning"
-msgstr "KI-berechnete Gewinnchancen für"
+msgstr "KI-berechnete Gewinnchancen"
 
 #. module: crm
 #. odoo-javascript
@@ -718,7 +719,7 @@ msgstr "Beschreibung hinzufügen …"
 msgid "Add a qualification step before the creation of an opportunity"
 msgstr ""
 "Fügen Sie vor der Erstellung einer Verkaufschance einen "
-"Qualifizierungsschritt hinzu"
+"Qualifizierungsschritt hinzu."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_followers_edit_action_from_lead
@@ -1182,7 +1183,7 @@ msgstr "Datum der Fertigstellung"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Computed by Odoo AI using your data."
-msgstr "Anhand Ihrer Daten von Odoo KI berechnet."
+msgstr "Anhand Ihrer Daten durch Odoo KI berechnet."
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_config_settings
@@ -1318,8 +1319,8 @@ msgid ""
 "Convert visitors of your website into leads and perform data enrichment "
 "based on their IP address"
 msgstr ""
-"Verwandeln Sie Besucher Ihrer Website in Leads und führen Sie eine "
-"Datenanreicherung basierend auf ihrer IP-Adresse durch."
+"Verwandeln Sie die Besucher Ihrer Website in Leads und führen Sie eine "
+"Datenanreicherung anhand ihrer IP-Adresse durch."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__correct
@@ -1545,7 +1546,7 @@ msgstr "Standardwerte"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Define recurring plans and revenues on Opportunities"
-msgstr "Definieren Sie wiederkehrende Pläne und Umsätze zu Verkaufschancen"
+msgstr "Definieren Sie wiederkehrende Pläne und Umsätze für Verkaufschancen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1758,8 +1759,8 @@ msgid ""
 "Enrich your leads automatically with company data based on their email "
 "address."
 msgstr ""
-"Reichern Sie Ihre Leads automatisch mit Unternehmensdaten basierend auf "
-"ihrer E-Mail-Adresse an."
+"Reichern Sie Ihre Leads automatisch anhand ihrer E-Mail-Adresse mit "
+"Unternehmensdaten an."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1834,7 +1835,7 @@ msgstr "Weitere Informationen"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Extra fields..."
-msgstr "Zusätzliche Felder ..."
+msgstr "Zusätzliche Felder …"
 
 #. module: crm
 #. odoo-javascript
@@ -1892,8 +1893,8 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 20 credits for free."
 msgstr ""
-"Für ein Verkaufsteam gibt es nichts Schlimmeres, als auf dem Trockenen zu "
-"sitzen, was Leads angeht. Zum Glück können Sie mit nur wenigen Klicks Leads "
+"Für ein Verkaufsteam gibt es nichts Schlimmeres, als bei Leads auf dem "
+"Trockenen zu sitzen. Zum Glück können Sie mit nur wenigen Klicks Leads "
 "generieren, die speziell auf Ihre Bedürfnisse zugeschnitten sind: "
 "Unternehmensgröße, Branche usw. Damit Sie die Funktion testen können, bieten "
 "wir Ihnen 20 Guthaben kostenlos an."
@@ -1938,13 +1939,15 @@ msgstr "Anstehende Aktivitäten"
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
 msgid "Generate new leads based on their country, industries, size, etc."
 msgstr ""
-"Generieren Sie neue Leads basierend auf ihrem Land, ihrer Branche, Größe usw."
+"Generieren Sie neue Leads basierend auf ihrem Land, ihrer Branche, ihrer "
+"Größe usw."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Generate new leads based on their country, industry, size, etc."
 msgstr ""
-"Generieren Sie neue Leads basierend auf ihrem Land, ihrer Branche, Größe usw."
+"Generieren Sie neue Leads basierend auf ihrem Land, ihrer Branche, ihrer "
+"Größe usw."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -1955,7 +1958,7 @@ msgstr "Erfahren Sie den Grund Ihres Scheiterns"
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "Give your team the requirements to move an opportunity to this stage."
 msgstr ""
-"Geben Sie ihrem Team die Vorraussetzungen, um eine Verkaufschance zu dieser "
+"Geben Sie Ihrem Team die Voraussetzungen, um eine Verkaufschance zu dieser "
 "Phase hinzuzufügen."
 
 #. module: crm
@@ -2661,7 +2664,7 @@ msgid ""
 "allow lead assignment and commission plans."
 msgstr ""
 "Verwalten Sie Mitglieder oder Partner. Mitglieder erhalten Bewertungen und "
-"Preislisten, Partner ermöglichen die Zuweisung von Leads und "
+"Preislisten und Partner ermöglichen die Zuweisung von Leads und "
 "Provisionsplänen."
 
 #. module: crm
@@ -2671,9 +2674,9 @@ msgid ""
 "action button. Automatic configures a cron running repeatedly assignment in "
 "all teams."
 msgstr ""
-"Bei der manuellen Zuweisung können Sie die Zuweisung über eine "
-"Aktionsschaltfläche in der Teamformularansicht auslösen. Konfiguriert "
-"automatisch einen Cron, der die Zuweisung in allen Teams wiederholt."
+"Bei der manuellen Zuweisung können Sie diese über eine Aktionsschaltfläche "
+"in der Teamformularansicht auslösen. Konfiguriert automatisch einen Cron, "
+"der die Zuweisung in allen Teams wiederholt."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
@@ -2700,7 +2703,7 @@ msgstr "Als verloren markieren"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Mark as won"
-msgstr "Als erfolgreich markieren"
+msgstr "Als gewonnen markieren"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2719,7 +2722,7 @@ msgstr "Marketing:"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "Medium"
+msgstr "Mittel"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3358,12 +3361,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone
 msgid "Phone"
-msgstr "Telefon"
+msgstr "Telefonnummer"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr "Telefon auf schwarzer Liste"
+msgstr "Telefonnummer auf schwarzer Liste"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_mobile_search
@@ -3407,17 +3410,17 @@ msgstr "Pipeline-Analyse"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__name
 msgid "Plan Name"
-msgstr "Planname"
+msgstr "Name des Plans"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
 msgid "Pls Fields"
-msgstr "Pls-Felder"
+msgstr "Felder für voraussichtliche Lead-Bewertung"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
 msgid "Pls Start Date"
-msgstr "Pls-Startdatum"
+msgstr "Startdatum der voraussichtlichen Lead-Bewertung"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_contact
@@ -3940,12 +3943,12 @@ msgstr "Straße"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Street 2..."
-msgstr "Straße 2 ..."
+msgstr "Adresszeile 2 …"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Street..."
-msgstr "Straße ..."
+msgstr "Straße …"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street2
@@ -4124,7 +4127,7 @@ msgstr ""
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
 "Diese E-Mail-Adresse steht auf der schwarzen Liste für Massenmailings. "
-"Klicken, um sie von der schwarzen Liste zu entfernen."
+"Klicken Sie, um sie von der schwarzen Liste zu entfernen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
@@ -4182,8 +4185,8 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"Diese Rufnummer steht auf der schwarzen Liste für SMS-Marketing. Klicken, um "
-"sie von der schwarzen Liste zu entfernen."
+"Diese Rufnummer steht auf der schwarzen Liste für SMS-Marketing. Klicken "
+"Sie, um sie von der schwarzen Liste zu entfernen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold

@@ -13,12 +13,13 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-12-05 07:58+0000\n"
+"PO-Revision-Date: 2025-12-09 14:06+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/stock/"
 "ja/>\n"
@@ -930,12 +931,12 @@ msgstr "<strong>配送</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
-msgstr "<strong>配送先住所:</strong>"
+msgstr "<strong>配送先:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
-msgstr "<strong>配送先住所</strong>"
+msgstr "<strong>配送先</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1098,7 +1099,8 @@ msgstr "バーコードは１つの梱包タイプに対して１つのみ割り
 #: code:addons/stock/models/stock_package.py:0
 msgid ""
 "A package can't have one of its contained packages as destination container."
-msgstr ""
+msgstr "梱包は、その中に含まれる梱包の1つを移動先コンテナとして指定することはできませ"
+"ん。"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -1277,7 +1279,7 @@ msgstr "住所"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__partner_address_id
 msgid "Address where goods should be delivered. Optional."
-msgstr "製品の配送先住所。オプション。"
+msgstr "製品の配送先。オプション。"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_adjustments
@@ -1325,7 +1327,7 @@ msgstr "全カテゴリ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__all_children_package_ids
 msgid "All Children Package"
-msgstr ""
+msgstr "すべての子梱包"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -3120,7 +3122,7 @@ msgstr "配送"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Delivery Address"
-msgstr "配送先住所"
+msgstr "配送先"
 
 #. module: stock
 #. odoo-javascript
@@ -3297,7 +3299,7 @@ msgstr "配送先"
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__move_partner_id
 msgid "Destination Address "
-msgstr "配送先住所 "
+msgstr "配送先 "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__package_dest_id
@@ -10012,10 +10014,10 @@ msgid ""
 "demand flow. The requested delivery address will be the customer delivery "
 "address and not your warehouse."
 msgstr ""
-"これにより、仕入先に顧客への配送を要求するために、プロダクトに適用する直送"
-"ルートが追加されます。 直送するプロダクトは、販売オーダが確定されると、見積依"
-"頼を生成します。これはオンデマンドフローです。要求された配送先住所は、倉庫で"
-"はなく、顧客の配送先住所になります。"
+"これにより、仕入先に顧客への配送を要求するために、プロダクトに適用する直送ル"
+"ートが追加されます。 直送するプロダクトは、販売オーダが確定されると、見積依頼"
+"を生成します。これはオンデマンドフローです。要求された配送先は、倉庫ではなく"
+"、顧客の配送先になります。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__picked

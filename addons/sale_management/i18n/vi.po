@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:35+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
 "PO-Revision-Date: 2025-09-16 02:35+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -508,21 +508,33 @@ msgstr ""
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "Mẫu của bạn không thể chứa sản phẩm từ môi trường đa công ty."
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas "
-"your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from "
-"other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Mẫu của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi mẫu "
-"này thuộc về công ty %(template_company)s. \n"
-" Vui lòng thay đổi công ty của mẫu hoặc xóa sản phẩm từ các công ty khác."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -533,6 +545,19 @@ msgstr "ngày"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "ví dụ: Gói tư vấn tiêu chuẩn"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "Mẫu của bạn không thể chứa sản phẩm từ môi trường đa công ty."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Mẫu của bạn chứa các sản phẩm từ công ty %(product_company)s trong khi "
+#~ "mẫu này thuộc về công ty %(template_company)s. \n"
+#~ " Vui lòng thay đổi công ty của mẫu hoặc xóa sản phẩm từ các công ty khác."
 
 #~ msgid "4 Person Desk"
 #~ msgstr "Bàn 4 chỗ ngồi"

@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:35+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
 "PO-Revision-Date: 2025-12-04 17:51+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -355,12 +355,6 @@ msgstr "$5,00"
 #: code:addons/website/models/ir_ui_view.py:0
 msgid "%(error)s (website: %(website_id)s)"
 msgstr "%(error)s (trang web: %(website_id)s)"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
-msgid "%s List"
-msgstr "%s danh sách"
 
 #. module: website
 #. odoo-javascript
@@ -1099,11 +1093,10 @@ msgid ""
 "primary mb-2 o_translate_inline\"><t t-out=\"cta_btn_text\">Contact us</t></"
 "a>"
 msgstr ""
-"<a t-att-href=\"cta_btn_href\" class="
-"\"btn btn-primary mb-2 o_translate_inline\">Bắt đầu ngay</a>\n"
-"                <a t-att-href=\"cta_btn_href\" class="
-"\"btn btn-outline-primary mb-2 o_translate_inline\"><t t-out=\"cta_btn_text\""
-">Liên hệ</t></a>"
+"<a t-att-href=\"cta_btn_href\" class=\"btn btn-primary mb-2 "
+"o_translate_inline\">Bắt đầu ngay</a>\n"
+"                <a t-att-href=\"cta_btn_href\" class=\"btn btn-outline-"
+"primary mb-2 o_translate_inline\"><t t-out=\"cta_btn_text\">Liên hệ</t></a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_connected
@@ -2343,8 +2336,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_dot o_not_editable position-absolute translate-middle-x "
 "rounded-circle pe-none\" contenteditable=\"false\"/>\n"
-"                        <small class=\"text-muted\">Ngày 03 tháng 4, "
-"2024</small>\n"
+"                        <small class=\"text-muted\">Ngày 03 tháng 4, 2024</"
+"small>\n"
 "                        <strong>Tính Năng Bảng Điều Khiển Mới cho Báo Cáo "
 "Tùy Chỉnh</strong>"
 
@@ -2378,8 +2371,8 @@ msgid ""
 msgstr ""
 "<span class=\"o_dot o_not_editable position-absolute translate-middle-x "
 "rounded-circle pe-none\" contenteditable=\"false\"/>\n"
-"                        <small class=\"text-muted\">Ngày 11 tháng 2, "
-"2024</small>\n"
+"                        <small class=\"text-muted\">Ngày 11 tháng 2, 2024</"
+"small>\n"
 "                        <strong>Giao Diện Người Dùng Nâng Cao Để Điều Hướng "
 "Tốt Hơn</strong>"
 
@@ -3427,7 +3420,6 @@ msgstr "Điều chỉnh khối dựng cho phù hợp."
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 #: code:addons/website/static/src/builder/plugins/options/card_image_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
@@ -3528,6 +3520,12 @@ msgstr "Thêm mốc thời gian"
 #: code:addons/website/static/src/builder/plugins/options/accordion_option.xml:0
 msgid "Add New"
 msgstr "Thêm mới"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Add New Option"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -5331,9 +5329,14 @@ msgstr "Kiểm tra kết nối và thử lại"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "Checkbox"
 msgstr "Hộp kiểm"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Checkbox List"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -6032,6 +6035,7 @@ msgstr "Trang điều khiển"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/interactions/cookies/cookies_bar.js:0
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Cookie Policy"
@@ -8379,6 +8383,12 @@ msgid "Fetched Elements"
 msgstr "Phần tử đã tìm nạp"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/utils.js:0
+msgid "Field"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__field_names
 msgid "Field Names"
 msgstr "Tên trường"
@@ -9610,8 +9620,8 @@ msgid ""
 "Hint: How to use Google Map on your website (Contact Us page and as a "
 "snippet)"
 msgstr ""
-"Gợi ý: Cách sử dụng Google Map trên trang web của bạn "
-"(Trang Liên hệ và dưới dạng một đoạn trích)"
+"Gợi ý: Cách sử dụng Google Map trên trang web của bạn (Trang Liên hệ và dưới "
+"dạng một đoạn trích)"
 
 #. module: website
 #. odoo-javascript
@@ -13110,12 +13120,6 @@ msgstr "Tối ưu hoá SEO"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
-msgid "Option"
-msgstr "Tùy chọn"
-
-#. module: website
-#. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/utils.js:0
 msgid "Option 1"
 msgstr "Lựa chọn 1"
@@ -13131,6 +13135,12 @@ msgstr "Lựa chọn 2"
 #: code:addons/website/static/src/builder/plugins/form/utils.js:0
 msgid "Option 3"
 msgstr "Lựa chọn 3"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Option List"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -14450,9 +14460,14 @@ msgstr "Radar"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
-#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "Radio"
 msgstr "Radio"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
+msgid "Radio Button List"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -17968,9 +17983,9 @@ msgid ""
 msgstr ""
 "Tìm hiểu cách khách truy cập tương tác với trang web thông qua Google "
 "Analytics.\n"
-"Tìm hiểu thêm về <a class=\"o_translate_inline\" href="
-"\"https://support.google.com/analytics/answer/11397207?hl=en\">cookie "
-"Analytics và thông tin về quyền riêng tư.</a>"
+"Tìm hiểu thêm về <a class=\"o_translate_inline\" href=\"https://"
+"support.google.com/analytics/answer/11397207?hl=en\">cookie Analytics và "
+"thông tin về quyền riêng tư.</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quadrant
@@ -18086,8 +18101,8 @@ msgstr "Url & Trang"
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
 msgid "Use Google Map on your website (Contact Us page, snippets, etc)."
 msgstr ""
-"Sử dụng Google Map trên trang web của bạn "
-"(trang Liên hệ, các đoạn trích, v.v.)."
+"Sử dụng Google Map trên trang web của bạn (trang Liên hệ, các đoạn trích, "
+"v.v.)."
 
 #. module: website
 #. odoo-javascript
@@ -21253,6 +21268,12 @@ msgstr "✽  Pizza"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Chúng tôi mang đến những gì"
+
+#~ msgid "%s List"
+#~ msgstr "%s danh sách"
+
+#~ msgid "Option"
+#~ msgstr "Tùy chọn"
 
 #~ msgid "Type your URL"
 #~ msgstr "Nhập URL của bạn"

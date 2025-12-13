@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-20 06:11+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"PO-Revision-Date: 2025-12-10 03:26+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "purchase_stock/id/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -152,6 +152,12 @@ msgstr "Tindakan"
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "Add All"
 msgstr "Tambahkan Semua"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "After next month last year"
+msgstr "Setelah bulan depan tahun lalu"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -409,6 +415,12 @@ msgid "Forecast Report"
 msgstr "Laporan Forecast"
 
 #. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Forecasted"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
 msgid "Forecasted Issue"
 msgstr "Masalah yang Diforecast"
@@ -536,9 +548,39 @@ msgid "Journal Item"
 msgstr "Item Jurnal"
 
 #. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 12 months"
+msgstr "12 bulan terakhir"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 3 months"
+msgstr "3 bulan terakhir"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 30 days"
+msgstr "30 hari terakhir"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 7 days"
+msgstr "7 hari terakhir"
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
 msgid "Last Purchase"
 msgstr "Pembelian Terakhir"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last year quarter"
+msgstr "Triwulan tahun lalu"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
@@ -574,6 +616,12 @@ msgstr "Senin"
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__monthly_demand
 msgid "Monthly Demand"
 msgstr "Permintaan Bulanan"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Next month last year"
+msgstr "Bulan depan tahun lalu"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -821,7 +869,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Referensi antara dokumen stok"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__reference_ids
@@ -854,6 +902,12 @@ msgstr "Reservasi"
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Return Picking"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Same month last year"
+msgstr "Bulan yang sama tahun lalu"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__6
@@ -1258,9 +1312,6 @@ msgstr "produk ini harus secara manual dipulihkan."
 #~ msgid "Actual Demand"
 #~ msgstr "Actual Demand"
 
-#~ msgid "After next month last year"
-#~ msgstr "Setelah bulan depan tahun lalu"
-
 #~ msgid "All Warehouses"
 #~ msgstr "Semua Warehouse"
 
@@ -1326,26 +1377,11 @@ msgstr "produk ini harus secara manual dipulihkan."
 #~ msgid "In"
 #~ msgstr "Masuk"
 
-#~ msgid "Last 12 months"
-#~ msgstr "12 bulan terakhir"
-
-#~ msgid "Last 3 months"
-#~ msgstr "3 bulan terakhir"
-
-#~ msgid "Last 30 days"
-#~ msgstr "30 hari terakhir"
-
-#~ msgid "Last 7 days"
-#~ msgstr "7 hari terakhir"
-
 #~ msgid "Last Updated by"
 #~ msgstr "Terakhir Diperbarui oleh"
 
 #~ msgid "Last Updated on"
 #~ msgstr "Terakhir Diperbarui pada"
-
-#~ msgid "Last year quarter"
-#~ msgstr "Triwulan tahun lalu"
 
 #~ msgid "Linked Purchase Order Lines"
 #~ msgstr "Baris PO yang Di-Link"
@@ -1365,9 +1401,6 @@ msgstr "produk ini harus secara manual dipulihkan."
 
 #~ msgid "Multiplier"
 #~ msgstr "Pengali"
-
-#~ msgid "Next month last year"
-#~ msgstr "Bulan depan tahun lalu"
 
 #~ msgid "No product to buy found"
 #~ msgstr "Tidak ada produk untuk dibeli yang ditemukan"
@@ -1413,9 +1446,6 @@ msgstr "produk ini harus secara manual dipulihkan."
 
 #~ msgid "Routes"
 #~ msgstr "Rute"
-
-#~ msgid "Same month last year"
-#~ msgstr "Bulan yang sama tahun lalu"
 
 #~ msgid "Schedule request for quotations earlier to avoid delays"
 #~ msgstr "Jadwalkan RFQ lebih dulu untuk mencegah penundaan"

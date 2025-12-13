@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2025-10-27 05:54+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
@@ -19,8 +19,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
-"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: stock_dropshipping
@@ -31,6 +31,7 @@ msgstr "Компании"
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__display_name
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__display_name
@@ -67,6 +68,7 @@ msgstr "Дропшипы"
 #. module: stock_dropshipping
 #: model:ir.model.fields,field_description:stock_dropshipping.field_product_product__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order__id
+#: model:ir.model.fields,field_description:stock_dropshipping.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_res_company__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order__id
 #: model:ir.model.fields,field_description:stock_dropshipping.field_sale_order_line__id
@@ -110,6 +112,11 @@ msgid "Purchase Order"
 msgstr "Заказ на покупку"
 
 #. module: stock_dropshipping
+#: model:ir.model,name:stock_dropshipping.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Позиция заказа на покупку"
+
+#. module: stock_dropshipping
 #: model:ir.model,name:stock_dropshipping.model_sale_order
 msgid "Sales Order"
 msgstr "Заказ на продажу"
@@ -149,6 +156,3 @@ msgstr "Тип операции"
 
 #~ msgid "Product Replenish"
 #~ msgstr "Пополнение продукта"
-
-#~ msgid "Purchase Order Line"
-#~ msgstr "Позиция заказа на покупку"

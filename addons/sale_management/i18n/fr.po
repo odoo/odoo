@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:35+0000\n"
-"PO-Revision-Date: 2025-12-05 10:58+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"PO-Revision-Date: 2025-12-09 14:06+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "sale_management/fr/>\n"
@@ -266,7 +266,7 @@ msgstr "Ligne optionnelle"
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Optional Products Section"
-msgstr ""
+msgstr "Section produits optionnels"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__parent_id
@@ -520,24 +520,33 @@ msgstr ""
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Votre modèle ne peut pas contenir des produits provenant de plusieurs "
-"sociétés."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas "
-"your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from "
-"other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"Votre modèle contient des produits de la société %(product_company)s alors "
-"que votre modèle appartient à la société %(template_company)s.\n"
-"Veuillez changer la société de votre modèle ou supprimer les produits "
-"d'autres sociétés."
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -548,6 +557,22 @@ msgstr "jours"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "par ex. Pack de consultance standard"
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr ""
+#~ "Votre modèle ne peut pas contenir des produits provenant de plusieurs "
+#~ "sociétés."
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "Votre modèle contient des produits de la société %(product_company)s "
+#~ "alors que votre modèle appartient à la société %(template_company)s.\n"
+#~ "Veuillez changer la société de votre modèle ou supprimer les produits "
+#~ "d'autres sociétés."
 
 #~ msgid "4 Person Desk"
 #~ msgstr "Bureau pour 4 personnes"

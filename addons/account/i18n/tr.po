@@ -40,7 +40,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:35+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
 "PO-Revision-Date: 2025-11-20 12:08+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/account/"
@@ -2587,6 +2587,14 @@ msgid "Account Chart Template"
 msgstr "Hesap Planı Şablonu"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_code_mapping.py:0
+msgid ""
+"Account Code Mapping cannot be accessed directly. It is designed to be used "
+"only through the Chart of Accounts."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
 msgid "Account Codes Formula Shortcut"
 msgstr "Hesap Kodları Formül Kısayolu"
@@ -4153,6 +4161,11 @@ msgstr "Ek Sayısı"
 #: model:ir.model.fields,field_description:account.field_account_payment__attachment_ids
 msgid "Attachments"
 msgstr "Ekler"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
+msgid "Attachments Not Supported"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -7466,6 +7479,11 @@ msgid "Display Amount"
 msgstr "Gösterilen Tutar"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
+msgid "Display Attachments Widget"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
 msgid "Display Days Next Month"
 msgstr "Gelecek Ayın Günlerini Görüntüle"
@@ -9588,6 +9606,11 @@ msgid "How total tax amount is computed in orders and invoices"
 msgstr "Siparişlerde ve faturalarda toplam vergi tutarı nasıl hesaplanacak"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "ICE:"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
 #: model:ir.model.fields,field_description:account.field_account_account_tag__id
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__id
@@ -10955,6 +10978,12 @@ msgstr "İade"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__is_register_payment_on_draft
 msgid "Is Register Payment On Draft"
 msgstr "Taslakta Ödeme Kaydı Var mı"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_sale_installed
+#: model:ir.model.fields,field_description:account.field_account_move__is_sale_installed
+msgid "Is Sale Installed"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_same_currency
@@ -20828,16 +20857,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You cannot have more than one account with \"Current Year Earnings\" as "
-"type. (accounts: %s)"
-msgstr ""
-"Tür olarak \"Cari Yıl Kazançları\" ile birden fazla hesabınız olamaz. "
-"(hesaplar: %s)"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
@@ -21804,6 +21823,13 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Kendi kendine faturalandırma faturası (Ref "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "You cannot have more than one account with \"Current Year Earnings\" as "
+#~ "type. (accounts: %s)"
+#~ msgstr ""
+#~ "Tür olarak \"Cari Yıl Kazançları\" ile birden fazla hesabınız olamaz. "
+#~ "(hesaplar: %s)"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "Fatura oluşturulduktan sonra bu ayar değiştirilemez."

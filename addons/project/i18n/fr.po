@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-12-05 16:30+0000\n"
+"PO-Revision-Date: 2025-12-11 13:01+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/project/"
 "fr/>\n"
@@ -611,6 +611,19 @@ msgid ""
 "                                            </span>\n"
 "                                        </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                            <i class="
+"\"fa fa-lightbulb-o pe-2\"/>\n"
+"                                            <span name="
+"\"rating_status_helper\">\n"
+"                                                <span invisible="
+"\"rating_status == 'periodic'\">Une demande d’évaluation sera envoyée dès qu’"
+"une tâche atteindra cette étape.</span>\n"
+"                                                <span invisible="
+"\"rating_status == 'stage'\">Des demandes d’évaluation seront envoyées tant "
+"que la tâche restera dans cette étape.</span>\n"
+"                                            </span>\n"
+"                                        </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
@@ -1088,6 +1101,9 @@ msgid ""
 "                When creating a new project from the template, choose who "
 "will take on each role."
 msgstr ""
+"Assignez des rôles aux tâches dans vos modèles de projet. Lors de la "
+"création d’un nouveau projet à partir du modèle, choisissez qui assumera "
+"chaque rôle."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1428,6 +1444,13 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"Collectez les retours de vos clients en leur envoyant une demande d’"
+"évaluation lorsqu’une tâche entre dans une certaine étape. Pour ce faire, "
+"définissez un modèle d’e-mail d’évaluation sur l’étape.\n"
+"Évaluation lors du changement d’étape : un e-mail sera automatiquement "
+"envoyé lorsqu’une tâche atteindra l’étape.\n"
+"Évaluation périodique : un e-mail sera automatiquement envoyé à intervalles "
+"réguliers tant que la tâche restera dans cette étape."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -1647,7 +1670,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by email:"
-msgstr ""
+msgstr "Créer des tâches par e-mail :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
@@ -1843,6 +1866,10 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"Nombre de jours avant que les tâches dans cette étape deviennent obsolètes. "
+"Définissez sur 0 pour désactiver. La modification de ce paramètre n’"
+"affectera pas le statut ou la date d’obsolescence des ressources mises à "
+"jour avant ce changement."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
@@ -2397,6 +2424,9 @@ msgid ""
 "individual tasks. Internal users automatically gain access to tasks they are "
 "assigned to."
 msgstr ""
+"Donnez aux utilisateurs l’accès en les ajoutant comme abonnés — soit au "
+"projet, soit aux tâches individuelles. Les utilisateurs internes obtiennent "
+"automatiquement l’accès aux tâches qui leur sont assignées."
 
 #. module: project
 #. odoo-javascript
@@ -2431,7 +2461,7 @@ msgstr "A un message"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
 msgid "Has Template Ancestor"
-msgstr ""
+msgstr "A un modèle ancêtre"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
@@ -2579,6 +2609,9 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"Si activé, cette étape sera affichée comme repliée dans les vues Kanban et "
+"Liste de vos projets. Les projets dans une étape repliée sont considérés "
+"comme fermés."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2588,6 +2621,10 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task "
 "remains in this stage."
 msgstr ""
+"Si ce champ est défini, une demande d’évaluation sera automatiquement "
+"envoyée par e-mail au client lorsque la tâche atteindra cette étape.\n"
+"Alternativement, elle sera envoyée à intervalles réguliers tant que la tâche "
+"restera dans cette étape."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2620,7 +2657,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Import Template for Tasks"
-msgstr ""
+msgstr "Importer un modèle pour les tâches"
 
 #. module: project
 #. odoo-javascript
@@ -2678,12 +2715,12 @@ msgstr "Nom d'affichage invalide"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
 msgid "Invited internal and portal users"
-msgstr ""
+msgstr "Utilisateurs internes et portail invités"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "Utilisateurs internes invités"
 
 #. module: project
 #. odoo-javascript
@@ -2758,7 +2795,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 30 Days"
-msgstr "Les 30 derniers jours"
+msgstr "30 derniers jours"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -2855,7 +2892,7 @@ msgstr "Plus tard"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create a regular <b>project</b>."
-msgstr ""
+msgstr "Créons un <b>projet</b> standard."
 
 #. module: project
 #. odoo-javascript
@@ -3671,7 +3708,7 @@ msgstr "Les tâches privées ne peuvent pas être converties en modèles"
 #. module: project
 #: model:project.project,name:project.project_template_1
 msgid "Product Launch Campaign"
-msgstr ""
+msgstr "Campagne de lancement de produit"
 
 #. module: project
 #. odoo-javascript
@@ -3789,7 +3826,7 @@ msgstr "Assistant de suppression d'étape de projet"
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 msgid "Project Stage: Send rating"
-msgstr ""
+msgstr "Étape du projet : envoyer l’évaluation"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
@@ -3866,6 +3903,29 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"Visibilité du projet et des tâches :\n"
+"- Utilisateurs internes invités : ont accès uniquement au projet ou aux "
+"tâches qu’ils suivent. Les assignés obtiennent automatiquement l’accès.\n"
+"- Utilisateurs internes et portail invités : même fonctionnement que ci-"
+"dessus, étendu aux utilisateurs portail.\n"
+"- Tous les utilisateurs internes : accès complet au projet et à toutes ses "
+"tâches.\n"
+"- Tous les utilisateurs internes et utilisateurs portail invités : les "
+"utilisateurs internes ont un accès complet. Les utilisateurs portail n’ont "
+"accès qu’au projet ou aux tâches qu’ils suivent.\n"
+"\n"
+"Niveaux d’accès portail :\n"
+"- Lecture seule : les utilisateurs portail voient les tâches via leur "
+"portail mais ne peuvent pas les modifier.\n"
+"- Modification (limitée) : les utilisateurs portail accèdent aux vues kanban/"
+"liste et peuvent modifier certains champs des tâches suivies.\n"
+"- Modification : identique ci-dessus, avec accès à toutes les tâches.\n"
+"\n"
+"Autres règles :\n"
+"- Les utilisateurs internes peuvent ouvrir une tâche via un lien direct, "
+"même sans accès au projet.\n"
+"- Les administrateurs du projet ont accès aux projets privés, même s’ils ne "
+"sont pas abonnés.\n"
 
 #. module: project
 #. odoo-javascript
@@ -4430,7 +4490,7 @@ msgstr "Envoyer une invitation"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_active
 msgid "Send a customer rating request"
-msgstr ""
+msgstr "Envoyer une demande d’évaluation au client"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
@@ -4646,7 +4706,7 @@ msgstr "Propriétaire de l'étape"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Stage Rating Status"
-msgstr ""
+msgstr "Statut d’évaluation de l’étape"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4854,7 +4914,7 @@ msgstr "Récurrence de tâche"
 #. module: project
 #: model:ir.model,name:project.model_task_share_wizard
 msgid "Task Sharing"
-msgstr ""
+msgstr "Partage de tâche"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -5017,7 +5077,7 @@ msgstr "Modèle"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
 msgid "Template Has Dates"
-msgstr ""
+msgstr "Le modèle contient des dates"
 
 #. module: project
 #. odoo-python
@@ -5823,6 +5883,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"Lorsque vous créez un projet à partir d’un modèle, vous pouvez choisir quel "
+"employé assume chaque rôle. Ces employés seront ajoutés aux tâches, ainsi "
+"que toute personne déjà assignée."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -6241,7 +6304,7 @@ msgstr "pour signaler quel est le statut actuel de votre idée."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "when reaching this stage"
-msgstr ""
+msgstr "lorsque cette étape est atteinte"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

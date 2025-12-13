@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-28 18:35+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
 "PO-Revision-Date: 2025-12-04 17:51+0000\n"
 "Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -2570,6 +2570,14 @@ msgid "Account Chart Template"
 msgstr "Mẫu hệ thống tài khoản"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_code_mapping.py:0
+msgid ""
+"Account Code Mapping cannot be accessed directly. It is designed to be used "
+"only through the Chart of Accounts."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
 msgid "Account Codes Formula Shortcut"
 msgstr "Lối tắt công thức mã tài khoản"
@@ -4134,6 +4142,11 @@ msgstr "Số tệp đính kèm"
 #: model:ir.model.fields,field_description:account.field_account_payment__attachment_ids
 msgid "Attachments"
 msgstr "Tệp đính kèm"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
+msgid "Attachments Not Supported"
+msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -7446,6 +7459,11 @@ msgid "Display Amount"
 msgstr "Hiển thị số tiền"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
+msgid "Display Attachments Widget"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
 msgid "Display Days Next Month"
 msgstr "Hiển thị ngày vào tháng tiếp theo"
@@ -9551,6 +9569,11 @@ msgid "How total tax amount is computed in orders and invoices"
 msgstr "Cách tổng tiền thuế được tính trong đơn hàng hoặc hóa đơn"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "ICE:"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
 #: model:ir.model.fields,field_description:account.field_account_account_tag__id
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__id
@@ -9866,8 +9889,8 @@ msgid ""
 "If you check this box, you will be able to register your payment using "
 "SEPA / ISO20022."
 msgstr ""
-"Nếu bạn đánh dấu vào ô này, bạn có thể đăng ký thanh toán của mình bằng SEPA "
-"/ ISO20022."
+"Nếu bạn đánh dấu vào ô này, bạn có thể đăng ký thanh toán của mình bằng "
+"SEPA / ISO20022."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -10040,8 +10063,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
-"Trong báo cáo '%(report_name)s', ở dòng '%(line_name)s', có nhãn '%(label)s',"
-"\n"
+"Trong báo cáo '%(report_name)s', ở dòng '%(line_name)s', có nhãn '%"
+"(label)s',\n"
 "Không thể phân tích ID báo cáo chéo hoặc xml_id.\n"
 
 #. module: account
@@ -10909,6 +10932,12 @@ msgstr "Là đơn hoàn tiền"
 #: model:ir.model.fields,field_description:account.field_account_payment_register__is_register_payment_on_draft
 msgid "Is Register Payment On Draft"
 msgstr "Ghi nhận thanh toán nháp"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_sale_installed
+#: model:ir.model.fields,field_description:account.field_account_move__is_sale_installed
+msgid "Is Sale Installed"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_same_currency
@@ -20756,16 +20785,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You cannot have more than one account with \"Current Year Earnings\" as "
-"type. (accounts: %s)"
-msgstr ""
-"Bạn không thể có nhiều hơn một tài khoản loại \"Doanh thu năm hiện tại\". "
-"(tài khoản: %s)"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
@@ -21726,6 +21745,13 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid ""
+#~ "You cannot have more than one account with \"Current Year Earnings\" as "
+#~ "type. (accounts: %s)"
+#~ msgstr ""
+#~ "Bạn không thể có nhiều hơn một tài khoản loại \"Doanh thu năm hiện tại\". "
+#~ "(tài khoản: %s)"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "Không thể thay đổi cài đặt này sau khi hóa đơn được tạo."

@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-12-03 08:35+0000\n"
+"PO-Revision-Date: 2025-12-11 06:44+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/stock/ko/>"
 "\n"
@@ -408,6 +408,17 @@ msgid ""
 "* Transit: Counterpart location that should be used for inter-company or "
 "inter-warehouses operations"
 msgstr ""
+"* 공급업체: 가상 위치이며 공급업체에서 입고되는 품목의 출발지를 나타내는 위치"
+"\n"
+"* 가상: 가상 위치이며 하위 위치를 모아 창고를 계층적으로 구조화하여 표현하는 "
+"데 사용되는 위치. 실제 품목을 직접 보관할 수는 없음\n"
+"* 내부: 물리적인 위치로 창고 내부에 있음\n"
+"* 고객: 가상 위치로 고객에게 발송되는 품목의 목적지 위치\n"
+"* 재고 손실: 가상 위치로 재고 수준을 조정하기 위해 재고 관리(물리적 재고 실사"
+")에 대한 대응 위치 역할\n"
+"* 생산: 가상의 대응 위치로 생산 작업에서 사용. 즉, 이 위치에서 원자재를 소비"
+"하고 완제품을 생산\n"
+"* 이동: 대응 위치로 회사 간 또는 창고 간 작업에 사용"
 
 #. module: stock
 #. odoo-python
@@ -715,7 +726,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<span class=\"mt0 float-start\">No assigned package</span>"
-msgstr ""
+msgstr "<span class=\"mt0 float-start\">지정된 패키지가 없습니다</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6478,7 +6489,7 @@ msgstr "주문 빈도:"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "Ordering Frequency: On demand"
-msgstr ""
+msgstr "주문 빈도: 주문 시"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__orderpoint_ids
@@ -10132,7 +10143,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_model.js:0
 msgid "This record already exists"
-msgstr ""
+msgstr "이미 존재하는 레코드입니다"
 
 #. module: stock
 #. odoo-python
