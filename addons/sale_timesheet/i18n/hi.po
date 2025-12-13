@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:37+0000\n"
-"PO-Revision-Date: 2025-11-22 17:00+0000\n"
+"PO-Revision-Date: 2025-12-13 08:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/"
 "sale_timesheet/hi/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -703,7 +703,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
 msgid "No activities found. Let's start a new one!"
-msgstr ""
+msgstr "कोई गतिविधि नहीं मिली. आइए एक नई शुरुआत करें!"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -850,7 +850,7 @@ msgstr "प्रोजेक्ट टेंप्लेट"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_update
 msgid "Project Update"
-msgstr ""
+msgstr "प्रोजेक्ट अपडेट"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
@@ -1117,7 +1117,7 @@ msgstr "टास्क"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "टास्क को निश्चित अंतराल पर दोहराना"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
@@ -1210,6 +1210,11 @@ msgid ""
 "senior consultants would deliver the same service (= consultancy), but at a "
 "different rate because of their level of seniority."
 msgstr ""
+"अगर आप अलग-अलग ग्राहकों को अलग-अलग दरों पर अलग-अलग सेवाएं बिल करना चाहते हैं, तो टास्क दर सही है. "
+"अगर आप किए गए काम के हर घंटे या दिन के लिए एक तय दर पर बिल करते हैं, भले ही काम करने वाला कर्मचारी "
+"कोई भी हो, तो तय दर (fixed rate) सही है. अगर आपके कर्मचारी एक ही सेवा को अलग-अलग दरों पर देते हैं"
+", तो कर्मचारी दर (employee rate) बेहतर है. उदाहरण के लिए, जूनियर और सीनियर सलाहकार एक ही सेवा "
+"(सलाहकार) देंगे, लेकिन उनके अनुभव के स्तर के कारण अलग-अलग दर पर।"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__cost
@@ -1247,7 +1252,7 @@ msgstr "टाइमशीट"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_graph_employee_per_date
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheet Costs"
-msgstr ""
+msgstr "टाइमशीट की लागत"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_encode_uom_id
@@ -1255,7 +1260,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_payment__timesheet_encode_uom_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr ""
+msgstr "टाइमशीट एन्कोडिंग यूनिट"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
@@ -1266,7 +1271,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 msgid "Timesheet Report"
-msgstr ""
+msgstr "टाइमशीट रिपोर्ट"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__timesheet_revenues
@@ -1345,12 +1350,12 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
 msgid "Timesheets Analysis"
-msgstr ""
+msgstr "टाइमशीट एनालिसिस"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr ""
+msgstr "टाइमशीट एनालिसिस रिपोर्ट"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
@@ -1441,6 +1446,7 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your "
 "customers."
 msgstr ""
+"हर दिन प्रोजेक्ट के अनुसार अपने काम के घंटों को ट्रैक करें और इस समय का इनवॉइस अपने ग्राहकों को भेजें।"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__price_unit

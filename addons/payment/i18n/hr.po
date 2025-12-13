@@ -28,7 +28,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:36+0000\n"
-"PO-Revision-Date: 2025-11-13 12:40+0000\n"
+"PO-Revision-Date: 2025-12-13 17:00+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-17/payment/"
 "hr/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
@@ -758,6 +758,9 @@ msgid ""
 "that provides all required billing and shipping information, thus allowing "
 "to skip the checkout process."
 msgstr ""
+"Brzo plaćanje omogućuje kupcima bržu uplatu korištenjem metode plaćanja koja "
+"pruža sve potrebne podatke za naplatu i dostavu, čime se omogućuje "
+"preskakanje standardnog procesa naplate."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -1432,6 +1435,8 @@ msgid ""
 "Refund is a feature allowing to refund customers directly from the payment "
 "in Odoo."
 msgstr ""
+"Povrat sredstava je funkcija koja omogućuje vraćanje novca kupcima izravno "
+"putem plaćanja u Odoo-u."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1715,6 +1720,9 @@ msgid ""
 "provider allows it). In other countries, this payment method is not "
 "available to customers."
 msgstr ""
+"Popis zemalja u kojima se ova metoda plaćanja može koristiti "
+"(ako to pružatelj omogućuje). U drugim zemljama, ova metoda plaćanja nije "
+"dostupna kupcima."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_currency_ids
@@ -1730,7 +1738,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method."
-msgstr ""
+msgstr "Popis pružatelja koji podržavaju ovu metodu plaćanja."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -1821,7 +1829,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__payment_method_code
 msgid "The technical code of this payment method."
-msgstr ""
+msgstr "Tehnički kod ove metode plaćanja."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -1980,6 +1988,9 @@ msgid ""
 "Tokenization is the process of saving the payment details as a token that "
 "can later be reused without having to enter the payment details again."
 msgstr ""
+"Tokenizacija je proces spremanja podataka o plaćanju kao tokena koji se "
+"kasnije može ponovno koristiti bez potrebe za ponovnim unosom podataka o "
+"plaćanju."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__transaction_ids
