@@ -122,6 +122,8 @@ class AccountEdiXmlPint_My(models.AbstractModel):
             return
 
         grouping_key = super()._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+        if not grouping_key:
+            return
 
         # If a business is not registered for SST and/or TTx, the business is not allowed to charge sales tax,
         # service tax or tourism tax in the e-Invoice.
