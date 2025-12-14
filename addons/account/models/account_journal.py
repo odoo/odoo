@@ -16,26 +16,19 @@ _logger = logging.getLogger(__name__)
 class AccountJournalGroup(models.Model):
     _name = 'account.journal.group'
     _description = "Account Journal Group"
-    _check_company_auto = True
-    _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char("Ledger group", required=True, translate=True)
-    company_id = fields.Many2one(
-        comodel_name='res.company',
-        help="Define which company can select the multi-ledger in report filters. If none is provided, available for all companies",
-        default=lambda self: self.env.company,
-    )
-    excluded_journal_ids = fields.Many2many(
-        comodel_name='account.journal',
-        domain='company_id and [("company_id", "parent_of", company_id)] or []',
-        string="Excluded Journals",
-        context={'active_test': False},
+
+    included_journal_ids = fields.One2many(
+        'account.journal',
+        'journal_group_id',
+        string="Included Journals",
     )
     sequence = fields.Integer(default=10)
 
     _uniq_name = models.Constraint(
-        'unique(company_id, name)',
-        'A Ledger group name must be unique per company.',
+        'unique(name)',
+        'A Ledger group name must be unique.',
     )
 
 
@@ -257,9 +250,11 @@ class AccountJournal(models.Model):
                                   "Any file extension will be accepted.\n"
                                   "Only PDF and XML files will be interpreted by Odoo")
 
-    journal_group_ids = fields.Many2many('account.journal.group',
-        check_company=True,
-        string="Ledger Group")
+    journal_group_id = fields.Many2one(
+        comodel_name='account.journal.group',
+        string="Ledger",
+        index='btree_not_null'
+    )
 
     available_payment_method_ids = fields.Many2many(
         comodel_name='account.payment.method',
@@ -294,6 +289,9 @@ class AccountJournal(models.Model):
     _code_company_uniq = models.Constraint(
         'unique (company_id, code)',
         'Journal codes must be unique per company.',
+    )
+    has_ledger = fields.Boolean(
+        related='company_id.has_ledger',
     )
 
     def _compute_has_invalid_statements(self):

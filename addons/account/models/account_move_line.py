@@ -49,8 +49,8 @@ class AccountMoveLine(models.Model):
     journal_group_id = fields.Many2one(
         string='Ledger',
         comodel_name='account.journal.group',
+        related='journal_id.journal_group_id',
         store=False,
-        search='_search_journal_group_id',
     )
 
     company_id = fields.Many2one(
@@ -1366,13 +1366,6 @@ class AccountMoveLine(models.Model):
             'target': 'new',
             'type': 'ir.actions.act_window',
         }
-
-    # -------------------------------------------------------------------------
-    # SEARCH METHODS
-    # -------------------------------------------------------------------------
-
-    def _search_journal_group_id(self, operator, value):
-        return self.env['account.move']._search_journal_group_id(operator, value)
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS

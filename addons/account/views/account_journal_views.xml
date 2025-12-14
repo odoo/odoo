@@ -11,7 +11,7 @@
                     <field name='sequence' widget='handle'/>
                     <field name="name"/>
                     <field name="type"/>
-                    <field name="journal_group_ids" widget="many2many_tags" readonly="1" optional="hide"/>
+                    <field name="journal_group_id" readonly="1" optional="hide"/>
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide"/>
                     <field name="code" optional="show"/>
                     <field name="default_account_id" optional="show"/>
@@ -54,6 +54,7 @@
                             </group>
                             <group>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="journal_group_id" placeholder="Local Gaap" invisible="not has_ledger"/>
                                 <field name="country_code" invisible="1"/>
                             </group>
                         </group>
@@ -261,13 +262,9 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <list editable="bottom">
-                    <field name="company_id" column_invisible="True"/>
                     <field name="sequence"  widget="handle"/>
                     <field name="name" placeholder="e.g. GAAP, IFRS, ..."/>
-                    <field name="excluded_journal_ids"
-                        widget="many2many_tags_journals"
-                        options="{'no_create': True}"/>
-                    <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all" options="{'no_create': True}"/>
+                    <field name="included_journal_ids" widget="many2many_tags" options="{'no_create': True}" optional="show"/>
                 </list>
             </field>
         </record>
@@ -280,13 +277,9 @@
                 <form string="Multi-ledger">
                     <sheet>
                         <group>
-                            <field name="company_id" invisible="1"/>
                             <field name="name" placeholder="e.g. GAAP, IFRS, ..."/>
-                            <field name="excluded_journal_ids"
-                                widget="many2many_tags_journals"
-                                options="{'no_create': True}"/>
                             <field name="sequence" groups="base.group_no_one"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="included_journal_ids" options="{'no_create': True}" optional="hide"/>
                         </group>
                     </sheet>
                 </form>
