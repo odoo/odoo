@@ -248,6 +248,8 @@
             <cbc:ID t-out="vals.get('delivery_id')"/>
             <cbc:ActualDeliveryDate t-out="vals.get('actual_delivery_date')"/>
             <cac:DeliveryLocation>
+                <cbc:ID t-att-schemeID="vals.get('delivery_location_vals', {}).get('delivery_location_scheme_id')"
+                        t-out="vals.get('delivery_location_vals', {}).get('delivery_location_id')"/>
                 <cac:Address>
                     <t t-call="{{AddressType_template}}">
                         <t t-set="vals" t-value="vals.get('delivery_location_vals', {}).get('delivery_address_vals', {})"/>
