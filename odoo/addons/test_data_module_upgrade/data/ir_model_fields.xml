@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="x_model_b_x_model_a_id" model="ir.model.fields">
+        <field name="ttype">many2one</field>
+        <field name="field_description">Model A</field>
+        <field name="model_id" ref="x_model_b"/>
+        <field name="relation">model_a</field>
+        <field name="name">x_model_a_id</field>
+    </record>
+
+    <record id="x_model_b_x_model_a_category_id" model="ir.model.fields">
+        <field name="ttype">many2one</field>
+        <field name="field_description">Model A Category</field>
+        <field name="model_id" ref="x_model_b"/>
+        <field name="relation">test_orm.category</field>
+        <field name="related">x_model_a_id.category_id</field>
+        <field name="name">x_model_a_category_id</field>
+    </record>
+
+    <record id="category_x_model_b_ids" model="ir.model.fields">
+        <field name="ttype">one2many</field>
+        <field name="field_description">Model B One2many</field>
+        <field name="model_id" ref="test_orm.model_test_orm_category"/>
+        <field name="relation">x_model_b</field>
+        <field name="relation_field">x_model_a_category_id</field>
+        <field name="name">x_model_b_ids</field>
+    </record>
+</odoo>
