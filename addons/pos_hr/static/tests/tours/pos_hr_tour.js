@@ -343,3 +343,24 @@ registry.category("web_tour.tours").add("pos_hr_go_backend_opened_registered", {
             Chrome.clickMenuOption("Backend", { expectUnloadPage: true }),
         ].flat(),
 });
+
+registry
+    .category("web_tour.tours")
+    .add("pos_hr_go_backend_opened_registered_different_user_logged", {
+        steps: () =>
+            [
+                Chrome.clickBtn("Unlock Register"),
+                PosHr.clickLoginButton(),
+
+                // Employee, connected user
+                SelectionPopup.has("Pos Employee1", { run: "click" }),
+                PosHr.enterPin("2580"),
+                Chrome.existMenuOption("Backend"),
+
+                // Manager that opened the session, not connected user
+                PosHr.clickCashierName(),
+                SelectionPopup.has("Test Manager 1", { run: "click" }),
+                PosHr.enterPin("5651"),
+                Chrome.notExistMenuOption("Backend"),
+            ].flat(),
+    });

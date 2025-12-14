@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-12-05 14:37+0000\n"
+"PO-Revision-Date: 2025-12-10 16:52+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/base/nl/>\n"
 "Language: nl\n"
@@ -831,8 +831,8 @@ msgstr ""
 "\n"
 "Officiële documentatie ARCA\n"
 "\n"
-"* Digitaal BTW-boek - recordontwerp https://www.afip.gob.ar/"
-"libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* Digitaal BTW-boek - recordontwerp https://www.afip.gob.ar/libro-iva-"
+"digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
 "* CITI - recordontwerp (hetzelfde als het Digitale btw-boek): https://"
 "www.afip.gob.ar/comprasyventas/documentos/"
 "RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
@@ -2810,8 +2810,9 @@ msgstr ""
 "algemeen worden deze identificatietypes gedefinieerd door de "
 "overheidsinstanties die de fiscale activiteiten regelen. Bijvoorbeeld:\n"
 "\n"
-"* ARCA in Argentinië definieert DNI, CUIT (btw voor rechtspersonen), CUIL ("
-"btw voor natuurlijke personen) en nog 80 andere geldige identificatietypen.\n"
+"* ARCA in Argentinië definieert DNI, CUIT (btw voor rechtspersonen), CUIL "
+"(btw voor natuurlijke personen) en nog 80 andere geldige "
+"identificatietypen.\n"
 "\n"
 "Elke identificatie bevat deze informatie:\n"
 "\n"
@@ -3974,8 +3975,8 @@ msgstr ""
 "bestand (.pfx). Op een UNIX-\n"
 "  systeem kan je de volgende opdrachten gebruiken:\n"
 "\n"
-"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
-"clcerts\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys "
+"-clcerts\n"
 "\n"
 "  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
 "my_cert.cer\n"
@@ -3994,8 +3995,8 @@ msgstr ""
 "  - Maak een technische gebruiker aan: Je klant moet nu een technische "
 "gebruiker aanmaken in het de online dienst\n"
 "    Toegangsbeheer. Volg deze procedure: https://www.socialsecurity.be/"
-"site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR."
-"pdf\n"
+"site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_creer_le_canal_FR.pdf\n"
 "\n"
 "  - Activeer een webservicekanaal: Zodra de technische gebruiker is "
 "aangemaakt, moet je klant\n"
@@ -4451,8 +4452,8 @@ msgstr ""
 "authenticeren bij de RSZ (.pem bestand). Op een UNIX\n"
 "  systeem kun je de volgende commando's gebruiken:\n"
 "\n"
-"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
-"clcerts\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys "
+"-clcerts\n"
 "\n"
 "  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
 "my_cert.cer\n"
@@ -4471,8 +4472,8 @@ msgstr ""
 "  - Maak een technische gebruiker aan + activeer een SFTP-kanaal: Je klant "
 "moet nu een technische gebruiker aanmaken in de Access management\n"
 "    online service. Volg deze procedure: https://www.socialsecurity.be/"
-"site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR."
-"pdf\n"
+"site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_creer_le_canal_FR.pdf\n"
 "\n"
 "  - Configureer je SFTP-client: https://www.socialsecurity.be/site_fr/"
 "general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
@@ -4490,8 +4491,8 @@ msgstr ""
 "\n"
 "- Upload de FO-, FS- en GO-bestanden naar de juiste RSZ-omgevingsmap\n"
 "  (IN, INTEST, INTEST-S).\n"
-"- Poll de OUT-mappen (OUT, OUTTEST, OUTTEST-S) voor teruggestuurde bestanden."
-"\n"
+"- Poll de OUT-mappen (OUT, OUTTEST, OUTTEST-S) voor teruggestuurde "
+"bestanden.\n"
 "- Koppel ontvangen bestanden aan de bijbehorende aangiften en medewerkers\n"
 "  indien van toepassing.\n"
 "\n"
@@ -6836,16 +6837,15 @@ msgstr ""
 "\n"
 "Als je in de elektronische dagboeken een factuur valideert, wordt deze zowel "
 "in Odoo als in ARCA gevalideerd. Deze validatie wordt\n"
-"uitgevoerd op het moment dat we de status "
-"\"goedgekeurd/goedgekeurd met opmerkingen/afgekeurd\" ontvangen van ARCA. "
-"Als de factuur\n"
+"uitgevoerd op het moment dat we de status \"goedgekeurd/goedgekeurd met "
+"opmerkingen/afgekeurd\" ontvangen van ARCA. Als de factuur\n"
 "door ARCA is afgekeurd, wordt deze niet in het systeem geplaatst en wordt er "
 "een pop-upbericht getoond met zowel de foutmelding (afkeurredenen)\n"
 "die we ontvangen en een HINT over wat het probleem zou kunnen zijn.\n"
 "\n"
-"Voor audits en troubleshooting hebben we ook een menu "
-"\"Consult Invoice in ARCA\" toegevoegd waarmee we facturen kunnen raadplegen "
-"die eerder naar ARCA zijn\n"
+"Voor audits en troubleshooting hebben we ook een menu \"Consult Invoice in "
+"ARCA\" toegevoegd waarmee we facturen kunnen raadplegen die eerder naar ARCA "
+"zijn\n"
 "gestuurd en het laatste nummer dat is gebruikt als ondersteuning voor "
 "mogelijke problemen met de synchronisatie van de sequenties tussen Odoo en "
 "ARCA.\n"
@@ -6882,8 +6882,8 @@ msgstr ""
 "    1.3. Optioneel kun je aangeven of je de facturen van leveranciers wilt "
 "kunnen verifiëren in ARCA.\n"
 "\n"
-"2. Maak verkoopdagboeken aan die elk van je ARCA POS vertegenwoordigen ("
-"beschikbaar in ARCA Portal) die je wilt gebruiken in Odoo.\n"
+"2. Maak verkoopdagboeken aan die elk van je ARCA POS vertegenwoordigen "
+"(beschikbaar in ARCA Portal) die je wilt gebruiken in Odoo.\n"
 "\n"
 "    2.1. Het veld Use Documents is standaard ingesteld\n"
 "    2.2. Stel ARCA POS System in voor een van de elektronische systemen.\n"
@@ -6963,8 +6963,8 @@ msgstr ""
 "Deze module is bedoeld om te worden uitgebreid door lokalisaties om deze "
 "documenttypes te beheren en is essentiële informatie die moet worden "
 "weergegeven in de afgedrukte rapporten en die gemakkelijk moet kunnen worden "
-"geïdentificeerd, zowel binnen de set facturen als binnen de set accountmoves."
-"\n"
+"geïdentificeerd, zowel binnen de set facturen als binnen de set "
+"accountmoves.\n"
 "\n"
 "Elk documenttype heeft zijn eigen regels en volgnummer, dit laatste is "
 "geïntegreerd met het factuurnummer en de journaalvolgorde om het de "
@@ -11057,8 +11057,8 @@ msgstr ""
 "\n"
 "Taiwan - E-facturatie\n"
 "=====================\n"
-"Met deze module kan de gebruiker zijn facturen naar het Ecpay-systeem sturen."
-"\n"
+"Met deze module kan de gebruiker zijn facturen naar het Ecpay-systeem "
+"sturen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -14409,8 +14409,8 @@ msgstr ""
 "\n"
 "Deze module introduceert een aantal geavanceerde Peppol-gerelateerde velden "
 "in het Odoo\n"
-"factuurmodel (`account.move`) en maakt ze beschikbaar op een nieuw tabblad '"
-"Extra\n"
+"factuurmodel (`account.move`) en maakt ze beschikbaar op een nieuw tabblad "
+"'Extra\n"
 "Informatie' in het gedeelte 'Overige informatie' van het factuurformulier.\n"
 "Dit is ontworpen als een aparte, optionele module om de kernfunctionaliteit\n"
 "overzichtelijk te houden en flexibel gebruik mogelijk te maken.\n"
@@ -15487,8 +15487,8 @@ msgstr ""
 "myDATA is een platform dat is opgezet door de belastingdienst van "
 "Griekenland,\n"
 "The Independent Authority for Public Revenue (IAPR),\n"
-"om de aangifte van zakelijke belasting- en boekhoudgegevens te digitaliseren."
-"\n"
+"om de aangifte van zakelijke belasting- en boekhoudgegevens te "
+"digitaliseren.\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
@@ -16044,8 +16044,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Login / Email\" "
 "invisible=\"login != email\"/>\n"
-"                                    <i class=\"fa fa-fw fa-key text-primary\""
-" title=\"Login\" invisible=\"login == email\"/>"
+"                                    <i class=\"fa fa-fw fa-key text-"
+"primary\" title=\"Login\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -22668,8 +22668,8 @@ msgid ""
 "                                    the rightmost column (value) contains "
 "the translations"
 msgstr ""
-"CSV-formaat: je kan het direct bewerken met je favoriete spreadsheetsoftware,"
-"\n"
+"CSV-formaat: je kan het direct bewerken met je favoriete "
+"spreadsheetsoftware,\n"
 "                                    de uiterst rechtse kolom (waarde) bevat "
 "de vertalingen"
 
@@ -26619,7 +26619,8 @@ msgstr "Duur"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
 msgid "E - WATER SUPPLY; SEWERAGE, WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
-msgstr "E - WATERVOORZIENING; RIOLEN, AFVALWATERBEHEER EN SANERINGSACTIVITEITEN"
+msgstr ""
+"E - WATERVOORZIENING; RIOLEN, AFVALWATERBEHEER EN SANERINGSACTIVITEITEN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_automation_website_sale
@@ -27015,7 +27016,7 @@ msgstr "Werknemer aanwezigheidscontrole"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_referral
 msgid "Employee Referral"
-msgstr "Werknemer doorverwijzing"
+msgstr "Aanbevelingen"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_employees
@@ -27929,7 +27930,7 @@ msgstr "Euro's"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_sms
 msgid "Event Attendees SMS Marketing"
-msgstr "Evenement deelnemers SMS-Marketing"
+msgstr "Evenement deelnemers Sms-marketing"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_booth_exhibitor
@@ -31800,7 +31801,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation_sms
 msgid "Integrate SMS Marketing in marketing campaigns"
-msgstr "Integreer SMS-Marketing in marketing campagnes"
+msgstr "Integreer Sms-marketing in marketingcampagnes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation_whatsapp
@@ -32029,6 +32030,15 @@ msgstr "Ongeldig JSON-formaat in Standaardwaarde-veld."
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__invalid_locators
 msgid "Invalid Locators"
 msgstr "Ongeldige lokators"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value in Default Value field. Expected type '%(field_type)s' for "
+"'%(model_name)s.%(field_name)s'."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -43107,12 +43117,12 @@ msgstr "SEPA betalingen voor Loonadministratie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sms
 msgid "SMS Marketing"
-msgstr "SMS-Marketing"
+msgstr "Sms-marketing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
 msgid "SMS Marketing in Marketing Automation"
-msgstr "SMS-Marketing in marketingautomatisering"
+msgstr "Sms-marketing in marketingautomatisering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mail_sms
@@ -44035,7 +44045,8 @@ msgstr "Webhook notificatie verzenden"
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_stock
 msgid "Send WhatsApp messages when a stock transfer is validated"
-msgstr "WhatsApp-berichten sturen wanneer een voorraadoverdracht is gevalideerd"
+msgstr ""
+"WhatsApp-berichten sturen wanneer een voorraadoverdracht is gevalideerd"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sign
@@ -48437,8 +48448,9 @@ msgstr "Traces synchronisatie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
+#, fuzzy
 msgid "Track Speakers SMS Marketing"
-msgstr "Volg Sprekers SMS-Marketing"
+msgstr "Volg Sprekers Sms-marketing"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
@@ -48699,8 +48711,8 @@ msgstr ""
 "\n"
 "- 'Werk een record bij': werk de waarden van een record bij\n"
 "- 'Activiteit aanmaken': maak een activiteit (Chat)\n"
-"- 'E-mail sturen': plaats een bericht, een notitie of stuur een e-mail (Chat)"
-"\n"
+"- 'E-mail sturen': plaats een bericht, een notitie of stuur een e-mail "
+"(Chat)\n"
 "- 'Sms sturen': stuur een sms, log ze op documenten (sms)\n"
 "- 'Volgers toevoegen/verwijderen': voeg volgers toe of verwijder volgers van "
 "een record (Chat)\n"

@@ -328,9 +328,6 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     "/api/peppol/1/ack",
                     params={'message_uuids': uuids_to_ack},
                 )
-            if created_moves:
-                for journal, moves_in_journal in created_moves.grouped('journal_id').items():
-                    journal._notify_einvoices_received(moves_in_journal)
 
         if need_retrigger:
             self.env.ref('account_peppol.ir_cron_peppol_get_new_documents')._trigger()
