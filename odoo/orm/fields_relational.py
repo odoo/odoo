@@ -912,7 +912,8 @@ class One2many(_RelationalMulti):
             # link self to its inverse field and vice-versa
             comodel = model.env[self.comodel_name]
             try:
-                comodel._fields[self.inverse_name]
+                field = comodel._fields[self.inverse_name]
+                field.setup(comodel)
             except KeyError:
                 raise ValueError(f"{self.inverse_name!r} declared in {self!r} does not exist on {comodel._name!r}.")
 
