@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
 "PO-Revision-Date: 2025-12-03 17:13+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/mail/ro/"
@@ -27,8 +27,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : "
-"(n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: mail
@@ -247,12 +247,12 @@ msgid ""
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
 "%(new_line)s%(new_line)sTastați %(bold_start)s@username%(bold_end)s pentru a "
-"menționa pe cineva și a-i atrage atenția.%(new_line)sTastați "
-"%(bold_start)s#channel%(bold_end)s pentru a menționa un canal.%(new_line)"
-"sTastați %(bold_start)s/command%(bold_end)s pentru a executa o "
+"menționa pe cineva și a-i atrage atenția.%(new_line)sTastați %"
+"(bold_start)s#channel%(bold_end)s pentru a menționa un canal.%"
+"(new_line)sTastați %(bold_start)s/command%(bold_end)s pentru a executa o "
 "comandă.%(new_line)sTastați %(bold_start)s::shortcut%(bold_end)s pentru a "
-"introduce un răspuns predefinit în mesajul dvs.%(new_line)sTastați "
-"%(bold_start)s:emoji:%(bold_end)s pentru a introduce un emoticon în mesajul "
+"introduce un răspuns predefinit în mesajul dvs.%(new_line)sTastați %"
+"(bold_start)s:emoji:%(bold_end)s pentru a introduce un emoticon în mesajul "
 "dvs."
 
 #. module: mail
@@ -346,8 +346,8 @@ msgid ""
 "%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
 "(strong_end)s channel."
 msgstr ""
-"%(user_name)s v-a invitat în canalul "
-"%(strong_start)s%(channel_name)s%(strong_end)s."
+"%(user_name)s v-a invitat în canalul %(strong_start)s%(channel_name)s%"
+"(strong_end)s."
 
 #. module: mail
 #. odoo-python
@@ -593,9 +593,9 @@ msgid ""
 "groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
 msgstr ""
-"<p>Canalele permit organizarea informațiilor di grupuri și subiecte "
-"diferite.</p> <p>Încearcă să <b> creezi primul canal </b> "
-"(e.g. vânzări, marketing, produs XYZ, petrecere după program, etc).</p>"
+"<p>Canalele permit organizarea informațiilor di grupuri și subiecte diferite."
+"</p> <p>Încearcă să <b> creezi primul canal </b> (e.g. vânzări, marketing, "
+"produs XYZ, petrecere după program, etc).</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -698,15 +698,15 @@ msgstr ""
 "                                        șablonului și nu va apărea în "
 "istoricul de mesagerie.\n"
 "                                    </span>\n"
-"                                    <span invisible="
-"\"mail_post_method != 'note'\">\n"
+"                                    <span invisible=\"mail_post_method != "
+"'note'\">\n"
 "                                        Mesajul va fi postat ca o notă "
 "internă vizibilă\n"
 "                                        utilizatorilor interni în istoricul "
 "de mesagerie.\n"
 "                                    </span>\n"
-"                                    <span invisible="
-"\"mail_post_method != 'comment'\">\n"
+"                                    <span invisible=\"mail_post_method != "
+"'comment'\">\n"
 "                                        Mesajul va fi postat ca un mesaj pe "
 "înregistrare,\n"
 "                                        notificând toți urmăritorii. Va "
@@ -2176,8 +2176,8 @@ msgstr "Browser"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
-msgid "Browser default"
-msgstr "Implicit browser"
+msgid "Browser Default"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__endpoint
@@ -3349,7 +3349,8 @@ msgstr "Clientul este necesar pentru notificarea în inbox"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_notification_notification_partner_or_email_required
 msgid "Customer or email is required for inbox / email notification"
-msgstr "Clientul sau e-mailul este necesar pentru notificarea în inbox / e-mail"
+msgstr ""
+"Clientul sau e-mailul este necesar pentru notificarea în inbox / e-mail"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -8353,8 +8354,8 @@ msgid ""
 "Oops! We couldn't save your template due to an issue with this value: %"
 "(template_txt)s. Correct it and try again."
 msgstr ""
-"Ups! Nu am putut salva șablonul din cauza unei probleme cu această valoare: "
-"%(template_txt)s. Corectați-o și încercați din nou."
+"Ups! Nu am putut salva șablonul din cauza unei probleme cu această valoare: %"
+"(template_txt)s. Corectați-o și încercați din nou."
 
 #. module: mail
 #. odoo-javascript
@@ -8833,6 +8834,12 @@ msgstr "Avertisment de performanță:"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/delete_thread_dialog.xml:0
 msgid "Permanently delete this thread?"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
+msgid "Permission Needed"
 msgstr ""
 
 #. module: mail
@@ -10264,6 +10271,12 @@ msgstr "Selectează o limbă"
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Select a user..."
 msgstr "Selectează un utilizator..."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
@@ -14135,6 +14148,9 @@ msgstr "aliasul dvs"
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
 msgstr "“%(member_name)s” in “%(channel_name)s”"
+
+#~ msgid "Browser default"
+#~ msgstr "Implicit browser"
 
 #~ msgid "Disconnected from the RTC call by the server"
 #~ msgstr "Deconectat de la apelul RTC de către server"

@@ -12,21 +12,22 @@
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Ioan Muntean <imuntean@information-systems.ro>, 2025.
 # Adrian Cocos <adrian.cocos@capps.ai>, 2025.
+# Alin Ilie <alin.ilie@logit-solutions.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-12-03 17:12+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"PO-Revision-Date: 2025-12-09 14:04+0000\n"
+"Last-Translator: Alin Ilie <alin.ilie@logit-solutions.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "hr_expense/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n==1 ? 0 : "
-"(n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
 "X-Generator: Weblate 5.14.3\n"
 
 #. module: hr_expense
@@ -98,8 +99,8 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
-"'Cheltuială - %s - %s' % (object.employee_id.name, (object.name).replace"
-"('/', ''))"
+"'Cheltuială - %s - %s' % (object.employee_id.name, "
+"(object.name).replace('/', ''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1415,24 +1416,28 @@ msgstr ""
 msgid ""
 "Only HR Officers, accountants, or the concerned employee can reset to draft."
 msgstr ""
+"Numai responsabilii cu resursele umane, contabilii sau angajații în cauză "
+"pot reseta la stadiul de proiect."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only draft expenses can have a total of 0."
-msgstr ""
+msgstr "Numai cheltuielile din schiță pot avea un total de 0."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only expense paid by the employee can be posted with the wizard"
 msgstr ""
+"Numai cheltuielile plătite de angajat pot fi înregistrate cu ajutorul "
+"asistentului."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only one expense can be linked to a particular payment"
-msgstr ""
+msgstr "Doar o singură cheltuială poate fi asociată unei anumite plăți."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1443,7 +1448,7 @@ msgstr "Deschideți meniul principal."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__split_expense_origin_id
 msgid "Origin Split Expense"
-msgstr ""
+msgstr "Cheltuială divizată la origine"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
@@ -1453,7 +1458,7 @@ msgstr "Valoare"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__split_expense_origin_id
 msgid "Original expense from a split."
-msgstr ""
+msgstr "Cheltuiala inițială dintr-o împărțire."
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__paid
@@ -1469,12 +1474,12 @@ msgstr "Plătit de"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Company"
-msgstr ""
+msgstr "Plătită de companie"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Paid by Employee"
-msgstr ""
+msgstr "Plătită de angajat"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_list_expense
@@ -1524,6 +1529,8 @@ msgstr "Facturi de telefon, taxe poștale etc."
 msgid ""
 "Please specify if the expenses were paid by the company, or the employee."
 msgstr ""
+"Vă rugăm să specificați dacă cheltuielile au fost plătite de companie sau de "
+"angajat."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1534,7 +1541,7 @@ msgstr "Postare intrări"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Post Expenses"
-msgstr ""
+msgstr "Cheltuieli poștale"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1551,7 +1558,7 @@ msgstr "Postați cheltuielile"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Post expenses paid by the employee"
-msgstr ""
+msgstr "Înregistrați cheltuielile plătite de angajat"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__posted
@@ -1940,7 +1947,7 @@ msgstr "Aprobator de echipă"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "The account %(name)s (%(code)s) is archived. Activate it to continue"
-msgstr ""
+msgstr "Contul %(nume)s (%(cod)s) este arhivat. Activați-l pentru a continua"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -1976,6 +1983,15 @@ msgstr ""
 "Următoarele cheltuieli aprobate au angajat deja asociat, sumă și categorie "
 "similare cu unele cheltuieli din acest raport. Vă rugăm să verificați dacă "
 "acest raport nu conține duplicate."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid ""
+"The following expenses payment method leads to several accounts payable and "
+"this isn't supported:\n"
+"%(expenses)s"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
@@ -2031,7 +2047,7 @@ msgstr "Sfat: încercați să trimiteți chitanțele prin email"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To Post"
-msgstr ""
+msgstr "Pentru a înregistra"
 
 #. module: hr_expense
 #. odoo-python
@@ -2073,7 +2089,7 @@ msgstr "Total taxe"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Total Untaxed Amount"
-msgstr ""
+msgstr "Suma totală neimpozitată"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount_currency
@@ -2131,7 +2147,7 @@ msgstr "Valoare fără taxe"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Untitled Expense %s"
-msgstr ""
+msgstr "Cheltuieli fără titlu %s"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2170,7 +2186,7 @@ msgstr "Vizualizați cheltuielile"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "View expenses"
-msgstr ""
+msgstr "Vizualizare cheltuieli"
 
 #. module: hr_expense
 #. odoo-python
@@ -2184,7 +2200,7 @@ msgstr "Asteapta aprobare"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Waiting Reimbursement"
-msgstr ""
+msgstr "În așteptare Rambursare"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -2229,7 +2245,7 @@ msgstr "Asistent"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can not submit an expense without a category."
-msgstr ""
+msgstr "Nu puteți trimite o cheltuială fără o categorie."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2249,6 +2265,8 @@ msgid ""
 "You can't post simultaneously employee-paid expenses belonging to different "
 "companies"
 msgstr ""
+"Nu puteți înregistra simultan cheltuieli plătite de angajați care aparțin "
+"unor companii diferite."
 
 #. module: hr_expense
 #. odoo-python
@@ -2263,6 +2281,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot cancel an expense linked to a posted journal entry"
 msgstr ""
+"Nu puteți anula o cheltuială legată de o înregistrare contabilă postată."
 
 #. module: hr_expense
 #. odoo-python
@@ -2283,12 +2302,14 @@ msgstr ""
 msgid ""
 "You cannot do this modification since the payment is linked to an expense."
 msgstr ""
+"Nu puteți efectua această modificare, deoarece plata este legată de o "
+"cheltuială."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot edit the security fields of an expense manually"
-msgstr ""
+msgstr "Nu puteți edita manual câmpurile de securitate ale unei cheltuieli."
 
 #. module: hr_expense
 #. odoo-python
@@ -2303,30 +2324,32 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot reset to draft an expense linked to a posted journal entry."
 msgstr ""
+"Nu puteți reseta la schiță o cheltuială legată de o înregistrare contabilă "
+"postată."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot split an expense that is already posted."
-msgstr ""
+msgstr "Nu puteți împărți o cheltuială care a fost deja înregistrată."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the required permission to submit this expense."
-msgstr ""
+msgstr "Nu aveți permisiunea necesară pentru a trimite această cheltuială."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
-msgstr ""
+msgstr "Nu aveți drepturile necesare pentru a edita această cheltuială."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the rights to create accounting entries."
-msgstr ""
+msgstr "Nu aveți drepturile necesare pentru a crea înregistrări contabile."
 
 #. module: hr_expense
 #. odoo-python
@@ -2347,7 +2370,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "Cheltuiala dvs."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register

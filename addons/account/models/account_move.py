@@ -4770,6 +4770,24 @@ class AccountMove(models.Model):
             if not existing_lines:
                 self.with_context(default_move_type=self.move_type)._link_bill_origin_to_purchase_orders(timeout=4)
 
+        if new and res:
+            try:
+                attachments = self._from_files_data(files_data + self._unwrap_attachments(files_data))
+                self.journal_id._notify_invoice_subscribers(
+                    invoice=self,
+                    mail_params={
+                        'attachment_ids': [
+                            Command.create({
+                                'name': f"MAIL_{attachment['name']}",
+                                'mimetype': attachment['mimetype'],
+                                'raw': attachment['raw'],
+                            }) for attachment in attachments
+                        ]
+                    },
+                )
+            except Exception:
+                _logger.exception("Failed to notify invoice subscribers after EDI import.")
+
         return res
 
     @contextmanager
@@ -6815,8 +6833,6 @@ class AccountMove(models.Model):
         )
         move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
         move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
-
-        move.journal_id._notify_einvoices_received(move)
 
         return move
 

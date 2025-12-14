@@ -228,7 +228,7 @@ class AccountMoveSend(models.AbstractModel):
                     invoice.peppol_message_uuid = message['message_uuid']
                     invoice.peppol_move_state = 'processing'
                     attachments_linked, attachments_not_linked = self._get_ubl_available_attachments(
-                        invoice_data['mail_attachments_widget'],
+                        invoice_data.get('mail_attachments_widget', []),
                         invoice_data['invoice_edi_format']
                     )
                     if attachments_not_linked:

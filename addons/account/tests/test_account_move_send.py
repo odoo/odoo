@@ -1227,3 +1227,26 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard_2 = self.create_send_and_print(move2)
         wizard_2.action_send_and_print()
         self.assertEqual(move2.message_main_attachment_id.name, f"CustomName_{move2._get_report_base_filename().replace('/', '_')}.pdf")
+
+    def test_journal_follower_gets_pdf_on_send_and_print(self):
+        watcher_email = 'watcher@example.com; bob@example.com'
+        journal = self.company_data['default_journal_sale']
+        journal.incoming_einvoice_notification_email = watcher_email
+
+        invoice = self.init_invoice("out_invoice", amounts=[1000], partner=self.partner_a, post=True)
+        wizard = self.create_send_and_print(invoice)
+
+        with patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail') as patched_send_mail:
+            wizard.action_send_and_print()
+
+        # we send an email for every recipient individually (for separate unsubscribe links)
+        self.assertEqual(patched_send_mail.call_count, 2)
+
+        for call in patched_send_mail.call_args_list:
+            attachments_data = call.kwargs.get('email_values', {}).get('attachment_ids', [])
+            self.assertTrue(invoice.invoice_pdf_report_id)
+            self.assertEqual(len(attachments_data), 1)
+            self.assertRecordValues(invoice.invoice_pdf_report_id, [{
+                'name': attachments_data[0][2]['name'],
+                'raw': attachments_data[0][2]['raw'],
+            }])
