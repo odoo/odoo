@@ -307,6 +307,11 @@ class ResCompany(models.Model):
         help="During perpetual valuation, this account will hold the price difference between the standard price and the bill price.",
     )
 
+    # If company has Ledgers
+    has_ledger = fields.Boolean(
+        compute='_compute_has_ledger',
+    )
+
     def get_next_batch_payment_communication(self):
         '''
         When in need of a batch payment communication reference (several invoices paid at the same time)
@@ -466,6 +471,12 @@ class ResCompany(models.Model):
 
     def _compute_qr_code(self):
         pass
+
+    def _compute_has_ledger(self):
+        self.has_ledger = bool(self.env['account.journal.group'].search_count(
+            domain=[],
+            limit=1,
+        ))
 
     def _initiate_account_onboardings(self):
         account_onboarding_routes = [
