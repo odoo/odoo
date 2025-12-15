@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import api, models
 from odoo.tools import cleanup_xml_node
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
@@ -21,8 +21,12 @@ class IrActionsReport(models.Model):
         custom_templates = [report.strip() for report in custom_templates.split(',')]
         return super()._is_invoice_report(report_ref) or self._get_report(report_ref).report_name in custom_templates
 
+    @api.model
+    def _get_edi_document_format_codes_for_pdf_embedding(self):
+        return ['ubl_bis3', 'ubl_de', 'nlcius_1', 'efff_1']
+
     def _add_pdf_into_invoice_xml(self, invoice, stream_data):
-        format_codes = ['ubl_bis3', 'ubl_de', 'nlcius_1', 'efff_1']
+        format_codes = self._get_edi_document_format_codes_for_pdf_embedding()
         edi_attachments = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code in format_codes).sudo().attachment_id
         for edi_attachment in edi_attachments:
             old_xml = base64.b64decode(edi_attachment.with_context(bin_size=False).datas, validate=True)
