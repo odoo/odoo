@@ -277,6 +277,9 @@ class HrExpense(models.Model):
     # Legacy sheet field, allow grouping of expenses to keep the grouping mechanic data and allow it to be re-used when re-implemented
     former_sheet_id = fields.Integer(string='Former Report')
 
+    # Mail fields
+    is_submitted_mail_sent = fields.Boolean(string="Is submitted mail sent")
+
     # --------------------------------------------
     # Constraints
     # --------------------------------------------
@@ -1029,17 +1032,12 @@ class HrExpense(models.Model):
         if expenses_activity_unlink:
             expenses_activity_unlink.activity_unlink(['hr_expense.mail_act_expense_approval'])
 
-        # TODO: Remove in master
-        # Note: field latest_version of model ir.module.module is the installed version
-        installed_module_version = self.sudo().env.ref('base.module_hr_expense').latest_version
-        if expenses_submitted_to_review and parse_version(installed_module_version)[2:] < parse_version('2.1'):
-            self._send_submitted_expenses_mail()
-
     @api.model
     def _cron_send_submitted_expenses_mail(self):
-        expenses_submitted_to_review = self.search([('state', '=', 'submitted')])
+        expenses_submitted_to_review = self.search([('state', '=', 'submitted'), ('is_submitted_mail_sent', '=', False)])
         if expenses_submitted_to_review:
             expenses_submitted_to_review._send_submitted_expenses_mail()
+            expenses_submitted_to_review.is_submitted_mail_sent = True
 
     def _send_submitted_expenses_mail(self):
         new_mails = []

@@ -6,9 +6,8 @@
             <field name="model_id" ref="model_hr_expense"/>
             <field name="state">code</field>
             <field name="code">model._cron_send_submitted_expenses_mail()</field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">weeks</field>
-            <field name="nextcall" eval="(DateTime.now().replace(hour=18, minute=0)).strftime('%Y-%m-%d %H:%M:%S')" />
+            <field name="interval_number">12</field>
+            <field name="interval_type">hours</field>
         </record>
     </data>
 </odoo>
