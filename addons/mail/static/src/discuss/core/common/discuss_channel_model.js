@@ -10,6 +10,7 @@ import {
     nearestGreaterThanOrEqual,
 } from "@mail/utils/common/misc";
 import { formatList } from "@web/core/l10n/utils";
+import { imageUrl } from "@web/core/utils/urls";
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
 
@@ -102,6 +103,16 @@ export class DiscussChannel extends Record {
     }
     get areAllMembersLoaded() {
         return this.member_count === this.channel_member_ids.length;
+    }
+    /** @type {string} */
+    avatar_cache_key;
+    get avatarUrl() {
+        if (["channel", "group"].includes(this.channel_type)) {
+            return imageUrl("discuss.channel", this.id, "avatar_128", {
+                unique: this.avatar_cache_key,
+            });
+        }
+        return this.correspondent?.avatarUrl;
     }
     /** @type {"video_full_screen"|undefined} */
     default_display_mode;

@@ -64,13 +64,6 @@ patch(Thread.prototype, {
     get isLastMessageFromCustomer() {
         return this.newestPersistentOfAllMessage?.isSelfAuthored;
     },
-
-    get avatarUrl() {
-        if (this.channel?.channel_type === "livechat") {
-            return this.livechat_operator_id.avatarUrl;
-        }
-        return super.avatarUrl;
-    },
     get hasWelcomeMessage() {
         return (
             this.channel?.channel_type === "livechat" &&
