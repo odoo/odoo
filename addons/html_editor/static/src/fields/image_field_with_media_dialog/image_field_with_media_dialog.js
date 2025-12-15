@@ -23,7 +23,13 @@ export class ImageFieldWithMediaDialog extends ImageField {
             activeTab: "IMAGES",
             save: (el) => {}, // Simple rebound to fake its execution
             imageSave: this.onImageSave.bind(this),
+            imageUrl: this.imageUrl,
         };
+    }
+
+    get imageUrl() {
+        const fieldName = this.fieldType === "many2one" ? this.props.previewImage : this.props.name;
+        return this.getUrl(fieldName)
     }
 
     async onImageSave(attachment) {
