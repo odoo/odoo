@@ -612,7 +612,21 @@ class AccountPaymentRegister(models.TransientModel):
                 total_amount += amount_residual_currency
             elif currency != comp_curr and wizard_curr == comp_curr:
                 # Foreign currency on source line but the company currency one on the opposite line.
-                total_amount += currency._convert(amount_residual_currency, comp_curr, self.company_id, self.payment_date)
+                payment_rate = wizard_curr._get_conversion_rate(comp_curr, self.source_currency_id, self.company_id, self.payment_date)
+                residual_amount = 0.0
+                for line in installments:
+                    aml = line['line']
+                    if self.payment_date != aml.date:
+                        aml_rate = payment_rate
+                    elif aml.move_id.is_invoice(include_receipts=True):
+                        aml_rate = aml.move_id.invoice_currency_rate
+                    else:
+                        aml_rate = (aml.amount_currency / aml.balance) if not aml.company_currency_id.is_zero(aml.balance) else 1.0
+                    if payment_rate == aml_rate:
+                        residual_amount += aml.amount_residual
+                    else:
+                        residual_amount += comp_curr.round(aml.amount_residual_currency / aml_rate)
+                total_amount += residual_amount
             elif currency == comp_curr and wizard_curr != comp_curr:
                 # Company currency on source line but a foreign currency one on the opposite line.
                 total_amount += comp_curr._convert(amount_residual, wizard_curr, self.company_id, self.payment_date)
