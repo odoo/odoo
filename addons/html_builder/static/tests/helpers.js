@@ -310,6 +310,11 @@ export async function setupHTMLBuilder(
         },
     });
     await comp.iframeLoaded;
+    patchWithCleanup(queryOne(":iframe").defaultView.CSSStyleDeclaration.prototype, {
+        getPropertyValue() {
+            return "";
+        },
+    });
     if (styleContent) {
         const iframeDocument = queryOne(":iframe");
         const styleEl = iframeDocument.createElement("style");
