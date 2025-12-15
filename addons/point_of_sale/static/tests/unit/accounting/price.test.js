@@ -35,9 +35,11 @@ test("Prices includes", async () => {
     expectFormattedPrice(order.currencyDisplayPrice, "$ 1,390.00");
     expectFormattedPrice(order.currencyAmountTaxes, "$ 290.00");
     expectFormattedPrice(order.lines[0].currencyDisplayPrice, "$ 1,250.00");
-    expectFormattedPrice(order.lines[0].currencyDisplayPriceUnit, "$ 1,000.00");
+    expectFormattedPrice(order.lines[0].currencyDisplayPriceUnit, "$ 1,250.00");
+    expectFormattedPrice(order.lines[0].currencyDisplayPriceUnitExcl, "$ 1,000.00");
     expectFormattedPrice(order.lines[1].currencyDisplayPrice, "$ 140.00");
-    expectFormattedPrice(order.lines[1].currencyDisplayPriceUnit, "$ 100.00");
+    expectFormattedPrice(order.lines[1].currencyDisplayPriceUnit, "$ 140.00");
+    expectFormattedPrice(order.lines[1].currencyDisplayPriceUnitExcl, "$ 100.00");
 });
 
 test("Prices excludes", async () => {
