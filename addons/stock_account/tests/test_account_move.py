@@ -363,6 +363,37 @@ class TestAccountMove(TestAccountMoveStockCommon):
 
         self.assertEqual(bill.invoice_line_ids.account_id, test_account)
 
+    def test_no_currency_rate_on_cogs(self):
+        """Check that when confirming a invoice with no date and a different rate than the one
+        of the current date, no currency rate is applied to the cogs.
+        """
+        self.other_currency.rate_ids.sorted()[0].rate = 2
+
+        invoice = self._create_invoice_one_line(
+            currency_id=self.other_currency,
+            invoice_currency_rate=10,
+            product_id=self.product_A,
+            price_unit=200,
+            date=False,
+            tax_ids=[],
+        )
+
+        # check that the cost of the product is 10
+        self.assertEqual(self.product_A.standard_price, 10)
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            {'credit': 20.0,    'debit': 0.0,    'balance': -20.0,   'account_id': self.company_data["default_account_revenue"].id},
+            {'credit': 0.0,     'debit': 20.0,   'balance': 20.0,    'account_id': self.company_data["default_account_receivable"].id},
+        ])
+
+        invoice._post()
+        # check that the lines generate for the cogs have a value of 10 (and other lines' value didn't change)
+        self.assertRecordValues(invoice.line_ids.sorted('balance'), [
+            {'credit': 20.0,   'debit': 0.0,    'balance': -20.0,   'account_id': self.company_data["default_account_revenue"].id},
+            {'credit': 10.0,   'debit': 0.0,    'balance': -10.0,   'account_id': self.auto_categ.property_stock_account_output_categ_id.id},
+            {'credit': 0.0,    'debit': 10.0,   'balance': 10.0,    'account_id': self.company_data["default_account_expense"].id},
+            {'credit': 0.0,    'debit': 20.0,   'balance': 20.0,    'account_id': self.company_data["default_account_receivable"].id},
+        ])
+
     def test_apply_inventory_adjustment_on_multiple_quants_simultaneously(self):
         products = self.product_a + self.product_b
         products.write({'is_storable': True, 'categ_id': self.auto_categ.id})
