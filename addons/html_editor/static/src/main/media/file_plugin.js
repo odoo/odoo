@@ -186,7 +186,7 @@ export class FilePlugin extends Plugin {
         const fileCards = attachments.map(this.renderDownloadBox.bind(this));
         // Insert
         fileCards.forEach(this.dependencies.dom.insert);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     renderDownloadBox(attachment) {

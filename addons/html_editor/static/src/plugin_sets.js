@@ -79,6 +79,8 @@ import { StylePlugin } from "./core/style_plugin";
 import { ContentEditablePlugin } from "./core/content_editable_plugin";
 import { SelectionPlaceholderPlugin } from "./main/selection_placeholder_plugin";
 import { ResizePlugin } from "./main/resize_plugin";
+import { DomReferenceMapPlugin } from "./core/dom_reference_map_plugin";
+import { DomObserverPlugin } from "./core/dom_observer_plugin";
 
 export const CORE_PLUGINS = [
     BaseContainerPlugin,
@@ -89,6 +91,8 @@ export const CORE_PLUGINS = [
     DomPlugin,
     FormatPlugin,
     HistoryPlugin,
+    DomReferenceMapPlugin,
+    DomObserverPlugin,
     InputPlugin,
     LineBreakPlugin,
     NoInlineRootPlugin,

@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 
 export class ProductsRibbonOptionPlugin extends Plugin {
     static id = 'productsRibbonOptionPlugin';
-    static dependencies = ['history'];
     static shared = [
         'getRibbonsObject',
         'setRibbonObject',

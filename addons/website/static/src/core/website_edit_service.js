@@ -53,7 +53,7 @@ export const websiteEditService = {
         let editableInteractions = null;
         let previewInteractions = null;
         const patches = [];
-        const historyCallbacks = {};
+        const domObserverCallbacks = {};
         const shared = {};
         // A cached rpc to be used for edit/preview mode interactions
         // (e.g., when dynamic snippets are loading content with the
@@ -127,19 +127,19 @@ export const websiteEditService = {
             patches.push(
                 patch(Colibri.prototype, {
                     setupInteraction() {
-                        historyCallbacks.ignoreDOMMutations(() => {
+                        domObserverCallbacks.ignore(() => {
                             super.setupInteraction();
                         });
                         this.interaction.setupConfigurationSnapshot();
                     },
                     destroyInteraction() {
-                        historyCallbacks.ignoreDOMMutations(() => {
+                        domObserverCallbacks.ignore(() => {
                             super.destroyInteraction();
                         });
                     },
                     protectSyncAfterAsync(interaction, name, fn) {
                         fn = super.protectSyncAfterAsync(interaction, name, fn);
-                        return (...args) => historyCallbacks.ignoreDOMMutations(() => fn(...args));
+                        return (...args) => domObserverCallbacks.ignore(() => fn(...args));
                     },
                     addListener(target, event, fn, options) {
                         const boundFn = fn.bind(this.interaction);
@@ -162,20 +162,20 @@ export const websiteEditService = {
                             delete options?.keepInHistory;
                         }
                         let stealthFn = fn;
-                        if (historyCallbacks.ignoreDOMMutations && !fn.isHandler && stealth) {
+                        if (domObserverCallbacks.ignore && !fn.isHandler && stealth) {
                             stealthFn = (...args) =>
-                                historyCallbacks.ignoreDOMMutations(() => fn(...args));
+                                domObserverCallbacks.ignore(() => fn(...args));
                         }
                         return super.addListener(target, event, stealthFn, options);
                     },
                     applyAttr(...args) {
-                        historyCallbacks.ignoreDOMMutations(() => super.applyAttr(...args));
+                        domObserverCallbacks.ignore(() => super.applyAttr(...args));
                     },
                     applyTOut(...args) {
-                        historyCallbacks.ignoreDOMMutations(() => super.applyTOut(...args));
+                        domObserverCallbacks.ignore(() => super.applyTOut(...args));
                     },
                     startInteraction(...args) {
-                        historyCallbacks.ignoreDOMMutations(() => super.startInteraction(...args));
+                        domObserverCallbacks.ignore(() => super.startInteraction(...args));
                     },
                 }),
                 patch(Interaction.prototype, {
@@ -317,8 +317,8 @@ export const websiteEditService = {
                 })
             );
             Object.assign(shared, ev.shared);
-            historyCallbacks.ignoreDOMMutations = shared.history.ignoreDOMMutations;
-            setupIgnoreDOMMutations(shared.history.ignoreDOMMutations);
+            domObserverCallbacks.ignore = shared.domObserver.ignore;
+            setupIgnoreDOMMutations(shared.domObserver.ignore);
         };
 
         window.parent.document.addEventListener("edit_page", handleEditPage);

@@ -62,8 +62,8 @@ export class TableAlignPlugin extends Plugin {
 
         /** Handlers */
         on_selectionchange_handlers: this.updateVerticalAlignParams.bind(this),
-        on_undone_handlers: this.updateVerticalAlignParams.bind(this),
-        on_redone_handlers: this.updateVerticalAlignParams.bind(this),
+        on_history_commit_undone_handlers: this.updateVerticalAlignParams.bind(this),
+        on_history_commit_redone_handlers: this.updateVerticalAlignParams.bind(this),
         on_all_formats_removed_handlers: this.setVerticalAlignment.bind(this),
 
         /** Predicates */
@@ -112,7 +112,7 @@ export class TableAlignPlugin extends Plugin {
         }
 
         if (isAlignmentUpdated) {
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
         }
         this.updateVerticalAlignParams();
     }

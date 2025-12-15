@@ -40,7 +40,7 @@ test("Drag and drop a section and then undo", async () => {
     expect(":iframe section.s_text_image:nth-child(1)").toHaveCount(1);
 });
 
-test("Drag and drop at the same position should not add a step in the history", async () => {
+test("Drag and drop at the same position should not add a commit in the history", async () => {
     await setupWebsiteBuilderWithSnippet(["s_text_image", "s_three_columns"]);
     await contains(":iframe section.s_text_image").click();
     expect(".overlay .o_overlay_options .o_move_handle.o_draggable").toHaveCount(1);

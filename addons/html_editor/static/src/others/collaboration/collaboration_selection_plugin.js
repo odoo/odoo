@@ -12,7 +12,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class CollaborationSelectionPlugin extends Plugin {
     static id = "collaborationSelection";
-    static dependencies = ["history", "collaborationOdoo", "position", "localOverlay"];
+    static dependencies = ["domReferenceMap", "collaborationOdoo", "position", "localOverlay"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
@@ -56,8 +56,8 @@ export class CollaborationSelectionPlugin extends Plugin {
         this.multiselectionRemove(peerId);
         let clientRects;
 
-        let anchorNode = this.dependencies.history.getNodeById(selection.anchorNodeId);
-        let focusNode = this.dependencies.history.getNodeById(selection.focusNodeId);
+        let anchorNode = this.dependencies.domReferenceMap.getNodeById(selection.anchorNodeId);
+        let focusNode = this.dependencies.domReferenceMap.getNodeById(selection.focusNodeId);
         let anchorOffset = selection.anchorOffset;
         let focusOffset = selection.focusOffset;
         if (!anchorNode || !focusNode) {

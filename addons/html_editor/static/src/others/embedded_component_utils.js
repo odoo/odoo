@@ -377,15 +377,15 @@ export class StateChangeManager {
      * @param { Object } options
      * @param {boolean} options.reverse whether to read the stateChange from
      *        next to previous
-     * @param {boolean} options.forNewStep whether the attribute change is being
-     *        used to create a new step.
+     * @param {boolean} options.ensureNewMutations whether the attribute change is being
+     *        used to create a new commit.
      * @returns {string} new JSON representation of a stateChange, in case
      *          it needs to be represented under another form to be shared
      *          in collaboration (a local peer doing revertMutations implies
      *          that collaborators will do applyMutations, so the stateChange
      *          must be expressed with another form for them).
      */
-    onStateChanged(attrState, { reverse = false, forNewStep = false } = {}) {
+    onStateChanged(attrState, { reverse = false, ensureNewMutations = false } = {}) {
         const stateChange = attrState ? JSON.parse(attrState) : this.defaultStateChange;
         const state = this.getState();
         if (reverse) {
@@ -404,14 +404,14 @@ export class StateChangeManager {
                 // pending change is applied in `changeState`.
                 this.assignDeepProxyCopy(toRaw(this.embeddedState), sortedState);
             }
-            if (!forNewStep) {
+            if (!ensureNewMutations) {
                 this.previousStateChange = stateChange;
             } else {
-                // If mutations are being applied to create a new step, the
+                // If mutations are being applied to create a new commit, the
                 // state change must be expressed under another form for
                 // collaborators, since the collaborator will always
                 // "applyMutations" and never "revertMutations" when receiving
-                // external steps.
+                // remote commits.
                 const next = JSON.stringify(sortedState);
                 if (previous !== next) {
                     this.previousStateChange = {
@@ -607,7 +607,7 @@ export class StateChangeManager {
  * That state can be modified through 2 channels:
  * - By the component itself, as with any normal state.
  * - By the embedded_component_plugin, during history or collaborative
- *   operations (undo/redo/resetStepsUntil/addExternalStep). The attribute
+ *   operations (undo/redo/insertRemoteCommit). The attribute
  *   `data-embedded-state` will be used to contain a serialized representation
  *   of a state change.
  *

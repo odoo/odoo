@@ -16,7 +16,7 @@ import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helper
 describe.current.tags("desktop");
 
 describe("useDomState", () => {
-    test("Should not update the state of an async useDomState if a new step has been made", async () => {
+    test("Should not update the state of an async useDomState if a new commit has been written", async () => {
         let currentResolve;
         addBuilderOption({
             selector: ".test-options-target",
@@ -48,10 +48,10 @@ describe("useDomState", () => {
         await animationFrame();
 
         editor.editable.querySelector(".test-options-target").textContent = "b";
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         const resolve2 = currentResolve;
         editor.editable.querySelector(".test-options-target").textContent = "c";
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         const resolve3 = currentResolve;
 
         resolve3("z");

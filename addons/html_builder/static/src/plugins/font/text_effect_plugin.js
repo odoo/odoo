@@ -237,7 +237,7 @@ export class TextEffectPlugin extends Plugin {
             const cursors = this.dependencies.selection.preserveSelection();
             unwrapContents(el);
             cursors.restore();
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
         };
 
         const existingTextEffectEl = this.getTextEffect();

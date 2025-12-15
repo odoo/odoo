@@ -42,7 +42,7 @@ export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "history", "savePlugin", "edit_interaction"];
+    static dependencies = ["builderActions", "domObserver", "savePlugin", "edit_interaction"];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
@@ -339,7 +339,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     .finally(() => this.services.ui.unblock());
             };
             await blockedApply(value);
-            this.dependencies.history.addCustomMutation({
+            this.dependencies.domObserver.stageCustomMutation({
                 apply: () => blockedApply(value),
                 revert: () => blockedApply(oldValue),
             });
@@ -490,7 +490,7 @@ export class AddLanguageAction extends BuilderAction {
 
 export class ToggleBodyBgImageAction extends BuilderAction {
     static id = "toggleBodyBgImage";
-    static dependencies = ["builderActions", "history", "customizeWebsite", "media"];
+    static dependencies = ["builderActions", "domObserver", "customizeWebsite", "media"];
     setup() {
         this.canTimeout = false;
     }
@@ -530,7 +530,7 @@ export class ToggleBodyBgImageAction extends BuilderAction {
     }
     async applyConfig(oldConfig, newConfig) {
         await this.applyConfigWithLoader(newConfig);
-        this.dependencies.history.addCustomMutation({
+        this.dependencies.domObserver.stageCustomMutation({
             apply: () => this.applyConfigWithLoader(newConfig),
             revert: () => this.applyConfigWithLoader(oldConfig),
         });
@@ -580,7 +580,7 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
     static id = "bodyBgPositionOverlay";
     static dependencies = [
         "overlayButtons",
-        "history",
+        "domObserver",
         "backgroundPositionOption",
         "customizeWebsite",
     ];
@@ -624,7 +624,7 @@ export class BodyBgPositionOverlayAction extends BuilderAction {
                 this.dependencies.customizeWebsite.getWebsiteVariableValue(
                     "body-image-background-position"
                 ) || "";
-            this.dependencies.history.applyCustomMutation({
+            this.dependencies.domObserver.applyCustomMutation({
                 apply: () => setBackgroundPosition(bgPosition),
                 revert: () => setBackgroundPosition(currentPosition),
             });
@@ -818,7 +818,7 @@ export class WebsiteConfigAction extends BuilderAction {
 
 export class PreviewableWebsiteConfigAction extends BuilderAction {
     static id = "previewableWebsiteConfig";
-    static dependencies = ["customizeWebsite", "history"];
+    static dependencies = ["customizeWebsite", "domObserver"];
     getPriority({ params }) {
         return (params.previewClass || "")?.trim().split(/\s+/).filter(Boolean).length || 0;
     }
@@ -835,7 +835,7 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         if (!isPreviewing) {
             const viewsToApply = params["views"] || [];
             let undoApplyCallback;
-            this.dependencies.history.applyCustomMutation({
+            this.dependencies.domObserver.applyCustomMutation({
                 apply: () => {
                     undoApplyCallback = this.dependencies.customizeWebsite.setViewsOnSave(
                         viewsToApply,
@@ -855,7 +855,7 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
         if (!isPreviewing) {
             const viewsToClean = params["views"] || [];
             let undoCleanCallback;
-            this.dependencies.history.applyCustomMutation({
+            this.dependencies.domObserver.applyCustomMutation({
                 apply: () => {
                     undoCleanCallback = this.dependencies.customizeWebsite.setViewsOnSave(
                         viewsToClean,

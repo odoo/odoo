@@ -186,7 +186,7 @@ def get_video_thumbnail(video_url):
     return None
 
 
-diverging_history_regex = 'data-last-history-steps="([0-9,]+)"'
+diverging_history_regex = 'data-last-history-commits="([0-9,]+)"'
 
 
 # This method must be called in a context that has write access to the record as
@@ -222,26 +222,26 @@ def _handle_history_divergence(record, html_field_name, incoming_html):
                 'field_name': html_field_name,
                 'res_id': record.id,
                 'notificationName': 'html_field_write',
-                'notificationPayload': {'last_step_id': None},
+                'notificationPayload': {'last_commit_id': None},
             }
             request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
         return incoming_html
     incoming_history_ids = incoming_history_matches[1].split(',')
-    last_step_id = incoming_history_ids[-1]
+    last_commit_id = incoming_history_ids[-1]
 
     bus_data = {
         'model_name': record._name,
         'field_name': html_field_name,
         'res_id': record.id,
         'notificationName': 'html_field_write',
-        'notificationPayload': {'last_step_id': last_step_id},
+        'notificationPayload': {'last_commit_id': last_commit_id},
     }
     if request:
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
 
     if record[html_field_name]:
         server_history_matches = re.search(diverging_history_regex, record[html_field_name] or '')
-        # Do not check old documents without data-last-history-steps.
+        # Do not check old documents without data-last-history-commits.
         if server_history_matches:
             server_last_history_id = server_history_matches[1].split(',')[-1]
             if server_last_history_id not in incoming_history_ids:
@@ -254,4 +254,4 @@ def _handle_history_divergence(record, html_field_name, incoming_html):
                 ))
 
     # Save only the latest id.
-    return incoming_html[0:incoming_history_matches.start(1)] + last_step_id + incoming_html[incoming_history_matches.end(1):]
+    return incoming_html[0:incoming_history_matches.start(1)] + last_commit_id + incoming_html[incoming_history_matches.end(1):]

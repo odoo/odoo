@@ -38,8 +38,8 @@ export class SyntaxHighlightingPlugin extends Plugin {
 
         /** Handlers */
         on_will_mount_component_handlers: this.setupNewCodeBlock.bind(this),
-        on_undone_handlers: () => this.addCodeBlocks(this.editable, true),
-        on_redone_handlers: () => this.addCodeBlocks(this.editable, true),
+        on_history_commit_undone_handlers: () => this.addCodeBlocks(this.editable, true),
+        on_history_commit_redone_handlers: () => this.addCodeBlocks(this.editable, true),
         on_will_set_tag_handlers: (el, newTagName, cursors) => {
             if (newTagName.toLowerCase() === "pre") {
                 // Remove invisible whitespace that would become visible in a `<pre>` element.
@@ -164,7 +164,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
                         const textarea = codeBlock.querySelector("textarea");
                         if (textarea !== codeBlock.ownerDocument.activeElement) {
                             textarea.focus();
-                            this.dependencies.history.stageFocus();
+                            this.dependencies.selection.stageFocus();
                         }
                     }
                 }
@@ -183,9 +183,9 @@ export class SyntaxHighlightingPlugin extends Plugin {
     setupNewCodeBlock({ name, props }) {
         if (name === "syntaxHighlighting") {
             Object.assign(props, {
-                onTextareaFocus: () => this.dependencies.history.stageFocus(),
+                onTextareaFocus: () => this.dependencies.selection.stageFocus(),
                 convertToParagraph: ({ target }) => {
-                    this.dependencies.history.stageSelection();
+                    this.dependencies.selection.stageSelection();
                     const component = target.closest(`[data-embedded='${name}']`);
                     const embeddedProps = getEmbeddedProps(component);
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer({
@@ -194,7 +194,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
                     component.replaceWith(baseContainer);
                     newlinesToLineBreaks(baseContainer);
                     this.dependencies.selection.setCursorStart(baseContainer);
-                    this.dependencies.history.addStep();
+                    this.dependencies.history.commit();
                 },
                 setSelection: (selection) => this.dependencies.selection.setSelection(selection),
             });

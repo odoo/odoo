@@ -57,7 +57,7 @@ export class BuilderActionsPlugin extends Plugin {
         this.dependencies.operation.next(
             async () => {
                 await action.apply(spec);
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
             },
             {
                 ...action,

@@ -54,7 +54,7 @@ export class LineBreakPlugin extends Plugin {
         const targetOffset = selection.anchorOffset;
 
         this.insertLineBreakNode({ targetNode, targetOffset });
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     /**

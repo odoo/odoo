@@ -26,7 +26,7 @@ PATCH_OPERATIONS = dict(
     replace=PATCH_OPERATION_REPLACE,
 )
 
-HTML_ATTRIBUTES_TO_REMOVE = ["data-last-history-steps"]
+HTML_ATTRIBUTES_TO_REMOVE = ["data-last-history-commits"]
 HTML_TAG_ISOLATION_REGEX = r"^([^>]*>)(.*)$"
 ADDITION_COMPARISON_REGEX = r"\1<added>\2</added>"
 ADDITION_1ST_REPLACE_COMPARISON_REGEX = r"added>\2</added>"

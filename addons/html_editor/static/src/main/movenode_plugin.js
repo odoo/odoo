@@ -506,7 +506,7 @@ export class MoveNodePlugin extends Plugin {
                 anchorNode: selectionPosition[0],
                 anchorOffset: selectionPosition[1],
             });
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
         }
     }
     onMousemove(e) {

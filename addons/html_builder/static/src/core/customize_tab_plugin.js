@@ -14,8 +14,8 @@ export class CustomizeTabPlugin extends Plugin {
     static shared = ["getCustomizeComponent", "openCustomizeComponent", "closeCustomizeComponent"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_redone_handlers: () => this.closeCustomizeComponent(),
-        on_undone_handlers: () => this.closeCustomizeComponent(),
+        on_history_commit_redone_handlers: () => this.closeCustomizeComponent(),
+        on_history_commit_undone_handlers: () => this.closeCustomizeComponent(),
         on_current_options_containers_changed_handlers: () => this.closeCustomizeComponent(),
     };
 

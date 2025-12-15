@@ -104,7 +104,7 @@ export class SetCoverImagePositionAction extends BuilderAction {
 }
 export class RemoveCoverImageAction extends BuilderAction {
     static id = "removeCoverImage";
-    static dependencies = ["history", "builderOptions", "remove"];
+    static dependencies = ["builderOptions", "remove"];
     apply({ editingElement }) {
         const imageWrapperEl = editingElement.querySelector(".o_card_img_wrapper");
         imageWrapperEl.remove();

@@ -410,14 +410,14 @@ describe("with italic", () => {
     });
 });
 
-test("should not add history step for underline on collapsed selection", async () => {
+test("should not add history commit for underline on collapsed selection", async () => {
     const { editor, el } = await setupEditor("<p>abcd[]</p>");
 
     patchWithCleanup(console, { warn: () => {} });
 
     // Collapsed formatting shortcuts (e.g. Ctrl+U) shouldn’t create a history
-    // step. The empty inline tag is temporary: auto-cleaned if unused. We want
-    // to avoid having a phantom step in the history.
+    // commit. The empty inline tag is temporary: auto-cleaned if unused. We want
+    // to avoid having a phantom commit in the history.
     await press(["ctrl", "u"]);
     expect(getContent(el)).toBe(`<p>abcd<u data-oe-zws-empty-inline="">\u200B[]</u></p>`);
 

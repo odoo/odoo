@@ -22,7 +22,7 @@ async function setupSocialMediaSnippet(socialValues = {}, options = {}) {
     // Mock RPC to fetch the current company's social media links.
     onRpc("res.company", "read", () => [{ id: 1, ...defaults }]);
     const builder = await setupWebsiteBuilderWithSnippet("s_social_media", options);
-    builder.getEditor().shared.history.addStep();
+    builder.getEditor().shared.history.commit();
     return builder;
 }
 async function setDropdownOption(

@@ -91,7 +91,7 @@ registerWebsitePreviewTour(
                 secondLine.textContent = "Text content line B";
                 this.anchor.replaceChildren(firstLine, document.createElement("br"), secondLine);
                 const editor = editorsWeakMap.get(this.anchor.ownerDocument);
-                editor.shared.history.addStep();
+                editor.shared.history.commit();
                 // Select the whole content.
                 const range = iframeDOC.createRange();
                 const selection = iframeDOC.getSelection();

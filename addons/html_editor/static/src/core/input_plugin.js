@@ -41,13 +41,13 @@ export class InputPlugin extends Plugin {
     }
 
     onBeforeInput(ev) {
-        this.dependencies.history.stageSelection();
+        this.dependencies.selection.stageSelection();
         this.trigger("on_beforeinput_handlers", ev);
         this.dependencies.selection.setCachedSelection(null);
     }
 
     onInput(ev) {
-        this.dependencies.history.addStep({ batchable: ev.inputType === "insertText" });
+        this.dependencies.history.commit({ batchable: ev.inputType === "insertText" });
         this.trigger("on_input_handlers", ev);
     }
 }

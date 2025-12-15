@@ -6,7 +6,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class FacebookOptionPlugin extends Plugin {
     static id = "facebookOption";
-    static dependencies = ["history"];
+    static dependencies = ["domObserver"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         so_content_addition_selectors: [".o_facebook_page"],
@@ -54,9 +54,9 @@ export class FacebookOptionPlugin extends Plugin {
         if (res) {
             this.facebookUrl = res[0].social_facebook || "https://www.facebook.com/Odoo";
 
-            // WARNING: the call to ignoreDOMMutations is very dangerous,
+            // WARNING: the call to ignore is very dangerous,
             // and should be avoided in most cases (if you think you need those, ask html_editor team)
-            const hasChanged = this.dependencies.history.ignoreDOMMutations(() =>
+            const hasChanged = this.dependencies.domObserver.ignore(() =>
                 this.setEmptyLink(nodes)
             );
 

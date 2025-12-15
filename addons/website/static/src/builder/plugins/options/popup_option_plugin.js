@@ -4,7 +4,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class PopupOptionPlugin extends Plugin {
     static id = "PopupOption";
-    static dependencies = ["anchor", "visibility", "history", "popupVisibilityPlugin"];
+    static dependencies = ["anchor", "visibility", "domObserver", "popupVisibilityPlugin"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -46,7 +46,7 @@ export class PopupOptionPlugin extends Plugin {
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_popup")) {
             this.assignUniqueID(snippetEl);
-            this.dependencies.history.addCustomMutation({
+            this.dependencies.domObserver.stageCustomMutation({
                 apply: () => {
                     this.dependencies.visibility.toggleTargetVisibility(snippetEl, true);
                 },
@@ -59,7 +59,7 @@ export class PopupOptionPlugin extends Plugin {
 
     onWillRemove(el) {
         this.dependencies.visibility.toggleTargetVisibility(el, false);
-        this.dependencies.history.addCustomMutation({
+        this.dependencies.domObserver.stageCustomMutation({
             apply: () => {
                 this.dependencies.visibility.toggleTargetVisibility(el, false);
             },

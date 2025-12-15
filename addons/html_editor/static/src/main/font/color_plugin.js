@@ -59,7 +59,7 @@ export class ColorPlugin extends Plugin {
                 id: "applyColor",
                 run: ({ color, mode }) => {
                     this.applyColor(color, mode);
-                    this.dependencies.history.addStep();
+                    this.dependencies.history.commit();
                 },
                 isAvailable: isHtmlContentSupported,
             },

@@ -55,7 +55,7 @@ export class EmbeddedCaptionComponent extends Component {
 
     onInputBlur() {
         // This is triggered before the selection changes. Wait before updating
-        // so when the history step triggers a normalization, it restores that
+        // so when the history commit triggers a normalization, it restores that
         // new selection and not the old one.
         setTimeout(() => {
             if (this.captionInput.el) {

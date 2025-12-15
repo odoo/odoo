@@ -25,7 +25,7 @@ export class MailFullComposerSuggestionPlugin extends Plugin {
         }
         this.historySavePointRestore();
         this.dependencies.dom.insert(mentionBlock);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     onBeforeInput(ev) {

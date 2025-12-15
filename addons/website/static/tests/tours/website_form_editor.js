@@ -546,7 +546,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe #wrapwrap",
             run() {
                 const editor = editorsWeakMap.get(this.anchor.ownerDocument);
-                editor.shared.history.addStep();
+                editor.shared.history.commit();
             },
         },
         // Edit the submit button using linkDialog.

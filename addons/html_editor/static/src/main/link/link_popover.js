@@ -26,7 +26,6 @@ export class LinkPopover extends Component {
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         linkElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
         containerElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        ignoreDOMMutations: Function,
         onApply: Function,
         onChange: Function,
         onDiscard: Function,

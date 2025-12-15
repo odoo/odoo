@@ -14,6 +14,7 @@ import { ShadowOption } from "@html_builder/plugins/shadow_option";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { omit } from "@web/core/utils/objects";
+import { HISTORY_COMMIT_TYPES } from "@html_editor/core/history_plugin";
 
 /** @typedef {import("@html_builder/core/base_option_component").BaseOptionComponent} BaseOptionComponent */
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -128,7 +129,7 @@ import { omit } from "@web/core/utils/objects";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
-    static dependencies = ["operation", "history"];
+    static dependencies = ["operation", "domObserver", "history"];
     static shared = [
         "checkElement",
         "closestWithOption",
@@ -147,10 +148,15 @@ export class BuilderOptionsPlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_will_add_step_handlers: this.onWillAddStep.bind(this),
-        on_step_added_handlers: this.onStepAdded.bind(this),
-        on_undone_handlers: (revertedStep) => this.restoreContainers(revertedStep, "undo"),
-        on_redone_handlers: (revertedStep) => this.restoreContainers(revertedStep, "redo"),
+        history_commit_data_properties: ["currentTarget", "nextTarget"],
+        on_will_reset_history_handlers: () => {
+            this.targetState = {};
+        },
+        on_committed_to_history_handlers: this.onHistoryCommitted.bind(this),
+        on_history_commit_undone_handlers: (lastCommitUndone) =>
+            this.restoreContainers(lastCommitUndone, HISTORY_COMMIT_TYPES.UNDO),
+        on_history_commit_redone_handlers: (lastCommitRedone) =>
+            this.restoreContainers(lastCommitRedone, HISTORY_COMMIT_TYPES.REDO),
         clean_for_save_processors: this.cleanForSave.bind(this),
         reload_context_processors: (context, el) => {
             if (el) {
@@ -179,9 +185,21 @@ export class BuilderOptionsPlugin extends Plugin {
             }
             return buttons;
         },
+        pending_history_commit_data_processors: this.processCommitData.bind(this),
+        save_point_history_commit_data_processors: (data) => ({
+            ...data,
+            targetState: { ...this.targetState },
+        }),
+        on_savepoint_restored_handlers: (savePoint) => {
+            if ("targetState" in savePoint.data) {
+                this.targetState = { ...savePoint.data.targetState };
+            }
+        },
     };
 
     setup() {
+        /** @type { current?: Node, next?: Node } */
+        this.targetState = {};
         this.builderOptions = this.computeBuilderOptionsFromTemplate();
         this.builderOptionsContext = new Map();
         this.builderOptionsDependencies = new Map();
@@ -263,9 +281,9 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     updateContainers(target, { forceUpdate = false } = {}) {
-        if (this.dependencies.history.getIsCurrentStepModified()) {
+        if (this.dependencies.domObserver.hasStagedMutations()) {
             console.warn(
-                "Should not have any mutations in the current step when you update the container selection"
+                "Should not have any mutations in the current commit when you update the container selection"
             );
         }
         if (this.dependencies.history.getIsPreviewing()) {
@@ -315,6 +333,21 @@ export class BuilderOptionsPlugin extends Plugin {
 
     getTarget() {
         return this.target;
+    }
+
+    processCommitData(data) {
+        const relatedCommit = data.relatedCommit;
+        if (!relatedCommit) {
+            // Store the current target in the current commit.
+            this.targetState.current = this.target;
+        }
+        return {
+            ...data,
+            currentTarget: relatedCommit
+                ? relatedCommit.data.currentTarget
+                : this.targetState.current,
+            nextTarget: relatedCommit ? relatedCommit.data.nextTarget : this.targetState.next,
+        };
     }
 
     deactivateContainers() {
@@ -465,7 +498,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 button.handler = (...args) => {
                     this.dependencies.operation.next(async () => {
                         await handler(...args);
-                        this.dependencies.history.addStep();
+                        this.dependencies.history.commit();
                     });
                 };
             }
@@ -487,8 +520,8 @@ export class BuilderOptionsPlugin extends Plugin {
 
     /**
      * Activates the containers of the given element or deactivate them if false
-     * is given. They will be (de)activated once the current step is added (see
-     * `onStepAdded`).
+     * is given. They will be (de)activated once the current commit is added (see
+     * `onCommitted`).
      *
      * @param {HTMLElement|Boolean} targetEl the element to activate or `false`
      */
@@ -509,18 +542,22 @@ export class BuilderOptionsPlugin extends Plugin {
             }
         }
         // Store the next target to activate in the current step.
-        this.dependencies.history.setStepExtra("nextTarget", targetEl);
+        this.targetState.next = targetEl;
     }
 
-    onWillAddStep() {
-        // Store the current target in the current step.
-        this.dependencies.history.setStepExtra("currentTarget", this.target);
-    }
-
-    onStepAdded({ step }) {
+    onHistoryCommitted(commit) {
+        this.targetState = {};
+        if (commit.type === HISTORY_COMMIT_TYPES.UNDO) {
+            if ("currentTarget" in commit.data) {
+                this.targetState.current = commit.data.currentTarget;
+            }
+            if ("nextTarget" in commit.data) {
+                this.targetState.next = commit.data.nextTarget;
+            }
+        }
         // If a target is specified, activate its containers, otherwise simply
         // update them.
-        const nextTargetEl = step.extraStepInfos.nextTarget;
+        const nextTargetEl = commit.data.nextTarget;
         if (nextTargetEl) {
             this.updateContainers(nextTargetEl, { forceUpdate: true });
         } else if (nextTargetEl === false) {
@@ -531,18 +568,18 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     /**
-     * Restores the containers of the target stored in the reverted step.
+     * Restores the containers of the target stored in the reversed commit.
      *
-     * @param {Object} revertedStep the step
-     * @param {String} mode "undo" or "redo"
+     * @param {Object} lastCommitReversed the last commit to have been reversed
+     * @param { Extract<import("@html_editor/core/history_plugin").HistoryCommitType, "undo" | "redo"> } mode
      */
-    restoreContainers(revertedStep, mode) {
-        if (revertedStep && revertedStep.extraStepInfos.currentTarget) {
-            let targetEl = revertedStep.extraStepInfos.currentTarget;
-            // If the step was supposed to activate another target, activate
+    restoreContainers(lastCommitReversed, mode) {
+        if (lastCommitReversed.data.currentTarget) {
+            let targetEl = lastCommitReversed.data.currentTarget;
+            // If the commit was supposed to activate another target, activate
             // this one instead.
-            const nextTarget = revertedStep.extraStepInfos.nextTarget;
-            if (mode === "redo" && (nextTarget || nextTarget === false)) {
+            const nextTarget = lastCommitReversed.data.nextTarget;
+            if (mode === HISTORY_COMMIT_TYPES.REDO && (nextTarget || nextTarget === false)) {
                 targetEl = nextTarget;
             }
             if (targetEl) {

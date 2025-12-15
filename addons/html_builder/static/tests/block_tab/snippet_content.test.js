@@ -188,7 +188,7 @@ test("click just after drop is redispatched in next operation", async () => {
     await click(":iframe", { position: { x: 200, y: 50 }, relative: true });
     expect.verifySteps(["next"]); // On click
     await nextDef.promise;
-    expect.verifySteps(["updateContainers"]); // End of drop, on addStep()
+    expect.verifySteps(["updateContainers"]); // End of drop, on commit()
     await animationFrame();
     expect.verifySteps(["onClick", "next", "updateContainers"]); // On click redispatched
     await animationFrame();

@@ -28,7 +28,7 @@ export class MediaUrlPastePlugin extends Plugin {
             // Open powerbox with commands to embed media or paste as link.
             // Insert URL as text, revert it later if a command is triggered.
             this.dependencies.dom.insert(text);
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             this.dependencies.powerbox.openPowerbox({ commands, onApplyCommand: restoreSavepoint });
             return true;
         }

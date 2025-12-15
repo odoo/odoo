@@ -23,7 +23,7 @@ export class BuilderOverlayPlugin extends Plugin {
     static shared = ["showOverlayPreview", "hideOverlayPreview", "refreshOverlays"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        on_step_added_handlers: this.refreshOverlays.bind(this),
+        on_committed_to_history_handlers: this.refreshOverlays.bind(this),
         on_current_options_containers_changed_handlers: this.openBuilderOverlays.bind(this),
         has_overlay_options: { hasOption: (el) => isResizable(el) },
     };

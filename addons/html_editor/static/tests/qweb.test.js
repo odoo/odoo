@@ -51,7 +51,7 @@ describe("qweb picker", () => {
 
     test("plugin's dom markers are not savable", async () => {
         const resources = {
-            on_new_records_handled_handlers: () => {
+            on_pending_mutations_staged_handlers: () => {
                 expect.step("handleNewRecords");
             },
         };

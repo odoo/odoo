@@ -34,7 +34,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
                     element.remove();
                     fillEmpty(parent);
                 });
-                this.editor.shared.history.addStep();
+                this.editor.shared.history.commit();
             });
         }
         this.lastAttachmentSet = new Set();

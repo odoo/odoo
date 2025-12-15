@@ -458,7 +458,7 @@ test("replicated translated snippets are marked dirty", async () => {
 
     setSelection({ anchorNode: sourceSpan.firstChild, anchorOffset: 0 });
     await insertText(editor, "X");
-    editor.shared.history.addStep();
+    editor.shared.history.commit();
 
     expect([sourceSpan, replicaSpan]).toHaveClass("o_dirty");
     expect([sourceSpan, replicaSpan]).toHaveText("XHello");

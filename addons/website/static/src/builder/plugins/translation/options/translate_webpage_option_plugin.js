@@ -16,7 +16,7 @@ import { uniqueId } from "@web/core/utils/functions";
  */
 export class TranslateToAction extends BuilderAction {
     static id = "translateWebpageAI";
-    static dependencies = ["translateWebpageOption", "translation", "history"];
+    static dependencies = ["translateWebpageOption", "translation", "history", "domObserver"];
 
     setup() {
         this.canTimeout = false;
@@ -283,7 +283,7 @@ export class TranslateToAction extends BuilderAction {
         }
 
         if (allMutations.length > 0) {
-            this.dependencies.history.applyCustomMutation({
+            this.dependencies.domObserver.applyCustomMutation({
                 apply: () => {
                     for (const mutation of allMutations) {
                         mutation.apply();
@@ -295,9 +295,9 @@ export class TranslateToAction extends BuilderAction {
                     }
                 },
             });
-            // Single addStep for all translations, so that undo/redo is easier
+            // Single commit for all translations, so that undo/redo is easier
             // to manage for the user.
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
         }
 
         return numOfFailedTranslationNodes;

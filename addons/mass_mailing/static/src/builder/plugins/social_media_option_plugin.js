@@ -216,7 +216,7 @@ export class MassMailingSocialMediaOptionPlugin extends Plugin {
         } else {
             editingElement.querySelector(LINKS_CONTAINER_SELECTOR).append(element);
         }
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     /** @param {integer} companyId */

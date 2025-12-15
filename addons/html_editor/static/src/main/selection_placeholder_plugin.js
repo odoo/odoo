@@ -20,11 +20,11 @@ const PLACEHOLDER_SELECTOR = `[${PLACEHOLDER_ATTRIBUTE}]`;
 
 export class SelectionPlaceholderPlugin extends Plugin {
     static id = "selectionPlaceholder";
-    static dependencies = ["baseContainer", "history", "selection"];
+    static dependencies = ["baseContainer", "history", "selection", "domObserver"];
     resources = {
-        on_external_history_step_added_handlers: this.updatePlaceholders.bind(this),
+        on_remote_history_commits_applied_handlers: this.updatePlaceholders.bind(this),
         normalize_processors: withSequence(100, this.updatePlaceholders.bind(this)),
-        on_step_added_handlers: this.updatePlaceholders.bind(this),
+        on_committed_to_history_handlers: this.updatePlaceholders.bind(this),
         on_selectionchange_handlers: (selectionData) => this.onSelectionChange(selectionData),
         clean_for_save_processors: withSequence(0, (root) => {
             for (const placeholder of root.querySelectorAll(PLACEHOLDER_SELECTOR)) {
@@ -239,8 +239,8 @@ export class SelectionPlaceholderPlugin extends Plugin {
             ) {
                 // If it's at the bottom of the document, just persist immediately.
                 this.persistPlaceholder(anchor);
-                if (this.dependencies.history.getIsCurrentStepModified()) {
-                    this.dependencies.history.addStep();
+                if (this.dependencies.domObserver.hasStagedMutations()) {
+                    this.dependencies.history.commit();
                 }
             }
         }

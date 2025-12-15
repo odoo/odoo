@@ -84,7 +84,7 @@ class PeerTest {
     }
     async writeToServer() {
         this.pool.lastRecordSaved = this.editor.getContent();
-        const lastId = this.plugins.collaborationOdoo.getLastHistoryStepId(
+        const lastId = this.plugins.collaborationOdoo.getLastHistoryCommitId(
             this.pool.lastRecordSaved
         );
         for (const peer of Object.values(this.peers)) {
@@ -117,7 +117,7 @@ class PeerTest {
     }
 }
 
-const initialValue = markup`<p data-last-history-steps="1">a[]</p>`;
+const initialValue = markup`<p data-last-history-commits="1">a[]</p>`;
 
 class Wysiwygs extends Component {
     static template = xml`
@@ -151,7 +151,7 @@ class Wysiwygs extends Component {
         this.loadedPromise = new Promise((resolve) => {
             this.loadedResolver = resolve;
         });
-        this.lastStepId = 0;
+        this.lastCommitId = 0;
     }
     getConfig({ peerId, content }) {
         const busService = {
@@ -254,10 +254,10 @@ class Wysiwygs extends Component {
                     };
                 },
             });
-            patch(plugins["history"], {
+            patch(plugins["domObserver"], {
                 generateId: () => {
-                    this.lastStepId++;
-                    return this.lastStepId.toString();
+                    this.lastCommitId++;
+                    return this.lastCommitId.toString();
                 },
             });
 
@@ -307,7 +307,7 @@ async function createPeers(peerIds, content = initialValue) {
 
 async function insertEditorText(editor, text) {
     await insertText(editor, text);
-    editor.shared.history.addStep();
+    editor.shared.history.commit();
 }
 
 beforeEach(() => {
@@ -319,7 +319,7 @@ beforeEach(() => {
 });
 
 describe("Focus", () => {
-    test("Focused peer should not receive step if no data channel is open", async () => {
+    test("Focused peer should not receive commit if no data channel is open", async () => {
         const pool = await createPeers(["p1", "p2", "p3"]);
         const peers = pool.peers;
 
@@ -338,7 +338,7 @@ describe("Focus", () => {
             message: "p3 should not have the document changed",
         });
     });
-    test("Focused peer should receive step while unfocused should not (if the datachannel is open before the step)", async () => {
+    test("Focused peer should receive commit while unfocused should not (if the datachannel is open before the commit)", async () => {
         const pool = await createPeers(["p1", "p2", "p3"]);
         const peers = pool.peers;
 
@@ -360,7 +360,7 @@ describe("Focus", () => {
             message: "p3 should not have the document changed",
         });
     });
-    test("Focused peer should receive step while unfocused should not (if the datachannel is open after the step)", async () => {
+    test("Focused peer should receive commit while unfocused should not (if the datachannel is open after the commit)", async () => {
         const pool = await createPeers(["p1", "p2", "p3"]);
         const peers = pool.peers;
 
@@ -440,8 +440,8 @@ describe("Stale detection & recovery", () => {
         });
     });
     describe("detect stale while focused", () => {
-        describe("recover from missing steps", () => {
-            test("should recover from missing steps", async () => {
+        describe("recover from missing commits", () => {
+            test("should recover from missing commits", async () => {
                 const pool = await createPeers(["p1", "p2", "p3"]);
                 const peers = pool.peers;
 
@@ -455,7 +455,7 @@ describe("Stale detection & recovery", () => {
                 const p3Spies = makeSpies(peers.p3.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "processMissingCommits",
                     "applySnapshot",
                 ]);
 
@@ -512,8 +512,8 @@ describe("Stale detection & recovery", () => {
                 expect(p3Spies.recoverFromStaleDocument.callCount).toBe(1, {
                     message: "p3 recoverFromStaleDocument should have been called once",
                 });
-                expect(p3Spies.processMissingSteps.callCount).toBe(1, {
-                    message: "p3 processMissingSteps should have been called once",
+                expect(p3Spies.processMissingCommits.callCount).toBe(1, {
+                    message: "p3 processMissingCommits should have been called once",
                 });
                 expect(p3Spies.applySnapshot.callCount).toBe(0, {
                     message: "p3 applySnapshot should not have been called",
@@ -551,13 +551,13 @@ describe("Stale detection & recovery", () => {
                 const p2Spies = makeSpies(peers.p2.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "processMissingCommits",
                     "applySnapshot",
                 ]);
                 const p3Spies = makeSpies(peers.p3.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "processMissingCommits",
                     "applySnapshot",
                     "onRecoveryPeerTimeout",
                 ]);
@@ -584,8 +584,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p2 resetFromServerAndResyncWithPeers should not have been called",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.processMissingCommits.callCount).toBe(0, {
+                    message: "p2 processMissingCommits should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -605,8 +605,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(1, {
                     message: "p2 resetFromServerAndResyncWithPeers should have been called once",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.processMissingCommits.callCount).toBe(0, {
+                    message: "p2 processMissingCommits should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -622,8 +622,8 @@ describe("Stale detection & recovery", () => {
                 expect(p3Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p3 resetFromServerAndResyncWithPeers should not have been called",
                 });
-                expect(p3Spies.processMissingSteps.callCount).toBe(1, {
-                    message: "p3 processMissingSteps should have been called once",
+                expect(p3Spies.processMissingCommits.callCount).toBe(1, {
+                    message: "p3 processMissingCommits should have been called once",
                 });
                 expect(p3Spies.applySnapshot.callCount).toBe(1, {
                     message: "p3 applySnapshot should have been called once",
@@ -649,13 +649,13 @@ describe("Stale detection & recovery", () => {
                 const p2Spies = makeSpies(peers.p2.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "processMissingCommits",
                     "applySnapshot",
                 ]);
                 const p3Spies = makeSpies(peers.p3.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "processMissingCommits",
                     "applySnapshot",
                     "onRecoveryPeerTimeout",
                 ]);
@@ -680,8 +680,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p2 resetFromServerAndResyncWithPeers should not have been called",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.processMissingCommits.callCount).toBe(0, {
+                    message: "p2 processMissingCommits should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -701,8 +701,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(1, {
                     message: "p2 resetFromServerAndResyncWithPeers should have been called once",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.processMissingCommits.callCount).toBe(0, {
+                    message: "p2 processMissingCommits should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -718,8 +718,8 @@ describe("Stale detection & recovery", () => {
                 expect(p3Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p3 resetFromServerAndResyncWithPeers should have been called once",
                 });
-                expect(p3Spies.processMissingSteps.callCount).toBe(1, {
-                    message: "p3 processMissingSteps should have been called once",
+                expect(p3Spies.processMissingCommits.callCount).toBe(1, {
+                    message: "p3 processMissingCommits should have been called once",
                 });
                 expect(p3Spies.applySnapshot.callCount).toBe(1, {
                     message: "p3 applySnapshot should have been called once",
@@ -747,7 +747,7 @@ describe("Stale detection & recovery", () => {
                 const p2Spies = makeSpies(peers.p2.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "processMissingCommits",
                     "applySnapshot",
                     "onRecoveryPeerTimeout",
                     "resetFromPeer",
@@ -756,7 +756,7 @@ describe("Stale detection & recovery", () => {
                 const p3Spies = makeSpies(peers.p3.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "processMissingCommits",
                     "applySnapshot",
                     "onRecoveryPeerTimeout",
                     "resetFromPeer",
@@ -783,8 +783,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p2 resetFromServerAndResyncWithPeers should not have been called",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.processMissingCommits.callCount).toBe(0, {
+                    message: "p2 processMissingCommits should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -813,8 +813,8 @@ describe("Stale detection & recovery", () => {
                 expect(p3Spies.resetFromServerAndResyncWithPeers.callCount).toBe(1, {
                     message: "p3 resetFromServerAndResyncWithPeers should have been called once",
                 });
-                expect(p3Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p3 processMissingSteps should not have been called",
+                expect(p3Spies.processMissingCommits.callCount).toBe(0, {
+                    message: "p3 processMissingCommits should not have been called",
                 });
                 expect(p3Spies.applySnapshot.callCount).toBe(1, {
                     message: "p3 applySnapshot should have been called once",
@@ -839,7 +839,7 @@ describe("Stale detection & recovery", () => {
                 const p2Spies = makeSpies(peers.p2.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "processMissingCommits",
                     "applySnapshot",
                     "onRecoveryPeerTimeout",
                     "resetFromPeer",
@@ -863,8 +863,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p2 resetFromServerAndResyncWithPeers should not have been called",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.processMissingCommits.callCount).toBe(0, {
+                    message: "p2 processMissingCommits should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -884,8 +884,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(1, {
                     message: "p2 resetFromServerAndResyncWithPeers should have been called once",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.processMissingCommits.callCount).toBe(0, {
+                    message: "p2 processMissingCommits should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -913,7 +913,7 @@ describe("Stale detection & recovery", () => {
                 const p2Spies = makeSpies(peers.p2.plugins.collaborationOdoo, [
                     "recoverFromStaleDocument",
                     "resetFromServerAndResyncWithPeers",
-                    "processMissingSteps",
+                    "processMissingCommits",
                     "applySnapshot",
                     "onRecoveryPeerTimeout",
                     "resetFromPeer",
@@ -939,8 +939,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(0, {
                     message: "p2 resetFromServerAndResyncWithPeers should not have been called",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.processMissingCommits.callCount).toBe(0, {
+                    message: "p2 processMissingCommits should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -963,8 +963,8 @@ describe("Stale detection & recovery", () => {
                 expect(p2Spies.resetFromServerAndResyncWithPeers.callCount).toBe(1, {
                     message: "p2 resetFromServerAndResyncWithPeers should have been called once",
                 });
-                expect(p2Spies.processMissingSteps.callCount).toBe(0, {
-                    message: "p2 processMissingSteps should not have been called",
+                expect(p2Spies.processMissingCommits.callCount).toBe(0, {
+                    message: "p2 processMissingCommits should not have been called",
                 });
                 expect(p2Spies.applySnapshot.callCount).toBe(0, {
                     message: "p2 applySnapshot should not have been called",
@@ -1010,7 +1010,7 @@ describe("Disconnect & reconnect", () => {
             const p = document.createElement("p");
             p.textContent = content;
             peer.editor.editable.append(p);
-            peer.editor.shared.history.addStep();
+            peer.editor.shared.history.commit();
         };
 
         setSelection(peers.p1);
@@ -1025,31 +1025,31 @@ describe("Disconnect & reconnect", () => {
         peers.p1.setOnline();
         peers.p2.setOnline();
 
-        // todo: p1PromiseForMissingStep and p2PromiseForMissingStep
-        // should be removed when the fix of undetected missing step
+        // todo: p1PromiseForMissingCommit and p2PromiseForMissingCommit
+        // should be removed when the fix of undetected missing commit
         // will be merged. (task-3208277)
-        const p1PromiseForMissingStep = new Promise((resolve) => {
+        const p1PromiseForMissingCommit = new Promise((resolve) => {
             patch(peers.p2.plugins.collaborationOdoo, {
-                async processMissingSteps() {
-                    // Wait for the p2PromiseForMissingStep to resolve
-                    // to avoid undetected missing step.
-                    await p2PromiseForMissingStep;
-                    super.processMissingSteps(...arguments);
+                async processMissingCommits() {
+                    // Wait for the p2PromiseForMissingCommit to resolve
+                    // to avoid undetected missing commit.
+                    await p2PromiseForMissingCommit;
+                    super.processMissingCommits(...arguments);
                     resolve();
                 },
             });
         });
-        const p2PromiseForMissingStep = new Promise((resolve) => {
+        const p2PromiseForMissingCommit = new Promise((resolve) => {
             patch(peers.p1.plugins.collaborationOdoo, {
-                async processMissingSteps() {
-                    super.processMissingSteps(...arguments);
+                async processMissingCommits() {
+                    super.processMissingCommits(...arguments);
                     resolve();
                 },
             });
         });
 
         await peers.p1.openDataChannel(peers.p2);
-        await p1PromiseForMissingStep;
+        await p1PromiseForMissingCommit;
 
         expect(peers.p1.getValue()).toBe(`<p>ac[]b</p><p>f</p><p>d</p>`, {
             message: "p1 should have the value merged with p2",
@@ -1071,7 +1071,7 @@ describe("Snapshot", () => {
         await advanceTime(2 * HISTORY_SNAPSHOT_INTERVAL);
         expect(peers.p1.plugins.collaboration._snapshotInterval).toBe(false);
     });
-    test("should get the steps from the first made snapshot of a reseted peer", async () => {
+    test("should get the commits from the first made snapshot of a reseted peer", async () => {
         const pool = await createPeers(["p1", "p2", "p3"]);
         const peers = pool.peers;
 
@@ -1089,13 +1089,13 @@ describe("Snapshot", () => {
         await peers.p2.openDataChannel(peers.p3);
 
         expect(peers.p3.getValue()).toBe(`<p>a[]b</p>`, {
-            message: "p3 should have the steps from the first snapshot of p2",
+            message: "p3 should have the commits from the first snapshot of p2",
         });
     });
 });
 
-describe("History steps Ids", () => {
-    test("should clear history step ids from the DOM at start up", async () => {
+describe("History commits Ids", () => {
+    test("should clear history commit ids from the DOM at start up", async () => {
         const pool = await createPeers(["p1"]);
         const peers = pool.peers;
         const editor = peers.p1.editor;
@@ -1104,7 +1104,7 @@ describe("History steps Ids", () => {
         editor.destroy();
     });
 
-    test("should clear history step ids when resetting from server", async () => {
+    test("should clear history commit ids when resetting from server", async () => {
         const pool = await createPeers(["p1", "p2"]);
         const peers = pool.peers;
 
@@ -1126,22 +1126,22 @@ describe("History steps Ids", () => {
         });
         expect(getContent(peers.p2.editor.editable)).toBe(`<p>[]ab</p>`, {
             message:
-                "p2 should have the same document as p1, without the history steps id attribute",
+                "p2 should have the same document as p1, without the history commits id attribute",
         });
     });
 
-    test("should not add history step ids to a split block's children", async () => {
+    test("should not add history commit ids to a split block's children", async () => {
         const pool = await createPeers(["p1"]);
         const peers = pool.peers;
         const editor = peers.p1.editor;
         await peers.p1.focus();
         editor.shared.split.splitBlock();
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(getContent(editor.editable)).toBe(
             `<p>a</p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
         editor.shared.split.splitBlock();
-        editor.shared.history.addStep();
+        editor.shared.history.commit();
         expect(getContent(editor.editable)).toBe(
             `<p>a</p><p><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );

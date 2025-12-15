@@ -3,6 +3,7 @@ import { isBlock } from "@html_editor/utils/blocks";
 import { registry } from "@web/core/registry";
 import { addBackgroundGrid, setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
+import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 export class SpacingOptionPlugin extends Plugin {
     static id = "SpacingOption";
@@ -11,24 +12,25 @@ export class SpacingOptionPlugin extends Plugin {
         builder_actions: {
             SetGridSpacingAction,
         },
-        is_mutation_record_savable_predicates: this.isMutationRecordSavable.bind(this),
+        is_mutation_savable_predicates: this.isMutationSavable.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
         clean_for_save_processors: this.cleanForSave.bind(this),
     };
 
     /**
-     * @param {import("@html_editor/core/history_plugin").HistoryMutationRecord} record
+     * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} mutation
+     * @returns {boolean | undefined}
      */
-    isMutationRecordSavable(record) {
+    isMutationSavable(mutation) {
         // Do not consider the grid preview in the history.
-        if (record.type === "childList") {
-            const node = (record.addedTrees[0] || record.removedTrees[0]).node;
-            if (node.matches && node.matches(".o_we_grid_preview") && isBlock(node)) {
+        if (mutation.type === NATIVE_MUTATION_TYPES.CHILD_LIST) {
+            const node = mutation.addedNodes[0] || mutation.removedNodes[0];
+            if (node?.matches?.(".o_we_grid_preview") && isBlock(node)) {
                 return false;
             }
         }
-        if (record.type === "attributes") {
-            if (record.target.matches(".o_we_grid_preview")) {
+        if (mutation.type === NATIVE_MUTATION_TYPES.ATTRIBUTES) {
+            if (mutation.target.matches(".o_we_grid_preview")) {
                 return false;
             }
         }

@@ -19,7 +19,6 @@ export class SnippetVisibilityOption extends BaseOptionComponent {
         this.getModel = this.dependencies["mass_mailing.SnippetVisibility"].getModel;
         this.treeProcessor = useService("tree_processor");
         this.dialog = useService("dialog");
-        this.historyPlugin = this.env.editor.shared.history;
         this.overlayButtonsPlugin = this.env.editor.shared.overlayButtons;
 
         this.state = useDomState((editingElement) => {

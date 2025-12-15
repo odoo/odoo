@@ -127,7 +127,7 @@ export class ResizePlugin extends Plugin {
             ev.preventDefault();
             this.isResizingElement = false;
             this.updateResizeCursor(false);
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             this.document.removeEventListener("mousemove", handleResize);
             this.document.removeEventListener("mouseup", endResizeOperation);
             this.document.removeEventListener("mouseleave", endResizeOperation);
