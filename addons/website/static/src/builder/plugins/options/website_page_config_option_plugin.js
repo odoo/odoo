@@ -88,14 +88,20 @@ class WebsitePageConfigOptionPlugin extends Plugin {
         if (!this.isDirty) {
             return;
         }
-        const item = this.getVisibilityItem();
         const pageOptions = {
-            header_overlay: () => item === "overTheContent",
-            header_color: () => this.getColorValue("background-color", "bg-"),
-            header_text_color: () => this.getColorValue("color", "text-"),
-            header_visible: () => item !== "hidden",
             footer_visible: () => !this.getFooterVisibility(),
         };
+
+        const headerEl = this.document.querySelector("#wrapwrap > header");
+        if (headerEl) {
+            const item = this.getVisibilityItem();
+            Object.assign(pageOptions, {
+                header_overlay: () => item === "overTheContent",
+                header_color: () => this.getColorValue("background-color", "bg-"),
+                header_text_color: () => this.getColorValue("color", "text-"),
+                header_visible: () => item !== "hidden",
+            });
+        }
 
         const args = {};
         for (const [pageOptionName, valueGetter] of Object.entries(pageOptions)) {
