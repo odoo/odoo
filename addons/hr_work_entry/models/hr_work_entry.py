@@ -344,3 +344,6 @@ class HrWorkEntry(models.Model):
             raise UserError(self.env._("This work entry was created manually and has no source attendance."))
         action.update(self._get_source_action_values())
         return action
+
+    def _work_entry_fields_to_nullify(self):
+        return ['active']

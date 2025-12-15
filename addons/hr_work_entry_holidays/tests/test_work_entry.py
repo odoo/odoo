@@ -226,9 +226,9 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         leave_work_entry = self.env['hr.work.entry'].search([('employee_id', '=', self.employee_external.id), ('work_entry_type_id', '=', leave.holiday_status_id.work_entry_type_id.id)])
         self.assertIsNotNone(leave_work_entry)
 
-        self.env["hr.work.entry.regeneration.wizard"].regenerate_work_entries(
-            slots=[{"date": leave_start_date, "employee_id": self.employee_external.id}],
-            record_ids=leave_work_entry.ids,
+        employee_dates = [{"date": leave_start_date, "employee_id": self.employee_external.id}]
+        self.env["hr.employee"].regenerate_work_entries_from_dates(
+            employee_dates,
         )
         leave_work_entry = self.env['hr.work.entry'].search([('employee_id', '=', self.employee_external.id), ('work_entry_type_id', '=', leave.holiday_status_id.work_entry_type_id.id)])
         self.assertIsNotNone(leave_work_entry, "Leave's work entry should have the same work entry type")

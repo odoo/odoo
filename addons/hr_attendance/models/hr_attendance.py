@@ -557,21 +557,6 @@ class HrAttendance(models.Model):
     def action_refuse_overtime(self):
         self.linked_overtime_ids.action_refuse()
 
-    # def action_list_overtimes(self):
-    #     self.ensure_one()
-    #     assert self.date
-    #     return {
-    #         "type": "ir.actions.act_window",
-    #         "name": _("Overtime details"),
-    #         "res_model": "hr.attendance.overtime.line",
-    #         "view_mode": 'list',
-    #         "context": {
-    #             "create": 0,
-    #             "editable": 'top',
-    #         },
-    #         "domain": [('id', 'in', self._linked_overtimes().ids)]
-    #     }
-
     def _cron_auto_check_out(self):
         def check_in_tz(attendance):
             """Returns check-in time in calendar's timezone."""
