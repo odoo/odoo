@@ -1,4 +1,5 @@
 import { isVisible } from "@html_builder/utils/utils";
+import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
@@ -41,11 +42,19 @@ export class DropZonePlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
-        is_mutation_record_savable_predicates: (record) => {
-            if (record.type === "childList") {
-                const addedOrRemovedNode = (record.addedTrees[0] || record.removedTrees[0]).node;
+        /**
+         * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} mutation
+         * @returns {boolean | undefined}
+         */
+        is_mutation_savable_predicates: (mutation) => {
+            if (mutation.type === NATIVE_MUTATION_TYPES.CHILD_LIST) {
+                const addedOrRemovedNode = mutation.addedNodes[0] || mutation.removedNodes[0];
                 // Do not record the addition/removal of the dropzones.
-                if (isElement(addedOrRemovedNode) && addedOrRemovedNode.matches(".oe_drop_zone")) {
+                if (
+                    addedOrRemovedNode &&
+                    isElement(addedOrRemovedNode) &&
+                    addedOrRemovedNode.matches(".oe_drop_zone")
+                ) {
                     return false;
                 }
             }

@@ -60,7 +60,7 @@ export class ClonePlugin extends Plugin {
             disabledReason,
             handler: async () => {
                 await this.cloneElement(this.overlayTarget, { activateClone: false });
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
             },
         });
         return buttons;
@@ -112,7 +112,7 @@ export class CloneItemAction extends BuilderAction {
         const itemEl = editingElement.querySelector(itemSelector);
         if (itemEl) {
             await this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
         }
     }
 }

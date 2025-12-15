@@ -158,7 +158,7 @@ export class InlineCodePlugin extends Plugin {
                 anchorNode: codeElement,
                 anchorOffset: nodeSize(codeElement),
             });
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             delete this.historySavePointRestore;
             return;
         }
@@ -193,7 +193,7 @@ export class InlineCodePlugin extends Plugin {
                 anchorNode: textNode,
                 anchorOffset: offset,
             });
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             const insertedBacktickIndex = offset - 1;
             const textBeforeInsertedBacktick = textNode.textContent.substring(
                 0,
@@ -231,20 +231,20 @@ export class InlineCodePlugin extends Plugin {
             );
             splitNode.replaceWith(codeElement);
             if (!codeElement.textContent.length) {
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 this.dependencies.selection.setSelection({
                     anchorNode: codeElement.firstChild,
                     anchorOffset: 1,
                 });
             } else if (isClosingForward) {
                 // Move selection out of code element.
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 this.dependencies.selection.setSelection({
                     anchorNode: codeElement.nextSibling,
                     anchorOffset: 1,
                 });
             } else {
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
                 this.dependencies.selection.setSelection({
                     anchorNode: codeElement.firstChild,
                     anchorOffset: 0,

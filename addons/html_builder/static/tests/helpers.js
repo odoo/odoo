@@ -469,7 +469,7 @@ export async function waitForSnippetDialog() {
 
 export async function modifyText(editor, editableContent) {
     setContent(editableContent, '<h1 class="title">H[]ello</h1>');
-    editor.shared.history.addStep();
+    editor.shared.history.commit();
     await insertText(editor, "1");
 }
 

@@ -68,7 +68,6 @@ function findOEditable(containerEl) {
 
 export class TranslationPlugin extends Plugin {
     static id = "translation";
-    static dependencies = ["history"];
     static shared = ["getTranslationInfo", "updateTranslationMap"];
 
     /** @type {import("plugins").WebsiteResources} */

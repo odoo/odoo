@@ -89,8 +89,8 @@ export class FontSizePlugin extends Plugin {
             READ,
             this.updateFontSizeSelectorParams.bind(this)
         ),
-        on_undone_handlers: this.updateFontSizeSelectorParams.bind(this),
-        on_redone_handlers: this.updateFontSizeSelectorParams.bind(this),
+        on_history_commit_undone_handlers: this.updateFontSizeSelectorParams.bind(this),
+        on_history_commit_redone_handlers: this.updateFontSizeSelectorParams.bind(this),
         normalize_processors: this.normalize.bind(this),
 
         is_format_class_predicates: (className) => {

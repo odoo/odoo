@@ -94,7 +94,7 @@ describe("collapsed selection", () => {
         });
     });
 
-    test("should replace '->' with '→' and be a undoable step", async () => {
+    test("should replace '->' with '→' and be a undoable commit", async () => {
         const { editor, el } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "->");
         await insertSpace(editor);
@@ -103,7 +103,7 @@ describe("collapsed selection", () => {
         expect(getContent(el)).toBe("<p>ab->&nbsp;[]</p>");
     });
 
-    test("should replace '<-' with '←' and be a undoable step", async () => {
+    test("should replace '<-' with '←' and be a undoable commit", async () => {
         const { editor, el } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "<-");
         await insertSpace(editor);
@@ -112,7 +112,7 @@ describe("collapsed selection", () => {
         expect(getContent(el)).toBe("<p>ab<-&nbsp;[]</p>");
     });
 
-    test("should replace '=>' with '⮕' and be a undoable step", async () => {
+    test("should replace '=>' with '⮕' and be a undoable commit", async () => {
         const { editor, el } = await setupEditor("<p>ab[]</p>");
         await insertText(editor, "=>");
         await insertSpace(editor);
@@ -175,7 +175,7 @@ describe("not collapsed selection", () => {
         });
     });
 
-    test("should replace text and be a undoable step", async () => {
+    test("should replace text and be a undoable commit", async () => {
         const { editor, el } = await setupEditor("<p>[abc]def</p>");
         await insertText(editor, "x");
         expect(getContent(el)).toBe("<p>x[]def</p>");

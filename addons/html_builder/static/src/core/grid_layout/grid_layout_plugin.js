@@ -17,6 +17,7 @@ import {
 } from "@html_builder/utils/grid_layout_utils";
 import { hasMediaOnly, isElement, isMediaElement } from "@html_editor/utils/dom_info";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 const gridItemSelector = ".row.o_grid_mode > div.o_grid_item";
 
@@ -52,7 +53,7 @@ export class GridLayoutPlugin extends Plugin {
         on_element_dropped_near_handlers: this.onElementDroppedNear.bind(this),
         on_element_dropped_handlers: this.onElementDropped.bind(this),
         // Ignore background grid in history
-        is_mutation_record_savable_predicates: this.ignoreBackgroundGrid.bind(this),
+        is_mutation_savable_predicates: this.ignoreBackgroundGrid.bind(this),
         // Make sure `o_grid_item_image` elements are not editable, unless they
         // already have other contents in them (=> compatibility with older
         // versions).
@@ -82,11 +83,17 @@ export class GridLayoutPlugin extends Plugin {
         return !!targetEl && targetEl === containerEl;
     }
 
-    ignoreBackgroundGrid(record) {
-        if (record.type === "childList") {
-            const addedOrRemovedNode = (record.addedTrees[0] || record.removedTrees[0]).node;
+    /**
+     *
+     * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} mutation
+     * @returns {boolean | undefined}
+     */
+    ignoreBackgroundGrid(mutation) {
+        if (mutation.type === NATIVE_MUTATION_TYPES.CHILD_LIST) {
+            const addedOrRemovedNode = mutation.addedNodes[0] || mutation.removedNodes[0];
             // Do not record the addition/removal of the background grid.
             if (
+                addedOrRemovedNode &&
                 isElement(addedOrRemovedNode) &&
                 addedOrRemovedNode.matches(".o_we_background_grid")
             ) {

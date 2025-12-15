@@ -56,7 +56,7 @@ test("Drag & drop an 'Image' snippet opens the dialog to select an image", async
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
 });
 
-test("Drag & drop an 'Image' snippet does not add a step in the history if we cancel the dialog", async () => {
+test("Drag & drop an 'Image' snippet does not add a commit in the history if we cancel the dialog", async () => {
     const { getEditableContent } = await setupWebsiteBuilder(`<div><p>Text</p></div>`);
     const contentEl = getEditableContent();
     expect(contentEl).toHaveInnerHTML(`<div><p>Text</p></div>`);

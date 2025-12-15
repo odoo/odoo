@@ -110,7 +110,7 @@ export class MailComposerPlugin extends Plugin {
         [...sanitizedFragment.childNodes].forEach(removeStyle);
         flattenStructuralDivWrappers(sanitizedFragment);
         this.dependencies.dom.insert(sanitizedFragment);
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
         return true;
     }
 }

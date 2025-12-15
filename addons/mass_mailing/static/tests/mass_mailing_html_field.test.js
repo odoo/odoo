@@ -344,7 +344,7 @@ describe("field HTML", () => {
             conversionDelay.then(() => oldConvert(fragment, config));
         const p = htmlField.editor.editable.querySelector("p");
         p.append(htmlField.editor.document.createTextNode("Updated"));
-        htmlField.editor.shared.history.addStep();
+        htmlField.editor.shared.history.commit();
         await contains(".o_notebook .nav-link[name='body_html']").click();
         await animationFrame();
         await waitFor(".o_notebook .nav-link[name='body_html']");
@@ -383,7 +383,7 @@ describe("field HTML", () => {
         ).toBe("Builder");
         const p = htmlField.editor.editable.querySelector("p");
         p.append(htmlField.editor.document.createTextNode("Updated"));
-        htmlField.editor.shared.history.addStep();
+        htmlField.editor.shared.history.commit();
         await formController.beforeLeave();
         expect(
             (

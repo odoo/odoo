@@ -22,7 +22,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
             this.dependencies.operation.next(async () => {
                 const prefilled = await prefillSocialMediaLinks(this.env.getEditingElement());
                 if (prefilled) {
-                    this.dependencies.history.addStep({ extraStepInfos: { prefill: true } });
+                    this.dependencies.history.commit({ areSocialMediaLinksPrefilled: true });
                 }
             });
         });
@@ -72,7 +72,7 @@ export class SocialMediaLinks extends BaseOptionComponent {
                         element: this.idsElMap.get(elId),
                         elementAfter: this.idsElMap.get(newNext),
                     });
-                    this.dependencies.history.addStep();
+                    this.dependencies.history.commit();
                 }
 
                 // hack to trigger the rebuild

@@ -439,7 +439,7 @@ test("The overlay buttons should only appear for elements in editable areas, unl
             <div class="test-editable">IN EDITABLE</div>
         </div>`
     );
-    editor.shared.history.addStep();
+    editor.shared.history.commit();
 
     await contains(":iframe .test-not-editable").click();
     expect(".overlay .button-a").toHaveCount(0);

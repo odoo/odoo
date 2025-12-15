@@ -125,6 +125,8 @@ export class SocialMediaOptionPlugin extends Plugin {
     ];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        // Added to commits by the `SocialMediaLinks` `BaseOptionComponent`:
+        history_commit_data_properties: ["areSocialMediaLinksPrefilled"],
         so_content_addition_selectors: [".s_share", ".s_social_media"],
         builder_actions: {
             ResetSocialMediaIconSizeAction,
@@ -147,8 +149,8 @@ export class SocialMediaOptionPlugin extends Plugin {
             { selector: ".s_share > a > *", target: ".s_share" },
         ],
         replace_media_dialog_params_processors: this.applyMediaDialogParams.bind(this),
-        is_step_reversible_predicates: (step) => {
-            if (step.extraStepInfos?.prefill) {
+        is_history_commit_reversible_predicates: (commit) => {
+            if (commit.data.areSocialMediaLinksPrefilled) {
                 return false;
             }
         },

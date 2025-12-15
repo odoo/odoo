@@ -28,7 +28,11 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert an info banner"),
                 icon: "fa-info-circle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection, "info") ?? true,
+                    this.checkPredicates(
+                        "is_banner_command_available_predicates",
+                        selection,
+                        "info"
+                    ) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Info"), "💡", "info");
                 },
@@ -39,7 +43,11 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a success banner"),
                 icon: "fa-check-circle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection, "success") ?? true,
+                    this.checkPredicates(
+                        "is_banner_command_available_predicates",
+                        selection,
+                        "success"
+                    ) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Success"), "✅", "success");
                 },
@@ -50,7 +58,11 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a warning banner"),
                 icon: "fa-exclamation-triangle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection, "warning") ?? true,
+                    this.checkPredicates(
+                        "is_banner_command_available_predicates",
+                        selection,
+                        "warning"
+                    ) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Warning"), "⚠️", "warning");
                 },
@@ -61,7 +73,11 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a danger banner"),
                 icon: "fa-exclamation-circle",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection, "danger") ?? true,
+                    this.checkPredicates(
+                        "is_banner_command_available_predicates",
+                        selection,
+                        "danger"
+                    ) ?? true,
                 run: () => {
                     this.insertBanner(_t("Banner Danger"), "❌", "danger");
                 },
@@ -72,7 +88,11 @@ export class BannerPlugin extends Plugin {
                 description: _t("Insert a monospace banner"),
                 icon: "fa-laptop",
                 isAvailable: (selection) =>
-                    this.checkPredicates("is_banner_command_available_predicates", selection, "secondary") ?? true,
+                    this.checkPredicates(
+                        "is_banner_command_available_predicates",
+                        selection,
+                        "secondary"
+                    ) ?? true,
                 run: () => {
                     this.insertBanner(
                         _t("Monospace Banner"),
@@ -166,7 +186,7 @@ export class BannerPlugin extends Plugin {
             } else {
                 icon.remove();
             }
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
             return;
         }
         const blockEl = closestBlock(selection.anchorNode);
@@ -196,7 +216,7 @@ export class BannerPlugin extends Plugin {
         this.dependencies.selection.setCursorEnd(
             bannerElement.querySelector(`.o_editor_banner_content > ${baseContainer.tagName}`)
         );
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     onBannerEmojiChange(iconElement) {
@@ -204,7 +224,7 @@ export class BannerPlugin extends Plugin {
             target: iconElement,
             onSelect: (emoji) => {
                 iconElement.textContent = emoji;
-                this.dependencies.history.addStep();
+                this.dependencies.history.commit();
             },
         });
     }

@@ -29,7 +29,7 @@ export class EmbeddedVideoPlugin extends VideoPlugin {
                 createOverlay: (Component, props = {}, options) =>
                     this.dependencies.overlay.createOverlay(Component, props, options),
                 focusEditable: () => this.dependencies.selection.focusEditable(),
-                addStep: () => this.dependencies.history.addStep(),
+                commit: () => this.dependencies.history.commit(),
                 openVideoSelectorDialog: (save, media) => {
                     this.openVideoSelectorDialog(save, media);
                 },

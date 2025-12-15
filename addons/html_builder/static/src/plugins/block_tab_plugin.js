@@ -140,7 +140,7 @@ export class BlockTabPlugin extends Plugin {
         }
         this.config.updateInvisibleElementsPanel();
         this.dependencies.disableSnippets.disableUndroppableSnippets();
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     /**

@@ -32,7 +32,7 @@ export class YoutubePlugin extends Plugin {
                 run: async () => {
                     const videoElement = await this.getYoutubeVideoElement(youtubeUrl[0]);
                     this.dependencies.dom.insert(videoElement);
-                    this.dependencies.history.addStep();
+                    this.dependencies.history.commit();
                 },
             };
         }

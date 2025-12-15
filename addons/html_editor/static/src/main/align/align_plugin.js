@@ -63,8 +63,8 @@ export class AlignPlugin extends Plugin {
 
         /** Handlers */
         on_selectionchange_handlers: withSequence(READ, this.updateAlignmentParams.bind(this)),
-        on_undone_handlers: this.updateAlignmentParams.bind(this),
-        on_redone_handlers: this.updateAlignmentParams.bind(this),
+        on_history_commit_undone_handlers: this.updateAlignmentParams.bind(this),
+        on_history_commit_redone_handlers: this.updateAlignmentParams.bind(this),
         on_all_formats_removed_handlers: this.setAlignment.bind(this),
 
         /** Predicates */
@@ -150,7 +150,7 @@ export class AlignPlugin extends Plugin {
             }
         }
         if (mode && isAlignmentUpdated) {
-            this.dependencies.history.addStep();
+            this.dependencies.history.commit();
         }
         this.updateAlignmentParams();
     }

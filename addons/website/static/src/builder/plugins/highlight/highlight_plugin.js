@@ -242,7 +242,7 @@ export class HighlightPlugin extends Plugin {
             focusOffset,
         });
         this.dependencies.selection.focusEditable();
-        this.dependencies.history.stageSelection();
+        this.dependencies.selection.stageSelection();
     }
 
     deleteSelectedHighlight() {

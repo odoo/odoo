@@ -60,8 +60,8 @@ export class FontFamilyPlugin extends Plugin {
         ],
         /** Handlers */
         on_selectionchange_handlers: withSequence(READ, this.updateCurrentFontFamily.bind(this)),
-        on_undone_handlers: this.updateCurrentFontFamily.bind(this),
-        on_redone_handlers: this.updateCurrentFontFamily.bind(this),
+        on_history_commit_undone_handlers: this.updateCurrentFontFamily.bind(this),
+        on_history_commit_redone_handlers: this.updateCurrentFontFamily.bind(this),
     };
 
     updateCurrentFontFamily(ev) {

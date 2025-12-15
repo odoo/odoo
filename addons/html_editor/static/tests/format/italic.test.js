@@ -239,14 +239,14 @@ test("should make a few characters italic inside table (italic)", async () => {
     });
 });
 
-test("should not add history step for italic on collapsed selection", async () => {
+test("should not add history commit for italic on collapsed selection", async () => {
     const { editor, el } = await setupEditor("<p>abcd[]</p>");
 
     patchWithCleanup(console, { warn: () => {} });
 
     // Collapsed formatting shortcuts (e.g. Ctrl+I) shouldn’t create a history
-    // step. The empty inline tag is temporary: auto-cleaned if unused. We want
-    // to avoid having a phantom step in the history.
+    // commit. The empty inline tag is temporary: auto-cleaned if unused. We want
+    // to avoid having a phantom commit in the history.
     await press(["ctrl", "i"]);
     expect(getContent(el)).toBe(`<p>abcd<em data-oe-zws-empty-inline="">\u200B[]</em></p>`);
 

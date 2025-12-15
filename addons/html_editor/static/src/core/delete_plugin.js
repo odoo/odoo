@@ -261,7 +261,7 @@ export class DeletePlugin extends Plugin {
      */
     delete(direction, granularity) {
         const selection = this.dependencies.selection.getEditableSelection();
-        this.dependencies.history.stageSelection();
+        this.dependencies.selection.stageSelection();
         this.trigger("on_will_delete_handlers");
 
         if (!selection.isCollapsed) {
@@ -274,7 +274,7 @@ export class DeletePlugin extends Plugin {
             throw new Error("Invalid direction");
         }
         this.trigger("on_deleted_handlers");
-        this.dependencies.history.addStep({ batchable: true });
+        this.dependencies.history.commit({ batchable: true });
     }
 
     // --------------------------------------------------------------------------

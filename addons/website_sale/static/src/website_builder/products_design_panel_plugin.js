@@ -3,10 +3,11 @@ import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ProductsDesignPanel } from "./products_design_panel";
+import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 export class ProductsDesignPanelPlugin extends Plugin {
     static id = "productsDesignPanel";
-    static dependencies = ["builderActions", "builderComponents"];
+    static dependencies = ["builderActions", "builderComponents", "domReferenceMap"];
     static shared = ["registerPanel", "unregisterPanel"];
 
     resources = {
@@ -17,7 +18,7 @@ export class ProductsDesignPanelPlugin extends Plugin {
         builder_components: {
             ProductsDesignPanel,
         },
-        on_new_records_handled_handlers: this.handleMutations.bind(this),
+        on_pending_mutations_staged_handlers: this.handleMutations.bind(this),
         on_ready_to_save_document_handlers: this.onSave.bind(this),
         product_design_list_to_save: {
             selector: "#o_wsale_products_grid",
@@ -54,20 +55,14 @@ export class ProductsDesignPanelPlugin extends Plugin {
 
     /**
      * Handles the flag of the closest product savable element
-     * @param {Object} records - The observed mutations
-     * @param {String} currentOperation - The name of the current operation
+     * @param {import("@html_editor/core/dom_observer_plugin").SerializedMutation[]} mutations - The observed mutations
      */
-    handleMutations(records, currentOperation) {
-        if (currentOperation === "undo" || currentOperation === "redo") {
-            // Do nothing as `o_dirty_product_design_list` has already been handled by the history
-            // plugin.
-            return;
-        }
-        for (const record of records) {
-            if (record.attributeName === "contenteditable") {
+    handleMutations(mutations) {
+        for (const mutation of mutations) {
+            if (mutation.type === EDITOR_MUTATION_TYPES.ATTRIBUTES && mutation.attributeName === "contenteditable") {
                 continue;
             }
-            let targetEl = record.target;
+            let targetEl = this.dependencies.domReferenceMap.getNodeById(mutation.nodeId);
             if (!targetEl.isConnected) {
                 continue;
             }

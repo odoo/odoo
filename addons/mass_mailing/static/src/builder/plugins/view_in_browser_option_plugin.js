@@ -39,7 +39,7 @@ export class ViewInBrowserOptionPlugin extends Plugin {
         if (color) {
             this.dependencies.color.colorElement(linkElement, color, "backgroundColor");
         }
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     removeViewInBrowserLink() {
@@ -48,7 +48,7 @@ export class ViewInBrowserOptionPlugin extends Plugin {
             return;
         }
         link.remove();
-        this.dependencies.history.addStep();
+        this.dependencies.history.commit();
     }
 
     getViewInBrowserLink() {

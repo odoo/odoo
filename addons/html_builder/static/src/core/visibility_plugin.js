@@ -204,8 +204,8 @@ export class VisibilityPlugin extends Plugin {
 
     /**
      * Hides the given element and updates what needs to be.
-     * Note: to use only when hiding things without adding history steps:
-     * - if an action adding a history step hides the element, it should call
+     * Note: to use only when hiding things without adding history commits:
+     * - if an action adding a history commit hides the element, it should call
      *   `onOptionVisibilityUpdate`
      * - if it concerns the "Invisible Element" panel, refer to its component.
      *

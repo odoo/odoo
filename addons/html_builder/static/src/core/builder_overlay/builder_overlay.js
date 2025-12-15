@@ -638,7 +638,7 @@ export class BuilderOverlay {
             // mutations).
             const wasResized = !directions.every((dir) => dir.initialIndex === dir.currentIndex);
             if (wasResized) {
-                this.history.addStep();
+                this.history.commit();
             } else {
                 cancelSizing();
             }
