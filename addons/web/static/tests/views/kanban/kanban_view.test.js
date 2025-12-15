@@ -9774,3 +9774,41 @@ test("kanban: fields with data-tooltip attribute", async () => {
     await advanceTime(500);
     expect(".o-tooltip").toHaveCount(1);
 });
+
+test.tags("desktop");
+test("add o-navigable to buttons with dropdown-item class and view buttons", async () => {
+    Partner._records.splice(1, 3); // keep one record only
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" class="dropdown-item">Item</a>
+                        <a role="menuitem" type="set_cover" class="dropdown-item">Item</a>
+                        <a role="menuitem" type="object" class="dropdown-item">Item</a>
+                    </t>
+                    <t t-name="card">
+                        <div/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    expect(".o-dropdown--menu").toHaveCount(0);
+    await toggleKanbanRecordDropdown();
+    expect(".o-dropdown--menu .dropdown-item.o-navigable").toHaveCount(3);
+    expect(".o-dropdown--menu .dropdown-item.o-navigable.focus").toHaveCount(0);
+
+    // Check that navigation is working
+    await hover(".o-dropdown--menu .dropdown-item.o-navigable");
+    expect(".o-dropdown--menu .dropdown-item.o-navigable.focus").toHaveCount(1);
+
+    await press("arrowdown");
+    expect(".o-dropdown--menu .dropdown-item.o-navigable:nth-child(2)").toHaveClass("focus");
+
+    await press("arrowdown");
+    expect(".o-dropdown--menu .dropdown-item.o-navigable:nth-child(3)").toHaveClass("focus");
+});
