@@ -440,13 +440,15 @@ export class FontPlugin extends Plugin {
                 targetOffset,
                 blockToSplit: closestBlockNode,
             });
-            const isPreBlock = beforeElement.nodeName === "PRE";
+            const isPreBlock = beforeElement === undefined || beforeElement.nodeName === "PRE";
             const baseContainer = isPreBlock
                 ? this.dependencies.baseContainer.createBaseContainer()
                 : afterElement;
             if (isPreBlock) {
-                baseContainer.replaceChildren(...afterElement.childNodes);
-                afterElement.replaceWith(baseContainer);
+                if (afterElement) {
+                    baseContainer.replaceChildren(...afterElement.childNodes);
+                    afterElement.replaceWith(baseContainer);
+                }
             } else {
                 beforeElement.remove();
                 closestPre.after(afterElement);
