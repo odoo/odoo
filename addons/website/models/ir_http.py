@@ -195,8 +195,8 @@ class IrHttp(models.AbstractModel):
             if isinstance(template, str) and '.' not in template:
                 template = 'website.%s' % template
 
-        if template and not request.env.cr.readonly and request.env['ir.ui.view']._get_cached_template_info(template)['track']:
-            request.env['website.visitor']._handle_webpage_dispatch(website_page)
+        if template and request.env['ir.ui.view']._get_cached_template_info(template)['track']:
+            request.env['website.visitor']._handle_webpage_dispatch(website_page, response)
 
         return False
 

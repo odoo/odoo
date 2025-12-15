@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.http import request
 from odoo.tests import tagged
 from odoo.tools import SQL
 
@@ -165,7 +166,11 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         viewed_products = self.black_case_M + self.pink_case_L + self.computer.product_variant_id
         dyn_filter = self.env.ref('website_sale.dynamic_filter_latest_viewed_products')
         with MockRequest(self.env, website=self.website):
-            visitor = self.env['website.visitor']._upsert_visitor(self.env.user.partner_id.id)
+            visitor = self.env['website.visitor']._upsert_visitor(
+                self.env.user.partner_id.id,
+                tz=self.env['website.visitor']._get_visitor_timezone(),
+                user_id=self.env.uid,
+                lang_id=request.lang.id, website_id=request.website.id, country_code=request.geoip.country_code)
             self.env['website.track'].create([{
                 'visitor_id': visitor[0],
                 'product_id': product_id,

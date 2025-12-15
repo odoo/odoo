@@ -1,7 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hashlib
+import functools
+
 from datetime import datetime, timedelta
+from typing import Callable
+from psycopg2 import IntegrityError, OperationalError
+from psycopg2.extensions import TransactionRollbackError
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
@@ -190,7 +195,9 @@ class WebsiteVisitor(models.Model):
             'context': compose_ctx,
         }
 
-    def _upsert_visitor(self, access_token, force_track_values=None):
+    def _upsert_visitor(self, access_token, *,
+                        tz, user_id, lang_id, website_id, country_code,
+                        force_track_values=None):
         """ Based on the given `access_token`, either create or return the
         related visitor if exists, through a single raw SQL UPSERT Query.
 
@@ -204,14 +211,14 @@ class WebsiteVisitor(models.Model):
         """
         create_values = {
             'access_token': access_token,
-            'lang_id': request.lang.id,
+            'lang_id': lang_id,
             # Note that it's possible for the GEOIP database to return a country
             # code which is unknown in Odoo
-            'country_code': request.geoip.country_code,
-            'website_id': request.website.id,
-            'timezone': self._get_visitor_timezone() or None,
-            'write_uid': self.env.uid,
-            'create_uid': self.env.uid,
+            'country_code': country_code,
+            'website_id': website_id,
+            'timezone': tz,
+            'write_uid': user_id,
+            'create_uid': user_id,
             # If the access_token is not a 32 length hexa string, it means that the
             # visitor is linked to a logged in user, in which case its partner_id is
             # used instead as the token.
@@ -275,7 +282,15 @@ class WebsiteVisitor(models.Model):
         access_token = self._get_access_token()
 
         if force_create:
-            visitor_id, _ = self._upsert_visitor(access_token, force_track_values)
+            if self.env.cr.readonly:
+                raise SystemError("It is currently impossible to create a record on this database.")
+            visitor_id, _ = self._upsert_visitor(
+                access_token,
+                tz=self._get_visitor_timezone(),
+                user_id=self.env.uid,
+                lang_id=request.lang.id, website_id=request.website.id, country_code=request.geoip.country_code,
+                force_track_values=force_track_values,
+            )
             return self.env['website.visitor'].sudo().browse(visitor_id)
 
         visitor = self.env['website.visitor'].sudo().search_fetch([('access_token', '=', access_token)])
@@ -287,20 +302,24 @@ class WebsiteVisitor(models.Model):
 
         return visitor
 
-    def _handle_webpage_dispatch(self, website_page):
+    def _handle_webpage_dispatch(self, website_page, response):
         """ Create a website.visitor if the http request object is a tracked
         website.page or a tracked ir.ui.view.
         Since this method is only called on tracked elements, the
         last_connection_datetime might not be accurate as the visitor could have
         been visiting only untracked page during his last visit."""
-
         url = request.httprequest.url
         website_track_values = {'url': url}
         if website_page:
             website_track_values['page_id'] = website_page.id
 
-        access_token = self._get_access_token()
-        self._upsert_visitor(access_token, website_track_values)
+        self._upsert_visitor(
+            self._get_access_token(),
+            user_id=self.env.uid,
+            tz=self._get_visitor_timezone(),
+            lang_id=request.lang.id, website_id=request.website.id, country_code=request.geoip.country_code,
+            force_track_values=website_track_values
+        )
 
     def _add_tracking(self, domain, website_track_values):
         """ Add the track and update the visitor"""

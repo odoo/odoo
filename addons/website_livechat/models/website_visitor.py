@@ -5,6 +5,7 @@ from collections import defaultdict
 from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
+from odoo.http import request
 from odoo.tools import get_lang
 from odoo.tools.sql import column_exists, create_column
 
@@ -116,8 +117,15 @@ class WebsiteVisitor(models.Model):
         ]
         return super()._merge_visitor(target)
 
-    def _upsert_visitor(self, access_token, force_track_values=None):
-        visitor_id, upsert = super()._upsert_visitor(access_token, force_track_values=force_track_values)
+    def _upsert_visitor(self, access_token, *,
+                        tz, user_id, lang_id, website_id, country_code,
+                        force_track_values=None):
+        visitor_id, upsert = super()._upsert_visitor(
+            access_token,
+            tz=tz,
+            user_id=user_id,
+            lang_id=lang_id, website_id=website_id, country_code=country_code,
+            force_track_values=force_track_values)
         if upsert == 'inserted':
             visitor_sudo = self.sudo().browse(visitor_id)
             if guest := self.env["mail.guest"]._get_guest_from_context():
