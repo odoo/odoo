@@ -3,12 +3,14 @@ import {
     renderStaticFileBox,
 } from "@html_editor/main/media/media_dialog/document_selector";
 import { Plugin } from "@html_editor/plugin";
+import { closestElement, firstLeaf, lastLeaf } from "@html_editor/utils/dom_traversal";
+import { nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
 export class FilePlugin extends Plugin {
     static id = "file";
-    static dependencies = ["dom", "history"];
+    static dependencies = ["dom", "history", "selection"];
     resources = {
         user_commands: {
             id: "uploadFile",
@@ -34,9 +36,99 @@ export class FilePlugin extends Plugin {
             },
         }),
         selectors_for_feff_providers: () => ".o_file_box",
+
+        /** Predicates */
         functional_empty_node_predicates: (node) =>
             node?.nodeName === "SPAN" && node.classList.contains("o_file_box"),
+        toolbar_visibility_predicates: (node) => !closestElement(node, ".o_file_box"),
     };
+
+    setup() {
+        this.editable.addEventListener("click", this.onClick.bind(this));
+        this.editable.addEventListener("keydown", this.onKeyDown.bind(this));
+        this.document.addEventListener("pointerdown", this.onPointerDown.bind(this));
+    }
+
+    onClick(ev) {
+        const fileNameEl = closestElement(ev.target, ".o_file_name_container .o_link_readonly");
+        if (!fileNameEl || fileNameEl.isContentEditable) {
+            return;
+        }
+        ev.preventDefault();
+        ev.stopPropagation();
+        fileNameEl.setAttribute("contenteditable", "true");
+
+        let anchorNode, anchorOffset;
+        if (this.document.caretPositionFromPoint) {
+            // Firefox API
+            const pos = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
+            anchorNode = pos?.offsetNode;
+            anchorOffset = pos?.offset;
+        } else if (this.document.caretRangeFromPoint) {
+            // Chrome / Safari API
+            const range = document.caretRangeFromPoint(ev.clientX, ev.clientY);
+            anchorNode = range?.startContainer;
+            anchorOffset = range?.startOffset;
+        }
+
+        // Place the cursor at the click position if it is inside filename,
+        // otherwise fall back to placing it at the start.
+        if (anchorNode && fileNameEl.contains(anchorNode)) {
+            this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+        } else {
+            this.dependencies.selection.setCursorStart(fileNameEl);
+        }
+    }
+
+    onKeyDown(ev) {
+        const fileNameEl = closestElement(ev.target, ".o_file_name_container .o_link_readonly");
+        if (!fileNameEl) {
+            return;
+        }
+        const selection = this.dependencies.selection.getEditableSelection();
+        const firstLeafNode = firstLeaf(fileNameEl);
+        const lastLeafNode = lastLeaf(fileNameEl);
+        switch (ev.key) {
+            case "ArrowLeft":
+                if (
+                    selection.isCollapsed &&
+                    selection.anchorNode === firstLeafNode &&
+                    selection.anchorOffset === 0
+                ) {
+                    ev.preventDefault();
+                }
+                break;
+            case "ArrowRight":
+                if (
+                    selection.isCollapsed &&
+                    selection.anchorNode === lastLeafNode &&
+                    selection.anchorOffset === nodeSize(lastLeafNode)
+                ) {
+                    ev.preventDefault();
+                }
+                break;
+            case "ArrowUp":
+                ev.preventDefault();
+                this.dependencies.selection.setCursorStart(fileNameEl);
+                break;
+            case "ArrowDown":
+                ev.preventDefault();
+                this.dependencies.selection.setCursorEnd(fileNameEl);
+                break;
+            case "Enter":
+                ev.preventDefault();
+                break;
+        }
+    }
+
+    onPointerDown(ev) {
+        const activeElement = this.document.activeElement;
+        const fileNameEl = closestElement(activeElement, ".o_file_name_container .o_link_readonly");
+        if (!fileNameEl || fileNameEl.contains(ev.target)) {
+            return;
+        }
+        activeElement.setAttribute("contenteditable", "false");
+    }
 
     get recordInfo() {
         return this.config.getRecordInfo?.() || {};
