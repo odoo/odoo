@@ -137,16 +137,18 @@ class HrWorkEntry(models.Model):
             return False
         undefined_type = self.filtered(lambda b: not b.work_entry_type_id)
         undefined_type.write({'state': 'conflict'})
-        conflict = self._mark_conflicting_work_entries(min(self.mapped('date')), max(self.mapped('date')))
+        conflict = self._mark_conflicting_work_entries()
         outside_calendar = self._mark_leaves_outside_schedule()
         return undefined_type or conflict or outside_calendar
 
-    def _mark_conflicting_work_entries(self, start, stop):
+    def _mark_conflicting_work_entries(self):
         """
         Set `state` to `conflict` for work entries where, for the same employee and day,
         the total duration exceeds 24 hours.
         Return True if such entries are found.
         """
+        start = min(self.mapped('date'))
+        stop = max(self.mapped('date'))
         self.flush_model(['date', 'duration', 'employee_id', 'active'])
         query = """
             WITH excessive_days AS (
@@ -154,7 +156,7 @@ class HrWorkEntry(models.Model):
                 FROM hr_work_entry
                 WHERE active = TRUE
                   AND date BETWEEN %(start)s AND %(stop)s
-                  {ids_filter}
+                  AND employee_id IN %(employee_ids)s
                 GROUP BY employee_id, date
                 HAVING SUM(duration) > 1000
             )
@@ -170,7 +172,7 @@ class HrWorkEntry(models.Model):
         self.env.cr.execute(query, {
             "start": start,
             "stop": stop,
-            "ids": tuple(self.ids) if self.ids else (),
+            'employee_ids': tuple(self.employee_id.ids),
         })
         conflict_ids = [row[0] for row in self.env.cr.fetchall()]
         self.browse(conflict_ids).write({'state': 'conflict'})
