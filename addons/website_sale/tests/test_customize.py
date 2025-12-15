@@ -383,7 +383,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
                 ('product_tmpl_id', '=', product_template.id),
                 ('price_extra', '=', 3)
             ]).ids
-]
+        ]
 
         self.start_tour(
             product_template.website_url,

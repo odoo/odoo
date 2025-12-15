@@ -49,19 +49,3 @@ export function assertWishlistQuantity(quantity = 1) {
         trigger: `a sup.my_wish_quantity:text(${quantity})`,
     };
 }
-
-export function submitCouponCode(code) {
-    return [
-        {
-            content: "Enter gift card code",
-            trigger: "form[name='coupon_code'] input[name='promo']",
-            run: `edit ${code}`,
-        },
-        {
-            content: "click on 'Apply'",
-            trigger: 'form[name="coupon_code"] button[type="submit"]',
-            run: 'click',
-            expectUnloadPage: true,
-        },
-    ]
-}

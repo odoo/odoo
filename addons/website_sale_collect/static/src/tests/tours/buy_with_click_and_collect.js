@@ -26,7 +26,7 @@ registry.category('web_tour.tours').add(
         steps: () => [
             ...tourUtils.searchProduct("Test CAC Product", { select: true }),
             ...tourUtils.addToCartFromProductPage(),
-            tourUtils.goToCart({ quantity: 1 }),
+            tourUtils.goToCart(),
             tourUtils.goToCheckout(),
             {
                 content: "Fill delivery address form",

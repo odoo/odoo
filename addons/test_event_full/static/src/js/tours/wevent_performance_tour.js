@@ -51,7 +51,7 @@ var registerSteps = [{
     run: 'click',
     expectUnloadPage: true,
 },
-...wsTourUtils.fillAdressForm({
+...wsTourUtils.fillAddressForm({
     name: "Raoulette Poiluchette",
     phone: "0456112233",
     email: "raoulette@example.com",
@@ -59,12 +59,6 @@ var registerSteps = [{
     city: "CheeseCity",
     zip: "8888",
 }),
-{
-    content: "Confirm address",
-    trigger: 'a[name="website_sale_main_button"]',
-    run: "click",
-    expectUnloadPage: true,
-},
 ...wsTourUtils.payWithDemo(),
 ];
 

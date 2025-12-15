@@ -5,7 +5,7 @@ registry.category("web_tour.tours").add('website_sale.update_billing_shipping_ad
     url: '/shop',
     steps: () => [
         ...tourUtils.addToCart({ productName: "Office Chair Black TEST", expectUnloadPage: true }),
-        tourUtils.goToCart({ quantity: 1 }),
+        tourUtils.goToCart(),
         tourUtils.goToCheckout(),
         tourUtils.confirmOrder(),
         {
