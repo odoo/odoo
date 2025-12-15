@@ -1,33 +1,50 @@
 {
-    'name': "via_suite_base",
+    "name": "Via Suite Base",
+    "summary": "Bootstrap defaults for ViaFronteira tenants (Keycloak SSO, currencies, USD base, pricelists, roles, admin users).",
+    "description": """
+Via Suite Base
+==============
 
-    'summary': "Short (1 phrase/line) summary of the module's purpose",
+Seeds a new tenant database with ViaFronteira defaults:
 
-    'description': """
-Long description of module's purpose
+- System parameters (e.g., auth_oauth.authorization_header)
+- Keycloak OAuth provider skeleton (auth.oauth.provider)
+- Currency activation: USD/BRL/ARS/PYG
+- Company base currency default: USD
+- Wholesale pricing tiers: Pricelists A/B/C/D/E/F
+- Via roles/groups aligned to Odoo core apps (Sales/Stock/POS/Accounting)
+- Default admin users (SSO-ready)
+
+Secrets are injected via environment variables in post_init_hook (no secrets in Git).
     """,
+    "author": "ViaFronteira",
+    "website": "https://viafronteira.com",
+    "category": "ViaFronteira",
+    "version": "19.0.1.0.0",
+    "license": "LGPL-3",
+    "depends": [
+        "base",
+        "auth_oauth",
 
-    'author': "My Company",
-    'website': "https://www.yourcompany.com",
-
-    # Categories can be used to filter modules in modules listing
-    # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
-    # for the full list
-    'category': 'Uncategorized',
-    'version': '0.1',
-
-    # any module necessary for this one to work correctly
-    'depends': ['base'],
-
-    # always loaded
-    'data': [
-        # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
+        # Required for groups and pricelists seeds:
+        "product",
+        "sale_management",
+        "stock",
+        "point_of_sale",
+        "account",
     ],
-    # only loaded in demonstration mode
-    'demo': [
-        'demo/demo.xml',
+    "data": [
+        "data/ir_config_parameter.xml",
+        "data/auth_oauth_provider.xml",
+
+        "data/currencies.xml",
+        "data/company.xml",
+
+        "data/pricelists.xml",
+        "data/groups.xml",
+        "data/users.xml",
     ],
+    "post_init_hook": "post_init_hook",
+    "installable": True,
+    "application": False,
 }
-

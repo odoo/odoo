@@ -1,0 +1,97 @@
+<odoo>
+    <data noupdate="1">
+
+        <!-- Pricelists (USD) -->
+        <record id="via_pricelist_a" model="product.pricelist">
+            <field name="name">A - Varejo (0%)</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="via_pricelist_b" model="product.pricelist">
+            <field name="name">B - Atacado (3%)</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="via_pricelist_c" model="product.pricelist">
+            <field name="name">C - Atacado (5%)</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="via_pricelist_d" model="product.pricelist">
+            <field name="name">D - Atacado (7%)</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="via_pricelist_e" model="product.pricelist">
+            <field name="name">E - Atacado (10%)</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="via_pricelist_f" model="product.pricelist">
+            <field name="name">F - Atacado (12%)</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Global rules (formula discount based on list_price) -->
+        <record id="via_pricelist_a_item_global" model="product.pricelist.item">
+            <field name="pricelist_id" ref="via_pricelist_a"/>
+            <field name="applied_on">3_global</field>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">0.0</field>
+            <field name="min_quantity">0.0</field>
+        </record>
+
+        <record id="via_pricelist_b_item_global" model="product.pricelist.item">
+            <field name="pricelist_id" ref="via_pricelist_b"/>
+            <field name="applied_on">3_global</field>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">0.03</field>
+            <field name="min_quantity">0.0</field>
+        </record>
+
+        <record id="via_pricelist_c_item_global" model="product.pricelist.item">
+            <field name="pricelist_id" ref="via_pricelist_c"/>
+            <field name="applied_on">3_global</field>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">0.05</field>
+            <field name="min_quantity">0.0</field>
+        </record>
+
+        <record id="via_pricelist_d_item_global" model="product.pricelist.item">
+            <field name="pricelist_id" ref="via_pricelist_d"/>
+            <field name="applied_on">3_global</field>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">0.07</field>
+            <field name="min_quantity">0.0</field>
+        </record>
+
+        <record id="via_pricelist_e_item_global" model="product.pricelist.item">
+            <field name="pricelist_id" ref="via_pricelist_e"/>
+            <field name="applied_on">3_global</field>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">0.10</field>
+            <field name="min_quantity">0.0</field>
+        </record>
+
+        <record id="via_pricelist_f_item_global" model="product.pricelist.item">
+            <field name="pricelist_id" ref="via_pricelist_f"/>
+            <field name="applied_on">3_global</field>
+            <field name="compute_price">formula</field>
+            <field name="base">list_price</field>
+            <field name="price_discount">0.12</field>
+            <field name="min_quantity">0.0</field>
+        </record>
+
+    </data>
+</odoo>
