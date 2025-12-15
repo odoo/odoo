@@ -27,11 +27,26 @@ from unittest.mock import patch, ANY
 _logger = logging.getLogger(__name__)
 
 
+def skip_unless_external(func):
+    """
+    Skip a test unless the test is run in external mode.
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if 'EXTERNAL_MODE' in (config['test_tags'] or {}):
+            return func(*args, **kwargs)
+        else:
+            raise SkipTest("Skipping this test as it is meant to run in external mode")
+
+    return wrapper
+
+
 class AccountTestInvoicingCommon(ProductCommon):
     # to override by the helper methods setup_country and setup_chart_template to adapt to a localization
     chart_template = False
     country_code = False
-    extra_tags = ['SAVE_XML', *(['-standard', 'external'] if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else [])]
+    extra_tags = ('-standard', 'external') if 'EXTERNAL_MODE' in (config['test_tags'] or {}) else ()
 
     @classmethod
     def safe_copy(cls, record):
@@ -749,7 +764,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             .create(kwargs)
 
     @classmethod
-    def _reverse_invoice(cls, invoice, post=False, **reversal_args):
+    def _reverse_invoice(cls, invoice, is_modify=False, post=False, **reversal_args):
         reverse_action_values = (
             cls.env['account.move.reversal']
             .with_context(active_model='account.move', active_ids=invoice.ids)
@@ -757,7 +772,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                 'journal_id': invoice.journal_id.id,
                 **reversal_args,
             })
-            .reverse_moves()
+            .reverse_moves(is_modify=is_modify)
         )
         credit_note = cls.env['account.move'].browse(reverse_action_values['res_id'])
 
@@ -765,6 +780,26 @@ class AccountTestInvoicingCommon(ProductCommon):
             credit_note.action_post()
 
         return credit_note
+
+    @classmethod
+    def _create_debit_note(cls, invoice, post=False, **debit_note_args):
+        cls.ensure_installed('account_debit_note')
+        debit_note_values = (
+            cls.env['account.debit.note']
+            .with_context(
+                active_model='account.move',
+                active_ids=invoice.ids,
+                default_copy_lines=True,
+            )
+            .create(debit_note_args)
+            .create_debit()
+        )
+        debit_note = cls.env['account.move'].browse(debit_note_values['res_id'])
+
+        if post:
+            debit_note.action_post()
+
+        return debit_note
 
     @classmethod
     def _register_payment(cls, record, **kwargs):
@@ -1039,8 +1074,24 @@ class AccountTestInvoicingCommon(ProductCommon):
                 self.assertDictEqual(current_tax_group, expected_tax_group)
 
     ####################################################
-    # Xml Comparison
+    # Xml / JSON Comparison
     ####################################################
+
+    @classmethod
+    def _get_ignore_schema(cls, subfolder: str, ignore_schema_name: str) -> bytes | None:
+        subfolders = subfolder.split('/')
+        ignore_schema_paths = []
+        while subfolders:
+            ignore_schema_paths.append(f"{cls.test_module}/tests/test_files/{'/'.join(subfolders)}/{ignore_schema_name}")
+            subfolders.pop()
+        ignore_schema_paths.append(f"{cls.test_module}/tests/test_files/{ignore_schema_name}")
+
+        for ignore_schema_path in ignore_schema_paths:
+            try:
+                with file_open(ignore_schema_path, 'rb') as f:
+                    return f.read()
+            except FileNotFoundError:
+                pass
 
     @classmethod
     def _get_xml_ignore_schema(cls, subfolder: str) -> etree._Element | None:
@@ -1059,19 +1110,13 @@ class AccountTestInvoicingCommon(ProductCommon):
         :param subfolder: the subfolder of the path of XML file to save/assert. (e.g. "folder_1", "folder_outer/folder_inner")
         :return: _Element object if an `ignore_schema.xml` file is found, otherwise nothing will be returned.
         """
-        subfolders = subfolder.split('/')
-        ignore_schema_paths = []
-        while subfolders:
-            ignore_schema_paths.append(f"{cls.test_module}/tests/test_files/{'/'.join(subfolders)}/ignore_schema.xml")
-            subfolders.pop()
-        ignore_schema_paths.append(f"{cls.test_module}/tests/test_files/ignore_schema.xml")
+        if ignore_schema_bytes := cls._get_ignore_schema(subfolder, 'ignore_schema.xml'):
+            return etree.fromstring(ignore_schema_bytes)
 
-        for ignore_schema_path in ignore_schema_paths:
-            try:
-                with file_open(ignore_schema_path, 'rb') as f:
-                    return etree.fromstring(f.read())
-            except FileNotFoundError:
-                pass
+    @classmethod
+    def _get_json_ignore_schema(cls, subfolder: str) -> dict | list | None:
+        if ignore_schema_bytes := cls._get_ignore_schema(subfolder, 'ignore_schema.json'):
+            return json.loads(ignore_schema_bytes)
 
     @classmethod
     def _clear_xml_content(cls, xml_element: etree._Element, clean_namespaces=True):
@@ -1226,7 +1271,29 @@ class AccountTestInvoicingCommon(ProductCommon):
         optional_subfolder = f"{subfolder}/" if subfolder else ''
         return file_path(f"{self.test_module}/tests/test_files/{optional_subfolder}{file_name}")
 
-    def assert_json(self, content_to_assert: dict, test_name: str, subfolder=''):
+    @classmethod
+    def _apply_json_ignore_schema(cls, data, ignore_schema):
+        assert data.__class__ is ignore_schema.__class__, "Type of data and ignore_schema must match"
+
+        if isinstance(ignore_schema, dict):
+            for schema_key, schema_value in ignore_schema.items():
+                if schema_key in data:
+                    if schema_value == '___ignore___':
+                        data[schema_key] = '___ignore___'
+                    elif data[schema_key]:  # schema_value is a dict or a list, and the corresponding value is not None
+                        cls._apply_json_ignore_schema(data[schema_key], schema_value)
+        elif isinstance(ignore_schema, list):
+            if len(ignore_schema) == 1:
+                # if there's only one dictionary, apply it to every item in the `data` list
+                for data_child in data:
+                    cls._apply_json_ignore_schema(data_child, ignore_schema[0])
+            else:
+                # otherwise, the length of the schema must match the data, and go through them as pairs
+                assert len(ignore_schema) == len(data), "Length of list of ignore_schema and data must match"
+                for i in range(len(ignore_schema)):
+                    cls._apply_json_ignore_schema(data[i], ignore_schema[i])
+
+    def assert_json(self, content_to_assert: dict | list, test_name: str, subfolder=''):
         """
         Helper to save/assert a dictionary to a JSON file located in the corresponding module `test_files`.
         By default, this method will assert the dictionary with the JSON content.
@@ -1236,20 +1303,22 @@ class AccountTestInvoicingCommon(ProductCommon):
         Before asserting, the dictionary will first be serialized to ensure it is in the same format of the saved JSON.
         This means that for example: all tuples within the dictionary will be converted to list, etc.
 
-        :param content_to_assert: dictionary to save or assert to the corresponding test file
+        :param content_to_assert: dictionary | list to save or assert to the corresponding test file
         :param test_name: the test file name
         :param subfolder: the test file subfolder(s), separated by `/` if there is more than one
         """
         json_path = self._get_test_file_path(f"{test_name}.json", subfolder=subfolder)
+        content_to_assert = json.loads(json.dumps(content_to_assert))
+        if json_ignore_schema := self._get_json_ignore_schema(subfolder):
+            self._apply_json_ignore_schema(content_to_assert, json_ignore_schema)
 
         if 'SAVE_JSON' in config['test_tags']:
             with file_open(json_path, 'w') as f:
-                json.dump(content_to_assert, f, indent=4)
+                f.write(json.dumps(content_to_assert, indent=4))
+            _logger.info("Saved the generated JSON content to %s", json_path)
         else:
             with file_open(json_path, 'rb') as f:
                 expected_content = json.loads(f.read())
-
-            content_to_assert = json.loads(json.dumps(content_to_assert))
             self.assertDictEqual(content_to_assert, expected_content)
 
     def assert_xml(
@@ -1314,7 +1383,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             # Save the xml_element content
             with file_open(test_file_path, 'wb') as f:
                 f.write(etree.tostring(xml_element, pretty_print=True, encoding='UTF-8'))
-                _logger.info("Saved the generated xml content to %s", file_name)
+                _logger.info("Saved the generated XML content to %s", file_name)
         else:
             with file_open(test_file_path, 'rb') as f:
                 expected_xml_str = f.read()

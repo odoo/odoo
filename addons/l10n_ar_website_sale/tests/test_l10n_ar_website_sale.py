@@ -1,12 +1,12 @@
 from odoo.fields import Command, Datetime
 from odoo.tests import tagged
 
-from odoo.addons.l10n_ar.tests.common import TestAr
+from odoo.addons.l10n_ar.tests.common import TestArCommon
 from odoo.addons.website_sale.tests.common import MockRequest
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nArWebsiteSale(TestAr):
+class TestL10nArWebsiteSale(TestArCommon):
 
     @classmethod
     def setUpClass(cls):
