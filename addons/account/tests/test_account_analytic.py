@@ -1130,3 +1130,16 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         })
         invoice.action_post()
         self.assertEqual(self.get_analytic_lines(invoice).amount, 3.33)
+
+    def test_post_move_with_archived_analytic_account(self):
+        """Ensure that posting an invoice with an archived analytic account
+        in its distribution raises a UserError.
+        """
+        invoice = self.create_invoice(self.partner_a, self.product_a)
+        invoice.invoice_line_ids.analytic_distribution = {
+            str(self.analytic_account_1.id): 100,
+        }
+        # Archive analytic account
+        self.analytic_account_1.active = False
+        with self.assertRaisesRegex(UserError, "archived analytic account"):
+            invoice._post()
