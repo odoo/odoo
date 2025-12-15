@@ -45,7 +45,7 @@
                                 <field name="activity_user_id" widget="many2one_avatar_user"
                                        required="not plan_id"/>
                             </group>
-                            <field name="note" class="oe-bordered-editor" placeholder="Log a note..."/>
+                            <field name="note" class="oe-bordered-editor" placeholder="Log a note..." widget="html_mail"/>
                         </group>
                         <div role="alert" class="alert alert-danger mb8" invisible="not has_error">
                             <field name="error"/>
