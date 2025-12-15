@@ -1522,7 +1522,7 @@ class AccountMoveLine(models.Model):
             ):
                 line.amount_currency = line.balance
             if (
-                (changed('amount_currency') or changed('currency_rate') or changed('move_type'))
+                (changed('amount_currency') or (changed('currency_rate') and line.display_type != "cogs") or changed('move_type'))
                 and not self.env.is_protected(self._fields['balance'], line)
                 and (not changed('balance') or (line not in before and not line.balance))
             ):

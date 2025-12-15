@@ -659,10 +659,10 @@ class AccountTestInvoicingCommon(ProductCommon):
                 date = invoice_date
             elif date and not invoice_date:
                 invoice_date = date
-            elif not date and not invoice_date:
+            elif date is None and not invoice_date:
                 invoice_date = fields.Date.today()
 
-        invoice_args |= {'date': date, 'invoice_date': invoice_date}
+        invoice_args |= {'date': date or None, 'invoice_date': invoice_date}
 
         # QoL: allow passing record immediately instead of getting the id / creating [Command.set(...)] everytime
         # QoL: delete all keys with None value from invoice_args
@@ -685,7 +685,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         return invoice
 
     @classmethod
-    def _create_invoice_one_line(cls, price_unit=None, product_id=None, name=None, quantity=1.0, tax_ids=None, discount=None, account_id=None, move_name=None, **invoice_args):
+    def _create_invoice_one_line(cls, price_unit=None, product_id=None, name=None, quantity=1.0, tax_ids=None, discount=None, account_id=None, move_name=None, date=None, **invoice_args):
         return cls._create_invoice(
             invoice_line_ids=[
                 cls._prepare_invoice_line(
@@ -698,6 +698,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     account_id=account_id,
                 )
             ],
+            date=date,
             name=move_name,
             **invoice_args,
         )
