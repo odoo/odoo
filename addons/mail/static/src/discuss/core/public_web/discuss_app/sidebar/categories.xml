@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussSidebarCategories">
-        <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat.id">
-            <t t-if="cat.isVisible" t-call="mail.DiscussSidebarCategories.category">
-                <t t-set="category" t-value="cat"/>
-            </t>
+        <t t-foreach="store.discuss.allCategories" t-as="category" t-key="category.localId">
+            <DiscussSidebarCategory t-if="category.isVisible" category="category"/>
         </t>
-    </t>
-
-    <t t-name="mail.DiscussSidebarCategories.category">
-        <DiscussSidebarCategory category="category"/>
-        <t t-if="category.is_open">
-            <DiscussSidebarChannel t-foreach="category.channels.filter((channel) => channel.isDisplayInSidebar)" t-as="channel" t-key="channel.localId" channel="channel"/>
-        </t>
-        <DiscussSidebarChannel t-elif="store.discuss.thread?.channel?.in(category.channels)" channel="store.discuss.thread?.channel"/>
-        <DiscussSidebarChannel t-elif="store.discuss.thread?.parent_channel_id?.channel?.in(category.channels)" channel="store.discuss.thread.parent_channel_id.channel" />
     </t>
 </templates>

@@ -1,6 +1,5 @@
 import { discussSidebarItemsRegistry } from "@mail/core/public_web/discuss_app/sidebar/sidebar";
 import { DiscussSidebarCategory } from "@mail/discuss/core/public_web/discuss_app/sidebar/category";
-import { DiscussSidebarChannel } from "@mail/discuss/core/public_web/discuss_app/sidebar/channel";
 
 import { Component } from "@odoo/owl";
 
@@ -14,11 +13,7 @@ import { useService } from "@web/core/utils/hooks";
 export class DiscussSidebarCategories extends Component {
     static template = "mail.DiscussSidebarCategories";
     static props = {};
-    static components = {
-        DiscussSidebarCategory,
-        DiscussSidebarChannel,
-        Dropdown,
-    };
+    static components = { DiscussSidebarCategory, Dropdown };
 
     setup() {
         super.setup();
