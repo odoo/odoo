@@ -33,6 +33,9 @@ export class PosOrderlineAccounting extends Base {
     get currencyDisplayPriceUnit() {
         return formatCurrency(this.displayPriceUnit, this.currency.id);
     }
+    get currencyDisplayPriceUnitExcl() {
+        return formatCurrency(this.displayPriceUnitExcl, this.currency.id);
+    }
 
     /**
      * Display price depending on the tax configuration (included or excluded).
@@ -62,6 +65,11 @@ export class PosOrderlineAccounting extends Base {
               }, 0);
     }
     get displayPriceUnit() {
+        return this.config.iface_tax_included === "total"
+            ? this.unitPrices.total_included
+            : this.unitPrices.total_excluded;
+    }
+    get displayPriceUnitExcl() {
         return this.unitPrices.total_excluded;
     }
 
@@ -116,7 +124,7 @@ export class PosOrderlineAccounting extends Base {
 
     get comboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.displayPriceUnit, 0);
+        return allLines.reduce((total, line) => total + line.displayPriceUnitExcl, 0);
     }
 
     get taxGroupLabels() {

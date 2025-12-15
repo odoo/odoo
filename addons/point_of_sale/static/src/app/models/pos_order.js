@@ -527,7 +527,7 @@ export class PosOrder extends PosOrderAccounting {
                         orderLine.discount == 0
                     ) {
                         sum +=
-                            (orderLine.currencyDisplayPriceUnit -
+                            (orderLine.currencyDisplayPriceUnitExcl -
                                 orderLine.unitPrices.no_discount_total_included) *
                             orderLine.getQuantity();
                     }
