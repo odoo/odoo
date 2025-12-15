@@ -167,6 +167,7 @@ class kioskAttendanceApp extends Component {
         if (!this.props.deviceTrackingEnabled || !navigator.geolocation) {
             return rpc(route, { ...params });
         }
+<<<<<<< d9b87ec529d431e49c1456584abc17b4be5d3080
 
         return new Promise((resolve) => {
             navigator.geolocation.getCurrentPosition(
@@ -187,6 +188,42 @@ class kioskAttendanceApp extends Component {
                 { enableHighAccuracy: true }
             );
         });
+||||||| 0071866cab389733b9000f074bdeaa5f156fe39f
+
+        return new Promise((resolve) => {
+            navigator.geolocation.getCurrentPosition(
+                async ({ coords: { latitude, longitude } }) => {
+                    const result = await rpc(route, {
+                        ...params,
+                        latitude,
+                        longitude,
+                    });
+                    resolve(result);
+                },
+                async (err) => {
+                    const result = await rpc(route, {
+                        ...params
+                    });
+                    resolve(result);
+                },
+                { enableHighAccuracy: true }
+            );
+        });
+=======
+        this.ui.block();
+        try {
+            const coords = await new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition(
+                    ({ coords: { latitude, longitude } }) => resolve({ latitude, longitude }),
+                    () => resolve({}),
+                    { enableHighAccuracy: true }
+                );
+            });
+            return await rpc(route, { ...params, ...coords });
+        } finally {
+            this.ui.unblock();
+        }
+>>>>>>> 51eceff213511be8f418323f4e8bb4d451df1a73
     }
 
     async onManualSelection(employeeId, enteredPin) {
