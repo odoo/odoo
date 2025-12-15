@@ -311,7 +311,7 @@ export class Thread extends Record {
     }
 
     get avatarUrl() {
-        return this.module_icon ?? this.store.DEFAULT_AVATAR;
+        return this.channel?.avatarUrl ?? this.module_icon ?? this.store.DEFAULT_AVATAR;
     }
 
     get isTransient() {
