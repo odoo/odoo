@@ -9,7 +9,6 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { createElementWithContent } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";
-import { imageUrl } from "@web/core/utils/urls";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 
@@ -17,8 +16,6 @@ const commandRegistry = registry.category("discuss.channel_commands");
 const threadPatch = {
     setup() {
         super.setup();
-        /** @type {string} */
-        this.avatar_cache_key = undefined;
         this.channel = fields.One("discuss.channel", {
             inverse: "thread",
             /** @this {import("models").Thread} */
@@ -72,17 +69,6 @@ const threadPatch = {
             inverse: "threadAsSelf",
         });
         this.scrollUnread = true;
-    },
-    get avatarUrl() {
-        if (this.channel?.channel_type === "channel" || this.channel?.channel_type === "group") {
-            return imageUrl("discuss.channel", this.id, "avatar_128", {
-                unique: this.avatar_cache_key,
-            });
-        }
-        if (this.correspondent) {
-            return this.correspondent.avatarUrl;
-        }
-        return super.avatarUrl;
     },
     get showCorrespondentCountry() {
         return false;
