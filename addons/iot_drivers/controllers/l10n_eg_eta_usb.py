@@ -16,15 +16,62 @@ _logger = logging.getLogger(__name__)
 crypt_context = CryptContext(schemes=['pbkdf2_sha512'])
 
 
+def _is_access_token_valid(access_token):
+    stored_hash = config.get('proxy_access_token')
+    if not stored_hash:
+        # empty password/hash => authentication forbidden
+        return False
+    return crypt_context.verify(access_token, stored_hash)
+
+
+def get_crypto_lib():
+    """Get the path to the PKCS11 library depending on the system."""
+    if IOT_SYSTEM == 'Darwin':
+        return '/Library/OpenSC/lib/onepin-opensc-pkcs11.so', False
+    elif IS_RPI:
+        return '/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so', False
+    elif IS_WINDOWS:
+        return 'C:/Windows/System32/eps2003csp11.dll', False
+
+    return False, _get_error_template('unsupported_system')
+
+
+def _get_session(pin):
+    """Get a PKCS11 session with the given pin.
+
+    :param pin: pin of the token
+    :return: tuple of (session, error)
+    """
+    lib, error = get_crypto_lib()
+    if error:
+        return False, error
+
+    try:
+        pkcs11 = PyKCS11.PyKCS11Lib()
+        pkcs11.load(pkcs11dll_filename=lib)
+    except PyKCS11.PyKCS11Error:
+        return False, _get_error_template('missing_dll')
+
+    slots = pkcs11.getSlotList(tokenPresent=True)
+    if not slots:
+        return False, _get_error_template('no_drive')
+    if len(slots) > 1:
+        return False, _get_error_template('multiple_drive')
+
+    try:
+        session = pkcs11.openSession(slots[0], PyKCS11.CKF_SERIAL_SESSION | PyKCS11.CKF_RW_SESSION)
+        session.login(pin)
+        return session, False
+    except Exception as ex:  # noqa: BLE001
+        error = _get_error_template(str(ex))
+    return False, error
+
+
+def _get_error_template(error_str):
+    return json.dumps({'error': error_str})
+
+
 class EtaUsbController(http.Controller):
-
-    def _is_access_token_valid(self, access_token):
-        stored_hash = config.get('proxy_access_token')
-        if not stored_hash:
-            # empty password/hash => authentication forbidden
-            return False
-        return crypt_context.verify(access_token, stored_hash)
-
     @route.iot_route('/hw_l10n_eg_eta/certificate', type='http', cors='*', csrf=False, methods=['POST'])
     def eta_certificate(self, pin, access_token):
         """Gets the certificate from the token and returns it to the main odoo instance so that we can prepare the
@@ -34,9 +81,9 @@ class EtaUsbController(http.Controller):
         :param access_token: token shared with the main odoo instance
         :return: json object with the certificate
         """
-        if not self._is_access_token_valid(access_token):
-            return self._get_error_template('unauthorized')
-        session, error = self._get_session(pin)
+        if not _is_access_token_valid(access_token):
+            return _get_error_template('unauthorized')
+        session, error = _get_session(pin)
         if error:
             return error
         try:
@@ -48,7 +95,7 @@ class EtaUsbController(http.Controller):
             return json.dumps(payload)
         except Exception as ex:
             _logger.exception('Error while getting ETA certificate')
-            return self._get_error_template(str(ex))
+            return _get_error_template(str(ex))
         finally:
             session.logout()
             session.closeSession()
@@ -62,9 +109,9 @@ class EtaUsbController(http.Controller):
         :param invoices: dictionary of invoices. Keys are invoices ids, value are the base64 encoded binaries to sign
         :return: json object with the signed invoices
         """
-        if not self._is_access_token_valid(access_token):
-            return self._get_error_template('unauthorized')
-        session, error = self._get_session(pin)
+        if not _is_access_token_valid(access_token):
+            return _get_error_template('unauthorized')
+        session, error = _get_session(pin)
         if error:
             return error
         try:
@@ -85,50 +132,7 @@ class EtaUsbController(http.Controller):
             return json.dumps(payload)
         except Exception as ex:
             _logger.exception('Error while signing invoices')
-            return self._get_error_template(str(ex))
+            return _get_error_template(str(ex))
         finally:
             session.logout()
             session.closeSession()
-
-    def _get_session(self, pin):
-        session = False
-
-        lib, error = self.get_crypto_lib()
-        if error:
-            return session, error
-
-        try:
-            pkcs11 = PyKCS11.PyKCS11Lib()
-            pkcs11.load(pkcs11dll_filename=lib)
-        except PyKCS11.PyKCS11Error:
-            return session, self._get_error_template('missing_dll')
-
-        slots = pkcs11.getSlotList(tokenPresent=True)
-        if not slots:
-            return session, self._get_error_template('no_drive')
-        if len(slots) > 1:
-            return session, self._get_error_template('multiple_drive')
-
-        try:
-            session = pkcs11.openSession(slots[0], PyKCS11.CKF_SERIAL_SESSION | PyKCS11.CKF_RW_SESSION)
-            session.login(pin)
-        except Exception as ex:  # noqa: BLE001
-            error = self._get_error_template(str(ex))
-        return session, error
-
-    def get_crypto_lib(self):
-        error = lib = False
-        if IOT_SYSTEM == 'Darwin':
-            lib = '/Library/OpenSC/lib/onepin-opensc-pkcs11.so'
-        elif IS_RPI:
-            lib = '/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so'
-        elif IS_WINDOWS:
-            lib = 'C:/Windows/System32/eps2003csp11.dll'
-        else:
-            error = self._get_error_template('unsupported_system')
-        return lib, error
-
-    def _get_error_template(self, error_str):
-        return json.dumps({
-            'error': error_str,
-        })
