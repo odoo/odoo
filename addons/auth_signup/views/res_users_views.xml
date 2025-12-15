@@ -17,6 +17,9 @@
                     <button string="Send Password Reset"
                             type="object" name="action_reset_password"
                             invisible="id == uid or state != 'active'" class="btn btn-secondary h-100 ms-2 my-auto"/>
+                    <widget name="auth_signup.button_reset_password_link"
+                            groups="base.group_erp_manager"
+                            invisible="id == uid"/>
                 </xpath>
             </field>
         </record>
