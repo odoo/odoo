@@ -38,6 +38,7 @@ import { BaseOptionComponent, revertPreview } from "@html_builder/core/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { WebsiteBuilder } from "@website/builder/website_builder";
 import { session } from "@web/session";
+import { setupInteractionsInIframe, getIframeInteractionService } from "./iframe_interaction_utils";
 import { getTranslatedElements } from "./translated_elements_getter.hoot";
 
 class Website extends models.Model {
@@ -101,6 +102,24 @@ function patchDOMParser() {
 /**
  * This helper will be moved to website. Prefer using setupHTMLBuilder
  * for builder-specific tests
+ *
+ * @param {string} websiteContent - HTML content to render in the website
+ * @param {Object} options - Configuration options
+ * @param {Object} options.snippets - Snippet definitions
+ * @param {boolean} options.openEditor - Whether to open the editor (default: true)
+ * @param {boolean} options.loadIframeBundles - Whether to load bundles in iframe (default: false)
+ * @param {boolean} options.loadAssetsFrontendJS - Whether to load JS in frontend assets (default: false)
+ * @param {boolean} options.hasToCreateWebsite - Whether to create website (default: true)
+ * @param {string} options.styleContent - Additional CSS content
+ * @param {string} options.headerContent - Header HTML content
+ * @param {string} options.beforeWrapwrapContent - Content before wrapwrap
+ * @param {boolean} options.translateMode - Whether in translate mode (default: false)
+ * @param {Function} options.onIframeLoaded - Callback when iframe loads
+ * @param {Function} options.delayReload - Async function to delay reload
+ * @param {boolean} options.enableInteractions - Whether to enable interactions in iframe (default: false)
+ * @param {string[]} options.interactionWhitelist - List of interactions to enable (if enableInteractions is true)
+ * @param {Object} options.interactionPatches - Patches to apply to interactions before load
+ * @returns {Promise<Object>} Setup result with helper functions
  */
 export async function setupWebsiteBuilder(
     websiteContent,
@@ -116,6 +135,9 @@ export async function setupWebsiteBuilder(
         translateMode = false,
         onIframeLoaded = () => {},
         delayReload = async () => {},
+        enableInteractions = false,
+        interactionWhitelist = [],
+        interactionPatches = {},
     } = {}
 ) {
     // TODO: fix when the iframe is reloaded and become empty (e.g. discard button)
@@ -299,6 +321,17 @@ export async function setupWebsiteBuilder(
     }
     resolveIframeLoaded(iframe);
     await animationFrame();
+
+    // Setup interactions if requested
+    let iframeInteractionAPI = null;
+    if (enableInteractions) {
+        iframeInteractionAPI = await setupInteractionsInIframe(iframe, {
+            whitelistInteractions: interactionWhitelist,
+            patches: interactionPatches,
+            loadFrontendAssets: true,
+        });
+    }
+
     if (openEditor) {
         await openBuilderSidebar(editAssetsLoaded);
     }
@@ -307,6 +340,8 @@ export async function setupWebsiteBuilder(
         getEditableContent: () => editableContent,
         openBuilderSidebar: async () => await openBuilderSidebar(editAssetsLoaded),
         waitSidebarUpdated,
+        getIframeCore: iframeInteractionAPI ? () => iframeInteractionAPI.getCore() : null,
+        iframeInteractionAPI,
     };
 }
 
@@ -532,4 +567,65 @@ export async function insertStructureSnippet(editor, snippetName) {
     const parentEl = editor.editable.querySelector("#wrap") || editor.editable;
     parentEl.append(snippetEl);
     editor.shared.history.addStep();
+}
+
+/**
+ * Enables interactions in the Website Builder iframe for a test.
+ * This is useful when you need to test interaction behavior within the builder.
+ *
+ * @param {HTMLIFrameElement} iframe - The iframe element from setupWebsiteBuilder
+ * @param {Object} options - Configuration options
+ * @param {string[]} options.whitelistInteractions - Interactions to enable
+ * @param {Object.<string, Function>} options.patches - Patches to apply to interactions
+ * @returns {Promise<Object>} API for interacting with the iframe's interaction service
+ *
+ * @example
+ * const { iframeInteractionAPI } = await setupWebsiteBuilder("<div>test</div>");
+ * // Or use the helper:
+ * const iframeAPI = await enableIframeInteractions(iframe, {
+ *     whitelistInteractions: ["website.animation"],
+ *     patches: {
+ *         "website.animation": (InteractionClass) => ({
+ *             start() { expect.step("animation-started"); super.start?.(); }
+ *         })
+ *     }
+ * });
+ */
+export async function enableIframeInteractions(iframe, options = {}) {
+    return setupInteractionsInIframe(iframe, options);
+}
+
+/**
+ * Helper to get the iframe element from setupWebsiteBuilder.
+ * Useful if you need to work with the iframe directly.
+ *
+ * @returns {HTMLIFrameElement|null} The website builder iframe or null
+ */
+export function getWebsiteBuilderIframe() {
+    return queryOne("iframe[data-src^='/website/force/1']");
+}
+
+/**
+ * Helper to access the interaction service from the builder's iframe.
+ * Only works if interactions have been enabled via setupWebsiteBuilder with enableInteractions: true.
+ *
+ * @param {Object} setupResult - The result object from setupWebsiteBuilder
+ * @returns {Promise<Object>} The interaction service from iframe
+ *
+ * @example
+ * const { iframeInteractionAPI } = await setupWebsiteBuilder("<div class='animate'>test</div>", {
+ *     enableInteractions: true,
+ *     interactionWhitelist: ["website.animation"]
+ * });
+ * const service = await getBuilderIframeInteractionService(iframeInteractionAPI);
+ * await service.waitForReady();
+ */
+export async function getBuilderIframeInteractionService(setupResult) {
+    if (!setupResult.iframeInteractionAPI) {
+        throw new Error(
+            "Interactions not enabled. Pass enableInteractions: true to setupWebsiteBuilder"
+        );
+    }
+    const iframe = getWebsiteBuilderIframe();
+    return getIframeInteractionService(iframe);
 }
