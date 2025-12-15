@@ -12,6 +12,14 @@ registry.category("web_tour.tours").add("im_livechat.looking_for_help_discuss_ca
         },
         {
             trigger:
+                ".o-mail-DiscussSidebarChannel:contains(Visitor Accounting):contains(Invoice SO0042 not received)",
+        },
+        {
+            trigger:
+                ".o-mail-DiscussSidebarChannel:contains(Visitor Sales):contains(Delivery delayed for PO0099)",
+        },
+        {
+            trigger:
                 ".o-mail-DiscussSidebarChannel:contains(Accounting):not(:has(.o-mail-starred))",
         },
         {
