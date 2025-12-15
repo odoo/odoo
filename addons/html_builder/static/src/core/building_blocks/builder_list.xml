@@ -8,7 +8,7 @@
             <t t-if="state.value?.length > 2">
                 <div class="o_we_table_wrapper">
                     <table t-ref="table">
-                        <t t-set="items" t-value="formatRawValue(state.value)"/>
+                        <t t-set="items" t-value="visibleItems"/>
                         <t t-foreach="items" t-as="item" t-key="item._id">
                             <tr class="o_row_draggable" t-att-data-id="item._id">
                                 <td t-if="props.sortable" class="o_handle_cell w-0">
@@ -52,6 +52,15 @@
                                 </td>
                             </tr>
                         </t>
+                        <tr t-if="state.isLoadingMore or visibleItems.length lt getIncludedRecords().length">
+                            <td
+                                t-att-colspan="Object.keys(props.itemShape).filter(key => !props.hiddenProperties.includes(key)).length + 2"
+                                class="text-center py-1"
+                            >
+                                <i class="fa fa-spinner fa-spin me-2"/>
+                                Loading more items...
+                            </td>
+                        </tr>
                     </table>
                 </div>
             </t>
