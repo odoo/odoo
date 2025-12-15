@@ -2,13 +2,14 @@
 <templates xml:space="preserve">
     <t t-name="im_livechat.ExpertiseTagsAutocomplete">
         <div
-            class="o-livechat-ExpertiseTagsAutocomplete d-inline-flex o_tags_input o_input flex-wrap gap-1 mb-3"
+            class="o-livechat-ExpertiseTagsAutocomplete d-inline-flex o_tags_input flex-wrap gap-1 mb-3"
+            t-att-class="{'o_input': !props.disabled, 'o-disabled': props.disabled}"
             t-ref="root"
         >
             <div class="d-flex flex-wrap gap-1">
-                <BadgeTag t-foreach="props.channel.livechat_expertise_ids" t-as="expertise" t-key="expertise.id" text="expertise.name" onDelete="() => this.unlinkExpertise(expertise)"/>
+                <BadgeTag t-foreach="props.channel.livechat_expertise_ids" t-as="expertise" t-key="expertise.id" text="expertise.name" onDelete="props.disabled ? null : () => this.unlinkExpertise(expertise)"/>
             </div>
-            <div class="flex-grow-1 d-inline-flex w-100" style="flex-basis: 0;">
+            <div t-if="!props.disabled" class="flex-grow-1 d-inline-flex w-100" style="flex-basis: 0;">
                 <Many2XAutocomplete
                     placeholder="placeholder"
                     resModel="'im_livechat.expertise'"

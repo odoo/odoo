@@ -22,7 +22,7 @@
             </div>
             <div class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Notes</h6>
-                <textarea class="form-control" rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
+                <textarea class="form-control" t-att-disabled="!store.has_access_livechat"  rows="3" placeholder="Add your notes here..." t-model="props.thread.livechatNoteText" t-on-blur="onBlurNote"></textarea>
             </div>
             <div t-if="expectAnswerSteps.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Chatbot answers</h6>
@@ -35,7 +35,7 @@
             </div>
             <div class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-1">Expertise</h6>
-                <ExpertiseTagsAutocomplete channel="props.thread.channel"/>
+                <ExpertiseTagsAutocomplete channel="props.thread.channel" disabled="!store.has_access_livechat"/>
             </div>
             <t t-name="extra_infos"/>
             <div t-if="props.thread.livechat_end_dt" class="d-flex flex-column bg-inherit gap-1">

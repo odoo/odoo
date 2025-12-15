@@ -24,7 +24,7 @@ registerThreadAction("livechat-status", {
     actionPanelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     condition: ({ channel, store, owner }) =>
         channel?.channel_type === "livechat" &&
-        store.self_user?.share === false &&
+        store.has_access_livechat &&
         !channel.livechat_end_dt &&
         !owner.isDiscussContent,
     dropdown: true,
