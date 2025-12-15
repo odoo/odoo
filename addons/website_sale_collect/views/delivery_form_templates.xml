@@ -63,7 +63,6 @@
                             <span class="small">|</span>
                             <button
                                 t-if="not in_wishlist"
-                                title="Add to Wishlist"
                                 class="o_add_wishlist_dyn alert-link btn btn-link btn-sm p-0"
                                 t-att-data-product-id="order_line.product_id.id"
                                 t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
@@ -73,7 +72,7 @@
                                     t-att-data-line-id="order_line.id"
                                     t-att-data-product-id="order_line.product_id.id"
                                 >
-                                    <i class="fa fa-fw fa-heart-o" role="presentation" aria-label="Add to Wishlist"/>
+                                    <i class="fa fa-fw fa-heart-o" role="presentation" aria-label="Add to wishlist"/>
                                     Wishlist
                                 </span>
                             </button>

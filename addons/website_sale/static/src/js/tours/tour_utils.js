@@ -23,7 +23,7 @@ export function goToProductPage({
 export function increaseProductPageQuantity() {
     return {
         content: "Increase product quantity",
-        trigger: '.css_quantity a.js_add_cart_json i.oi-plus',
+        trigger: '.css_quantity button:has(i.oi-plus)',
         run: "click",
     }
 }
