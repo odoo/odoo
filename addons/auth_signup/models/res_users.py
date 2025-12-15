@@ -7,7 +7,7 @@ from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.tools.translate import LazyTranslate
 
@@ -152,6 +152,20 @@ class ResUsers(models.Model):
                 raise UserError(_("Could not contact the mail server, please check your outgoing email server configuration")) from mde
             else:
                 raise UserError(_("There was an error when trying to deliver your Email, please check your configuration")) from mde
+
+    def get_reset_password_link(self):
+        """ Generate a new valid link to reset the password. """
+        self.ensure_one()
+
+        if not self.env.is_admin:
+            raise AccessError(_("Only administrators can generate reset password link."))
+        if self.id == self.env.user.id:
+            raise UserError(_("You cannot perform this action on your own user."))
+        if not self.active:
+            raise UserError(_("You cannot perform this action on an archived user."))
+
+        self.partner_id.signup_prepare(signup_type='reset')
+        return self.partner_id._get_signup_url()
 
     def _action_reset_password(self, signup_type="reset"):
         """ create signup token for each user, and send their signup url by email """
