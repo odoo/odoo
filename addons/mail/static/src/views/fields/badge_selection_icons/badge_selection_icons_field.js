@@ -47,8 +47,13 @@ export class BadgeSelectionWithIconsField extends BadgeSelectionField {
                 });
 
                 return ret.map((opt) => {
-                    const iconValue = opt[props.relatedIconField] || props.defaultIcon;
-                    return [opt.id, opt.name, iconValue];
+                    const relatedFieldValue = opt[props.relatedIconField];
+                    // In case the icon value is a selection, we can specify a mapping too
+                    const iconValue =
+                        relatedFieldValue && props.iconMapping
+                            ? props.iconMapping[relatedFieldValue]
+                            : relatedFieldValue;
+                    return [opt.id, opt.name, iconValue || props.defaultIcon];
                 });
             });
         }
