@@ -2,6 +2,7 @@ import { Plugin, isValidTargetForDomListener } from "../plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef {Object} Shortcut
@@ -32,6 +33,7 @@ import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
  *     commandId: string;
  *     commandParams?: object;
  * }[]} shorthands
+ * @typedef {import("plugins").CSSSelector[]} shorthand_blacklist_selectors
  */
 
 export class ShortCutPlugin extends Plugin {
@@ -80,6 +82,15 @@ export class ShortCutPlugin extends Plugin {
         );
     }
 
+    matchShorthand(text) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const blacklistSelector = this.getResource("shorthand_blacklist_selectors").join(", ");
+        if (blacklistSelector && closestElement(selection.anchorNode).matches(blacklistSelector)) {
+            return undefined;
+        }
+        return this.getResource("shorthands").find(({ pattern }) => pattern.test(text));
+    }
+
     onInput(ev) {
         if (ev.data !== " ") {
             return;
@@ -97,9 +108,7 @@ export class ShortCutPlugin extends Plugin {
             leftLeaf = leftDOMPath.next().value;
         }
         const precedingText = blockEl.textContent.substring(0, spaceOffset - 1);
-        const matchedShortcut = this.getResource("shorthands").find(({ pattern }) =>
-            pattern.test(precedingText)
-        );
+        const matchedShortcut = this.matchShorthand(precedingText);
         if (matchedShortcut) {
             const command = this.dependencies.userCommand.getCommand(matchedShortcut.commandId);
             if (command) {

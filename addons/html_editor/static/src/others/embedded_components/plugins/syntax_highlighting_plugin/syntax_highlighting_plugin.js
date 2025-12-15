@@ -30,6 +30,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
         },
         system_attributes: "data-syntax-highlighting-autofocus",
         powerbox_blacklist_selectors: "[data-embedded-props*='plaintext'] pre",
+        shorthand_blacklist_selectors: "[data-embedded-props*='plaintext'] pre",
 
         /** Handlers */
         mount_component_handlers: this.setupNewCodeBlock.bind(this),
