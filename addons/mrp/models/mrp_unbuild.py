@@ -104,10 +104,11 @@ class MrpUnbuild(models.Model):
             self.bom_id = self.mo_id.bom_id
             self.product_uom_id = self.mo_id.product_uom_id
             self.lot_id = self.mo_id.lot_producing_id
-            if self.has_tracking == 'serial':
+            qty_produced = self.mo_id.qty_produced
+            if self.has_tracking == 'serial' or qty_produced < 1:
                 self.product_qty = 1
             else:
-                self.product_qty = self.mo_id.qty_produced
+                self.product_qty = qty_produced
 
 
     @api.onchange('product_id')
