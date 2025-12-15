@@ -117,13 +117,5 @@ class AccountMove(models.Model):
         )
 
     def _l10n_eg_edi_exchange_currency_rate(self):
-        """ Calculate the rate based on the balance and amount_currency, so we recuperate the one used at the time"""
         self.ensure_one()
-        from_currency = self.currency_id
-        to_currency = self.company_id.currency_id
-        if from_currency != to_currency and self.invoice_line_ids:
-            first_product_line = self.invoice_line_ids.filtered(lambda line: line.display_type == "product")[:1]
-            amount_currency = first_product_line.amount_currency
-            if not float_is_zero(amount_currency, precision_rounding=from_currency.rounding):
-                return abs(first_product_line.balance / amount_currency)
-        return 1.0
+        return 1.0 if float_is_zero(self.invoice_currency_rate, precision_digits=5) else 1 / self.invoice_currency_rate
