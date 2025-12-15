@@ -204,6 +204,7 @@ class TestUi(TestUICommon):
             'karma': 10,
             'group_ids': [(6, 0, (self.env.ref('base.group_user') | self.env.ref('website_slides.group_website_slides_officer')).ids)]
         })
+        self.user_admin.email = 'admin-test_course_reviews_elearning_admin@example.com'
         self.channel._action_add_members(user_demo.partner_id)
         self.channel.with_user(user_demo).message_post(
             body="Other user review",
