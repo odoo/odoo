@@ -8,7 +8,7 @@
             <t t-if="this.state.value?.length > 2">
                 <div class="o_we_table_wrapper">
                     <table t-custom-ref="table">
-                        <t t-set="items" t-value="this.formatRawValue(this.state.value)"/>
+                        <t t-set="items" t-value="this.cappedItems"/>
                         <t t-foreach="items" t-as="item" t-key="item._id">
                             <tr class="o_row_draggable" t-att-data-id="item._id">
                                 <td t-if="this.props.sortable" class="o_handle_cell w-0">
@@ -52,6 +52,9 @@
                                 </td>
                             </tr>
                         </t>
+                        <tr t-custom-ref="sentinel" t-if="this.hasMoreItems">
+                            <td colspan="99"/>
+                        </tr>
                     </table>
                 </div>
             </t>

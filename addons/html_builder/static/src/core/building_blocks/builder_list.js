@@ -1,4 +1,4 @@
-import { useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { BuilderComponent } from "@html_builder/core/building_blocks/builder_component";
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import {
@@ -40,6 +40,7 @@ export class BuilderList extends Component {
         columnWidth: { optional: true },
         forbidLastItemRemoval: { type: Boolean, optional: true },
         isEditable: { type: Boolean, optional: true },
+        limit: { type: Number, optional: true },
     };
     static defaultProps = {
         addItemTitle: _t("Add"),
@@ -51,6 +52,7 @@ export class BuilderList extends Component {
         columnWidth: {},
         forbidLastItemRemoval: false,
         isEditable: true,
+        limit: 50,
     };
     static components = { BuilderComponent, SelectMenu };
 
@@ -70,6 +72,34 @@ export class BuilderList extends Component {
         this.commit = commit;
         this.preview = preview;
         this.allRecords = this.formatRawValue(this.props.records);
+        this.visibilityState = useState({
+            limit: this.props.limit,
+        });
+        this.tableRef = useRef("table");
+        this.sentinelRef = useRef("sentinel");
+        useLayoutEffect(
+            () => {
+                const sentinelEl = this.sentinelRef.el;
+                if (!sentinelEl) {
+                    return;
+                }
+                const observer = new IntersectionObserver(
+                    ([entry]) => {
+                        if (entry.isIntersecting && this.hasMoreItems) {
+                            this.visibilityState.limit += this.props.limit;
+                        }
+                    },
+                    {
+                        root: this.tableRef.el.parentElement,
+                        threshold: 1.0,
+                        rootMargin: "100px",
+                    }
+                );
+                observer.observe(sentinelEl);
+                return () => observer.disconnect();
+            },
+            () => []
+        );
 
         onWillUpdateProps((props) => {
             this.allRecords = this.formatRawValue(props.records);
@@ -78,7 +108,7 @@ export class BuilderList extends Component {
         if (this.props.sortable) {
             useSortable({
                 enable: () => this.props.sortable,
-                ref: useRef("table"),
+                ref: this.tableRef,
                 elements: ".o_row_draggable",
                 handle: ".o_handle_cell",
                 cursor: "grabbing",
@@ -89,6 +119,14 @@ export class BuilderList extends Component {
                 },
             });
         }
+    }
+
+    get cappedItems() {
+        return this.getIncludedRecords().slice(0, this.visibilityState.limit);
+    }
+
+    get hasMoreItems() {
+        return this.cappedItems.length < this.getIncludedRecords().length;
     }
 
     validateProps() {
