@@ -5126,6 +5126,12 @@ class AccountMove(models.Model):
             msg = "\n".join([line for line in validation_msgs])
             raise UserError(msg)
 
+        if inactive_analytic_ids := self.line_ids.with_context(active_test=False).distribution_analytic_account_ids.filtered(lambda a: not a.active):
+            raise UserError(_(
+                "You cannot post an entry with an archived analytic account: %s",
+                ', '.join(inactive_analytic_ids.mapped('name')),
+            ))
+
         if soft:
             future_moves = self.filtered(lambda move: move.date > fields.Date.context_today(self))
             for move in future_moves:
