@@ -374,7 +374,7 @@ class ImageGalleryOption extends Plugin {
             }
             clonedImgs.push(newImg);
         }
-        await Promise.all(imgLoaded);
+        await Promise.allSettled(imgLoaded);
         return { clonedImgs, imageToSelect };
     }
 
