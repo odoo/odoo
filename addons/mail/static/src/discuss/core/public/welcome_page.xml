@@ -18,9 +18,9 @@
                     <input class="form-control bg-white rounded" type="text" name="guest_name" placeholder="Your name" t-model="state.userName" t-on-keydown="onKeydownInput"/>
                     <small class="form-text text-end" t-att-class="{'text-danger': state.userName.length > 60}"><t t-out="state.userName.length"/>/60</small>
                 </div>
-                <div class="fs-3" t-if="store.self_user">
-                    <p>Ready to join?</p>
-                    <p t-if="showCallPreview and noActiveParticipants">No one else is here.</p>
+                <div t-if="store.self_user">
+                    <p class="fs-3">Ready to join?</p>
+                    <p t-if="showCallPreview and noActiveParticipants" class="fs-4 mt-n3 text-muted">No one else is here.</p>
                 </div>
                 <button class="d-flex btn btn-light rounded-pill align-items-center justify-content-center gap-3 px-4 fs-3" title="Join Channel" t-att-disabled="!canJoin" t-on-click="joinChannel">
                     <t t-if="showCallPreview" t-set="joinText">Join call</t>
