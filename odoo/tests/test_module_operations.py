@@ -233,5 +233,5 @@ if __name__ == '__main__':
     try:
         args.func(args)
     except Exception:
-        _logger.error("%s tests failed", args.func.__name__[5:])
-        raise
+        _logger.exception("%s tests failed", args.func.__name__[5:])
+        exit(1)
