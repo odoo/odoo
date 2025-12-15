@@ -54,7 +54,7 @@
                                 <field name="res_model" widget="activity_model_selector" string="Link to"
                                     invisible="id or context.get('active_model')" required="activity_user_id != context.get('uid')"/>
                             </group>
-                            <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..."/>
+                            <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..." widget="html_mail" />
                         </group>
                         <div role="alert" class="alert alert-danger mb8" invisible="not has_error">
                             <field name="error"/>
