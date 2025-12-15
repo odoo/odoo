@@ -751,7 +751,9 @@ patch(PosStore.prototype, {
                     );
                 }
             }
-            await this._postProcessLoyalty(order);
+            if (!["draft", "cancel"].includes(order.state)) {
+                await this._postProcessLoyalty(order);
+            }
         }
     },
     async _postProcessLoyalty(order) {
