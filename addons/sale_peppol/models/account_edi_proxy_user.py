@@ -1,4 +1,4 @@
-from markupsafe import Markup
+from base64 import b64encode
 
 from odoo import models
 
@@ -26,11 +26,9 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         return super()._peppol_import_document(self, attachment, peppol_state, uuid, journal)
 
     def _peppol_import_advanced_order(self, attachment, peppol_state, uuid):
-        """Import documents related to advanced order:
-        - Order: create new order
-        - Order Change: update matching order
-        - Order Cancellation: set order state to cancelled
-        - Order Balance: add indication on order lines
+        """Import documents related to advanced order. Note that for order change and order
+        cancellation, they wouldn't update the order automatically. The user would need to confirm
+        these requests (see sale.edi.xml.ubl_bis3_order_change.process_peppol_order_change)
 
         Note: ensure_one() from account_peppol
 
@@ -54,56 +52,42 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 'peppol_message_uuid': uuid,
                 'peppol_order_state': peppol_state,
             })
+            partner = order.partner_id.commercial_partner_id.with_company(order.company_id)
+            order_response_xml = self.env['sale.edi.xml.ubl_bis3_order_response_advanced'].build_order_response_xml(order, 'AB')
+            params = {
+                'documents': [{
+                    'filename': f"{attachment.name}-response",
+                    'ubl': b64encode(order_response_xml).decode(),
+                    'receiver': f"{partner.peppol_eas}:{partner.peppol_endpoint}",
+                }],
+            }
+            self._call_peppol_proxy(
+                "/api/peppol/1/send_document",
+                params=params,
+            )
+
         elif doc_customization_id == customization_id['order_change']:
             order_ref_id = tree.findtext('.//{*}OrderReference/{*}ID')
-            order = self.env['sale.order'].search([('peppol_order_id', '=', order_ref_id)])
+            order = self.env['sale.order'].search([('peppol_order_id', '=', order_ref_id)], limit=1)
             if order:
-                order_vals, logs = self.env['sale.edi.xml.ubl_bis3_advanced_order']._retrieve_order_vals(order, tree)
-                order_change_seq_no = order_vals.get('order_change_seq_no')
-                if order_change_seq_no and order_change_seq_no <= order.peppol_order_change_seq:
-                    order.message_post(self.env._("Received invalid order change sequence number:"
-                                                  " %s. Rejecting the order change message.",
-                                                  order_change_seq_no))
-                    # Return rejection order response
-                    return {}
-                order.peppol_order_change_seq = order_change_seq_no
-                order.client_order_ref = f"{order_ref_id}-{order_change_seq_no}"
-                for order_line in order_vals['order_line']:
-                    # order_vals['order_line'] is a Command.create tuple (i.e. (6, 0, values_dict))
-                    # Maybe we can refactor _retrieve_order_vals > _import_lines so we can use the
-                    # method outside of _retrieve_order_vals as well.
-                    order_line_vals = order_line[2]
-                    line_status_code = order_line_vals.pop('line_status_code', None)
+                order.message_post(
+                    body=self.env._("Received PEPPOL order change request."),
+                    attachment_ids=[attachment.id],
+                )
+                attachment.write({'res_model': 'sale.order', 'res_id': order.id})
+                order.l10n_sg_has_peppol_order_change = True
 
-                    if line_status_code == "1":  # Line is being added
-                        pass
-                    elif line_status_code == "2":  # Line is being deleted
-                        updated_line_ref = order_line_vals.get('ubl_line_item_ref')
-                        if updated_line_ref is None:
-                            continue
-                        order.order_line.search(
-                            [('ubl_line_item_ref', '=', updated_line_ref)],
-                            limit=1,
-                        ).unlink()
-                    elif line_status_code == "3":  # Line is being updated
-                        updated_line_ref = order_line_vals.get('ubl_line_item_ref')
-                        if updated_line_ref is None:
-                            continue
-                        line_to_update = order.order_line.search(
-                            [('ubl_line_item_ref', '=', updated_line_ref)],
-                            limit=1,
-                        )
-                        # Unlink and rewrite line level charges
-                        line_to_update['linked_line_ids'].unlink()
-                        line_to_update.write(order_line_vals)
-                order.message_post(body=Markup("<strong>%s</strong>") % self.env._("Format used to import the document: %s", self._description))
-                if logs:
-                    order._create_activity_set_details(Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs))
         elif doc_customization_id == customization_id['order_cancel']:
             order_ref_id = tree.findtext('.//{*}OrderReference/{*}ID')
-            order = self.env['sale.order'].search([('peppol_order_id', '=', order_ref_id)])
+            order = self.env['sale.order'].search([('peppol_order_id', '=', order_ref_id)], limit=1)
             if order:
-                order.state = 'cancel'
+                order.message_post(
+                    body=self.env._("Received PEPPOL order change request."),
+                    attachment_ids=[attachment.id],
+                )
+                attachment.write({'res_model': 'sale.order', 'res_id': order.id})
+                order.l10n_sg_has_peppol_order_cancel = True
+
         else:
             # We did not handle any document
             return {}

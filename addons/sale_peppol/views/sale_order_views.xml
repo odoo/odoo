@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="after">
+                <div class="alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not l10n_sg_has_peppol_order_change"  role="alert">
+                    <span>You have a new PEPPOL order change request.</span>
+                    <button name="action_apply_peppol_order_change" 
+                        type="object" 
+                        string="Update" 
+                        class="btn-link"
+                        style="padding: 0; vertical-align: baseline; border: none;"/>
+                </div>
+                <div class="alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not l10n_sg_has_peppol_order_cancel"  role="alert">
+                    <span>You have a new PEPPOL cancellation request.</span>
+                    <button name="action_apply_peppol_order_cancel" 
+                        type="object" 
+                        string="Update" 
+                        class="btn-link"
+                        style="padding: 0; vertical-align: baseline; border: none;"/>
+                    <button name="action_reject_peppol_order_cancel" 
+                        type="object" 
+                        string="Reject" 
+                        class="btn-link"
+                        style="padding: 0; vertical-align: baseline; border: none;"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

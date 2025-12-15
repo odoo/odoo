@@ -10,4 +10,7 @@ Receive PEPPOL UBL BIS Advanced Orders and automatically generate sale orders
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'data': [
+        'views/sale_order_views.xml',
+    ],
 }

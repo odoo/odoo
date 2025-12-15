@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
@@ -19,7 +19,15 @@ class SaleOrder(models.Model):
         copy=False,
     )
     peppol_order_id = fields.Char(string="PEPPOL order document ID")
-    peppol_order_change_seq = fields.Integer(string="PEPPOL order change sequence number")
+    peppol_order_change_id = fields.Char(string="PEPPOL order change document ID")
+
+    l10n_sg_has_peppol_order_change = fields.Boolean(default=True)
+    l10n_sg_has_peppol_order_cancel = fields.Boolean(default=True)
+
+    def action_confirm(self):
+        super().action_confirm()
+        self.env['sale.edi.xml.ubl_bis3_order_response_advanced'].build_order_response_xml(self, 'AP')
+        # Send this via peppol
 
     # =================== #
     # === EDI Decoder === #
@@ -48,3 +56,17 @@ class SaleOrder(models.Model):
                 'decoder': self.env['sale.edi.xml.ubl_bis3_advanced_order']._import_order_ubl,
             }
         return super()._get_edi_decoder(file_data, new)
+
+    def action_apply_peppol_order_change(self):
+        self.env['sale.edi.xml.ubl_bis3_order_change'].process_peppol_order_change(self)
+        self.l10n_sg_has_peppol_order_change = False
+
+    def action_reject_peppol_order_change(self):
+        self.l10n_sg_has_peppol_order_cancel = False
+
+    def action_apply_peppol_order_cancel(self):
+        self.env['sale.edi.xml.ubl_bis3_order_cancel'].process_peppol_order_cancel(self)
+        self.l10n_sg_has_peppol_order_cancel = False
+
+    def action_reject_peppol_order_cancel(self):
+        self.l10n_sg_has_peppol_order_cancel = False

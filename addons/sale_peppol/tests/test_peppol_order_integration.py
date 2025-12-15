@@ -102,6 +102,7 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
 
         cls.mocked_incoming_invoice_fname = 'encrypted_order_change'
         self.env['account_edi_proxy_client.user'].sudo()._cron_peppol_get_new_documents()
+        order.action_apply_peppol_order_change()
         self.assertEqual(order.amount_total, 4855.0)
 
     def test_order_cancel(self):
@@ -121,6 +122,7 @@ class TestPeppolOrderIntegration(TestPeppolMessage):
         self.env['account_edi_proxy_client.user'].sudo()._cron_peppol_get_new_documents()
 
         order = self.env['sale.order'].sudo().search([('peppol_message_uuid', '=', FAKE_UUID[1])])
+        order.action_apply_peppol_order_cancel()
         self.assertEqual(order.state, 'cancel')
 
     # def test_end_to_end_complex_order_processing(self):
