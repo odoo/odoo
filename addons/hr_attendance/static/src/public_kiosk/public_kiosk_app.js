@@ -138,7 +138,12 @@ class kioskAttendanceApp extends Component{
         if (!this.props.deviceTrackingEnabled || !navigator.geolocation) {
             return rpc(route, { ...params });
         }
+<<<<<<< 61820b37b6ed039868060717e93b89c74bcf5a09
 
+||||||| 00ae9ca642fd0b9621a0b1d9e55363477800ac99
+=======
+        this.ui.block();
+>>>>>>> 6278ead84b767c2cbcd8f222804e81be857d1cc1
         return new Promise((resolve) => {
             navigator.geolocation.getCurrentPosition(
                 async ({ coords: { latitude, longitude } }) => {
@@ -148,12 +153,14 @@ class kioskAttendanceApp extends Component{
                         longitude,
                     });
                     resolve(result);
+                    this.ui.unblock();
                 },
                 async (err) => {
                     const result = await rpc(route, {
                         ...params
                     });
                     resolve(result);
+                    this.ui.unblock();
                 },
                 { enableHighAccuracy: true }
             );
