@@ -191,22 +191,26 @@ class ResPartner(models.Model):
             if partner.parent_id and partner.parent_id.vat == partner.vat:
                 partner.vies_valid = partner.parent_id.vies_valid
                 continue
+
             from odoo.tools import zeep  # noqa: PLC0415
+
+            msg, exc = "", None
+
             try:
                 vies_valid = check_vies(partner.vat, timeout=10)
                 partner.vies_valid = vies_valid['valid']
-            except (OSError, InvalidComponent, zeep.exceptions.Fault) as e:
+            except OSError as e:
+                msg, exc = "Connection with the VIES server failed.", e
+            except InvalidComponent as e:
+                msg, exc = "Could not be interpreted by the VIES server.", e
+            except zeep.exceptions.Fault as e:
+                msg, exc = "The request for VAT validation was not processed.", e
+
+            if exc:
                 if partner._origin.id:
-                    msg = ""
-                    if isinstance(e, OSError):
-                        msg = _("Connection with the VIES server failed. The VAT number %s could not be validated.", partner.vat)
-                    elif isinstance(e, InvalidComponent):
-                        msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vat)
-                    elif isinstance(e, zeep.exceptions.Fault):
-                        msg = _('The request for VAT validation was not processed. VIES service has responded with the following error: %s', e.message)
-                    partner._origin.message_post(body=msg)
-                _logger.warning("The VAT number %s failed VIES check.", partner.vat)
-                partner.vies_valid = False
+                    partner_msg = self.env._("Error while checking the VAT number '%s' against the VIES service.", partner.vat)
+                    partner._origin.message_post(body=partner_msg)
+                _logger.warning("Error while checking the VAT number '%s' against the VIES service: %s - %s", partner.vat, msg, exc)
 
     def _split_vat(self, vat):
         vat_prefix, vat_number = vat[:2].upper(), vat[2:].replace(' ', '')
