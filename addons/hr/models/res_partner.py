@@ -38,7 +38,7 @@ class Partner(models.Model):
     def _get_all_addr(self):
         self.ensure_one()
         employee_id = self.env['hr.employee'].search(
-            [('id', 'in', self.employee_ids.ids)],
+            [('id', 'in', self.sudo().employee_ids.ids)],
             limit=1,
         )
         if not employee_id:
