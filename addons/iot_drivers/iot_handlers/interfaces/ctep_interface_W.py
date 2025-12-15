@@ -15,16 +15,16 @@ from odoo.addons.iot_drivers.iot_handlers.drivers.ctypes_terminal_driver import 
 _logger = logging.getLogger(__name__)
 
 libPath = path_file('odoo/addons/iot_drivers/iot_handlers/drivers')
-easyCTEPPath = libPath / 'ctep_w/libeasyctep.dll'
-zipPath = libPath / 'ctep_w.zip'
+easyCTEPPath = libPath / 'ctep/libeasyctep.dll'
+zipPath = libPath / 'ctep.zip'
 
 if not easyCTEPPath.exists():
     download_from_url('https://nightly.odoo.com/master/posbox/iotbox/worldline-ctepv23_02_w.zip', zipPath)
-    unzip_file(zipPath, libPath / 'ctep_w')
+    unzip_file(zipPath, libPath / 'ctep')
 
 # Add Worldline dll path so that the linker can find the required dll files
-os.environ['PATH'] = str(libPath / 'ctep_w') + os.pathsep + os.environ['PATH']
-easyCTEP = import_ctypes_library("ctep_w", "libeasyctep.dll")
+os.environ['PATH'] = str(libPath / 'ctep') + os.pathsep + os.environ['PATH']
+easyCTEP = import_ctypes_library("ctep", "libeasyctep.dll")
 
 easyCTEP.createCTEPManager.restype = ctypes.c_void_p
 easyCTEP.connectedTerminal.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
