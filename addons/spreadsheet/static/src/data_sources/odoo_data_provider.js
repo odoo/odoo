@@ -4,7 +4,7 @@ import { ServerData } from "./server_data";
 export class OdooDataProvider extends EventBus {
     constructor(env) {
         super();
-        this.orm = env.services.orm.silent;
+        this.orm = env.services.orm;
         this.fieldService = env.services.field;
         this.serverData = new ServerData(this.orm, {
             whenDataStartLoading: (promise) => this.notifyWhenPromiseResolves(promise),
