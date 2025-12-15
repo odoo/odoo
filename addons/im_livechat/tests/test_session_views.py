@@ -120,8 +120,10 @@ class TestImLivechatLookingForHelpViews(TestImLivechatSessionViews):
         agent.livechat_expertise_ids = sales_expertise
         accounting_chat = self.start_needhelp_session(guest_name="Visitor Accounting")
         accounting_chat.livechat_expertise_ids = accounting_expertise
+        accounting_chat.description = "Invoice SO0042 not received"
         sales_chat = self.start_needhelp_session(guest_name="Visitor Sales")
         sales_chat.livechat_expertise_ids = sales_expertise
+        sales_chat.description = "Delivery delayed for PO0099"
         self._reset_bus()
         self.start_tour(
             "/odoo/discuss",

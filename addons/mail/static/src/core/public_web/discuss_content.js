@@ -9,6 +9,7 @@ import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
+import { attClassObjectToString } from "@mail/utils/common/format";
 
 import { _t } from "@web/core/l10n/translation";
 import { FileUploader } from "@web/views/fields/file_handler";
@@ -36,6 +37,7 @@ export class DiscussContent extends Component {
         this.root = useRef("root");
         this.state = useState({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;
+        this.attClassObjectToString = attClassObjectToString;
         useEffect(
             () => this.actionPanelAutoOpenFn(),
             () => [this.thread]
@@ -92,6 +94,12 @@ export class DiscussContent extends Component {
             this.thread.is_editable &&
             ["channel", "group"].includes(this.thread.channel?.channel_type)
         );
+    }
+
+    get threadDescriptionAttClass() {
+        return {
+            "o-mail-DiscussContent-threadDescription flex-shrink-1 small pt-1": true,
+        };
     }
 
     async onFileUploaded(file) {
