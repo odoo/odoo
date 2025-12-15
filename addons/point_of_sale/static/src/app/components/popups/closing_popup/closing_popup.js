@@ -291,7 +291,11 @@ export class ClosePosPopup extends Component {
             cancel: async () => {
                 if (!response.redirect) {
                     const ordersDraft = this.pos.models["pos.order"].filter((o) => !o.finalized);
-                    await this.pos.deleteOrders(ordersDraft, response.open_order_ids);
+                    await this.pos.deleteOrders(ordersDraft, response.open_order_ids, false, {
+                        context: {
+                            is_session_closing: true,
+                        },
+                    });
                     this.closeSession();
                 }
             },
