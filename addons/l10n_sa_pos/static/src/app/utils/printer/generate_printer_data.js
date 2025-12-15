@@ -10,6 +10,7 @@ patch(GeneratePrinterData.prototype, {
         if (this.order.isSACompany()) {
             data.conditions.code_sa = true;
             data.image.sa_qr_code = this.order.generateQrcode();
+            data.conditions.l10n_sa_show_title = this.order.state !== "draft";
         }
         return data;
     },

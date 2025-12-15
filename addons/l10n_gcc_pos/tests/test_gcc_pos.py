@@ -39,3 +39,12 @@ class TestGenericGCC(TestGenericLocalization):
         self.assertTrue("Total / اﻹجمالي" in html)
         self.assertTrue("Discount / الخصومات" in html)
         self.assertTrue("Change / الباقي" in html)
+
+    def test_gcc_basic_receipt_title_hidden(self):
+        """check the tax invoice title is hidden on basic receipts for GCC region """
+        self.main_pos_config.write({
+            'basic_receipt': True,
+            'l10n_gcc_dual_language_receipt': True,
+        })
+        self.main_pos_config.open_ui()
+        self.start_pos_tour("test_gcc_basic_receipt_title_hidden")

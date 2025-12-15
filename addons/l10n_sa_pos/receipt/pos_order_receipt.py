@@ -15,6 +15,7 @@ class PosOrderReceipt(models.AbstractModel):
         if self.company_id.country_id.code == 'SA':
             data['image']['sa_qr_code'] = self._order_receipt_generate_qr_code(self.compute_sa_qr_code())
             data['conditions']['code_sa'] = True
+            data['conditions']['l10n_sa_show_title'] = self.state != 'draft'
 
         return data
 

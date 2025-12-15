@@ -15,7 +15,10 @@ Adds Arabic as a secondary language on your receipt
     'assets': {
         'point_of_sale._assets_pos': [
             'l10n_gcc_pos/static/src/**/*',
-        ]
+        ],
+        'web.assets_tests': [
+            'l10n_gcc_pos/static/tests/**/*',
+        ],
     },
     'auto_install': True,
 }
