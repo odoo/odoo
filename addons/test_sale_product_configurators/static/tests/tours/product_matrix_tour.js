@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
-import tourUtils from "@sale/js/tours/tour_utils";
+import * as tourUtils from "@sale/js/tours/tour_utils";
 
 let EXPECTED = [
     "Matrix", "PAV11", "PAV12 + $ 50.00",
