@@ -83,7 +83,7 @@ export class ModelMany2Many extends Component {
     }
     setSelection(newSelection) {
         this.modelEdit.set(this.props.m2oField, newSelection);
-        this.env.editor.shared.history.addStep();
+        this.env.editor.shared.domMutation.commit();
     }
     create(name) {
         // TODO maybe this can be in base layer

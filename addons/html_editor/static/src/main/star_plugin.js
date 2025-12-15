@@ -5,7 +5,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class StarPlugin extends Plugin {
     static id = "star";
-    static dependencies = ["dom", "history"];
+    static dependencies = ["dom", "domMutation"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -68,7 +68,7 @@ export class StarPlugin extends Plugin {
                     star.classList.toggle("fa-star-o", true);
                     star.classList.toggle("fa-star", false);
                 }
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
             }
             ev.stopPropagation();
             ev.preventDefault();
@@ -79,6 +79,6 @@ export class StarPlugin extends Plugin {
         const stars = Array(length).fill('<i class="fa fa-star-o"></i>').join("");
         const html = `<span contenteditable="false" class="o_stars">${stars}</span>`;
         this.dependencies.dom.insert(parseHTML(this.document, html));
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 }

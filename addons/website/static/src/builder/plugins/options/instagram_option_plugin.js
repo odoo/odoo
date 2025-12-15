@@ -19,7 +19,7 @@ export class InstagramOption extends BaseOptionComponent {
 
 class InstagramOptionPlugin extends Plugin {
     static id = "instagramOption";
-    static dependencies = ["history"];
+    static dependencies = ["domMutation"];
     static shared = ["instagramPageNameFromUrl"];
 
     /** @type {import("plugins").WebsiteResources} */
@@ -60,7 +60,7 @@ class InstagramOptionPlugin extends Plugin {
 
             // WARNING: the call to ignoreDOMMutations is very dangerous,
             // and should be avoided in most cases (if you think you need those, ask html_editor team)
-            const hasChanged = this.dependencies.history.ignoreDOMMutations(() =>
+            const hasChanged = this.dependencies.domMutation.ignoreDOMMutations(() =>
                 this.setPage(nodes)
             );
 

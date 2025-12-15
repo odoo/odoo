@@ -39,7 +39,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class GoogleMapsOptionPlugin extends Plugin {
     static id = "googleMapsOption";
-    static dependencies = ["history", "edit_interaction"];
+    static dependencies = ["domMutation", "edit_interaction"];
     static shared = [
         "configureGMapsAPI",
         "initializeGoogleMaps",
@@ -161,7 +161,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
                 editingElement.dataset.pinAddress = place.formatted_address;
                 // Restart interactions to re-render the map.
                 this.dispatchTo("content_manually_updated_handlers", editingElement);
-                this.dependencies.history.addStep();
+                this.dependencies.domMutation.commit();
             }
         }
     }
@@ -176,7 +176,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
      * @returns {Promise<boolean>} true if a new API key was written to db.
      */
     async configureGMapsAPI(apiKey) {
-        this.undoInitialize = this.dependencies.history.makeSavePoint();
+        this.undoInitialize = this.dependencies.domMutation.makeSavePoint();
         /** @type {number} */
         const websiteId = this.websiteService.currentWebsite.id;
 

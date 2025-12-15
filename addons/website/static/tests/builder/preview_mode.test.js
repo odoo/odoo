@@ -34,10 +34,10 @@ test("do not update builder if in preview mode", async () => {
 
 class CustomAction extends BuilderAction {
     static id = "customAction";
-    static dependencies = ["history"];
+    static dependencies = ["domMutation"];
     apply({ editingElement }) {
         editingElement.classList.add("applied");
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
     isApplied({ editingElement }) {
         return editingElement.classList.contains("applied");

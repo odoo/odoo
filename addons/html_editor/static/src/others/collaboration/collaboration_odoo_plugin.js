@@ -45,7 +45,7 @@ let ICE_SERVERS = null;
 
 export class CollaborationOdooPlugin extends Plugin {
     static id = "collaborationOdoo";
-    static dependencies = ["baseContainer", "history", "collaboration", "selection"];
+    static dependencies = ["baseContainer", "history", "domMutation", "collaboration", "selection"];
     static shared = ["getPeerMetadata"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -61,7 +61,7 @@ export class CollaborationOdooPlugin extends Plugin {
         clean_for_save_handlers: ({ root }) => this.attachHistoryIds(root),
         history_missing_parent_step_handlers: this.onHistoryMissingParentStep.bind(this),
         history_reset_handlers: this.onReset.bind(this),
-        step_added_handlers: ({ step }) =>
+        step_added_handlers: (step) =>
             this.ptp?.notifyAllPeers("oe_history_step", step, { transport: "rtc" }),
     };
 
@@ -124,7 +124,7 @@ export class CollaborationOdooPlugin extends Plugin {
     getCurrentCollaborativeSelection() {
         const selection = this.dependencies.selection.getEditableSelection();
         return {
-            selection: this.dependencies.history.serializeSelection(selection),
+            selection: this.dependencies.domMutation.serializeSelection(selection),
             peerId: this.config.collaboration.peerId,
         };
     }

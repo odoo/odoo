@@ -48,7 +48,7 @@ const IMAGE_SIZE = [
 
 export class ImagePlugin extends Plugin {
     static id = "image";
-    static dependencies = ["history", "dom", "selection", "overlay"];
+    static dependencies = ["domMutation", "dom", "selection", "overlay"];
     static shared = ["getTargetedImage", "previewImage", "resetImageTransformation"];
     static defaultConfig = { allowImageTransform: true };
     toolbarNamespace = "image";
@@ -261,7 +261,7 @@ export class ImagePlugin extends Plugin {
             }
         }
         targetedImg.classList.add(`p-${size}`);
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
     resizeImage({ size } = {}) {
         const targetedImg = this.getTargetedImage();
@@ -269,7 +269,7 @@ export class ImagePlugin extends Plugin {
             return;
         }
         targetedImg.style.width = size || "";
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     setImageShape(className, { excludeClasses = [] } = {}) {
@@ -283,7 +283,7 @@ export class ImagePlugin extends Plugin {
             }
         }
         targetedImg.classList.toggle(className);
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     previewImage() {
@@ -320,7 +320,7 @@ export class ImagePlugin extends Plugin {
             targetedImg.remove();
             cursors.restore();
             fillEmpty(parentEl);
-            this.dependencies.history.addStep();
+            this.dependencies.domMutation.commit();
         }
     }
 
@@ -360,7 +360,7 @@ export class ImagePlugin extends Plugin {
                     const img = this.document.createElement("IMG");
                     img.setAttribute("src", url);
                     this.dependencies.dom.insert(img);
-                    this.dependencies.history.addStep();
+                    this.dependencies.domMutation.commit();
                 },
             };
         }
@@ -373,7 +373,7 @@ export class ImagePlugin extends Plugin {
         }
         targetedImg.setAttribute("alt", description);
         targetedImg.setAttribute("title", tooltip);
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     resetImageTransformation(image) {
@@ -383,7 +383,7 @@ export class ImagePlugin extends Plugin {
         );
         image.style.removeProperty("width");
         image.style.removeProperty("height");
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     getImageTransformProps() {
@@ -393,7 +393,7 @@ export class ImagePlugin extends Plugin {
             title: _t("Transform the picture (click twice to reset transformation)"),
             getTargetedImage: this.getTargetedImage.bind(this),
             resetImageTransformation: this.resetImageTransformation.bind(this),
-            addStep: this.dependencies.history.addStep.bind(this),
+            addStep: this.dependencies.domMutation.commit.bind(this),
             document: this.document,
             editable: this.editable,
             activeTitle: _t("Click again to reset transformation"),

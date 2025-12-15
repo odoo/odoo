@@ -78,6 +78,7 @@ import { DoubleClickImagePreviewPlugin } from "./main/media/dblclick_image_previ
 import { StylePlugin } from "./core/style_plugin";
 import { ContentEditablePlugin } from "./core/content_editable_plugin";
 import { SelectionPlaceholderPlugin } from "./main/selection_placeholder_plugin";
+import { DomMutationPlugin } from "./core/dom_mutation_plugin";
 
 export const CORE_PLUGINS = [
     BaseContainerPlugin,
@@ -88,6 +89,7 @@ export const CORE_PLUGINS = [
     DomPlugin,
     FormatPlugin,
     HistoryPlugin,
+    DomMutationPlugin,
     InputPlugin,
     LineBreakPlugin,
     NoInlineRootPlugin,

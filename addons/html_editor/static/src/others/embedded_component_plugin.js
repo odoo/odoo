@@ -1,4 +1,4 @@
-import { nodeToTree } from "@html_editor/core/history_plugin";
+import { nodeToTree } from "@html_editor/utils/dom_info";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { memoize } from "@web/core/utils/functions";
@@ -20,7 +20,7 @@ import { renderToElement } from "@web/core/utils/render";
  */
 export class EmbeddedComponentPlugin extends Plugin {
     static id = "embeddedComponents";
-    static dependencies = ["history", "protectedNode", "selection"];
+    static dependencies = ["history", "domMutation", "protectedNode", "selection"];
     static shared = ["renderBlueprintToElement"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -31,7 +31,9 @@ export class EmbeddedComponentPlugin extends Plugin {
         restore_savepoint_handlers: () => this.handleComponents(this.editable),
         history_reset_handlers: () => this.handleComponents(this.editable),
         history_reset_from_steps_handlers: () => this.handleComponents(this.editable),
-        step_added_handlers: ({ stepCommonAncestor }) => this.handleComponents(stepCommonAncestor),
+        step_added_handlers: (step) => {
+            this.handleComponents(this.dependencies.domMutation.getNodeById(step.commit.root));
+        },
         external_step_added_handlers: () => this.handleComponents(this.editable),
 
         serializable_descendants_processors: this.processDescendantsToSerialize.bind(this),
@@ -76,7 +78,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     }
 
     /**
-     * @typedef {import("@html_editor/core/history_plugin").Tree} Tree
+     * @typedef {import("@html_editor/core/dom_mutation_plugin").Tree} Tree
      *
      * @param {Node} elem
      * @param {Tree[]} serializableDescendants
@@ -129,12 +131,12 @@ export class EmbeddedComponentPlugin extends Plugin {
      *
      * @param {Object} attributeChange @see HistoryPlugin
      * @param { Object } options
-     * @param { boolean } options.forNewStep whether the mutation is being used
+     * @param { boolean } options.ensureNewMutations whether the mutation is being used
      *        to create a new step
      * @returns {string} new attribute value to set on the node, which might be
      *        unchanged
      */
-    onChangeAttribute(attributeChange, { forNewStep = false } = {}) {
+    onChangeAttribute(attributeChange, { ensureNewMutations = false } = {}) {
         const attributeValue = attributeChange.value;
         let newAttributeValue;
         if (attributeChange.attributeName === "data-embedded-state") {
@@ -147,7 +149,7 @@ export class EmbeddedComponentPlugin extends Plugin {
                 // the attribute value
                 newAttributeValue = stateChangeManager.onStateChanged(attrState, {
                     reverse: attributeChange.reverse,
-                    forNewStep,
+                    ensureNewMutations,
                 });
             }
         }
@@ -162,7 +164,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         if (!this.hostToStateChangeManagerMap.has(host)) {
             const config = {
                 host,
-                commitStateChanges: () => this.dependencies.history.addStep(),
+                commitStateChanges: () => this.dependencies.domMutation.commit(),
             };
             const stateChangeManager = embedding.getStateChangeManager(config);
             stateChangeManager.setup();
@@ -221,7 +223,7 @@ export class EmbeddedComponentPlugin extends Plugin {
     destroyRemovedComponents(infos) {
         // Avoid registering mutations if removed hosts are handled in
         // the same microtask as when they were removed.
-        this.dependencies.history.ignoreDOMMutations(() => {
+        this.dependencies.domMutation.ignoreDOMMutations(() => {
             for (const info of infos) {
                 if (!this.editable.contains(info.host)) {
                     const host = info.host;

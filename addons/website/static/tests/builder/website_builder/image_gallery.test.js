@@ -18,7 +18,7 @@ defineWebsiteModels();
 async function setupWbsiteBuilderWithImageWall() {
     const builder = await setupWebsiteBuilderWithSnippet("s_images_wall");
     queryAll(":iframe img").forEach((imgEl) => (imgEl.src = dummyBase64Img));
-    builder.getEditor().shared.history.addStep();
+    builder.getEditor().shared.domMutation.commit();
     return builder;
 }
 

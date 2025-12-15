@@ -6,7 +6,7 @@ import {
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Operation } from "@html_builder/core/operation";
 import { BaseOptionComponent } from "@html_builder/core/utils";
-import { HistoryPlugin } from "@html_editor/core/history_plugin";
+import { DomMutationPlugin } from "@html_editor/core/dom_mutation_plugin";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, delay, hover, press, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
@@ -159,7 +159,7 @@ describe("Block editable", () => {
 
 describe("Async operations", () => {
     beforeEach(() => {
-        patchWithCleanup(HistoryPlugin.prototype, {
+        patchWithCleanup(DomMutationPlugin.prototype, {
             makePreviewableAsyncOperation(operation) {
                 const res = super.makePreviewableAsyncOperation(operation);
                 const revert = res.revert;

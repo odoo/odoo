@@ -5,9 +5,9 @@ export function useCachedModel() {
 }
 
 export class ModelEdit {
-    constructor(history, model, recordId) {
+    constructor(domMutation, model, recordId) {
         this.values = {};
-        this.history = history;
+        this.domMutation = domMutation;
         this.model = model;
         this.recordId = recordId;
     }
@@ -24,7 +24,7 @@ export class ModelEdit {
     set(field, value) {
         const previous = this.values[field].current;
         value = JSON.stringify(value);
-        this.history.applyCustomMutation({
+        this.domMutation.applyCustomMutation({
             apply: () => {
                 this.values[field].current = value;
             },

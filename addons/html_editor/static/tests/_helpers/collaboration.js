@@ -1,4 +1,4 @@
-import { HistoryPlugin } from "@html_editor/core/history_plugin";
+import { DomMutationPlugin } from "@html_editor/core/dom_mutation_plugin";
 import { CollaborationPlugin } from "@html_editor/others/collaboration/collaboration_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { createDOMPathGenerator } from "@html_editor/utils/dom_traversal";
@@ -53,9 +53,9 @@ export const setupMultiEditor = async (spec) => {
     /** @type { Record<string, PeerInfo> } */
     const peerInfos = {};
     const peerIds = spec.peerIds;
-    const initialHystoryPluginGenerateId = HistoryPlugin.prototype.generateId;
+    const initialDomMutationPluginGenerateId = DomMutationPlugin.prototype.generateId;
     after(() => {
-        HistoryPlugin.prototype.generateId = initialHystoryPluginGenerateId;
+        DomMutationPlugin.prototype.generateId = initialDomMutationPluginGenerateId;
     });
 
     for (const peerId of peerIds) {
@@ -65,7 +65,7 @@ export const setupMultiEditor = async (spec) => {
         };
         peerInfos[peerId] = peerInfo;
         let n = 0;
-        HistoryPlugin.prototype.generateId = () => `fake_id_${n++}`;
+        DomMutationPlugin.prototype.generateId = () => `fake_id_${n++}`;
         let selection;
         const defaultPlugins = MAIN_PLUGINS;
         const base = await setupEditor(spec.contentBefore, {
@@ -90,7 +90,7 @@ export const setupMultiEditor = async (spec) => {
         peerInfo.editor = base.editor;
         if (selection && selection.anchorNode) {
             base.editor.shared.selection.setSelection(selection);
-            base.plugins.get("history").stageSelection();
+            base.plugins.get("domMutation").stageSelection();
         } else {
             base.editor.document.getSelection().removeAllRanges();
         }
@@ -99,6 +99,7 @@ export const setupMultiEditor = async (spec) => {
         const getPlugin = (id) => base.editor.plugins.find((x) => x.constructor.id === id);
         peerInfo.collaborationPlugin = getPlugin("collaboration");
         peerInfo.historyPlugin = getPlugin("history");
+        peerInfo.domMutationPlugin = getPlugin("domMutation");
     }
 
     const peerInfosList = Object.values(peerInfos);
@@ -107,9 +108,8 @@ export const setupMultiEditor = async (spec) => {
 
     // From now, any any step from a peer must have a different ID.
     let concurrentNextId = 1;
-    for (const { historyPlugin } of peerInfosList) {
-        historyPlugin.generateId = () => "fake_concurrent_id_" + concurrentNextId++;
-        historyPlugin.currentStep.id = historyPlugin.generateId();
+    for (const { domMutationPlugin } of peerInfosList) {
+        domMutationPlugin.generateId = () => "fake_concurrent_id_" + concurrentNextId++;
     }
 
     after(() => {
@@ -201,7 +201,7 @@ export function renderTextualSelection(peerInfos) {
     const cursorNodes = {};
     for (const peerInfo of peerInfosList) {
         const iframeDocument = peerInfo.editor.document;
-        const historyPlugin = peerInfo.historyPlugin;
+        const domMutationPlugin = peerInfo.domMutationPlugin;
         const peerSelection = iframeDocument.getSelection();
         if (peerSelection.anchorNode === null) {
             continue;
@@ -210,8 +210,8 @@ export function renderTextualSelection(peerInfos) {
         const { anchorNode, anchorOffset, focusNode, focusOffset } = peerSelection;
 
         const peerId = peerInfo.peerId;
-        const focusNodeId = historyPlugin.nodeMap.getId(focusNode);
-        const anchorNodeId = historyPlugin.nodeMap.getId(anchorNode);
+        const focusNodeId = domMutationPlugin.getNodeId(focusNode);
+        const anchorNodeId = domMutationPlugin.getNodeId(anchorNode);
         cursorNodes[focusNodeId] = cursorNodes[focusNodeId] || [];
         cursorNodes[focusNodeId].push({ type: "focus", peerId, offset: focusOffset });
         cursorNodes[anchorNodeId] = cursorNodes[anchorNodeId] || [];
@@ -225,9 +225,9 @@ export function renderTextualSelection(peerInfos) {
     }
 
     for (const peerInfo of peerInfosList) {
-        const historyPlugin = peerInfo.historyPlugin;
+        const domMutationPlugin = peerInfo.domMutationPlugin;
         for (const [nodeId, cursorsData] of Object.entries(cursorNodes)) {
-            const node = historyPlugin.nodeMap.getNode(nodeId);
+            const node = domMutationPlugin.getNodeById(nodeId);
             for (const cursorData of cursorsData) {
                 const cursorString =
                     cursorData.type === "anchor"

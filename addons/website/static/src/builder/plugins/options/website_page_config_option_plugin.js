@@ -198,11 +198,11 @@ class WebsitePageConfigOptionPlugin extends Plugin {
 }
 export class BaseWebsitePageConfigAction extends BuilderAction {
     static id = "baseWebsitePageConfig";
-    static dependencies = ["websitePageConfigOptionPlugin", "history", "visibility"];
+    static dependencies = ["websitePageConfigOptionPlugin", "domMutation", "visibility"];
     setup() {
         this.websitePageConfig = this.dependencies.websitePageConfigOptionPlugin;
         this.visibility = this.dependencies.visibility;
-        this.history = this.dependencies.history;
+        this.domMutation = this.dependencies.domMutation;
         this.headerVisibilityHandlers = this.getVisibilityHandlers("header");
         this.breadcrumbVisibilityHandlers = this.getVisibilityHandlers("breadcrumb");
     }
@@ -288,7 +288,7 @@ export class SetWebsiteHeaderVisibilityAction extends BaseWebsitePageConfigActio
     static id = "setWebsiteHeaderVisibility";
     apply({ editingElement, value: headerPositionValue, isPreviewing }) {
         const lastValue = this.websitePageConfig.getVisibilityItem("header");
-        this.history.applyCustomMutation({
+        this.domMutation.applyCustomMutation({
             apply: () => this.headerVisibilityHandlers[headerPositionValue](),
             revert: () => this.headerVisibilityHandlers[lastValue](),
         });
@@ -306,7 +306,7 @@ export class SetWebsiteBreadcrumbVisibilityAction extends BaseWebsitePageConfigA
     }
     apply({ value }) {
         const lastValue = this.websitePageConfig.getVisibilityItem("breadcrumb");
-        this.history.applyCustomMutation({
+        this.domMutation.applyCustomMutation({
             apply: () => this.breadcrumbVisibilityHandlers[value](),
             revert: () => this.breadcrumbVisibilityHandlers[lastValue](),
         });

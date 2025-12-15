@@ -23,7 +23,7 @@ const ALLOWED_ELEMENTS = "h1, h2, h3, p, hr, pre, blockquote, li";
 
 export class MoveNodePlugin extends Plugin {
     static id = "movenode";
-    static dependencies = ["baseContainer", "selection", "history", "position", "localOverlay"];
+    static dependencies = ["baseContainer", "selection", "domMutation", "position", "localOverlay"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         layout_geometry_change_handlers: () => {
@@ -482,7 +482,7 @@ export class MoveNodePlugin extends Plugin {
                 anchorNode: selectionPosition[0],
                 anchorOffset: selectionPosition[1],
             });
-            this.dependencies.history.addStep();
+            this.dependencies.domMutation.commit();
         }
     }
     onMousemove(e) {

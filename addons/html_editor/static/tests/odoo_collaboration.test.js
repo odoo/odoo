@@ -254,7 +254,7 @@ class Wysiwygs extends Component {
                     };
                 },
             });
-            patch(plugins["history"], {
+            patch(plugins["domMutation"], {
                 generateId: () => {
                     this.lastStepId++;
                     return this.lastStepId.toString();
@@ -307,7 +307,7 @@ async function createPeers(peerIds, content = initialValue) {
 
 async function insertEditorText(editor, text) {
     await insertText(editor, text);
-    editor.shared.history.addStep();
+    editor.shared.domMutation.commit();
 }
 
 beforeEach(() => {
@@ -1010,7 +1010,7 @@ describe("Disconnect & reconnect", () => {
             const p = document.createElement("p");
             p.textContent = content;
             peer.editor.editable.append(p);
-            peer.editor.shared.history.addStep();
+            peer.editor.shared.domMutation.commit();
         };
 
         setSelection(peers.p1);
@@ -1136,12 +1136,12 @@ describe("History steps Ids", () => {
         const editor = peers.p1.editor;
         await peers.p1.focus();
         editor.shared.split.splitBlock();
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         expect(getContent(editor.editable)).toBe(
             `<p>a</p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
         editor.shared.split.splitBlock();
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         expect(getContent(editor.editable)).toBe(
             `<p>a</p><p><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );

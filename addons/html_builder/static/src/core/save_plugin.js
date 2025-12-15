@@ -127,6 +127,8 @@ export class SavePlugin extends Plugin {
             // plugin.
             return;
         }
+        // TODO: should do nothing if currently undo/redoing as `o_dirty` would
+        // then already have been handled by the history plugin.
         for (const record of records) {
             if (record.attributeName === "contenteditable") {
                 continue;

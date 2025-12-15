@@ -82,7 +82,7 @@ test("should set contenteditable to false on .o_not_editable elements", async ()
     `;
     const snippet = parseHTML(editor.document, snippetHtml).firstChild;
     div.after(snippet);
-    editor.shared.history.addStep();
+    editor.shared.domMutation.commit();
     // Normalization should set contenteditable to false
     expect(snippet).toHaveAttribute("contenteditable", "false");
 });

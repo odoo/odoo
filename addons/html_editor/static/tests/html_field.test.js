@@ -2272,7 +2272,7 @@ describe("save image", () => {
         sendBeaconDef = new Deferred();
         setSelectionInHtmlField(".test_target");
         await insertText(htmlEditor, "a");
-        htmlEditor.shared.history.addStep();
+        htmlEditor.shared.domMutation.commit();
         await formController.beforeUnload();
         await sendBeaconDef;
 
@@ -2281,7 +2281,7 @@ describe("save image", () => {
         const imageContainerElement = parseHTML(htmlEditor.document, imageContainerHTML).firstChild;
         const paragraph = htmlEditor.editable.querySelector(".test_target");
         htmlEditor.editable.replaceChild(imageContainerElement, paragraph);
-        htmlEditor.shared.history.addStep();
+        htmlEditor.shared.domMutation.commit();
 
         // Simulate an urgent save before the end of the RPC roundtrip for the
         // image.

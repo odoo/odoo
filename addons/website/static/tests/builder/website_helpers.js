@@ -532,5 +532,5 @@ export async function insertStructureSnippet(editor, snippetName) {
     const snippetEl = await getStructureSnippet(snippetName);
     const parentEl = editor.editable.querySelector("#wrap") || editor.editable;
     parentEl.append(snippetEl);
-    editor.shared.history.addStep();
+    editor.shared.domMutation.commit();
 }

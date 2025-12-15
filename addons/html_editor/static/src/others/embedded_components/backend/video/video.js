@@ -26,7 +26,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
         host: { type: HTMLElement },
         createOverlay: { type: Function, optional: true },
         focusEditable: { type: Function, optional: true },
-        addStep: { type: Function, optional: true },
+        commit: { type: Function, optional: true },
         openVideoSelectorDialog: { type: Function, optional: true },
     };
 
@@ -58,7 +58,7 @@ export class EmbeddedVideoComponent extends ReadonlyEmbeddedVideoComponent {
                     },
                     removeVideo: () => {
                         this.videoBlock.remove();
-                        this.props.addStep();
+                        this.props.commit();
                     },
                     focusEditable: this.props.focusEditable,
                     dropdown: this.dropdown,

@@ -21,7 +21,7 @@ const deviceInvisibleSelector = ".o_snippet_mobile_invisible, .o_snippet_desktop
 
 export class VisibilityPlugin extends Plugin {
     static id = "visibility";
-    static dependencies = ["builderOptions", "disableSnippets", "history"];
+    static dependencies = ["builderOptions", "disableSnippets", "domMutation"];
     static shared = [
         "getVisibleSibling",
         "toggleTargetVisibility",
@@ -154,7 +154,7 @@ export class VisibilityPlugin extends Plugin {
      * @param {Boolean} show true/false if the element was shown/hidden
      */
     onOptionVisibilityUpdate(editingEl, show) {
-        if (this.dependencies.history.getIsPreviewing()) {
+        if (this.dependencies.domMutation.getIsPreviewing()) {
             return;
         }
         const isShown = this.toggleVisibilityStatus(editingEl, show);

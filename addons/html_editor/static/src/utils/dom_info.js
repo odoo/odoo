@@ -996,3 +996,64 @@ export function isRedundantElement(node) {
 
     return true;
 }
+
+/**
+ * @typedef {import("@html_editor/core/dom_mutation_plugin").Tree} Tree
+ *
+ * @param {Tree} tree
+ * @returns {Node[]}
+ */
+export function treeToNodes(tree) {
+    return [tree.node, ...tree.children.flatMap(treeToNodes)];
+}
+
+/**
+ * @typedef {import("@html_editor/core/dom_mutation_plugin").Tree} Tree
+ *
+ * @param {Node} node
+ * @returns {Tree}
+ */
+export function nodeToTree(node) {
+    return {
+        node,
+        children: childNodes(node).map(nodeToTree),
+    };
+}
+
+/**
+ * Bidirectional map between IDs (string) and Node objects.
+ */
+export class NodeMap {
+    constructor() {
+        // Private properties enclosed in the constructor
+        /** @type {Map<string, Node>} */
+        const idToNodeMap = new Map();
+        /** @type {Map<Node, string>} */
+        const nodeToIdMap = new Map();
+
+        // Public methods
+        /** @type {(id: string, node: Node) => void} */
+        this.set = (id, node) => {
+            if (!id || !node) {
+                throw new Error("Id and Node cannot be nullish");
+            }
+            // Remove old mappings
+            const oldNode = idToNodeMap.get(id);
+            nodeToIdMap.delete(oldNode);
+            const oldId = nodeToIdMap.get(node);
+            idToNodeMap.delete(oldId);
+            // Set new mappings
+            idToNodeMap.set(id, node);
+            nodeToIdMap.set(node, id);
+        };
+
+        /** @type {(id: string) => Node | undefined} */
+        this.getNode = (id) => idToNodeMap.get(id);
+
+        /** @type {(node: Node) => string | undefined} */
+        this.getId = (node) => nodeToIdMap.get(node);
+
+        /** @type {(node: Node) => boolean} */
+        this.hasNode = (node) => nodeToIdMap.has(node);
+    }
+}

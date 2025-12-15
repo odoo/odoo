@@ -39,7 +39,7 @@ import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
 
 export class MediaPlugin extends Plugin {
     static id = "media";
-    static dependencies = ["selection", "history", "dom", "dialog"];
+    static dependencies = ["selection", "domMutation", "dom", "dialog"];
     static shared = ["openMediaDialog"];
     static defaultConfig = {
         allowImage: true,
@@ -135,7 +135,7 @@ export class MediaPlugin extends Plugin {
         const node = targetedNodes.find((node) => node.tagName === "IMG");
         if (node) {
             this.openMediaDialog({ node });
-            this.dependencies.history.addStep();
+            this.dependencies.domMutation.commit();
         }
     }
 
@@ -204,7 +204,7 @@ export class MediaPlugin extends Plugin {
         const [anchorNode, anchorOffset] = rightPos(element);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         this.dispatchTo("after_save_media_dialog_handlers", element);
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     openMediaDialog(params = {}, editableEl = null) {

@@ -19,7 +19,7 @@ function span(text) {
 
 const insertHTML = (html) => (editor) => {
     editor.shared.dom.insert(parseHTML(editor.document, html));
-    editor.shared.history.addStep();
+    editor.shared.domMutation.commit();
 };
 
 describe("collapsed selection", () => {
@@ -101,7 +101,7 @@ describe("collapsed selection", () => {
                         '<p>unwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after</p>'
                     )
                 );
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter:
                 '<p>contentunwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after[]</p>',
@@ -149,7 +149,7 @@ describe("collapsed selection", () => {
                 editor.shared.dom.insert(
                     parseHTML(editor.document, "<p>abc</p><ul><li></li></ul>")
                 );
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: "<p>abc</p><ul><li>[]<br></li></ul>",
         });
@@ -162,7 +162,7 @@ describe("collapsed selection", () => {
                 editor.shared.dom.insert(
                     parseHTML(editor.document, "<ul><li></li></ul><p>abc</p>")
                 );
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: "<ul><li><br></li></ul><p>abc[]</p>",
         });
@@ -173,7 +173,7 @@ describe("collapsed selection", () => {
             contentBefore: "<p>[]<br></p>",
             stepFunction: async (editor) => {
                 editor.shared.dom.insert(parseHTML(editor.document, "<h1></h1><p>abc</p>"));
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: "<h1><br></h1><p>abc[]</p>",
         });
@@ -249,7 +249,7 @@ describe("collapsed selection", () => {
                 `<p class="oe_unbreakable">1</p><p class="oe_unbreakable">2</p>`
             )
         );
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         expect(getContent(editor.editable)).toBe(
             `<p>cont</p><p class="oe_unbreakable">1</p>` +
                 `<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>` +
@@ -304,7 +304,7 @@ describe("collapsed selection", () => {
         editor.shared.dom.insert(
             parseHTML(editor.document, `<p data-oe-protected="true">in</p>`).firstElementChild
         );
-        editor.shared.history.addStep();
+        editor.shared.domMutation.commit();
         // Insertion triggers selectionchange & addStep creates selection
         // placeholder.fixSelectionInsideEditableRoot moves selection into it,
         // trigger another selectionchange that removes selection placeholder.
@@ -449,7 +449,7 @@ describe("not collapsed selection", () => {
             ),
             stepFunction: (editor) => {
                 editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: '<p>a<span class="a">TEST</span>[]l</p>',
         });
@@ -466,7 +466,7 @@ describe("not collapsed selection", () => {
             ),
             stepFunction: (editor) => {
                 editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: unformat(
                 `<table><tbody>
@@ -490,7 +490,7 @@ describe("not collapsed selection", () => {
             ),
             stepFunction: (editor) => {
                 editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: unformat(
                 `<p>a<span class="a">TEST</span>[]</p>
@@ -511,7 +511,7 @@ describe("not collapsed selection", () => {
             ),
             stepFunction: (editor) => {
                 editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: unformat(
                 `<p>ab</p>
@@ -532,7 +532,7 @@ describe("not collapsed selection", () => {
             ),
             stepFunction: (editor) => {
                 editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: `<p>a<span class="a">TEST</span>[]l</p>`,
         });
@@ -559,7 +559,7 @@ describe("not collapsed selection", () => {
                 // fired in the next tick.
                 await tick();
                 editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: `<p><span class="a">TEST</span>[]</p>`,
         });
@@ -587,7 +587,7 @@ describe("not collapsed selection", () => {
             ),
             stepFunction: (editor) => {
                 editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: `<p>0<span class="a">TEST</span>[]</p>`,
         });
@@ -615,7 +615,7 @@ describe("not collapsed selection", () => {
             ),
             stepFunction: (editor) => {
                 editor.shared.dom.insert(span("TEST"));
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: `<p><span class="a">TEST</span>[]</p>`,
         });
@@ -631,7 +631,7 @@ describe("not collapsed selection", () => {
                         '<p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p><p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p>'
                     )
                 );
-                editor.shared.history.addStep();
+                editor.shared.domMutation.commit();
             },
             contentAfter: '<p><a href="#">link</a></p><p><a href="#">link</a>[]</p>',
         });

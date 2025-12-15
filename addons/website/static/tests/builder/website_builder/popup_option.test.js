@@ -109,7 +109,7 @@ describe("Popup options: popup in page before edit", () => {
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
         // Ensure that no mutations were registered in the history.
         // `addStep` return the created step, or false if there was no mutations
-        expect(builder.getEditor().shared.history.addStep()).toBe(false);
+        expect(builder.getEditor().shared.domMutation.commit()).toBe(false);
     });
 
     test("editing s_popup, then closing it, then undo show it again", async () => {

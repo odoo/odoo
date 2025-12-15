@@ -31,7 +31,7 @@ function columnIsAvailable(numberOfColumns) {
 
 export class ColumnPlugin extends Plugin {
     static id = "column";
-    static dependencies = ["baseContainer", "selection", "history", "dom"];
+    static dependencies = ["baseContainer", "selection", "domMutation", "dom"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -125,7 +125,7 @@ export class ColumnPlugin extends Plugin {
             this.createColumns(anchor, numberOfColumns);
         }
         this.dependencies.selection.setSelection(selectionToRestore);
-        this.dependencies.history.addStep();
+        this.dependencies.domMutation.commit();
     }
 
     removeColumns(anchor) {

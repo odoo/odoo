@@ -5,7 +5,7 @@ import {
     editBuilderRangeValue,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { HistoryPlugin } from "@html_editor/core/history_plugin";
+import { DomMutationPlugin } from "@html_editor/core/dom_mutation_plugin";
 import { expect, test, describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, edit, fill, freezeTime, press } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
@@ -135,7 +135,7 @@ test("range input should step up or down with arrow keys", async () => {
 });
 
 test("keeping an arrow key pressed should commit only once", async () => {
-    patchWithCleanup(HistoryPlugin.prototype, {
+    patchWithCleanup(DomMutationPlugin.prototype, {
         makePreviewableAsyncOperation(...args) {
             const res = super.makePreviewableAsyncOperation(...args);
             const commit = res.commit;
