@@ -269,6 +269,10 @@ export class DiscussChannel extends Record {
         return (this.member_count ?? 0) - (this.channel_member_ids.length ?? 0);
     }
 
+    async checkReadAccess() {
+        return Boolean(this.channel_type);
+    }
+
     delete() {
         this.chatWindow?.close();
         super.delete(...arguments);

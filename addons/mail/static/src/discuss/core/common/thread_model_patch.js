@@ -87,15 +87,6 @@ const threadPatch = {
     get showCorrespondentCountry() {
         return false;
     },
-    /** @override */
-    async checkReadAccess() {
-        const res = await super.checkReadAccess();
-        if (!res && this.channel) {
-            // channel is assumed to be readable if its channel_type is known
-            return this.channel.channel_type;
-        }
-        return res;
-    },
     /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
         if (this.channel?.channel_type === "channel") {

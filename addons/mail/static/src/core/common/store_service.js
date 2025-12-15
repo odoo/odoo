@@ -330,18 +330,18 @@ export class Store extends BaseStore {
             return true;
         } else if (link.classList.contains("o_message_redirect")) {
             const message = this["mail.message"].get(id);
-            const targetThread = message?.thread;
+            const target = message?.channel_id || message?.thread;
             const showAccessError = () =>
                 this.env.services.notification.add(_t("This conversation isn’t available."), {
                     type: "danger",
                 });
-            if (targetThread) {
-                targetThread.checkReadAccess().then((hasAccess) => {
+            if (target) {
+                target.checkReadAccess().then((hasAccess) => {
                     if (hasAccess) {
-                        targetThread.highlightMessage = message;
-                        let isOpen = targetThread.eq(thread);
+                        target.highlightMessage = message;
+                        let isOpen = target.eq(thread);
                         if (!isOpen) {
-                            isOpen = targetThread.open({ focus: true, swapOpened: false });
+                            isOpen = target.open({ focus: true, swapOpened: false });
                         }
                         if (!isOpen) {
                             window.open(link.href);
