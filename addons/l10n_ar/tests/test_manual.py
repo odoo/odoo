@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from unittest import skip
+
 from . import common
 from odoo import Command
 from odoo.tests import Form, tagged
@@ -7,14 +9,14 @@ from odoo.exceptions import ValidationError
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
-class TestManual(common.TestAr):
+class TestArManual(common.TestArCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestManual, cls).setUpClass()
-        cls.journal = cls._create_journal(cls, 'preprinted')
+        super().setUpClass()
+        cls.journal = cls._create_journal('preprinted')
         cls.partner = cls.res_partner_adhoc
-        cls._create_test_invoices_like_demo(cls)
+        cls._create_test_invoices_like_demo()
 
     def test_01_create_invoice(self):
         """ Create and validate an invoice for a Responsable Inscripto
@@ -36,19 +38,19 @@ class TestManual(common.TestAr):
 
     def test_02_fiscal_position(self):
         # ADHOC SA > IVA Responsable Inscripto > Domestic
-        invoice = self._create_invoice_ar({'partner': self.partner})
+        invoice = self._create_invoice_ar(partner_id=self.partner)
         self.assertEqual(invoice.fiscal_position_id, self.env.company.domestic_fiscal_position_id)
 
         # Consumidor Final > IVA Responsable Inscripto > Without Fiscal Positon
-        invoice = self._create_invoice_ar({'partner': self.partner_cf})
+        invoice = self._create_invoice_ar(partner_id=self.partner_cf)
         self.assertFalse(invoice.fiscal_position_id, 'Fiscal position should be set to empty')
 
         # Montana Sur > IVA Liberado - Ley Nº 19.640 > Compras / Ventas Zona Franca > IVA Exento
-        invoice = self._create_invoice_ar({'partner': self.res_partner_montana_sur})
+        invoice = self._create_invoice_ar(partner_id=self.res_partner_montana_sur)
         self.assertEqual(invoice.fiscal_position_id, self._search_fp('Purchases / Sales Free Trade Zone'))
 
         # Barcelona food > Cliente / Proveedor del Exterior >  > IVA Exento
-        invoice = self._create_invoice_ar({'partner': self.res_partner_barcelona_food})
+        invoice = self._create_invoice_ar(partner_id=self.res_partner_barcelona_food)
         self.assertEqual(invoice.fiscal_position_id, self._search_fp('Purchases / Sales abroad'))
 
     def test_03_corner_cases(self):
@@ -110,7 +112,7 @@ class TestManual(common.TestAr):
         self.assertTrue(self.journal.l10n_ar_is_pos)
 
         # If we create an invoice it will not use manual numbering
-        invoice = self._create_invoice_ar({'partner': self.partner})
+        invoice = self._create_invoice_ar()
         self.assertFalse(invoice.l10n_latam_manual_document_number)
 
         # Create a new sale journal that is not ARCA POS
@@ -195,23 +197,18 @@ class TestManual(common.TestAr):
 
     def test_18_invoice_b_tax_breakdown_1(self):
         """ Display Both VAT and Other Taxes """
-        invoice = self._create_invoice_from_dict({
-            'ref': 'test_invoice_20:  Final Consumer Invoice B with multiple vat/perceptions/internal/other/national taxes',
-            "move_type": 'out_invoice',
-            "partner_id": self.partner_cf,
-            "company_id": self.company_ri,
-            "invoice_date": "2021-03-20",
-            "invoice_line_ids": [
-                {'product_id': self.service_iva_21, 'price_unit': 124.3, 'quantity': 3, 'name': 'Support Services 8',
-                 'tax_ids': [Command.set([self.tax_21.id, self.tax_perc_iibb.id])]},
-                {'product_id': self.service_iva_27, 'price_unit': 2250.0,
-                 'tax_ids': [Command.set([self.tax_27.id, self.tax_national.id])]},
-                {'product_id': self.product_iva_105_perc, 'price_unit': 1740.0,
-                 'tax_ids': [Command.set([self.tax_10_5.id, self.tax_internal.id])]},
-                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0,
-                 'tax_ids': [Command.set([self.tax_0.id, self.tax_other.id])]},
+        invoice = self._create_invoice_ar(
+            ref='test_invoice_20:  Final Consumer Invoice B with multiple vat/perceptions/internal/other/national taxes',
+            partner_id=self.partner_cf,
+            company_id=self.company_ri,
+            invoice_date="2021-03-20",
+            invoice_line_ids=[
+                self._prepare_invoice_line(product_id=self.service_iva_21, price_unit=124.3, quantity=3, name='Support Services 8', tax_ids=self.tax_21 + self.tax_perc_iibb),
+                self._prepare_invoice_line(product_id=self.service_iva_27, price_unit=2250.0, tax_ids=self.tax_27 + self.tax_national),
+                self._prepare_invoice_line(product_id=self.product_iva_105_perc, price_unit=1740.0, tax_ids=self.tax_10_5 + self.tax_internal),
+                self._prepare_invoice_line(product_id=self.product_iva_105_perc, price_unit=10000.0, tax_ids=self.tax_0 + self.tax_other),
             ],
-        })
+        )
         results = invoice._l10n_ar_get_invoice_custom_tax_summary_for_report()
         self.assertEqual(results, [
             {
@@ -256,17 +253,13 @@ class TestManual(common.TestAr):
 
     def test_19_invoice_b_tax_breakdown_2(self):
         """ Display only Other Taxes (VAT taxes are 0) """
-        invoice = self._create_invoice_from_dict({
-            'ref': 'test_invoice_21: Final Consumer Invoice B with 0 tax and internal tax',
-            "move_type": 'out_invoice',
-            "partner_id": self.partner_cf,
-            "company_id": self.company_ri,
-            "invoice_date": "2021-03-20",
-            "invoice_line_ids": [
-                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0,
-                 'tax_ids': [Command.set([self.tax_no_gravado.id, self.tax_internal.id])]},
-            ],
-        })
+        invoice = self._create_invoice_ar(
+            ref='test_invoice_21: Final Consumer Invoice B with 0 tax and internal tax',
+            partner_id=self.partner_cf,
+            company_id=self.company_ri,
+            invoice_date="2021-03-20",
+            invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_iva_105_perc, price_unit=10000.0, tax_ids=self.tax_no_gravado + self.tax_internal)],
+        )
         results = invoice._l10n_ar_get_invoice_custom_tax_summary_for_report()
         self.assertEqual(results, [
             {
@@ -292,17 +285,13 @@ class TestManual(common.TestAr):
 
     def test_20_invoice_b_tax_breakdown_3(self):
         """ Display only Other Taxes (VAT taxes are 0 and non other taxes) """
-        invoice = self._create_invoice_from_dict({
-            'ref': 'test_invoice_22: Final Consumer Invoice B with only 0 tax',
-            "move_type": 'out_invoice',
-            "partner_id": self.partner_cf,
-            "company_id": self.company_ri,
-            "invoice_date": "2021-03-20",
-            "invoice_line_ids": [
-                {'product_id': self.product_iva_105_perc, 'price_unit': 10000.0, 'quantity': 1,
-                    'tax_ids': [(6, 0, [self.tax_no_gravado.id])]},
-            ],
-        })
+        invoice = self._create_invoice_ar(
+            ref='test_invoice_22: Final Consumer Invoice B with only 0 tax',
+            partner_id=self.partner_cf,
+            company_id=self.company_ri,
+            invoice_date="2021-03-20",
+            invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_iva_105_perc, price_unit=10000.0, tax_ids=self.tax_no_gravado)],
+        )
         results = invoice._l10n_ar_get_invoice_custom_tax_summary_for_report()
         self.assertEqual(results, [
             {
@@ -363,18 +352,14 @@ class TestManual(common.TestAr):
         # Create a credit note with document type 60 that can be used as both invoice and refund
         doc_60_lp_a = self.env.ref('l10n_ar.dc_a_cvl')
 
-        credit_note = self._create_invoice_from_dict({
-            'ref': 'test_credit_note_refund: Credit note with document type 60 for refund test',
-            "move_type": 'out_refund',
-            "partner_id": self.res_partner_adhoc,
-            "company_id": self.company_ri,
-            "invoice_date": "2021-03-20",
-            "invoice_line_ids": [
-                {'product_id': self.product_iva_21, 'price_unit': 100.0, 'quantity': 1,
-                 'tax_ids': [Command.set([self.tax_21.id])]},
-            ],
-        })
-        credit_note.l10n_latam_document_type_id = doc_60_lp_a
+        credit_note = self._create_invoice_ar(
+            ref='test_credit_note_refund: Credit note with document type 60 for refund test',
+            move_type='out_refund',
+            partner_id=self.res_partner_adhoc,
+            company_id=self.company_ri,
+            invoice_date="2021-03-20",
+            l10n_latam_document_type_id=doc_60_lp_a,
+        )
 
         # Verify this is considered a refund invoice with special ARCA code
         self.assertTrue(credit_note._l10n_ar_is_refund_invoice())
@@ -428,3 +413,40 @@ class TestManual(common.TestAr):
         })
         debit_note_wizard.create_debit()
         self.assertTrue(invoice.reversal_move_ids.debit_note_ids)
+
+    @skip("TODO: failing test. 'Fix' the rounding error")
+    def test_l10n_ar_rounding_01(self):
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        currency_usd = self.env.ref('base.USD')
+        currency_usd.active = True
+
+        self.env['res.currency.rate'].create([{
+            'name': '2025-04-01',
+            'inverse_company_rate': 1066.50,
+            'currency_id': currency_usd.id,
+            'company_id': self.env.company.id,
+        }])
+        tax_02 = self.percent_tax(0.2)
+        invoice_a = self._create_invoice_ar(
+            invoice_date='2025-04-02',
+            currency_id=currency_usd,
+            invoice_line_ids=[self._prepare_invoice_line(price_unit=124, tax_ids=tax_02)],
+        )
+        self.assertEqual(invoice_a.amount_total, invoice_a.invoice_line_ids.price_total, 'The invoice total should match the line total since there is only one line.')
+
+        tax_lines_a = invoice_a.line_ids \
+            .filtered(lambda x: x.tax_line_id) \
+            .sorted(lambda x: (x.move_id.id, x.tax_line_id.id, x.tax_ids.ids, x.tax_repartition_line_id.id))
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+        invoice_b = self._create_invoice_ar(
+            invoice_date='2025-04-02',
+            currency_id=currency_usd,
+            invoice_line_ids=[self._prepare_invoice_line(price_unit=124, tax_ids=tax_02)],
+        )
+        self.assertEqual(invoice_b.amount_total, invoice_b.invoice_line_ids.price_total, 'The invoice total should match the line total since there is only one line.')
+
+        tax_lines_b = invoice_b.line_ids \
+            .filtered(lambda x: x.tax_line_id) \
+            .sorted(lambda x: (x.move_id.id, x.tax_line_id.id, x.tax_ids.ids, x.tax_repartition_line_id.id))
+
+        self.assertEqual(tax_lines_a.balance, tax_lines_b.balance, 'Tax balances should be equal since both invoices have a single line and the total matches the line amount.')

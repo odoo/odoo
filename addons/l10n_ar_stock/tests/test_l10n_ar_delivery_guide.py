@@ -1,12 +1,12 @@
 from odoo import Command
 from odoo.tests import tagged
 
-from odoo.addons.l10n_ar.tests.common import TestAr
+from odoo.addons.l10n_ar.tests.common import TestArCommon
 from odoo.addons.mail.tests.common import MailCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestArDeliveryGuide(TestAr, MailCommon):
+class TestArDeliveryGuide(TestArCommon, MailCommon):
 
     @classmethod
     def setUpClass(cls):
