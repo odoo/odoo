@@ -325,7 +325,7 @@ $accordion-icon-active-color: $accordion-button-active-color !default;
 // Popovers
 $popover-bg: $body-bg !default;
 $popover-border-color: $border-color !default;
-$popover-arrow-color: $body-bg !default;
+$popover-arrow-color: var(--popover-arrow-color, #{$popover-bg}) !default;
 $popover-arrow-outer-color: $border-color !default;
 
 // Shadows
