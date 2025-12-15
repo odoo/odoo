@@ -24,7 +24,8 @@ export class ActivityMenu extends Component {
         this.employee = false;
         this.state = useState({
             checkedIn: false,
-            isDisplayed: false
+            isDisplayed: false,
+            gettingPosition: false,
         });
         this.date_formatter = registry.category("formatters").get("float_time")
         this.dropdown = useDropdownState();
@@ -76,17 +77,17 @@ export class ActivityMenu extends Component {
                 throw error;
             }
         } finally {
-            this._attendanceInProgress = false;
+            this.state.gettingPosition = false;
         }
     };
 
     async signInOut() {
         this.dropdown.close();
 
-        if (this._attendanceInProgress) {
+        if (this.state.gettingPosition) {
             return;
         }
-        this._attendanceInProgress = true;
+        this.state.gettingPosition = true;
 
         if (!isIosApp() && navigator.onLine) { // iOS app lacks permissions to call `getCurrentPosition`
 
