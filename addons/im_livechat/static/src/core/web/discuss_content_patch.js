@@ -11,4 +11,11 @@ patch(DiscussContent.prototype, {
         }
         super.actionPanelAutoOpenFn();
     },
+    get threadDescriptionAttClass() {
+        return {
+            ...super.threadDescriptionAttClass,
+            "text-warning":
+                this.thread.channel?.livechat_status === "need_help" && this.thread.description,
+        };
+    },
 });

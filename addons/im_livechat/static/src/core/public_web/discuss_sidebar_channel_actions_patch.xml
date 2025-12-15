@@ -7,5 +7,13 @@
                 <span t-if="helpState.text" class="o-livechat-LookingForHelp-timer text-muted fw-normal" t-esc="helpState.text"/>
             </t>
         </xpath>
+        <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="inside">
+            <div t-if="channel.livechat_status === 'need_help' and channel.description" t-att-title="channel.description" class="text-warning text-truncate smaller" t-esc="channel.description"/>
+        </xpath>
+    </t>
+    <t t-inherit="mail.DiscussSidebarChannel" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-floatingName')]" position="after">
+            <div t-if="channel.livechat_status === 'need_help' and channel.description" t-att-title="channel.description" class="text-warning text-truncate smaller px-2 pb-2" t-esc="channel.description"/>
+        </xpath>
     </t>
 </templates>
