@@ -2935,3 +2935,21 @@ class TestStockValuation(TestStockValuationCommon):
         move.picked = True
         move.with_user(self.inventory_user)._action_done()
         self.assertEqual(move.state, 'done')
+
+    def test_fifo_recursion_zero_cost_crash(self):
+        """ Ensure that a FIFO product with 0 cost and no history
+        does not trigger a RecursionError during valuation report generation.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Zero Cost FIFO Recursion',
+            'type': 'consu',
+            'is_storable': True,
+            'categ_id': self.product_fifo.categ_id.id,
+            'standard_price': 0.0,
+        })
+        move = self._make_in_move(product, 10, unit_cost=0)
+        try:
+            val = move._get_value_from_std_price(1.0, std_price=0.0, at_date=Date.today())
+            self.assertEqual(val['value'], 0.0, "Valuation should be 0.0 without recursion crash")
+        except RecursionError:
+            self.fail("RecursionError triggered! The recursion guard is not working.")

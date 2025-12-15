@@ -423,8 +423,8 @@ class StockMove(models.Model):
 
     def _get_value_from_std_price(self, quantity, std_price=False, at_date=None):
         std_price = std_price if std_price else self.product_id.standard_price
-        if at_date:
-            std_price = std_price or self.product_id._get_standard_price_at_date(at_date)
+        if at_date and not self.env.context.get('stock_valuation_recursion'):
+            std_price = std_price or self.product_id.with_context(stock_valuation_recursion=True)._get_standard_price_at_date(at_date)
         return {
             'value': std_price * quantity,
             'quantity': quantity,
