@@ -36,7 +36,7 @@
                             <div class="flex-shrink-0 mx-1 py-2 border-start"/>
                             <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                             <AutoresizeInput
-                                className="'o-mail-DiscussContent-threadDescription flex-shrink-1 small pt-1'"
+                                className="attClassObjectToString(threadDescriptionAttClass)"
                                 enabled="thread.is_editable"
                                 onValidate.bind="updateThreadDescription"
                                 placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
