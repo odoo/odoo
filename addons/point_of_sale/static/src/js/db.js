@@ -402,7 +402,7 @@ var PosDB = core.Class.extend({
         if (product_ids) {
             for (var i = 0, len = Math.min(product_ids.length, this.limit); i < len; i++) {
                 const product = this.product_by_id[product_ids[i]];
-                if (!(product.active && product.available_in_pos)) continue;
+                if (!(product.show_product_in_pos)) continue;
                 list.push(product);
             }
         }
@@ -426,7 +426,7 @@ var PosDB = core.Class.extend({
             if(r){
                 var id = Number(r[1]);
                 const product = this.get_product_by_id(id);
-                if (!(product.active && product.available_in_pos)) continue;
+                if (!(product.show_product_in_pos)) continue;
                 results.push(product);
             }else{
                 break;
