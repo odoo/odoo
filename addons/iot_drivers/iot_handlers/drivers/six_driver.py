@@ -7,33 +7,25 @@ from logging import getLogger
 from odoo.addons.iot_drivers.tools.system import IS_WINDOWS
 from odoo.addons.iot_drivers.iot_handlers.drivers.ctypes_terminal_driver import (
     CtypesTerminalDriver,
-    import_ctypes_library,
     create_ctypes_string_buffer
 )
 
 _logger = getLogger(__name__)
-CANCELLED_BY_POS = 2  # Error code returned when you press "cancel" in PoS
-
-
-LIB_NAME = 'libsix_odoo_w.dll' if IS_WINDOWS else 'libsix_odoo_l.so'
 
 
 class SixDriver(CtypesTerminalDriver):
     connection_type = 'tim'
+    cancelled_by_pos = 2  # Error code returned when you press "cancel" in PoS
 
     def __init__(self, identifier, device):
-        super().__init__(identifier, device)
-        self.device_name = 'Six terminal %s' % self.device_identifier
-        self.device_manufacturer = 'Six'
-
-        # Load library
-        self.TIMAPI = import_ctypes_library('tim', LIB_NAME)
+        lib_name = 'libsix_odoo_w.dll' if IS_WINDOWS else 'libsix_odoo_l.so'
+        super().__init__(identifier, device, lib_name=lib_name, manufacturer="Six")
 
         # int six_cancel_transaction(t_terminal_manager *terminal_manager)
-        self.TIMAPI.six_cancel_transaction.argtypes = [ctypes.c_void_p]
+        self.terminal.six_cancel_transaction.argtypes = [ctypes.c_void_p]
 
         # int six_perform_transaction
-        self.TIMAPI.six_perform_transaction.argtypes = [
+        self.terminal.six_perform_transaction.argtypes = [
             ctypes.c_void_p,                # t_terminal_manager *terminal_manager
             ctypes.c_char_p,                # char *pos_id
             ctypes.c_int,                   # int user_id
@@ -51,26 +43,18 @@ class SixDriver(CtypesTerminalDriver):
             ctypes.c_char_p,                # char *error
         ]
 
-        self.TIMAPI.six_terminal_balance.argtypes = [
+        self.terminal.six_terminal_balance.argtypes = [
             ctypes.c_void_p,                # t_terminal_manager *terminal_manager
             ctypes.c_char_p,                # char *balance_receipt_buffer
             ctypes.POINTER(ctypes.c_int),   # int *n_receipts
         ]
 
-    def processTransaction(self, transaction):
-        if transaction['amount'] <= 0:
-            return self.send_status(
-                error='The terminal cannot process negative or null transaction amounts.',
-                request_data=transaction
-            )
-        elif transaction['transactionType'] not in ['Refund', 'Payment']:
-            return self.send_status(
-                error='Invalid transaction type.',
-                request_data=transaction
-            )
+    def process_transaction(self, transaction):
+        if not super().process_transaction(transaction):
+            return None
 
-        # Notify PoS about the transaction start
-        self.send_status(stage='WaitingForCard', request_data=transaction)
+        if transaction['transactionType'] not in ['Refund', 'Payment']:
+            return self.send_status(error='Invalid transaction type.', request_data=transaction)
 
         # Transaction buffers
         transaction_id = create_ctypes_string_buffer()
@@ -84,7 +68,7 @@ class SixDriver(CtypesTerminalDriver):
         # Transaction
         try:
             _logger.info('Start transaction #%s', transaction)
-            result = self.TIMAPI.six_perform_transaction(
+            result = self.terminal.six_perform_transaction(
                 self.dev,  # t_terminal_manager *terminal_manager
                 str(transaction['posId']).encode(),  # char *pos_id
                 ctypes.c_int(transaction['userId']),  # int user_id
@@ -114,7 +98,7 @@ class SixDriver(CtypesTerminalDriver):
             # Transaction failed
             elif result == 0:
                 # If cancelled by Odoo Pos
-                if error_code.value == CANCELLED_BY_POS:
+                if error_code.value == self.cancelled_by_pos:
                     sleep(3)  # Wait a couple of seconds between cancel requests as per documentation
                     _logger.info("Transaction #%s cancelled by PoS user", transaction)
                     self.send_status(stage='Cancel', request_data=transaction)
@@ -136,7 +120,7 @@ class SixDriver(CtypesTerminalDriver):
                 request_data=transaction,
             )
 
-    def cancelTransaction(self, transaction):
+    def cancel_transaction(self, transaction):
         self.send_status(stage='waitingCancel', request_data=transaction)
         if not self.terminal_busy:
             # In case of restart after sending a payment request, the terminal is not busy
@@ -145,7 +129,7 @@ class SixDriver(CtypesTerminalDriver):
             return self.send_status(stage="Cancel", request_data=transaction)
         try:
             _logger.info("cancel transaction request for %s", transaction)
-            if not self.TIMAPI.six_cancel_transaction(ctypes.cast(self.dev, ctypes.c_void_p)):
+            if not self.terminal.six_cancel_transaction(ctypes.cast(self.dev, ctypes.c_void_p)):
                 _logger.info("Transaction #%s could not be cancelled", transaction)
                 self.send_status(stage='Cancel', error='Transaction could not be cancelled', request_data=transaction)
         except OSError:
@@ -161,7 +145,7 @@ class SixDriver(CtypesTerminalDriver):
         n_receipts = ctypes.c_int(0)
         try:
             _logger.info("Requesting terminal balance")
-            result = self.TIMAPI.six_terminal_balance(self.dev, balance_receipt_buffer, ctypes.byref(n_receipts))
+            result = self.terminal.six_terminal_balance(self.dev, balance_receipt_buffer, ctypes.byref(n_receipts))
             if result:
                 _logger.info("Terminal balance request success")
                 # If this ever occurs the C code will need to be adapted to handle multiple receipts
