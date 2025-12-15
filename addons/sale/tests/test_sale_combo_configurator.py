@@ -6,6 +6,7 @@ from odoo.tests import HttpCase, tagged
 from odoo.addons.sale.tests.common import SaleCommon
 
 
+# TODO VFE move to test_sale_product_configurators
 @tagged('post_install', '-at_install')
 class TestSaleComboConfigurator(HttpCase, SaleCommon):
 

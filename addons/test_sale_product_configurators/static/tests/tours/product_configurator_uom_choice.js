@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 import configuratorTourUtils from "@sale/js/tours/product_configurator_tour_utils";
-import tourUtils from "@sale/js/tours/tour_utils";
+import * as tourUtils from "@sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('sale_product_configurator_uom_tour', {
     url: '/odoo',
@@ -9,22 +9,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_uom_tour', {
         ...stepUtils.goToAppSteps("sale.sale_menu_root", "Go to the Sales App"),
         ...tourUtils.createNewSalesOrder(),
         ...tourUtils.selectCustomer('Tajine Saucisse'),
-        {
-            content: "search the pricelist",
-            trigger: 'input[id="pricelist_id_0"]',
-            // Wait for onchange to come back
-            run: "edit Test",
-        },
-        {
-            content: "search the pricelist",
-            trigger: 'input[id="pricelist_id_0"]',
-            run: "edit Custo",
-        },
-        {
-            content: "select the pricelist",
-            trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
-            run: "click",
-        },
+        ...tourUtils.selectPricelist("Custom pricelist (TEST)"),
         ...tourUtils.addProduct("Customizable Desk (TEST)"),
         configuratorTourUtils.assertProductPrice("Customizable Desk (TEST)", "750.00"),
         configuratorTourUtils.increaseProductQuantity("Customizable Desk (TEST)"),
