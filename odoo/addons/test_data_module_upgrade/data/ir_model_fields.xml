@@ -25,4 +25,24 @@
         <field name="relation_field">x_model_a_category_id</field>
         <field name="name">x_model_b_ids</field>
     </record>
+
+    <record id="category_x_model_a_id" model="ir.model.fields">
+        <field name="ttype">many2one</field>
+        <field name="field_description">Model A Many2one</field>
+        <field name="model_id" ref="test_orm.model_test_orm_category"/>
+        <field name="relation">model_a</field>
+        <field name="name">x_model_a_id</field>
+    </record>
+
+    <record id="category_x_model_a_name" model="ir.model.fields">
+        <field name="ttype">char</field>
+        <field name="field_description">Model A name</field>
+        <field name="model_id" ref="test_orm.model_test_orm_category"/>
+        <field name="depends">x_model_a_id.name</field>
+        <field name="name">x_model_a_name</field>
+        <field name="compute"><![CDATA[
+for rec in self:
+    rec['x_model_a_name'] = rec.x_model_a_id.name
+]]></field>
+    </record>
 </odoo>
