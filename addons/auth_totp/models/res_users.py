@@ -233,7 +233,7 @@ class ResUsers(models.Model):
     def _totp_enable_search(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        domain = Domain.custom(to_sql=lambda table: SQL("%s <> 'false'", table.totp_secret))
+        domain = Domain.custom(to_sql=lambda table: SQL("%s <> 'false'", table._sudo().totp_secret))
         if not (self.env.su or self.env.user.has_group('base.group_erp_manager')):
             domain &= Domain('id', '=', self.env.uid)
         return domain
