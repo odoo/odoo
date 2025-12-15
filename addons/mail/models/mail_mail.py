@@ -792,6 +792,7 @@ class MailMail(models.Model):
                     'failure_reason': IrMailServer.NO_VALID_RECIPIENT if no_recipients else _('Error without exception. Probably due to sending an email without computed recipients.'),
                     'failure_type': 'mail_email_missing' if no_recipients else 'unknown',
                 })
+                mail.flush_recordset()
                 # Update notification in a transient exception state to avoid concurrent
                 # update in case an email bounces while sending all emails related to current
                 # mail record.
