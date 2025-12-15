@@ -12,13 +12,14 @@ registerThreadAction("show-threads", {
         close: () => action.actionPanelClose(),
         thread,
     }),
-    actionPanelOpen({ owner, thread }) {
-        const channel = thread?.parent_channel_id || thread;
-        this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), { thread: channel });
+    actionPanelOpen({ channel, owner }) {
+        this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
+            thread: (channel?.parent_channel_id || channel).thread,
+        });
     },
     actionPanelOuterClass: "bg-100 border border-secondary",
-    condition: ({ owner, thread }) =>
-        (thread?.hasSubChannelFeature || thread?.parent_channel_id?.hasSubChannelFeature) &&
+    condition: ({ channel, owner }) =>
+        (channel?.hasSubChannelFeature || channel?.parent_channel_id?.hasSubChannelFeature) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-comments-o",
     name: _t("Threads"),

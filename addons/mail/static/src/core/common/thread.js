@@ -662,7 +662,7 @@ export class Thread extends Component {
 
     get startMessageTitle() {
         const channelName = this.props.thread.name;
-        if (this.props.thread.parent_channel_id) {
+        if (this.props.thread.channel?.parent_channel_id) {
             return channelName;
         }
         if (this.props.thread.channel?.channel_type === "channel") {
@@ -672,7 +672,7 @@ export class Thread extends Component {
     }
 
     get startMessageSubtitle() {
-        if (this.props.thread.parent_channel_id) {
+        if (this.props.thread.channel?.parent_channel_id) {
             const authorName = Object.values(this.store["res.partner"].records).find((partner) =>
                 partner.main_user_id?.eq(this.props.thread.create_uid)
             )?.name;

@@ -16,6 +16,7 @@ declare module "models" {
         hasSomeoneFetched: boolean|undefined;
         hasSomeoneSeen: boolean|undefined;
         isMessagePreviousToLastSelfMessageSeenByEveryone: boolean;
+        linkedSubChannel: DiscussChannel;
         showSeenIndicator: (thread: Thread) => boolean;
         threadAsFirstUnread: Thread;
     }

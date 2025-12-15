@@ -20,9 +20,6 @@ declare module "models" {
         notifyMessageToUser: (message: Message) => Promise<void>;
         subChannelsInSidebar: DiscussChannel[];
     }
-    export interface Message {
-        linkedSubChannel: Thread;
-    }
     export interface Store {
         channels: ReturnType<Store['makeCachedFetchData']>;
         "discuss.category": StaticMailRecord<DiscussCategory, typeof DiscussCategoryClass>;
@@ -31,13 +28,10 @@ declare module "models" {
     }
     export interface Thread {
         createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
-        from_message_id: Message;
         hasSubChannelFeature: Readonly<boolean>;
-        lastSubChannelLoaded: Thread|null;
-        loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<Thread[]|undefined>;
+        lastSubChannelLoaded: DiscussChannel;
+        loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<void>;
         loadSubChannelsDone: boolean;
-        parent_channel_id: Thread;
-        sub_channel_ids: Thread[];
     }
 
     export interface Models {

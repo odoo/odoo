@@ -57,9 +57,7 @@ const discussChannelPatch = {
         });
         this.subChannelsInSidebar = fields.Many("discuss.channel", {
             compute() {
-                return this.sub_channel_ids
-                    ?.filter((thread) => thread.channel?.isDisplayInSidebar)
-                    .map((thread) => thread.channel);
+                return this.sub_channel_ids.filter((channel) => channel.isDisplayInSidebar);
             },
         });
     },
