@@ -47,7 +47,7 @@ function useResizable({
 
     onMounted(() => {
         if (handleRef.el) {
-            resize(initialWidth);
+            resize(Math.max(initialWidth, getMinWidth(props) || 0));
             handleRef.el.addEventListener("mousedown", onMouseDown);
         }
     });
