@@ -112,7 +112,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                     timeout=OUTLOOK_TOKEN_REQUEST_TIMEOUT)
                 response.raise_for_status()
             except requests.exceptions.RequestException as e:
-                _logger.error('Can not contact IAP: %s.', e)
+                _logger.warning('Can not contact IAP: %s.', e)
                 raise UserError(_('Oops, we could not authenticate you. Please try again later.'))
 
             response = response.json()
@@ -224,7 +224,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         )
 
         if not response.ok:
-            _logger.error('Can not contact IAP: %s.', response.text)
+            _logger.warning('Can not contact IAP: %s.', response.text)
             raise UserError(_('Oops, we could not authenticate you. Please try again later.'))
 
         response = response.json()
