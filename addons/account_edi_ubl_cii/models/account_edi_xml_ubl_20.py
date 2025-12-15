@@ -46,7 +46,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # 3. Run constraints
         vals['document_node'] = document_node
-        errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
+        constraints = self._flatten_multilevel_constraints(self._export_invoice_constraints(invoice, vals))
+        errors = [constraint for constraint in constraints.values() if constraint]
 
         template = self._get_document_template(vals)
         nsmap = self._get_document_nsmap(vals)
