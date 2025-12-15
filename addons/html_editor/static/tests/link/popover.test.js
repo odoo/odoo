@@ -1806,6 +1806,17 @@ describe("hidden label field", () => {
     });
 });
 
+describe("Selection in input/textarea", () => {
+    test("Should not show link preview", async () => {
+        await setupEditor(
+            `<p><a href="http://test.com/">a[]b</a><span contenteditable="false" data-oe-protected="true"><input></span></p>`
+        );
+        await waitFor(".o-we-linkpopover");
+        queryOne("input").focus();
+        await expectElementCount(".o-we-linkpopover", 0);
+    });
+});
+
 describe("link popover with empty URL", () => {
     test("should not close the popover when pressing Enter with an empty URL", async () => {
         const { editor } = await setupEditor("<p>ab[]</p>");
