@@ -225,7 +225,7 @@ export function generateSpecialMentionElement(label) {
 export function generateThreadMentionElement(thread) {
     return generateMentionElement({
         className: `o_channel_redirect${
-            thread.parent_channel_id ? " o_channel_redirect_asThread" : ""
+            thread.channel?.parent_channel_id ? " o_channel_redirect_asThread" : ""
         }`,
         id: thread.id,
         model: "discuss.channel",

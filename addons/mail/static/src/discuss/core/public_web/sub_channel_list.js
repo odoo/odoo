@@ -27,7 +27,7 @@ export class SubChannelList extends Component {
             searchTerm: "",
             lastSearchTerm: "",
             searching: false,
-            subChannels: this.props.thread.sub_channel_ids,
+            subChannels: this.props.thread.channel.sub_channel_ids,
         });
         this.searchRef = useRef("search");
         this.sequential = useSequential();
@@ -56,7 +56,7 @@ export class SubChannelList extends Component {
     /**
      * @param {import("models").DiscussChannel} subChannel
      */
-    async onClickSubThread(subChannel) {
+    async onClickSubChannel(subChannel) {
         if (!subChannel.self_member_id) {
             await rpc("/discuss/channel/join", { channel_id: subChannel.id });
         }
@@ -71,7 +71,7 @@ export class SubChannelList extends Component {
         this.state.lastSearchTerm = "";
         this.state.searching = false;
         this.state.loading = false;
-        this.state.subChannels = this.props.thread.sub_channel_ids;
+        this.state.subChannels = this.props.thread.channel.sub_channel_ids;
     }
 
     onKeydownSearch(ev) {
@@ -110,8 +110,8 @@ export class SubChannelList extends Component {
     _refreshSubChannelList() {
         this.state.subChannels = fuzzyLookup(
             this.state.searchTerm ?? "",
-            this.props.thread.sub_channel_ids,
-            ({ name }) => name
+            this.props.thread.channel.sub_channel_ids,
+            (channel) => channel.displayName
         );
     }
 }

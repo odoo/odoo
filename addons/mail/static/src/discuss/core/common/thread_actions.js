@@ -243,10 +243,10 @@ registerThreadAction("delete-thread", {
         return { channel, close: () => action.actionPanelClose() };
     },
     actionPanelOuterClass: "bg-100",
-    condition({ owner, store, thread }) {
+    condition({ channel, owner, store }) {
         return (
-            thread?.parent_channel_id &&
-            store.self_user?.eq(thread.create_uid) &&
+            channel?.parent_channel_id &&
+            store.self_user?.eq(channel.create_uid) &&
             !owner.isDiscussContent
         );
     },

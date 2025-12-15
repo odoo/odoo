@@ -36,7 +36,7 @@
                         onParentMessageClick.bind="() => msg.parent_id and env.messageHighlight?.highlightMessage(msg.parent_id, props.thread)"
                         thread="props.thread"
                         isFirstMessage="msg_first"
-                        hasActions="!msg.eq(props.thread.from_message_id)"
+                        hasActions="!msg.eq(props.thread.channel?.from_message_id)"
                         showDates="props.showDates"
                     />
                 </t>
@@ -103,11 +103,11 @@
 <t t-name="mail.Thread.startMessage">
     <div class="pt-4" t-att-class="{ 'px-3': env.inChatWindow, 'px-2': env.inDiscussApp or env.inMeetingChat }">
         <div class="d-flex align-items-center gap-2" t-att-class="{
-            'mt-2 mb-1': !props.thread.parent_channel_id,
-            'mt-1': props.thread.parent_channel_id,
+            'mt-2 mb-1': !props.thread.channel?.parent_channel_id,
+            'mt-1': props.thread.channel?.parent_channel_id,
         }">
             <div class="o-mail-Thread-avatar d-inline" t-att-class="{'o-mail-Thread-avatarChatWindow': env.inChatWindow }">
-                <img t-if="!props.thread.parent_channel_id" class="rounded-3 object-fit-cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
+                <img t-if="!props.thread.channel?.parent_channel_id" class="rounded-3 object-fit-cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
                 <i t-else="" class="fa fa-comments-o text-muted" role="presentation"/>
             </div>
             <div role="heading" aria-level="1" class="text-break" t-att-class="{ 'fs-1': !env.inChatWindow, 'fs-3': env.inChatWindow }" t-esc="startMessageTitle"/>

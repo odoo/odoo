@@ -15,8 +15,8 @@
             <t t-if="category.is_open">
                 <DiscussSidebarChannel t-foreach="category.channels.filter((channel) => channel.isDisplayInSidebar)" t-as="channel" t-key="channel.localId" channel="channel"/>
             </t>
-            <DiscussSidebarChannel t-elif="store.discuss.thread?.channel?.in(category.channels)" channel="store.discuss.thread?.channel"/>
-            <DiscussSidebarChannel t-elif="store.discuss.thread?.parent_channel_id?.channel?.in(category.channels)" channel="store.discuss.thread.parent_channel_id.channel" />
+            <DiscussSidebarChannel t-elif="store.discuss.thread?.channel?.in(category.channels)" channel="store.discuss.thread.channel"/>
+            <DiscussSidebarChannel t-elif="store.discuss.thread?.channel?.parent_channel_id?.in(category.channels)" channel="store.discuss.thread.channel.parent_channel_id"/>
         </div>
     </t>
 

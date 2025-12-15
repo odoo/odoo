@@ -119,6 +119,7 @@ export class DiscussChannel extends Record {
     fetchMembersState = "not_fetched";
     /** @type {"not_fetched"|"fetching"|"fetched"} */
     fetchChannelInfoState = "not_fetched";
+    from_message_id = fields.One("mail.message", { inverse: "linkedSubChannel" });
     get memberListTypes() {
         return ["channel", "group"];
     }
@@ -247,8 +248,18 @@ export class DiscussChannel extends Record {
             );
         },
     });
+    parent_channel_id = fields.One("discuss.channel", {
+        inverse: "sub_channel_ids",
+        onDelete() {
+            this.delete();
+        },
+    });
     /** @type {"loaded"|"loading"|"error"|undefined} */
     pinnedMessagesState = undefined;
+    sub_channel_ids = fields.Many("discuss.channel", {
+        inverse: "parent_channel_id",
+        sort: (a, b) => compareDatetime(b.lastInterestDt, a.lastInterestDt) || b.id - a.id,
+    });
     thread = fields.One("mail.thread", {
         compute() {
             return { id: this.id, model: "discuss.channel" };

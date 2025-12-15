@@ -50,6 +50,7 @@ const messagePatch = {
                 return this.id < this.channel_id.lastSelfMessageSeenByEveryone.id;
             },
         });
+        this.linkedSubChannel = fields.One("discuss.channel", { inverse: "from_message_id" });
         this.threadAsFirstUnread = fields.One("mail.thread", { inverse: "firstUnreadMessage" });
     },
     /** @returns {import("models").ChannelMember[]} */

@@ -7,7 +7,7 @@
         <div class="o-mail-DiscussContent-header py-1 ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-ref="header">
             <t t-if="thread">
                 <div t-if="showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
-                    <img class="rounded-2 object-fit-cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
+                    <img class="rounded-2 object-fit-cover" t-att-src="thread.channel?.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
                     <FileUploader t-if="isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                         <t t-set-slot="toggler">
                             <a href="#" class="position-absolute z-1 h-100 w-100 rounded-2 start-0 bottom-0" title="Upload Avatar">
@@ -21,8 +21,8 @@
                     <ThreadIcon className="'align-self-center fs-3 my-2 opacity-75'" size="'large'" thread="thread"/>
                 </t>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-1">
-                    <div t-if="thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
-                        <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.parent_channel_id.displayName" t-on-click="() => this.thread.parent_channel_id.open({ focus: true })"/>
+                    <div t-if="thread.channel?.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
+                        <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.channel.parent_channel_id.displayName" t-on-click="() => this.thread.channel.parent_channel_id.open({ focus: true })"/>
                         <i class="oi oi-chevron-right o-xsmaller mx-1"/>
                     </div>
                     <AutoresizeInput
