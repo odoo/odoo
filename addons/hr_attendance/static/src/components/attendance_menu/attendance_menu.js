@@ -64,6 +64,7 @@ export class ActivityMenu extends Component {
             activeAttendance: null,
             attendanceReviewExpanded: false,
             editingAttendanceId: null,
+            gettingPosition: false,
         });
 
         this.cameraCapture = null;
@@ -389,7 +390,7 @@ export class ActivityMenu extends Component {
                 throw error;
             }
         } finally {
-            this._attendanceInProgress = false;
+            this.state.gettingPosition = false;
         }
     }
 
@@ -400,7 +401,7 @@ export class ActivityMenu extends Component {
             ),
             confirmLabel: _t("Proceed Anyway"),
             confirm: async () => await this.checking({ checkInImage }),
-            cancel: () => { this._attendanceInProgress = false; },
+            cancel: () => { this.state.gettingPosition = false; },
         });
     }
 
@@ -409,20 +410,20 @@ export class ActivityMenu extends Component {
     }
 
     async signInOut() {
-        if (this._attendanceInProgress) {
+        if (this.state.gettingPosition) {
             return;
         }
-        this._attendanceInProgress = true;
+        this.state.gettingPosition = true;
         const attendanceWasCheckedIn = this.state.checkedIn;
         if (this.attendanceRecord?.dirty) {
             if (!(await this.saveAttendanceRecord())) {
-                this._attendanceInProgress = false;
+                this.state.gettingPosition = false;
                 return;
             }
             if (attendanceWasCheckedIn && !this.state.checkedIn) {
                 this._stopInlineEdit();
                 this.dropdown.close();
-                this._attendanceInProgress = false;
+                this.state.gettingPosition = false;
                 return;
             }
         }

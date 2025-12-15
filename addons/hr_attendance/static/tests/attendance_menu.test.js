@@ -501,7 +501,7 @@ test("check-out is not toggled again when editing already closed the attendance"
     await attendanceMenu.signInOut();
 
     expect.verifySteps(["save attendance", "close"]);
-    expect(attendanceMenu._attendanceInProgress).toBe(false);
+    expect(attendanceMenu.state.gettingPosition).toBe(false);
 });
 
 test("a failed attendance save re-enables check-in/out", async () => {
@@ -517,5 +517,5 @@ test("a failed attendance save re-enables check-in/out", async () => {
     await attendanceMenu.signInOut();
 
     expect.verifySteps([]);
-    expect(attendanceMenu._attendanceInProgress).toBe(false);
+    expect(attendanceMenu.state.gettingPosition).toBe(false);
 });
