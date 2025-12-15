@@ -748,10 +748,18 @@ patch(PosStore.prototype, {
                     );
                 }
             }
+<<<<<<< e8448a9c86c152a8e720d9e8b0b11ede7f99bbcd:addons/pos_loyalty/static/src/app/services/pos_store.js
 
             if (!["draft", "cancel"].includes(order.state)) {
                 await this._postProcessLoyalty(order);
             }
+||||||| ebb9124e05aff3125622fd5e5df88956ae261e4d:addons/pos_loyalty/static/src/overrides/models/pos_store.js
+            await this._postProcessLoyalty(order);
+=======
+            if (!["draft", "cancel"].includes(order.state)) {
+                await this._postProcessLoyalty(order);
+            }
+>>>>>>> c585f2d5e56f3a02c1bf022f96adb37ccce6e5ef:addons/pos_loyalty/static/src/overrides/models/pos_store.js
         }
     },
     async _postProcessLoyalty(order) {
