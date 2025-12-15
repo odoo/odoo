@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
     account_peppol_purchase_journal_id = fields.Many2one(related='company_id.peppol_purchase_journal_id', readonly=False)
     peppol_external_provider = fields.Char(related='company_id.peppol_external_provider', readonly=False)
     peppol_use_parent_company = fields.Boolean(compute='_compute_peppol_use_parent_company')
-    peppol_parent_company_name = fields.Char(related='company_id.peppol_parent_company_id.name', string="Peppol Parent Company Name")
+    peppol_parent_company_name = fields.Char(compute='_compute_peppol_use_parent_company')
     account_is_token_out_of_sync = fields.Boolean(related='account_peppol_edi_user.is_token_out_of_sync', readonly=False)
 
     # -------------------------------------------------------------------------
@@ -26,7 +26,15 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('company_id.peppol_parent_company_id')
     def _compute_peppol_use_parent_company(self):
         for setting in self:
-            setting.peppol_use_parent_company = bool(setting.company_id.peppol_parent_company_id)
+            setting.peppol_use_parent_company = (
+                setting.company_id != setting.company_id.peppol_parent_company_id
+                and setting.company_id.peppol_can_send
+                and setting.company_id.peppol_parent_company_id.peppol_can_send
+            )
+            if setting.peppol_use_parent_company:
+                setting.peppol_parent_company_name = setting.company_id.peppol_parent_company_id.name
+            else:
+                setting.peppol_parent_company_name = None
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
