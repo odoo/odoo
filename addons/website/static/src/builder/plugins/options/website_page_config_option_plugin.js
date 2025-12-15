@@ -82,9 +82,6 @@ class WebsitePageConfigOptionPlugin extends Plugin {
      */
     getVisibilityItem(type) {
         const el = this.getTarget(type);
-        if (!el) {
-            return "regular";
-        }
         const isHidden = el.classList.contains("o_snippet_invisible");
         let isOverlay = null;
         if (type === "header") {
@@ -115,9 +112,6 @@ class WebsitePageConfigOptionPlugin extends Plugin {
      */
     getColorValue(type, attribute, classPrefix) {
         const el = this.getTarget(type);
-        if (!el) {
-            return null;
-        }
         const matchingClass = [...el.classList].find((cls) => cls.startsWith(classPrefix));
         return matchingClass || rgbaToHex(el.style.getPropertyValue(attribute));
     }
@@ -133,21 +127,32 @@ class WebsitePageConfigOptionPlugin extends Plugin {
         if (!this.isDirty) {
             return;
         }
-        const headerItem = this.getVisibilityItem("header");
-        const breadcrumbItem = this.getVisibilityItem("breadcrumb");
 
         const pageOptions = {
-            header_overlay: () => headerItem === "overTheContent",
-            header_color: () => this.getColorValue("header", "background-color", "bg-"),
-            header_text_color: () => this.getColorValue("header", "color", "text-"),
-            header_visible: () => headerItem !== "hidden",
             footer_visible: () => !this.getFooterVisibility(),
-
-            breadcrumb_overlay: () => breadcrumbItem === "overTheContent",
-            breadcrumb_color: () => this.getColorValue("breadcrumb", "background-color", "bg-"),
-            breadcrumb_text_color: () => this.getColorValue("breadcrumb", "color", "text-"),
-            breadcrumb_visible: () => breadcrumbItem !== "hidden",
         };
+
+        const headerEl = this.document.querySelector("#wrapwrap > header");
+        if (headerEl) {
+            const headerItem = this.getVisibilityItem("header");
+            Object.assign(pageOptions, {
+                header_overlay: () => headerItem === "overTheContent",
+                header_color: () => this.getColorValue("header", "background-color", "bg-"),
+                header_text_color: () => this.getColorValue("header", "color", "text-"),
+                header_visible: () => headerItem !== "hidden",
+            });
+        }
+
+        const breadcrumbEl = this.document.querySelector("#wrapwrap div.o_page_breadcrumb");
+        if (breadcrumbEl) {
+            const breadcrumbItem = this.getVisibilityItem("breadcrumb");
+            Object.assign(pageOptions, {
+                breadcrumb_overlay: () => breadcrumbItem === "overTheContent",
+                breadcrumb_color: () => this.getColorValue("breadcrumb", "background-color", "bg-"),
+                breadcrumb_text_color: () => this.getColorValue("breadcrumb", "color", "text-"),
+                breadcrumb_visible: () => breadcrumbItem !== "hidden",
+            });
+        }
 
         const args = {};
         for (const [pageOptionName, valueGetter] of Object.entries(pageOptions)) {
