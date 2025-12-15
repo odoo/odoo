@@ -636,18 +636,35 @@ class TestChannelInternals(MailCommon, HttpCase):
         test_channel.image_128 = base64.b64encode(("<svg/>").encode())
         self.assertEqual(test_channel.avatar_128, test_channel.image_128)
 
+    @freeze_time("2020-03-22 10:42:06")
     def test_channel_write_should_send_notification(self):
-        channel = self.env['discuss.channel'].create({"name": "test", "description": "test"})
-        with self.assertBus(
-            [(self.cr.dbname, "discuss.channel", channel.id)],
-            [
-                {
-                    "type": "mail.record/insert",
-                    "payload": {"discuss.channel": [{"id": channel.id, "name": "test test"}]},
-                }
-            ],
-        ):
+        channel = self.env["discuss.channel"].create({"name": "test", "description": "test"})
+
+        def get_channel_write_bus():
+            return (
+                [
+                    (self.cr.dbname, "res.partner", self.env.user.partner_id.id),
+                    (self.cr.dbname, "discuss.channel", channel.id),
+                    (self.cr.dbname, "discuss.channel", channel.id),
+                ],
+                [
+                    {
+                        "type": "mail.record/insert",
+                        "payload": {"discuss.channel": [{"id": channel.id, "name": "test test"}]},
+                    },
+                ],
+            )
+        with self.assertBus(get_params=get_channel_write_bus):
             channel.name = "test test"
+        last_message = self.env["mail.message"].search([
+            ("model", "=", "discuss.channel"),
+            ("res_id", "=", channel.id),
+        ], order="id desc", limit=1)
+        self.assertEqual(last_message.message_type, "notification")
+        self.assertEqual(
+            last_message.body,
+            '<div data-oe-type="channel_rename" class="o_mail_notification">test test</div>',
+        )
 
     def test_channel_write_should_send_notification_if_image_128_changed(self):
         channel = self.env['discuss.channel'].create({'name': '', 'uuid': 'test-uuid'})
@@ -1043,3 +1060,22 @@ class TestChannelInternals(MailCommon, HttpCase):
         actual_member_ids = [m.partner_id.id if m.partner_id else m.guest_id.id for m in channel.channel_member_ids]
         expected_member_ids = [self.partner_employee.id, self.guest.id, self.env.user.partner_id.id]
         self.assertCountEqual(actual_member_ids, expected_member_ids)
+
+    def test_group_chat_name_reset_posts_rename_message_with_display_name(self):
+        channel = self.env["discuss.channel"].create({
+            "name": "Original Name",
+            "channel_type": "group",
+            "channel_member_ids": [
+                Command.create({"partner_id": self.partner_employee.id}),
+                Command.create({"partner_id": self.test_partner.id}),
+            ],
+        })
+        channel.name = ""
+        last_message = self.env["mail.message"].search([
+            ("model", "=", "discuss.channel"),
+            ("res_id", "=", channel.id),
+        ], order="id desc", limit=1)
+        self.assertEqual(
+            last_message.body,
+            '<div data-oe-type="channel_rename" class="o_mail_notification">Ernest Employee, Test Partner, and OdooBot</div>',
+        )
