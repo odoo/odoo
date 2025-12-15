@@ -12,7 +12,7 @@ export class CartLine extends Interaction {
         '.css_quantity > input.js_quantity': {
             't-on-change.withTarget': this.locked(this.debounced(this.changeQuantity, 500)),
         },
-        '.css_quantity > a': {
+        '.css_quantity > button': {
             't-on-click.prevent.withTarget': this.locked(this.incOrDecQuantity),
         },
         '.js_delete_product': { 't-on-click.prevent': this.locked(this.deleteProduct) },

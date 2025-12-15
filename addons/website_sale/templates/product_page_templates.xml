@@ -849,30 +849,28 @@
                 t-attf-class="css_quantity input-group {{'d-none' if combination_info['prevent_sale'] else 'd-inline-flex order-first'}} align-middle border"
                 contenteditable="false"
             >
-                <a
-                    t-attf-href="#"
-                    class="btn btn-link pe-2 js_add_cart_json border-0"
+                <button
+                    class="btn btn-link pe-2 border-0"
                     aria-label="Remove one"
                     title="Remove one"
-                    name="remove_one"
                 >
                     <i class="oi oi-minus text-600"/>
-                </a>
+                </button>
                 <input
                     type="text"
                     t-attf-class="form-control quantity text-center border-0"
                     data-min="1"
                     name="add_qty"
                     t-att-value="1"
+                    aria-label="Quantity"
                 />
-                <a
-                    t-attf-href="#"
-                    class="btn btn-link ps-2 js_add_cart_json border-0"
+                <button
+                    class="btn btn-link ps-2 border-0"
                     aria-label="Add one"
                     title="Add one"
                 >
                     <i class="oi oi-plus text-600"/>
-                </a>
+                </button>
             </div>
         </div>
     </template>

@@ -136,7 +136,6 @@
                                     <button
                                         class="js_delete_product btn btn-link btn-sm p-0"
                                         aria-label="Remove from cart"
-                                        title="Remove from cart"
                                     >
                                         Remove
                                     </button>
@@ -158,6 +157,7 @@
                             <button
                                 class="js_delete_product btn btn-link d-inline-block d-md-none px-2"
                                 title="Remove"
+                                aria-label="Remove"
                             >
                                 <i class="fa fa-fw fa-trash-o"/>
                             </button>
@@ -178,20 +178,21 @@
             t-attf-name="{{'website_sale_cart_line_quantity' if not is_mobile else 'website_sale_cart_line_quantity_mobile'}}"
         >
             <t t-if="should_show_quantity_selector and line._is_sellable()">
-                <a
-                    href="#"
+                <button
                     class="btn btn-link d-inline-block border-end-0"
                     aria-label="Remove one"
                     title="Remove one"
                 >
                     <i class="oi oi-minus position-relative z-1"/>
-                </a>
+                </button>
                 <input
                     type="text"
                     class="js_quantity quantity form-control border-0"
                     t-att-data-line-id="line.id"
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="line._get_displayed_quantity()"
+                    t-attf-name="cart-quantity-{{line.id}}-{{int(is_mobile or False)}}"
+                    aria-label="Quantity"
                 />
                 <t t-if="line._get_shop_warning(clear=False)">
                     <a href="#" class="btn btn-link">
@@ -203,15 +204,14 @@
                         />
                     </a>
                 </t>
-                <a
+                <button
                     t-else=""
-                    href="#"
                     class="btn btn-link d-inline-block border-start-0"
                     aria-label="Add one"
                     title="Add one"
                 >
                     <i class="oi oi-plus position-relative z-1"/>
-                </a>
+                </button>
             </t>
             <t t-else="">
                 <input
@@ -220,7 +220,9 @@
                     t-att-data-line-id="line.id"
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="line._get_displayed_quantity()"
+                    t-attf-name="cart-quantity-{{line.id}}-{{int(is_mobile or False)}}"
                     readonly="True"
+                    aria-label="Quantity"
                 />
             </t>
         </div>
@@ -576,6 +578,7 @@
                 t-att-data-product-id="line.product_id.id"
                 t-att-data-product-template-id="line.product_id.product_tmpl_id.id"
                 title="Wishlist"
+                aria-label="Wishlist"
             >
                 <i class="fa fa-fw fa-heart-o"/>
             </button>

@@ -50,9 +50,9 @@
                         t-if="ptav.attribute_id.is_thumbnail_visible"
                         class="d-flex"
                     >
-                        <label
+                        <img
+                            t-att-src="previewed_ptav['variant_image_url']"
                             class="css_attribute_preview_thumbnail cursor-pointer d-block"
-                            t-att-style="'background:url(%s); background-size:cover; background-position: center center;' % previewed_ptav['variant_image_url']"
                             t-att-title="ptav.name"
                         />
                     </div>
@@ -60,18 +60,14 @@
                         t-elif="ptav.display_type == 'color'"
                         class="d-flex"
                     >
-                        <t
+                        <img
                             t-if="ptav.product_attribute_value_id.image"
-                            t-set="background_style"
-                            t-value="'background:url(/web/image/product.attribute.value/%s/image); background-size:cover;' % ptav.product_attribute_value_id.id"
+                            t-att-src="'/web/image/product.attribute.value/%s/image' % ptav.product_attribute_value_id.id"
+                            class="css_attribute_preview_thumbnail cursor-pointer d-block"
+                            t-att-title="ptav.name"
                         />
-                        <t
-                            t-elif="not ptav.is_custom"
-                            t-set="background_style"
-                            t-value="'background: ' + str(ptav.html_color or ptav.name)"
-                        />
-                        <label
-                            t-att-style="background_style"
+                        <i
+                            t-att-style="'background: ' + str(ptav.html_color or ptav.name)"
                             class="css_attribute_color cursor-pointer d-block"
                             t-att-title="ptav.name"
                         />
@@ -1092,15 +1088,6 @@
                             role="menuitem"
                             t-att-aria-label="c.name"
                         >
-                            <input
-                                type="radio"
-                                t-attf-name="wsale_categories_top_radios_{{parentCategoryId}}"
-                                class="btn-check pe-none"
-                                t-att-id="c.id"
-                                t-att-value="c.id"
-                                t-att-checked="'true' if c.id == category.id else None"
-                                tabindex="-1"
-                            />
                             <div
                                 t-att-class="'o_wsale_filmstrip_item position-relative d-flex w-100 h-100'
                                     + (c.id == category.id and ' active' or '')"
@@ -1517,6 +1504,7 @@
                             t-att-min="'%f' % (available_min_price)"
                             t-att-max="'%f' % (available_max_price)"
                             t-att-value="'%f,%f' % (min_price, max_price)"
+                            aria-label="Price Range"
                         />
                     </div>
                 </div>
@@ -1536,6 +1524,7 @@
                     t-att-min="'%f' % (available_min_price)"
                     t-att-max="'%f' % (available_max_price)"
                     t-att-value="'%f,%f' % (min_price, max_price)"
+                    aria-label="Price Range"
                 />
             </t>
         </div>
