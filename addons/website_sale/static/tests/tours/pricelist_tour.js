@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add(
     "website_sale.pricelist_on_login",
@@ -15,17 +16,11 @@ registry.category("web_tour.tours").add(
                 run: "click",
                 expectUnloadPage: true,
             },
-            {
-                content: "Submit login",
-                trigger: '.oe_login_form',
-                run: function () {
-                    document.querySelector('.oe_login_form input[name="login"]').value = "toto";
-                    document.querySelector('.oe_login_form input[name="password"]').value = "long_enough_password";
-                    document.querySelector('.oe_login_form input[name="redirect"]').value = "/shop";
-                    document.querySelector('.oe_login_form').submit();
-                },
-                expectUnloadPage: true,
-            },
+            ...tourUtils.login({
+                login: 'toto',
+                password: 'long_enough_password',
+                redirectUrl: '/shop',
+            }),
             {
                 content: "Check pricelist",
                 trigger: ".o_pricelist_dropdown .dropdown-toggle:contains('User Pricelist')",

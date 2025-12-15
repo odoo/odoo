@@ -5,7 +5,7 @@ registry.category("web_tour.tours").add("website_sale.check_free_delivery", {
     steps: () => [
         // Part 1: Check free delivery
         ...tourUtils.addToCartFromProductPage(),
-        tourUtils.goToCart({ quantity: 1 }),
+        tourUtils.goToCart(),
         tourUtils.goToCheckout(),
         {
             trigger: "#o_delivery_methods label:text(Delivery Now Free Over 10)",

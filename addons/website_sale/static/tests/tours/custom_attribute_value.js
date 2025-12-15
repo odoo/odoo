@@ -21,25 +21,19 @@ registry.category("web_tour.tours").add("website_sale.custom_attribute_value", {
             run: 'click',
             expectUnloadPage: true,
         },
-        {
-            trigger: "#cart_products",
-        },
-        {
-            trigger: 'span:contains(Custom: Wood)',
-        },
+        ...tourUtils.assertCartContains({
+            productName: 'Customizable Desk (TEST)',
+            quantity: '1',
+            description: 'Custom: Wood',
+        }),
     ]
 });
 let optionVariantImage;
 
 registry.category("web_tour.tours").add("website_sale.custom_attribute_value_advanced", {
     steps: () => [
-        {
-            trigger: 'a.js_add_cart_json:has(i.oi-plus)',
-            run: 'click',
-        },
-        {
-            trigger: 'span.oe_currency_value:contains(750)',
-        },
+        tourUtils.increaseProductPageQuantity(),
+        tourUtils.assertProductPageStrikeThroughPrice('750.00'),
         ...tourUtils.addToCartFromProductPage(),
         {
             trigger: configuratorTourUtils.optionalProductSelector("Conference Chair (TEST) (Steel)"),

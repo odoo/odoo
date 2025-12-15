@@ -14,63 +14,31 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
             run: "click",
             expectUnloadPage: true,
         },
-        {
-            content: "Add one more storage box",
-            trigger: '.js_add_cart_json:eq(1)',
-            run: "click",
-        },
-        {
-            content: "Check b2b Tax-Excluded Prices",
-            trigger: ".product_price .oe_price .oe_currency_value:text(79.00)",
-        },
+        tourUtils.increaseProductPageQuantity(),
+        tourUtils.assertProductPagePrice('79.00'),
         ...tourUtils.addToCartFromProductPage(),
         tourUtils.goToCart({ quantity: 2 }),
-        {
-            content: "Check for 2 products in cart",
-            trigger:
-                '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
-        },
+        ...tourUtils.assertCartContains({
+            productName: "Storage Box Test",
+            quantity: '2',
+        }),
         ...tourUtils.assertCartAmounts({
             taxes: '23.70',
             untaxed: '158.00',
             total: '181.70',
         }),
         tourUtils.goToCheckout(),
-        {
-            content: "Fulfill delivery address form",
-            trigger: 'select[name="country_id"]',
-            run: "selectByLabel Afghanistan",
-        },
-        {
-            trigger: `input[name="name"]`,
-            run: "edit abcd",
-        },
-        {
-            trigger: `input[name="phone"]`,
-            run: "edit 99999999",
-        },
-        {
-            trigger: `input[name="email"]`,
-            run: "edit abc@odoo.com",
-        },
-        {
-            trigger: `input[name="street"]`,
-            run: "edit SO1 Delivery Street, 33",
-        },
-        {
-            trigger: `input[name="city"]`,
-            run: "edit SO1DeliveryCity",
-        },
-        {
-            trigger: `input[name="zip"]`,
-            run: "edit 10000",
-        },
-        {
-            content: "Click on Confirm button",
-            trigger: 'a[name="website_sale_main_button"]',
-            run: "click",
-            expectUnloadPage: true,
-        },
+        ...tourUtils.fillAddressForm(
+            {
+                name: "abcd",
+                phone: "99999999",
+                email: "abc@odoo.com",
+                street: "SO1 Delivery Street, 33",
+                city: "SO1DeliveryCity",
+                zip: "10000",
+            },
+            'Afghanistan',
+        ),
         tourUtils.waitForInteractionToLoad(),
         {
             content: "Billing address is not same as delivery address",
@@ -86,41 +54,17 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
         {
             trigger: 'h4:contains("New address")',
         },
-        {
-            content: "Fulfill billing address form",
-            trigger: 'select[name="country_id"]',
-            run: "selectByLabel Afghanistan",
-        },
-        {
-            trigger: `input[name="name"]`,
-            run: "edit def",
-        },
-        {
-            trigger: `input[name="phone"]`,
-            run: "edit 8888888888",
-        },
-        {
-            trigger: `input[name="email"]`,
-            run: "edit abc@odoo.com",
-        },
-        {
-            trigger: `input[name="street"]`,
-            run: "edit 17, SO1 Billing Road",
-        },
-        {
-            trigger: `input[name="city"]`,
-            run: "edit SO1BillingCity",
-        },
-        {
-            trigger: `input[name="zip"]`,
-            run: "edit 10000",
-        },
-        {
-            content: "Click on Confirm button to save the address",
-            trigger: 'a[name="website_sale_main_button"]',
-            run: "click",
-            expectUnloadPage: true,
-        },
+        ...tourUtils.fillAddressForm(
+            {
+                name: "def",
+                phone: "8888888888",
+                email: "abc@odoo.com",
+                street: "17, SO1 Billing Road",
+                city: "SO1BillingCity",
+                zip: "10000",
+            },
+            'Afghanistan',
+        ),
         {
             content: "Check selected delivery address is same as typed in previous step",
             trigger: '#delivery_address_list:contains(SO1 Delivery Street, 33):contains(SO1DeliveryCity):contains(Afghanistan)',
@@ -221,26 +165,7 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
             run: "click",
             expectUnloadPage: true,
         },
-        {
-            trigger: `.oe_login_form input[name="login"]`,
-            run: "edit admin",
-        },
-        {
-            trigger: `.oe_login_form input[name="password"]`,
-            run: "edit admin",
-        },
-        {
-            trigger: `.oe_login_form input[name="redirect"]:not(:visible)`,
-            run(helpers) {
-                this.anchor.value = "/";
-            },
-        },
-        {
-            content: "Submit login",
-            trigger: `.oe_login_form button[type="submit"]`,
-            run: "click",
-            expectUnloadPage: true,
-        },
+        ...tourUtils.login({ redirectUrl: '/' }),
         {
             trigger: ".o_frontend_to_backend_nav", // Check if the user is connected
         },
@@ -266,66 +191,35 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
                     });
                 });
                 def2.then(async function () {
-                    const url = await post('/web/session/logout?redirect=/shop?search=Storage Box Test', { csrf_token: odoo.csrf_token }, "url");
+                    const url = await post('/web/session/logout?redirect=/shop', { csrf_token: odoo.csrf_token }, "url");
                     redirect(url);
                 });
             },
             expectUnloadPage: true,
         },
         // Testing b2b with Tax-Included Prices
-        {
-            content: "Open product page",
-            trigger: '.oe_product_cart a:contains("Storage Box Test")',
-            run: "click",
-            expectUnloadPage: true,
-        },
-        {
-            content: "Add one more Storage Box Test",
-            trigger: '.js_add_cart_json:eq(1)',
-            run: "click",
-        },
-        {
-            content: "Check b2c Tax-Included Prices",
-            trigger: ".product_price .oe_price .oe_currency_value:text(90.85)",
-        },
+        ...tourUtils.goToProductPage({ productName: 'Storage Box Test' }),
+        tourUtils.increaseProductPageQuantity(),
+        tourUtils.assertProductPagePrice('90.85'),
         ...tourUtils.addToCartFromProductPage(),
         tourUtils.goToCart({ quantity: 2 }),
-        {
-            content: "Check for 2 products in cart",
-            trigger:
-                '#cart_products div:has(a>h6:contains("Storage Box Test")) input.js_quantity:value(2)',
-        },
+        ...tourUtils.assertCartContains({
+            productName: "Storage Box Test",
+            quantity: '2',
+        }),
         ...tourUtils.assertCartAmounts({
             taxes: "23.70",
             untaxed: "158.00",
             total: "181.70",
         }),
-        {
-            content: "Proceed to checkout",
-            trigger: 'a[href*="/shop/checkout"]',
-            run: "click",
-            expectUnloadPage: true,
-        },
+        tourUtils.goToCheckout(),
         {
             content: "Click on Sign in Button",
             trigger: `.oe_cart a:contains(Sign in)`,
             run: "click",
             expectUnloadPage: true,
         },
-        {
-            trigger: `.oe_login_form input[name="login"]`,
-            run: "edit abc@odoo.com",
-        },
-        {
-            trigger: `.oe_login_form input[name="password"]`,
-            run: "edit 1admin@admin",
-        },
-        {
-            content: "Submit login",
-            trigger: `.oe_login_form button[type="submit"]`,
-            run: "click",
-            expectUnloadPage: true,
-        },
+        ...tourUtils.login({ login: 'abc@odoo.com', password: '1admin@admin' }),
         {
             content: "Add new delivery address",
             trigger: '#delivery_address_list a[href^="/shop/address"]:contains("Add address")',
@@ -416,26 +310,8 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_1', {
             run: "click",
             expectUnloadPage: true,
         },
-        {
-            trigger: `.oe_login_form input[name="login"]`,
-            run: "edit admin",
-        },
-        {
-            trigger: `.oe_login_form input[name="password"]`,
-            run: "edit admin",
-        },
-        {
-            trigger: `.oe_login_form input[name="redirect"]:not(:visible)`,
-            run(helpers) {
-                this.anchor.value = "/shop/cart";
-            },
-        },
-        {
-            content: "Submit login",
-            trigger: `.oe_login_form button[type="submit"]`,
-            run: "click",
-            expectUnloadPage: true,
-        }]
+        ...tourUtils.login({ redirectUrl: '/shop/cart' }),
+    ]
 });
 
 registry.category("web_tour.tours").add('website_sale.complete_flow_2', {
@@ -461,26 +337,11 @@ registry.category("web_tour.tours").add('website_sale.complete_flow_2', {
             run: "click",
             expectUnloadPage: true,
         },
-        {
-            trigger: `.oe_login_form input[name="login"]`,
-            run: "edit abc@odoo.com",
-        },
-        {
-            trigger: `.oe_login_form input[name="password"]`,
-            run: "edit 1admin@admin",
-        },
-        {
-            trigger: `.oe_login_form input[name="redirect"]:not(:visible)`,
-            run(helpers) {
-                this.anchor.value = "/shop?search=Storage Box Test";
-            },
-        },
-        {
-            content: "Submit login",
-            trigger: `.oe_login_form button[type="submit"]`,
-            run: "click",
-            expectUnloadPage: true,
-        },
+        ...tourUtils.login({
+            login: 'abc@odoo.com',
+            password: '1admin@admin',
+            redirectUrl: '/shop?search=Storage Box Test',
+        }),
         {
             content: "Open product page",
             trigger: '.oe_product_cart a:contains("Storage Box Test")',

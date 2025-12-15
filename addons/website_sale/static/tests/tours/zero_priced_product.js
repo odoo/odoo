@@ -1,4 +1,5 @@
 import { registry } from '@web/core/registry';
+import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
 registry.category('web_tour.tours').add('website_sale.contact_us_button', {
     steps: () => [
@@ -27,10 +28,7 @@ registry.category('web_tour.tours').add('website_sale.contact_us_button', {
             trigger: '.js_attribute_value:contains(blue):contains(20.00) input',
             run: 'click',
         },
-        {
-            content: "Product price should be updated",
-            trigger: '.product_price .oe_currency_value:contains(20.00)',
-        },
+        tourUtils.assertProductPagePrice('20.00'),
         {
             content: '"Add to Cart" button should now be visibile',
             trigger: '#add_to_cart_wrap',

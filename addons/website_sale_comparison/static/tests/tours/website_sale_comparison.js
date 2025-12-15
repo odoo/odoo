@@ -147,9 +147,9 @@ registry.category("web_tour.tours").add('website_sale.product_comparison', {
         },
         clickOnElement('Add to cart', 'button[name="website_sale_product_configurator_continue_button"]'),
         tourUtils.goToCart(),
-        {
-            content: "check product correctly added to cart",
-            trigger: '#cart_products:contains("Color Pants") .js_quantity[value="1"]',
-        },
+        ...tourUtils.assertCartContains({
+            productName: "Color Pants",
+            quantity: '1',
+        }),
     ]
 });
