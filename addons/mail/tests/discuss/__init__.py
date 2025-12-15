@@ -3,6 +3,7 @@
 from . import test_avatar_acl
 from . import test_discuss_attachment_controller
 from . import test_discuss_binary_controller
+from . import test_discuss_category
 from . import test_discuss_channel_invite
 from . import test_discuss_action
 from . import test_discuss_channel

@@ -38,18 +38,18 @@ class BusSyncMixin(models.AbstractModel):
             """Get the current values of the fields to sync."""
             result = defaultdict(dict)
             for bus_target, field_descriptions in fields_to_sync.items():
-                target = (
-                    (record[bus_target[0]], bus_target[1])
-                    if isinstance(bus_target, tuple)
-                    else (record._bus_channel(), bus_target)
-                )
-                result[target] = {
-                    Store.get_field_name(field_description): (
-                        get_field_value(record, field_description),
-                        field_description,
-                    )
-                    for field_description in field_descriptions
-                }
+                targets = [
+                    ((record[bus_target[0]], bus_target[1]) if isinstance(bus_target, tuple) else (channel, bus_target))
+                    for channel in record._bus_channel()
+                ]
+                for target in targets:
+                    result[target] = {
+                        Store.get_field_name(field_description): (
+                            get_field_value(record, field_description),
+                            field_description,
+                        )
+                        for field_description in field_descriptions
+                    }
             return result
 
         self._sync_field_names(fields_to_sync := defaultdict(Store.FieldList))
@@ -57,21 +57,20 @@ class BusSyncMixin(models.AbstractModel):
         result = super().write(vals)
         stores = lazymapping(lambda param: Store(bus_channel=param[0], bus_subchannel=param[1]))
         for record in self:
-            for (channels, subchannel), values in get_vals(record).items():
+            for (channel, subchannel), values in get_vals(record).items():
                 diff = defaultdict(Store.FieldList)
                 for field_name, (value, field_description) in values.items():
-                    if value != old_vals[record][channels, subchannel][field_name][0]:
-                        diff[channels, subchannel].append(field_description)
+                    if value != old_vals[record][channel, subchannel].get(field_name, (None,))[0]:
+                        diff[channel, subchannel].append(field_description)
                 if diff:
-                    for (channels, subchannel), diff_fields in diff.items():
-                        for channel in channels:
-                            stores[channel, subchannel].add(
-                                record,
-                                lambda res, diff_fields=diff_fields: (
-                                    res.extend(diff_fields),
-                                    res.from_method("_store_sync_extra_fields"),
-                                ),
-                            )
+                    for (channel, subchannel), diff_fields in diff.items():
+                        stores[channel, subchannel].add(
+                            record,
+                            lambda res, diff_fields=diff_fields: (
+                                res.extend(diff_fields),
+                                res.from_method("_store_sync_extra_fields"),
+                            ),
+                        )
         for store in stores.values():
             store.bus_send()
         return result
