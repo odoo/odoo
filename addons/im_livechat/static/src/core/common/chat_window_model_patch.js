@@ -31,6 +31,10 @@ const chatWindowPatch = {
                     channel.delete();
                     break;
                 }
+                if (!this.channel.thread.self_member_id) {
+                    super.close(...arguments);
+                    break;
+                }
                 if (this.channel.livechat_end_dt) {
                     if (isSelfVisitor) {
                         this.livechatStep = CW_LIVECHAT_STEP.FEEDBACK;
