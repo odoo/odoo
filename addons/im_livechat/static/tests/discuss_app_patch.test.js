@@ -58,10 +58,7 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
         })
     );
     await contains(
-        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarChannel-container",
-        {
-            text: "Visitor",
-        }
+        ".o-mail-DiscussSidebarCategory-livechat + .o-mail-DiscussSidebarCategory-channels:has(:text(Visitor))"
     );
 });
 

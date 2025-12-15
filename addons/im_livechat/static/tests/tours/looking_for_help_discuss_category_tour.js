@@ -5,7 +5,7 @@ registry.category("web_tour.tours").add("im_livechat.looking_for_help_discuss_ca
         {
             // Two live chats are looking for help, they are both in the "Looking for help" category.
             trigger:
-                ".o-mail-DiscussSidebarCategory-livechatNeedHelp + .o-mail-DiscussSidebarChannel-container:contains(Visitor Accounting) + .o-mail-DiscussSidebarChannel-container:contains(Visitor Sales)",
+                ".o-mail-DiscussSidebarCategory-livechatNeedHelp + .o-mail-DiscussSidebarCategory-channels .o-mail-DiscussSidebarChannel-container:contains(Visitor Accounting) + .o-mail-DiscussSidebarChannel-container:contains(Visitor Sales)",
         },
         {
             trigger: ".o-mail-DiscussSidebarChannel:contains(Sales) .o-mail-starred",

@@ -1199,9 +1199,9 @@ test("add and remove channel from favorites updates sidebar", async () => {
         channel_type: "channel",
     });
     const channelContainerSelector =
-        ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarChannel-container";
+        ".o-mail-DiscussSidebarCategory-channel + .o-mail-DiscussSidebarCategory-channels";
     const favoriteContainerSelector =
-        ".o-mail-DiscussSidebarCategory-favorite + .o-mail-DiscussSidebarChannel-container";
+        ".o-mail-DiscussSidebarCategory-favorite + .o-mail-DiscussSidebarCategory-channels";
     const generalChannelSelector = ".o-mail-DiscussSidebarChannel:has(:text(General))";
     await start();
     await openDiscuss();
