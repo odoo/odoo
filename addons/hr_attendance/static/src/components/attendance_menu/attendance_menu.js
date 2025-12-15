@@ -27,6 +27,7 @@ export class ActivityMenu extends Component {
             isDisplayed: false,
             captureCheckInImage: false,
             streamAvailable: null,
+            gettingPosition: false,
         });
         this.cameraCapture = null;
         this.dropdown = useDropdownState();
@@ -130,7 +131,7 @@ export class ActivityMenu extends Component {
                 throw error;
             }
         } finally {
-            this._attendanceInProgress = false;
+            this.state.gettingPosition = false;
         }
     }
 
@@ -154,10 +155,10 @@ export class ActivityMenu extends Component {
         if (this.closeSystrayOnCheckIn) {
             this.dropdown.close();
         }
-        if (this._attendanceInProgress) {
+        if (this.state.gettingPosition) {
             return;
         }
-        this._attendanceInProgress = true;
+        this.state.gettingPosition = true;
 
         const trackingEnabled = this.employee && this.employee.device_tracking_enabled;
         if (trackingEnabled && navigator.geolocation && navigator.onLine) {
