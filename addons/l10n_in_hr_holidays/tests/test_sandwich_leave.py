@@ -25,7 +25,7 @@ class TestSandwichLeave(TransactionCase):
             'user_id': self.demo_user.id,
         })
 
-        self.leave_type_day, self.leave_type_half_day, self.leave_type_hours = self.env['hr.leave.type'].create([{
+        self.leave_type_day, self.leave_type_half_day, self.leave_type_hours, self.leave_type_day_without_sl = self.env['hr.leave.type'].create([{
             'name': 'Test Leave Type',
             'request_unit': 'day',
             'requires_allocation': 'no',
@@ -43,6 +43,11 @@ class TestSandwichLeave(TransactionCase):
             'requires_allocation': 'no',
             'l10n_in_is_sandwich_leave': True,
             'company_id': self.indian_company.id,
+        }, {
+            'name': 'Test leave type without sandwich leave',
+            'request_unit': 'day',
+            'requires_allocation': 'no',
+            'company_id': self.indian_company.id,
         }])
         self.rahul_emp = self.env['hr.employee'].create({
             'name': 'Rahul',
@@ -57,6 +62,10 @@ class TestSandwichLeave(TransactionCase):
         })
 
     def test_approved_leave_does_not_raise_access_error(self):
+        """
+        Ensure opening a validated time off as a normal user
+        does not raise a UserError or AccessError
+        """
         approved_leave = self.env['hr.leave'].create({
             'name': 'Approved Sandwich Leave',
             'employee_id': self.demo_employee.id,
@@ -67,6 +76,20 @@ class TestSandwichLeave(TransactionCase):
         })
         approved_leave.action_approve()
         self.assertIsNotNone(approved_leave.with_user(self.demo_user).leave_type_increases_duration)
+
+        approved_leave_without_sl = self.env['hr.leave'].create({
+            'name': 'Without sandwich leave',
+            'employee_id': self.demo_employee.id,
+            'holiday_status_id': self.leave_type_day_without_sl.id,
+            'request_date_from': '2025-12-15',
+            'request_date_to': '2025-12-15',
+            'state': 'confirm',
+        })
+        approved_leave_without_sl.action_approve()
+        self.assertEqual(
+            approved_leave_without_sl.with_user(self.demo_user)._get_durations()[approved_leave_without_sl.id][0],
+            1
+        )
 
     def test_long_sandwich_leave(self):
         self.env['resource.calendar.leaves'].create({
