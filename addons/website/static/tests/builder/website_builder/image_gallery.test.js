@@ -251,3 +251,28 @@ test("Click the outline option for the image gallery thumbnails", async () => {
     ).click();
     expect(":iframe section.o_slideshow").not.toHaveClass("s_image_gallery_indicators_outline");
 });
+
+test("Change gallery layout still works when img.decode() fails", async () => {
+    // to handle the Chrome bug where img.decode() can fail with "EncodingError:
+    // The source image cannot be decoded" when decoding many images simultaneously.
+    // See: https://bugs.chromium.org/p/chromium/issues/detail?id=1256288
+    // To reproduce the issue in the test we will set image src = "".
+    const builder = await setupWebsiteBuilderWithSnippet("s_images_wall");
+    // Change img source so decoding will fail
+    const images = queryAll(":iframe img");
+    images.forEach((imgEl) => {
+        imgEl.src = "";
+    });
+    await images.at(0).click();
+    await builder.waitSidebarUpdated();
+    await contains("[data-label='Mode'] .dropdown-toggle").click();
+
+    // This should NOT throw an error even img.decode() call will fail
+    await contains("[data-action-param='grid']").click();
+    await builder.waitSidebarUpdated();
+
+    // Verify the layout change worked despite decode failures
+    expect(":iframe .o_grid").toHaveCount(1);
+    expect(":iframe .o_masonry_col").toHaveCount(0);
+    expect("[data-label='Mode'] .dropdown-toggle").toHaveText("Grid");
+});
