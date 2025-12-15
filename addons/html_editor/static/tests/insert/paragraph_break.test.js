@@ -156,7 +156,7 @@ describe("Selection collapsed", () => {
                             textareaRange: 3, // "ab\n[]cd"
                         }) +
                         '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-                    contentAfter: `<pre data-language-id="plaintext">ab<br>cd</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">ab<br>cd</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -177,7 +177,7 @@ describe("Selection collapsed", () => {
                             textareaRange: 4, // "abc\n[]"
                         }) +
                         '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-                    contentAfter: `<pre data-language-id="plaintext">abc<br><br></pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abc<br><br></pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -505,7 +505,7 @@ describe("Selection collapsed", () => {
                 await testEditor({
                     contentBefore: `<div class="oe_unbreakable"><a href="http://test.test/">ab[]</a></div>`,
                     stepFunction: splitBlockA,
-                    contentAfter: `<div class="oe_unbreakable"><a href="http://test.test/">ab</a><br><br>[]</div>`,
+                    contentAfter: `<div class="oe_unbreakable"><a href="http://test.test/">ab</a><br>[]<br></div>`,
                 });
                 await testEditor({
                     contentBefore: `<div class="oe_unbreakable"><a href="http://test.test/">ab[]</a>cd</div>`,

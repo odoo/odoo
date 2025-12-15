@@ -307,10 +307,18 @@ export class TicketScreen extends Component {
         const destinationOrder = this._getEmptyOrder(partner);
 
         destinationOrder.is_refund = true;
+        destinationOrder.pricelist_id = order.pricelist_id;
         // Add orderline for each toRefundDetail to the destinationOrder.
         const lines = [];
         for (const refundDetail of this._getRefundableDetails(partner, order)) {
             const refundLine = refundDetail.line;
+            const alreadyRefundedLots = refundLine.refund_orderline_ids
+                .filter((item) => !["cancel", "draft"].includes(item.order_id.state))
+                .flatMap((item) => item.pack_lot_ids)
+                .map((pack_lot) => pack_lot.lot_name);
+            const options = refundLine.pack_lot_ids
+                .map((p) => p.lot_name)
+                .filter((lotName) => !alreadyRefundedLots.includes(lotName));
             const line = this.pos.models["pos.order.line"].create({
                 qty: -refundDetail.qty,
                 price_unit: refundLine.price_unit,
@@ -319,10 +327,10 @@ export class TicketScreen extends Component {
                 discount: refundLine.discount,
                 tax_ids: refundLine.tax_ids.map((tax) => ["link", tax]),
                 refunded_orderline_id: refundLine,
-                pack_lot_ids: refundLine.pack_lot_ids.map((packLot) => [
-                    "create",
-                    { lot_name: packLot.lot_name },
-                ]),
+                // Only include as many pack_lot_ids as the refunded quantity requires.
+                pack_lot_ids: options
+                    .slice(0, refundDetail.qty)
+                    .map((lotName) => ["create", { lot_name: lotName }]),
                 price_type: "automatic",
             });
             lines.push(line);

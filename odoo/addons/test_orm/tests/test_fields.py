@@ -3258,6 +3258,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         record.invalidate_recordset()
         self.assertEqual(record.comment0, record_value)
 
+    def test_related_column_type(self):
+        related_float_field = self.env['test_orm.related']._fields['foo_float_id']
+        self.assertEqual(related_float_field.column_type[1], 'numeric')
+
 
 class TestX2many(TransactionExpressionCase):
 

@@ -13,6 +13,7 @@ from odoo.exceptions import UserError, ValidationError
 @tagged("post_install", "-at_install")
 class TestDiscussSubChannels(HttpCase):
     def test_01_gc_unpin_outdated_sub_channels(self):
+        bob = new_test_user(self.env, "bob_user", groups="base.group_user")
         parent = self.env["discuss.channel"].create({"name": "General"})
         parent._create_sub_channel()
         sub_channel = parent.sub_channel_ids[0]
@@ -23,16 +24,35 @@ class TestDiscussSubChannels(HttpCase):
         # Last interrest of the member is older than 2 days, no activity on the
         # channel: should be unpinned.
         two_days_later_dt = datetime.now() + timedelta(days=3)
-        with freeze_time(two_days_later_dt):
+        with freeze_time(two_days_later_dt) as frozen_time:
             self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
             self.assertFalse(self_member.is_pinned)
-        # Last interrest of the member is older than 2 days, activity on the
-        # channel: should be kept.
+            unpin_dt = self_member.unpin_dt
+            # The member isn't unpinned again when GC re-runs.
+            frozen_time.tick(delta=timedelta(days=1))
+            self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
+            self.assertEqual(self_member.unpin_dt, unpin_dt)
         sub_channel.channel_pin(pinned=True)
-        with freeze_time(two_days_later_dt):
-            sub_channel.message_post(body="Hey!")
+        with freeze_time(two_days_later_dt) as frozen_time:
+            # Last interrest older than 2 days, activity on the channel: should be kept.
+            message = sub_channel.with_user(bob).message_post(body="Hey!", message_type="comment")
+            self_member._mark_as_read(message.id)
             self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
             self.assertTrue(self_member.is_pinned)
+            # Unread messages: should be kept regardless of last interrest.
+            message = sub_channel.with_user(bob).message_post(body="Another message!", message_type="comment")
+            frozen_time.tick(delta=timedelta(days=3))
+            self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
+            self.assertTrue(self_member.is_pinned)
+            self_member._mark_as_read(message.id)
+            self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
+            self.assertFalse(self_member.is_pinned)
+        # Ensure regular channels are not impacted.
+        channel = self.env["discuss.channel"].create({"name": "General"})
+        channel.channel_pin(pinned=True)
+        with freeze_time(two_days_later_dt):
+            self.env["discuss.channel.member"]._gc_unpin_outdated_sub_channels()
+            self.assertTrue(channel.channel_member_ids.filtered("is_self").is_pinned)
 
     def test_02_sub_channel_members_sync_with_parent(self):
         parent = self.env["discuss.channel"].create({"name": "General"})

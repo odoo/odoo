@@ -32,8 +32,8 @@ export function initElementForEdition(element, options = {}) {
 }
 
 /**
- * Properly close common XML-like self-closing elements to avoid HTML parsing
- * issues.
+ * Converts XML-style self-closing tags (e.g., <div/> <span/> <t/>) into proper
+ * HTML start/end tag pairs, except for true HTML void elements.
  *
  * @param {string | ReturnType<markup>} content
  * @returns {ReturnType<markup>}
@@ -42,8 +42,11 @@ export function fixInvalidHTML(content) {
     if (!content) {
         return content;
     }
+    // Match self-closing tags EXCEPT HTML void elements.
+    // We do not use selfClosingElementTags because it includes XML-only tags
+    // such as <t>, which must not be treated as void in HTML.
     const regex =
-        /<\s*(a|strong|t|span)\s*((?:(?:\s+[\w:-]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*))\s*\/>/g;
+        /<\s*(?!area\b|base\b|br\b|col\b|embed\b|hr\b|img\b|input\b|link\b|meta\b|param\b|source\b|track\b|wbr\b)([a-zA-Z0-9:-]+)\s*((?:(?:\s+[\w:-]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>`]+))?)*))\s*\/>/g;
     return htmlReplace(content, regex, (match, tag, attributes) => {
         // markup: content is either already markup or escaped in htmlReplace
         attributes = markup(attributes);

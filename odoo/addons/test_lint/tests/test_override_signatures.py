@@ -16,10 +16,10 @@ EMPTY = inspect.Parameter.empty
 failure_message = """\
 Invalid override in {model} of {method}, {message}.
 
-Original definition in {parent_module}:
+Original definition in {parent_module}:{original_decorators}
     def {method}{original_signature}
 
-Incompatible override definition in {child_module}:
+Incompatible override definition in {child_module}:{override_decorators}
     def {method}{override_signature}"""
 
 
@@ -154,6 +154,12 @@ def assert_attribute_override(parent_method, child_method, is_private):
         "parent and child method should either both be deprecated or none of them"
 
 
+def get_decorators(method):
+    if not method.__name__.startswith('_') and hasattr(method, '_api_model') and method._api_model:
+        return "\n    @api.model"
+    return ""
+
+
 @tagged('-at_install', 'post_install')
 class TestLintOverrideSignatures(LintCase):
     def test_lint_override_signature(self):
@@ -180,6 +186,7 @@ class TestLintOverrideSignatures(LintCase):
 
                 parent_module = get_odoo_module_name(parent_class.__module__)
                 original_signature = inspect.signature(method)
+                original_decorators = get_decorators(method)
                 is_private = method_name.startswith('_')
 
                 # Assert that all child classes correctly override the method
@@ -190,10 +197,12 @@ class TestLintOverrideSignatures(LintCase):
 
                     child_module = get_odoo_module_name(child_class.__module__)
                     override_signature = inspect.signature(override)
+                    override_decorators = get_decorators(override)
 
                     with self.subTest(module=child_module, model=model_name, method=method_name):
                         try:
                             assert_valid_override(original_signature, override_signature, is_private=is_private)
+                            assert override_decorators == original_decorators, "decorators does not match"
                             assert_attribute_override(method, override, is_private=is_private)
                             counter[method_name].hit += 1
                         except AssertionError as exc:
@@ -206,6 +215,8 @@ class TestLintOverrideSignatures(LintCase):
                                 parent_module=parent_module,
                                 original_signature=original_signature,
                                 override_signature=override_signature,
+                                original_decorators=original_decorators,
+                                override_decorators=override_decorators,
                             )
                             raise TypeError(msg) from None
 

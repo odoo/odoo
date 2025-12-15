@@ -136,6 +136,7 @@ async function fetchAttachmentMetaData(url, ormService) {
  *      isAvailable: (linkEl: HTMLLinkElement) => boolean;
  *      getProps: (props) => props;
  *  }[]} link_popovers
+ * @typedef {((linkEl: HTMLAnchorElement) => void)[]} create_link_handlers
  */
 
 export class LinkPlugin extends Plugin {
@@ -875,6 +876,7 @@ export class LinkPlugin extends Plugin {
         }
         cursors.restore();
         this.linkInDocument = null;
+        this.dependencies.selection.focusEditable();
         this.dependencies.history.addStep();
     }
 

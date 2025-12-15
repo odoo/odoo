@@ -471,7 +471,7 @@ test("Update the link previews when a message is edited", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    onRpcBefore("/mail/link_preview$", (args) => asyncStep("link_preview"));
+    onRpcBefore("/mail/link_preview", (args) => asyncStep("link_preview"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Edit']");
@@ -646,8 +646,13 @@ test("Other messages are grayed out when replying to another one", async () => {
     await click(".o-mail-Message [title='Reply']", {
         parent: [".o-mail-Message", { text: "Hello world" }],
     });
-    await contains(".o-mail-Message.opacity-50", { text: "Goodbye world" });
-    await contains(".o-mail-Message:not(.opacity_50)", { text: "Hello world" });
+    await contains(".o-mail-Message.o-selected:has(:text('Hello world'))");
+    expect(
+        getComputedStyle(queryFirst(".o-mail-Message:has(:text('Goodbye world'))")).opacity
+    ).toBe("0.5");
+    expect(getComputedStyle(queryFirst(".o-mail-Message:has(:text('Hello world))")).opacity).toBe(
+        "1"
+    );
 });
 
 test("Parent message body is displayed on replies", async () => {
@@ -2207,6 +2212,31 @@ test("Prettify message links", async () => {
     await contains(".o-mail-Message", { text: "TestPartner" });
     await contains(".o-mail-Message .fa.fa-comment");
     await contains(".o-mail-Message", { text: url(`/mail/message/100`) });
+});
+
+test("Clicking message link does not open a new tab", async () => {
+    patchWithCleanup(window, {
+        open() {
+            expect.step("new_window");
+            super.open();
+        },
+    });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Channel" });
+    const otherChannelId = pyEnv["discuss.channel"].create({ name: "Other Channel" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Message on other channel",
+        res_id: otherChannelId,
+        model: "discuss.channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", `${url(`/mail/message/${messageId}`)}`);
+    await press("Enter");
+    await click(".o_message_redirect");
+    await contains(".o-mail-DiscussContent-threadName[title='Other Channel']");
+    await contains(".o-mail-Message", { text: "Message on other channel" });
+    expect.verifySteps([]);
 });
 
 test("should delete link preview along with message", async () => {

@@ -372,6 +372,9 @@ export function clickOnText(snippet, element, position = "bottom") {
             tooltipPosition: position,
             run: "click",
         },
+        {
+            trigger: "#customize-tab.active",
+        },
     ];
 }
 

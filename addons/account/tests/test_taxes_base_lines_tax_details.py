@@ -25,6 +25,9 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
             'total_included_currency': 10.94,
             'delta_total_excluded': 0.0,
             'delta_total_excluded_currency': 0.0,
+            'manual_total_excluded': None,
+            'manual_total_excluded_currency': None,
+            'manual_tax_amounts': None,
             'taxes_data': [
                 {
                     'tax_id': tax_21.id,
@@ -42,6 +45,9 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
             'total_included_currency': 1.14,
             'delta_total_excluded': 0.0,
             'delta_total_excluded_currency': 0.0,
+            'manual_total_excluded': None,
+            'manual_total_excluded_currency': None,
+            'manual_tax_amounts': None,
             'taxes_data': [
                 {
                     'tax_id': tax_21.id,
@@ -87,3 +93,4 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
         }
 
         self.assert_base_lines_tax_details(document, expected_values)
+        self._run_js_tests()

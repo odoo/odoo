@@ -28,7 +28,7 @@ class OnlinePaymentCommon(PaymentHttpCommon):
     def _fake_open_pos_order_pay_confirmation_page(self, pos_order_id, access_token, tx_id, exit_route=None):
         self._fake_http_get_request(PaymentPortal._get_landing_route(pos_order_id, access_token, tx_id=tx_id, exit_route=exit_route))
 
-    def _fake_online_payment(self, pos_order_id, access_token, expected_payment_provider_id, exit_route=None):
+    def _fake_online_payment(self, pos_order_id, access_token, expected_payment_provider_id, exit_route=None, confirmation_page=True):
         payment_context = self._fake_open_pos_order_pay_page(pos_order_id, access_token)
 
         # Code inspired by addons/payment/tests/test_flows.py
@@ -53,4 +53,5 @@ class OnlinePaymentCommon(PaymentHttpCommon):
             processing_values = self._fake_request_pos_order_pay_transaction_page(pos_order_id, route_values)
         tx_sudo = self._get_tx(processing_values['reference'])
         tx_sudo._set_done()
-        self._fake_open_pos_order_pay_confirmation_page(pos_order_id, access_token, tx_sudo.id, exit_route=exit_route)
+        if confirmation_page:
+            self._fake_open_pos_order_pay_confirmation_page(pos_order_id, access_token, tx_sudo.id, exit_route=exit_route)

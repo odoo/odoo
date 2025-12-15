@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-23 09:16+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-12-05 16:30+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "sale_project/fr/>\n"
 "Language: fr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_project
 #. odoo-python
@@ -116,17 +116,17 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Projects</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Projets</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tâches</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Aperçu</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -147,6 +147,14 @@ msgid ""
 "the project is billable.</span>\n"
 "                </span>"
 msgstr ""
+"<span name=\"rating_status_helper\">\n"
+"<span invisible=\"rating_status == 'periodic'\">Une demande d’évaluation "
+"sera envoyée dès qu’une tâche atteindra cette étape, à condition que le "
+"projet soit facturable.</span>\n"
+"<span invisible=\"rating_status == 'stage'\">Des demandes d’évaluation "
+"seront envoyées tant que la tâche restera dans cette étape, à condition que "
+"le projet soit facturable.</span>\n"
+"</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -266,7 +274,7 @@ msgstr "Créer une commande client"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "Create a Project"
-msgstr ""
+msgstr "Créer un projet"
 
 #. module: sale_project
 #: model:ir.model,website_form_label:sale_project.model_project_task
@@ -551,7 +559,7 @@ msgstr "Nouvel article de commande"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
 msgid "New project"
-msgstr ""
+msgstr "Nouveau projet"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -678,7 +686,7 @@ msgstr "Assistant de création de modèle de projet"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_update
 msgid "Project Update"
-msgstr ""
+msgstr "Mise à jour du projet"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
@@ -704,7 +712,7 @@ msgstr "Ligne de modèle de devis"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
 msgid "Role To Users"
-msgstr ""
+msgstr "Rôle pour les utilisateurs"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -871,13 +879,13 @@ msgstr "Récurrence de tâche"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_type
 msgid "Task Stage"
-msgstr ""
+msgstr "Étape de tâche"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__task_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__task_template_id
 msgid "Task Template"
-msgstr ""
+msgstr "Modèle de tâche"
 
 #. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
@@ -973,6 +981,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Utilisez ces mots-clés dans le titre pour créer de nouvelles tâches :\n"
+"\n"
+"    30h Allouer 30 heures à la tâche  \n"
+"    #tags Ajouter des tags à la tâche  \n"
+"    @user Assigner la tâche à un utilisateur  \n"
+"    ! Définir la tâche comme priorité moyenne  \n"
+"    !! Définir la tâche comme priorité élevée  \n"
+"    !!! Définir la tâche comme priorité urgente  \n"
+"\n"
+"    Veillez à utiliser le bon format et l’ordre correct, par exemple : "
+"Améliorer l’écran de configuration 5h #feature #v16 @Mitchell !"
 
 #. module: sale_project
 #. odoo-python

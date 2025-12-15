@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-11-28 18:35+0000\n"
 "PO-Revision-Date: 2025-11-16 15:05+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/analytic/"
@@ -473,6 +473,7 @@ msgstr "सेव करें को बंद करें"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__display_name
 #: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_ir_config_parameter__display_name
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "डिस्प्ले का नाम"
@@ -549,6 +550,7 @@ msgstr "मानव संसाधन"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__id
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__id
 #: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_ir_config_parameter__id
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__id
 msgid "ID"
 msgstr "आईडी"
@@ -708,8 +710,7 @@ msgstr "डिलीवरी में गड़बड़ी वाले म�
 #. odoo-python
 #: code:addons/analytic/models/analytic_mixin.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
-"एक या एक से ज़्यादा लाइनें ऐसी हैं जिनके लिए '100% विश्लेषणात्मक वितरण' ज़रूरी है।"
+msgstr "एक या एक से ज़्यादा लाइनें ऐसी हैं जिनके लिए '100% विश्लेषणात्मक वितरण' ज़रूरी है।"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -822,8 +823,8 @@ msgid ""
 msgstr ""
 "जब आप ग्राहकों के लिए इनवॉइस बनाएंगे, तो आपकी कमाई अपने-आप \n"
 "दर्ज हो जाएगी. ये ग्राहकों के बिल तीन तरीकों से बनाए जा सकते हैं: \n"
-"या तो सेल्स ऑर्डर के आधार पर (निश्चित कीमतों वाले बिल), या कर्मचारियों द्वारा किए गए का"
-"म (टाइमशीट) के हिसाब से, \n"
+"या तो सेल्स ऑर्डर के आधार पर (निश्चित कीमतों वाले बिल), या कर्मचारियों द्वारा किए गए "
+"काम (टाइमशीट) के हिसाब से, \n"
 "या फिर किए गए खर्चों (जैसे यात्रा खर्चों को दोबारा बिल करना) के आधार पर।"
 
 #. module: analytic
@@ -866,8 +867,8 @@ msgid ""
 "will automatically take this as an analytic account)"
 msgstr ""
 "कोई ऐसी कंपनी कैटगरी चुनें जिसके लिए एनालिटिक डिस्ट्रिब्यूशन का इस्तेमाल किया जाएगा. जैसे, "
-"अगर हम इस कंपनी को चुनेंगे, तो ग्राहक के बिल या सेल्स ऑर्डर में अपने आप वही एनालिटिक अकाउं"
-"ट आ जाएगा."
+"अगर हम इस कंपनी को चुनेंगे, तो ग्राहक के बिल या सेल्स ऑर्डर में अपने आप वही एनालिटिक "
+"अकाउंट आ जाएगा."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -876,9 +877,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"कोई ऐसी पार्टनर कैटगरी चुनें जिसके लिए एनालिटिक डिस्ट्रिब्यूशन का इस्तेमाल किया जाएगा. जैसे"
-", अगर हम इस पार्टनर को चुनेंगे, तो ग्राहक के बिल या सेल्स ऑर्डर में अपने आप वही एनालिटिक "
-"अकाउंट आ जाएगा."
+"कोई ऐसी पार्टनर कैटगरी चुनें जिसके लिए एनालिटिक डिस्ट्रिब्यूशन का इस्तेमाल किया जाएगा. "
+"जैसे, अगर हम इस पार्टनर को चुनेंगे, तो ग्राहक के बिल या सेल्स ऑर्डर में अपने आप वही "
+"एनालिटिक अकाउंट आ जाएगा."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -906,6 +907,19 @@ msgstr "Spark Systems"
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
 msgstr "सबप्लान"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr ""
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/ir_config_parameter.py:0
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
+msgstr ""
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -976,8 +990,8 @@ msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
 msgstr ""
-"आपने डिस्ट्रिब्यूशन के लिए व्यवस्था बनाई है, जिसमें एक कंपनी का हिसाब (एनालिटिक अकाउंट) है"
-", लेकिन उसका मॉडल या तो कई कंपनियों का है या किसी और कंपनी का है"
+"आपने डिस्ट्रिब्यूशन के लिए व्यवस्था बनाई है, जिसमें एक कंपनी का हिसाब (एनालिटिक अकाउंट) "
+"है, लेकिन उसका मॉडल या तो कई कंपनियों का है या किसी और कंपनी का है"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

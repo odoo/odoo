@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-11-16 15:11+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-12-12 06:42+0000\n"
+"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/base/"
 "id/>\n"
 "Language: id\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -6442,6 +6442,96 @@ msgid ""
 "WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"Functional\n"
+"----------\n"
+"\n"
+"Be able to create journals in Odoo to create electronic customer invoices "
+"and report then to ARCA (via webservices).\n"
+"The options available are:\n"
+"\n"
+"    * Electronic Invoice - Web Service\n"
+"    * Export Voucher - Web Service\n"
+"    * Electronic Fiscal Bond - Web Service\n"
+"\n"
+"In the electronic journals if you validate an invoice this one will be "
+"validated in both Odoo and ARCA. This validation is\n"
+"made at the instant and we recieve and \"approved/approved with observation/"
+"rejected\" state from ARCA. If the invoice has\n"
+"been rejected by ARCA will not be post in the system and a pop up message "
+"will be shown with both the error detail (reject reasons)\n"
+"we recieve and a HINT about what the problem could be.\n"
+"\n"
+"For auditing and troubleshooting purposes we also add a menu \"Consulit "
+"Invoice in ARCA\" that let us to consult invoices previously\n"
+"sent to ARCA and last number used as support for any possible issues on the "
+"sequences synchronization between Odoo and ARCA.\n"
+"\n"
+"    NOTE: From the Journal's form view we are able to force a sync between "
+"the odoo sequences to each of the document types in\n"
+"    with the last numbers registered in ARCA.\n"
+"\n"
+"From vendor bills, we have added a functionality that can be configured in "
+"the accounting settings to be able to verify\n"
+"vendor bills in ARCA to check if the vendor bills are real (more information "
+"please review the setting description).\n"
+"\n"
+"Configuration:\n"
+"\n"
+"1. Go to the Accounting Settings > Argentinean Localization section\n"
+"\n"
+"    1.1. Configure the ARCA Web Services mode:\n"
+"\n"
+"    * Testing environment in order to use demo certificates that will be use "
+"to test the instance and to make NOT\n"
+"      real invoices to ARCA. is just for testing. For demo instaces is "
+"already pre-defined you will not need to configure\n"
+"      it (commonly named in ARCA as Homologation environment).\n"
+"    * Production environment in order to generate real certificates and "
+"legal invoices to ARCA,\n"
+"\n"
+"    1.2. Configure your ARCA Certificate: If you are in a demo instance this "
+"one will be have been set by default. If you\n"
+"         are in production instance just need to go to upload your ARCA "
+"Certificate\n"
+"\n"
+"    1.3. Optionally you can define if you like to be eable to verify vendor "
+"bills in ARCA.\n"
+"\n"
+"2. Create Sales journals that will represent each one of your ARCA POS "
+"(Available in ARCA Portal) you want to use in Odoo.\n"
+"\n"
+"    2.1. Use Documents field is set by default please dont change\n"
+"    2.2. Set ARCA POS System for one of the electronic ones.\n"
+"\n"
+"        * Electronic Invoice - Web Service'\n"
+"        * Electronic Fiscal Bond - Web Service'\n"
+"        * Export Voucher - Web Service'\n"
+"\n"
+"    2.3. Set the ARCA POS Number and ARCA POS Address taking into account "
+"what you have configured in your ARCA Portal.\n"
+"\n"
+"    NOTE: You can use the \"Check Available ARCA POS\" button in Journal's "
+"form to corroborate the to use to create the journals.\n"
+"\n"
+"For more information about Argentinean Electronic invoicing please go to "
+"http://www.afip.gob.ar/fe/ayuda.asp\n"
+"\n"
+"Technical\n"
+"---------\n"
+"\n"
+"The web services that are implemented are the ones that are the most "
+"common:\n"
+"\n"
+"* wsfev1 - \"Factura Electrónica\" (Electronic Invoice)\n"
+"* wsbfev1 - \"Bono Fiscal Electrónico\" (Electronic Fiscal Bond)\n"
+"* wsfexv1 - \"Factura de Exportación Electrónica\" (Electronic Exportation "
+"Invoice - same as Export Voucher)\n"
+"* wscdc - \"Constatación de Comprobantes\" (Invoices Verification)\n"
+"\n"
+"For Development information go to http://www.afip.gob.ar/fe/documentos/"
+"WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -31293,6 +31383,17 @@ msgstr "Locator Tidak Valid"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value in Default Value field. Expected type '%(field_type)s' for "
+"'%(model_name)s.%(field_name)s'."
+msgstr ""
+"Value tidak valid di field Value Default. Tipe yang diharapkan '%(field_type)"
+"s' untuk '%(model_name)s.%(field_name)s'."
+
+#. module: base
+#. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Invalid attributes %s in element <attribute>"
 msgstr "Atribut %s tidak valid di elemen <attribute>"
@@ -38087,7 +38188,7 @@ msgstr "Hanya satu nilai tukar mata uang per hari yang diizinkan!"
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_properties_base_definition_unique_properties_field_id
 msgid "Only one definition per properties field"
-msgstr ""
+msgstr "Hanya satu definisi per field properti"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_decimal_precision_name_uniq
@@ -40993,12 +41094,12 @@ msgstr "Properti"
 #: model:ir.model.fields,field_description:base.field_res_partner__properties_base_definition_id
 #: model:ir.model.fields,field_description:base.field_res_users__properties_base_definition_id
 msgid "Properties Base Definition"
-msgstr ""
+msgstr "Definisi Dasar Properti"
 
 #. module: base
 #: model:ir.model,name:base.model_properties_base_definition_mixin
 msgid "Properties Base Definition Mixin"
-msgstr ""
+msgstr "Mixin Definisi Dasar Properti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_properties_base_definition__properties_definition
@@ -43564,12 +43665,12 @@ msgstr "Tindakan Server"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server_history
 msgid "Server Action History"
-msgstr ""
+msgstr "Riwayat Tindakan Server"
 
 #. module: base
 #: model:ir.model,name:base.model_server_action_history_wizard
 msgid "Server Action History Wizard"
-msgstr ""
+msgstr "Wizard Riwayat Tindakan Server"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action

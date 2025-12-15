@@ -14,7 +14,7 @@ import { uniqueId } from "@web/core/utils/functions";
 
 /**
  * @typedef {(() => void)[]} after_save_handlers
- * @typedef {((el: HTMLElement) => Promise<Map<string,string> | void>)[]} before_save_handlers
+ * @typedef {((el?: HTMLElement) => Promise<void>)[]} before_save_handlers
  * Called at the very beginning of the save process.
  *
  * @typedef {((el: HTMLElement) => Promise<void>)[]} save_element_handlers
@@ -63,14 +63,14 @@ export class SavePlugin extends Plugin {
         this.savableSelector = this.getResource("savable_selectors").join(", ");
     }
 
-    async save({ alwaysSkipAfterSaveHandlers = true } = {}) {
-        let success;
+    async save({ shouldSkipAfterSaveHandlers = async () => true } = {}) {
+        let skipAfterSaveHandlers;
         try {
             await Promise.all(this.getResource("before_save_handlers").map((handler) => handler()));
             await this._save();
-            success = true;
+            skipAfterSaveHandlers = await shouldSkipAfterSaveHandlers();
         } finally {
-            if (!(alwaysSkipAfterSaveHandlers || success)) {
+            if (!skipAfterSaveHandlers) {
                 this.getResource("after_save_handlers").forEach((handler) => handler());
             }
         }

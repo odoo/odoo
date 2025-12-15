@@ -64,7 +64,7 @@ export function getBestGranularity(dateFilterValue, fieldMatching) {
  */
 export function getValidGranularities(dateFilterValue) {
     if (!dateFilterValue) {
-        return ["week", "month", "quarter", "year"];
+        return ["day", "week", "month", "quarter", "year"];
     }
     const { from, to } = getDateRange(dateFilterValue);
     const numberOfDays = Math.round(to.diff(from, "days").days);

@@ -218,7 +218,7 @@ patch(OrderPaymentValidation.prototype, {
             (this.order.isPaidWithCash() || this.order.change) &&
             this.pos.config.iface_cashdrawer
         ) {
-            this.hardwareProxy.printer.openCashbox();
+            this.pos.hardwareProxy.openCashbox();
         }
 
         if (isInvoiceRequested) {
@@ -228,7 +228,7 @@ patch(OrderPaymentValidation.prototype, {
                     body: _t("The invoice could not be generated."),
                 });
             } else {
-                await this.invoiceService.downloadPdf(orderJSON[0].account_move);
+                await this.pos.env.services.account_move.downloadPdf(orderJSON[0].account_move);
             }
         }
 

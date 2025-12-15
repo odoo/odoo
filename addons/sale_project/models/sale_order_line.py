@@ -247,7 +247,7 @@ class SaleOrderLine(models.Model):
     def _timesheet_create_task_prepare_values(self, project):
         self.ensure_one()
         allocated_hours = 0.0
-        if self.product_id.service_type not in ['milestones', 'manual']:
+        if self.product_id.service_type != 'milestones':
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
         products_inside_template_line_with_name = self.order_id.sale_order_template_id.sale_order_template_line_ids.filtered(

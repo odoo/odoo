@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-14 15:24+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"PO-Revision-Date: 2025-11-24 12:09+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_ubl_cii/nl/>\n"
@@ -67,6 +67,11 @@ msgstr "AS2 exchange"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
 msgid "Account Move Send"
 msgstr "Boeking verzenden"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9923
@@ -323,6 +328,7 @@ msgstr "Directoraten van de Europese Commissie"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_sg__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send_wizard__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_ir_actions_report__display_name
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__display_name
@@ -464,7 +470,7 @@ msgstr "Formaat gebruikt om het document te importeren: %s"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Format: %s"
-msgstr ""
+msgstr "Formaat: %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__facturx
@@ -544,6 +550,7 @@ msgstr "Hongarije BTW"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_xml_ubl_sg__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__id
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send_wizard__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_tax__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_ir_actions_report__id
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__id
@@ -562,6 +569,12 @@ msgstr "Indirizzo di Posta Elettronica Certificata"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+msgid "Install Chorus Pro"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Intra-Community supply"
 msgstr "Intracommunautaire levering"
@@ -575,7 +588,7 @@ msgstr "Factuur gegenereerd door Odoo"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Invoice imported"
-msgstr ""
+msgstr "Factuur geïmporteerd"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9935
@@ -787,6 +800,13 @@ msgstr ""
 "te genereren."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
+msgid ""
+"Please install the french Chorus pro module to have all the specific rules."
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9945
 msgid "Poland VAT"
 msgstr "Polen BTW"
@@ -956,7 +976,8 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_category_code
 msgid "The VAT category code used for electronic invoicing purposes."
-msgstr "De btw-categoriecode die wordt gebruikt voor elektronische facturering."
+msgstr ""
+"De btw-categoriecode die wordt gebruikt voor elektronische facturering."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1091,6 +1112,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9932
 msgid "United Kingdom VAT"
 msgstr "Verenigd Koninkrijk BTW"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
+msgid "Unspported file type via %s"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132
@@ -1626,11 +1653,6 @@ msgstr ""
 "gefactureerd artikel (BT-151)."
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
-msgid "Your endpoint"
-msgstr "Je eindpunt"
-
-#. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__z
 msgid "Z - Zero rated goods"
 msgstr "Z - Goederen met nulclassificatie"
@@ -1655,6 +1677,9 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
+
+#~ msgid "Your endpoint"
+#~ msgstr "Je eindpunt"
 
 #~ msgid "Australia BIS Billing 3.0 A-NZ"
 #~ msgstr "Australië BIS Billing 3.0 A-NZ"

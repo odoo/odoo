@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-11-17 10:56+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
+"PO-Revision-Date: 2025-12-05 09:20+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/survey/"
 "ja/>\n"
 "Language: ja\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -271,28 +271,28 @@ msgstr ""
 "    <table style=\"width:600px;margin:5px auto;\">\n"
 "        <tbody>\n"
 "            <tr><td>\n"
-"                <!-- アンケート調査を作成した会社のロゴを使用します(複数会社"
-"のケースに対応するため)  -->\n"
-"                <a href=\"/\"><img t-if=\"not "
-"object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src=\"/"
-"logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" "
-"style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <!-- アンケート調査を作成した会社のロゴを使用します(マルチカ"
+"ンパニーのケースに対応するため)  -->\n"
+"                <a href=\"/\"><img t-if="
+"\"not object.survey_id.create_uid.company_id.uses_default_logo\" t-attf-src="
+"\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style"
+"=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    認定書: <t t-out=\"object.survey_id.display_name or ''\">"
 "フィードバックフォーム</t>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
-"    <table style=\"width:600px;margin:0px auto;background:white;border:1px "
-"solid #e1e1e1;\">\n"
+"    <table style="
+"\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
 "        <tbody>\n"
 "            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
 "                <p> <span t-out=\"object.partner_id.name or 'participant'\">"
 "ご参加者</span>様</p>\n"
 "                <p>\n"
 "                    添付にて\n"
-"                        <strong t-out=\"object.survey_id.display_name or "
-"''\">家具製作</strong>\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\""
+">家具製作</strong>\n"
 "                    認定書をお送りいたします。\n"
 "                </p>\n"
 "                <p>テストに合格されました。おめでとうございます。 スコア:"
@@ -1380,7 +1380,7 @@ msgstr "クラシックパープル"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_session_manage.js:0
 msgid "Click to copy link"
-msgstr ""
+msgstr "リンクをコピーするにはクリックしてください"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q1_sug4
@@ -1977,7 +1977,7 @@ msgstr "食事の好み"
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 msgid "For this question, you can only select one answer."
-msgstr ""
+msgstr "この質問では、選択できる回答は 1 つだけです。"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__text_box
@@ -2057,7 +2057,7 @@ msgstr "既存のハンドル"
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "Handle quiz & certifications"
-msgstr ""
+msgstr "クイズと認定資格の取り扱い"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__has_message
@@ -2089,7 +2089,7 @@ msgstr "ヘミウヌ"
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Here, you can view the participants."
-msgstr ""
+msgstr "こちらで参加者を確認できます。"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug1
@@ -2600,7 +2600,7 @@ msgstr "最後の質問/ページを表示しました"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Late Activities"
-msgstr "遅れた活動"
+msgstr "期限超過の活動"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -3619,7 +3619,7 @@ msgstr "現在の質問を表示するためのトリガとなる答えを含む
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_success
 msgid "Quiz Passed"
-msgstr ""
+msgstr "クイズに合格しました"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -4804,7 +4804,8 @@ msgstr "参加する:"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "To take this survey, please close all other tabs on %(hostname)s"
-msgstr ""
+msgstr "このアンケートにご回答いただくには、他のタブをすべて閉じてください。%"
+"(hostname)s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search

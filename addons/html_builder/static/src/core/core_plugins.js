@@ -11,6 +11,8 @@ import { BuilderOverlayPlugin } from "./builder_overlay/builder_overlay_plugin";
 import { CachedModelPlugin } from "./cached_model_plugin";
 import { ClonePlugin } from "./clone_plugin";
 import { ColorUIPlugin } from "./color_ui_plugin";
+import { ImagePlugin } from "./image_plugin";
+import { IconPlugin } from "./icon_plugin";
 import { CoreBuilderActionPlugin } from "./core_builder_action_plugin";
 import { CompositeActionPlugin } from "./composite_action_plugin";
 import { CustomizeTabPlugin } from "./customize_tab_plugin";
@@ -45,6 +47,8 @@ const mainEditorPluginsToRemove = [
     "FontFamilyPlugin",
     // Replaced plugins:
     "ColorUIPlugin",
+    "ImagePlugin",
+    "IconPlugin",
 ];
 
 export const MAIN_PLUGINS = [
@@ -53,6 +57,8 @@ export const MAIN_PLUGINS = [
         mainEditorPluginsToRemove
     ),
     ColorUIPlugin,
+    ImagePlugin,
+    IconPlugin,
 ];
 
 export const CORE_PLUGINS = [

@@ -516,25 +516,21 @@ patch(PosStore.prototype, {
                 const considerTheReward =
                     program.applies_on !== "both" || (program.applies_on == "both" && hasLine);
                 if (reward.reward_type === "product" && considerTheReward) {
-                    let hasPotentialQty = true;
-                    let potentialQty;
                     for (const { id } of reward.reward_product_ids) {
                         const product = this.models["product.product"].get(id);
-                        potentialQty = order._computePotentialFreeProductQty(
+                        const potentialQty = order._computePotentialFreeProductQty(
                             reward,
                             product,
                             points
                         );
-                        if (potentialQty <= 0) {
-                            hasPotentialQty = false;
+                        if (potentialQty > 0) {
+                            result.push({
+                                coupon_id: couponProgram.coupon_id,
+                                reward: reward,
+                                potentialQty,
+                            });
+                            break;
                         }
-                    }
-                    if (hasPotentialQty) {
-                        result.push({
-                            coupon_id: couponProgram.coupon_id,
-                            reward: reward,
-                            potentialQty,
-                        });
                     }
                 }
             }

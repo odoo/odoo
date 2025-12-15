@@ -324,7 +324,7 @@ class ResPartner(models.Model):
     partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
     duplicate_bank_partner_ids = fields.Many2many(related="bank_ids.duplicate_bank_partner_ids")
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'country_code')
     @api.depends_context('allowed_company_ids')
     def _compute_fiscal_country_codes(self):
         for record in self:

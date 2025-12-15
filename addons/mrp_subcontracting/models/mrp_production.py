@@ -70,7 +70,7 @@ class MrpProduction(models.Model):
                     'mo_id': mo.id,
                     'product_qty': vals['product_qty'],
                 }]).change_prod_qty()
-                mo.action_assign()
+                mo.sudo().action_assign()
 
         res = super().write(vals)
 

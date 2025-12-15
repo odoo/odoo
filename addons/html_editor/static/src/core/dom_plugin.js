@@ -259,9 +259,9 @@ export class DomPlugin extends Plugin {
             }
         }
 
+        const textNode = this.document.createTextNode("");
         if (startNode.nodeType === Node.ELEMENT_NODE) {
             if (selection.anchorOffset === 0) {
-                const textNode = this.document.createTextNode("");
                 if (isSelfClosingElement(startNode)) {
                     startNode.parentNode.insertBefore(textNode, startNode);
                 } else {
@@ -399,6 +399,8 @@ export class DomPlugin extends Plugin {
             }
             currentNode = nodeToInsert;
         }
+        // Remove the empty text node created earlier
+        textNode.remove();
         allInsertedNodes.push(...lastInsertedNodes);
         this.getResource("after_insert_handlers").forEach((handler) => handler(allInsertedNodes));
         let insertedNodesParents = getConnectedParents(allInsertedNodes);
@@ -622,7 +624,7 @@ export class DomPlugin extends Plugin {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }
-                this.dispatchTo("before_set_tag_handlers", block);
+                this.dispatchTo("before_set_tag_handlers", block, tagName, cursors);
                 const newEl = this.setTagName(block, tagName);
                 cursors.remapNode(block, newEl);
                 // We want to be able to edit the case `<h2 class="h3">`

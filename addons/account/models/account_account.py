@@ -30,17 +30,6 @@ class AccountAccount(models.Model):
             if account.account_type in ('asset_receivable', 'liability_payable') and not account.reconcile:
                 raise ValidationError(_('You cannot have a receivable/payable account that is not reconcilable. (account code: %s)', account.code))
 
-    @api.constrains('account_type')
-    def _check_account_type_unique_current_year_earning(self):
-        result = self.with_context(active_test=False)._read_group(
-            domain=[('account_type', '=', 'equity_unaffected')],
-            groupby=['company_ids'],
-            aggregates=['id:recordset'],
-            having=[('__count', '>', 1)],
-        )
-        for _company, account_unaffected_earnings in result:
-            raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)', [a.code for a in account_unaffected_earnings]))
-
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True, translate=True)
     description = fields.Text(translate=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
@@ -917,12 +906,12 @@ class AccountAccount(models.Model):
         for account in self:
             if formatted_display_name and account.code:
                 account.display_name = (
-                    f"""{account.code} {account.name}"""
+                    f"""{account.code if self.env.user.has_group('account.group_account_readonly') else ''} {account.name}"""
                     f"""{f' `{_("Suggested")}`' if account.id in preferred_account_ids else ''}"""
                     f"""{f'{new_line}--{account.description}--' if account.description else ''}"""
                 )
             else:
-                account.display_name = f"{account.code} {account.name}" if account.code else account.name
+                account.display_name = f"{account.code} {account.name}" if account.code and self.env.user.has_group('account.group_account_readonly') else account.name
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default)

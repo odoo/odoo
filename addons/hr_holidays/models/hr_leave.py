@@ -125,7 +125,7 @@ class HrLeave(models.Model):
 
     # description
     name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False, copy=False)
-    private_name = fields.Char('Time Off Description', groups='hr_holidays.group_hr_holidays_user')
+    private_name = fields.Char('Time Off Description', groups='hr_holidays.group_hr_holidays_responsible')
     state = fields.Selection([
         ('confirm', 'To Approve'),
         ('refuse', 'Refused'),
@@ -434,7 +434,7 @@ Versions:
                 holiday.date_from = False
                 continue
 
-            if not holiday.request_unit_half and not holiday.request_unit_hours and not holiday.request_date_to:
+            if not holiday.request_date_to:
                 holiday.date_to = False
                 continue
 
@@ -606,7 +606,7 @@ Versions:
                     else:
                         hours = (leave.date_to - leave.date_from).total_seconds() / 3600
                     if not leave.request_unit_hours and not public_holidays:
-                        days = 1 if not leave.request_unit_half else 0.5
+                        days = 1 if not leave.request_unit_half or leave.request_date_from_period != leave.request_date_to_period else 0.5
                     else:
                         days = hours / 24
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
@@ -730,6 +730,7 @@ Versions:
     def _inverse_supported_attachment_ids(self):
         for holiday in self:
             holiday.attachment_ids = holiday.supported_attachment_ids
+        self.invalidate_recordset(['attachment_ids'])
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
@@ -1319,7 +1320,7 @@ Versions:
 
         user_employees = self.env.user.employee_ids
         is_own_leave = self.employee_id in user_employees
-        is_in_past = self.date_from.date() < fields.Date.today()
+        is_in_past = self.date_from and self.date_from.date() < fields.Date.today()
 
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_time_off_manager = self.employee_id.leave_manager_id == self.env.user

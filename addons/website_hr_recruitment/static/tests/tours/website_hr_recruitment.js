@@ -115,7 +115,7 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
     run: "click",
 }, {
     content: 'Add a new field',
-    trigger: 'div[data-container-title="Field"] button.o_we_bg_brand_primary',
+    trigger: 'div[data-container-title="Field"] button.btn-success',
     run: "click",
 },
 ...clickOnSave(),

@@ -47,6 +47,7 @@ export const popoverService = {
                     closeOnEscape: options.closeOnEscape,
                     component,
                     componentProps: markRaw(props),
+                    extendedFlipping: options.extendedFlipping,
                     ref: options.ref,
                     class: options.popoverClass,
                     animation: options.animation,

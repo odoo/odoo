@@ -183,6 +183,41 @@ class TestSaleStockReports(TestReportsCommon):
         with self.assertRaises(AccessError):
             draft.with_user(other).check_access('read')
 
+    def test_add_reference_remove_reference_works_with_multiple_records(self):
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 5,
+            })],
+        })
+        so.action_confirm()
+        so_delivery = so.picking_ids
+
+        so_delivery.reference_ids.copy()
+
+        picking_receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'partner_id': self.partner.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 18,
+            })],
+        })
+        picking_receipt.action_confirm()
+
+        self.env['report.stock.report_reception']._action_assign(
+            picking_receipt.move_ids,
+            so_delivery.move_ids,
+        )
+        self.assertEqual(picking_receipt.move_ids.reference_ids, so_delivery.move_ids.reference_ids)
+
+        self.env['report.stock.report_reception']._action_unassign(
+            picking_receipt.move_ids,
+            so_delivery.move_ids,
+        )
+        self.assertNotIn(picking_receipt.move_ids.reference_ids, so_delivery.move_ids.reference_ids)
+
 
 @tagged('post_install', '-at_install')
 class TestSaleStockInvoices(TestSaleCommon):

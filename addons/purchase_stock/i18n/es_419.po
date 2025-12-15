@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
 "PO-Revision-Date: 2025-11-11 17:17+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -43,7 +43,8 @@ msgstr "%(value)s para %(quantity)s %(unit)s de %(bills)s"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid "%(value)s for %(quantity)s %(unit)s from %(quotation)s (not billed)"
-msgstr "%(value)s por %(quantity)s %(unit)s de %(quotation)s (aún sin facturar)"
+msgstr ""
+"%(value)s por %(quantity)s %(unit)s de %(quotation)s (aún sin facturar)"
 
 #. module: purchase_stock
 #. odoo-python
@@ -154,6 +155,12 @@ msgstr "Acción"
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "Add All"
 msgstr "Agregar todos"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "After next month last year"
+msgstr "Después del siguiente mes del año pasado"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -422,6 +429,12 @@ msgid "Forecast Report"
 msgstr "Reporte de pronóstico"
 
 #. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Forecasted"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
 msgid "Forecasted Issue"
 msgstr "Emisión pronosticada"
@@ -550,9 +563,39 @@ msgid "Journal Item"
 msgstr "Apunte contable"
 
 #. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 12 months"
+msgstr "Últimos 12 meses"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 3 months"
+msgstr "Últimos 3 meses"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 30 days"
+msgstr "Últimos 30 días"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 7 days"
+msgstr "Últimos 7 días"
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
 msgid "Last Purchase"
 msgstr "Última compra"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last year quarter"
+msgstr "Trimestre del año pasado"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
@@ -588,6 +631,12 @@ msgstr "Lunes"
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__monthly_demand
 msgid "Monthly Demand"
 msgstr "Demanda mensual"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Next month last year"
+msgstr "Siguiente mes del año pasado"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -868,6 +917,12 @@ msgstr "Reserva"
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Recolección de devolución"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Same month last year"
+msgstr "Mismo mes del año pasado"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__6
@@ -1283,9 +1338,6 @@ msgstr "debe reabastecer este producto de forma manual."
 #~ msgid "Actual Demand"
 #~ msgstr "Demanda real"
 
-#~ msgid "After next month last year"
-#~ msgstr "Después del siguiente mes del año pasado"
-
 #~ msgid "All Warehouses"
 #~ msgstr "Todos los almacenes"
 
@@ -1350,26 +1402,11 @@ msgstr "debe reabastecer este producto de forma manual."
 #~ msgid "In"
 #~ msgstr "En"
 
-#~ msgid "Last 12 months"
-#~ msgstr "Últimos 12 meses"
-
-#~ msgid "Last 3 months"
-#~ msgstr "Últimos 3 meses"
-
-#~ msgid "Last 30 days"
-#~ msgstr "Últimos 30 días"
-
-#~ msgid "Last 7 days"
-#~ msgstr "Últimos 7 días"
-
 #~ msgid "Last Updated by"
 #~ msgstr "Última actualización por"
 
 #~ msgid "Last Updated on"
 #~ msgstr "Última actualización el"
-
-#~ msgid "Last year quarter"
-#~ msgstr "Trimestre del año pasado"
 
 #~ msgid "Linked Purchase Order Lines"
 #~ msgstr "Líneas de la orden de compra vinculadas"
@@ -1388,9 +1425,6 @@ msgstr "debe reabastecer este producto de forma manual."
 
 #~ msgid "Multiplier"
 #~ msgstr "Multiplicador"
-
-#~ msgid "Next month last year"
-#~ msgstr "Siguiente mes del año pasado"
 
 #~ msgid "No product to buy found"
 #~ msgstr "No se encontró ningún producto para comprar"
@@ -1437,9 +1471,6 @@ msgstr "debe reabastecer este producto de forma manual."
 
 #~ msgid "Routes"
 #~ msgstr "Rutas"
-
-#~ msgid "Same month last year"
-#~ msgstr "Mismo mes del año pasado"
 
 #~ msgid "Schedule request for quotations earlier to avoid delays"
 #~ msgstr ""

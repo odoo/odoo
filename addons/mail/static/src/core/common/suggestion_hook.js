@@ -212,7 +212,7 @@ export class UseSuggestion {
         if (this.comp.composerService.htmlEnabled) {
             let inlineElement;
             if (option.partner) {
-                inlineElement = generatePartnerMentionElement(option.partner);
+                inlineElement = generatePartnerMentionElement(option.partner, this.thread);
             } else if (option.isSpecial) {
                 inlineElement = generateSpecialMentionElement(option.label);
             } else if (option.role) {
@@ -225,6 +225,7 @@ export class UseSuggestion {
             this.comp.editor.shared.dom.insert(inlineElement);
             const [anchorNode, anchorOffset] = rightPos(inlineElement);
             this.comp.editor.shared.selection.setSelection({ anchorNode, anchorOffset });
+            this.comp.editor.shared.dom.insert("\u00A0");
             this.comp.editor.shared.history.addStep();
         } else {
             // remove the user-typed search delimiter

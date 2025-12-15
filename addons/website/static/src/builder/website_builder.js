@@ -44,6 +44,7 @@ import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plug
 import { CustomizeTranslationTab } from "@website/builder/plugins/translation_tab/customize_translation_tab";
 import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
 import { Plugin } from "@html_editor/plugin";
+import { revertPreview } from "@html_builder/core/utils";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -102,7 +103,8 @@ export class WebsiteBuilder extends Component {
         });
     }
 
-    discard() {
+    async discard() {
+        await revertPreview(this.editor);
         if (this.editor.shared.history.canUndo()) {
             this.dialog.add(ConfirmationDialog, {
                 title: _t("Discard all changes?"),
@@ -123,7 +125,7 @@ export class WebsiteBuilder extends Component {
         if (!this.editor) {
             return;
         }
-        if (!this.isSaving && this.editor.shared.history.canUndo()) {
+        if (this.editor.shared.history.canUndo()) {
             event.preventDefault();
             event.returnValue = "Unsaved changes";
         }
@@ -152,15 +154,14 @@ export class WebsiteBuilder extends Component {
     }
 
     async save() {
-        this.editor.shared.operation.next(this._save.bind(this), { withLoadingEffect: false });
-    }
-
-    async _save() {
-        this.isSaving = true;
         // TODO: handle the urgent save and the fail of the save operation
-        await this.editor.shared.savePlugin.save({ alwaysSkipAfterSaveHandlers: false });
-        this.props.builderProps.closeEditor();
-        this.isSaving = false;
+        await this.editor.shared.operation.next(
+            async () => {
+                await this.editor.shared.savePlugin.save();
+                this.props.builderProps.closeEditor();
+            },
+            { withLoadingEffect: false }
+        );
     }
 
     get builderProps() {

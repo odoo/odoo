@@ -1,4 +1,4 @@
-import { beforeEach, expect, test, describe } from "@odoo/hoot";
+import { beforeEach, expect, test, describe, getFixture } from "@odoo/hoot";
 import { setSelection } from "./_helpers/selection";
 import { click, hover, queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 import {
@@ -20,6 +20,7 @@ import { parseHTML } from "@html_editor/utils/html";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { insertText } from "./_helpers/user_actions";
+import { getScrollContainer } from "@html_editor/core/overlay";
 
 class Test extends models.Model {
     name = fields.Char();
@@ -459,4 +460,218 @@ test("overlay don't close when click on child overlay", async () => {
     await animationFrame();
     expect(document.activeElement).toBe(queryOne(".my-suboverlay"));
     expect(".my-overlay").toHaveCount(1);
+});
+
+describe("getScrollContainer", () => {
+    // Visual hints for easier debugging
+    const addVisualHints = (root) => {
+        const style = document.createElement("style");
+        style.textContent = `
+            .fixed {
+                border: 3px solid blue;
+            }
+            .target {
+                border: 3px solid orange;
+            }
+            .expected {
+                border: 3px solid green;
+            }
+            div, iframe {
+                margin: 10px;
+            }
+        `;
+        root.prepend(style);
+    };
+    const setContent = (html, root = getFixture()) => {
+        root.innerHTML = html;
+        addVisualHints(root);
+        return {
+            target: root.querySelector(".target"),
+            expected: root.querySelector(".expected"),
+            iframe: root.querySelector(".iframe"),
+        };
+    };
+
+    describe("single document", () => {
+        test("should return null", () => {
+            const { target } = setContent(`<div class="target">Target</div>`);
+            expect(getScrollContainer(target)).toBe(null);
+        });
+        test("should return null (2)", () => {
+            const { target } = setContent(`
+                <div style="height: 100px">
+                    <div class="target" style="height: 200px;">Target</div>
+                </div>`);
+            expect(getScrollContainer(target)).toBe(null);
+        });
+        test("should return the target itself", () => {
+            const { target } = setContent(`
+                <div class="target" style="height: 100px; overflow-y: auto;">
+                    <div style="height: 200px;">Content</div>
+                </div>`);
+            expect(getScrollContainer(target)).toBe(target);
+        });
+        test("should return target's parent", () => {
+            const { target, expected } = setContent(`
+                <div class="expected" style="height: 100px; overflow-y: auto;">
+                    <div class="target" style="height: 200px;">Target</div>
+                </div>`);
+            expect(getScrollContainer(target)).toBe(expected);
+        });
+        test("should return closest scrollable ancestor", () => {
+            const { target, expected } = setContent(`
+                <div style="height: 200px; overflow-y: auto;">
+                    <div class="expected" style="height: 300px; overflow-y: auto;">
+                        <div class="target" style="height: 400px;">Target</div>
+                    </div>
+                </div>`);
+            expect(getScrollContainer(target)).toBe(expected);
+        });
+        test("should return closest scrollable ancestor (2)", () => {
+            const { target, expected } = setContent(`
+                <div class="expected" style="height: 300px; overflow-y: auto;">
+                    <div style="height: 500px; overflow-y: auto;">
+                        <div class="target" style="height: 400px;">Target</div>
+                    </div>
+                </div>`);
+            expect(getScrollContainer(target)).toBe(expected);
+        });
+    });
+
+    describe("with iframe", () => {
+        test("should return closest scrollable ancestor inside the iframe", () => {
+            // Fixture's content
+            const { iframe } = setContent(`<iframe class="iframe" style="height: 500px"></iframe>`);
+            // Iframe's content
+            const { target, expected } = setContent(
+                `<div class="expected" style="height: 300px; overflow-y: auto;">
+                    <div class="target" style="height: 400px;">Target</div>
+                </div>`,
+                iframe.contentDocument.body
+            );
+            expect(getScrollContainer(target)).toBe(expected);
+        });
+        test("should return the iframe's document element", () => {
+            // Fixture's content
+            const { iframe } = setContent(`
+                <iframe class="iframe" style="height: 500px"></iframe>`);
+            // Iframe's content
+            const { target } = setContent(
+                `<div class="target" style="height: 600px;">Target</div>`,
+                iframe.contentDocument.body
+            );
+            const documentElement = iframe.contentDocument.documentElement;
+            documentElement.classList.add("expected"); // for visual hint
+            expect(getScrollContainer(target)).toBe(documentElement);
+        });
+        test("should return scrollable element in the enclosing document", () => {
+            // Fixture's content
+            const { iframe, expected } = setContent(`
+                <div class="expected" style="height: 300px; overflow-y: auto;">
+                    <iframe class="iframe" style="height: 500px"></iframe>
+                </div>`);
+            // Iframe's content
+            const { target } = setContent(
+                `<div class="target" style="height: 400px;">Target</div>`,
+                iframe.contentDocument.body
+            );
+            expect(getScrollContainer(target)).toBe(expected);
+        });
+    });
+
+    describe("with fixed elements", () => {
+        test("should return scrollable element inside fixed container", () => {
+            const { target, expected } = setContent(`
+                <div class="fixed" style="position: fixed, height: 600px">
+                    <div class="expected" style="height: 300px; overflow-y: auto;">
+                        <div class="target" style="height: 400px;">Target</div>
+                    </div>
+                </div>`);
+            expect(getScrollContainer(target)).toBe(expected);
+        });
+        test("should not consider scrollable ancestor of a fixed element as the scroll container", () => {
+            // The outer div is scrollable, but since the target is inside a
+            // fixed container, it is not affected by the scrolling.
+            const { target } = setContent(`
+                <div style="height: 500px; overflow-y: auto">
+                    <div style="height: 700px">
+                        <div class="fixed" style="position: fixed">
+                            <div class="target" style="height: 400px;">Target</div>
+                        </div>
+                    </div>
+                </div>`);
+            expect(getScrollContainer(target)).toBe(null);
+        });
+        test("should return scrollable element in enclosing document of a fixed element", () => {
+            // Fixture's content
+            const { iframe, expected } = setContent(`
+                <div class="expected" style="height: 300px; overflow-y: auto;">
+                    <iframe class="iframe" style="height: 600px"></iframe>
+                </div>`);
+            // Iframe's content
+            // The outer div inside the iframe is scrollable, but since the target is inside a
+            // fixed container, it is not affected by the scrolling.
+            const { target } = setContent(
+                `<div style="height: 500px; overflow-y: auto">
+                    <div style="height: 700px">
+                        <div class="fixed" style="position: fixed">
+                            <div class="target" style="height: 300px;">Target</div>
+                        </div>
+                    </div>
+                </div>`,
+                iframe.contentDocument.body
+            );
+            expect(getScrollContainer(target)).toBe(expected);
+        });
+        test("should return scrollable element in enclosing document of a fixed element (2)", () => {
+            // Fixture's content
+            const { iframe, expected } = setContent(`
+                <div class="expected" style="height: 300px; overflow-y: auto;">
+                    <iframe class="iframe" style="height: 600px"></iframe>
+                </div>`);
+            // Iframe's content
+            // The iframe's document element is scrollable, but since the target
+            // is inside a fixed container, it is not affected by the scrolling.
+            const { target } = setContent(
+                `<div style="height: 700px">
+                        <div class="fixed" style="position: fixed">
+                            <div class="target" style="height: 300px;">Target</div>
+                        </div>
+                </div>`,
+                iframe.contentDocument.body
+            );
+            expect(getScrollContainer(target)).toBe(expected);
+        });
+        test("should return the fixed container if it is scrollable", () => {
+            const { target, expected } = setContent(`
+                <div class="expected fixed" style="position: fixed; height: 300px; overflow-y: auto;">
+                    <div class="target" style="height: 400px;">Target</div>
+                </div>`);
+            expect(getScrollContainer(target)).toBe(expected);
+        });
+    });
+});
+
+// This test simulates a case in website builder. The values of y and bottom
+// returned by getBoundingClientRect are negative for the scroll container (the
+// iframe's html element).
+test("Overlay should be visible when scroll container has negative value for bottom", async () => {
+    const bigContent = "<p>line</p>".repeat(100);
+    const { el } = await setupEditor(bigContent, { props: { iframe: true } });
+    const iframe = el.ownerDocument.defaultView.frameElement;
+    iframe.classList.remove("h-100");
+    iframe.style.height = "500px";
+    el.style.height = "1000px";
+
+    const lastP = el.querySelector("p:last-child");
+    lastP.scrollIntoView();
+
+    const scrollContainer = getScrollContainer(el);
+    const { bottom } = scrollContainer.getBoundingClientRect();
+    expect(bottom).toBeLessThan(0);
+    // Even though bottom is negative, its contents are still visible. An
+    // overlay at this point should also be visible.
+    setSelection({ anchorNode: lastP, anchorOffset: 0, focusNode: lastP, focusOffset: 1 });
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toBeVisible();
 });

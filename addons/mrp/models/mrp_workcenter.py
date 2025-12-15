@@ -610,7 +610,6 @@ class MrpWorkcenterCapacity(models.Model):
     _name = 'mrp.workcenter.capacity'
     _description = 'Work Center Capacity'
     _check_company_auto = True
-    _order = 'workcenter_id, product_id nulls first,product_uom_id,id'
 
     def _default_time_start(self):
         workcenter_id = self.workcenter_id.id or self.env.context.get('default_workcenter_id')
@@ -622,8 +621,8 @@ class MrpWorkcenterCapacity(models.Model):
 
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True, index=True)
     product_id = fields.Many2one('product.product', string='Product')
-    product_uom_id = fields.Many2one('uom.uom', string='Unit', default=lambda self: self.env.ref('uom.product_uom_unit'),
-        compute="_compute_product_uom_id", store=True, readonly=False, required=True)
+    product_uom_id = fields.Many2one('uom.uom', string='Unit',
+        compute="_compute_product_uom_id", precompute=True, store=True, readonly=False, required=True)
     capacity = fields.Float('Capacity', help="Number of pieces that can be produced in parallel for this product or for all, depending on the unit.")
     time_start = fields.Float('Setup Time (minutes)', default=_default_time_start, help="Time in minutes for the setup.")
     time_stop = fields.Float('Cleanup Time (minutes)', default=_default_time_stop, help="Time in minutes for the cleaning.")

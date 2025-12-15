@@ -90,6 +90,7 @@ export class Builder extends Component {
 
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
+        /** @type {Editor} */
         this.editor = new Editor(
             {
                 Plugins: this.props.Plugins,
@@ -123,6 +124,7 @@ export class Builder extends Component {
                     await this.props.closeEditor?.();
                 },
                 installSnippetModule: (snippet) => this.props.installSnippetModule?.(snippet),
+                /** @type {import("plugins").BuilderResources} */
                 resources: {
                     trigger_dom_updated: () => {
                         this.triggerDomUpdated();
@@ -171,9 +173,6 @@ export class Builder extends Component {
                     }),
                     unsplittable_node_predicates: (/** @type {Node} */ node) =>
                         node.querySelector?.("[data-oe-translation-source-sha]"),
-                    can_display_toolbar: (namespace) => !["image", "icon"].includes(namespace),
-
-                    // disable the toolbar for images and icons
                 },
                 localOverlayContainers: {
                     key: this.env.localOverlayContainerKey,

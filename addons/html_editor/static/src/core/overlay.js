@@ -11,7 +11,6 @@ import {
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { useActiveElement } from "@web/core/ui/ui_service";
-import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export class EditorOverlay extends Component {
     static template = xml`
@@ -98,7 +97,8 @@ export class EditorOverlay extends Component {
             useActiveElement("root");
         }
         const topDocument = editable.ownerDocument.defaultView.top.document;
-        const container = closestScrollable(editable) || topDocument.documentElement;
+        const scrollContainer = getScrollContainer(editable);
+        const container = scrollContainer || topDocument.documentElement;
         const resizeObserver = new ResizeObserver(() => position.unlock());
         resizeObserver.observe(container);
         onWillDestroy(() => resizeObserver.disconnect());
@@ -108,7 +108,7 @@ export class EditorOverlay extends Component {
             ...this.props.positionOptions,
             onPositioned: (el, solution) => {
                 this.props.positionOptions?.onPositioned?.(el, solution);
-                this.updateVisibility(el, solution, container);
+                this.updateVisibility(el, solution, scrollContainer);
             },
         };
         position = usePosition("root", getTarget, positionOptions);
@@ -156,13 +156,17 @@ export class EditorOverlay extends Component {
         return this.rangeElement;
     }
 
-    updateVisibility(overlayElement, solution, container) {
+    updateVisibility(overlayElement, solution, scrollContainer) {
         // @todo: mobile tests rely on a visible (yet overflowing) toolbar
         // Remove this once the mobile toolbar is fixed?
         if (this.env.isSmall) {
             return;
         }
-        const shouldBeVisible = this.shouldOverlayBeVisible(overlayElement, solution, container);
+        const shouldBeVisible = this.shouldOverlayBeVisible(
+            overlayElement,
+            solution,
+            scrollContainer
+        );
         overlayElement.style.visibility = shouldBeVisible ? "visible" : "hidden";
         this.overlayState.isOverlayVisible = shouldBeVisible;
     }
@@ -170,17 +174,22 @@ export class EditorOverlay extends Component {
     /**
      * @param {HTMLElement} overlayElement
      * @param {Object} solution
-     * @param {HTMLElement} container
+     * @param {HTMLElement} scrollContainer
      */
-    shouldOverlayBeVisible(overlayElement, solution, container) {
-        const containerRect = container.getBoundingClientRect();
-        const overflowsTop = solution.top < containerRect.top;
-        const overflowsBottom = solution.top + overlayElement.offsetHeight > containerRect.bottom;
+    shouldOverlayBeVisible(overlayElement, solution, scrollContainer) {
+        if (!scrollContainer) {
+            return true;
+        }
+        const scrollContainerRect = scrollContainer.getBoundingClientRect();
+        const top = Math.max(scrollContainerRect.top, 0);
+        const bottom = top + scrollContainerRect.height;
+        const overflowsTop = solution.top < top;
+        const overflowsBottom = solution.top + overlayElement.offsetHeight > bottom;
         const canFlip = this.props.positionOptions?.flip ?? true;
         if (overflowsTop) {
             if (overflowsBottom) {
-                // Overlay is bigger than the cointainer. Hiding it would it
-                // make always invisible.
+                // Overlay is bigger than the cointainer. Hiding it would make
+                // it always invisible.
                 return true;
             }
             if (solution.direction === "top" && canFlip) {
@@ -201,13 +210,37 @@ export class EditorOverlay extends Component {
 }
 
 /**
- * Wrapper around closestScrollableY that keeps searching outside of iframes.
+ * The scroll container is an ancestor of {@link el} that is:
+ * - scrollable and
+ * - not also ancestor of a fixed element encosing `el` in the same
+ * document (as this makes `el` fixed and not affected by scrolls of
+ * that ancestor)
  *
  * @param {HTMLElement} el
+ * @returns {HTMLElement|null}
  */
-function closestScrollable(el) {
-    if (!el) {
-        return null;
+export function getScrollContainer(el) {
+    const isScrollable = (/** @type {HTMLElement} */ el) => {
+        if (el.tagName === "HTML") {
+            return el.scrollHeight > el.ownerDocument.defaultView.visualViewport.height;
+        }
+        return (
+            el.scrollHeight > el.clientHeight &&
+            /\bauto\b|\bscroll\b/.test(getComputedStyle(el)["overflow-y"])
+        );
+    };
+    const isFixed = (el) => getComputedStyle(el).position === "fixed";
+    while (el) {
+        if (isScrollable(el)) {
+            return el;
+        }
+        if (isFixed(el)) {
+            // Any scrollable ancestor in the same document does not affect it.
+            // Search in the enclosing document, if any.
+            el = el.ownerDocument.defaultView.frameElement;
+            continue;
+        }
+        el = el.parentElement || el.ownerDocument.defaultView.frameElement;
     }
-    return closestScrollableY(el) || closestScrollable(el.ownerDocument.defaultView.frameElement);
+    return null;
 }

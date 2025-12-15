@@ -456,7 +456,8 @@ export class ListPlugin extends Plugin {
         }
         const newTag = newMode === "CL" ? "UL" : newMode;
         const newList = this.dependencies.dom.setTagName(list, newTag);
-        // Clear list style (@todo @phoenix - why??)
+        // Remove any previously set list-style so that when changing the list
+        // type, the new list can show its correct default marker style.
         newList.style.removeProperty("list-style");
         for (const li of newList.children) {
             li.style.removeProperty("list-style");
@@ -1238,7 +1239,7 @@ export class ListPlugin extends Plugin {
                 const markerWidth = parseFloat(this.window.getComputedStyle(li, "::marker").width);
                 return isNaN(markerWidth) ? 0 : markerWidth;
             })
-            .reduce(Math.max);
+            .reduce((accumulator, currentValue) => Math.max(accumulator, currentValue));
         // For `UL` with large font size the marker width is so big that more padding is needed.
         const largestMarkerPadding = Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
 

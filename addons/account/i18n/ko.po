@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-20 03:05+0000\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"PO-Revision-Date: 2025-12-02 14:54+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/account/"
 "ko/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2551,6 +2551,14 @@ msgid "Account Chart Template"
 msgstr "계정과목표 서식"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_code_mapping.py:0
+msgid ""
+"Account Code Mapping cannot be accessed directly. It is designed to be used "
+"only through the Chart of Accounts."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
 msgid "Account Codes Formula Shortcut"
 msgstr "계정 코드 수식 바로가기"
@@ -3493,7 +3501,7 @@ msgstr "해시될 모든 동작"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense
 msgid "All other uncategorized expenses"
-msgstr ""
+msgstr "기타 모든 미분류 경비"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -4089,6 +4097,11 @@ msgid "Attachments"
 msgstr "첨부 파일"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
+msgid "Attachments Not Supported"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
 #: model:ir.ui.menu,name:account.account_audit_trail_menu
 msgid "Audit Trail"
@@ -4337,8 +4350,8 @@ msgstr "잔액 비율은 0이 될 수 없습니다"
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_44
-#: model:account.account,name:account.2_bank_journal_default_account_149
+#: model:account.account,name:account.1_bank_journal_default_account_45
+#: model:account.account,name:account.2_bank_journal_default_account_150
 #: model:account.journal,name:account.1_bank
 #: model:account.journal,name:account.2_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
@@ -4466,7 +4479,7 @@ msgstr "은행 조정 이동 사전 설정"
 #. module: account
 #: model:account.group,name:account.2_us_group_650
 msgid "Bank Service Charges"
-msgstr ""
+msgstr "은행 서비스 수수료"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5079,7 +5092,7 @@ msgstr "이월 대상"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.1_cash_journal_default_account_160
+#: model:account.account,name:account.1_cash_journal_default_account_161
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5092,12 +5105,12 @@ msgid "Cash Account"
 msgstr "현금 계정"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_157
+#: model:account.account,name:account.1_cash_journal_default_account_158
 msgid "Cash Bakery"
 msgstr "현금 베이커리"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_159
+#: model:account.account,name:account.1_cash_journal_default_account_160
 msgid "Cash Bar"
 msgstr "현금 바"
 
@@ -5139,7 +5152,7 @@ msgid "Cash Basis Transition Account"
 msgstr "현금주의 전환 계좌"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_156
+#: model:account.account,name:account.1_cash_journal_default_account_157
 msgid "Cash Clothes Shop"
 msgstr "현금 의류 매장"
 
@@ -5201,7 +5214,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "현금할인상각손실 계정"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_155
+#: model:account.account,name:account.1_cash_journal_default_account_156
 msgid "Cash Furn. Shop"
 msgstr "현금 가구 매장"
 
@@ -5212,7 +5225,7 @@ msgid "Cash Registers"
 msgstr "금전 등록기"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_158
+#: model:account.account,name:account.1_cash_journal_default_account_159
 msgid "Cash Restaurant"
 msgstr "현금 레스토랑"
 
@@ -7366,6 +7379,11 @@ msgid "Display Amount"
 msgstr "표시 금액"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
+msgid "Display Attachments Widget"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
 msgid "Display Days Next Month"
 msgstr "다음 달 표시일"
@@ -8044,7 +8062,7 @@ msgstr "직원 수수료"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_commissions
 msgid "Employees commissions and bonuses"
-msgstr ""
+msgstr "직원 수수료 및 보너스"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_healthcare
@@ -8649,7 +8667,7 @@ msgstr "재정 국가 코드"
 #: model:ir.model.fields,field_description:account.field_res_partner__fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account.field_res_users__fiscal_country_group_codes
 msgid "Fiscal Country Group Codes"
-msgstr ""
+msgstr "재정 국가 그룹 코드"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_country_group__exclude_state_ids
@@ -8821,7 +8839,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.2_account_account_us_food
 msgid "Food: Catering & Delivery"
-msgstr ""
+msgstr "음식: 케이터링 및 배달"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -9133,7 +9151,7 @@ msgstr "생성된 항목"
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "Generic Chart of Accounts"
-msgstr ""
+msgstr "일반 계정과목표"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report
@@ -9288,6 +9306,11 @@ msgstr "재정 위치가 변경되었습니다."
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_iban_warning
 msgid "Has Iban Warning"
 msgstr "IBAN 주의 사항이 있습니다."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__has_invalid_analytics
+msgid "Has Invalid Analytics"
+msgstr "유효하지 않은 애널리틱스 여부"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
@@ -9455,6 +9478,11 @@ msgstr "호텔"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
 msgstr "발주서 및 청구서에서 세금 총액을 계산하는 방법입니다."
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "ICE:"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -9833,7 +9861,7 @@ msgstr "수입 관세"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Import Template for Bills"
-msgstr ""
+msgstr "업체용 청구서 템플릿 가져오기"
 
 #. module: account
 #. odoo-python
@@ -9851,7 +9879,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Import Template for Invoices"
-msgstr ""
+msgstr "청구서 템플릿 가져오기"
 
 #. module: account
 #. odoo-python
@@ -9869,7 +9897,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Import Template for Refunds"
-msgstr ""
+msgstr "환불용 템플릿 가져오기"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10789,6 +10817,12 @@ msgid "Is Register Payment On Draft"
 msgstr "어음 결제 등록"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_sale_installed
+#: model:ir.model.fields,field_description:account.field_account_move__is_sale_installed
+msgid "Is Sale Installed"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_same_currency
 msgid "Is Same Currency"
 msgstr "동일한 통화입니다."
@@ -11015,7 +11049,7 @@ msgstr "전표 항목"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
 msgid "Journal Items (DEPRECATED)"
-msgstr ""
+msgstr "전표 항목 (사용 중지됨)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -12000,7 +12034,7 @@ msgstr "방법"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_ground_transportation
 msgid "Mileage, taxi and parking"
-msgstr ""
+msgstr "마일리지, 택시 및 주차"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -15641,12 +15675,12 @@ msgstr "청구서 자체 발행"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Self Billing Credit Note"
-msgstr ""
+msgstr "내부 청구서 발행용 신용장"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_self_billing_credit_note
 msgid "Self-billing credit note: Sending"
-msgstr ""
+msgstr "내부 발행 신용장: 보내기"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_self_billing_invoice
@@ -16018,7 +16052,7 @@ msgstr "회계 기능 표시 - 읽기 전용"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Show Composition"
-msgstr ""
+msgstr "구성 내용 표시"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
@@ -16097,7 +16131,7 @@ msgstr "지급조건 세부 내역 표시"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Show Prices"
-msgstr ""
+msgstr "가격 표시"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -16109,7 +16143,7 @@ msgstr "미결로 초기화 버튼 표시"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_taxable_supply_date
 #: model:ir.model.fields,field_description:account.field_account_move__show_taxable_supply_date
 msgid "Show Taxable Supply Date"
-msgstr ""
+msgstr "과세 공급일 표시"
 
 #. module: account
 #. odoo-python
@@ -16404,6 +16438,11 @@ msgstr "설정 완료!"
 #: model:account.account,name:account.1_stock_valuation
 msgid "Stock Valuation"
 msgstr "재고 평가"
+
+#. module: account
+#: model:account.account,name:account.1_stock_variation
+msgid "Stock Variation"
+msgstr "재고 세부 옵션"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16987,7 +17026,7 @@ msgstr "과세 기준일"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__taxable_supply_date_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__taxable_supply_date_placeholder
 msgid "Taxable Supply Date Placeholder"
-msgstr ""
+msgstr "과세 공급일자 자리표시자"
 
 #. module: account
 #. odoo-python
@@ -18659,8 +18698,8 @@ msgstr "해당일을 포함하여 선택한 날짜까지 반복 발행됩니다,
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "This setting cannot be changed after an invoice is created."
-msgstr "이 설정은 청구서가 생성된 후에는 변경할 수 없습니다."
+msgid "This setting locks once a journal entry is created."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20467,14 +20506,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-msgid ""
-"You cannot have more than one account with \"Current Year Earnings\" as "
-"type. (accounts: %s)"
-msgstr "\"현재 연도 수익\" 계정은 하나만 있어야 합니다. (계정 : %s)"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/company.py:0
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
@@ -21404,6 +21435,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} 내부 발행 신용장 (Ref {{ object.name or 'n/"
+"a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_invoice
@@ -21411,6 +21444,16 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+"{{ object.company_id.name }} 내부 발행 청구서 (Ref {{ object.name or 'n/"
+"a' }})"
+
+#~ msgid ""
+#~ "You cannot have more than one account with \"Current Year Earnings\" as "
+#~ "type. (accounts: %s)"
+#~ msgstr "\"현재 연도 수익\" 계정은 하나만 있어야 합니다. (계정 : %s)"
+
+#~ msgid "This setting cannot be changed after an invoice is created."
+#~ msgstr "이 설정은 청구서가 생성된 후에는 변경할 수 없습니다."
 
 #~ msgid ""
 #~ "%(tax_account)s (%(account_name)s) should be an account of type \"%"

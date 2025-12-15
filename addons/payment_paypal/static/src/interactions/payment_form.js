@@ -92,7 +92,7 @@ patch(PaymentForm.prototype, {
         const currentPayPalData = this.paypalData[paymentOptionId];
         if (currentPayPalData && this.selectedOptionId !== paymentOptionId) {
             const paypalSDKURL = this.paypalData[paymentOptionId]['sdkURL']
-            await this.waitFor(loadJS(paypalSDKURL));
+            await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
             this.paypalData[this.selectedOptionId]['enabledButtons'].forEach(btn => btn.show());
             this.paypalData[this.selectedOptionId]['disabledButtons'].forEach(btn => btn.show());
         }
@@ -111,7 +111,7 @@ patch(PaymentForm.prototype, {
             const paypalSDKURL = `https://www.paypal.com/sdk/js?client-id=${
                 client_id}&components=buttons&currency=${currency_code}&intent=capture`;
             this.paypalData[paymentOptionId]['sdkURL'] = paypalSDKURL;
-            await this.waitFor(loadJS(paypalSDKURL));
+            await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
 
             // Create the two sets of PayPal buttons.
             // See https://developer.paypal.com/sdk/js/reference.
@@ -158,6 +158,22 @@ patch(PaymentForm.prototype, {
             buttonContainer.classList.remove('d-none');
         }
         this.selectedOptionId = paymentOptionId;
+    },
+
+    /**
+     * Load the JS from the PayPal SDK URL and set an identifier dedicated to Odoo, for PayPal to be
+     * able to recognize which transactions are originating from Odoo.
+     *
+     * @private
+     * @param {string} paypalSDKURL - The SDK URL that needs to be loaded on the page.
+     * @return {void}
+     */
+    async _paypalLoadSDK(paypalSDKURL) {
+        await loadJS(paypalSDKURL);
+        const paypalSDKs = document.querySelectorAll(`script[src="${paypalSDKURL}"]`);
+        [...paypalSDKs].forEach(sdk => {
+            sdk.setAttribute('data-partner-attribution-id', 'OdooInc_SP_EC');
+        });
     },
 
     // #=== PAYMENT FLOW ===#

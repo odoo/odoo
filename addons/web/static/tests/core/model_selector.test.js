@@ -215,3 +215,15 @@ test("model_selector: with an initial value", async () => {
     await mountModelSelector(["model.1", "model.2", "model.3"], "Model 1");
     expect(".o-autocomplete--input").toHaveValue("Model 1");
 });
+
+test("model_selector: autofocus", async () => {
+    await mountWithCleanup(ModelSelector, {
+        props: {
+            models: ["model.1"],
+            autofocus: true,
+            onModelSelected: () => {},
+        },
+    });
+    const input = queryAll("input.o-autocomplete--input")[0];
+    expect(input).toBe(document.activeElement);
+});

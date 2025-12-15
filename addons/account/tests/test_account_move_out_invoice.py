@@ -4946,3 +4946,59 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {'balance': -851053.94},
             {'balance': 851053.94},
         ])
+
+    def test_tax_recomputed_when_changing_base_lines(self):
+        percent_tax = self.company_data['default_tax_sale']
+
+        invoice = self.init_invoice('out_invoice', self.partner_a, '2019-01-01', amounts=[500.0, 900.0], taxes=[percent_tax])
+
+        invoice.invoice_line_ids = [
+            Command.unlink(invoice.line_ids[1].id),
+            Command.create({
+                'name': 'line3',
+                'debit': 100.0,
+                'credit': 0.0,
+                'account_id': self.company_data['default_account_revenue'].id,
+            }),
+        ]
+
+        tax_line = invoice.line_ids.filtered('tax_repartition_line_id')
+        self.assertRecordValues(tax_line, [
+            {
+                'balance': -75.0,
+                'tax_base_amount': -500.0,
+                'tax_line_id': percent_tax.id,
+            }
+        ])
+
+    def test_out_invoice_custom_currency_rate(self):
+        ''' Check the invoice_date will be set automatically at the post date. '''
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.other_currency.id,
+            'invoice_currency_rate': 5,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id})],
+            'invoice_date': False,
+        })
+        expected_lines_vals = [
+            {
+                'balance': -400.0,
+                'amount_currency': -2000.0,
+            },
+            {
+                'balance': -60.0,
+                'amount_currency': -300.0,
+            },
+            {
+                'balance': 460.0,
+                'amount_currency': 2300.0,
+            },
+        ]
+        self.assertRecordValues(move.line_ids, expected_lines_vals)
+        move.action_post()
+        self.assertRecordValues(move.line_ids, expected_lines_vals)
+        self.assertRecordValues(move, [{
+            'invoice_currency_rate': 5.0,
+            'expected_currency_rate': 2.0,
+        }])

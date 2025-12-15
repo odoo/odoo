@@ -39,7 +39,7 @@ class AccountMove(models.Model):
         # Post entries.
         res = super()._post(soft)
 
-        self.line_ids._get_stock_moves()._set_value()
+        self.line_ids._get_stock_moves().filtered(lambda m: m.is_in)._set_value()
 
         return res
 
@@ -47,7 +47,8 @@ class AccountMove(models.Model):
         res = super().button_draft()
 
         # Unlink the COGS lines generated during the 'post' method.
-        self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
+        with self.env.protecting(self.env['account.move']._get_protected_vals({}, self)):
+            self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
         return res
 
     def button_cancel(self):

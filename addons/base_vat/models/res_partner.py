@@ -306,12 +306,15 @@ class ResPartner(models.Model):
             return True
         return stdnum.util.get_cc_module('gr', 'vat').is_valid(vat)
 
+    # Our EDI provider Infile has designated this range of testing VATs for our customers.
+    __check_vat_gt_testing_infile = re.compile(r'98[0-9]{10}K')
+
     def check_vat_gt(self, vat):
         """
         Allow some custom Guatemala NIT numbers to pass the test to be used for testing the Guatemalan EDI.
         """
         guatemalan_test_vats = ('11201220K', '11201350K')
-        if vat in guatemalan_test_vats:
+        if vat in guatemalan_test_vats or self.__check_vat_gt_testing_infile.match(vat):
             return True
         return stdnum.util.get_cc_module('gt', 'vat').is_valid(vat)
 
@@ -826,3 +829,10 @@ class ResPartner(models.Model):
         if self.env.context.get('import_file'):
             self.env.remove_to_compute(self._fields['vies_valid'], self)
         return res
+
+    def _create_contact_parent_company(self):
+        new_company = super()._create_contact_parent_company()
+        if new_company and self.vies_valid:
+            new_company.env.remove_to_compute(self._fields['vies_valid'], new_company)
+            new_company.vies_valid = self.vies_valid
+        return new_company

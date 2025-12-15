@@ -176,7 +176,7 @@
 </t>
 
 <t t-name="mail.Composer.extraActions">
-    <div class="me-2" t-attf-class="{{ actionsContainerClass }}">
+    <div class="me-2 o-mail-Composer-extraActions" t-attf-class="{{ actionsContainerClass }}" t-ref="extra-actions">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <ActionList actions="partitionedActions.other" inline="true"/>
         </div>
@@ -197,6 +197,9 @@
         <ImStatus t-if="partner" persona="partner"/>
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="partner.name"/>
+            <t t-if="option.thread and partner.name !== option.thread.getPersonaName(partner)">
+                "<t t-esc="option.thread.getPersonaName(partner)"/>"
+            </t>
         </strong>
         <span t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</span>
     </t>

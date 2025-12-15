@@ -57,7 +57,7 @@ test("Can set a color to a highlight", async () => {
     await animationFrame();
     await click("#colorButton");
     await animationFrame();
-    await click("button[style='background-color: var(--o-color-2)']");
+    await click("button[style='background-color: var(--hb-cp-o-color-2)']");
     await animationFrame();
     const color = getComputedStyle(document.documentElement).getPropertyValue("--o-color-2");
     expect("span.o_text_highlight_freehand_2").toHaveStyle({

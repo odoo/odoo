@@ -16,6 +16,11 @@ class AccountPayment(models.Model):
             payment.outstanding_account_id = payment.expense_ids._get_expense_account_destination()
         super(AccountPayment, self - expense_company_payments)._compute_outstanding_account_id()
 
+    def _compute_show_require_partner_bank(self):
+        expense_payments = self.filtered(lambda pay: pay.move_id.expense_ids)
+        super(AccountPayment, self - expense_payments)._compute_show_require_partner_bank()
+        expense_payments.require_partner_bank_account = False
+
     def write(self, vals):
         trigger_fields = {
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference',

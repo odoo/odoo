@@ -1,8 +1,15 @@
 /** @odoo-module */
 
 import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
-import { createMock, HootError, MIME_TYPE, MockEventTarget } from "../hoot_utils";
-import { getSyncValue, setSyncValue } from "./sync_values";
+import {
+    createMock,
+    getSyncValue,
+    HootError,
+    MIME_TYPE,
+    MockEventTarget,
+    setSyncValue,
+} from "../hoot_utils";
+import { ensureTest } from "../main_runner";
 
 /**
  * @typedef {"android" | "ios" | "linux" | "mac" | "windows"} Platform
@@ -220,7 +227,7 @@ export class MockClipboardItem extends ClipboardItem {
     // Added synchronous methods to enhance speed in tests
 
     async getType(type) {
-        return getSyncValue(this)[type];
+        return getSyncValue(this, false)[type];
     }
 }
 
@@ -291,6 +298,7 @@ export function cleanupNavigator() {
  * @param {PermissionState} [value]
  */
 export function mockPermission(name, value) {
+    ensureTest("mockPermission");
     if (!(name in currentPermissions)) {
         throw new TypeError(
             `The provided value '${name}' is not a valid enum value of type PermissionName`
@@ -310,6 +318,7 @@ export function mockPermission(name, value) {
  * @param {Navigator["sendBeacon"]} callback
  */
 export function mockSendBeacon(callback) {
+    ensureTest("mockSendBeacon");
     mockValues.sendBeacon = callback;
 }
 
@@ -317,6 +326,7 @@ export function mockSendBeacon(callback) {
  * @param {Platform} platform
  */
 export function mockUserAgent(platform = "linux") {
+    ensureTest("mockUserAgent");
     mockValues.userAgent = makeUserAgent(platform);
 }
 
@@ -324,5 +334,6 @@ export function mockUserAgent(platform = "linux") {
  * @param {Navigator["vibrate"]} callback
  */
 export function mockVibrate(callback) {
+    ensureTest("mockVibrate");
     mockValues.vibrate = callback;
 }

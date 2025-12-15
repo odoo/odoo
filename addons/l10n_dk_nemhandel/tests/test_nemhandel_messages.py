@@ -343,7 +343,7 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
 
         wizard = self.create_send_and_print(move_1 + move_2)
         with patch(
-            'odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20.AccountEdiXmlUbl_20._export_invoice_constraints',
+            'odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20.AccountEdiXmlUBL20._export_invoice_constraints',
             mocked_export_invoice_constraints
         ), self.enter_registry_test_mode():
             wizard.action_send_and_print()

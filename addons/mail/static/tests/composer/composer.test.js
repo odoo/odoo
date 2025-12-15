@@ -1689,8 +1689,8 @@ test("mentions can be correctly selected with ctrl+A and deleted", async () => {
     await htmlInsertText(editor, "@admin");
     await click(".o-mail-NavigableList-item", { text: "Mitchell Admin" });
     await contains(editor.editable, { text: "@Mitchell Admin" });
-    await htmlInsertText(editor, " Hello");
-    await contains(editor.editable, { textContent: "@Mitchell Admin Hello" });
+    await htmlInsertText(editor, "Hello");
+    await contains(editor.editable, { textContent: "@Mitchell Admin\u00A0Hello" });
     await focus(editor.editable);
     await press("Control+a");
     await press("Backspace");
@@ -1701,8 +1701,8 @@ test("mentions can be correctly selected with ctrl+A and deleted", async () => {
     await click(".o-mail-NavigableList-item", { text: "General" });
     await contains(editor.editable, { text: "General" });
     await contains(editor.editable.querySelector("i.fa-hashtag"));
-    await htmlInsertText(editor, " Hello");
-    await contains(editor.editable, { textContent: "General Hello" });
+    await htmlInsertText(editor, "Hello");
+    await contains(editor.editable, { textContent: "General\u00A0Hello" });
     await focus(editor.editable);
     await press("Control+a");
     await press("Backspace");
@@ -1713,8 +1713,10 @@ test("mentions can be correctly selected with ctrl+A and deleted", async () => {
     await htmlInsertText(editor, "Hello @admin");
     await click(".o-mail-NavigableList-item", { text: "Mitchell Admin" });
     await contains(editor.editable, { text: "@Mitchell Admin" });
-    await htmlInsertText(editor, " nice to meet you!");
-    await contains(editor.editable, { textContent: "Hello @Mitchell Admin nice to meet you!" });
+    await htmlInsertText(editor, "nice to meet you!");
+    await contains(editor.editable, {
+        textContent: "Hello\u00A0@Mitchell Admin\u00A0nice to meet you!",
+    });
     await focus(editor.editable);
     await press("Control+a");
     await press("Backspace");
@@ -1725,8 +1727,8 @@ test("mentions can be correctly selected with ctrl+A and deleted", async () => {
     await click(".o-mail-NavigableList-item", { text: "General" });
     await contains(editor.editable, { text: "General" });
     await contains(editor.editable.querySelector("i.fa-hashtag"));
-    await htmlInsertText(editor, " nice to meet you!");
-    await contains(editor.editable, { textContent: "Hello  General nice to meet you!" });
+    await htmlInsertText(editor, "nice to meet you!");
+    await contains(editor.editable, { textContent: "Hello\u00A0 General\u00A0nice to meet you!" });
     await focus(editor.editable);
     await press("Control+a");
     await press("Backspace");

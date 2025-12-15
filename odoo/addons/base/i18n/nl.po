@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-11-21 14:14+0000\n"
+"PO-Revision-Date: 2025-12-10 16:52+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/base/nl/>\n"
 "Language: nl\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -831,8 +831,8 @@ msgstr ""
 "\n"
 "Officiële documentatie ARCA\n"
 "\n"
-"* Digitaal BTW-boek - recordontwerp https://www.afip.gob.ar/"
-"libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
+"* Digitaal BTW-boek - recordontwerp https://www.afip.gob.ar/libro-iva-"
+"digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
 "* CITI - recordontwerp (hetzelfde als het Digitale btw-boek): https://"
 "www.afip.gob.ar/comprasyventas/documentos/"
 "RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
@@ -2810,8 +2810,9 @@ msgstr ""
 "algemeen worden deze identificatietypes gedefinieerd door de "
 "overheidsinstanties die de fiscale activiteiten regelen. Bijvoorbeeld:\n"
 "\n"
-"* ARCA in Argentinië definieert DNI, CUIT (btw voor rechtspersonen), CUIL ("
-"btw voor natuurlijke personen) en nog 80 andere geldige identificatietypen.\n"
+"* ARCA in Argentinië definieert DNI, CUIT (btw voor rechtspersonen), CUIL "
+"(btw voor natuurlijke personen) en nog 80 andere geldige "
+"identificatietypen.\n"
 "\n"
 "Elke identificatie bevat deze informatie:\n"
 "\n"
@@ -3974,8 +3975,8 @@ msgstr ""
 "bestand (.pfx). Op een UNIX-\n"
 "  systeem kan je de volgende opdrachten gebruiken:\n"
 "\n"
-"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
-"clcerts\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys "
+"-clcerts\n"
 "\n"
 "  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
 "my_cert.cer\n"
@@ -3994,8 +3995,8 @@ msgstr ""
 "  - Maak een technische gebruiker aan: Je klant moet nu een technische "
 "gebruiker aanmaken in het de online dienst\n"
 "    Toegangsbeheer. Volg deze procedure: https://www.socialsecurity.be/"
-"site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR."
-"pdf\n"
+"site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_creer_le_canal_FR.pdf\n"
 "\n"
 "  - Activeer een webservicekanaal: Zodra de technische gebruiker is "
 "aangemaakt, moet je klant\n"
@@ -4451,8 +4452,8 @@ msgstr ""
 "authenticeren bij de RSZ (.pem bestand). Op een UNIX\n"
 "  systeem kun je de volgende commando's gebruiken:\n"
 "\n"
-"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
-"clcerts\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys "
+"-clcerts\n"
 "\n"
 "  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
 "my_cert.cer\n"
@@ -4471,8 +4472,8 @@ msgstr ""
 "  - Maak een technische gebruiker aan + activeer een SFTP-kanaal: Je klant "
 "moet nu een technische gebruiker aanmaken in de Access management\n"
 "    online service. Volg deze procedure: https://www.socialsecurity.be/"
-"site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR."
-"pdf\n"
+"site_fr/general/helpcentre/rest/documents/pdf/"
+"webservices_creer_le_canal_FR.pdf\n"
 "\n"
 "  - Configureer je SFTP-client: https://www.socialsecurity.be/site_fr/"
 "general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
@@ -4490,8 +4491,8 @@ msgstr ""
 "\n"
 "- Upload de FO-, FS- en GO-bestanden naar de juiste RSZ-omgevingsmap\n"
 "  (IN, INTEST, INTEST-S).\n"
-"- Poll de OUT-mappen (OUT, OUTTEST, OUTTEST-S) voor teruggestuurde bestanden."
-"\n"
+"- Poll de OUT-mappen (OUT, OUTTEST, OUTTEST-S) voor teruggestuurde "
+"bestanden.\n"
 "- Koppel ontvangen bestanden aan de bijbehorende aangiften en medewerkers\n"
 "  indien van toepassing.\n"
 "\n"
@@ -6836,16 +6837,15 @@ msgstr ""
 "\n"
 "Als je in de elektronische dagboeken een factuur valideert, wordt deze zowel "
 "in Odoo als in ARCA gevalideerd. Deze validatie wordt\n"
-"uitgevoerd op het moment dat we de status "
-"\"goedgekeurd/goedgekeurd met opmerkingen/afgekeurd\" ontvangen van ARCA. "
-"Als de factuur\n"
+"uitgevoerd op het moment dat we de status \"goedgekeurd/goedgekeurd met "
+"opmerkingen/afgekeurd\" ontvangen van ARCA. Als de factuur\n"
 "door ARCA is afgekeurd, wordt deze niet in het systeem geplaatst en wordt er "
 "een pop-upbericht getoond met zowel de foutmelding (afkeurredenen)\n"
 "die we ontvangen en een HINT over wat het probleem zou kunnen zijn.\n"
 "\n"
-"Voor audits en troubleshooting hebben we ook een menu "
-"\"Consult Invoice in ARCA\" toegevoegd waarmee we facturen kunnen raadplegen "
-"die eerder naar ARCA zijn\n"
+"Voor audits en troubleshooting hebben we ook een menu \"Consult Invoice in "
+"ARCA\" toegevoegd waarmee we facturen kunnen raadplegen die eerder naar ARCA "
+"zijn\n"
 "gestuurd en het laatste nummer dat is gebruikt als ondersteuning voor "
 "mogelijke problemen met de synchronisatie van de sequenties tussen Odoo en "
 "ARCA.\n"
@@ -6882,8 +6882,8 @@ msgstr ""
 "    1.3. Optioneel kun je aangeven of je de facturen van leveranciers wilt "
 "kunnen verifiëren in ARCA.\n"
 "\n"
-"2. Maak verkoopdagboeken aan die elk van je ARCA POS vertegenwoordigen ("
-"beschikbaar in ARCA Portal) die je wilt gebruiken in Odoo.\n"
+"2. Maak verkoopdagboeken aan die elk van je ARCA POS vertegenwoordigen "
+"(beschikbaar in ARCA Portal) die je wilt gebruiken in Odoo.\n"
 "\n"
 "    2.1. Het veld Use Documents is standaard ingesteld\n"
 "    2.2. Stel ARCA POS System in voor een van de elektronische systemen.\n"
@@ -6963,8 +6963,8 @@ msgstr ""
 "Deze module is bedoeld om te worden uitgebreid door lokalisaties om deze "
 "documenttypes te beheren en is essentiële informatie die moet worden "
 "weergegeven in de afgedrukte rapporten en die gemakkelijk moet kunnen worden "
-"geïdentificeerd, zowel binnen de set facturen als binnen de set accountmoves."
-"\n"
+"geïdentificeerd, zowel binnen de set facturen als binnen de set "
+"accountmoves.\n"
 "\n"
 "Elk documenttype heeft zijn eigen regels en volgnummer, dit laatste is "
 "geïntegreerd met het factuurnummer en de journaalvolgorde om het de "
@@ -11057,8 +11057,8 @@ msgstr ""
 "\n"
 "Taiwan - E-facturatie\n"
 "=====================\n"
-"Met deze module kan de gebruiker zijn facturen naar het Ecpay-systeem sturen."
-"\n"
+"Met deze module kan de gebruiker zijn facturen naar het Ecpay-systeem "
+"sturen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -14409,8 +14409,8 @@ msgstr ""
 "\n"
 "Deze module introduceert een aantal geavanceerde Peppol-gerelateerde velden "
 "in het Odoo\n"
-"factuurmodel (`account.move`) en maakt ze beschikbaar op een nieuw tabblad '"
-"Extra\n"
+"factuurmodel (`account.move`) en maakt ze beschikbaar op een nieuw tabblad "
+"'Extra\n"
 "Informatie' in het gedeelte 'Overige informatie' van het factuurformulier.\n"
 "Dit is ontworpen als een aparte, optionele module om de kernfunctionaliteit\n"
 "overzichtelijk te houden en flexibel gebruik mogelijk te maken.\n"
@@ -14971,7 +14971,7 @@ msgid ""
 "can setup API keys to replace their main password.\n"
 msgstr ""
 "\n"
-"Twee-factorenauthenticatie (TOTP)\n"
+"Twee-factorauthenticatie (TOTP)\n"
 "================================\n"
 "Hiermee kunnen gebruikers tweestapsverificatie configureren op hun "
 "gebruikersaccount\n"
@@ -14987,7 +14987,7 @@ msgstr ""
 "toegang voor gebruikers\n"
 "waar het is ingeschakeld. Om RPC-scripts te kunnen uitvoeren, moet de "
 "gebruiker\n"
-"kunnen API keys instellen om hun hoofdwachtwoord te vervangen.\n"
+"kunnen API-sleutels instellen om hun hoofdwachtwoord te vervangen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr_hr_payroll
@@ -15487,8 +15487,8 @@ msgstr ""
 "myDATA is een platform dat is opgezet door de belastingdienst van "
 "Griekenland,\n"
 "The Independent Authority for Public Revenue (IAPR),\n"
-"om de aangifte van zakelijke belasting- en boekhoudgegevens te digitaliseren."
-"\n"
+"om de aangifte van zakelijke belasting- en boekhoudgegevens te "
+"digitaliseren.\n"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
@@ -16044,8 +16044,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Login / Email\" "
 "invisible=\"login != email\"/>\n"
-"                                    <i class=\"fa fa-fw fa-key text-primary\""
-" title=\"Login\" invisible=\"login == email\"/>"
+"                                    <i class=\"fa fa-fw fa-key text-"
+"primary\" title=\"Login\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -17000,12 +17000,12 @@ msgstr "API key: wizard voor het invoeren van beschrijvingen"
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "API Keys"
-msgstr "API keys"
+msgstr "API-sleutels"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
 msgid "API Keys Listing"
-msgstr "API keys lijst"
+msgstr "Lijst API-sleutels"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__api_key_duration
@@ -22570,7 +22570,7 @@ msgstr "HTML-veld opschonen overslaan"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
 msgid "C - MANUFACTURING"
-msgstr "C - PRODUCTIE"
+msgstr "C - INDUSTRIE"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__c5e
@@ -22668,8 +22668,8 @@ msgid ""
 "                                    the rightmost column (value) contains "
 "the translations"
 msgstr ""
-"CSV-formaat: je kan het direct bewerken met je favoriete spreadsheetsoftware,"
-"\n"
+"CSV-formaat: je kan het direct bewerken met je favoriete "
+"spreadsheetsoftware,\n"
 "                                    de uiterst rechtse kolom (waarde) bevat "
 "de vertalingen"
 
@@ -24200,7 +24200,7 @@ msgstr "Beperkingen met dezelfde naam zijn uniek per module."
 #: model:ir.module.module,shortdesc:base.module_construction
 #: model:res.partner.industry,name:base.res_partner_industry_F
 msgid "Construction"
-msgstr "Constructie"
+msgstr "Bouwsector"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_paptic
@@ -24626,7 +24626,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
 msgid "Create an Industry"
-msgstr "Maak een branche"
+msgstr "Maak een bedrijfstak"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_studio
@@ -25274,7 +25274,7 @@ msgstr "Ivoorkust"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_D
 msgid "D - ELECTRICITY, GAS, STEAM AND AIR CONDITIONING SUPPLY"
-msgstr "D - ELEKTRICITEITS-, GAS-, STOOM- EN AIRCONDITIONING-TOEVOER"
+msgstr "D - ELEKTRICITEIT-, GAS-, STOOM- EN AIRCONDITIONING-VOORZIENING"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl_rest
@@ -25735,7 +25735,7 @@ msgstr "Demo"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__demo
 msgid "Demo Data"
-msgstr "Demogegevens"
+msgstr "Demodata"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure_wizard
@@ -26619,7 +26619,8 @@ msgstr "Duur"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
 msgid "E - WATER SUPPLY; SEWERAGE, WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
-msgstr "E - WATERVOORZIENING; RIOOL-, AFVALBEHEER- EN SANERINGACTIVITEITEN"
+msgstr ""
+"E - WATERVOORZIENING; RIOLEN, AFVALWATERBEHEER EN SANERINGSACTIVITEITEN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_automation_website_sale
@@ -26813,7 +26814,7 @@ msgstr "Ecuador Kassa"
 #: model:ir.module.category,name:base.module_category_theme_education
 #: model:res.partner.industry,name:base.res_partner_industry_P
 msgid "Education"
-msgstr "Opleiding"
+msgstr "Onderwijs"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__egypt
@@ -27015,7 +27016,7 @@ msgstr "Werknemer aanwezigheidscontrole"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_referral
 msgid "Employee Referral"
-msgstr "Werknemer doorverwijzing"
+msgstr "Aanbevelingen"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_employees
@@ -27139,7 +27140,7 @@ msgstr "Thema Enark"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_D
 msgid "Energy supply"
-msgstr "Energie aanbod"
+msgstr "Energievoorziening"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_enrich
@@ -27929,7 +27930,7 @@ msgstr "Euro's"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_sms
 msgid "Event Attendees SMS Marketing"
-msgstr "Evenement deelnemers SMS-Marketing"
+msgstr "Evenement deelnemers Sms-marketing"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_booth_exhibitor
@@ -28435,7 +28436,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_hr_expense_extract
 msgid "Extract data from expense scans to fill them automatically"
 msgstr ""
-"Extraheer gegevens uit declaratie bonnetjes-scans om ze automatisch in te "
+"Extraheer gegevens uit scans van onkostenbonnetjes om ze automatisch in te "
 "vullen"
 
 #. module: base
@@ -28446,7 +28447,7 @@ msgstr "Onttrek data vanuit factuur scans om ze automatisch in te vullen"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_U
 msgid "Extraterritorial"
-msgstr "NGO's"
+msgstr "Extraterritoriaal"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_eyewear_shop
@@ -28456,7 +28457,7 @@ msgstr "Brillenwinkel"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_F
 msgid "F - CONSTRUCTION"
-msgstr "F - CONSTRUCTIE"
+msgstr "F - BOUW"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_fedex
@@ -29107,7 +29108,7 @@ msgstr "Foodtrucks"
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
 msgid "Food/Hospitality"
-msgstr "Eten/gastvrijheid"
+msgstr "Voeding/hospitality"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__report_footer
@@ -29591,7 +29592,8 @@ msgstr "Genereer een elektronische factuur met aangepaste nummers"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_iap_mine
 msgid "Generate Leads/Opportunities based on country, industries, size, etc."
-msgstr "Genereer leads / kansen op basis van land, sectoren, grootte, enz."
+msgstr ""
+"Genereer leads / kansen op basis van land, bedrijfstakken, grootte, enz."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_iap_reveal
@@ -29724,7 +29726,7 @@ msgstr "Krijg een nieuwe dashboard weergave in de website app"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_demo
 msgid "Get demo data for the social module"
-msgstr "Download demogegevens voor de social app"
+msgstr "Download demodata voor de social app"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_demo
@@ -29733,7 +29735,7 @@ msgid ""
 "    This module creates a social 'sandbox' where you can play around with "
 "the social app without publishing anything on actual social media."
 msgstr ""
-"Download demogegevens voor de social app.\n"
+"Download demodata voor de social app.\n"
 "Deze module maakt een sociale 'sandbox' waar je met de sociale app kunt "
 "spelen zonder iets op echte sociale media te publiceren."
 
@@ -30614,12 +30616,12 @@ msgstr "Hoe een berekend veld te definiëren"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_extract
 msgid "Hr Expense Extract"
-msgstr "HR Declaratie extractie"
+msgstr "HR Onkost-extractie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_predict_product
 msgid "Hr Expense Predict product"
-msgstr "HR Declaratie voorspel product"
+msgstr "HR Onkost voorspel product"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_extract
@@ -31651,7 +31653,7 @@ msgstr "Indonesisch verkooppunt"
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr "Sectoren"
+msgstr "Bedrijfstakken"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -31660,12 +31662,12 @@ msgstr "Sectoren"
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_form
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_tree
 msgid "Industry"
-msgstr "Branche"
+msgstr "Bedrijfstak"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_industry_data
 msgid "Industry base"
-msgstr "Branche basis"
+msgstr "Bedrijfstak basis"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__info
@@ -31799,7 +31801,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation_sms
 msgid "Integrate SMS Marketing in marketing campaigns"
-msgstr "Integreer SMS-Marketing in marketing campagnes"
+msgstr "Integreer Sms-marketing in marketingcampagnes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation_whatsapp
@@ -32028,6 +32030,15 @@ msgstr "Ongeldig JSON-formaat in Standaardwaarde-veld."
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__invalid_locators
 msgid "Invalid Locators"
 msgstr "Ongeldige lokators"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value in Default Value field. Expected type '%(field_type)s' for "
+"'%(model_name)s.%(field_name)s'."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -32688,7 +32699,7 @@ msgstr "Json"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
 msgid "K - FINANCIAL AND INSURANCE ACTIVITIES"
-msgstr "K - FINANCILE EN VERZEKERINGSACTIVITEITEN"
+msgstr "K - FINANCIËLE EN VERZEKERINGSDIENSTEN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
@@ -33772,7 +33783,7 @@ msgstr "Een vertaling laden"
 #. module: base
 #: model:ir.actions.act_window,name:base.demo_force_install_action
 msgid "Load demo data"
-msgstr "Laad demo data"
+msgstr "Demodata laden"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_loans
@@ -35727,7 +35738,7 @@ msgstr "Myanmar (Birma)"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_N
 msgid "N - ADMINISTRATIVE AND SUPPORT SERVICE ACTIVITIES"
-msgstr "N - ADMINISTRATIEVE EN ONDERSTEUNENDE DIENSTACTIVITEITEN"
+msgstr "N - ADMINISTRATIEVE EN ONDERSTEUNENDE DIENSTEN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_payment_nacha
@@ -36348,7 +36359,7 @@ msgstr "Kleuterschool, Speelgoed, Spellen, Kinderen, Jongens, Meisjes, Winkels"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
 msgid "O - PUBLIC ADMINISTRATION AND DEFENCE; COMPULSORY SOCIAL SECURITY"
-msgstr "O - OPENBAAR BESTUUR EN DEFENTIE; VERPLICHTE SOCIALE ZEKERHEID"
+msgstr "O - OPENBAAR BESTUUR EN DEFENSIE; VERPLICHTE SOCIALE ZEKERHEID"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_oauth
@@ -38817,7 +38828,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Only internal users can create API keys"
-msgstr "Alleen interne gebruikers kunnen API keys maken"
+msgstr "Alleen interne gebruikers kunnen API-sleutels"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -41949,7 +41960,7 @@ msgstr "Python-methode die een actie retourneert"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_Q
 msgid "Q - HUMAN HEALTH AND SOCIAL WORK ACTIVITIES"
-msgstr "Q - MENSELIJKE GEZONDHEID EN SOCIALE WERKACTIVITEITEN"
+msgstr "Q - MENSELIJKE GEZONDHEID EN SOCIAAL WERK"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__qweb
@@ -43076,7 +43087,7 @@ msgstr "Reünie"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_S
 msgid "S - OTHER SERVICE ACTIVITIES"
-msgstr "S - ANDERE SERVICEACTIVITEITEN"
+msgstr "S - ANDERE DIENSTVERLENINGEN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft_import
@@ -43106,12 +43117,12 @@ msgstr "SEPA betalingen voor Loonadministratie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sms
 msgid "SMS Marketing"
-msgstr "SMS-Marketing"
+msgstr "Sms-marketing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
 msgid "SMS Marketing in Marketing Automation"
-msgstr "SMS-Marketing in marketingautomatisering"
+msgstr "Sms-marketing in marketingautomatisering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_mail_sms
@@ -43789,7 +43800,7 @@ msgstr "Zoek partnercategorie"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
 msgid "Search Partner Industry"
-msgstr "Zoek branche van partner"
+msgstr "Zoek bedrijfstak van partner"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view_id
@@ -44034,7 +44045,8 @@ msgstr "Webhook notificatie verzenden"
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_stock
 msgid "Send WhatsApp messages when a stock transfer is validated"
-msgstr "WhatsApp-berichten sturen wanneer een voorraadoverdracht is gevalideerd"
+msgstr ""
+"WhatsApp-berichten sturen wanneer een voorraadoverdracht is gevalideerd"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sign
@@ -45099,8 +45111,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
 msgid "Specify industries to classify your contacts and draw up reports."
 msgstr ""
-"Specificeer sectoren om je contacten te classificeren en rapportages op te "
-"stellen."
+"Specificeer bedrijfstakken om je contacten te classificeren en rapportages "
+"op te stellen."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__crud_model_id
@@ -45563,7 +45575,7 @@ msgstr "Bewaar verlofdocumenten van werknemers in de Document-app"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_expense
 msgid "Store expense documents in the Document app"
-msgstr "Sla declaratie-documenten op in de Documenten-app"
+msgstr "Sla onkost-documenten op in de Documenten-app"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_l10n_ch_hr_payroll
@@ -45926,9 +45938,8 @@ msgid ""
 "T - ACTIVITIES OF HOUSEHOLDS AS EMPLOYERS; UNDIFFERENTIATED GOODS- AND "
 "SERVICES-PRODUCING ACTIVITIES OF HOUSEHOLDS FOR OWN USE"
 msgstr ""
-"T - ACTIVITEITEN VAN HUISHOUDENS ALS WERKGEVER; NIET-GEDIFFERENTIEERDE "
-"GOEDEREN- EN DIENSTENPRODUCERENDE ACTIVITEITEN VAN HUISHOUDENS VOOR EIGEN "
-"GEBRUIK"
+"T - HUISHOUDENS ALS WERKGEVER; NIET-GEDIFFERENTIEERDE GOEDEREN- EN "
+"DIENSTENPRODUCERENDE ACTIVITEITEN VAN HUISHOUDENS VOOR EIGEN GEBRUIK"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__format__tgz
@@ -48437,8 +48448,9 @@ msgstr "Traces synchronisatie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
+#, fuzzy
 msgid "Track Speakers SMS Marketing"
-msgstr "Volg Sprekers SMS-Marketing"
+msgstr "Volg Sprekers Sms-marketing"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
@@ -48699,8 +48711,8 @@ msgstr ""
 "\n"
 "- 'Werk een record bij': werk de waarden van een record bij\n"
 "- 'Activiteit aanmaken': maak een activiteit (Chat)\n"
-"- 'E-mail sturen': plaats een bericht, een notitie of stuur een e-mail (Chat)"
-"\n"
+"- 'E-mail sturen': plaats een bericht, een notitie of stuur een e-mail "
+"(Chat)\n"
 "- 'Sms sturen': stuur een sms, log ze op documenten (sms)\n"
 "- 'Volgers toevoegen/verwijderen': voeg volgers toe of verwijder volgers van "
 "een record (Chat)\n"
@@ -49752,7 +49764,7 @@ msgstr "Gebruikers & Bedrijven"
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys
 msgid "Users API Keys"
-msgstr "API Keys gebruikers"
+msgstr "API-sleutels gebruikers"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_deletion
@@ -50616,8 +50628,8 @@ msgid ""
 "When re-invoicing the expense on the SO, set the cost to the total untaxed "
 "amount of the expense."
 msgstr ""
-"Wanneer je de declaratie opnieuw factureert op de verkooporder, stel je de "
-"kosten in op het totale onbelaste bedrag van de declaratie."
+"Wanneer je de onkost opnieuw factureert op de verkooporder, stel je de "
+"kosten in op het totale onbelaste bedrag van de onkost."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -50992,7 +51004,7 @@ msgstr "Je kunt niet twee gebruikers met dezelfde login hebben!"
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
 msgstr ""
-"Je kunt API keys alleen verwijderen als ze van je zijn of als je een "
+"Je kunt API-sleutels alleen verwijderen als ze van je zijn of als je een "
 "systeemgebruiker bent"
 
 #. module: base

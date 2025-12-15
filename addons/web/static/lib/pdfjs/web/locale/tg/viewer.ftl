@@ -433,7 +433,10 @@ pdfjs-editor-new-alt-text-dialog-add-label = Илова кардани матн�
 pdfjs-editor-new-alt-text-textarea =
     .placeholder = Тафсири худро дар ин ҷо нависед…
 pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Маълумоти бештар
+pdfjs-editor-new-alt-text-create-automatically-button-label = Ба таври худкор эҷод кардани матни иловагӣ
 pdfjs-editor-new-alt-text-not-now-button = Ҳоло не
+pdfjs-editor-new-alt-text-error-title = Матни иловагӣ ба таври худкор эҷод карда нашуд
+pdfjs-editor-new-alt-text-error-description = Лутфан, матни иловагии худро ворид кунед ё баъдтар аз нав кӯшиш кунед.
 pdfjs-editor-new-alt-text-error-close-button = Пӯшидан
 # This is a button that users can click to edit the alt text they have already added.
 pdfjs-editor-new-alt-text-added-button-label = Матни иловагӣ илова карда шуд

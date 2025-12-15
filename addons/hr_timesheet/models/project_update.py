@@ -33,7 +33,7 @@ class ProjectUpdate(models.Model):
             project.sudo().last_update_id = update
             update.write({
                 "uom_id": encode_uom,
-                "allocated_time": round(project.allocated_hours / ratio),
-                "timesheet_time": round(project.sudo().total_timesheet_time / ratio),
+                "allocated_time": round(project.allocated_hours * ratio),
+                "timesheet_time": round(project.sudo().total_timesheet_time),
             })
         return updates

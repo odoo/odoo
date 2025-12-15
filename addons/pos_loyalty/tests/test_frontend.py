@@ -1308,6 +1308,37 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
 
+        # Adding a third program whose first reward should not be applied during the Tour
+        # Its purpose is to confirm that the 'not ilike' logic is properly converted into 'in'
+        self.env['loyalty.program'].create({
+            'name': 'Discount on Specific Products - Product B',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'minimum_qty': 1,
+                'reward_point_amount': 2,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 1,
+                'description': '10$ on your order - Product B - Not Saleable',
+                'discount_mode': 'per_order',
+                'discount': 10,
+                'discount_applicability': 'specific',
+                'discount_product_domain': '["&", ("categ_id", "not ilike", "Saleable"), ("name", "=", "Product B")]',
+            }),
+            (0, 0, {
+                'reward_type': 'discount',
+                'required_points': 1,
+                'description': '10$ on your order - Product B - Saleable',
+                'discount_mode': 'per_order',
+                'discount': 10,
+                'discount_applicability': 'specific',
+                'discount_product_domain': '["&", ("categ_id", "ilike", "Saleable"), ("name", "=", "Product B")]',
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
         self.main_pos_config.open_ui()
         self.start_pos_tour("PosLoyaltySpecificDiscountWithRewardProductDomainTour")
 

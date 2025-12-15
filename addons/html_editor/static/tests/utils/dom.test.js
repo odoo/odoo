@@ -1,8 +1,9 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { setupEditor } from "../_helpers/editor";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import {
     cleanTextNode,
     fillEmpty,
+    removeInvisibleWhitespace,
     splitTextNode,
     wrapInlinesInBlocks,
 } from "@html_editor/utils/dom";
@@ -409,5 +410,34 @@ describe("fillEmpty", () => {
         const div = el.firstChild;
         fillEmpty(div);
         expect(el.innerHTML).toBe('<div class="o-paragraph"><canvas></canvas></div>');
+    });
+});
+
+describe("removeInvisibleWhitespace", () => {
+    test("should remove invisible whitespace from an element and preserve the selection", async () => {
+        await testEditor({
+            contentBefore: `<p>
+                <u>
+                    abc
+                </u>
+                def
+                <span>
+                    <b>
+                        ghi
+                    </b>
+                    jkl
+                </span>
+                mno
+                <i>
+                    pqr
+                </i>
+            </p>`,
+            stepFunction: (editor) => {
+                const cursors = editor.shared.selection.preserveSelection();
+                removeInvisibleWhitespace(editor.editable.querySelector("p"), cursors);
+                cursors.restore();
+            },
+            contentAfter: `<p><u>abc</u> def<span><b> ghi</b> jkl</span> mno<i> pqr</i></p>`,
+        });
     });
 });

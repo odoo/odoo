@@ -124,6 +124,18 @@ class TestTaxesComputation(TestTaxCommonAccountTaxPython):
             },
             product_values={"volume": 7.0},
         )
+        self.assert_python_taxes_computation(
+            "uom.relative_factor",
+            100.0,
+            {
+                'total_included': 142.0,
+                'total_excluded': 100.0,
+                'taxes_data': (
+                    (100.0, 42.0),
+                ),
+            },
+            product_uom_values={'relative_factor': 42.0},
+        )
         self._run_js_tests()
 
     def test_invalid_formula(self):
@@ -180,7 +192,7 @@ class TestTaxesComputation(TestTaxCommonAccountTaxPython):
         for formula, expected_normalized, expected_fields in valid_cases:
             with self.subTest(code=formula):
                 normalized_formula, accessed_fields = normalize_formula(self.env, formula)
-                self.assertEqual(accessed_fields, expected_fields)
+                self.assertEqual(accessed_fields['product.product'], expected_fields)
                 self.assertEqual(normalized_formula, expected_normalized)
 
     def test_ast_validator(self):

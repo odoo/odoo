@@ -47,6 +47,7 @@ import { DebugWidget } from "../utils/debug/debug_widget";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
+import { initLNA } from "../utils/init_lna";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -176,6 +177,8 @@ export class PosStore extends WithLazyGetterTrap {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
+
+        initLNA(this.notification);
     }
 
     navigate(routeName, routeParams = {}) {
@@ -494,6 +497,43 @@ export class PosStore extends WithLazyGetterTrap {
                 products[i].available_in_pos = false;
             }
         }
+
+        this.productAttributesExclusion = this.computeProductAttributesExclusion();
+    }
+
+    computeProductAttributesExclusion(excl = false) {
+        const exclusions = this.productAttributesExclusion || new Map();
+
+        const addExclusion = (key, value) => {
+            if (!exclusions.has(key)) {
+                exclusions.set(key, new Set());
+            }
+            exclusions.get(key).add(value);
+        };
+
+        for (const exclusion of excl ||
+            this.models["product.template.attribute.exclusion"].getAll()) {
+            const ptavId = exclusion.product_template_attribute_value_id.id;
+            for (const { id: valueId } of exclusion.value_ids) {
+                addExclusion(ptavId, valueId);
+                addExclusion(valueId, ptavId);
+            }
+        }
+        return exclusions;
+    }
+
+    doHaveConflictWith(value, selectedValues) {
+        const exclusions = this.productAttributesExclusion.get(value.id);
+        if (!exclusions) {
+            return false;
+        }
+        const selectedValueIds = new Set(selectedValues.map((v) => v.id));
+        for (const exclusionId of exclusions) {
+            if (selectedValueIds.has(exclusionId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     async onDeleteOrder(order) {
@@ -593,6 +633,9 @@ export class PosStore extends WithLazyGetterTrap {
             [odoo.pos_config_id, domain, offset, limit],
             {},
             false
+        );
+        this.productAttributesExclusion = this.computeProductAttributesExclusion(
+            result["product.template.attribute.exclusion"]
         );
         return result;
     }
@@ -2293,6 +2336,45 @@ export class PosStore extends WithLazyGetterTrap {
 
         return payload;
     }
+    async editLotsRefund(line) {
+        const product = line.getProduct();
+        const packLotLinesToEdit = line.pack_lot_ids.map((p) => ({
+            id: p.id,
+            text: p.lot_name,
+        }));
+        const alreadyRefundedLots = line.refunded_orderline_id.refund_orderline_ids
+            .filter((item) => !["cancel", "draft"].includes(item.order_id.state))
+            .flatMap((item) => item.pack_lot_ids)
+            .map((p) => p.lot_name);
+        const options = line.refunded_orderline_id.pack_lot_ids
+            .map((p) => ({ id: p.id, name: p.lot_name, product_qty: line.qty }))
+            .filter((lot) => !alreadyRefundedLots.includes(lot.name));
+        const payload = await makeAwaitable(this.dialog, SelectLotPopup, {
+            title: _t("Lot/Serial number(s) required for"),
+            name: product.display_name,
+            isSingleItem: product.isAllowOnlyOneLot(),
+            array: packLotLinesToEdit,
+            options: options,
+            customInput: false,
+            uniqueValues: product.tracking === "serial",
+            isLotNameUsed: () => false,
+        });
+        if (payload) {
+            const modifiedPackLotLines = {};
+            const newPackLotLines = [];
+            for (const item of payload) {
+                if (item.id) {
+                    modifiedPackLotLines[item.id] = item.text;
+                } else {
+                    newPackLotLines.push({ lot_name: item.text });
+                }
+            }
+            return { modifiedPackLotLines, newPackLotLines };
+        } else {
+            return null;
+        }
+    }
+
     async editLots(product, packLotLinesToEdit) {
         const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
         let canCreateLots = this.pickingType.use_create_lots || !this.pickingType.use_existing_lots;

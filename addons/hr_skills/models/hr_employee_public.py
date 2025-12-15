@@ -11,3 +11,4 @@ class HrEmployeePublic(models.Model):
         domain=[('skill_type_id.active', '=', True)])
     current_employee_skill_ids = fields.One2many('hr.employee.skill', related='employee_id.current_employee_skill_ids')
     certification_ids = fields.One2many('hr.employee.skill', related='employee_id.certification_ids')
+    display_certification_page = fields.Boolean(related="employee_id.display_certification_page")

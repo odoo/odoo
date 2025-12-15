@@ -197,7 +197,7 @@ class MailScheduledMessage(models.Model):
                     subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
                     **{k: v for k, v in json.loads(scheduled_message.notification_parameters or '{}').items() if k in notification_parameters_whitelist},
                 )
-                self._message_created_hook(message)
+                scheduled_message._message_created_hook(message)
                 if auto_commit:
                     self.env.cr.commit()
             except Exception:

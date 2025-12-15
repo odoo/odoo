@@ -1459,6 +1459,7 @@ class ChromeBrowser:
             '--disable-translate': '',
             '--no-sandbox': '',
             '--disable-gpu': '',
+            '--mute-audio': '',
         }
         switches = {
             # required for tours that use Youtube autoplay conditions (namely website_slides' "course_tour")
@@ -1673,7 +1674,7 @@ class ChromeBrowser:
             self._websocket_send(cmd, params={'requestId': params['requestId'], **response})
         except websocket.WebSocketConnectionClosedException:
             pass
-        except (BrokenPipeError, ConnectionResetError):
+        except (BrokenPipeError, ConnectionResetError, OSError):
             # this can happen if the browser is closed. Just ignore it.
             _logger.info("Websocket error while handling request %s", params['request']['url'])
 
@@ -2068,7 +2069,7 @@ class Screencaster:
                 '-y', '-loglevel', 'warning',
                 '-f', 'concat', '-safe', '0', '-i', concat_script_path,
                 '-vf', 'pad=ceil(iw/2)*2:ceil(ih/2)*2',
-                '-pix_fmt', 'yuv420p', '-g', '0',
+                '-c:v', 'libx265', '-x265-params', 'lossless=1',
                 outfile,
             ], preexec_fn=_preexec, check=True)
         except subprocess.CalledProcessError:

@@ -110,9 +110,9 @@
                 <img t-if="!props.thread.parent_channel_id" class="rounded-3 object-fit-cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
                 <i t-else="" class="fa fa-comments-o text-muted" role="presentation"/>
             </div>
-            <div role="heading" aria-level="1" t-att-class="{ 'fs-1': !env.inChatWindow, 'fs-3': env.inChatWindow }" t-esc="startMessageTitle"/>
+            <div role="heading" aria-level="1" class="text-break" t-att-class="{ 'fs-1': !env.inChatWindow, 'fs-3': env.inChatWindow }" t-esc="startMessageTitle"/>
         </div>
-        <p class="text-muted mb-0 small" t-esc="startMessageSubtitle"/>
+        <p class="text-muted mb-0 small text-break" t-esc="startMessageSubtitle"/>
     </div>
 </t>
 </templates>

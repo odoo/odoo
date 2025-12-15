@@ -864,7 +864,7 @@ describe("Selection collapsed", () => {
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "acd", textareaRange: 1 }) +
                         '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-                    contentAfter: `<pre data-language-id="plaintext">acd</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">acd</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -882,7 +882,7 @@ describe("Selection collapsed", () => {
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "     acd", textareaRange: 6 }) +
                         '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-                    contentAfter: `<pre data-language-id="plaintext">     acd</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">     acd</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -900,7 +900,7 @@ describe("Selection collapsed", () => {
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "acd     ", textareaRange: 1 }) +
                         '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-                    contentAfter: `<pre data-language-id="plaintext">acd     </pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">acd     </pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -918,7 +918,7 @@ describe("Selection collapsed", () => {
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "     acd     ", textareaRange: 6 }) +
                         '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-                    contentAfter: `<pre data-language-id="plaintext">     acd     </pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">     acd     </pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -936,7 +936,7 @@ describe("Selection collapsed", () => {
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "    ab", textareaRange: 2 }) +
                         '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-                    contentAfter: `<pre data-language-id="plaintext">    ab</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">    ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -954,7 +954,7 @@ describe("Selection collapsed", () => {
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "abcd", textareaRange: 2 }) +
                         '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-                    contentAfter: `<pre data-language-id="plaintext">abcd</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">abcd</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -978,7 +978,7 @@ describe("Selection collapsed", () => {
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "ab", textareaRange: 0 }) +
                         '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-                    contentAfter: `<pre data-language-id="plaintext">ab</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -1002,7 +1002,7 @@ describe("Selection collapsed", () => {
                         '<p data-selection-placeholder=""><br></p>' +
                         highlightedPre({ value: "ab", textareaRange: 2 }) +
                         '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
-                    contentAfter: `<pre data-language-id="plaintext">ab</pre>[]`,
+                    contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">ab</pre>[]`,
                     config: configWithEmbeddings,
                 });
             });
@@ -2114,12 +2114,22 @@ describe("Selection not collapsed", () => {
         });
     });
 
-    test("should delete if first element and append in paragraph", async () => {
+    test("should convert empty blockquote into base container regardless of its position in editable", async () => {
         await testEditor({
             contentBefore: `<blockquote><br>[]</blockquote>`,
             stepFunction: deleteBackward,
-            contentAfter: `<p>[]<br></p>`,
+            contentAfter: `<div>[]<br></div>`,
+            config: { baseContainers: ["DIV"] },
         });
+        await testEditor({
+            contentBefore: `<div><br></div><blockquote><br>[]</blockquote>`,
+            stepFunction: deleteBackward,
+            contentAfter: `<div><br></div><div>[]<br></div>`,
+            config: { baseContainers: ["DIV"] },
+        });
+    });
+
+    test("should delete if first element and append in paragraph", async () => {
         await testEditor({
             contentBefore: `<h1><br>[]</h1>`,
             stepFunction: deleteBackward,

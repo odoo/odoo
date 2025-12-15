@@ -44,6 +44,22 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'work_entry_type_id': cls.work_entry_type_remote.id,
         })
 
+        cls.half_day_leave_type = cls.env['hr.leave.type'].create({
+            'name': 'Half-Day Leaves',
+            'time_type': 'leave',
+            'request_unit': 'half_day',
+            'work_entry_type_id': cls.work_entry_type_leave.id,
+            'requires_allocation': False,
+        })
+
+        cls.hours_leave_type = cls.env['hr.leave.type'].create({
+            'name': 'Hours Leaves',
+            'time_type': 'leave',
+            'request_unit': 'hour',
+            'work_entry_type_id': cls.work_entry_type_leave.id,
+            'requires_allocation': False,
+        })
+
         cls.external_company = cls.env['res.company'].create({'name': 'External Test company'})
         cls.external_user_employee = mail_new_test_user(cls.env, login='external', password='external', groups='base.group_user')
         cls.employee_external = cls.env['hr.employee'].create({
@@ -209,3 +225,85 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         )
         leave_work_entry = self.env['hr.work.entry'].search([('employee_id', '=', self.employee_external.id), ('work_entry_type_id', '=', leave.holiday_status_id.work_entry_type_id.id)])
         self.assertIsNotNone(leave_work_entry, "Leave's work entry should have the same work entry type")
+
+    def test_work_entries_overlap_half_day_leaves(self):
+        """Test that half-day leaves correctly split work entries across multiple days.
+        When a half-day leave spans two days (AM on day 1, AM on day 2), verify that:
+        - The full-day work entry on day 1 is completely replaced by a leave entry
+        - The full-day work entry on day 2 is split into a leave entry and attendance entry
+        - All durations are correctly calculated (8h full day, 4h half day)
+        """
+        self.richard_emp.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
+        work_entries = self.env["hr.work.entry"].search([
+            ("employee_id", "=", self.richard_emp.id),
+            ("date", ">=", date(2025, 11, 27)),
+            ("date", "<=", date(2025, 11, 28)),
+        ])
+        self.assertEqual(2, len(work_entries))
+        self.assertTrue(all(we.duration == 8.0 for we in work_entries))
+        attendance_work_entry_type = work_entries[0].work_entry_type_id
+        leave = self.env['hr.leave'].create({
+            'name': 'Half-Day Leave',
+            'employee_id': self.richard_emp.id,
+            'request_date_from': date(2025, 11, 27),
+            'request_date_from_period': 'am',
+            'request_date_to': date(2025, 11, 28),
+            'request_date_to_period': 'am',
+            'holiday_status_id': self.half_day_leave_type.id,
+        })
+        leave.action_approve()
+        work_entries = self.env["hr.work.entry"].search([
+            ("employee_id", "=", self.richard_emp.id),
+            ("date", ">=", date(2025, 11, 27)),
+            ("date", "<=", date(2025, 11, 28)),
+        ])
+        self.assertEqual(3, len(work_entries))
+        attendance_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id == attendance_work_entry_type)
+        self.assertEqual(1, len(attendance_work_entry))
+        self.assertEqual(4.0, attendance_work_entry.duration)
+        self.assertEqual(date(2025, 11, 28), attendance_work_entry.date, "The 27/11 work entry should be replaced")
+
+        leave_work_entries = work_entries - attendance_work_entry
+        self.assertEqual(2, len(leave_work_entries))
+        self.assertTrue(all(we.work_entry_type_id == self.work_entry_type_leave for we in leave_work_entries))
+        self.assertEqual(8.0, leave_work_entries.filtered(lambda we: we.date == date(2025, 11, 27)).duration)
+        self.assertEqual(4.0, leave_work_entries.filtered(lambda we: we.date == date(2025, 11, 28)).duration)
+
+    def test_work_entries_overlap_hours_leaves(self):
+        """Test that hour-based leaves correctly split a single day's work entry.
+        When an hours-based leave (e.g., 10:00-12:00) is taken within a workday, verify that:
+        - The original 8-hour work entry is split into two entries
+        - One attendance entry covers the non-leave hours (6h)
+        - One leave entry covers the requested leave hours (2h)
+        """
+        self.richard_emp.version_id._generate_work_entries(datetime(2025, 11, 1), datetime(2025, 11, 30))
+        work_entry = self.env["hr.work.entry"].search([
+            ("employee_id", "=", self.richard_emp.id),
+            ("date", "=", date(2025, 11, 27)),
+        ])
+        self.assertEqual(1, len(work_entry))
+        self.assertEqual(8.0, work_entry.duration)
+        attendance_work_entry_type = work_entry.work_entry_type_id
+        leave = self.env['hr.leave'].create({
+            'name': 'Hours Leave',
+            'employee_id': self.richard_emp.id,
+            'request_date_from': date(2025, 11, 27),
+            'request_hour_from': 10.0,
+            'request_date_to': date(2025, 11, 27),
+            'request_hour_to': 12.0,
+            'holiday_status_id': self.hours_leave_type.id,
+        })
+        leave.action_approve()
+        work_entry = self.env["hr.work.entry"].search([
+            ("employee_id", "=", self.richard_emp.id),
+            ("date", "=", date(2025, 11, 27)),
+        ])
+        self.assertEqual(2, len(work_entry))
+        attendance_work_entry = work_entry.filtered(lambda we: we.work_entry_type_id == attendance_work_entry_type)
+        self.assertEqual(1, len(attendance_work_entry))
+        self.assertEqual(6.0, attendance_work_entry.duration)
+
+        leave_work_entry = work_entry - attendance_work_entry
+        self.assertEqual(1, len(leave_work_entry))
+        self.assertTrue(leave_work_entry.work_entry_type_id == self.work_entry_type_leave)
+        self.assertEqual(2.0, leave_work_entry.duration)

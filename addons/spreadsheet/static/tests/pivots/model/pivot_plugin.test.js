@@ -6,6 +6,7 @@ import {
     getBasicServerData,
 } from "@spreadsheet/../tests/helpers/data";
 import {
+    fields,
     makeServerError,
     onRpc,
     allowTranslations,
@@ -535,6 +536,28 @@ test("An error is displayed if the pivot has invalid field", async function () {
     expect(getEvaluatedCell(model, "A1").message).toBe(`Field unknown does not exist`);
 });
 
+test("Datasources are in error when their RPC fails", async function () {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        mockRPC: async function (route, { model, method, kwargs }) {
+            if (model === "unknown" && method === "fields_get") {
+                throw makeServerError({ code: 404 });
+            }
+        },
+    });
+    const pivot = model.getters.getPivotCoreDefinition(pivotId);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...pivot,
+            model: "unknown",
+        },
+    });
+    setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:avg")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe("#ERROR");
+    expect(getEvaluatedCell(model, "A1").message).toBe(`The model "unknown" does not exist.`);
+});
+
 test("evaluates only once when two pivots are loading", async function () {
     const spreadsheetData = {
         sheets: [{ id: "sheet1" }],
@@ -1041,6 +1064,156 @@ test("pivot grouped by ID in a chain displays values correctly", async () => {
     await waitForDataLoaded(model);
 
     expect(getCellValue(model, "A1")).toBe(37);
+});
+
+test("Can group by many2one_reference field ", async () => {
+    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) => {
+        // The mock server doesn't support well many2one_reference.
+        // It is fixed in master/saas-19.1, but for now we have to mock the correct output ourselves.
+        return [
+            [{ __count: 3, "probability:avg": 11, __extra_domain: [] }],
+            [
+                {
+                    res_id: 2,
+                    __extra_domain: [["res_id", "=", 2]],
+                    __count: 1,
+                    "probability:avg": 11,
+                },
+                {
+                    res_id: 3,
+                    __extra_domain: [["res_id", "=", 3]],
+                    __count: 1,
+                    "probability:avg": 12,
+                },
+                {
+                    res_id: false,
+                    __extra_domain: [["res_id", "=", false]],
+                    __count: 1,
+                    "probability:avg": 13,
+                },
+            ]
+        ];
+    });
+    Partner._fields = {
+        ...Partner._fields,
+        res_id: fields.Many2oneReference({
+            model_field: "res_model",
+            relation: "",
+        }),
+        res_model: fields.Char(),
+    };
+    Partner._records = [
+        {
+            id: 1,
+            res_id: 2,
+            res_model: "partner",
+            probability: 11,
+        },
+        {
+            id: 2,
+            res_id: 3,
+            res_model: "partner",
+            probability: 12,
+        },
+        {
+            id: 3,
+            probability: 13,
+        },
+    ];
+    const { model } = await createSpreadsheetWithPivot({
+        pivotType: "static",
+        arch: /* xml */ `
+            <pivot>
+                <field name="res_id" type="row"/>
+                <field name="probability" type="measure"/>
+            </pivot>`,
+    });
+    expect(getCellFormula(model, "A3")).toBe('=PIVOT.HEADER(1,"res_id",2)');
+    expect(getCellFormula(model, "A4")).toBe('=PIVOT.HEADER(1,"res_id",3)');
+    expect(getCellFormula(model, "A5")).toBe('=PIVOT.HEADER(1,"res_id",FALSE)');
+    expect(getCellFormula(model, "B3")).toBe('=PIVOT.VALUE(1,"probability:avg","res_id",2)');
+    expect(getCellFormula(model, "B4")).toBe('=PIVOT.VALUE(1,"probability:avg","res_id",3)');
+    expect(getCellFormula(model, "B5")).toBe('=PIVOT.VALUE(1,"probability:avg","res_id",FALSE)');
+
+    expect(getCellValue(model, "A3")).toBe(2);
+    expect(getCellValue(model, "A4")).toBe(3);
+    expect(getCellValue(model, "A5")).toBe("None");
+    expect(getCellValue(model, "B3")).toBe(11);
+    expect(getCellValue(model, "B4")).toBe(12);
+    expect(getCellValue(model, "B5")).toBe(13);
+});
+
+test("Can group by reference field ", async () => {
+    onRpc("partner", "formatted_read_grouping_sets", ({ kwargs }) => {
+        // The mock server doesn't support well reference.
+        // It is fixed in master/saas-19.1, but for now we have to mock the correct output ourselves.
+        return [
+            [{ __count: 3, "probability:avg": 11, __extra_domain: [] }],
+            [
+                {
+                    ref: "partner,2",
+                    __extra_domain: [["ref", "=", "partner,2"]],
+                    __count: 1,
+                    "probability:avg": 11,
+                },
+                {
+                    ref: "partner,3",
+                    __extra_domain: [["ref", "=", "partner,3"]],
+                    __count: 1,
+                    "probability:avg": 12,
+                },
+                {
+                    ref: false,
+                    __extra_domain: [["ref", "=", false]],
+                    __count: 1,
+                    "probability:avg": 13,
+                },
+            ]
+        ];
+    });
+    Partner._fields = {
+        ...Partner._fields,
+        ref: fields.Reference({
+            selection: [["partner", "Partner"]],
+        }),
+    };
+    Partner._records = [
+        {
+            id: 1,
+            ref: "partner,2",
+            probability: 11,
+        },
+        {
+            id: 2,
+            ref: "partner,3",
+            probability: 12,
+        },
+        {
+            id: 3,
+            probability: 13,
+        },
+    ];
+    const { model } = await createSpreadsheetWithPivot({
+        pivotType: "static",
+        arch: /* xml */ `
+            <pivot>
+                <field name="ref" type="row"/>
+                <field name="probability" type="measure"/>
+            </pivot>`,
+    });
+    expect(getCellFormula(model, "A3")).toBe('=PIVOT.HEADER(1,"ref","partner,2")');
+    expect(getCellFormula(model, "A4")).toBe('=PIVOT.HEADER(1,"ref","partner,3")');
+    expect(getCellFormula(model, "A5")).toBe('=PIVOT.HEADER(1,"ref",FALSE)');
+    expect(getCellFormula(model, "B3")).toBe('=PIVOT.VALUE(1,"probability:avg","ref","partner,2")');
+    expect(getCellFormula(model, "B4")).toBe('=PIVOT.VALUE(1,"probability:avg","ref","partner,3")');
+    expect(getCellFormula(model, "B5")).toBe('=PIVOT.VALUE(1,"probability:avg","ref",FALSE)');
+
+    expect(getCellValue(model, "A3")).toBe("partner,2");
+    expect(getCellValue(model, "A4")).toBe("partner,3");
+    expect(getCellValue(model, "A5")).toBe("None");
+    expect(getCellValue(model, "B3")).toBe(11);
+    expect(getCellValue(model, "B4")).toBe(12);
+    expect(getCellValue(model, "B5")).toBe(13);
 });
 
 test("PIVOT.HEADER grouped by date field without value", async function () {
@@ -1968,11 +2141,11 @@ test("changing order of group by", async () => {
                 </pivot>`,
         mockRPC: async function (route, args) {
             if (args.method === "formatted_read_grouping_sets") {
-                expect.step(args.kwargs.order || "NO_ORDER");
+                expect.step(args.kwargs.order);
             }
         },
     });
-    expect.verifySteps(["NO_ORDER"]);
+    expect.verifySteps(["foo"]);
     model.dispatch("UPDATE_PIVOT", {
         pivotId,
         pivot: {
@@ -1993,7 +2166,7 @@ test("changing order of group by", async () => {
         },
     });
     await animationFrame();
-    expect.verifySteps(["NO_ORDER"]);
+    expect.verifySteps(["foo"]);
 });
 
 test("change date order", async () => {
@@ -2021,6 +2194,33 @@ test("change date order", async () => {
     });
     await animationFrame();
     expect.verifySteps(["date:year asc,date:month desc"]);
+});
+
+test("Order are set for all dimensions", async () => {
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+        mockRPC: async function (route, args) {
+            if (args.method === "formatted_read_grouping_sets") {
+                expect.step(args.kwargs.order);
+            }
+        },
+    });
+    expect.verifySteps([""]);
+    model.dispatch("UPDATE_PIVOT", {
+        pivotId,
+        pivot: {
+            ...model.getters.getPivotCoreDefinition(pivotId),
+            columns: [
+                { fieldName: "date", granularity: "year", order: "asc" },
+                { fieldName: "foo" },
+            ],
+        },
+    });
+    await animationFrame();
+    expect.verifySteps(["date:year asc,foo"]);
 });
 
 test("duplicated dimension on col and row with different granularity", async () => {

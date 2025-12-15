@@ -420,6 +420,19 @@ export class Colibri {
             }
         }
 
+        for (const tOut of this.tOuts) {
+            const { sel, initialValue } = tOut;
+            if (!initialValue) {
+                continue;
+            }
+            for (const node of this.dynamicNodes.get(sel) || []) {
+                if (initialValue.has(node)) {
+                    const value = initialValue.get(node);
+                    this.applyTOut(node, value);
+                }
+            }
+        }
+
         this.listeners.clear();
         this.dynamicNodes.clear();
         this.destroyInteraction();

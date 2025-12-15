@@ -674,8 +674,7 @@ class AccountMove(models.Model):
 
         if self.partner_id.commercial_partner_id.contact_address_inline:
             buyer_json_data["Address"] = self.partner_id.commercial_partner_id.contact_address_inline
-        if self.partner_id.commercial_partner_id.phone or self.partner_id.commercial_partner_id.mobile:
-            number = self.partner_id.commercial_partner_id.phone or self.partner_id.commercial_partner_id.mobile
+        if number := self.partner_id.commercial_partner_id.phone:
             buyer_json_data["TelephoneNumber"] = self._reformat_phone_number(number)
 
         return call_ecpay_api("/MaintainMerchantCustomerData", buyer_json_data, self.company_id,

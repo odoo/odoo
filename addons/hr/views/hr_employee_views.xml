@@ -317,6 +317,10 @@
                                         <field name="certificate"/>
                                         <field name="study_field"/>
                                     </group>
+                                    <group string="Documents" name="hr_document_group">
+                                        <field name="id_card"/>
+                                        <field name="driving_license"/>
+                                    </group>
                                 </group>
                             </page>
                             <page name="payroll_information" string="Payroll" groups="hr.group_hr_manager">
@@ -355,8 +359,8 @@
                                     <group string="User" name="user">
                                         <label for="user_id"/>
                                         <div class="o_row align-items-center">
-                                            <field name="user_id" string="User" placeholder="Not linked to an user"
-                                                domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
+                                            <field name="user_id" string="User" placeholder="No user linked"
+                                                domain="[('company_ids', 'in', company_id)]"
                                                 context="{
                                                     'default_create_employee_id': id,
                                                     'default_name': name,
@@ -364,11 +368,12 @@
                                                     'default_mobile': mobile_phone,
                                                     'default_login': work_email,
                                                     'default_partner_id': work_contact_id,
+                                                    'search_default_filter_no_share': 1,
                                                 }"
                                                 widget="many2one_avatar_user"
                                                 groups="base.group_erp_manager"/>
-                                            <field name="user_id" string="User" placeholder="Not linked to an user"
-                                                domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
+                                            <field name="user_id" string="User" placeholder="No user linked"
+                                                domain="[('company_ids', 'in', company_id)]"
                                                 context="{
                                                     'default_create_employee_id': id,
                                                     'default_name': name,
@@ -376,6 +381,7 @@
                                                     'default_mobile': mobile_phone,
                                                     'default_login': work_email,
                                                     'default_partner_id': work_contact_id,
+                                                    'search_default_filter_no_share': 1,
                                                 }"
                                                 widget="many2one_avatar_user"
                                                 groups="!base.group_erp_manager"

@@ -1,3 +1,5 @@
+import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
+
 import { waitNotifications, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import {
@@ -5,6 +7,7 @@ import {
     contains,
     defineMailModels,
     editInput,
+    focus,
     insertText,
     listenStoreFetch,
     onRpcBefore,
@@ -203,7 +206,7 @@ test("Posting message should transform links.", async () => {
     await contains("a[href='https://www.odoo.com/']");
 });
 
-test("Posting message should transform relevant data to emoji.", async () => {
+test("[text composer] Posting message should transform relevant data to emoji.", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -212,6 +215,27 @@ test("Posting message should transform relevant data to emoji.", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test :P :laughing:");
+    await press("Enter");
+    await contains(".o-mail-Message-body", { text: "test 😛 😆" });
+});
+
+test.tags("html composer");
+test("Posting message should transform relevant data to emoji.", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "test :P :laughing:");
     await press("Enter");
     await contains(".o-mail-Message-body", { text: "test 😛 😆" });
 });

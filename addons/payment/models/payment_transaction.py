@@ -745,8 +745,9 @@ class PaymentTransaction(models.Model):
         tx = self or self._search_by_reference(provider_code, payment_data)
         if tx:
             tx.ensure_one()
+            previous_state = tx.state
             tx._validate_amount(payment_data)
-            if tx.state == 'error':
+            if tx.state == 'error' and tx.state != previous_state:
                 return tx
             tx._apply_updates(payment_data)
             if tx.tokenize and tx.state in {'authorized', 'done'}:

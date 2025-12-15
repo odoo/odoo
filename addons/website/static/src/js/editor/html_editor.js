@@ -65,7 +65,7 @@ patch(LinkPopover.prototype, {
         this.urlRef = useChildRef();
         useEffect(
             (el) => {
-                if (el) {
+                if (el && (this.state.isImage || (!this.state.url && this.state.label))) {
                     el.focus();
                 }
             },

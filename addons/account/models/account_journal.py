@@ -1,9 +1,11 @@
 from ast import literal_eval
+from urllib.parse import urlencode
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
-from odoo.tools import groupby
+from odoo.tools import email_normalize, email_normalize_all, groupby, urls
+from odoo.tools.misc import hash_sign
 from collections import defaultdict
 import logging
 import re
@@ -283,9 +285,9 @@ class AccountJournal(models.Model):
         compute='_compute_show_refresh_out_einvoices_status_button',
     )
 
-    incoming_einvoice_notification_email = fields.Char(
-        string="Invoice Notifications",
-        help="Receive an email for incoming electronic invoices.",
+    incoming_einvoice_notification_email = fields.Char(  # no longer incoming-specific, rename in master
+        string="Send Copy To",
+        help="Email addresses that will receive copy for sent and received invoices. Separate entries with ';'.",
         compute='_compute_incoming_einvoice_notification_email',
         store=True,
         readonly=False,
@@ -538,10 +540,12 @@ class AccountJournal(models.Model):
     @api.depends('company_id', 'type')
     def _compute_incoming_einvoice_notification_email(self):
         for journal in self:
-            if journal.type == 'purchase':
-                journal.incoming_einvoice_notification_email = journal.incoming_einvoice_notification_email or journal.company_id.email
-            else:
-                journal.incoming_einvoice_notification_email = False
+            if (
+                journal.type == 'purchase'
+                and not journal.incoming_einvoice_notification_email
+                and journal.company_id.email
+            ):
+                journal.incoming_einvoice_notification_email = journal.company_id.email
 
     @api.depends('type')
     def _compute_show_fetch_in_einvoices_button(self):
@@ -706,9 +710,13 @@ class AccountJournal(models.Model):
 
     @api.constrains('type', 'incoming_einvoice_notification_email')
     def _check_incoming_einvoice_notification_email(self):
+        # to remove in master
+        pass
+
+    @api.onchange('incoming_einvoice_notification_email')
+    def _onchange_incoming_einvoice_notification_email(self):
         for journal in self:
-            if not journal.type == 'purchase' and journal.incoming_einvoice_notification_email:
-                raise ValidationError(_("The incoming e-invoice notification email can only be set on purchase journals."))
+            journal.incoming_einvoice_notification_email = ', '.join(email_normalize_all(journal.incoming_einvoice_notification_email or ''))
 
     @api.depends('type')
     def _compute_refund_sequence(self):
@@ -1214,24 +1222,74 @@ class AccountJournal(models.Model):
         return order_reference
 
     # -------------------------------------------------------------------------
-    # E-Invoice Related Methods
+    # Notifications & E-Invoice Related Methods
     # -------------------------------------------------------------------------
+
+    def _get_journal_notification_unsubscribe_scope(self):
+        return 'account_journal_notification_unsubscribe'
+
+    def _unsubscribe_invoice_notification_email(self, email_to_remove):
+        self.ensure_one()
+        normalized_to_remove = email_normalize(email_to_remove, strict=False)
+        subscribed_emails = set(email_normalize_all(self.incoming_einvoice_notification_email or ''))
+        if not normalized_to_remove or normalized_to_remove not in subscribed_emails:
+            return False
+        remaining = subscribed_emails - {normalized_to_remove}
+        self.incoming_einvoice_notification_email = ', '.join(remaining or [])
+        return True
 
     def _notify_einvoices_received(self, moves):
         self.ensure_one()
-
-        if not moves or not self.incoming_einvoice_notification_email:
+        # legacy if module was not upgraded
+        new_mail_template = self.env.ref('account.mail_template_invoice_subscriber', raise_if_not_found=False)
+        if new_mail_template:
+            # if module was upgraded, this is handled in _notify_invoice_subscribers
             return
 
-        mail_template = self.env.ref('account.mail_template_einvoice_notification', raise_if_not_found=False)
-        if not mail_template:
+        emails = set(email_normalize_all(self.incoming_einvoice_notification_email or ''))
+        if not moves or not emails:
+            return
+
+        if not (mail_template := self.env.ref('account.mail_template_einvoice_notification', raise_if_not_found=False)):
             return
 
         mail_template.with_context(einvoices=moves).send_mail(self.id, force_send=True)
 
     def button_unsubscribe_from_invoice_notifications(self):
+        # deprecated, to remove in master
         self.ensure_one()
         self.incoming_einvoice_notification_email = False
+
+    def _notify_invoice_subscribers(self, invoice, mail_params=None):
+        self.ensure_one()
+        invoice.ensure_one()
+
+        recipients = set(email_normalize_all(self.incoming_einvoice_notification_email or ''))
+        if not recipients:
+            return
+
+        if not (template := self.env.ref('account.mail_template_invoice_subscriber', raise_if_not_found=False)):
+            # we add the template in stable, thus this might happen if the module was not upgraded
+            self._notify_einvoices_received(invoice)
+            return
+
+        base_url = self.get_base_url()
+        for recipient in recipients:
+            unsubscribe_token = hash_sign(
+                self.sudo().env,
+                scope=self._get_journal_notification_unsubscribe_scope(),
+                message_values={'email_to_unsubscribe': recipient, 'journal_id': self.id},
+            )
+            unsubscribe_url = urls.urljoin(base_url, f'/my/journal/{self.id}/unsubscribe?{urlencode({"token": unsubscribe_token})}')
+
+            template.with_context(unsubscribe_url=unsubscribe_url).send_mail(
+                invoice.id,
+                email_values={
+                    **(mail_params or {}),
+                    'email_to': recipient,
+                },
+                force_send=True,
+            )
 
     def button_fetch_in_einvoices(self):
         # TO OVERRIDE

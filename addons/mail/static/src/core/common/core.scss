@@ -44,7 +44,7 @@ $o-discuss-talkingColor: lighten($success, 10%);
     }
 
     & .o-innerBadge {
-        min-width: 2.7ch; // same as .badge, without using .badge to keep semantics of a single .badge
+        min-width: $o-badge-min-width; // same as .badge, without using .badge to keep semantics of a single .badge
     }
 }
 
@@ -288,6 +288,10 @@ $o-mail-utilities: map-merge(
 
 .o-xxsmaller {
     font-size: 0.5rem;
+}
+
+.o-xxxs {
+    font-size: 0.35rem;
 }
 
 .o-yellow {

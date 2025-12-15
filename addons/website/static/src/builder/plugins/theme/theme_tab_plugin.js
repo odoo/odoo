@@ -30,6 +30,10 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
  * @property { ThemeTabPlugin['setGrayParams'] } setGrayParams
  */
 
+/**
+ * @typedef {import("@html_builder/core/builder_options_plugin").BuilderOptionContainer[]} theme_options
+ */
+
 export const GRAY_PARAMS = {
     EXTRA_SATURATION: "gray-extra-saturation",
     HUE: "gray-hue",

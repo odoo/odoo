@@ -4,6 +4,9 @@ import { splitTextNode, unwrapContents } from "@html_editor/utils/dom";
 import { isElement, isTextNode, isZwnbsp } from "@html_editor/utils/dom_info";
 import { closestElement, selectElements, findFurthest } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
+
+/** @typedef {((codeElement: HTMLElement) => void)[]} to_inline_code_processors */
+
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
     static dependencies = ["selection", "history", "input", "split", "feff"];

@@ -20,5 +20,8 @@ class PosPaymentMethod(models.Model):
     def _load_pos_self_data_domain(self, data, config):
         domain = super()._load_pos_self_data_domain(data, config)
         if config.self_ordering_mode == 'kiosk':
-            domain = Domain.OR([[('use_payment_terminal', '=', 'razorpay')], domain])
+            domain = Domain.OR([
+                [('use_payment_terminal', '=', 'razorpay'), ('id', 'in', config.payment_method_ids.ids)],
+                domain
+            ])
         return domain

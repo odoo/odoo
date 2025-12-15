@@ -1,3 +1,4 @@
+import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
 import {
     click,
     contains,
@@ -6,9 +7,8 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, press, test } from "@odoo/hoot";
+import { describe, press, test, waitFor } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { defineLivechatModels } from "@im_livechat/../tests/livechat_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -43,6 +43,9 @@ test("livechat note is loaded when opening the channel info list", async () => {
 
 test("editing livechat note is synced between tabs", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: [serverState.groupLivechatId],
+    });
     const userId = pyEnv["res.users"].create({ name: "James" });
     pyEnv["res.partner"].create({
         name: "James",
@@ -94,8 +97,8 @@ test("shows live chat status in discuss sidebar", async () => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         country_id: countryId,
         channel_type: "livechat",
@@ -129,8 +132,8 @@ test("editing livechat status is synced between tabs", async () => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ guest_id: guestId }),
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         country_id: countryId,
         channel_type: "livechat",
@@ -161,9 +164,7 @@ test("editing livechat status is synced between tabs", async () => {
 test("Manage expertises from channel info list", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write([serverState.userId], {
-        group_ids: pyEnv["res.groups"]
-            .search_read([["id", "=", serverState.groupLivechatManagerId]])
-            .map(({ id }) => id),
+        group_ids: [serverState.groupLivechatManagerId, serverState.groupLivechatId],
     });
     const userId = pyEnv["res.users"].create({ name: "James" });
     pyEnv["res.partner"].create({ name: "James", user_ids: [userId] });
@@ -212,4 +213,23 @@ test("Can download transcript from channel info panel", async () => {
     await contains(
         `a[href='${getOrigin()}/im_livechat/download_transcript/${channelId}']:text(Download)`
     );
+});
+
+test("Disable actions for non-livechat users", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+        livechat_status: "in_progress",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-livechat-LivechatStatusSelection button:text(In progress):disabled");
+    await waitFor(".o-livechat-LivechatStatusSelection button:text(Waiting for customer):disabled");
+    await waitFor(".o-livechat-LivechatStatusSelection button:text(Looking for help):disabled");
+    await waitFor("textarea[placeholder='Add your notes here...']:disabled");
+    await waitFor(".o-livechat-ExpertiseTagsAutocomplete.o-disabled");
 });

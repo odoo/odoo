@@ -8,7 +8,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2022
 # Martin Trigaux, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
@@ -16,8 +16,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-21 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 17:58+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-11-24 12:08+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
 "stock_account/ro/>\n"
 "Language: ro\n"
@@ -39,12 +39,14 @@ msgstr " [Contabilizat pe %s]"
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "%(lot)s price update from %(old_price)s to %(new_price)s by %(user)s"
 msgstr ""
+"%(lot)s actualizare preț de la %(old_price)s la %(new_price)s de către "
+"%(user)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
-msgstr ""
+msgstr "%(quantity)s %(uom)s la prețul standard al produsului %(price)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -69,7 +71,7 @@ msgstr "<span>NL/NS:</span>"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
 msgid "AVCO Value"
-msgstr ""
+msgstr "Valoare CMP"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_account
@@ -97,7 +99,7 @@ msgstr "Informații Contabile"
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Accrual"
-msgstr ""
+msgstr "Ajustare"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -110,7 +112,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__quantity
 msgid "Added Quantity"
-msgstr ""
+msgstr "Cantitate adăugată"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__added_value
@@ -128,13 +130,13 @@ msgstr "Ajustează evaluarea"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjust Valuation: %(product)s"
-msgstr ""
+msgstr "Ajustare evaluare: %(product)s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Adjusted on %(date)s by %(user)s"
-msgstr ""
+msgstr "Ajustat la %(date)s de către %(user)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -180,12 +182,13 @@ msgid ""
 "At closing, register the inventory variation of the period into a specific "
 "account"
 msgstr ""
+"La închidere, înregistrează variația stocului perioadei într-un cont specific"
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
 msgid "At the date of"
-msgstr ""
+msgstr "La data de"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -215,19 +218,19 @@ msgstr "Bacon"
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Location Reclassification - [%(account)s]"
-msgstr ""
+msgstr "Închidere: Reclasificare locație - [%(account)s]"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Stock Variation Global for company [%(company)s]"
-msgstr ""
+msgstr "Închidere: Variație stoc globală pentru compania [%(company)s]"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Closing: Stock Variation Over Period"
-msgstr ""
+msgstr "Închidere: Variație stoc pe perioadă"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
@@ -254,7 +257,7 @@ msgstr "Moneda companiei"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__computed_value_description
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_computed_justification
 msgid "Computed Value Description"
-msgstr ""
+msgstr "Descriere valoare calculată"
 
 #. module: stock_account
 #. odoo-python
@@ -263,6 +266,8 @@ msgid ""
 "Computed value: %(value)s\n"
 "%(description)s"
 msgstr ""
+"Valoare calculată: %(value)s\n"
+"%(description)s"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
@@ -280,7 +285,7 @@ msgstr "Cost"
 #: model:ir.model.fields,field_description:stock_account.field_res_company__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
 msgid "Cost Method"
-msgstr ""
+msgstr "Metodă de cost"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -298,6 +303,8 @@ msgid ""
 "Counterpart used at closing for accounting adjustments to inventory "
 "valuation."
 msgstr ""
+"Contrapartidă utilizată la închidere pentru ajustările contabile la "
+"evaluarea stocurilor."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -336,12 +343,12 @@ msgstr "Valoare curentă"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value_description
 msgid "Current Value Description"
-msgstr ""
+msgstr "Descriere valoare curentă"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__current_value_details
 msgid "Current Value Details"
-msgstr ""
+msgstr "Detalii valoare curentă"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__daily
@@ -420,13 +427,13 @@ msgstr "Afișare serie și număr lot pe facturi"
 #: code:addons/stock_account/report/stock_valuation_report.py:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Ending Stock"
-msgstr ""
+msgstr "Stoc final"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Everything is correctly closed"
-msgstr ""
+msgstr "Totul este închis corect"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
@@ -439,6 +446,8 @@ msgid ""
 "Expense account used to re-qualify products removed from stock and sent to "
 "this location"
 msgstr ""
+"Cont de cheltuieli utilizat pentru recalificarea produselor scoase din stoc "
+"și trimise către această locație"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -452,18 +461,18 @@ msgstr "Primul intrat primul ieșit (FIFO)"
 #. odoo-python
 #: code:addons/stock_account/models/product_value.py:0
 msgid "For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
-msgstr ""
+msgstr "Pentru %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
 msgid "For Perpetual Continental Only"
-msgstr ""
+msgstr "Doar pentru metoda continentală perpetuă"
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
 msgid "Generate Entry"
-msgstr ""
+msgstr "Generează înregistrare"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__id
@@ -499,6 +508,8 @@ msgid ""
 "If checked, the product will be valued using the Anglo-Saxon accounting "
 "method."
 msgstr ""
+"Dacă este bifat, produsul va fi evaluat folosind metoda de contabilitate "
+"anglo-saxonă."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
@@ -519,7 +530,7 @@ msgstr "Soldul inițial"
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
-msgstr ""
+msgstr "Operator sau valoare de căutare nevalidă"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory_adjustment_name
@@ -543,7 +554,7 @@ msgstr "Pierdere la inventar"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_period
 msgid "Inventory Period"
-msgstr ""
+msgstr "Perioadă inventar"
 
 #. module: stock_account
 #. odoo-python
@@ -557,32 +568,32 @@ msgstr "Evaluarea stocurilor"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
 msgid "Is Dropship"
-msgstr ""
+msgstr "Este livrare directă"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_in
 msgid "Is Incoming (valued)"
-msgstr ""
+msgstr "Este intrare (evaluată)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_out
 msgid "Is Outgoing (valued)"
-msgstr ""
+msgstr "Este ieșire (evaluată)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_valued
 msgid "Is Valued"
-msgstr ""
+msgstr "Este evaluat"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_internal
 msgid "Is valued inside the company"
-msgstr ""
+msgstr "Este evaluat în interiorul companiei"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__is_valued_external
 msgid "Is valued outside the company"
-msgstr ""
+msgstr "Este evaluat în afara companiei"
 
 #. module: stock_account
 #. odoo-python
@@ -591,6 +602,8 @@ msgid ""
 "It exists closing entries after the selected date. Cancel them before "
 "generate an entry prior to them"
 msgstr ""
+"Există înregistrări de închidere după data selectată. Anulați-le înainte să "
+"generați o înregistrare anterioară acestora"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
@@ -651,7 +664,7 @@ msgstr "Manual"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_manual
 msgid "Manual Value"
-msgstr ""
+msgstr "Valoare manuală"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
@@ -670,6 +683,8 @@ msgid ""
 "Only the value 'periodic' and 'real_time' are accepted to search on "
 "valuation field."
 msgstr ""
+"Doar valorile 'periodic' și 'real_time' sunt acceptate pentru căutarea pe "
+"câmpul de evaluare."
 
 #. module: stock_account
 #. odoo-javascript
@@ -682,7 +697,7 @@ msgstr "Opțiuni"
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__periodic
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__periodic
 msgid "Periodic (at closing)"
-msgstr ""
+msgstr "Periodic (la închidere)"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -693,13 +708,18 @@ msgid ""
 "inventory when a product is billed or invoiced.\n"
 "        "
 msgstr ""
+"Periodic: Înregistrările contabile sunt sugerate manual în raportul de "
+"evaluare a stocului.\n"
+"        Perpetual: O înregistrare contabilă este creată automat pentru a "
+"evalua stocul atunci când un produs este facturat sau facturat.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__real_time
 msgid "Perpetual (at invoicing)"
-msgstr ""
+msgstr "Perpetuă (la facturare)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -710,7 +730,7 @@ msgstr "Tip ridicare"
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Please set the Journal for Inventory Valuation in the settings."
-msgstr ""
+msgstr "Vă rugăm să setați Jurnalul pentru Evaluarea Stocurilor în setări."
 
 #. module: stock_account
 #. odoo-python
@@ -718,6 +738,7 @@ msgstr ""
 msgid ""
 "Please set the Valuation Account for Inventory Valuation in the settings."
 msgstr ""
+"Vă rugăm să setați Contul de evaluare pentru Evaluarea stocurilor în setări."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_id
@@ -735,7 +756,7 @@ msgstr "Preț unitar"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Price update from %(old_price)s to %(new_price)s by %(user)s"
-msgstr ""
+msgstr "Actualizare preț de la %(old_price)s la %(new_price)s de către %(user)s"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -770,7 +791,7 @@ msgstr "Cantitate produs actualizat"
 #: model:ir.model,name:stock_account.model_product_value
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_avco_report__res_model_name__product_value
 msgid "Product Value"
-msgstr ""
+msgstr "Valoare produs"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
@@ -800,7 +821,7 @@ msgstr "Referință"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
 msgid "Remaining Quantity"
-msgstr ""
+msgstr "Cantitate rămasă"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_value
@@ -810,7 +831,7 @@ msgstr "Valoarea rămasă"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__res_model_name
 msgid "Resource Model Name"
-msgstr ""
+msgstr "Nume model resursă"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
@@ -820,7 +841,7 @@ msgstr "Linie Ridicare Retur"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__should_show_accounting_date
 msgid "Should Show Accounting Date"
-msgstr ""
+msgstr "Ar trebui să afișeze data contabilă"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__standard_price
@@ -852,23 +873,23 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
 msgid "Stock AVCO Justifier"
-msgstr ""
+msgstr "Justificator CMP stoc"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Stock Account"
-msgstr ""
+msgstr "Cont stoc"
 
 #. module: stock_account
 #: model:ir.actions.server,name:stock_account.ir_cron_post_stock_valuation_ir_actions_server
 msgid "Stock Account: Inventory Valuation Closing"
-msgstr ""
+msgstr "Cont Stoc: Închidere evaluare inventar"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Stock Closing"
-msgstr ""
+msgstr "Închidere stoc"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
@@ -910,12 +931,12 @@ msgstr "Cont Evaluare Stoc"
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Stock Variation"
-msgstr ""
+msgstr "Variație stoc"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_id
 msgid "Stock Variation Account"
-msgstr ""
+msgstr "Cont variație stoc"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -940,7 +961,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_product_value__current_value
 #: model:ir.model.fields,help:stock_account.field_stock_move__value
 msgid "The current value of the move. It's zero if the move is not valued."
-msgstr ""
+msgstr "Contul curent al mișcării. Este zero dacă mișcarea nu este evaluată."
 
 #. module: stock_account
 #. odoo-javascript
@@ -960,7 +981,7 @@ msgstr "Cantitatea totală"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
 msgid "Total Remaining Qty"
-msgstr ""
+msgstr "Cantitate totală rămasă"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
@@ -1003,7 +1024,7 @@ msgstr "Costul unității"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_avco_report_action
 msgid "Unit Cost History"
-msgstr ""
+msgstr "Istoric cost unitar"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
@@ -1014,7 +1035,7 @@ msgstr "Actualizați cantitățile pe SO/PO"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__anglo_saxon_accounting
 msgid "Use Anglo-Saxon Accounting"
-msgstr ""
+msgstr "Utilizați contabilitatea anglo-saxonă"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__user_id
@@ -1042,7 +1063,7 @@ msgstr "Valuarea monedei"
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__lot_valuated
 msgid "Valuation by Lot/Serial"
-msgstr ""
+msgstr "Evaluare pe lot/serie"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__value
@@ -1055,7 +1076,7 @@ msgstr "Valoare"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__value_justification
 msgid "Value Description"
-msgstr ""
+msgstr "Descriere valoare"
 
 #. module: stock_account
 #. odoo-javascript
@@ -1067,7 +1088,7 @@ msgstr "Valoarea în stoc:"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value based on original move %(reference)s"
-msgstr ""
+msgstr "Valoare bazată pe mișcarea originală %(reference)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
@@ -1098,7 +1119,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
 msgid "Variation Account"
-msgstr ""
+msgstr "Cont variație"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -1127,18 +1148,21 @@ msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"Cu evaluare perpetuă, acest cont va deține diferența de preț între prețul "
+"standard și prețul facturat."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
-msgstr ""
+msgstr "Puteți ajusta evaluarea pentru o singură mișcare la un moment dat."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "You can only use the '=' operator to search on valuation field."
 msgstr ""
+"Puteți utiliza doar operatorul '=' pentru a căuta pe câmpul de evaluare."
 
 #. module: stock_account
 #. odoo-python
@@ -1147,11 +1171,13 @@ msgid ""
 "You cannot modify the scheduled date of this operation because it falls "
 "within a locked fiscal period."
 msgstr ""
+"Nu puteți modifica data programată a acestei operațiuni deoarece se "
+"încadrează într-o perioadă fiscală blocată."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
 msgid "stock_move_id"
-msgstr ""
+msgstr "stock_move_id"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document

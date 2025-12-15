@@ -34,7 +34,7 @@ import { WebsiteBuilderClientAction } from "@website/client_actions/website_prev
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent, revertPreview } from "@html_builder/core/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { WebsiteBuilder } from "@website/builder/website_builder";
 
@@ -207,7 +207,7 @@ export async function setupWebsiteBuilder(
 
     let lastUpdatePromise;
     const waitSidebarUpdated = async () => {
-        await editor.shared.operation.next();
+        await revertPreview(editor);
         // The tick ensures that lastUpdatePromise has correctly been assigned
         await tick();
         await lastUpdatePromise;
@@ -430,7 +430,16 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
 export async function getStructureSnippet(snippetName) {
     const html = await getWebsiteSnippets();
     const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
-    return snippetsDocument.querySelector(`[data-snippet=${snippetName}]`).cloneNode(true);
+    const processors = registry.category("html_builder.snippetsPreprocessor").getAll();
+    for (const processor of Object.values(processors)) {
+        processor("website.snippets", snippetsDocument);
+    }
+    const snippetEl = snippetsDocument.querySelector(
+        `[data-snippet=${snippetName}]:not([data-snippet] [data-snippet])`
+    );
+    const el = snippetEl.cloneNode(true);
+    el.dataset.name = snippetEl.parentElement.getAttribute("name");
+    return el;
 }
 
 export async function insertStructureSnippet(editor, snippetName) {

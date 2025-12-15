@@ -252,10 +252,8 @@ export class MediaDialog extends Component {
                                 }
                             } else {
                                 // Regex
-                                for (const className of element.classList) {
-                                    if (className.match(candidateName)) {
-                                        return false;
-                                    }
+                                if (candidateName.match(name)) {
+                                    return false;
                                 }
                             }
                         }
@@ -274,6 +272,11 @@ export class MediaDialog extends Component {
     }
 
     selectMedia(media, tabId, multiSelect) {
+        if (media && !Object.keys(media).length) {
+            // Clear media selection when an empty object is passed
+            this.selectedMedia[tabId] = [];
+            return;
+        }
         if (multiSelect) {
             const isMediaSelected = this.selectedMedia[tabId]
                 .map(({ id }) => id)

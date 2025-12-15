@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-07 18:36+0000\n"
-"PO-Revision-Date: 2025-11-13 14:24+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"PO-Revision-Date: 2025-12-12 15:39+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/purchase_stock/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -155,6 +155,12 @@ msgstr "Ação"
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "Add All"
 msgstr "Adicionar tudo"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "After next month last year"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -295,6 +301,14 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
+"Defina se as solicitações de cotação devem ser agrupadas com base na data de "
+"chegada prevista.\n"
+"Por pedido: as necessidades de reposição serão agrupadas, exceto para MTO.\n"
+"Diariamente: as necessidades de reposição serão agrupadas se a data de "
+"chegada prevista for o mesmo dia.\n"
+"Semanalmente: as necessidades de reposição serão agrupadas se a data de "
+"chegada prevista for a mesma semana ou dia da semana.\n"
+"Sempre: as necessidades de reposição serão sempre agrupadas."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -309,7 +323,7 @@ msgstr "Entregar para"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
 msgid "Delivery Time"
-msgstr ""
+msgstr "Prazo de entrega"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -382,7 +396,7 @@ msgstr "Dias efetivos até a chegada"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__effective_vendor_id
 msgid "Effective Vendor"
-msgstr ""
+msgstr "Fornecedor eficaz"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__effective_vendor_id
@@ -390,6 +404,8 @@ msgid ""
 "Either the vendor set directly or the one computed to be used by this "
 "replenishment"
 msgstr ""
+"O fornecedor definido diretamente ou aquele calculado para ser usado por "
+"esta reposição"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -410,6 +426,12 @@ msgstr "Data prevista"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Forecast Report"
 msgstr "Relatório de previsão"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Forecasted"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
@@ -442,6 +464,13 @@ msgid ""
 " Set a reference period to estimate sales, and use the percentage to take "
 "into account seasonality and the increase/decrease of business."
 msgstr ""
+"Obtenha recomendações de produtos para comprar de %(vendorName)s com base no "
+"estoque disponível, nas quantidades recebidas e nos volumes de vendas "
+"esperados.\n"
+"\n"
+"Defina um período de referência para estimar as vendas e use a porcentagem "
+"para levar em consideração a sazonalidade e o aumento/diminuição dos "
+"negócios."
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -453,13 +482,13 @@ msgstr "Volte para o pedido de compra para gerar a fatura de fornecedor."
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/stock_valuation/stock_valuation_report.js:0
 msgid "Goods Received Not Invoiced"
-msgstr ""
+msgstr "Mercadorias recebidas não faturadas"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_partner__group_rfq
 #: model:ir.model.fields,field_description:purchase_stock.field_res_users__group_rfq
 msgid "Group RFQ"
-msgstr ""
+msgstr "SDC em grupo"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
@@ -534,9 +563,39 @@ msgid "Journal Item"
 msgstr "Item do diário"
 
 #. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 12 months"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 3 months"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 30 days"
+msgstr ""
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last 7 days"
+msgstr ""
+
+#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
 msgid "Last Purchase"
 msgstr "Última compra"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Last year quarter"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
@@ -574,6 +633,12 @@ msgid "Monthly Demand"
 msgstr "Demanda mensal"
 
 #. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Next month last year"
+msgstr ""
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
 msgstr "Próximas transferências afetadas:"
@@ -582,7 +647,7 @@ msgstr "Próximas transferências afetadas:"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "No Vendor Found"
-msgstr ""
+msgstr "Nenhum fornecedor encontrado"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
@@ -614,7 +679,7 @@ msgstr "Em"
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_rfq__default
 msgid "On Order"
-msgstr ""
+msgstr "Por pedido"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.vendor_delay_report_view_graph
@@ -851,6 +916,12 @@ msgstr "Reserva"
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
 msgid "Return Picking"
 msgstr "Separação de devolução"
+
+#. module: purchase_stock
+#. odoo-javascript
+#: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
+msgid "Same month last year"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__6

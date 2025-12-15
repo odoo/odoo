@@ -1,5 +1,11 @@
-.o-mail-Thread:focus-visible {
-    outline: 0;
+.o-mail-Thread {
+    &:has(.o-mail-Message.o-selected) .o-mail-Message:not(.o-selected) {
+        opacity: 50% !important;
+    }
+
+    &:focus-visible {
+        outline: 0;
+    }
 }
 
 .o-mail-Thread-jumpPresent {

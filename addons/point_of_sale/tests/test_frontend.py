@@ -221,25 +221,25 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
         line.product_template_value_ids[0].price_extra = 2
 
-        chair_color_attribute = env['product.attribute'].create({
+        cls.chair_color_attribute = env['product.attribute'].create({
             'name': 'Color',
             'display_type': 'color',
             'create_variant': 'no_variant',
         })
-        chair_color_red = env['product.attribute.value'].create({
+        cls.chair_color_red = env['product.attribute.value'].create({
             'name': 'Red',
-            'attribute_id': chair_color_attribute.id,
+            'attribute_id': cls.chair_color_attribute.id,
             'html_color': '#ff0000',
         })
         chair_color_blue = env['product.attribute.value'].create({
             'name': 'Blue',
-            'attribute_id': chair_color_attribute.id,
+            'attribute_id': cls.chair_color_attribute.id,
             'html_color': '#0000ff',
         })
         chair_color_line = env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.configurable_chair.id,
-            'attribute_id': chair_color_attribute.id,
-            'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
+            'attribute_id': cls.chair_color_attribute.id,
+            'value_ids': [(6, 0, [cls.chair_color_red.id, chair_color_blue.id])]
         })
         chair_color_line.product_template_value_ids[0].price_extra = 1
 
@@ -262,28 +262,28 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'value_ids': [(6, 0, [chair_legs_metal.id, chair_legs_wood.id])]
         })
 
-        chair_fabrics_attribute = env['product.attribute'].create({
+        cls.chair_fabrics_attribute = env['product.attribute'].create({
             'name': 'Fabrics',
             'display_type': 'radio',
             'create_variant': 'no_variant',
         })
         chair_fabrics_leather = env['product.attribute.value'].create({
             'name': 'Leather',
-            'attribute_id': chair_fabrics_attribute.id,
+            'attribute_id': cls.chair_fabrics_attribute.id,
         })
-        chair_fabrics_wool = env['product.attribute.value'].create({
+        cls.chair_fabrics_wool = env['product.attribute.value'].create({
             'name': 'wool',
-            'attribute_id': chair_fabrics_attribute.id,
+            'attribute_id': cls.chair_fabrics_attribute.id,
         })
-        chair_fabrics_other = env['product.attribute.value'].create({
+        cls.chair_fabrics_other = env['product.attribute.value'].create({
             'name': 'Other',
-            'attribute_id': chair_fabrics_attribute.id,
+            'attribute_id': cls.chair_fabrics_attribute.id,
             'is_custom': True,
         })
         env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.configurable_chair.id,
-            'attribute_id': chair_fabrics_attribute.id,
-            'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_wool.id, chair_fabrics_other.id])]
+            'attribute_id': cls.chair_fabrics_attribute.id,
+            'value_ids': [(6, 0, [chair_fabrics_leather.id, cls.chair_fabrics_wool.id, cls.chair_fabrics_other.id])]
         })
         chair_color_line.product_template_value_ids[1].is_custom = True
 
@@ -575,6 +575,24 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
 
         # Set customers
+        # Unlink some data partners that makes the test crash
+        for xmlid in [
+            "l10n_us_hr_payroll.res_partner_taxation_va",
+            "l10n_us_hr_payroll.res_partner_revenue_dc",
+            "l10n_us_hr_payroll.res_partner_pfl_dc",
+            "l10n_us_hr_payroll.res_partner_revenue_or",
+            "l10n_us_hr_payroll.res_partner_dcbs_or",
+            "l10n_us_hr_payroll.res_partner_employment_or",
+            "l10n_us_hr_payroll.res_partner_revenue_nc",
+            "l10n_us_hr_payroll.res_partner_state_tax_commission_id",
+            "l10n_us_hr_payroll.res_partner_department_taxes_vt",
+            "l10n_us_hr_payroll.res_partner_department_revenue_il",
+            "l10n_us_hr_payroll.res_partner_department_revenue_az",
+        ]:
+            partner = cls.env.ref(xmlid, raise_if_not_found=False)
+            if partner:
+                partner.unlink()
+
         partners = cls.env['res.partner'].create([
             {'name': 'Partner Test 1'},
             {'name': 'Partner Test 2'},
@@ -1555,6 +1573,28 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'RefundFewQuantities', login="pos_user")
+
+    def test_refund_multiple_products_amounts_compliance(self):
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 10.00,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        current_session = self.main_pos_config.current_session_id
+
+        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'refund_multiple_products_amounts_compliance', login="pos_user")
+
+        refund_order = current_session.order_ids.filtered(lambda order: order.is_refund)
+        self.assertEqual(refund_order.lines[0].price_subtotal, 2 * test_product.list_price)
+        total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(
+            lambda payment: payment.payment_method_id.type == 'cash').mapped('amount')
+        )
+        current_session.post_closing_cash_details(total_cash_payment)
+        current_session.close_session_from_ui()
+        self.assertEqual(current_session.state, 'closed')
 
     def test_product_combo_price(self):
         """ Check that the combo has the expected price """
@@ -2809,6 +2849,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         This includes validating the refund order creation, amount, state, and payment processing.
         """
         # Open POS UI with the POS user
+        pricelists = self.env['product.pricelist'].create([
+            {'name': 'Test Pricelist'},
+            {'name': 'Percentage Pricelist'},
+        ])
+        self.main_pos_config.write({
+            'available_pricelist_ids': [Command.set(pricelists.ids)],
+            'pricelist_id': pricelists[0].id,
+        })
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
         # Run the POS tour simulating a partial refund
@@ -2819,6 +2867,12 @@ class TestUi(TestPointOfSaleHttpCommon):
             ('session_id', '=', self.main_pos_config.current_session_id.id)
         ])
         self.assertEqual(len(orders), 2, "Expected two orders: original and refund.")
+        order, refund_order = orders[0], orders[1]
+        self.assertEqual(
+            refund_order.pricelist_id.id,
+            order.pricelist_id.id,
+            "Refund order pricelist should be the original order's pricelist."
+        )
 
         # Perform refund on order and retrieve the resulting draft refund order
         refund_action = orders[1].refund()
@@ -3168,6 +3222,47 @@ class TestUi(TestPointOfSaleHttpCommon):
         with patch.object(pos_order, "sync_from_ui", sync_from_ui_patch):
             self.start_pos_tour("test_sync_from_ui_one_by_one", login="pos_user")
             self.assertEqual(sync_counter['count'], 6)
+
+    def test_lot_refund_lower_qty(self):
+        product = self.env['product.product'].create({
+            'name': 'Serial Product',
+            'is_storable': True,
+            'tracking': 'serial',
+            'available_in_pos': True,
+        })
+        for sn in ["SN1", "SN2"]:
+            self.env['stock.quant'].create({
+                'product_id': product.id,
+                'inventory_quantity': 1,
+                'location_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
+                'lot_id': self.env['stock.lot'].create({'name': sn, 'product_id': product.id}).id,
+            }).sudo().action_apply_inventory()
+        self.env['stock.picking.type'].search([('name', '=', 'PoS Orders')]).use_create_lots = False
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("test_lot_refund_lower_qty")
+
+    def test_exclusion_attribute_values(self):
+        chair_fabrics_other_ptav = self.configurable_chair.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.chair_fabrics_attribute.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.chair_fabrics_other.id)
+        chair_fabrics_wool_ptav = self.configurable_chair.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.chair_fabrics_attribute.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.chair_fabrics_wool.id)
+        chair_color_red_ptav = self.configurable_chair.attribute_line_ids.filtered(lambda l: l.attribute_id.id == self.chair_color_attribute.id).product_template_value_ids.filtered(lambda v: v.product_attribute_value_id.id == self.chair_color_red.id)
+
+        # Test the exclusion of attribute values
+        self.env['product.template.attribute.exclusion'].create({
+            'product_tmpl_id': self.configurable_chair.id,
+            'product_template_attribute_value_id': chair_color_red_ptav.id,
+            'value_ids': [Command.set([chair_fabrics_other_ptav.id])],
+        })
+
+        # # Test the exclusion of attribute values in the opposite direction
+        self.env['product.template.attribute.exclusion'].create({
+            'product_tmpl_id': self.configurable_chair.id,
+            'product_template_attribute_value_id': chair_fabrics_wool_ptav.id,
+            'value_ids': [Command.set([chair_color_red_ptav.id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_exclusion_attribute_values')
 
 
 # This class just runs the same tests as above but with mobile emulation

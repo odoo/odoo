@@ -5252,6 +5252,62 @@ class TestMrpOrder(TestMrpCommon):
         # Check that the serial numbers follow the sequence
         self.assertEqual(mo2.lot_producing_ids.mapped('name'), ['customMRPSerial0000001', 'customMRPSerial0000002', 'customMRPSerial0000003'])
 
+    def test_mark_done_multi_mo_with_different_uom(self):
+        """Test marking multiple productions as done with different product UoMs."""
+        mo1, mo2 = self.env['mrp.production'].create([
+            {'product_id': self.product_1.id},
+            {'product_id': self.product_3.id},
+        ])
+        wo1, wo2 = self.env['mrp.workorder'].create([
+            {
+                'name': 'Test order1',
+                'workcenter_id': self.workcenter_1.id,
+                'product_uom_id': self.product_1.uom_id.id,
+                'production_id': mo1.id,
+            },
+            {
+                'name': 'Test order2',
+                'workcenter_id': self.workcenter_1.id,
+                'product_uom_id': self.product_3.uom_id.id,
+                'production_id': mo2.id,
+            }
+        ])
+
+        mos = mo1 | mo2
+        mos.action_confirm()
+        mos.button_mark_done()
+
+        self.assertEqual(mo1.state, 'done')
+        self.assertEqual(mo2.state, 'done')
+        self.assertNotEqual(mo1.workorder_ids.product_uom_id, mo2.workorder_ids.product_uom_id)
+        self.assertEqual(mo1.product_qty, mo2.product_qty)
+        self.assertEqual(wo1.qty_produced, wo2.qty_produced)
+
+    def test_update_component_qty_consumption(self):
+        """Ensure that when updating the component's quantity to consume,
+        the move is not marked as picked allowing the new quantity to be
+        correctly reserved."""
+        group_unlock_mo = self.env.ref('mrp.group_unlocked_by_default')
+        self.env.user.group_ids += group_unlock_mo
+        self.bom_1.bom_line_ids.product_id.is_storable = True
+        self.env['stock.quant']._update_available_quantity(self.bom_1.bom_line_ids[0].product_id, self.stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.bom_1.bom_line_ids[1].product_id, self.stock_location, 10)
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.move_raw_ids.mapped('product_uom_qty'), [2.0, 4.0])
+        self.assertEqual(mo.move_raw_ids.mapped('quantity'), [2.0, 4.0])
+        self.assertEqual(mo.move_raw_ids.mapped('picked'), [False, False])
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.edit(1) as move:
+            move.product_uom_qty = 5
+        mo = mo_form.save()
+        self.assertEqual(mo.move_raw_ids.mapped('quantity'), [2.0, 5.0])
+        self.assertEqual(mo.move_raw_ids.mapped('picked'), [False, False])
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):

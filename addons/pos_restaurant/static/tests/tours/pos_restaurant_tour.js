@@ -1154,3 +1154,20 @@ registry.category("web_tour.tours").add("test_guest_count_bank_payment", {
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_name_preset_skip_screen", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});

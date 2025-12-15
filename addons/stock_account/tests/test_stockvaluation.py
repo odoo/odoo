@@ -280,6 +280,16 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(move8.remaining_qty, 0.0)  # unused in internal moves
         self.assertEqual(move9.remaining_qty, 0.0)  # unused in out moves
 
+    def test_fifo_perpetual_3(self):
+        """ Make sure that the fifo valuation is correct for non-integer quantities.
+        """
+        product = self.product_fifo
+
+        move1 = self._make_in_move(product, 1.9, 10)
+
+        self.assertAlmostEqual(move1.remaining_qty, 1.9)
+        self.assertAlmostEqual(move1.remaining_value, 19)
+
     def test_fifo_negative_1(self):
         """ Send products that you do not have. Value the first outgoing move to the standard
         price, receive in multiple times the delivered quantity and run _fifo_vacuum to compensate.
@@ -2908,3 +2918,20 @@ class TestStockValuation(TestStockValuationCommon):
                 {'account_id': self.account_expense.id, 'credit': 0.0, 'debit': 600.0},
             ]
         )
+
+    def test_inventory_user_can_validate_avco_picking(self):
+        """Ensure that an inventory user can validate a receipt picking
+        containing an AVCO-costed product without triggering an access error.
+        """
+        move = self.env['stock.move'].create({
+            'product_id': self.product_avco_auto.id,
+            'product_uom_qty': 1,
+            'product_uom': self.product_avco_auto.uom_id.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        move._action_confirm()
+        move.quantity = 1.0
+        move.picked = True
+        move.with_user(self.inventory_user)._action_done()
+        self.assertEqual(move.state, 'done')

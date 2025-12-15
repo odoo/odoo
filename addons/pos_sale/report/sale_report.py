@@ -38,11 +38,11 @@ class SaleReport(models.Model):
                 / MIN({self._case_value_or_one('pos.currency_rate')})
                 * {self._case_value_or_one('account_currency_table.rate')}
             AS price_unit,
-            SUM(l.price_subtotal_incl)
+            SUM(SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal_incl))
                 / MIN({self._case_value_or_one('pos.currency_rate')})
                 * {self._case_value_or_one('account_currency_table.rate')}
             AS price_total,
-            SUM(l.price_subtotal)
+            SUM(SIGN(l.qty) * SIGN(l.price_unit) * ABS(l.price_subtotal))
                 / MIN({self._case_value_or_one('pos.currency_rate')})
                 * {self._case_value_or_one('account_currency_table.rate')}
             AS price_subtotal,

@@ -21,6 +21,7 @@ import {
 } from "@point_of_sale/utils";
 import { getOrderLineValues } from "./card_utils";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
+import { initLNA } from "@point_of_sale/app/utils/init_lna";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -149,8 +150,15 @@ export class SelfOrder extends Reactive {
             this.addToCart(productTemplate, 1, "", {}, {});
             this.router.navigate("cart");
         });
+
         if (this.config.epson_printer_ip && this.config.other_devices) {
             this.printer.setPrinter(new EpsonPrinter({ ip: this.config.epson_printer_ip }));
+        }
+
+        if (this.config.self_ordering_mode === "kiosk") {
+            initLNA(this.notification);
+        } else {
+            odoo.use_lna = false;
         }
     }
 
@@ -281,6 +289,7 @@ export class SelfOrder extends Reactive {
         return this.filterPaymentMethods(this.models["pos.payment.method"].getAll()).length > 0;
     }
 
+    // TODO: Remove in master. This method is redundant as the same logic exists in _load_pos_self_data_domain.
     filterPaymentMethods(pms) {
         //based on _load_pos_self_data_domain from pos_payment_method.py
         return this.config.self_ordering_mode === "kiosk"
@@ -830,9 +839,7 @@ export class SelfOrder extends Reactive {
     }
 
     getProductPriceInfo(productTemplate, product) {
-        const pricelist = this.config.use_presets
-            ? this.currentOrder.preset_id?.pricelist_id
-            : this.config.pricelist_id;
+        const pricelist = this.currentOrder.preset_id?.pricelist_id || this.config.pricelist_id;
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
 
         if (!product) {
@@ -842,9 +849,10 @@ export class SelfOrder extends Reactive {
         // Taxes computation.
         const order = this.currentOrder;
         const taxesData = product.getTaxDetails({
-            price_unit: price,
-            quantity: 1,
-            fiscalPosition: order?.fiscal_position_id || false,
+            overridedValues: {
+                price,
+                fiscalPosition: order?.fiscal_position_id || false,
+            },
         });
         return { pricelist_price: price, ...taxesData };
     }

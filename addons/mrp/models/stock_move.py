@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from odoo import _, api, Command, fields, models
-from odoo.tools import OrderedSet
+from odoo.tools import OrderedSet, float_is_zero
 from odoo.exceptions import ValidationError
 
 
@@ -211,14 +211,16 @@ class StockMove(models.Model):
 
     @api.onchange('product_uom_qty', 'product_uom')
     def _onchange_product_uom_qty(self):
-        if self.product_uom and self.raw_material_production_id and self.has_tracking == 'none':
+        if self.product_uom and self.raw_material_production_id and self.has_tracking == 'none'\
+            and self.state not in ('draft', 'cancel', 'done'):
             mo = self.raw_material_production_id
             new_qty = self.product_uom.round((mo.qty_producing - mo.qty_produced) * self.unit_factor)
             self.quantity = new_qty
 
     @api.onchange('quantity', 'product_uom', 'picked')
     def _onchange_quantity(self):
-        if self.raw_material_production_id and self.product_uom and self.product_uom.compare(self.product_uom_qty, self.quantity) != 0:
+        if self.raw_material_production_id and self.product_uom and \
+            not float_is_zero(self.quantity, precision_rounding=self.product_uom.rounding) and self.product_uom.compare(self.product_uom_qty, self.quantity) != 0:
             self.manual_consumption = True
             self.picked = True
 
@@ -320,7 +322,7 @@ class StockMove(models.Model):
                         or (move.reservation_date and move.reservation_date <= fields.Date.today()):
                     to_assign |= move
 
-            if move.procure_method == 'make_to_order':
+            if move.procure_method == 'make_to_order' or move.rule_id.procure_method == 'mts_else_mto':
                 procurement_qty = move.product_uom_qty - old_qties.get(move.id, 0)
                 possible_reduceable_qty = -sum(move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.product_uom_qty).mapped('product_uom_qty'))
                 procurement_qty = max(procurement_qty, possible_reduceable_qty)

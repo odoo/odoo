@@ -12,21 +12,29 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         super.setup();
         this.descriptionColumn = "name";
         this.productColumns = ["product_id", "product_template_id"];
+        this.conditionalColumns = ["product_id", "quantity", "product_uom_id"];
     }
 
     processAllColumn(allColumns, list) {
         allColumns = allColumns.map((column) => {
-            if (column["optional"] === "conditional" && column["name"] === "product_id") {
+            if (column["optional"] === "conditional" && this.conditionalColumns.includes(column["name"])) {
                 /**
-                 * The preference should be different for Bills & Invoices lines
-                 * Invoices -> Should show the products by default
-                 * Bills -> Should show the labels by default
+                 * The preference should be different whether:
+                 *     - It's a Vendor Bill or an Invoice
+                 *     - Sale module is installed
+                 * Vendor Bills -> Product should be hidden by default
+                 * Invoices -> conditionalColumns should be hidden by default if Sale module is not installed
                  */
-                column["optional"] = ["in_invoice", "in_refund", "in_receipt"].includes(
-                    this.props.list.evalContext.parent.move_type
-                )
-                    ? "hide"
-                    : "show";
+                const isBill = ["in_invoice", "in_refund", "in_receipt"].includes(this.props.list.evalContext.parent.move_type);
+                const isInvoice = ["out_invoice", "out_refund", "out_receipt"].includes(this.props.list.evalContext.parent.move_type);
+                const isSaleInstalled = this.props.list.evalContext.parent.is_sale_installed;
+                column["optional"] = "show";
+                if (isBill && column["name"] === "product_id") {
+                    column["optional"] = "hide";
+                }
+                else if (isInvoice && !isSaleInstalled) {
+                    column["optional"] =  "hide";
+                }
             }
             return column;
         });

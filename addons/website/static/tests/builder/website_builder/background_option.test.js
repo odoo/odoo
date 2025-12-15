@@ -7,6 +7,7 @@ import {
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -412,13 +413,59 @@ test("changing shape's background color doesn't hide the shape itself", async ()
 });
 
 test("remove background image removes color filter", async () => {
-    const backgroundImageUrl = "url('/web/image/123/transparent.png')";
-    await setupWebsiteBuilder(`
-        <section>
-            <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
-            <div class="o_we_bg_filter bg-black-50"><br></div>
-        </section>`);
+    await setupWebsiteBuilderWithSnippet("s_cover");
     await contains(":iframe section").click();
     await contains("[data-action-id='toggleBgImage']").click();
     expect(":iframe section .o_we_bg_filter").not.toHaveCount();
+});
+
+test("change background size", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <section class="o_bg_img_opt_repeat" style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px; background-size: 100px;">
+        </section>`);
+
+    const section = await waitFor(":iframe section");
+    await contains(section).click();
+
+    await waitSidebarUpdated();
+
+    const widthInput = await waitFor(
+        '[data-action-id="setBackgroundSize"][data-action-param="width"] > input'
+    );
+    const heightInput = await waitFor(
+        '[data-action-id="setBackgroundSize"][data-action-param="height"] > input'
+    );
+
+    expect(heightInput).toHaveValue("");
+
+    await contains(heightInput).edit("0");
+    expect(heightInput).toHaveValue("1", { message: "minimum value is 1" });
+    expect(section).toHaveStyle("background-size: 100px 1px");
+
+    await contains(heightInput).edit("");
+    expect(heightInput).toHaveValue("");
+    expect(section).toHaveStyle("background-size: 100px");
+
+    await contains(widthInput).edit("");
+    expect(widthInput).toHaveValue("");
+    expect(heightInput).toHaveValue("", { message: "height input should stay empty" });
+    expect(section).toHaveStyle("background-size: auto");
+
+    await contains(widthInput).edit("0");
+    expect(widthInput).toHaveValue("1", { message: "minimum value is 1" });
+    expect(section).toHaveStyle("background-size: 1px");
+});
+
+test("background shape detection is compatible with previous ones (web_editor)", async () => {
+    await setupWebsiteBuilder(`
+        <section data-oe-shape-data='{"shape":"web_editor/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+            AAAA
+        </section>`);
+    await contains(":iframe section").click();
+    expect("div[data-label='Shape'] button:first-of-type").toHaveText("Connections 01");
+    await contains("div[data-label='Shape'] button:first-of-type").click();
+    expect("button.active[data-action-id='setBackgroundShape']").toHaveAttribute(
+        "data-action-value",
+        "html_builder/Connections/01"
+    );
 });

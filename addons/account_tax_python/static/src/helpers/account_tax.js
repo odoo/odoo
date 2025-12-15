@@ -17,6 +17,7 @@ patch(accountTaxHelpers, {
             price_unit: evaluation_context.price_unit,
             quantity: evaluation_context.quantity,
             product: evaluation_context.product,
+            uom: evaluation_context.uom,
             base: raw_base,
         };
         return evaluateExpr(tax.formula_decoded_info.js_formula, formula_context);

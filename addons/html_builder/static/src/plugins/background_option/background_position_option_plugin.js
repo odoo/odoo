@@ -53,8 +53,8 @@ export class SetBackgroundSizeAction extends BuilderAction {
             params: { mainParam: otherParam },
         });
         let bgSize;
+        value ||= "auto";
         if (styleName === "width") {
-            value = !value && otherBgSize ? "auto" : value;
             otherBgSize = otherBgSize === "" ? "" : ` ${otherBgSize}`;
             bgSize = `${value}${otherBgSize}`;
         } else {
