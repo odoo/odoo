@@ -7,6 +7,7 @@ declare module "models" {
     export interface Thread {
         askLeaveConfirmation: (body: string) => Promise<void>;
         autoOpenChatWindowOnNewMessage: Readonly<boolean>;
+        discussAppAsThread: DiscussApp;
         inChathubOnNewMessage: Readonly<boolean>;
         setActiveURL: () => void;
         setAsDiscussThread: (pushState: boolean) => void;

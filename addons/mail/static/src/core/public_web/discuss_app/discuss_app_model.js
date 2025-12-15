@@ -11,6 +11,7 @@ export class DiscussApp extends Record {
     isSidebarCompact = fields.Attr(false, { localStorage: true });
     lastActiveId = fields.Attr(undefined, { localStorage: true });
     thread = fields.One("mail.thread", {
+        inverse: "discussAppAsThread",
         /** @this {import("models").DiscussApp} */
         onUpdate() {
             this._threadOnUpdate();

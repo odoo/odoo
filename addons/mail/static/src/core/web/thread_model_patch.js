@@ -21,7 +21,7 @@ const threadPatch = {
             /** @this {import("models").Thread} */
             compute() {
                 if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
-                    return this.eq(this.store.discuss.thread);
+                    return Boolean(this.discussAppAsThread);
                 }
                 return false;
             },

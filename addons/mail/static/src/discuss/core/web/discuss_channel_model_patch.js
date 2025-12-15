@@ -5,11 +5,7 @@ import { patch } from "@web/core/utils/patch";
 const discussChannelPatch = {
     onPinStateUpdated() {
         super.onPinStateUpdated();
-        if (
-            !this.displayToSelf &&
-            !this.isLocallyPinned &&
-            this.eq(this.store.discuss.thread?.channel)
-        ) {
+        if (!this.displayToSelf && !this.isLocallyPinned && this.discussAppAsThread) {
             if (this.store.discuss.isActive) {
                 const newChannel =
                     this.store.discuss.channelCategory.channels.find(
