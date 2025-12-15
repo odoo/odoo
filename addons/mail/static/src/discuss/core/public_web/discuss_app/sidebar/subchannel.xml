@@ -28,7 +28,7 @@
                 </svg>
             </t>
             <button class="o-mail-DiscussSidebarChannel-subChannel o-mail-DiscussSidebar-item btn btn-secondary border-0 bg-inherit d-flex flex-grow-1 smaller rounded-2 text-start text-truncate align-items-center" t-att-title="store.discuss.isSidebarCompact ? undefined : channel.displayName" t-on-click="(ev) => this.openChannel(ev, channel)" t-att-class="{
-                'o-active': channel.eq(this.store.discuss.thread?.channel),
+                'o-active': channel.discussAppAsThread,
                 'px-1 py-2 mx-1 text-wrap word-break lh-1': store.discuss.isSidebarCompact,
                 'o-nonCompact me-1 pe-0 ps-1 o-py-0_5': !store.discuss.isSidebarCompact,
                 'o-unread': channel.self_member_id?.message_unread_counter > 0 and !channel.self_member_id?.mute_until_dt,

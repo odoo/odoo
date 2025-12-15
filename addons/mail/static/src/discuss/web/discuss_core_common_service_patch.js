@@ -26,7 +26,7 @@ patch(DiscussCoreCommon.prototype, {
         this.store.history.messages = this.store.history.messages.filter(
             (msg) => !msg.thread?.eq(thread)
         );
-        if (thread.eq(this.store.discuss.thread)) {
+        if (thread.discussAppAsThread) {
             this.store.discuss.thread = undefined;
         }
         super._handleNotificationChannelDelete(thread, metadata);

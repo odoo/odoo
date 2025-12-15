@@ -1,10 +1,21 @@
-import { patch } from "@web/core/utils/patch";
 import { Thread } from "@mail/core/common/thread_model";
+import { fields } from "@mail/model/misc";
+
+import { patch } from "@web/core/utils/patch";
 import { router } from "@web/core/browser/router";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 
-patch(Thread.prototype, {
+/** @type {import("models").Thread} */
+const threadModelPatch = {
+    setup() {
+        super.setup(...arguments);
+        /**
+         * Inverse of discuss.thread, useful to efficiently check whether this thread is the one
+         * currently displayed in discuss app.
+         */
+        this.discussAppAsThread = fields.One("DiscussApp", { inverse: "thread" });
+    },
     /** Condition for whether the conversation should become present in chat hub on new message */
     get inChathubOnNewMessage() {
         return !this.store.discuss.isActive;
@@ -15,7 +26,7 @@ patch(Thread.prototype, {
     /** @param {boolean} pushState */
     setAsDiscussThread(pushState) {
         if (pushState === undefined) {
-            pushState = this.notEq(this.store.discuss.thread);
+            pushState = !this.discussAppAsThread;
         }
         this.store.discuss.thread = this;
         this.store.discuss.activeTab = !this.store.env.services.ui.isSmall
@@ -54,7 +65,7 @@ patch(Thread.prototype, {
     },
     async unpin() {
         this.isLocallyPinned = false;
-        if (this.eq(this.store.discuss.thread)) {
+        if (this.discussAppAsThread) {
             router.replaceState({ active_id: undefined });
         }
         if (this.model === "discuss.channel" && this.self_member_id?.is_pinned !== false) {
@@ -77,4 +88,5 @@ patch(Thread.prototype, {
             });
         });
     },
-});
+};
+patch(Thread.prototype, threadModelPatch);

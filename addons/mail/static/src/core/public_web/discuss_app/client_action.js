@@ -77,7 +77,7 @@ export class DiscussClientAction extends Component {
         }
         const [model, id] = parsedActiveId;
         const activeThread = await this.store["mail.thread"].getOrFetch({ model, id });
-        if (activeThread && activeThread.notEq(this.store.discuss.thread)) {
+        if (activeThread && !activeThread.discussAppAsThread) {
             const highlight_message_id =
                 props.action?.params?.highlight_message_id || router.current.highlight_message_id;
             if (highlight_message_id) {
