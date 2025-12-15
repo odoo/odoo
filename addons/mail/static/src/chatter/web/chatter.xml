@@ -67,12 +67,6 @@
         </div>
         <div class="o-mail-Chatter-content d-flex flex-column flex-grow-1 bg-inherit">
             <t>
-                <t t-if="props.has_activities and activities.length and !messageSearch.searching and !messageSearch.searched">
-                    <t t-call="mail.ActivityList"/>
-                </t>
-                <t t-if="scheduledMessages.length">
-                    <t t-call="mail.ScheduledMessagesList"/>
-                </t>
                 <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative">
                     <div class="d-flex align-items-center">
                         <hr class="flex-grow-1"/>
@@ -106,6 +100,12 @@
                         <MessageCardList messages="state.thread.pinnedMessages" thread="state.thread" mode="'pin'"/>
                     </div>
                 </div>
+                <t t-if="props.has_activities and activities.length and !messageSearch.searching and !messageSearch.searched">
+                    <t t-call="mail.ActivityList"/>
+                </t>
+                <t t-if="scheduledMessages.length">
+                    <t t-call="mail.ScheduledMessagesList"/>
+                </t>
                 <SearchMessageResult t-if="messageSearch.searching or messageSearch.searched" thread="state.thread"  messageSearch="messageSearch" onClickJump.bind="closeSearch"/>
                 <Thread t-else="" thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"/>
             </t>
