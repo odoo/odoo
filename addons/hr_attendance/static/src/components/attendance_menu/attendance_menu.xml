@@ -9,10 +9,16 @@
                   state="this.dropdown">
             <button>
                 <i class="oi oi-filled"
-                   data-icon="circle"
-                   t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"
-                   role="img"
-                   aria-label="Attendance"/>
+                    data-icon="circle"
+                    t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"
+                    role="img"
+                    aria-label="Attendance"
+                    t-if="!this.state.gettingPosition"/>
+                <i class="oi oi-spin"
+                    data-icon="progress_activity"
+                    role="img"
+                    aria-label="Attendance"
+                    t-if="this.state.gettingPosition"/>
             </button>
 
             <t t-set-slot="content">
@@ -139,7 +145,7 @@
                     </div>
 
                     <div class="o_wrap_btn_sign_out d-flex gap-3 align-items-center bottom-0 p-2 z-2">
-                        <button t-on-click="() => this.signInOut()"
+                        <button t-on-click="() => this.signInOut()" t-if="!this.state.gettingPosition"
                                 t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'primary' }} flex-grow-1">
                             <span t-if="!this.state.checkedIn">Check in</span>
                             <span t-else="">Check out</span>
