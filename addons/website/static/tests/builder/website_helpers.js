@@ -112,6 +112,7 @@ export async function setupWebsiteBuilder(
         hasToCreateWebsite = true,
         styleContent,
         headerContent = "",
+        footerContent = "",
         beforeWrapwrapContent = "",
         translateMode = false,
         onIframeLoaded = () => {},
@@ -135,7 +136,7 @@ export async function setupWebsiteBuilder(
         translateMode
             ? ""
             : `data-oe-model="ir.ui.view" data-oe-id="${setupWebsiteBuilderOeId}" data-oe-field="arch"`
-    }>${websiteContent}</div></div>`;
+    }>${websiteContent}</div> ${footerContent}</div>`;
     const iframeLoaded = new Promise((resolve) => {
         resolveIframeLoaded = async (el) => {
             const iframe = el;
