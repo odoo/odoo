@@ -1,6 +1,5 @@
 import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
-import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -39,18 +38,5 @@ patch(Thread.prototype, {
         if (this.store.env.services.ui.isSmall && this.channel?.channel_type === "livechat") {
             this.store.discuss.activeTab = "livechat";
         }
-    },
-    async leaveChannel() {
-        if (
-            this.channel?.channel_type === "livechat" &&
-            this.channel?.channel_member_ids.length <= 2 &&
-            this.channel.self_member_id &&
-            !this.livechat_end_dt
-        ) {
-            await this.askLeaveConfirmation(
-                _t("Leaving will end the live chat. Do you want to proceed?")
-            );
-        }
-        await super.leaveChannel(...arguments);
     },
 });
