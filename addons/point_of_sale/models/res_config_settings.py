@@ -135,6 +135,16 @@ class ResConfigSettings(models.TransientModel):
             }
         }
 
+    @api.onchange('pos_iface_tipproduct')
+    def _onchange_iface_tipproduct(self):
+        for res_config in self:
+            if not res_config.pos_iface_tipproduct:
+                res_config.pos_tip_product_id = False
+                res_config.pos_set_tip_after_payment = False
+            else:
+                if not res_config.pos_tip_product_id:
+                    res_config.pos_tip_product_id = res_config.pos_config_id._get_default_tip_product()
+
     @api.model_create_multi
     def create(self, vals_list):
         # STEP: Remove the 'pos' fields from each vals.
