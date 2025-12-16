@@ -417,10 +417,15 @@ class ResourceCalendar(models.Model):
                                 allocate_hours = min(max_hours_per_day, remaining_hours)
                                 remaining_hours -= allocate_hours
 
-                                # Create interval centered at 12:00 PM
-                                midpoint = tz.localize(datetime.combine(current_day, time(12, 0)))
-                                start_time = midpoint - timedelta(hours=allocate_hours / 2)
-                                end_time = midpoint + timedelta(hours=allocate_hours / 2)
+                                if self.env.context.get('intervals_from_start_datetime', False):
+                                    # If an appoinment is being booked, create interval starting start_dt
+                                    start_time = start_datetime
+                                    end_time = start_time + timedelta(hours=allocate_hours)
+                                else:
+                                    # If an appointment isn't being booked, create interval centered at 12:00 PM
+                                    midpoint = tz.localize(datetime.combine(current_day, time(12, 0)))
+                                    start_time = midpoint - timedelta(hours=allocate_hours / 2)
+                                    end_time = midpoint + timedelta(hours=allocate_hours / 2)
 
                                 dummy_attendance = self.env['resource.calendar.attendance'].new({
                                     'duration_hours': allocate_hours,
