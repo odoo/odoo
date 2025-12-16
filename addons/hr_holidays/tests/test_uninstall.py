@@ -2,8 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.tests import tagged, TransactionCase
+
+from odoo.tests import TransactionCase, tagged
 
 
 @tagged('-at_install', 'post_install')
@@ -34,7 +34,7 @@ class TestHrLeaveUninstall(TransactionCase):
         self.assertTrue(activity_type)
         self.assertIn('hr.leave', activity_type.mapped('res_model'))
 
-        model.sudo().with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
+        model.sudo().with_context(force_delete=True).unlink()
         self.assertFalse(model.exists())
 
         domain = [('res_model', '=', 'hr.leave')]

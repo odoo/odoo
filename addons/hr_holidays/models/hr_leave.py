@@ -9,11 +9,9 @@ from dateutil.relativedelta import relativedelta
 from math import ceil
 from markupsafe import Markup
 
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.addons.resource.models.utils import HOURS_PER_DAY
-
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_utils import float_to_time
 from odoo.fields import Command, Date, Domain
@@ -1309,7 +1307,7 @@ class HrLeave(models.Model):
         self._force_cancel(reason, 'mail.mt_note')
 
     def _force_cancel(self, reason=None, msg_subtype='mail.mt_comment', notify_responsibles=True):
-        leaves = self.browse() if self.env.context.get(MODULE_UNINSTALL_FLAG) else self
+        leaves = self.browse() if self.env.context.get('force_delete') else self
         if reason:
             model_description = self.env['ir.model']._get('hr.holidays').display_name
             for leave in leaves:

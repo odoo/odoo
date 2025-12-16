@@ -3496,7 +3496,6 @@ class BaseModel(metaclass=MetaModel):
 
         self.check_access('unlink')
 
-        from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
         for func in self._ondelete_methods:
             # func._ondelete is True => should be called during uninstallation
             # func._ondelete is False => should be called unless its module is being uninstalled
@@ -3557,8 +3556,8 @@ class BaseModel(metaclass=MetaModel):
             ir_attachment_unlink |= Attachment.browse(row[0] for row in cr.fetchall())
 
             # don't allow fallback value in ir.default for many2one company dependent fields to be deleted
-            # Exception: when MODULE_UNINSTALL_FLAG, these fallbacks can be deleted by Defaults.discard_records(records)
-            if (many2one_fields := self.env.registry.many2one_company_dependents[self._name]) and not self.env.context.get(MODULE_UNINSTALL_FLAG):
+            # Exception: when 'force_delete', these fallbacks can be deleted by Defaults.discard_records(records)
+            if (many2one_fields := self.env.registry.many2one_company_dependents[self._name]) and not self.env.context.get('force_delete'):
                 IrModelFields = self.env["ir.model.fields"]
                 field_ids = tuple(IrModelFields._get_ids(field.model_name).get(field.name) for field in many2one_fields)
                 sub_ids_json_text = tuple(json.dumps(id_) for id_ in sub_ids)
@@ -3571,7 +3570,7 @@ class BaseModel(metaclass=MetaModel):
             # on delete set null/restrict for jsonb company dependent many2one
             for field in many2one_fields:
                 model = self.env[field.model_name]
-                if field.ondelete == 'restrict' and not self.env.context.get(MODULE_UNINSTALL_FLAG):
+                if field.ondelete == 'restrict' and not self.env.context.get('force_delete'):
                     if res := self.env.execute_query(SQL(
                         """
                         SELECT id, %(field)s

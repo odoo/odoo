@@ -33,7 +33,9 @@ ACCESS_ERROR_GROUPS = _lt("This operation is allowed for the following groups:\n
 ACCESS_ERROR_NOGROUP = _lt("No group currently allows this operation.")
 ACCESS_ERROR_RESOLUTION = _lt("Contact your administrator to request access if necessary.")
 
-MODULE_UNINSTALL_FLAG = '_force_unlink'
+# constant MODULE_UNINSTALL_FLAG is kept for backward compatibility only;
+# use 'force_delete' explicitly in your code to add/detect it
+MODULE_UNINSTALL_FLAG = 'force_delete'
 RE_ORDER_FIELDS = re.compile(r'"?(\w+)"?\s*(?:asc|desc)?', flags=re.I)
 
 # base environment for doing a safe_eval
@@ -347,7 +349,7 @@ class IrModel(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_manual(self):
-        if self.env.context.get(MODULE_UNINSTALL_FLAG):
+        if self.env.context.get('force_delete'):
             return
         # Prevent manual deletion of module tables
         for model in self:
@@ -885,8 +887,8 @@ class IrModelFields(models.Model):
         """
         from odoo.orm.model_classes import pop_field
 
-        uninstalling = self.env.context.get(MODULE_UNINSTALL_FLAG)
-        if not uninstalling and any(record.state != 'manual' for record in self):
+        force_delete = self.env.context.get('force_delete')
+        if not force_delete and any(record.state != 'manual' for record in self):
             raise UserError(_("This column contains module data and cannot be removed!"))
 
         records = self              # all the records to delete
@@ -916,7 +918,7 @@ class IrModelFields(models.Model):
         self = records
 
         if failed_dependencies:
-            if not uninstalling:
+            if not force_delete:
                 field, dep = failed_dependencies[0]
                 raise UserError(_(
                     "The field '%(field)s' cannot be removed because the field '%(other_field)s' depends on it.",
@@ -948,7 +950,7 @@ class IrModelFields(models.Model):
             for view in views:
                 view._check_xml()
         except Exception:
-            if not uninstalling:
+            if not force_delete:
                 raise UserError(_(
                     "Cannot rename/delete fields that are still present in views:\nFields: %(fields)s\nView: %(view)s",
                     fields=fields,
@@ -997,12 +999,12 @@ class IrModelFields(models.Model):
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
         # Beware: when renaming a field, method write() calls unlink() on the
-        # corresponding inherited fields with MODULE_UNINSTALL_FLAG, and
+        # corresponding inherited fields with 'force_delete' in context, and
         # method write() itself is in charge of cleaning up the registry. If
         # done here, the field to be renamed regenerates an inherited field
         # below, and we end up with two records for the inherited field: one
         # with the old name, and one with the new name.
-        if not (self.env.context.get(MODULE_UNINSTALL_FLAG) or self.pool.uninstalling_modules):
+        if not (self.env.context.get('force_delete') or self.pool.uninstalling_modules):
             # setup models; this re-initializes models in registry
             self.env.flush_all()
             self.pool._setup_models__(self.env.cr, model_names)
@@ -1111,7 +1113,7 @@ class IrModelFields(models.Model):
         if column_rename and self.state == 'manual':
             # renaming a studio field, remove inherits fields
             # we need to set the uninstall flag to allow removing them
-            (self._prepare_update() - self).with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
+            (self._prepare_update() - self).with_context(force_delete=True).unlink()
 
         res = super().write(vals)
 
@@ -1719,7 +1721,7 @@ class IrModelFieldsSelection(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_manual(self):
-        if self.env.context.get(MODULE_UNINSTALL_FLAG):
+        if self.env.context.get('force_delete'):
             return
         # Prevent manual deletion of module columns
         if (
@@ -2448,7 +2450,7 @@ class IrModelData(models.Model):
 
         # enable model/field deletion
         # we deactivate prefetching to not try to read a column that has been deleted
-        self = self.with_context(**{MODULE_UNINSTALL_FLAG: True, 'prefetch_fields': False})
+        self = self.with_context(force_delete=True, prefetch_fields=False)  # noqa: PLW0642
 
         # determine records to unlink
         records_items = []              # [(model, id)]
@@ -2622,7 +2624,7 @@ class IrModelData(models.Model):
             return True
 
         bad_imd_ids = []
-        self = self.with_context({MODULE_UNINSTALL_FLAG: True})
+        self = self.with_context({'force_delete': True})  # noqa: PLW0642
         loaded_xmlids = self.pool.loaded_xmlids
 
         query = """ SELECT id, module || '.' || name, model, res_id FROM ir_model_data

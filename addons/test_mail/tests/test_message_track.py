@@ -1029,7 +1029,7 @@ class TestTrackingInternals(MailCommon):
         # update a module with the model code removed
         model = self.env.registry.models.pop('mail.test.ticket')
         try:
-            fields_to_remove.with_context(_force_unlink=True).unlink()
+            fields_to_remove.with_context(force_delete=True).unlink()
         finally:
             # Restore model to prevent registry errors after test
             self.env.registry.models['mail.test.ticket'] = model
@@ -1117,7 +1117,7 @@ class TestTrackingInternals(MailCommon):
             ('model', '=', 'mail.test.ticket'),
             ('name', 'in', ('email_from', 'user_id', 'datetime'))  # also include a non tracked field
         ])
-        fields_toremove.with_context(_force_unlink=True).unlink()
+        fields_toremove.with_context(force_delete=True).unlink()
         self.assertEqual(len(trackings_all.exists()), 5)
 
         # check display / format, even if field is removed
