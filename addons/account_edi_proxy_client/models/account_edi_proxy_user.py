@@ -199,7 +199,7 @@ class AccountEdiProxyClientUser(models.Model):
             'company_id': company.id,
             'proxy_type': proxy_type,
             'edi_mode': edi_mode,
-            'edi_identification': edi_identification,
+            'edi_identification': response.get('edi_identification', edi_identification),
             'private_key_id': private_key_sudo.id,
             'refresh_token': response['refresh_token'],
         })

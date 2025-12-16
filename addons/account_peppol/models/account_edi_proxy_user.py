@@ -119,6 +119,24 @@ class AccountEdiProxyClientUser(models.Model):
             return f'{company.peppol_eas}:{company.peppol_endpoint}'
         return super()._get_proxy_identification(company, proxy_type)
 
+    def _update_proxy_identification(self, peppol_identifier):
+        self.ensure_one()
+        if peppol_identifier.lower() != self._get_proxy_identification(self.company_id, 'peppol').lower():
+            eas, _sep, endpoint = peppol_identifier.partition(":")
+            self.company_id.write({
+                'peppol_eas': eas,
+                'peppol_endpoint': endpoint,
+            })
+        if peppol_identifier.lower() != self.edi_identification.lower():
+            self.edi_identification = peppol_identifier
+
+    def _register_proxy_user(self, company, proxy_type, edi_mode):
+        # EXTENDS 'account_edi_proxy_client'
+        edi_user = super()._register_proxy_user(company, proxy_type, edi_mode)
+        if proxy_type != 'peppol':
+            edi_user._update_proxy_identification()
+        return edi_user
+
     def _peppol_import_invoice(self, attachment, partner_endpoint, peppol_state, uuid):
         """Save new documents in an accounting journal, when one is specified on the company.
 
@@ -279,13 +297,16 @@ class AccountEdiProxyClientUser(models.Model):
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
             try:
-                proxy_user = edi_user._call_peppol_proxy("/api/peppol/2/participant_status")
+                response = edi_user._call_peppol_proxy("/api/peppol/2/participant_status")
             except AccountEdiProxyError as e:
                 _logger.error('Error while updating Peppol participant status: %s', e)
                 continue
 
-            if proxy_user['peppol_state'] in ('sender', 'smp_registration', 'receiver', 'rejected'):
-                edi_user.company_id.account_peppol_proxy_state = proxy_user['peppol_state']
+            if response['peppol_state'] in ('sender', 'smp_registration', 'receiver', 'rejected'):
+                edi_user.company_id.account_peppol_proxy_state = response['peppol_state']
+
+            if response.get('peppol_identifier') != edi_user.edi_identification:
+                edi_user._update_proxy_identification(response['peppol_identifier'])
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
