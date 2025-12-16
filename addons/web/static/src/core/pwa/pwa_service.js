@@ -83,6 +83,8 @@ const pwaService = {
         // For Apple devices, PWA are supported on any mobile version of Safari, or in desktop since version 17
         // On Safari devices, the check is also done on the display-mode and we rely on the installationState to
         // decide whether we must show the prompt or not
+
+        // Get Version
         let safariVersion = 0;
         if (isMacOS() && isBrowserSafari()) {
             const match = browser.navigator.userAgent.match(/Version\/(\d+)/);
