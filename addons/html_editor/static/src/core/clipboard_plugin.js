@@ -223,6 +223,9 @@ export class ClipboardPlugin extends Plugin {
         if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);
             this.dependencies.sanitize.sanitize(fragment);
+            if (this.delegateTo("handle_paste_html_override", fragment)) {
+                return true;
+            }
             if (fragment.hasChildNodes()) {
                 this.dependencies.dom.insert(fragment);
             }
@@ -241,6 +244,11 @@ export class ClipboardPlugin extends Plugin {
         const textContent = clipboardData.getData("text/plain");
         if (ONLY_LINK_REGEX.test(textContent)) {
             return false;
+        }
+        const fragment = parseHTML(this.document, clipboardHtml);
+        this.dependencies.sanitize.sanitize(fragment);
+        if (this.delegateTo("handle_paste_html_override", fragment)) {
+            return true;
         }
         if (files.length || clipboardHtml) {
             const clipboardElem = this.prepareClipboardData(clipboardHtml);
