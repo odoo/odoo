@@ -1558,10 +1558,20 @@ We can redirect you to the public employee list."""
             return res
 
         date_from = fields.Date.to_date(date_from)
-        for employee in self:
-            employee_versions_sudo = employee.sudo().version_ids.filtered(lambda v: v._is_in_contract(date_from))
-            if employee_versions_sudo:
-                res[employee.id] = employee_versions_sudo[0].resource_calendar_id.sudo(False)
+        group_data = self.env['hr.version'].sudo()._read_group([
+            ('employee_id', 'in', self.ids),
+            ('date_start', '<=', date_from),
+            '|',
+            ('date_end', '=', False),
+            ('date_end', '>=', date_from),
+            ],
+            groupby=['employee_id'],
+            aggregates=['resource_calendar_id:recordset'],
+            )
+
+        for group in group_data:
+            res[group[0]] = group[0][0].sudo(False)
+
         return res
 
     def _get_calendar_periods(self, start, stop):
