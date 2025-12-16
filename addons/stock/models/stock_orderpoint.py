@@ -141,7 +141,7 @@ class StockWarehouseOrderpoint(models.Model):
         for company in orderpoints_to_compute.company_id:
             company_orderpoints = orderpoints_to_compute.filtered(lambda c: c.company_id == company)
             horizon_date = fields.Date.today() + relativedelta.relativedelta(days=company_orderpoints.get_horizon_days())
-            _, domain_move_in, domain_move_out = company_orderpoints.product_id._get_domain_locations()
+            _, domain_move_in, domain_move_out, __, __ = company_orderpoints.product_id._get_domain_locations()
             domain_move_in = Domain.AND([
                 [('product_id', 'in', company_orderpoints.product_id.ids)],
                 [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))],
@@ -527,7 +527,7 @@ class StockWarehouseOrderpoint(models.Model):
 
         Move = self.env['stock.move'].with_context(active_test=False)
         Quant = self.env['stock.quant'].with_context(active_test=False)
-        domain_quant, domain_move_in_loc, domain_move_out_loc = all_product_ids._get_domain_locations_new(all_replenish_location_ids.ids)
+        domain_quant, domain_move_in_loc, domain_move_out_loc, __, __ = all_product_ids._get_domain_locations_new(all_replenish_location_ids.ids)
         domain_state = Domain('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))
         domain_product = Domain('product_id', 'in', all_product_ids.ids)
 

@@ -154,7 +154,7 @@ class ProductProduct(models.Model):
             product.with_context(skip_qty_available_update=True).update({key: val for key, val in res[product.id].items() if val})
 
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
-        domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
+        domain_quant_loc, domain_move_in_loc, domain_move_out_loc, domain_move_in_loc_done, domain_move_out_loc_done = self._get_domain_locations()
         domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
         dates_in_the_past = False
         # only to_date as to_date will correspond to qty_available
@@ -179,8 +179,12 @@ class ProductProduct(models.Model):
         if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
-            domain_move_in_done = list(domain_move_in)
-            domain_move_out_done = list(domain_move_out)
+            # Use the done location domains (simple location_dest_id) for move lines
+            domain_move_in_done = [('product_id', 'in', self.ids)] + domain_move_in_loc_done
+            domain_move_out_done = [('product_id', 'in', self.ids)] + domain_move_out_loc_done
+            if owner_id is not None:
+                domain_move_in_done += [('owner_id', '=', owner_id)]
+                domain_move_out_done += [('owner_id', '=', owner_id)]
         if from_date:
             date_date_expected_domain_from = [('date', '>=', from_date)]
             domain_move_in += date_date_expected_domain_from
@@ -190,6 +194,7 @@ class ProductProduct(models.Model):
             domain_move_in += date_date_expected_domain_to
             domain_move_out += date_date_expected_domain_to
         Move = self.env['stock.move'].with_context(active_test=False)
+        MoveLine = self.env['stock.move.line']
         Quant = self.env['stock.quant'].with_context(active_test=False)
         domain_move_in_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_in
         domain_move_out_todo = [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))] + domain_move_out
@@ -208,12 +213,11 @@ class ProductProduct(models.Model):
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
 
-            groupby = ['product_id', 'uom_id']
-            for product, uom, quantity in Move._read_group(domain_move_in_done, groupby, ['quantity:sum']):
-                moves_in_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
+            for product, quantity in MoveLine._read_group(domain_move_in_done, ['product_id'], ['quantity_product_uom:sum']):
+                moves_in_res_past[product.id] += quantity
 
-            for product, uom, quantity in Move._read_group(domain_move_out_done, groupby, ['quantity:sum']):
-                moves_out_res_past[product.id] += uom._compute_quantity(quantity, product.uom_id)
+            for product, quantity in MoveLine._read_group(domain_move_out_done, ['product_id'], ['quantity_product_uom:sum']):
+                moves_out_res_past[product.id] += quantity
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
@@ -373,9 +377,9 @@ class ProductProduct(models.Model):
 
         return self._get_domain_locations_new(location_ids)
 
-    def _get_domain_locations_new(self, location_ids) -> tuple[Domain, Domain, Domain]:
+    def _get_domain_locations_new(self, location_ids) -> tuple[Domain, Domain, Domain, Domain, Domain]:
         if not location_ids:
-            return (Domain.FALSE,) * 3
+            return (Domain.FALSE,) * 5
         locations = self.env['stock.location'].browse(location_ids)
         # TDE FIXME: should move the support of child_of + bypass_search_access directly in expression
         # this optimizes [('location_id', 'child_of', locations.ids)]
@@ -385,6 +389,7 @@ class ProductProduct(models.Model):
             loc_domain = Domain('location_id', 'in', locations.ids)
             dest_loc_domain = Domain('location_dest_id', 'in', locations.ids)
             dest_loc_domain_out = Domain('location_dest_id', 'not in', locations.ids)
+            dest_loc_domain_done = dest_loc_domain
         elif locations:
             paths_query = models.Query(locations)
             paths_query.add_where(SQL(
@@ -417,11 +422,14 @@ class ProductProduct(models.Model):
                     '&', ('state', '!=', 'done'), ~dest_loc_domain_in_progress,
             ])
 
-        # returns: (domain_quant_loc, domain_move_in_loc, domain_move_out_loc)
+        # returns: (domain_quant_loc, domain_move_in_loc, domain_move_out_loc,
+        #           domain_move_in_loc_done, domain_move_out_loc_done)
         return (
             loc_domain,
             dest_loc_domain & ~loc_domain,
             loc_domain & dest_loc_domain_out,
+            dest_loc_domain_done & ~loc_domain,
+            loc_domain & ~dest_loc_domain_done,
         )
 
     def _search_qty_available(self, operator, value):
