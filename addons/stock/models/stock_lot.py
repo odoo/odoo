@@ -63,6 +63,25 @@ class StockLot(models.Model):
         inverse='_set_single_location', domain="[('usage', '!=', 'view')]", group_expand='_read_group_location_id')
     is_scrap = fields.Boolean('Is Scrapped', compute='_compute_is_scrap')
 
+    @api.depends_context('active_move_id', 'formatted_display_name')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        ctx = self.env.context
+        move_id = self.env['stock.move'].browse(ctx.get('active_move_id'))
+        if ctx.get('formatted_display_name') and move_id and move_id.product_id.tracking == 'lot' and move_id.location_id.usage == 'internal':
+            not_selected_lots = self - move_id.lot_ids
+            move_uom = move_id.uom_id
+            available_qty_by_lot = self.env['stock.quant']._read_group(
+                domain=[
+                    ('product_id', '=', move_id.product_id.id),
+                    ('location_id', '=', move_id.location_id.id),
+                    ('lot_id', 'in', not_selected_lots.ids),
+                ], groupby=['lot_id'], aggregates=['available_quantity:sum'],
+            )
+            for lot, available_qty in available_qty_by_lot:
+                available_qty = move_id.product_id.uom_id._compute_quantity(available_qty, move_uom)
+                lot.display_name = f"{lot.name}\t--{available_qty or 0.0} {move_uom.name}--"
+
     @api.depends('product_id')
     def _compute_name(self):
         for lot in self:
