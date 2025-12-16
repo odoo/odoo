@@ -59,8 +59,64 @@ export class ProductPage extends Component {
         });
     }
 
+<<<<<<< 0283b700307440c7daff104b510e158d2889c5b0
     get productTemplate() {
         return this.props.productTemplate;
+||||||| 7f810d306aaad9e6a89a412cedfde48232b4c4dd
+    get product() {
+        return this.props.product;
+    }
+
+    get attributes() {
+        return this.product.attributes;
+    }
+
+    get editableProductLine() {
+        const order = this.selfOrder.currentOrder;
+        return !(
+            this.selfOrder.editedLine &&
+            this.selfOrder.editedLine.uuid &&
+            order.lastChangesSent[this.selfOrder.editedLine.uuid]
+        );
+    }
+
+    initState() {
+        const editedLine = this.selfOrder.editedLine;
+
+        if (editedLine) {
+            this.state.customer_note = editedLine.customer_note;
+            this.state.qty = editedLine.qty;
+        }
+
+        return 0;
+=======
+    get product() {
+        return this.props.product;
+    }
+
+    get attributes() {
+        return this.product.attributes;
+    }
+
+    get editableProductLine() {
+        const order = this.selfOrder.currentOrder;
+        return !(
+            this.selfOrder.editedLine &&
+            this.selfOrder.editedLine.uuid &&
+            order.uiState.lineChanges[this.selfOrder.editedLine.uuid]
+        );
+    }
+
+    initState() {
+        const editedLine = this.selfOrder.editedLine;
+
+        if (editedLine) {
+            this.state.customer_note = editedLine.customer_note;
+            this.state.qty = editedLine.qty;
+        }
+
+        return 0;
+>>>>>>> cbfc67851faba3c9a0a98968253797f4472571ce
     }
 
     changeQuantity(increase) {

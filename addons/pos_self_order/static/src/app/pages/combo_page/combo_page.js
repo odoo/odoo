@@ -65,6 +65,28 @@ export class ComboPage extends Component {
         });
     }
 
+<<<<<<< 0283b700307440c7daff104b510e158d2889c5b0
+||||||| 7f810d306aaad9e6a89a412cedfde48232b4c4dd
+    get editableProductLine() {
+        const order = this.selfOrder.currentOrder;
+        return !(
+            this.selfOrder.editedLine &&
+            this.selfOrder.editedLine.uuid &&
+            order.lastChangesSent[this.selfOrder.editedLine.uuid]
+        );
+    }
+
+=======
+    get editableProductLine() {
+        const order = this.selfOrder.currentOrder;
+        return !(
+            this.selfOrder.editedLine &&
+            this.selfOrder.editedLine.uuid &&
+            order.uiState.lineChanges[this.selfOrder.editedLine.uuid]
+        );
+    }
+
+>>>>>>> cbfc67851faba3c9a0a98968253797f4472571ce
     get currentCombo() {
         return this.props.productTemplate;
     }
