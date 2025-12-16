@@ -9,6 +9,7 @@ import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 
@@ -279,5 +280,47 @@ registry.category("web_tour.tours").add("test_tax_in_merge_table_order_line_tour
             FloorScreen.isShown(),
             FloorScreen.linkTables("5", "4"),
             FloorScreen.isChildTable("5"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("no_ghost_floor", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // 1. Create new floor along with a table
+            Chrome.clickMenuOption("Edit Plan"),
+            FloorScreen.addFloor("Ghost Floor"),
+            FloorScreen.addTable({ name: "999" }),
+            FloorScreen.clickSaveEditButton(),
+
+            // 2. Create and pay an order on that table
+            FloorScreen.clickFloor("Ghost Floor"),
+            FloorScreen.clickTable("999"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickPayButton(false),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.clickNextOrder(),
+
+            // // 3. Delete the floor
+            Chrome.clickMenuOption("Edit Plan"),
+            FloorScreen.deleteFloor("Ghost Floor"),
+            FloorScreen.clickSaveEditButton(),
+
+            // 4. Refund one orderline of the paid order
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Active"),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("0001"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.clickNextOrder(),
+
+            // 5. Floor Plan ===> The floor deleted was reappearing
+            FloorScreen.hasNotFloor("Ghost Floor"),
         ].flat(),
 });
