@@ -50,6 +50,7 @@ export class OdooChart extends AbstractChart {
         this.actionXmlId = definition.actionXmlId;
         this.showValues = definition.showValues;
         this._dataSets = definition.dataSets || [];
+        this.humanize = definition.humanize ?? true;
     }
 
     static transformDefinition(definition) {
@@ -90,6 +91,7 @@ export class OdooChart extends AbstractChart {
             showValues: this.showValues,
             dataSets: this.dataSets,
             datasetsConfig: this.datasetsConfig,
+            humanize: this.humanize,
         };
     }
 
