@@ -204,6 +204,7 @@ test("pass last notification id on initialization", async () => {
 test("websocket disconnects when user logs out", async () => {
     addBusServiceListeners(
         ["connect", () => asyncStep("connect")],
+        ["reconnect", () => asyncStep("connect")],
         ["disconnect", () => asyncStep("disconnect")]
     );
     patchWithCleanup(session, { user_id: null, db: "openerp" });
