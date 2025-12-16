@@ -27,7 +27,7 @@ class RestaurantFloor(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image']
+        return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image', 'active']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
