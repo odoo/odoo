@@ -11,7 +11,9 @@ export class StockValuationReportController {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
         this.state = reactive({
-            date: DateTime.now(),
+            date: this.action.params?.date_to
+                ? DateTime.fromISO(this.action.params.date_to)
+                : DateTime.now()
         });
     }
 
