@@ -116,6 +116,10 @@ class AccountMove(models.Model):
         result = super()._load_pos_data_fields(config)
         return result or ['id', 'name']
 
+    @api.model
+    def _load_pos_data_domain(self, data, config):
+        return False
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
