@@ -54,49 +54,39 @@
             <field name="model">hr.recruitment.stage</field>
             <field name="arch" type="xml">
                 <form string="Stage">
+                <field name="is_warning_visible" invisible="1"/>
                 <sheet>
-                    <group name="stage_definition" string="Stage Definition">
-                        <group>
-                            <field name="name"/>
-                            <field name="sequence" groups="base.group_no_one"/>
-                            <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]" options="{'no_quick_create': True}"/>
-                        </group>
-                        <group name="stage_details">
-                            <field name="fold"/>
-                            <field name="hired_stage"/>
-                            <field name="is_warning_visible" invisible="1"/>
-                            <span invisible="not is_warning_visible">
-                                <span
-                                    class="fa fa-exclamation-triangle text-danger ps-3">
-                                </span>
-                                <span class="text-danger">
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Qualification"/></h1>
+                    </div>
+                    <group>
+                        <group name="configuration">
+                            <field name="template_id" placeholder="No email"
+                                domain= "[('model_id.model', '=', 'hr.applicant')]"
+                                options="{'no_quick_create': True}"/>
+                            <label for="hired_stage"/>
+                            <div>
+                                <field name="hired_stage"/>
+                                <div invisible="not is_warning_visible" class="text-danger">
+                                    <span class="fa fa-exclamation-triangle pe-1"/>
                                     All applications will lose their hired date and hired status.
-                                </span>
-                            </span>
-                            <field name="job_ids" widget="many2many_tags"/>
+                                </div>
+                            </div>
                             <label for="rotting_threshold_days" string="Rotting in" invisible="hired_stage"/>
                             <div invisible="hired_stage">
                                 <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
                                 <span>days</span>
                             </div>
                         </group>
-                    </group>
-                    <group name="tooltips" string="Tooltips">
-                        <p class="text-muted" colspan="2">
-                            You can define here the labels that will be displayed for the kanban state instead
-                            of the default labels.
-                        </p>
-                        <label for="legend_normal" string=" " class="o_status"/>
-                        <field name="legend_normal" nolabel="1"/>
-                        <label for="legend_blocked" string=" " class="o_status o_status_red"/>
-                        <field name="legend_blocked" nolabel="1"/>
-                        <label for="legend_waiting" string=" " class="o_status o_status_orange"/>
-                        <field name="legend_waiting" nolabel="1"/>
-                        <label for="legend_done" string=" " class="o_status o_status_green"/>
-                        <field name="legend_done" nolabel="1"/>
+                        <group name="details">
+                            <field name="job_ids" string="Job Positions" widget="many2many_tags"
+                                placeholder="Show for all positions"/>
+                            <field name="fold" string="Fold by Default"/>
+                        </group>
                     </group>
                     <separator string="Requirements"/>
-                    <field name="requirements" placeholder="You can define the requirements here. They will be displayed when you hover over the stage title."/>
+                    <field name="requirements" placeholder="What are the requirements to move an applicant to this stage?"/>
                 </sheet>
                 </form>
             </field>

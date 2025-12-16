@@ -26,14 +26,6 @@ class HrRecruitmentStage(models.Model):
         help="If checked, this stage is used to determine the hire date of an applicant")
     rotting_threshold_days = fields.Integer('Days to rot', default=0, help='Day count before applicants in this stage become stale. \
         Set to 0 to disable.  Changing this parameter will not affect the rotting status/date of resources last updated before this change.')
-    legend_blocked = fields.Char(
-        'Red Kanban Label', default=lambda self: _('Blocked'), translate=True, required=True)
-    legend_waiting = fields.Char(
-        'Orange Kanban Label', default=lambda self: _('Waiting'), translate=True, required=True)
-    legend_done = fields.Char(
-        'Green Kanban Label', default=lambda self: _('Ready for Next Stage'), translate=True, required=True)
-    legend_normal = fields.Char(
-        'Grey Kanban Label', default=lambda self: _('In Progress'), translate=True, required=True)
     is_warning_visible = fields.Boolean(compute='_compute_is_warning_visible')
 
     @api.model

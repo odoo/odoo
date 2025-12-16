@@ -5,14 +5,20 @@
         <field name="model">project.task.type</field>
         <field name="inherit_id" ref="project.task_type_edit"/>
         <field name="arch" type="xml">
-            <xpath expr="//span[@name='rating_status_helper']" position="replace">
-                <span name="rating_status_helper">
-                    <span invisible="rating_status == 'periodic'">A rating request will be sent as soon as a task reaches this stage, provided the project is billable.</span>
-                    <span invisible="rating_status == 'stage'">Rating requests will be sent as long as the task remains in this stage, provided the project is billable.</span>
-                </span>
-            </xpath>
-            <xpath expr="//group[@name='group_customer_rating']" position="attributes">
+            <xpath expr="//label[@for='rating_active']" position="attributes">
                 <attribute name="invisible">not show_rating_active</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_customer_rating')]" position="attributes">
+                <attribute name="invisible">not show_rating_active</attribute>
+            </xpath>
+            <xpath expr="//field[@name='rating_status_period']" position="attributes">
+                <attribute name="invisible" add="not show_rating_active" separator="or"/>
+            </xpath>
+            <xpath expr="//field[@name='rating_template_id']" position="attributes">
+                <attribute name="invisible" add="not show_rating_active" separator="or"/>
+            </xpath>
+            <xpath expr="//field[@name='auto_validation_state']" position="attributes">
+                <attribute name="invisible" add="not show_rating_active" separator="or"/>
             </xpath>
         </field>
     </record>

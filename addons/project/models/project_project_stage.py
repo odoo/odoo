@@ -12,7 +12,7 @@ class ProjectProjectStage(models.Model):
 
     active = fields.Boolean(default=True, export_string_translation=False)
     sequence = fields.Integer(default=50, export_string_translation=False)
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char("Stage Name", required=True, translate=True)
     mail_template_id = fields.Many2one('mail.template', string='Email Template', domain=[('model', '=', 'project.project')],
         help="If set, an email will be automatically sent to the customer when the project reaches this stage.")
     fold = fields.Boolean('Folded',

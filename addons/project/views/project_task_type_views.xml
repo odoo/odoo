@@ -22,54 +22,41 @@
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
                 <form string="Task Stage" delete="0">
-                    <field name="active" invisible="1" />
+                    <field name="active" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                     <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="oe_title">
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. Qualification"/></h1>
+                        </div>
                         <group>
                             <group>
-                                <field name="name" placeholder="e.g. To Do"/>
-                                <field name="fold"/>
-                                <field name="user_id" invisible="True"/>
-                                <field name="auto_validation_state" invisible="not rating_template_id"/>
-                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'open_form'}" invisible="user_id" required="not user_id"/>
+                                <field name="mail_template_id" placeholder="No email"
+                                    context="{'default_model': 'project.task'}" invisible="user_id"/>
                                 <label for="rotting_threshold_days" string="Rotting in"/>
                                 <div>
                                     <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
                                     <span>days</span>
                                 </div>
-                                <field name="color" widget="color_picker"/>
-                                <field name="sequence" groups="base.group_no_one"/>
+                                <label for="rating_active" string="Ask for Ratings"/>
+                                <div class="o_customer_rating o_row">
+                                    <field name="rating_active"/>
+                                    <field name="rating_status" invisible="not rating_active"/>
+                                </div>
+                                <field name="rating_status_period" string="Rating Periodicity"
+                                    invisible="not rating_active or rating_status != 'periodic'"
+                                    required="rating_active and rating_status == 'periodic'"/>
+                                <field name="rating_template_id" string="Rating Email" placeholder="Default"
+                                    invisible="not rating_active" required="rating_active" context="{'default_model': 'project.task'}"/>
+                                <field name="auto_validation_state" string="Update Stage" invisible="not rating_active or not rating_template_id"/>
                             </group>
                             <group>
-                                <field name="mail_template_id" context="{'default_model': 'project.task'}" invisible="user_id"/>
-                            </group>
-                            <group name="group_customer_rating" string="Customer Rating" class="row o_settings_container" invisible="user_id">
-                                <setting class="col-lg-12">
-                                    <field name="rating_active"/>
-                                    <div invisible="not rating_active">
-                                        <field name="rating_status" widget="radio" class="o_row"/>
-                                        <group class="mt-2">
-                                            <field
-                                                name="rating_status_period"
-                                                invisible="rating_status != 'periodic'"
-                                                required="rating_status == 'periodic'"
-                                            />
-                                            <field
-                                                name="rating_template_id"
-                                                placeholder="Task: Rating Request"
-                                                context="{'default_model': 'project.task'}"
-                                                required="rating_active"
-                                            />
-                                        </group>
-                                        <span colspan="2" class="text-muted o_row ps-1">
-                                            <i class="fa fa-lightbulb-o pe-2"/>
-                                            <span name="rating_status_helper">
-                                                <span invisible="rating_status == 'periodic'">A rating request will be sent as soon as a task reaches this stage.</span>
-                                                <span invisible="rating_status == 'stage'">Rating requests will be sent as long as the task remains in this stage.</span>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </setting>
+                                <field name="project_ids" invisible="user_id" required="not user_id"
+                                    widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'open_form'}"/>
+                                <field name="fold" string="Fold by Default"/>
+                                <field name="color" widget="color_picker"/>
+                                <field name="sequence" groups="base.group_no_one"/>
                             </group>
                         </group>
                     </sheet>

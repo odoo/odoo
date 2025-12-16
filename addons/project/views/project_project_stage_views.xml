@@ -34,19 +34,22 @@
         <field name="model">project.project.stage</field>
         <field name="arch" type="xml">
             <form delete="0">
+                <field name="active" invisible="1"/>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <h1><field name="name" placeholder="e.g. To Do"/></h1>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Qualification"/></h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="active" invisible="1"/>
-                            <field name="mail_template_id" context="{'default_model': 'project.project'}"/>
-                            <field name="color" widget="color_picker"/>
-                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="mail_template_id" placeholder="No email" context="{'default_model': 'project.project'}"/>
                         </group>
                         <group>
-                            <field name="fold"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
+                            <field name="company_id" groups="base.group_multi_company"
+                                placeholder="Show to all companies" options="{'no_create': True}"/>
+                            <field name="fold" string="Fold by Default"/>
+                            <field name="color" widget="color_picker"/>
                         </group>
                     </group>
                 </sheet>

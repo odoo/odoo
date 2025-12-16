@@ -116,14 +116,10 @@ class HrApplicant(models.Model):
     attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'hr.applicant')], string='Attachments')
     kanban_state = fields.Selection([
         ('normal', 'In Progress'),
-        ('done', 'Ready for Next Stage'),
+        ('done', 'Ready'),
         ('waiting', 'Waiting'),
         ('blocked', 'Blocked')], string='Kanban State',
         copy=False, default='normal', required=True)
-    legend_blocked = fields.Char(related='stage_id.legend_blocked', string='Kanban Blocked')
-    legend_done = fields.Char(related='stage_id.legend_done', string='Kanban Valid')
-    legend_waiting = fields.Char(related='stage_id.legend_waiting', string='Kanban Waiting')
-    legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing')
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', string='Refuse Reason', tracking=True)
     meeting_ids = fields.One2many('calendar.event', 'applicant_id', 'Meetings')
     meeting_display_text = fields.Char(compute='_compute_meeting_display')
