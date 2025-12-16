@@ -79,7 +79,7 @@
         <t t-set="is_scored_question" t-value="any(answer.answer_score for answer in question.suggested_answer_ids)" />
         <t t-set="show_bar_chart" t-value="question.question_type in ['simple_choice', 'multiple_choice', 'scale']" />
         <t t-set="show_text_answers" t-value="question.question_type in ['char_box', 'date', 'datetime'] and not question.save_as_email and not question.save_as_nickname" />
-        <t t-set="bar_reserved_with_rem" t-value="23.4"/> <!-- See setup of SurveySessionLeaderboard -->
+        <t t-set="bar_reserved_with_rem" t-value="25"/> <!-- See setup of SurveySessionLeaderboard -->
         <div class="wrap min-vh-100 align-items-center justify-content-center d-flex flex-column o_survey_session_manage invisible"
             t-att-style="'display: none;' if is_rpc_call else ''"
             t-att-data-is-rpc-call="is_rpc_call"
@@ -97,6 +97,7 @@
             t-att-data-answers-validity="answers_validity"
             t-att-data-is-first-question="is_first_question"
             t-att-data-is-last-question="is_last_question"
+            t-att-data-all-participants-shown="all_participants_shown"
             t-att-data-survey-last-triggering-answers="survey_last_triggering_answers"
             t-att-data-current-screen="'question' if is_scored_question else 'userInputs'"
             t-att-data-show-bar-chart="show_bar_chart"
@@ -128,7 +129,7 @@
                     <div t-field="survey.description_done"/>
                 </div>
                 <a role="button"
-                    class="o_survey_session_navigation o_survey_session_navigation_next p-2 bg-light">
+                    class="o_survey_session_navigation o_survey_session_navigation_next p-2 bg-light text-nowrap">
                     <span class="o_survey_session_navigation_next_label me-2 fw-bold d-none d-md-inline"/>
                     <i class="fw-bold oi oi-chevron-right"/>
                 </a>
@@ -176,7 +177,9 @@
                     <t t-set="question" t-value="False"/>
                     <div class="d-flex flex-wrap">
                         <h1 class="o_survey_session_leaderboard_title flex-grow-1 me-4 ms-1">
-                            <span t-if="is_last_question">Final Leaderboard</span>
+                            <span t-if="is_last_question and all_participants_shown">Final Scoreboard</span>
+                            <span t-elif="is_last_question">Final Leaderboard</span>
+                            <span t-elif="all_participants_shown">Scoreboard</span>
                             <span t-else="">Leaderboard</span>
                         </h1>
                         <div t-att-class="'o_survey_leaderboard_buttons fw-bold %s' % 'd-none' if not is_last_question else 'ms-2'">
@@ -191,12 +194,13 @@
     </template>
 
     <template id="user_input_session_leaderboard" name="Survey User Input Leaderboard">
-        <t t-set="bar_reserved_with_rem" t-value="23.4"/> <!-- See setup of SurveySessionLeaderboard -->
-        <div t-if="leaderboard" class="position-relative mb-5" t-attf-style="height: calc(3.8rem * #{len(leaderboard)});">
-            <t t-set="max_updated_score" t-value="max(score.get('updated_score', 1) for score in leaderboard) or 1" />
+        <t t-set="bar_reserved_with_rem" t-value="25"/> <!-- See setup of SurveySessionLeaderboard -->
+        <div t-if="leaderboard" class="position-relative mb-5 o_survey_leaderboard_scores" t-attf-style="height: calc(3.8rem * #{len(leaderboard)});">
+            <t t-set="max_updated_score" t-value="max(score.get('updated_score', score.get('scoring_total', 1)) for score in leaderboard) or 1" />
             <t t-foreach="leaderboard" t-as="score">
                 <t t-set="current_score" t-value="score.get('scoring_total', 0)"/>
                 <t t-set="question_score" t-value="score.get('question_score', 0)"/>
+                <t t-set="min_current_score" t-value="score.get('min_current_score', 0)"/>
                 <t t-set="max_question_score" t-value="score.get('max_question_score', 1)"/>
                 <div class="o_survey_session_leaderboard_item ms-2 d-flex position-absolute"
                     t-attf-style="top: calc(#{score_index} * 3.8rem);"
@@ -206,24 +210,30 @@
                     t-att-data-current-score="str(current_score)"
                     t-att-data-updated-score="str(round(score.get('updated_score', 0)))"
                     t-att-data-max-question-score="str(round(max_question_score))">
-                    <div class="d-inline-block fw-bold align-top">
-                        <div class="d-inline-block me-2 o_survey_session_leaderboard_score" t-out="'%.0f p' % score['scoring_total']" />
+                    <i class="o_survey_session_leaderboard_caret fa mt-1"/>
+                    <div class="d-inline-block fw-bold align-top position-relative">
+                        <div class="d-inline-block me-2 o_survey_session_leaderboard_position">
+                            <t t-out="str(score_index + 1)"/>.
+                        </div>
+                        <div class="o_survey_session_leaderboard_name position-absolute end-0 fw-normal">
+                            <span t-if="score.get('nickname')" t-out="score['nickname']"/>
+                            <span t-else="">Anonymous</span>
+                        </div>
                     </div>
-                    <t t-set="width_ratio" t-value="round(current_score / max_updated_score, 3)"/>
-                    <div class="o_survey_session_leaderboard_bar ms-2 align-top d-inline-block text-end fw-bold"
+                    <t t-set="width_ratio" t-value="round((current_score - min_current_score) / (max_updated_score - min_current_score), 3)"/>
+                    <div class="o_survey_session_leaderboard_bar_landmark ms-2"/>
+                    <div class="o_survey_session_leaderboard_bar align-top d-inline-block"
                         t-attf-style="width: calc(calc(100% - #{bar_reserved_with_rem}rem) * #{width_ratio})">
                     </div>
                     <div class="o_survey_session_leaderboard_bar_question me-2 align-top d-inline-block text-end fw-bold position-relative"
                         style="width: 0;"
-                        t-att-data-width-ratio="str(round(question_score / max_updated_score, 3))"
+                        t-att-data-width-ratio="str(round(question_score / (max_updated_score - min_current_score), 3))"
                         t-att-data-max-question-score="str(max_question_score)"
                         t-att-data-question-score="str(question_score)">
-                        <div class="o_survey_session_leaderboard_bar_question_score position-absolute"></div>
                     </div>
-                    <div class="o_survey_session_leaderboard_name d-inline-block">
-                        <span t-if="score.get('nickname')" t-out="score['nickname']" />
-                        <span t-else="">Anonymous</span>
-                    </div>
+                    <div class="o_survey_session_leaderboard_score d-inline-block"
+                        t-out="'%.0f' % score['scoring_total']"/>
+                    <div class="o_survey_session_leaderboard_bar_question_score text-nowrap"></div>
                 </div>
             </t>
         </div>

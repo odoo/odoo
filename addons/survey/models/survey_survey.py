@@ -12,6 +12,8 @@ from odoo.fields import Domain
 from odoo.tools import is_html_empty
 from odoo.tools.urls import urljoin as url_join
 
+SURVEY_LEADERBOARD_MAX_PARTICIPANTS = 250
+
 
 class SurveySurvey(models.Model):
     """ Settings for a multi-page/multi-question survey. Each survey can have one or more attached pages
@@ -986,7 +988,7 @@ class SurveySurvey(models.Model):
             'id',
             'nickname',
             'scoring_total',
-        ], limit=15, order="scoring_total desc")
+        ], limit=SURVEY_LEADERBOARD_MAX_PARTICIPANTS, order="scoring_total desc")
 
         if leaderboard and self.session_state == 'in_progress' and \
            any(answer.answer_score for answer in self.session_question_id.suggested_answer_ids):
@@ -1000,17 +1002,23 @@ class SurveySurvey(models.Model):
                     question_scores.get(input_line['user_input_id'][0], 0) + input_line['answer_score']
 
             score_position = 0
+            max_question_score = sum(
+                score for score in self.session_question_id.suggested_answer_ids.mapped('answer_score')
+                if score > 0
+            ) or 1
+            min_current_score = max(min(
+                leaderboard_item['scoring_total'] - question_scores.get(leaderboard_item['id'], 0)
+                for leaderboard_item in leaderboard
+            ), 0)
             for leaderboard_item in leaderboard:
                 question_score = question_scores.get(leaderboard_item['id'], 0)
                 leaderboard_item.update({
                     'updated_score': leaderboard_item['scoring_total'],
                     'scoring_total': leaderboard_item['scoring_total'] - question_score,
                     'leaderboard_position': score_position,
-                    'max_question_score': sum(
-                        score for score in self.session_question_id.suggested_answer_ids.mapped('answer_score')
-                        if score > 0
-                    ) or 1,
-                    'question_score': question_score
+                    'max_question_score': max_question_score,
+                    'min_current_score': min_current_score,
+                    'question_score': question_score,
                 })
                 score_position += 1
             leaderboard = sorted(

@@ -11,6 +11,8 @@ const nextPageTooltips = {
     closingWords: _t("End of Survey"),
     leaderboard: _t("Show Leaderboard"),
     leaderboardFinal: _t("Show Final Leaderboard"),
+    scoreboard: _t("Show Scoreboard"),
+    scoreboardFinal: _t("Show Final Scoreboard"),
     nextQuestion: _t("Next"),
     results: _t("Show Correct Answer(s)"),
     startScreen: _t("Start"),
@@ -90,6 +92,7 @@ export class SurveySessionManage extends Interaction {
         this.isStartScreen = this.el.dataset.isStartScreen;
         this.isFirstQuestion = this.el.dataset.isFirstQuestion;
         this.isLastQuestion = this.el.dataset.isLastQuestion;
+        this.allParticipantsShown = this.el.dataset.allParticipantsShown;
         this.surveyLastTriggeringAnswers = JSON.parse(
             this.el.dataset.surveyLastTriggeringAnswers || "[]"
         );
@@ -536,9 +539,9 @@ export class SurveySessionManage extends Interaction {
         ) {
             tooltip = nextPageTooltips.closingWords;
         } else {
-            const nextScreen = this.getNextScreen();
-            if (nextScreen === "nextQuestion" || this.surveyHasConditionalQuestions) {
-                tooltip = nextPageTooltips.nextQuestion;
+            let nextScreen = this.getNextScreen();
+            if (nextScreen.startsWith("leaderboard") && this.allParticipantsShown) {
+                nextScreen = nextScreen.replace('leaderboard', 'scoreboard');
             }
             tooltip = nextPageTooltips[nextScreen];
         }

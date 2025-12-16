@@ -417,11 +417,34 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
     }
 }
 
+@keyframes vertical-marquee {
+    0% { // Spend more time on top positions
+        transform: translateY(0);
+    }
+    98% {  // Scroll back up so viewers are not lost
+        transform: translateY(var(--surveyLeaderboardTranslateY));  // defined in JS
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
 .o_survey_session_leaderboard {
     font-size: 1.4rem;
 
     .o_survey_session_leaderboard_container {
         height: calc(2.8rem * 15);
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        &::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+        .o_survey_leaderboard_scores {
+            animation: vertical-marquee 10s linear infinite;  // duration adjusted in JS
+            animation-delay: 10s;
+        }
     }
 
     .o_survey_session_leaderboard_item {
@@ -429,8 +452,13 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         width: 100%;
         transition: top ease-in-out .3s;
 
-        .o_survey_session_leaderboard_score {
-            width: 6.5rem;
+        .o_survey_session_leaderboard_caret {
+            font-size: 2rem;  // fixed size or overridden with website and looks weird
+            width: 2rem;
+        }
+
+        .o_survey_session_leaderboard_position {
+            width: 12rem;
             padding-top: .2rem;
             height: 2.8rem;
         }
@@ -438,23 +466,31 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         .o_survey_session_leaderboard_bar, .o_survey_session_leaderboard_bar_question {
             height: 2.8rem;
         }
+        .o_survey_session_leaderboard_bar_landmark {
+            width: 0.5rem;
+            background-color: #007A77;
+        }
 
         .o_survey_session_leaderboard_bar {
-            min-width: 3.7rem;
             background-color: #007A77;
-            z-index: 2;
         }
 
         .o_survey_session_leaderboard_bar_question_score {
-            top: .2rem;
-            right: .5rem;
-            width: 20rem;
+            padding-top: .2rem;
             z-index: 1;
         }
 
-        .o_survey_session_leaderboard_name {
+        .o_survey_session_leaderboard_score {
             padding-top: .2rem;
-            width: 7.5rem;
+            padding-left: .2rem;
+            margin-right: 1rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .o_survey_session_leaderboard_name {
+            margin-top: -2.6rem;
+            width: 9rem;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
