@@ -27,7 +27,7 @@
                     <t t-set="btnText">Split</t>
                     <t t-set="btnClasses" t-value="'btn-secondary '"/>
                     <t t-set="onClick" t-value="this.openSplitPage"/>
-                    <t t-set="disabled" t-value="this.pos.getOrder()?.getOrderlines()?.reduce((sum, line) => sum + line.qty, 0) lt 2"/>
+                    <t t-set="disabled" t-value="this.pos.getOrder()?.getOrderlines()?.filter((line) => line.isGlobalDiscountApplicable()).reduce((sum, line) => sum + line.qty, 0) lt 2"/>
                 </t>
                 <!-- Transfer / Merge Button -->
                 <!-- No t-call controlButton because of t-on-click.stop -->
