@@ -249,12 +249,15 @@ describe("Range collapsed", () => {
             });
         });
 
-        test("should convert list item with line breaks into a single paragraph", async () => {
+        test("should convert list item with line breaks into a single paragraph (1)", async () => {
             await testEditor({
                 contentBefore: "<ol><li>ab<br>cd<br>ef[]</li></ol>",
                 stepFunction: toggleOrderedList,
                 contentAfter: "<p>ab<br>cd<br>ef[]</p>",
             });
+        });
+
+        test("should convert list item with line breaks into a single paragraph (2)", async () => {
             await testEditor({
                 contentBefore: "<ol><li>ab<br><b>cd</b><br><i>ef[]</i></li></ol>",
                 stepFunction: toggleOrderedList,
