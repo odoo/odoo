@@ -1,3 +1,5 @@
+import { browser } from "@web/core/browser/browser";
+
 /**
  * Checks if the given URL contains the specified hostname and returns a reconstructed URL if it does.
  *
@@ -55,4 +57,27 @@ export function getVideoUrl(platform, videoId, params) {
     }
     url.search = new URLSearchParams(params);
     return url;
+}
+
+export function scrollAndHighlightHeading(
+    content,
+    headingId = browser?.location?.hash?.replace?.(/^#/, "")
+) {
+    if (content && headingId) {
+        // Wait until the browser has rendered the editor before
+        // scrolling. The timeout value of 500 is a little arbitrary,
+        // but it should be enough to prevent an irritating case where
+        // a Youtube video is in the document and loads while the
+        // autoscroll is happening, and stops it.
+        setTimeout(() => {
+            const heading = content.querySelector(`[data-heading-link-id="${headingId}"]`);
+            if (heading) {
+                heading.scrollIntoView({ behavior: "smooth" });
+                heading.classList.add("o-highlight-heading");
+                setTimeout(() => {
+                    heading.classList.remove("o-highlight-heading");
+                }, 2000);
+            }
+        }, 500);
+    }
 }
