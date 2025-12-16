@@ -1360,13 +1360,13 @@ We can redirect you to the public employee list."""
         employees = employees.sorted(key=lambda employee: index_per_employee[employee])
         # Sudo in case HR officer doesn't have the Contact Creation group
         employees.filtered(lambda e: not e.work_contact_id).sudo()._create_work_contacts()
+        if self.env.context.get('salary_simulation'):
+            return employees
         for employee_sudo in employees.sudo():
             # creating 'svg/xml' attachments requires specific rights
             if not employee_sudo.image_1920 and self.env['ir.ui.view'].sudo(False).has_access('write'):
                 employee_sudo.image_1920 = employee_sudo._avatar_generate_svg()
                 employee_sudo.work_contact_id.image_1920 = employee_sudo.image_1920
-        if self.env.context.get('salary_simulation'):
-            return employees
         employee_departments = employees.department_id
         if employee_departments:
             self.env['discuss.channel'].sudo().search([
