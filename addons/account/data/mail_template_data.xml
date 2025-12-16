@@ -382,8 +382,6 @@
 <t t-set="portal_url" t-value="object.get_portal_url()"/>
 <t t-set="unsubscribe_url" t-value="ctx.get('unsubscribe_url', False)"/>
 
-<t t-set="payment_state" t-value="object.payment_state != 'not_paid' and object.payment_state.replace('_', ' ')"/>
-
 <div style="margin:0; padding:0; color:#2c2431;">
     <table cellpadding="0" cellspacing="0" border="0" style="width:100%; background:#f7f4f8; padding:40px 0;">
         <tr>
