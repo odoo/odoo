@@ -343,13 +343,13 @@ export function getCommonAncestor(nodes, root = undefined) {
  *
  * @param {Element} root
  * @param {string} selector
- * @returns {Generator<Element>}
+ * @returns {Element[]}
  */
-export const selectElements = function* (root, selector) {
+export const selectElements = function (root, selector) {
+    const elements = [];
     if (root.matches(selector)) {
-        yield root;
+        elements.push(root);
     }
-    for (const elem of root.querySelectorAll(selector)) {
-        yield elem;
-    }
+    elements.push(...root.querySelectorAll(selector));
+    return elements;
 };

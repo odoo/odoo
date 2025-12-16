@@ -55,7 +55,7 @@ export class LinkSelectionPlugin extends Plugin {
     };
 
     addFeffsToLinks(root, cursors) {
-        return [...selectElements(root, "a")]
+        return selectElements(root, "a")
             .filter(this.isLinkEligibleForZwnbsp.bind(this))
             .flatMap((link) => this.dependencies.feff.surroundWithFeffs(link, cursors));
     }

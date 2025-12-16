@@ -15,7 +15,7 @@ export class InlineCodePlugin extends Plugin {
         input_handlers: this.onInput.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
         feff_providers: (root, cursors) =>
-            [...selectElements(root, ".o_inline_code")].flatMap((code) =>
+            selectElements(root, ".o_inline_code").flatMap((code) =>
                 this.dependencies.feff.surroundWithFeffs(code, cursors)
             ),
     };

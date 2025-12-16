@@ -125,7 +125,7 @@ export class FeffPlugin extends Plugin {
         if (!combinedSelector) {
             return [];
         }
-        const elements = [...selectElements(root, combinedSelector)];
+        const elements = selectElements(root, combinedSelector);
         const isEditable = (node) => node.parentElement?.isContentEditable;
         const feffNodes = elements
             .filter(isEditable)

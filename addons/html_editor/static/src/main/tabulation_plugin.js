@@ -62,7 +62,7 @@ export class TabulationPlugin extends Plugin {
             { hotkey: "tab", commandId: "tab" },
             { hotkey: "shift+tab", commandId: "shiftTab" },
         ],
-        content_not_editable_providers: (rootEl) => [...selectElements(rootEl, ".oe-tabs")],
+        content_not_editable_providers: (rootEl) => selectElements(rootEl, ".oe-tabs"),
         contenteditable_to_remove_selector: "span.oe-tabs",
 
         /** Handlers */

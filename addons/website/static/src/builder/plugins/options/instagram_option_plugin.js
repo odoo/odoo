@@ -37,9 +37,7 @@ class InstagramOptionPlugin extends Plugin {
     }
 
     normalize(root) {
-        const nodes = [
-            ...selectElements(root, ".s_instagram_page[data-instagram-page-is-default]"),
-        ];
+        const nodes = selectElements(root, ".s_instagram_page[data-instagram-page-is-default]");
         if (nodes.length) {
             this.loadAndSetPage(nodes);
         }

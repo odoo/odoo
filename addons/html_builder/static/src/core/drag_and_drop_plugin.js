@@ -7,6 +7,7 @@ import { clamp } from "@web/core/utils/numbers";
 import { rowSize } from "@html_builder/utils/grid_layout_utils";
 import { isEditable, isVisible } from "@html_builder/utils/utils";
 import { DragAndDropMoveHandle } from "./drag_and_drop_move_handle";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef {{
@@ -101,7 +102,7 @@ export class DragAndDropPlugin extends Plugin {
     }
 
     cleanForSave({ root }) {
-        [root, ...root.querySelectorAll(".o_draggable")].forEach((el) => {
+        selectElements(root, ".o_draggable").forEach((el) => {
             el.classList.remove("o_draggable");
         });
     }

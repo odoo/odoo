@@ -214,10 +214,10 @@ export class QWebPlugin extends Plugin {
             // If there is no element in groupId activated, activate the first
             // one.
             if (!isOneElementActive) {
-                const firstElementToActivate = selectElements(
-                    root,
-                    `[data-oe-t-group='${groupId}']`
-                ).next().value;
+                const firstElementToActivate =
+                    root.getAttribute("data-oe-t-group") === groupId.toString()
+                        ? root
+                        : root.querySelector(`[data-oe-t-group='${groupId}']`);
                 firstElementToActivate.setAttribute("data-oe-t-group-active", "true");
             }
         }

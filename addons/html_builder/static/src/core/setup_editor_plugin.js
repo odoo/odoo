@@ -78,7 +78,7 @@ export class SetupEditorPlugin extends Plugin {
             savableEl.classList.remove("o_savable");
         }
 
-        [root, ...root.querySelectorAll("[data-editor-message]")].forEach((el) => {
+        selectElements(root, "[data-editor-message]").forEach((el) => {
             el.removeAttribute("data-editor-message");
             el.removeAttribute("data-editor-message-default");
         });
@@ -93,6 +93,6 @@ export class SetupEditorPlugin extends Plugin {
      */
     getSavableAreas(rootEl) {
         const editableEl = rootEl || this.editable;
-        return [...selectElements(editableEl, ".o_savable")];
+        return selectElements(editableEl, ".o_savable");
     }
 }

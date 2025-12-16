@@ -40,7 +40,7 @@ class FacebookOptionPlugin extends Plugin {
             }
         }
 
-        const nodes = [...selectElements(root, ".o_facebook_page:not([data-href])")];
+        const nodes = selectElements(root, ".o_facebook_page:not([data-href])");
         if (nodes.length) {
             this.loadAndSetEmptyLink(nodes);
         }
