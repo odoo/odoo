@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { animationFrame, expect, test } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
@@ -21,20 +21,23 @@ test("getNumpadButtons", async () => {
         props: { orderUuid: order.uuid },
     });
     await store.applyDiscount(10);
+    await animationFrame();
     const receivedButtonsDisableStatue = productScreen
         .getNumpadButtons()
         .filter((button) => ["quantity", "discount"].includes(button.value))
         .map((button) => button.disabled);
-    let discountLine = order.getDiscountLine();
-    expect(Math.abs(discountLine.priceIncl).toString()).toBe(
+    expect(Math.abs(order.discountLines[0].priceIncl).toString()).toBe(
         (order.lines[0].priceIncl * 0.1).toPrecision(2)
     );
+
     expect(receivedButtonsDisableStatue).toEqual([true, true]);
 
     await productScreen.addProductToOrder(product1);
-    discountLine = order.getDiscountLine();
-
-    expect(Math.abs(discountLine.priceIncl).toString()).toBe(
-        (order.lines[0].priceIncl * 0.1).toPrecision(2)
-    );
+    // Animation frame doesn't work here since the debounced function used to recompute
+    // discount is using eventListener, so we use setTimeout instead.
+    setTimeout(() => {
+        expect(Math.abs(order.discountLines[0].priceIncl).toString()).toBe(
+            (order.lines[0].priceIncl * 0.1).toPrecision(2)
+        );
+    }, 100);
 });
