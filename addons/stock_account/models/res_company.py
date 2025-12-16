@@ -51,7 +51,7 @@ class ResCompany(models.Model):
         if at_date and isinstance(at_date, str):
             at_date = fields.Date.from_string(at_date)
         last_closing_date = self._get_last_closing_date()
-        if at_date and last_closing_date and at_date < last_closing_date:
+        if at_date and last_closing_date and at_date < fields.Date.to_date(last_closing_date):
             raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
         aml_vals_list = self._action_close_stock_valuation(at_date=at_date)
 
@@ -179,6 +179,7 @@ class ResCompany(models.Model):
             moves_base_domain &= Domain([('date', '<=', at_date)])
         moves_in_domain = Domain([
             ('is_out', '=', True),
+            ('company_id', '=', self.id),
             ('location_dest_id', 'in', valued_location.ids),
         ]) & moves_base_domain
         moves_in_by_location = self.env['stock.move']._read_group(
@@ -188,6 +189,7 @@ class ResCompany(models.Model):
         )
         moves_out_domain = Domain([
             ('is_in', '=', True),
+            ('company_id', '=', self.id),
             ('location_id', 'in', valued_location.ids),
         ]) & moves_base_domain
         moves_out_by_location = self.env['stock.move']._read_group(
@@ -327,7 +329,11 @@ class ResCompany(models.Model):
             closing_id = closing_ids.pop(-1)
             closing_id = int(closing_id)
             closing = self.env['account.move'].browse(closing_id).exists().filtered(lambda am: am.state == 'posted')
-        return closing.date if closing else False
+        if not closing:
+            return False
+        am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
+        state_tracking = closing.message_ids.tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
+        return state_tracking[-1:].create_date or fields.Datetime.to_datetime(closing.date)
 
     def _save_closing_id(self, move_id):
         self.ensure_one()
