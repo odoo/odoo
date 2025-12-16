@@ -151,6 +151,17 @@ class AccountFiscalPosition(models.Model):
                 fp_label = _("fiscal position [%s]", record.name)
                 record.foreign_vat, _country_code = self.env['res.partner']._run_vat_checks(record.country_id, record.foreign_vat, partner_name=fp_label)
 
+    '''
+    def map_tax(self, taxes):
+        if not self:
+            return taxes
+        result = self.env['account.tax']
+        for tax in taxes:
+            taxes_correspondance = self.tax_ids.filtered(lambda t: t.tax_group_id == tax._origin and (not t.tax_dest_id or t.tax_dest_active))
+            result |= taxes_correspondance.tax_dest_id if taxes_correspondance else tax
+        return result
+    '''
+
     def map_tax(self, taxes):
         if not self:
             return taxes

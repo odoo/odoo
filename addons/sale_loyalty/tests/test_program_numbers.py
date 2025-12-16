@@ -1922,3 +1922,105 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             order.amount_total,
             "Order total should be 0, as a specific discount should have been applied.",
         )
+
+    def test_program_discount_with_fiscal_position_senegal(self):
+        xof_currency = self.env['res.currency'].search([('name', '=', 'XOF')], limit=1)
+        if not xof_currency:
+            xof_currency = self.env['res.currency'].create({
+                'name': 'XOF',
+                'symbol': 'CFA',
+                'rounding': 1,
+                'rate_ids': [Command.create({'rate': 600})],
+            })
+        else:
+            xof_currency.active = True
+
+        senegal = self.env['res.country'].search([('code', '=', 'SN')], limit=1)
+        if not senegal:
+            senegal = self.env['res.country'].create({
+                'name': 'Senegal',
+                'code': 'SN',
+            })
+
+        senegal_company = self.env['res.company'].create({
+            'name': 'Test Senegal Company',
+            'currency_id': xof_currency.id,
+            'country_id': senegal.id,
+        })
+
+        tax_group = self.env['account.tax.group'].with_company(senegal_company).create({
+            'name': 'VAT 18%',
+            'company_id': senegal_company.id,
+        })
+
+        tax_18pc = self.env['account.tax'].with_company(senegal_company).create({
+            'name': "VAT 18%",
+            'amount_type': 'percent',
+            'amount': 18,
+            'type_tax_use': 'sale',
+            'company_id': senegal_company.id,
+            'tax_group_id': tax_group.id,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].with_company(senegal_company).create({
+            'name': 'Senegal Fiscal Position',
+            'company_id': senegal_company.id,
+            'country_id': senegal.id,
+        })
+
+        # Create product with 1000 XOF price
+        product_senegal = self.env['product.product'].with_company(senegal_company).create({
+            'name': 'Product Senegal',
+            'list_price': 1000,
+            'sale_ok': True,
+            'taxes_id': [Command.set([tax_18pc.id])],
+            'company_id': False,
+        })
+
+        # Create 10% discount program
+        discount_program = self.env['loyalty.program'].with_company(senegal_company).create({
+            'name': '10% Discount Senegal',
+            'trigger': 'auto',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'company_id': senegal_company.id,
+            'rule_ids': [Command.create({})],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount_mode': 'percent',
+                'discount': 10,
+                'discount_applicability': 'order',
+                'required_points': 1,
+            })],
+        })
+
+        partner = self.env['res.partner'].create({
+            'name': 'Senegal Customer',
+            'country_id': senegal.id,
+        })
+
+        order = self.env['sale.order'].with_company(senegal_company).create({
+            'partner_id': partner.id,
+            'company_id': senegal_company.id,
+            'fiscal_position_id': fiscal_position.id,
+            'order_line': [Command.create({
+                'product_id': product_senegal.id,
+                'product_uom_qty': 1,
+                'tax_ids': [Command.set([tax_18pc.id])], # Test fails without this since map_taxes applies 0% instead of 18%
+            })],
+        })
+
+        # Apply discount program
+        self._auto_rewards(order, discount_program)
+
+        # This will fail, the tax applied to the discount will be 0% different than the products 18% which ultimately is what is causing the issue
+        self.assertEqual(
+            discount_line.tax_ids,
+            tax_18pc,
+            "Discount line should have the same 18% tax as the product"
+        )
+
+        # Test fails with amount_tax = 180
+        self.assertEqual(order.amount_untaxed, 900, "Untaxed amount should be 900 XOF after discount")
+        self.assertEqual(order.amount_tax, 162, "Tax should be 162 XOF (18% of 900)")
+        self.assertEqual(order.amount_total, 1062, "Total should be 1062 XOF after discount")
