@@ -365,6 +365,10 @@ patch(PosStore.prototype, {
             );
         });
     },
+    async applyDiscount(percent, type = "percent", order = this.getOrder()) {
+        await super.applyDiscount(...arguments);
+        await this.updatePrograms();
+    },
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
         if (!vals.product_tmpl_id && vals.product_id) {
             vals.product_tmpl_id = vals.product_id.product_tmpl_id;
