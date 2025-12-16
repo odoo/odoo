@@ -899,6 +899,8 @@ class Website(Home):
 
         if enable:
             records = self._get_customize_data(enable, is_view_data)
+            if reset_view_arch:
+                records.reset_arch(mode='hard')
             if 'website_blog.opt_blog_cover_post' in enable:
                 # TODO: In master, set the priority in XML directly.
                 records.filtered_domain([('key', '=', 'website_blog.opt_blog_cover_post')]).priority = 17

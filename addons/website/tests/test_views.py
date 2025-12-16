@@ -9,6 +9,8 @@ from itertools import zip_longest
 from lxml import etree as ET, html
 from lxml.html import builder as h
 
+from odoo.addons.website.controllers.main import Website
+from odoo.addons.website.tools import MockRequest
 from odoo.modules.module import _DEFAULT_MANIFEST
 from odoo.tests import common, HttpCase, tagged
 
@@ -1561,3 +1563,36 @@ class TestThemeViews(common.TransactionCase):
         test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
         self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
         self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")
+
+
+@tagged('-at_install', 'post_install')
+class TestCustomizeView(common.HttpCase):
+    # TODO: Move this test in appropriate class in saas-18.4
+    def test_toggling_view_resets_arch(self):
+        """
+            Ensure that enabling/disabling a view triggers `reset_arch` if
+            `reset_view_arch` is True.
+        """
+        websiteController = Website()
+        website = self.env.ref('website.default_website')
+        self.env['ir.ui.view'].create({
+            'name': 'Test View Reset',
+            'type': 'qweb',
+            'key': 'website.test_view_reset',
+            'arch_db': '<div>Original Content</div>',
+            'website_id': website.id,
+        })
+
+        with patch('odoo.addons.base.models.ir_ui_view.View.reset_arch') as mock_reset:
+            with MockRequest(self.env, website=website):
+                # Test Disabling
+                websiteController.theme_customize_data(is_view_data=True, disable=['website.test_view_reset'], reset_view_arch=True)
+                self.assertTrue(mock_reset.called, "reset_arch should be called when disabling with reset flag")
+                self.assertEqual(mock_reset.call_args[1].get('mode'), 'hard', "Should be called with mode='hard'")
+
+                mock_reset.reset_mock()
+
+                # Test Enabling
+                websiteController.theme_customize_data(is_view_data=True, enable=['website.test_view_reset'], reset_view_arch=True)
+                self.assertTrue(mock_reset.called, "reset_arch should be called when enabling with reset flag")
+                self.assertEqual(mock_reset.call_args[1].get('mode'), 'hard', "Should be called with mode='hard'")
