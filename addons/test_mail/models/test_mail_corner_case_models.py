@@ -198,6 +198,18 @@ class MailTestMultiCompany(models.Model):
     company_id = fields.Many2one('res.company')
 
 
+class MailTestMultiCompanyRestrictWrite(models.Model):
+    """ This model can be used in multi company tests, with attachments support
+    for checking record update in MC. It is readable for all companies, but
+    write is company-restricted to the current main company. """
+    _name = 'mail.test.multi.company.restrict.write'
+    _description = "Test Multi Company Mail Restrict Write"
+    _inherit = 'mail.thread.main.attachment'
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company')
+
+
 class MailTestMultiCompanyRead(models.Model):
     """ Just mail.test.simple, but multi company and supporting posting
     even if the user has no write access. """
