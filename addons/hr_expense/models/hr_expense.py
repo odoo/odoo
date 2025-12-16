@@ -64,6 +64,7 @@ class HrExpense(models.Model):
         string="Employee",
         compute='_compute_employee_id', precompute=True, store=True, readonly=False,
         required=True,
+        index=True,
         default=_default_employee_id,
         check_company=True,
         domain=[('filter_for_expense', '=', True)],
