@@ -204,6 +204,7 @@ test("pass last notification id on initialization", async () => {
 test("websocket disconnects when user logs out", async () => {
     addBusServiceListeners(
         ["connect", () => asyncStep("connect")],
+        ["reconnect", () => asyncStep("connect")],
         ["disconnect", () => asyncStep("disconnect")]
     );
     patchWithCleanup(session, { user_id: null, db: "openerp" });
@@ -471,7 +472,8 @@ test("show notification when version is outdated", async () => {
     await waitForSteps(["Worker deactivated due to an outdated version.", "disconnect"]);
     await runAllTimers();
     await waitFor(".o_notification", {
-        contains: "Save your work and refresh to get the latest updates and avoid potential issues.",
+        contains:
+            "Save your work and refresh to get the latest updates and avoid potential issues.",
     });
     await contains(".o_notification button:contains(Refresh)").click();
     await waitForSteps(["reload"]);
