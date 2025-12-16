@@ -48,21 +48,24 @@ export class HrOrgChart extends Component {
         this.state = useState({'employee_id': null});
         this.max_level = null;
         this.lastEmployeeId = null;
+        this.lastJobTitle = null;
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
 
         useRecordObserver(async (record) => {
             const newParentId = record.data.parent_id?.id || false;
             const newEmployeeId = record.resId || false;
-            if (this.lastParent !== newParentId || this.state.employee_id !== newEmployeeId) {
+            const newJobTitle = record.data.job_title || false;
+            if (this.lastParent !== newParentId || this.state.employee_id !== newEmployeeId || this.lastJobTitle !== newJobTitle) {
                 this.lastParent = newParentId;
                 this.max_level = null; // Reset max_level to default
-                await this.fetchEmployeeData(newEmployeeId, newParentId, true);
+                this.lastJobTitle = newJobTitle;
+                await this.fetchEmployeeData(newEmployeeId, newParentId, newJobTitle, true);
             }
             this.state.employee_id = newEmployeeId;
         });
     }
 
-    async fetchEmployeeData(employeeId, newParentId = null, force = false) {
+    async fetchEmployeeData(employeeId, newParentId = null, newJobTitle = null, force = false) {
         if (!employeeId) {
             this.managers = [];
             this.children = [];
@@ -77,6 +80,7 @@ export class HrOrgChart extends Component {
                 {
                     employee_id: employeeId,
                     new_parent_id: newParentId,
+                    new_job_title: newJobTitle,
                     context: {
                         ...user.context,
                     max_level: this.max_level,
