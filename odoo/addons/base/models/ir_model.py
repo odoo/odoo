@@ -2530,6 +2530,10 @@ class IrModelData(models.Model):
             except Exception:
                 if len(records) <= 1:
                     undeletable_ids.extend(ref_data._ids)
+                    if records._name in 'ir.model':
+                        _logger.warning("Could not delete model %s", records.model, exc_info=True)
+                    elif records._name == 'ir.model.fields':
+                        _logger.warning("Could not delete field %s.%s", records.model, records.name, exc_info=True)
                 else:
                     # divide the batch in two, and recursively delete them
                     half_size = len(records) // 2
