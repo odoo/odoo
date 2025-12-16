@@ -425,10 +425,32 @@
         </field>
     </record>
 
+    <record id="mail_activity_view_pivot" model="ir.ui.view">
+        <field name="name">mail.activity.view.pivot</field>
+        <field name="model">mail.activity</field>
+        <field name="arch" type="xml">
+            <pivot string="Activities" sample="1">
+                 <field name="user_id" type="row"/>
+                 <field name="activity_type_id" type="col"/>
+             </pivot>
+        </field>
+    </record>
+
+    <record id="mail_activity_view_graph" model="ir.ui.view">
+        <field name="name">mail.activity.view.graph</field>
+        <field name="model">mail.activity</field>
+        <field name="arch" type="xml">
+            <graph string="Activities" sample="1">
+                <field name="user_id"/>
+                <field name="activity_type_id"/>
+            </graph>
+        </field>
+    </record>
+
     <record id="mail_activity_action_my" model="ir.actions.act_window">
         <field name="name">My Activities</field>
         <field name="res_model">mail.activity</field>
-        <field name="view_mode">list,kanban,calendar</field>
+        <field name="view_mode">list,kanban,calendar,pivot,graph</field>
         <field name="search_view_id" ref="mail.mail_activity_view_search"/>
         <!-- ensure pagination works even if _search removes records after fetching -->
         <field name="context">{
@@ -458,6 +480,20 @@
         <field name="view_mode">calendar</field>
         <field name="act_window_id" ref="mail.mail_activity_action_my"/>
         <field name="view_id" ref="mail.mail_activity_view_calendar"/>
+    </record>
+
+    <record id="mail_activity_action_my_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="mail.mail_activity_action_my"/>
+        <field name="view_id" ref="mail.mail_activity_view_pivot"/>
+    </record>
+
+    <record id="mail_activity_action_my_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="mail.mail_activity_action_my"/>
+        <field name="view_id" ref="mail.mail_activity_view_graph"/>
     </record>
 
 </odoo>
