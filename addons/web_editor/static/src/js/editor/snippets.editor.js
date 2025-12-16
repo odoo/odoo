@@ -4224,9 +4224,10 @@ class SnippetsMenu extends Component {
             this.lastElement = false;
         });
 
-        if (!$target.closest('we-button, we-toggler, we-select, .o_we_color_preview').length) {
+        if (!$target.closest('we-button, we-toggler, we-select, .o_we_color_preview').length && !this._isColorpickerClick) {
             this._closeWidgets();
         }
+        delete this._isColorpickerClick;
         if (!$target.closest('body > *').length || $target.is('#iframe_target')) {
             return;
         }
@@ -4538,6 +4539,9 @@ class SnippetsMenu extends Component {
             clearTimeout(enableTimeoutID);
             reenable();
         });
+        if (ev.target.closest(".o_colorpicker_widget")) {
+            this._isColorpickerClick = true;
+        }
     }
     /**
      * @private

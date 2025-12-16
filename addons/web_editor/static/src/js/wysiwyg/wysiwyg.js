@@ -2176,7 +2176,9 @@ export class Wysiwyg extends Component {
         return backgroundGradient || $(targetElement).css(colorType === "text" ? 'color' : 'backgroundColor');
     }
     onColorpaletteDropdownHide(ev) {
-        return !(ev.clickEvent && ev.clickEvent.__isColorpickerClick);
+        const shouldHide = !(ev.clickEvent && this._isColorpickerClick);
+        delete this._isColorpickerClick;
+        return shouldHide;
     }
     onColorpaletteDropdownShow(colorType) {
         const selectedColor = this._getSelectedColor($, colorType);
@@ -3049,6 +3051,9 @@ export class Wysiwyg extends Component {
                 this._pendingBlur = false;
             }
             this._shouldDelayBlur = false;
+        }
+        if (e.target.closest(".o_colorpicker_widget")) {
+            this._isColorpickerClick = true;
         }
     }
     _onBlur() {
