@@ -491,11 +491,11 @@ class AccountEdiUBL(models.AbstractModel):
                     target_key = f'tax_totals{suffix}'
                     sign = 1
 
-                tax_total_grouping_key = self._ubl_default_tax_total_grouping_key(grouping_key, vals)
-                if not tax_total_grouping_key:
+                tax_total_grouping_key = frozendict(self._ubl_default_tax_total_grouping_key(grouping_key, vals))
+                if tax_total_grouping_key not in ubl_values[target_key]:
                     continue
 
-                tax_total_values = ubl_values[target_key][frozendict(tax_total_grouping_key)]
+                tax_total_values = ubl_values[target_key][tax_total_grouping_key]
                 tax_total_values['subtotals'][frozendict(grouping_key)] = {
                     **grouping_key,
                     'base_amount': values[f'base_amount{suffix}'],
@@ -530,11 +530,11 @@ class AccountEdiUBL(models.AbstractModel):
                 if not tax_subtotal_grouping_key:
                     continue
 
-                tax_total_grouping_key = self._ubl_default_tax_total_grouping_key(tax_subtotal_grouping_key, vals)
-                if not tax_total_grouping_key:
+                tax_total_grouping_key = frozendict(self._ubl_default_tax_total_grouping_key(tax_subtotal_grouping_key, vals))
+                if tax_total_grouping_key not in ubl_values[target_key]:
                     continue
 
-                tax_total_values = ubl_values[target_key][frozendict(tax_total_grouping_key)]
+                tax_total_values = ubl_values[target_key][tax_total_grouping_key]
                 tax_total_values['subtotals'][frozendict(tax_subtotal_grouping_key)]['tax_categories'][frozendict(grouping_key)] = {
                     **grouping_key,
                     'base_amount': values[f'base_amount{suffix}'],
