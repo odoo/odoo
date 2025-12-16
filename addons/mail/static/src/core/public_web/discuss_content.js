@@ -77,7 +77,7 @@ export class DiscussContent extends Component {
     }
 
     async onFileUploaded(file) {
-        await this.thread.notifyAvatarToServer(file.data);
+        await this.thread.channel?.notifyAvatarToServer(file.data);
         this.notification.add(_t("The avatar has been updated!"), { type: "success" });
     }
 

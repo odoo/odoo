@@ -53,7 +53,6 @@ declare module "models" {
         markingAsRead: boolean;
         markReadSequential: () => Promise<any>;
         name: string;
-        notifyAvatarToServer: (data: string) => Promise<void>;
         scrollUnread: boolean;
         self_member_id: ChannelMember;
         showCorrespondentCountry: Readonly<boolean>;
