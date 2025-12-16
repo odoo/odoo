@@ -13,6 +13,7 @@ import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
@@ -68,6 +69,7 @@ export class Meeting extends Component {
         });
         onMounted(() => (this.store.meetingViewOpened = true));
         onWillUnmount(() => (this.store.meetingViewOpened = false));
+        useHotkey("escape", () => this.onEscape());
     }
 
     get channel() {
@@ -79,5 +81,17 @@ export class Meeting extends Component {
             return [];
         }
         return this.threadActions.actions.filter((a) => PIP_EXTRA_ACTION_IDS.includes(a.id));
+    }
+
+    onEscape() {
+        if (this.threadActions.activeAction) {
+            this.threadActions.activeAction.actionPanelClose();
+            return true;
+        }
+        if (this.rtc.isFullscreen) {
+            this.rtc.exitFullscreen();
+            return true;
+        }
+        return false;
     }
 }

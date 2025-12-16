@@ -1360,3 +1360,28 @@ test("shows a presenter bar when screen-sharing in discuss calls and meetings", 
     }
     await contains(".o-discuss-CallPresentationBar", { count: 0 });
 });
+
+test("Escape closes meeting UI layers sequentially", async () => {
+    /** Escape closes overlay elements → action panel → fullscreen meeting view. */
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    await click("[title='Fullscreen']");
+    await contains(".o-mail-Meeting");
+    await click("[title='Chat']");
+    await contains(".o-mail-ActionPanel-header:text('In call messages')");
+    await click(".o-mail-DiscussContent-panelContainer [title='Add Emojis']");
+    await contains(".o-EmojiPicker");
+    triggerHotkey("Escape");
+    await contains(".o-EmojiPicker ", { count: 0 });
+    await contains(".o-mail-DiscussContent-panelContainer .o-mail-Composer.o-focused");
+    triggerHotkey("Escape");
+    await contains(".o-mail-ActionPanel-header:text('In call messages')", { count: 0 });
+    await contains(".o-mail-Meeting");
+    triggerHotkey("Escape");
+    await contains(".o-mail-Meeting", { count: 0 });
+    await contains(".o-discuss-Call");
+});
