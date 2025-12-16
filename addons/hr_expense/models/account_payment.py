@@ -20,6 +20,7 @@ class AccountPayment(models.Model):
         expense_payments = self.filtered(lambda pay: pay.move_id.expense_ids)
         super(AccountPayment, self - expense_payments)._compute_show_require_partner_bank()
         expense_payments.require_partner_bank_account = False
+        expense_payments.show_partner_bank_account = False
 
     def write(self, vals):
         trigger_fields = {
