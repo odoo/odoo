@@ -746,10 +746,17 @@ export class PosOrder extends PosOrderAccounting {
         return pos_categ_id_A - pos_categ_id_B;
     }
 
-    getDiscountLine() {
-        return this.lines?.find(
+    get discountLines() {
+        return this.lines?.filter(
             (line) => line.product_id.id === this.config.discount_product_id?.id
         );
+    }
+
+    get globalDiscountPc() {
+        return {
+            value: this.discountLines()?.[0].extra_tax_data?.discount_value,
+            type: this.discountLines()?.[0].extra_tax_data?.discount_type,
+        };
     }
 
     getName() {
