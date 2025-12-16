@@ -5,12 +5,12 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 registerThreadAction("restart", {
-    condition: ({ owner, thread }) =>
-        thread?.chatbot?.canRestart && !owner.isDiscussSidebarChannelActions,
+    condition: ({ channel, owner }) =>
+        channel?.chatbot?.canRestart && !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-refresh",
     name: _t("Restart Conversation"),
-    onSelected: ({ owner, thread }) => {
-        thread.chatbot.restart();
+    onSelected: ({ channel, owner }) => {
+        channel.chatbot.restart();
         owner.props.chatWindow.open({ focus: true });
     },
     sequence: 99,

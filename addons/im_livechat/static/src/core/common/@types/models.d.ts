@@ -26,6 +26,7 @@ declare module "models" {
         chatbot_step: ChatbotStep;
     }
     export interface DiscussChannel {
+        chatbot: Chatbot;
         livechat_agent_history_ids: LivechatChannelMemberHistory[];
         livechat_channel_id: LivechatChannel;
         livechat_channel_member_history_ids: LivechatChannelMemberHistory[];

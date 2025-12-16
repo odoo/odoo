@@ -12,7 +12,7 @@ patch(Thread.prototype, {
         this.livechat_operator_id = fields.One("res.partner");
         this.chatbotTypingMessage = fields.One("mail.message", {
             compute() {
-                if (this.chatbot) {
+                if (this.channel?.chatbot) {
                     return {
                         id: -0.1 - this.id,
                         thread: this,
@@ -42,17 +42,16 @@ patch(Thread.prototype, {
          * @type {Deferred}
          */
         this.readyToSwapDeferred = new Deferred();
-        this.chatbot = fields.One("Chatbot");
         this._toggleChatbot = fields.Attr(false, {
             compute() {
-                return this.chatbot && !this.livechat_end_dt;
+                return this.channel?.chatbot && !this.channel.livechat_end_dt;
             },
             onUpdate() {
                 this.isLoadedDeferred.then(() => {
                     if (this._toggleChatbot) {
-                        this.chatbot.start();
+                        this.channel.chatbot.start();
                     } else {
-                        this.chatbot?.stop();
+                        this.channel?.chatbot?.stop();
                     }
                 });
             },
@@ -73,7 +72,11 @@ patch(Thread.prototype, {
         return super.avatarUrl;
     },
     get displayName() {
-        if (this.channel?.channel_type === "livechat" && this.isTransient && this.livechat_operator_id) {
+        if (
+            this.channel?.channel_type === "livechat" &&
+            this.isTransient &&
+            this.livechat_operator_id
+        ) {
             return this.getPersonaName(this.livechat_operator_id);
         }
         return super.displayName;
@@ -81,28 +84,28 @@ patch(Thread.prototype, {
     get hasWelcomeMessage() {
         return (
             this.channel?.channel_type === "livechat" &&
-            !this.chatbot &&
+            !this.channel.chatbot &&
             !this.requested_by_operator
         );
     },
     /** @returns {Promise<import("models").Message} */
     async post(body, postData, extraData = {}) {
         if (
-            this.chatbot &&
-            !this.chatbot.forwarded &&
-            this.chatbot.currentStep?.step_type !== "free_input_multi"
+            this.channel?.chatbot &&
+            !this.channel.chatbot.forwarded &&
+            this.channel.chatbot.currentStep?.step_type !== "free_input_multi"
         ) {
-            this.chatbot.isProcessingAnswer = true;
+            this.channel.chatbot.isProcessingAnswer = true;
         }
         if (this.channel?.channel_type === "livechat" && this.isTransient) {
             // For smoother transition: post the temporary message and set the
             // selected chat bot answer if any. Then, simulate the chat bot is
             // typing (2 ** 31 - 1 is the greatest value supported by
             // `setTimeout`).
-            if (this.chatbot && extraData.selected_answer_id) {
-                this.chatbot.currentStep.selectedAnswer = this.store["chatbot.script.answer"].get(
-                    extraData.selected_answer_id
-                );
+            if (this.channel.chatbot && extraData.selected_answer_id) {
+                this.channel.chatbot.currentStep.selectedAnswer = this.store[
+                    "chatbot.script.answer"
+                ].get(extraData.selected_answer_id);
             }
             const temporaryMsg = this.store["mail.message"].insert({
                 author_id: this.store.self,
@@ -113,7 +116,7 @@ patch(Thread.prototype, {
                 thread: this,
             });
             this.messages.push(temporaryMsg);
-            this?.chatbot?._simulateTyping(2 ** 31 - 1);
+            this.channel.chatbot?._simulateTyping(2 ** 31 - 1);
             const channel = await this.store.env.services["im_livechat.livechat"].persist(this);
             temporaryMsg.author_id = this.store.self; // Might have been created after persist.
             if (!channel) {
@@ -123,7 +126,7 @@ patch(Thread.prototype, {
             return channel.post(...arguments).then(() => channel.readyToSwapDeferred.resolve());
         }
         const message = await super.post(...arguments);
-        await this.chatbot?.processAnswer(message);
+        await this.channel?.chatbot?.processAnswer(message);
         return message;
     },
 
@@ -131,17 +134,17 @@ patch(Thread.prototype, {
         return (
             super.composerHidden ||
             this.livechat_end_dt ||
-            (this.chatbot?.completed && !this.chatbot?.forwarded)
+            (this.channel?.chatbot?.completed && !this.channel.chatbot.forwarded)
         );
     },
 
     computeComposerDisabled() {
-        const step = this.chatbot?.currentStep;
-        if (this.chatbot?.forwarded && !this.livechat_end_dt) {
+        if (this.channel?.chatbot?.forwarded && !this.livechat_end_dt) {
             return false;
         }
+        const step = this.channel?.chatbot?.currentStep;
         return (
-            this.chatbot?.isProcessingAnswer ||
+            this.channel?.chatbot?.isProcessingAnswer ||
             (step &&
                 !step.operatorFound &&
                 (step.completed || !step.expectAnswer || step.answer_ids.length > 0))

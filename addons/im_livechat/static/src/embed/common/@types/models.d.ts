@@ -14,7 +14,6 @@ declare module "models" {
     export interface Thread {
         _prevComposerDisabled: boolean;
         _toggleChatbot: boolean;
-        chatbot: Chatbot;
         chatbotTypingMessage: Message;
         hasWelcomeMessage: Readonly<boolean>;
         isLastMessageFromCustomer: Readonly<boolean>;
