@@ -15,19 +15,4 @@ patch(ProductScreen.prototype, {
             return button;
         });
     },
-    async addProductToOrder(product) {
-        await super.addProductToOrder(product);
-        const discountLine = this.currentOrder.getDiscountLine();
-        if (discountLine) {
-            const value = discountLine.extra_tax_data?.discount_value;
-            const type = discountLine.extra_tax_data?.discount_type;
-            if (value) {
-                const selectLine = this.currentOrder?.getSelectedOrderline();
-                await this.pos.applyDiscount(value, type, this.currentOrder);
-                this.pos.selectOrderLine(this.currentOrder, selectLine);
-            } else {
-                discountLine.delete();
-            }
-        }
-    },
 });

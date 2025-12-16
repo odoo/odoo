@@ -88,8 +88,15 @@ export class SplitBillScreen extends Component {
         return `${latestOrderName.slice(0, -1)}${nextChar}`;
     }
 
+    get totOrderQty() {
+        return this.currentOrder.lines.reduce(
+            (sum, line) => sum + (line.isGlobalDiscountApplicable() ? line.qty : 0),
+            0
+        );
+    }
+
     async paySplittedOrder() {
-        const totalQty = this.currentOrder.lines.reduce((sum, line) => sum + line.qty, 0);
+        const totalQty = this.totOrderQty;
         const selectedQty = this.getNumberOfProducts();
 
         if (selectedQty > 0 && selectedQty < totalQty) {
@@ -103,20 +110,16 @@ export class SplitBillScreen extends Component {
     async transferSplittedOrder(event) {
         // Prevents triggering the 'startTransferOrder' event listener
         event.stopPropagation();
-        if (this.getNumberOfProducts() > 0) {
+        const totalQty = this.totOrderQty;
+        const selectedQty = this.getNumberOfProducts();
+        if (selectedQty > 0 && selectedQty !== totalQty) {
             this.isTransferred = true;
             await this.createSplittedOrder();
         }
         this.pos.startTransferOrder();
     }
-    getGlobalDiscountPc(order = this.currentOrder) {
-        return {
-            value: order.getDiscountLine()?.extra_tax_data?.discount_value,
-            type: order.getDiscountLine()?.extra_tax_data?.discount_type,
-        };
-    }
     async handleDiscountLines(originalOrder, newOrder) {
-        const { value, type } = this.getGlobalDiscountPc(originalOrder);
+        const { value, type } = originalOrder.globalDiscountPc;
         if (value) {
             await this.pos.applyDiscount(value, type, originalOrder);
             if (!this.isTransferred) {
@@ -206,7 +209,6 @@ export class SplitBillScreen extends Component {
             line.delete();
         }
         await this.handleDiscountLines(originalOrder, newOrder);
-
         await this.pos.syncAllOrders({ orders: [originalOrder, newOrder] });
         originalOrder.customer_count -= 1;
         originalOrder.setScreenData({ name: "ProductScreen" });
