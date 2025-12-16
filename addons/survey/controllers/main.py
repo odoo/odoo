@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import json
 import logging
 from collections import defaultdict
@@ -651,6 +652,29 @@ class Survey(http.Controller):
                 if len(answers_no_comment) == 1:
                     answers_no_comment = answers_no_comment[0]
         return answers_no_comment, comment
+
+    @http.route('/survey/upload_files', type='http', auth='public', website=True, sitemap=False)
+    def survey_upload_files(self, **post):
+        # Extract files from request
+        files = request.httprequest.files.getlist("files")
+
+        if not files:
+            return request.make_json_response({"error": "No files received"}, status=400)
+
+        if len(files) > 1:
+            return request.make_json_response({"error": "Only one file can be uploaded at a time"}, status=400)
+
+        file = files[0]
+        data = file.read()
+        attachment = request.env['ir.attachment'].sudo().create({
+            'name': file.filename,
+            'datas': base64.b64encode(data),
+            'mimetype': file.content_type,
+        })
+
+        return request.make_json_response({
+            "attachment_id": attachment.id,
+        })
 
     # ------------------------------------------------------------
     # COMPLETED SURVEY ROUTES

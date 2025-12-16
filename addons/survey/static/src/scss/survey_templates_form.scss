@@ -289,6 +289,146 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
     .o_survey_main_title_fade {
         transition: opacity 0.4s ease-in-out;
     }
+
+    .o_survey_upload_container {
+        padding: 0;
+    }
+
+    .o_survey_upload_area {
+        min-height: 200px;
+        padding: 40px 20px;
+
+        background-color: rgba($primary, 0.05);
+        border: 2px dashed rgba($primary, 0.3);
+        border-radius: 10px;
+        text-align: center;
+
+        transition: background-color .2s, border-color .2s, box-shadow .2s;
+        cursor: pointer;
+    }
+
+    /* Drag-over highlight (you toggle this class from JS) */
+    .o_survey_upload_area.drag-over {
+        border-color: $primary;
+        background-color: rgba($primary, 0.15);
+        box-shadow: 0 0 6px rgba($primary, .2);
+    }
+
+    .o_survey_upload_area.drag-over {
+        border-color: $primary;
+        background-color: rgba($primary, 0.15);
+        box-shadow: 0 0 6px rgba($primary, .2);
+    }
+
+    .o_survey_upload_area:hover {
+        border-color: $primary;
+        background-color: rgba($primary, 0.15);
+        box-shadow: 0 0 6px rgba($primary, .2);
+    }
+
+    /* Prevent flicker only during drag */
+    /* Child elements shouldn't steal drag events */
+    .o_survey_upload_area.drag-mode * {
+        pointer-events: none;
+    }
+
+    .o_survey_upload_label {
+        display: inline-block;
+        user-select: none;
+        cursor: pointer;
+
+        .fa {
+            color: $primary;
+            margin-bottom: 10px;
+        }
+    }
+
+    .o_survey_upload_text {
+        margin: 0;
+        font-size: 1.1rem;
+        color: #1f2937;
+    }
+
+    .o_survey_upload_hint {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.8rem;
+        color: #6b7280;
+    }
+
+    .o_survey_file_input {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+    }
+
+    /* Container for uploaded items */
+    .o_survey_uploaded_files {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Each uploaded file row */
+    .o_survey_uploaded_file_item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        background-color: rgba($primary, 0.05);
+        border: 1px solid rgba($primary, 0.2);
+        border-radius: 6px;
+
+        padding: 8px 12px;
+        font-size: 14px;
+
+        transition: background-color .2s, border-color .2s;
+    }
+
+    /* Hover effect */
+    .o_survey_uploaded_file_item:hover {
+        background-color: rgba($primary, 0.1);
+        border-color: rgba($primary, 0.4);
+    }
+
+    /* Left side: icon + filename */
+    .o_survey_uploaded_file_info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        overflow: hidden;
+    }
+
+    /* File icon */
+    .o_survey_uploaded_file_icon {
+        font-size: 20px;
+        color: $primary;
+    }
+
+    /* Filename (truncate long names) */
+    .o_survey_uploaded_file_name {
+        font-weight: 500;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 300px;
+    }
+
+    /* Delete button */
+    .o_survey_uploaded_file_remove {
+        font-size: 16px;
+        color: $danger;
+        cursor: pointer;
+        padding: 4px;
+
+        transition: color .15s;
+    }
+
+    .o_survey_uploaded_file_remove:hover {
+        color: darken($danger, 10%);
+    }
 }
 
 /**********************************************************
