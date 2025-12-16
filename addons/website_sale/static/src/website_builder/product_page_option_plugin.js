@@ -369,22 +369,26 @@ export class ProductAddExtraImageAction extends BaseProductPageAction {
             );
         }
         await new Promise((resolve) => {
-            const onClose = this.dependencies.media.openMediaDialog({
-                addFieldImage: true,
-                multiImages: true,
-                visibleTabs: ["IMAGES", "VIDEOS"],
-                node: el,
-                // Kinda hack-ish but the regular save does not get the information we need
-                save: async (imgEls, selectedMedia, activeTab) => {
-                    if (selectedMedia.length) {
-                        const type =
-                            activeTab === TABS["IMAGES"].id ? "image" : "video";
-                        await this.extraMediaSave(el, type, selectedMedia, imgEls);
-                    }
-                },
-            });
+            const onClose = this.dependencies.media.openMediaDialog(this.getMediaDialogProps({ editingElement: el }));
             onClose.then(resolve);
         });
+    }
+
+    getMediaDialogProps({ editingElement }) {
+        return {
+            addFieldImage: true,
+            multiImages: true,
+            visibleTabs: ["IMAGES", "VIDEOS"],
+            node: editingElement,
+            // Kinda hack-ish but the regular save does not get the information we need
+            save: async (imgEls, selectedMedia, activeTab) => {
+                if (selectedMedia.length) {
+                    const type =
+                        activeTab === TABS["IMAGES"].id ? "image" : "video";
+                    await this.extraMediaSave(editingElement, type, selectedMedia, imgEls);
+                }
+            },
+        };
     }
 }
 export class ProductRemoveAllExtraImagesAction extends BaseProductPageAction {
