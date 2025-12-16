@@ -335,7 +335,10 @@ def check_network(host=None):
     if not host:
         return None
 
-    host = socket.gethostbyname(host)
+    try:
+        host = socket.gethostbyname(host)
+    except socket.gaierror:
+        return "unreachable"
     packet_loss, avg_latency = system.mtr(host)
     thresholds = {"fast": 5, "normal": 20} if ip_address(host).is_private else {"fast": 50, "normal": 150}
 
