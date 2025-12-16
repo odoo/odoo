@@ -192,7 +192,7 @@ export class CartPage extends Component {
         const order = this.selfOrder.currentOrder;
         this.selfOrder.editedLine = line;
 
-        if (order.state === "draft" && !order.lastChangesSent[line.uuid]) {
+        if (order.state === "draft" && !order.uiState.lineChanges[line.uuid]) {
             this.selfOrder.selectedOrderUuid = order.uuid;
 
             if (line.combo_line_ids.length > 0) {
