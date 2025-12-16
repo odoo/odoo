@@ -495,7 +495,6 @@ test("arrow follows target and can get sucked", async () => {
         }
         .popover-target {
             background-color: bisque;
-            margin-left: 20px;
             width: 50px;
             height: 50px;
         }
