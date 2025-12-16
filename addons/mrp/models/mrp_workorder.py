@@ -569,19 +569,21 @@ class MrpWorkorder(models.Model):
     def _plan_workorder(self, replan=False):
         self.ensure_one()
         # Plan workorder after its predecessors
+        replan_predecessors = replan
+        if self.state not in ['blocked', 'ready']:
+            replan = False
+        elif replan:
+            self.leave_id.unlink()
+        elif not self.leave_id:
+            replan = True
         date_start = max(self.production_id.date_start, datetime.now())
         for workorder in self.blocked_by_workorder_ids:
-            workorder._plan_workorder(replan)
+            workorder._plan_workorder(replan_predecessors)
             if workorder.date_finished and workorder.date_finished > date_start:
                 date_start = workorder.date_finished
         # Plan only suitable workorders
-        if self.state not in ['blocked', 'ready']:
+        if not replan:
             return
-        if self.leave_id:
-            if replan:
-                self.leave_id.unlink()
-            else:
-                return
         # Consider workcenter and alternatives
         workcenters = self.workcenter_id | self.workcenter_id.alternative_workcenter_ids
         best_date_finished = datetime.max
