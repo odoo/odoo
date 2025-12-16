@@ -128,6 +128,10 @@ class WebsiteSnippetFilter(models.Model):
                     # factorize and avoid computing the rest
                     if product.is_product_variant:
                         res_product.update(product._get_combination_info_variant())
+                    elif hide_variants:
+                        res_product.update(product._get_combination_info(only_template=True))
+                        # Re-add product_id since it is set to false and required by some tests
+                        res_product['product_id'] = product.product_variant_id.id
                     else:
                         res_product.update(product._get_combination_info())
 
