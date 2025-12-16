@@ -58,7 +58,7 @@ class ProductProduct(models.Model):
         # the purpose of this override is to flag the aggregates above as such:
         # field._description_aggregator() should simply not fail
         if aggregate_spec in self._SPECIAL_SUM_AGGREGATES:
-            return SQL()
+            return SQL("NULL")
         return super()._read_group_select(aggregate_spec, query)
 
     @api.model
