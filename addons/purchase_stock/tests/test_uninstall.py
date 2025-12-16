@@ -3,7 +3,6 @@
 from unittest.mock import patch
 
 from odoo import fields
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.addons.purchase_stock.models.purchase_order_line import PurchaseOrderLine
 from odoo.tests.common import tagged
 
@@ -46,9 +45,7 @@ class TestUninstallPurchaseStock(PurchaseTestCommon):
                 records.flush_recordset()
 
         with patch.object(PurchaseOrderLine, '_compute_qty_received', _compute_qty_received):
-            stock_moves_option.sudo().with_context(**{
-                MODULE_UNINSTALL_FLAG: True
-            }).unlink()
+            stock_moves_option.sudo().with_context(force_delete=True).unlink()
 
         self.assertEqual(order_line.qty_received_method, 'manual')
         self.assertEqual(order_line.qty_received, 1)
