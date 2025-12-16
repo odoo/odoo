@@ -43,7 +43,7 @@ class DisplayDriver(Driver):
             'rotate_screen': self._action_rotate_screen,
             'open': self._action_open_customer_display,
             'close': self._action_close_customer_display,
-            'set': self._action_set_customer_display,
+            'set': self._action_set_customer_display,  # TODO: Remove customer display actions when v19 is deprecated
         })
 
     @classmethod
@@ -138,6 +138,7 @@ class DisplayDriver(Driver):
         helpers.save_browser_state(orientation=orientation)
 
 
+# TODO: Remove when v19 is deprecated
 class DisplayController(http.Controller):
     @route.iot_route('/hw_proxy/customer_facing_display', type='jsonrpc', cors='*')
     def customer_facing_display(self, action, pos_id=None, access_token=None, data=None):
