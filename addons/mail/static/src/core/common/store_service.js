@@ -175,20 +175,20 @@ export class Store extends BaseStore {
      * @param {boolean} [options.readonly=true] when set to false, the server will open a read-write
      *  cursor to process this request which is necessary if the request is expected to change data.
      * @param {boolean} [options.silent=true]
-     * @returns {Deferred}
      */
     async fetchStoreData(
         name,
         params,
         { requestData = false, readonly = true, silent = true } = {}
     ) {
+        /** @type {import("models").DataResponse} */
         const dataRequest = this.DataResponse.createRequest();
         dataRequest._autoResolve = !requestData;
         this.fetchParams.push([name, params, dataRequest]);
         this.fetchReadonly = this.fetchReadonly && readonly;
         this.fetchSilent = this.fetchSilent && silent;
         this._fetchStoreDataDebounced();
-        return dataRequest._resultDef;
+        return dataRequest._resultResolvers.promise;
     }
 
     /** Import data received from init_messaging */
@@ -267,7 +267,7 @@ export class Store extends BaseStore {
             },
             (error) => {
                 for (const [, , dataRequest] of fetchParams) {
-                    dataRequest._resultDef.reject(error);
+                    dataRequest._resultResolvers.reject(error);
                 }
             }
         );
@@ -290,7 +290,7 @@ export class Store extends BaseStore {
             partners_to: [this.self.id],
         });
         await this.store.chatHub.initPromise;
-        this.ChatWindow.get(channel.thread)?.update({ autofocus: 0 });
+        channel.chatWindow?.update({ autofocus: 0 });
         await this.env.services["discuss.rtc"].toggleCall(channel, { camera: true });
         if (this.rtc.selfSession) {
             this.rtc.enterFullscreen({ autoOpenAction: "invite-people" });
@@ -417,7 +417,6 @@ export class Store extends BaseStore {
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
-     * @returns {Promise<import("models").DiscussChannel | undefined>}
      */
     async getChat({ userId, partnerId }) {
         const partner = await this.getPartner({ userId, partnerId });
@@ -582,7 +581,7 @@ export class Store extends BaseStore {
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
-     * @returns {Promise<import("models").Persona> | undefined}
+     * @returns {Promise<import("models").ResPartner>}
      */
     async getPartner({ userId, partnerId }) {
         if (userId) {
@@ -640,7 +639,7 @@ export class Store extends BaseStore {
             { readonly: false, requestData: true }
         );
         if (forceOpen) {
-            await channel.open({ focus: true });
+            channel.open({ focus: true });
         }
         return channel;
     }

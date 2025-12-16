@@ -1106,21 +1106,15 @@ function _process_request_for_all(store, name, params, context = {}) {
     }
     if (name === "/discuss/get_or_create_chat") {
         const channelId = DiscussChannel._get_or_create_chat(params.partners_to);
-        store.add(channelId).resolve_data_request({
-            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
-        });
+        store.resolve_data_request({ channel: mailDataHelpers.Store.one(channelId) });
     }
     if (name === "/discuss/create_channel") {
         const channelId = DiscussChannel._create_channel(params.name, params.group_id);
-        store.add(channelId).resolve_data_request({
-            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
-        });
+        store.resolve_data_request({ channel: mailDataHelpers.Store.one(channelId) });
     }
     if (name === "/discuss/create_group") {
         const channelId = DiscussChannel._create_group(params.partners_to, params.name);
-        store.add(channelId).resolve_data_request({
-            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
-        });
+        store.resolve_data_request({ channel: mailDataHelpers.Store.one(channelId) });
     }
 }
 

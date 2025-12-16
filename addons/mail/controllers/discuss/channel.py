@@ -57,7 +57,6 @@ class DiscussChannelWebclientController(WebclientController):
         if name == "/discuss/get_or_create_chat":
             resolve_channel = request.env["discuss.channel"]._get_or_create_chat(
                 params["partners_to"],
-                params.get("pin", True),
             )
         if name == "/discuss/create_channel":
             resolve_channel = request.env["discuss.channel"]._create_channel(

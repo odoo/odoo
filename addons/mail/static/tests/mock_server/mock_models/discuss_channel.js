@@ -349,12 +349,10 @@ export class DiscussChannel extends models.ServerModel {
 
     /**
      * @param {number[]} partners_to
-     * @param {boolean} [pin=true]
      */
-    _get_or_create_chat(partners_to, pin) {
-        const kwargs = getKwArgs(arguments, "partners_to", "pin");
+    _get_or_create_chat(partners_to) {
+        const kwargs = getKwArgs(arguments, "partners_to");
         partners_to = kwargs.partners_to || [];
-        pin = kwargs.pin ?? true;
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
