@@ -14,7 +14,7 @@
                 <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-view" t-att-value="searchStr" t-ref="input" t-att-placeholder="searchPlaceholder" t-on-input="onInput"/>
                 <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto o-scrollbar-thin list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': selectablePartners.length === 0 and state.selectableEmails.length === 0 }">
                     <div t-if="selectablePartners.length === 0 and state.selectableEmails.length === 0" class="smaller text-muted mx-1 opacity-50">
-                        <t t-if="props.channel">No user found that is not already a member of this channel.</t>
+                        <t t-if="props.channel">No people found to invite.</t>
                         <t t-else="">No user found.</t>
                     </div>
                     <div t-if="state.searchResultCount > selectablePartners.length" class="smaller text-muted mx-1 mb-1 fst-italic" t-esc="showingResultNarrowText"/>
