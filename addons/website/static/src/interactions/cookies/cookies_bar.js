@@ -25,6 +25,15 @@ export class CookiesBar extends Popup {
         "#cookies-consent-essential, #cookies-consent-all": { "t-on-click": this.onAcceptClick },
         // Override to avoid side effects on hide.
         ".js_close_popup": { "t-on-click": () => { } },
+        ".modal": {
+            "t-on-keydown.capture": (ev) => {
+                if (ev.key === "Escape") {
+                    // Circumvent Bootstrap's keydown behavior which triggers a
+                    // UI glitch.
+                    ev.stopImmediatePropagation();
+                }
+            },
+        },
     };
 
     setup() {
