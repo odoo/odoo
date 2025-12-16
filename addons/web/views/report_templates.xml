@@ -327,7 +327,12 @@
                                 </div>
                             </span>
                         </li>
-                        <li t-if="not forced_vat"/>
+                        <li t-if="not forced_vat">
+                            <t t-if="company.vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                <span t-esc="company.vat">US12345671</span>
+                            </t>
+                        </li>
                         <li t-else="">
                             <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
                             <span t-esc="forced_vat">US12345671</span>
@@ -382,7 +387,12 @@
                                     </div>
                                 </span>
                             </li>
-                            <li t-if="not forced_vat"/>
+                            <li t-if="not forced_vat">
+                                <t t-if="company.vat">
+                                    <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                    <span t-esc="company.vat">US12345671</span>
+                                </t>
+                            </li>
                             <li t-else="">
                                 <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
                                 <span t-esc="forced_vat">US12345671</span>
@@ -441,7 +451,12 @@
                                 </div>
                             </span>
                         </li>
-                        <li t-if="not forced_vat"/>
+                        <li t-if="not forced_vat">
+                            <t t-if="company.vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                <span t-esc="company.vat">US12345671</span>
+                            </t>
+                        </li>
                         <li t-else="">
                             <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
                             <span t-esc="forced_vat">US12345671</span>
@@ -501,7 +516,12 @@
                                 </div>
                             </span>
                         </li>
-                        <li t-if="not forced_vat"/>
+                        <li t-if="not forced_vat">
+                            <t t-if="company.vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                <span t-esc="company.vat">US12345671</span>
+                            </t>
+                        </li>
                         <li t-else="">
                             <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
                             <span t-esc="forced_vat">US12345671</span>
@@ -575,7 +595,12 @@
                                 </div>
                             </span>
                         </li>
-                        <li t-if="not forced_vat"/>
+                        <li t-if="not forced_vat">
+                            <t t-if="company.vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                <span t-esc="company.vat">US12345671</span>
+                            </t>
+                        </li>
                         <li t-else="">
                             <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
                             <span t-esc="forced_vat">US12345671</span>
@@ -644,7 +669,12 @@
                                 </div>
                             </span>
                         </li>
-                        <li t-if="not forced_vat"/>
+                        <li t-if="not forced_vat">
+                            <t t-if="company.vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                <span t-esc="company.vat">US12345671</span>
+                            </t>
+                        </li>
                         <li t-else="">
                             <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
                             <span t-esc="forced_vat">US12345671</span>
@@ -710,7 +740,12 @@
                                 </div>
                             </span>
                         </li>
-                        <li t-if="not forced_vat"/>
+                        <li t-if="not forced_vat">
+                            <t t-if="company.vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                <span t-esc="company.vat">US12345671</span>
+                            </t>
+                        </li>
                         <li t-else="">
                             <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
                             <span t-esc="forced_vat">US12345671</span>
