@@ -285,6 +285,10 @@ class TestStockValuationCommon(BaseCommon):
         cls.stock_location = cls.warehouse.lot_stock_id
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
+        cls.inventory_location = cls.env['stock.location'].search([
+            ('usage', '=', 'inventory'),
+            ('company_id', '=', cls.company.id)
+        ], limit=1)
 
         cls.account_expense = cls.company.expense_account_id
         cls.account_stock_valuation = cls.company.account_stock_valuation_id
