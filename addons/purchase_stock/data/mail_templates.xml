@@ -27,4 +27,23 @@
           </div>
         </div>
     </template>
+
+    <template id="exception_on_picking">
+        <div>
+            Received quantity is less than the expected quantity for transfer
+            <a href="#" data-oe-model="stock.picking" t-att-data-oe-id="origin_picking.id"><t t-out="origin_picking.name"/></a> and no backorder is planned. Manual action may be needed.
+            <div class="mt16">
+                <ul t-foreach="moves_information" t-as="exception">
+                    <t t-set="move" t-value="exception[0]"/>
+                    <t t-set="new_qty" t-value="exception[1][0]"/>
+                    <t t-set="old_qty" t-value="exception[1][1]"/>
+                    <li>
+                        Only <t t-out="new_qty"/> <t t-out="move.uom_id.name"/>
+                        of <t t-out="move.product_id.display_name"/>
+                        received in contrast to the expected <t t-out="old_qty"/> <t t-out="move.uom_id.name"/>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </template>
 </odoo>

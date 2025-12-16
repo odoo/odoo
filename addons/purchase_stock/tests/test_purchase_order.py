@@ -865,3 +865,112 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
                 'debit': 0.0,
             },
         ])
+
+    def test_log_activity_in_po_with_receipt_without_backorders(self):
+        """
+        Checks if a warning note is created in a PO in case a transfer is validated with
+        incomplete quantities and without backorders. In multi-step receipts, the note
+        should only be created if the first transfer doesn't have backorders.
+        """
+        expected_note = """<div>
+            Received quantity is less than the expected quantity for transfer
+            <a href="#" data-oe-model="stock.picking" data-oe-id="{receipt.id}">{receipt.name}</a> and no backorder is planned. Manual action may be needed.
+            <div class="mt16">
+                <ul>
+                    <li>
+                        Only 50.0 Units
+                        of product_a
+                        received in contrast to the expected 200.0 Units
+                    </li>
+                </ul><ul>
+                    <li>
+                        Only 5.0 Dozens
+                        of product_b
+                        received in contrast to the expected 20.0 Dozens
+                    </li>
+                </ul>
+            </div>
+        </div>"""
+
+        product_c = self.env['product.product'].create({
+            'name': 'Product C', 'is_storable': True,
+        })
+        po_user = self.env['res.users'].create({
+            'name': 'Test PO user',
+            'login': 'test_po_user',
+            'email': 'test_po_user@yourcompany.com',
+            'group_ids': [Command.set([self.ref('purchase.group_purchase_manager')])],
+        })
+
+        # Create a PO in a single-step scenario
+        po = self.env['purchase.order'].with_user(po_user).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id, 'product_qty': 200,
+                }),
+                Command.create({
+                    'product_id': self.product_b.id, 'product_qty': 20,
+                }),
+                Command.create({
+                    'product_id': product_c.id, 'product_qty': 2,
+                }),
+            ],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        # Update quantities: product_a misses 150, product_b misses 5, product_c is complete
+        receipt.move_line_ids.filtered(lambda ml: ml.product_id == self.product_a).quantity = 50
+        receipt.move_line_ids.filtered(lambda ml: ml.product_id == self.product_b).quantity = 5
+        receipt.move_line_ids.filtered(lambda ml: ml.product_id == product_c).quantity = 2
+        # Validate the receipt without creating backorders
+        Form.from_action(self.env, receipt.button_validate()).save().process_cancel_backorder()
+        # A note is created: it mentions 2 incomplete lines and ignores the complete one
+        activity = self.env['mail.activity'].search([
+            ('res_model_id', '=', 'purchase.order'), ('res_id', '=', po.id),
+        ])
+        self.assertEqual(activity.summary, 'Missing products in receipt')
+        # The PO user should be assigned to the note
+        self.assertEqual(activity.user_id, po_user)
+        self.assertEqual(activity.date_deadline, fields.Date.context_today(self))
+        self.assertEqual(activity.activity_type_id, self.env.ref('mail.mail_activity_data_warning'))
+        self.assertEqual(str(activity.note), expected_note.format(receipt=receipt))
+
+        # A note should not be created for non-first transfers in multi-step receipts
+        self.company_data['default_warehouse'].reception_steps = 'two_steps'
+        # Create the same PO as above
+        multi_step_po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id, 'product_qty': 200,
+                }),
+                Command.create({
+                    'product_id': self.product_b.id, 'product_qty': 20,
+                }),
+                Command.create({
+                    'product_id': product_c.id, 'product_qty': 2,
+                }),
+            ],
+        })
+        multi_step_po.button_confirm()
+        # Confirm the first transfer, keeping original quantities
+        first_step = multi_step_po.picking_ids
+        first_step.button_validate()
+        # There should be no note
+        activity = self.env['mail.activity'].search([
+            ('res_model_id', '=', 'purchase.order'), ('res_id', '=', multi_step_po.id),
+        ])
+        self.assertFalse(activity)
+        # Update quantities in the second transfer
+        second_step = first_step._get_next_transfers()
+        second_step.move_line_ids.filtered(lambda ml: ml.product_id == self.product_a).quantity = 50
+        second_step.move_line_ids.filtered(lambda ml: ml.product_id == self.product_b).quantity = 5
+        second_step.move_line_ids.filtered(lambda ml: ml.product_id == product_c).quantity = 2
+        # Validate the second step without creating backorders
+        Form.from_action(self.env, second_step.button_validate()).save().process_cancel_backorder()
+        # There should still be no note, since the first transfer was validated with full quantities
+        activity = self.env['mail.activity'].search([
+            ('res_model_id', '=', 'purchase.order'), ('res_id', '=', multi_step_po.id),
+        ])
+        self.assertFalse(activity)

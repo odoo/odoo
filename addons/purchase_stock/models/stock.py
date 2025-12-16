@@ -41,6 +41,21 @@ class StockPicking(models.Model):
         self.purchase_id.sudo().action_acknowledge()
         return super()._action_done()
 
+    def _log_less_quantities_than_expected(self, moves):
+        moves_information = [(k, v) for k, v in moves.items()]
+        purchase_order = self.move_ids.purchase_line_id.order_id
+        if purchase_order:
+            purchase_order.sudo().activity_schedule(
+                'mail.mail_activity_data_warning',
+                summary=_('Missing products in receipt'),
+                note=self.env['ir.qweb']._render('purchase_stock.exception_on_picking', {
+                    'origin_picking': self,
+                    'moves_information': moves_information,
+                }),
+                user_id=purchase_order.user_id.id,
+            )
+        return super()._log_less_quantities_than_expected(moves)
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
