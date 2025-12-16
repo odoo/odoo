@@ -191,7 +191,7 @@ class StockMove(models.Model):
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', index=True)
     forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit', compute_sudo=True)
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
-    lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', domain="[('product_id', '=', product_id)]", string='Serial Numbers', readonly=False)
+    lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', domain="[('product_id', '=', product_id)]", string='Tracking')
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True, help="Computes when a move should be reserved")
     packaging_uom_id = fields.Many2one('uom.uom', 'Packaging', help="Packaging unit from sale or purchase orders", compute='_compute_packaging_uom_id', precompute=True, store=True)
     packaging_uom_qty = fields.Float('Packaging Quantity', help="Quantity in the packaging unit", compute='_compute_packaging_uom_qty', store=True)
@@ -634,39 +634,46 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _set_lot_ids(self):
         for move in self:
-            if move.state == 'assigned' and all(ml.lot_id in move.lot_ids for ml in move.move_line_ids):
+            if move.state == 'draft' and not move.lot_ids:
                 continue
             move_lines_commands = []
             mls = move.move_line_ids
             mls_with_lots = mls.filtered(lambda ml: ml.lot_id)
             mls_without_lots = (mls - mls_with_lots)
+            move_uom = move.uom_id
+            product_uom = move.product_id.uom_id
+            ls = mls.lot_id
+            demand = move_uom._compute_quantity(move.product_uom_qty, product_uom)
+            is_serial_tracked = move.has_tracking == 'serial'
+            qty_assigned = move_uom._compute_quantity(move._quantity_sml(), product_uom)
+            qty_to_assign = move_uom._compute_quantity(move.quantity, product_uom) - qty_assigned
             for ml in mls_with_lots:
                 if ml.quantity and ml.lot_id not in move.lot_ids:
-                    move_lines_commands.append((2, ml.id))
-            ls = move.move_line_ids.lot_id
+                    move_lines_commands.append(Command.delete(ml.id))
+                    released_qty = ml.uom_id._compute_quantity(ml.quantity, product_uom)
+                    qty_to_assign += released_qty
+                    qty_assigned -= released_qty
             for lot in move.lot_ids:
                 if lot not in ls:
-                    if mls_without_lots[:1]:  # Updates an existing line without serial number.
-                        move_line = mls_without_lots[:1]
-                        move_lines_commands.append(Command.update(move_line.id, {
-                            'lot_id': lot.id,
-                            'uom_id': move.product_id.uom_id.id if move.product_id.tracking == 'serial' else move.uom_id.id,
-                            'quantity': 1 if move.product_id.tracking == 'serial' else move.quantity,
-                        }))
+                    if move_line := mls_without_lots[:1]:  # Updates an existing line without serial/lot number.
+                        move_lines_commands.append(Command.update(move_line.id, {'lot_id': lot.id}))
                         mls_without_lots -= move_line
-                    else:  # No line without serial number, creates a new one.
-                        reserved_quants = self.env['stock.quant'].with_context(packaging_uom_id=move.packaging_uom_id)._get_reserve_quantity(move.product_id, move.location_id, 1.0, lot_id=lot)
-                        if reserved_quants and reserved_quants[0][0].lot_id:
+                    else:  # No line without serial/lot number, creates a new one.
+                        qty_to_reserve = 1.0 if is_serial_tracked or qty_assigned >= demand else min(qty_to_assign, demand - qty_assigned)
+                        reserved_quants = self.env['stock.quant'].with_context(
+                            packaging_uom_id=move.packaging_uom_id
+                        )._get_reserve_quantity(move.product_id, move.location_id, qty_to_reserve, lot_id=lot)
+                        if reserved_quants:
                             move_line_vals = self._prepare_move_line_vals(quantity=0, reserved_quant=reserved_quants[0][0])
+                            move_line_vals['quantity'] = reserved_quants[0][1]
                         else:
                             move_line_vals = self._prepare_move_line_vals(quantity=0)
-                            move_line_vals['lot_id'] = lot.id
-                        move_line_vals['uom_id'] = move.product_id.uom_id.id
-                        move_line_vals['quantity'] = 1
-                        move_lines_commands.append((0, 0, move_line_vals))
-                else:
-                    move_line = move.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id)
-                    move_line.quantity = 1
+                            move_line_vals['quantity'] = 1.0
+                        move_line_vals['lot_id'] = lot.id
+                        move_line_vals['uom_id'] = product_uom.id
+                        move_lines_commands.append(Command.create(move_line_vals))
+                        qty_to_assign -= move_line_vals['quantity']
+                        qty_assigned += move_line_vals['quantity']
             move.write({'move_line_ids': move_lines_commands})
 
     @api.depends('picking_type_id', 'date', 'priority', 'state')
@@ -1405,9 +1412,32 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     @api.onchange('lot_ids')
     def _onchange_lot_ids(self):
-        quantity = sum(ml.quantity_product_uom for ml in self.move_line_ids.filtered(lambda ml: not ml.lot_id and ml.lot_name))
-        quantity += self.product_id.uom_id._compute_quantity(len(self.lot_ids), self.uom_id)
-        self.update({'quantity': quantity})
+        if self.has_tracking == 'serial':
+            quantity = len(self.lot_ids)
+        else:
+            mls_with_existing_lots = self.move_line_ids.filtered(lambda ml: ml.lot_id.id in self.lot_ids.ids)
+            mls_without_lots = self.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_name)
+            quantity = sum((mls_with_existing_lots | mls_without_lots).mapped('quantity_product_uom'))
+            newly_added_lots = self.lot_ids.filtered(lambda lot: lot._origin.id not in self._origin.lot_ids.ids)
+            if newly_added_lots:
+                demand = self.uom_id._compute_quantity(self.product_uom_qty, self.product_id.uom_id)
+                assigned_mls = self.env['stock.move.line']
+                for lot in newly_added_lots:
+                    remaining_move_qty = demand - quantity
+                    unassigned_empty_ml = (mls_without_lots - assigned_mls)[:1]
+                    if unassigned_empty_ml:
+                        qty_to_add = 0
+                        assigned_mls |= unassigned_empty_ml
+                    elif remaining_move_qty > 0:
+                        available_quants = self.env['stock.quant'].with_context(
+                            packaging_uom_id=self.packaging_uom_id
+                        )._get_reserve_quantity(self.product_id, self.location_id, remaining_move_qty, lot_id=lot._origin)
+                        qty_to_add = min(available_quants[0][1], remaining_move_qty) if available_quants else 1
+                    else:
+                        qty_to_add = 1
+                    quantity += qty_to_add
+
+        self.quantity = self.product_id.uom_id._compute_quantity(quantity, self.uom_id, round=False)
         base_location = self.location_id
         quants = self.env['stock.quant'].sudo().search([
             ('product_id', '=', self.product_id.id),
