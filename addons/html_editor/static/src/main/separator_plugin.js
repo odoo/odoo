@@ -31,7 +31,7 @@ export class SeparatorPlugin extends Plugin {
             categoryId: "structure",
             commandId: "insertSeparator",
         }),
-        content_not_editable_providers: (rootEl) => [...selectElements(rootEl, "hr")],
+        content_not_editable_providers: (rootEl) => selectElements(rootEl, "hr"),
         contenteditable_to_remove_selector: "hr[contenteditable]",
         shorthands: [
             {

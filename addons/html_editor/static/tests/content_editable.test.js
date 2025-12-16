@@ -8,8 +8,8 @@ test("set o_editable_media class on contenteditable false media elements", async
     class TestPlugin extends Plugin {
         static id = "test";
         resources = {
-            content_not_editable_providers: (rootEl) => [...selectElements(rootEl, "i")],
-            content_editable_providers: (rootEl) => [...selectElements(rootEl, "i")],
+            content_not_editable_providers: (rootEl) => selectElements(rootEl, "i"),
+            content_editable_providers: (rootEl) => selectElements(rootEl, "i"),
         };
     }
     const Plugins = [...MAIN_PLUGINS, TestPlugin];

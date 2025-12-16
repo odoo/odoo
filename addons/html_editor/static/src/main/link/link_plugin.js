@@ -739,7 +739,8 @@ export class LinkPlugin extends Plugin {
             // the anchor element itself.
             if (color && childNodes.every((n) => !isBlock(n))) {
                 anchorEl.style.removeProperty("color");
-                const font = selectElements(anchorEl, "font").next().value;
+                const font =
+                    anchorEl.nodeName === "FONT" ? anchorEl : anchorEl.querySelector("font");
                 if (font && cleanZWChars(anchorEl.textContent) === font.textContent) {
                     continue;
                 }

@@ -65,9 +65,7 @@ export class ContentEditablePlugin extends Plugin {
 
     cleanForSave({ root }) {
         const toRemoveSelector = this.getResource("contenteditable_to_remove_selector").join(",");
-        const contenteditableEls = toRemoveSelector
-            ? [...selectElements(root, toRemoveSelector)]
-            : [];
+        const contenteditableEls = toRemoveSelector ? selectElements(root, toRemoveSelector) : [];
         for (const contenteditableEl of contenteditableEls) {
             contenteditableEl.removeAttribute("contenteditable");
         }

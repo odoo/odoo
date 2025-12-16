@@ -35,12 +35,12 @@ export class BuilderContentEditablePlugin extends Plugin {
 
     getContentEditableEls(rootEl) {
         const editableSelector = this.getResource("content_editable_selectors").join(",");
-        return [...selectElements(rootEl, editableSelector)];
+        return selectElements(rootEl, editableSelector);
     }
 
     getContentNotEditableEls(rootEl) {
         const notEditableSelector = this.getResource("content_not_editable_selectors").join(",");
-        return [...selectElements(rootEl, notEditableSelector)];
+        return selectElements(rootEl, notEditableSelector);
     }
 
     isValidContentEditable(contentEditableEl) {

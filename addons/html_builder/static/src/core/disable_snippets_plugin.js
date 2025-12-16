@@ -1,6 +1,7 @@
 import { omit } from "@web/core/utils/objects";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef { Object } DisableSnippetsShared
@@ -55,7 +56,7 @@ export class DisableSnippetsPlugin extends Plugin {
         const checkSanitize = (el, snippetEl) => {
             let forbidSanitize = false;
             // Check if the snippet is sanitized/contains such snippets.
-            for (const el of [snippetEl, ...snippetEl.querySelectorAll("[data-snippet")]) {
+            for (const el of selectElements(snippetEl, "[data-snippet")) {
                 const snippet = this.snippetModel.getOriginalSnippet(el.dataset.snippet);
                 if (snippet && snippet.forbidSanitize) {
                     forbidSanitize = snippet.forbidSanitize;

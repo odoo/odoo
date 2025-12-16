@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { InputConfirmationDialog } from "./input_confirmation_dialog";
 import { fuzzyLookup } from "@web/core/utils/search";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export class SnippetViewer extends Component {
     static template = "html_builder.SnippetViewer";
@@ -100,8 +101,7 @@ export class SnippetViewer extends Component {
         }
         const getClasses = (snippet) => {
             const classes = new Set();
-            const elements = [snippet.content, ...snippet.content.querySelectorAll("*")];
-            for (const el of elements) {
+            for (const el of selectElements(snippet.content, "*")) {
                 for (const className of el.classList) {
                     if (className.startsWith("s_")) {
                         classes.add(className);

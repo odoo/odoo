@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { unremovableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
 import { isUnremovableQWebElement as qwebPluginPredicate } from "@html_editor/others/qweb_plugin";
 import { isEditable } from "@html_builder/utils/utils";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 
@@ -141,7 +141,7 @@ export class RemovePlugin extends Plugin {
         }
 
         // Remove tooltips.
-        [toRemoveEl, ...toRemoveEl.querySelectorAll("*")].forEach((el) => {
+        selectElements(toRemoveEl, "*").forEach((el) => {
             const tooltip = Tooltip.getInstance(el);
             if (tooltip) {
                 tooltip.dispose();
