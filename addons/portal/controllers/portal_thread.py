@@ -45,7 +45,8 @@ class PortalChatter(ThreadController):
     def _store_portal_thread_fields(cls, res: Store.FieldList, **kwargs):
         portal_partner_by_thread = {
             thread: get_portal_partner(
-                thread, kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token"),
+                # need to use sudo because portal users might not have the right to read the portal partner
+                thread.sudo(), kwargs.get("hash"), kwargs.get("pid"), kwargs.get("token"),
             ) for thread in res.records
         }
 
