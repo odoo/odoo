@@ -7,8 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 registerThreadAction("call", {
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
     icon: "fa fa-fw fa-phone",
-    name: ({ thread }) =>
-        thread.rtc_session_ids.length > 0 ? _t("Join the Call") : _t("Start Call"),
+    name: ({ channel }) => (channel.hasRtcSessionActive ? _t("Join the Call") : _t("Start Call")),
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     sequence: 10,
     sequenceQuick: 30,
@@ -17,10 +16,8 @@ registerThreadAction("call", {
 registerThreadAction("camera-call", {
     condition: ({ channel, store }) => channel?.allowCalls && !channel?.eq(store.rtc.channel),
     icon: "fa fa-fw fa-video-camera",
-    name: ({ thread }) =>
-        thread.rtc_session_ids.length > 0
-            ? _t("Join the Call with Camera")
-            : _t("Start Video Call"),
+    name: ({ channel }) =>
+        channel.hasRtcSessionActive ? _t("Join the Call with Camera") : _t("Start Video Call"),
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
     sequence: 5,
     sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 25 : 35),
