@@ -1,6 +1,11 @@
 import { fields, Record } from "@mail/model/export";
 
-import { Deferred } from "@web/core/utils/concurrency";
+/**
+ * @template T
+ * @typedef {{
+ *   [K in keyof T as T[K] extends Function ? never : K]: T[K]
+ * }} InstanceFields
+ */
 
 /**
  * This class represents a specific and unique request coming from the client to the server, and it
@@ -16,6 +21,7 @@ export class DataResponse extends Record {
     static id = "id";
     static _lastId = 0;
 
+    /** @returns {import("models").DataResponse} */
     static createRequest() {
         return this.insert({ id: ++this._lastId });
     }
@@ -29,10 +35,6 @@ export class DataResponse extends Record {
      */
     _autoResolve = false;
     /**
-     * Promise that is resolved with the data when the data request is complete.
-     */
-    _resultDef = new Deferred();
-    /**
      * When set to true, resolves this data request with the current values of the fields as data,
      * and then deletes the data request.
      *
@@ -42,11 +44,16 @@ export class DataResponse extends Record {
         /** @this {import("models").DataResponse} */
         onUpdate() {
             if (this._resolve) {
-                this._resultDef.resolve({ ...this });
+                this._resultResolvers.resolve({ ...this });
                 this.delete();
             }
         },
     });
+    /**
+     * Promise that is resolved with the data when the data request is complete.
+     * @type {PromiseWithResolvers<InstanceFields<DataResponse>>}
+     */
+    _resultResolvers = Promise.withResolvers();
     /*
      * Fields are contextual to each data request. They are generically added here to benefit from
      * fields behavior as well as auto-complete, but their meaning depends on each data request.
@@ -54,8 +61,8 @@ export class DataResponse extends Record {
      * other fields can be added if necessary.
      */
     attachments = fields.Many("ir.attachment");
-    channel = fields.One("mail.thread");
-    channels = fields.Many("mail.thread");
+    channel = fields.One("discuss.channel");
+    channels = fields.Many("discuss.channel");
     /** @type {number} */
     count;
     message = fields.One("mail.message");

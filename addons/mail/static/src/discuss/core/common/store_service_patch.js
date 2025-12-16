@@ -34,13 +34,13 @@ const storeServicePatch = {
      * @returns {Promise<import("models").DiscussChannel>}
      */
     async createGroupChat({ default_display_mode, partners_to, name }) {
-        const { channel: thread } = await this.fetchStoreData(
+        const { channel } = await this.fetchStoreData(
             "/discuss/create_group",
             { default_display_mode, partners_to, name },
             { readonly: false, requestData: true }
         );
-        await thread.open({ focus: true });
-        return thread.channel;
+        channel.open({ focus: true });
+        return channel;
     },
     /** @param {number} channelId */
     async fetchChannel(channelId) {
@@ -48,7 +48,7 @@ const storeServicePatch = {
         if (fetchParam) {
             const [, channelIds, dataRequest] = fetchParam;
             channelIds.push(channelId);
-            await dataRequest._resultDef;
+            await dataRequest._resultResolvers.promise;
         } else {
             await this.fetchStoreData("discuss.channel", [channelId]);
         }

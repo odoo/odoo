@@ -1257,7 +1257,7 @@ class DiscussChannel(models.Model):
     # User methods
 
     @api.model
-    def _get_or_create_chat(self, partners_to, pin=True):
+    def _get_or_create_chat(self, partners_to):
         """ Get the canonical private channel between some partners, create it if needed.
             To reuse an old channel (conversation), this one must be private, and contains
             only the given partners.
@@ -1306,10 +1306,7 @@ class DiscussChannel(models.Model):
             # get the existing channel between the given partners
             channel = self.browse(result[0].get('channel_id'))
             # pin or open the channel for the current partner
-            if pin:
-                channel.self_member_id.write(
-                    {"last_interest_dt": last_interest_dt, "unpin_dt": False}
-                )
+            channel.self_member_id.write({"last_interest_dt": last_interest_dt, "unpin_dt": False})
             channel._broadcast(self.env.user.partner_id.ids)
         else:
             # create a new one

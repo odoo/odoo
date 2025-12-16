@@ -158,7 +158,7 @@ export class Chatbot extends Record {
                 chatbot_script_id: this.script.id,
                 data_id: dataRequest.id,
             });
-            await dataRequest._resultDef;
+            await dataRequest._resultResolvers.promise;
             if (!dataRequest.chatbot_step) {
                 this.currentStep.isLast = true;
                 return;

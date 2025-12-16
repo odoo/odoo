@@ -29,6 +29,7 @@ declare module "models" {
     import { ResRole as ResRoleClass } from "@mail/core/common/res_role_model";
     import { ResUsers as ResUsersClass } from "@mail/core/common/res_users_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
+    import { Store as StoreClass } from "@mail/core/common/store_service";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
 
@@ -62,8 +63,15 @@ declare module "models" {
     export interface ResRole extends ResRoleClass {}
     export interface ResUsers extends ResUsersClass, ResPartner {}
     export interface Settings extends SettingsClass {}
+    export interface Store extends StoreClass {}
     export interface Thread extends ThreadClass {}
     export interface Volume extends VolumeClass {}
+
+    type StaticMailRecord<ClassInterface, JSClassType> = Omit<JSClassType, "get" | "insert" | "records"> & {
+        get: (data: any) => ClassInterface;
+        insert: <D extends object | object[]>(data: D, options?: object) => D extends object[] ? ClassInterface[] : ClassInterface;
+        records: { [localId: string]: ClassInterface };
+    };
 
     export interface Store {
         ChatHub: StaticMailRecord<ChatHub, typeof ChatHubClass>;
@@ -97,6 +105,7 @@ declare module "models" {
         "res.role": StaticMailRecord<ResRole, typeof ResRoleClass>;
         "res.users": StaticMailRecord<ResUsers, typeof ResUsersClass>;
         Settings: StaticMailRecord<Settings, typeof SettingsClass>;
+        Store: StaticMailRecord<Store, typeof StoreClass>;
         Volume: StaticMailRecord<Volume, typeof VolumeClass>;
     }
 
@@ -132,6 +141,7 @@ declare module "models" {
         "res.role": ResRole;
         "res.users": ResUsers;
         Settings: Settings;
+        Store: Store;
         Volume: Volume;
     }
 }

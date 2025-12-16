@@ -127,7 +127,7 @@ async function makeNewChannel(name, store) {
         { name, group_id: store.internalUserGroupId },
         { readonly: false, requestData: true }
     );
-    await channel.open({ focus: true, bypassCompact: true });
+    channel.open({ focus: true, bypassCompact: true });
 }
 
 export class DiscussCommandPalette {
