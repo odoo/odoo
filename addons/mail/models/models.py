@@ -707,15 +707,26 @@ class Base(models.AbstractModel):
         # begin with aliases (independent from company, alias_domain_id on alias wins)
         reply_to_email = {}
         if model and res_ids:
-            mail_aliases = self.env['mail.alias'].sudo().search([
-                ('alias_domain_id', '!=', False),
-                ('alias_parent_model_id.model', '=', model),
-                ('alias_parent_thread_id', 'in', res_ids),
-                ('alias_name', '!=', False)
-            ])
-            # take only first found alias for each thread_id, to match order (1 found -> limit=1 for each res_id)
-            for alias in mail_aliases:
-                reply_to_email.setdefault(alias.alias_parent_thread_id, alias.alias_full_name)
+            # 1. Try to get the primary alias from the record itself (if it uses the mixin)
+            if isinstance(self.env[model], self.env.registry['mail.alias.mixin']):
+                valid_aliases = _records_sudo.alias_id.filtered_domain([('alias_parent_thread_id', '!=', False), ('alias_name', '!=', False), ('alias_domain_id', '!=', False)])
+                for alias in valid_aliases:
+                    reply_to_email[alias.alias_parent_thread_id] = alias.alias_full_name
+            # 2. Fallback: Search for any alias pointing to these records
+            missing_thread_ids = [
+                res_id for res_id in res_ids
+                if res_id not in reply_to_email
+            ]
+            if missing_thread_ids:
+                mail_aliases = self.env['mail.alias'].sudo().search([
+                    ('alias_domain_id', '!=', False),
+                    ('alias_parent_model_id.model', '=', model),
+                    ('alias_parent_thread_id', 'in', missing_thread_ids),
+                    ('alias_name', '!=', False),
+                ])
+                # take only first found alias for each thread_id, to match order (1 found -> limit=1 for each res_id)
+                for alias in mail_aliases:
+                    reply_to_email.setdefault(alias.alias_parent_thread_id, alias.alias_full_name)
 
         # continue with company alias
         left_ids = set(_res_ids) - set(reply_to_email)
