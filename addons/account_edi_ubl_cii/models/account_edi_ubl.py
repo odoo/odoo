@@ -91,9 +91,7 @@ class AccountEdiUBL(models.AbstractModel):
         """
         return {
             **tax_grouping_key,
-            # Temporary solution to have withholding taxes merged with others until we know how to manage them.
-            # Should be: `'is_withholding': tax_grouping_key['is_withholding'],`
-            'is_withholding': False,
+            'is_withholding': tax_grouping_key['is_withholding'],
         }
 
     def _ubl_default_tax_total_grouping_key(self, tax_subtotal_grouping_key, vals):

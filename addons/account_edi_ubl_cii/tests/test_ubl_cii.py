@@ -399,6 +399,32 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
             'zip': '8010',
         }])
 
+    def test_export_mixed_taxes(self):
+        special_tax = self.env['account.tax'].create({
+            'name': "negative_tax_10",
+            'amount_type': 'percent',
+            'amount': -10.0,
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'invoice_edi_format': 'ubl_bis3',
+            'country_id': self.env.ref('base.be').id,
+        })
+        invoice = self.env['account.move'].create({
+            'partner_id': partner.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                    'tax_ids': [Command.set(special_tax.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        invoice._generate_and_send()
+
     def test_import_discount(self):
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
