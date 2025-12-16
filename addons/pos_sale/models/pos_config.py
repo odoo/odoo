@@ -7,11 +7,15 @@ from odoo import fields, models, api
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
+    def _get_default_down_payment_product(self):
+        return self.env.ref('pos_sale.default_downpayment_product', raise_if_not_found=False)
+
     crm_team_id = fields.Many2one(
         'crm.team', string="Sales Team", ondelete="set null", index='btree_not_null',
         help="This Point of sale's sales will be related to this Sales Team.")
     down_payment_product_id = fields.Many2one('product.product',
         string="Down Payment Product",
+        default=_get_default_down_payment_product,
         help="This product will be used as down payment on a sale order.")
 
     def _get_special_products(self):
@@ -20,13 +24,6 @@ class PosConfig(models.Model):
 
     @api.model
     def _ensure_downpayment_product(self):
-        pos_config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
-        downpayment_product = self.env.ref('pos_sale.default_downpayment_product', raise_if_not_found=False)
-        if pos_config and downpayment_product:
-            pos_config.write({'down_payment_product_id': downpayment_product.id})
-
-    @api.model
-    def load_onboarding_furniture_scenario(self, with_demo_data=True):
-        res = super().load_onboarding_furniture_scenario(with_demo_data)
-        self._ensure_downpayment_product()
-        return res
+        if downpayment_product := self._get_default_down_payment_product():
+            pos_configs = self.with_context(active_test=False).search([])
+            pos_configs.write({'down_payment_product_id': downpayment_product.id})
