@@ -3,9 +3,12 @@ import { ProductCatalogSaleOrderLine } from "./sale_order_line/sale_order_line";
 import { patch } from "@web/core/utils/patch";
 
 patch(ProductCatalogKanbanRecord.prototype, {
-    updateQuantity(quantity) {
-        if (this.env.orderResModel !== "sale.order" || this.productCatalogData.productType == "service") {
-            super.updateQuantity(...arguments);
+    updateQuantity(quantity, debounce) {
+        if (
+            this.orderLineProps.orderResModel !== "sale.order" ||
+            this.productCatalogData.productType == "service"
+        ) {
+            super.updateQuantity(quantity, debounce);
         } else if (
             this.productCatalogData.quantity === this.productCatalogData.deliveredQty &&
             quantity < this.productCatalogData.quantity
@@ -16,12 +19,23 @@ patch(ProductCatalogKanbanRecord.prototype, {
             this.props.record.load();
             this.props.record.model.notify();
         } else {
-            super.updateQuantity(Math.max(quantity, this.productCatalogData.deliveredQty));
+            quantity = Math.max(quantity, this.productCatalogData.deliveredQty ?? 0);
+            super.updateQuantity(quantity, debounce);
         }
     },
 
+    get orderLineProps() {
+        if (super.orderLineProps.orderResModel === "sale.order") {
+            return {
+                ...super.orderLineProps,
+                deliveredQty: this.productCatalogData.deliveredQty,
+            };
+        }
+        return { ...super.orderLineProps };
+    },
+
     get orderLineComponent() {
-        if (this.env.orderResModel === "sale.order") {
+        if (this.orderLineProps.orderResModel === "sale.order") {
             return ProductCatalogSaleOrderLine;
         }
         return super.orderLineComponent;

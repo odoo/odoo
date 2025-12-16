@@ -1,4 +1,3 @@
-import { useSubEnv } from "@odoo/owl";
 import { ProductCatalogKanbanRecord } from "@product/product_catalog/kanban_record";
 import { ProductCatalogAccountMoveLine } from "./account_move_line";
 import { patch } from "@web/core/utils/patch";
@@ -6,15 +5,10 @@ import { patch } from "@web/core/utils/patch";
 patch(ProductCatalogKanbanRecord.prototype, {
     setup() {
         super.setup();
-
-        useSubEnv({
-            ...this.env,
-            selectedSectionId: this.env.searchModel.selectedSection?.sectionId,
-        });
     },
 
     get orderLineComponent() {
-        if (this.env.orderResModel === "account.move") {
+        if (this.orderLineProps.orderResModel === "account.move") {
             return ProductCatalogAccountMoveLine;
         }
         return super.orderLineComponent;
@@ -34,19 +28,19 @@ patch(ProductCatalogKanbanRecord.prototype, {
         super.addProduct(qty);
     },
 
-    updateQuantity(quantity) {
+    updateQuantity(quantity, debounce = true) {
         const lineCountChange = (quantity > 0) - (this.productCatalogData.quantity > 0);
         if (lineCountChange !== 0) {
             this.notifyLineCountChange(lineCountChange);
         }
 
-        super.updateQuantity(quantity);
+        super.updateQuantity(quantity, debounce);
     },
 
     notifyLineCountChange(lineCountChange) {
-        this.env.searchModel.trigger('section-line-count-change', {
-            sectionId: this.env.selectedSectionId,
+        this.env.searchModel.trigger("section-line-count-change", {
+            sectionId: this.env.searchModel.selectedSection?.sectionId,
             lineCountChange: lineCountChange,
         });
     },
-})
+});

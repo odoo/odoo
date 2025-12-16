@@ -29,6 +29,6 @@ registry.category("web_tour.tours").add("test_use_product_catalog_on_invoice", {
     ],
 });
 
-registry.category("web_tour.tours").add('test_add_section_from_product_catalog_on_invoice', {
-    steps: () => addSectionFromProductCatalog()
+registry.category("web_tour.tours").add("test_add_section_from_product_catalog_on_invoice", {
+    steps: () => addSectionFromProductCatalog(),
 });

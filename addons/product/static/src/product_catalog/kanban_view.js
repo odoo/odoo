@@ -5,7 +5,6 @@ import { ProductCatalogKanbanController } from "./kanban_controller";
 import { ProductCatalogKanbanModel } from "./kanban_model";
 import { ProductCatalogKanbanRenderer } from "./kanban_renderer";
 
-
 export const productCatalogKanbanView = {
     ...kanbanView,
     Controller: ProductCatalogKanbanController,

@@ -10,7 +10,7 @@ patch(ProductCatalogKanbanRecord.prototype, {
     },
 
     get orderLineComponent() {
-        if (this.env.orderResModel === "purchase.order") {
+        if (this.orderLineProps.orderResModel === "purchase.order") {
             return ProductCatalogPurchaseOrderLine;
         }
         return super.orderLineComponent;

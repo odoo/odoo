@@ -150,7 +150,6 @@ class PurchaseOrder(models.Model):
             'vendor_suggest_days': self.partner_id.suggest_days,
             'vendor_suggest_based_on': self.partner_id.suggest_based_on,
             'vendor_suggest_percent': self.partner_id.suggest_percent,
-            'product_catalog_order_state': self.state,
         }
 
     def action_purchase_order_suggest(self):
@@ -466,7 +465,8 @@ class PurchaseOrder(models.Model):
     def _get_product_catalog_order_line_info(self, product_ids, child_field=False, **kwargs):
         """ Add suggest_ctx to env in order to trigger product.product suggest compute fields"""
         if kwargs.get('suggest_based_on'):
-            suggest_keys = ('suggest_days', 'suggest_based_on', 'suggest_percent', 'warehouse_id')
+            suggest_keys = ('suggest_days', 'suggest_based_on', 'suggest_percent', 'warehouse_id',
+                            'monthly_demand_start', 'monthly_demand_end')
             suggest_ctx = {k: v for k, v in kwargs.items() if k in suggest_keys}
             return super(PurchaseOrder, self.with_context(suggest_ctx))._get_product_catalog_order_line_info(
                 product_ids, child_field=child_field, **kwargs

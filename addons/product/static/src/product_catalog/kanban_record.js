@@ -1,4 +1,3 @@
-import { useSubEnv } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { useDebounced } from "@web/core/utils/timing";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
@@ -16,22 +15,33 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
         this.debouncedUpdateQuantity = useDebounced(this._updateQuantity, 500, {
             execBeforeUnmount: true,
         });
+    }
 
-        useSubEnv({
-            currencyId: this.props.record.context.product_catalog_currency_id,
-            orderId: this.props.record.context.product_catalog_order_id,
-            orderResModel: this.props.record.context.product_catalog_order_model,
-            digits: this.props.record.context.product_catalog_digits,
-            displayUoM: this.props.record.context.display_uom,
-            precision: this.props.record.context.precision,
-            productId: this.props.record.resId,
+    get orderLineProps() {
+        const record = this.props.record;
+        return {
+            childField: record.context.child_field,
+            code: record.productCatalogData.code,
+            currencyId: record.context.product_catalog_currency_id,
+            digits: record.context.product_catalog_digits,
+            displayUoM: record.context.display_uom,
+            isSample: record.productCatalogData.isSample,
+            orderId: record.context.product_catalog_order_id,
+            orderResModel: record.context.product_catalog_order_model,
+            precision: record.context.precision,
+            productType: record.productCatalogData.productType,
+            price: record.productCatalogData.price,
+            productId: record.resId,
+            quantity: record.productCatalogData.quantity,
+            readOnly: record.productCatalogData.readOnly,
+            uomDisplayName: record.productCatalogData.uomDisplayName,
+            warning: record.productCatalogData.warning,
             addProduct: this.addProduct.bind(this),
             removeProduct: this.removeProduct.bind(this),
             increaseQuantity: this.increaseQuantity.bind(this),
             setQuantity: this.setQuantity.bind(this),
             decreaseQuantity: this.decreaseQuantity.bind(this),
-            childField: this.props.record.context.child_field,
-        });
+        };
     }
 
     get orderLineComponent() {
@@ -64,50 +74,57 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     }
 
     _updateQuantityAndGetPrice() {
-        return rpc("/product/catalog/update_order_line_info", this._getUpdateQuantityAndGetPriceParams());
+        return rpc(
+            "/product/catalog/update_order_line_info",
+            this._getUpdateQuantityAndGetPriceParams()
+        );
     }
 
     _getUpdateQuantityAndGetPriceParams() {
         return {
-            order_id: this.env.orderId,
-            product_id: this.env.productId,
+            order_id: this.orderLineProps.orderId,
+            product_id: this.orderLineProps.productId,
             quantity: this.productCatalogData.quantity,
-            res_model: this.env.orderResModel,
-            child_field: this.env.childField,
-        }
+            res_model: this.orderLineProps.orderResModel,
+            child_field: this.orderLineProps.childField,
+        };
     }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    updateQuantity(quantity) {
+    updateQuantity(quantity, debounce = true) {
         if (this.productCatalogData.readOnly) {
             return;
         }
         this.productCatalogData.quantity = quantity || 0;
-        this.debouncedUpdateQuantity();
+        if (debounce) {
+            this.debouncedUpdateQuantity();
+        } else {
+            this._updateQuantity();
+        }
     }
 
     /**
-     * Add the product to the order
+     * Add the product to the order without waiting for the debounce
      */
-    addProduct(qty=1) {
-        this.updateQuantity(qty);
+    addProduct(quantity = 1) {
+        this.updateQuantity(quantity, false);
     }
 
     /**
      * Remove the product to the order
      */
     removeProduct() {
-        this.updateQuantity(0);
+        this.updateQuantity(0, false);
     }
 
     /**
      * Increase the quantity of the product on the order line.
      */
-    increaseQuantity(qty=1) {
-        this.updateQuantity(this.productCatalogData.quantity + qty);
+    increaseQuantity(quantity = 1) {
+        this.updateQuantity(this.productCatalogData.quantity + quantity);
     }
 
     /**
@@ -116,7 +133,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
      * @param {Event} event
      */
     setQuantity(event) {
-        this.updateQuantity(parseFloat(event.target.value));
+        this.updateQuantity(parseFloat(event.target.value), false);
     }
 
     /**
