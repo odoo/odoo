@@ -4,6 +4,9 @@
 # Author: Leonardo Pistone
 # Copyright 2015 Camptocamp SA
 
+from freezegun import freeze_time
+
+from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
@@ -385,3 +388,62 @@ class TestVirtualAvailable(TestStockCommon):
         with Form(product) as product_form:
             product_form.qty_available = 0.0
         self.assertEqual(product.qty_available, 0.0)
+
+    @freeze_time("2025-12-16")
+    def test_product_quantities_in_sub_location_in_past_date(self):
+        """
+        Test that the quantities of a product in a sub location are correctly tracked in the past.
+        """
+        with freeze_time("2025-12-10"):
+            receipt = self.env['stock.picking'].create({
+                'picking_type_id': self.warehouse_1.in_type_id.id,
+                'move_ids': [Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 5,
+                    'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                    'location_dest_id': self.warehouse_1.lot_stock_id.id,
+                })]
+            })
+            self.env['stock.move.line'].create([
+                {
+                    'product_id': self.productA.id,
+                    'move_id': receipt.move_ids.id,
+                    'picking_id': receipt.id,
+                    'quantity': 3,
+                },
+                {
+                    'product_id': self.productA.id,
+                    'move_id': receipt.move_ids.id,
+                    'picking_id': receipt.id,
+                    'quantity': 2,
+                }
+            ])
+            receipt.action_confirm()
+            receipt.action_assign()
+            receipt.move_line_ids[0].location_dest_id = self.shelf_1.id
+            receipt.move_line_ids[1].location_dest_id = self.shelf_2.id
+            receipt.button_validate()
+
+        # Query quantities at a date in the past (after the receipt was validated)
+        past_date = "2025-12-13"
+
+        # Verify qty_available at location_1 (should be 3, not 5)
+        qty_location_1 = self.productA.with_context(
+            to_date=past_date,
+            location=self.shelf_1.id,
+        ).qty_available
+        self.assertEqual(qty_location_1, 3, "Location 1 should have 3 units at past date")
+
+        # Verify qty_available at location_2 (should be 2, not 5)
+        qty_location_2 = self.productA.with_context(
+            to_date=past_date,
+            location=self.shelf_2.id,
+        ).qty_available
+        self.assertEqual(qty_location_2, 2, "Location 2 should have 2 units at past date")
+
+        # Verify total at parent location (should be 5)
+        qty_parent = self.productA.with_context(
+            to_date=past_date,
+            location=self.warehouse_1.lot_stock_id.id,
+        ).qty_available
+        self.assertEqual(qty_parent, 5, "Parent location should have 5 units total at past date")
