@@ -67,10 +67,10 @@ class ResCompany(models.Model):
             'journal_id': self.account_stock_journal_id.id,
             'date': at_date or fields.Date.today(),
             'ref': _('Stock Closing'),
+            'inventory_closing': True,
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
         }
         account_move = self.env['account.move'].create(moves_vals)
-        self._save_closing_id(account_move.id)
         if auto_post:
             account_move._post()
 
@@ -327,25 +327,12 @@ class ResCompany(models.Model):
 
     def _get_last_closing_date(self):
         self.ensure_one()
-        key = f'{self.id}.stock_valuation_closing_ids'
-        closing_ids = self.env['ir.config_parameter'].sudo().get_str(key)
-        closing_ids = closing_ids.split(',') if closing_ids else []
-        closing = self.env['account.move']
-        while not closing and closing_ids:
-            closing_id = closing_ids.pop(-1)
-            closing_id = int(closing_id)
-            closing = self.env['account.move'].browse(closing_id).exists().filtered(lambda am: am.state == 'posted')
+        closing = self.env['account.move'].search_fetch([
+            ('inventory_closing', '=', True),
+            ('state', '=', 'posted'),
+            ('company_id', '=', self.id),
+        ], ['date'], limit=1, order='date desc, id desc')
         return closing.date if closing else False
-
-    def _save_closing_id(self, move_id):
-        self.ensure_one()
-        key = f'{self.id}.stock_valuation_closing_ids'
-        closing_ids = self.env['ir.config_parameter'].sudo().get_str(key)
-        ids = closing_ids.split(',') if closing_ids else []
-        ids.append(str(move_id))
-        if len(ids) > 10:
-            ids = ids[1:]
-        self.env['ir.config_parameter'].sudo().set_str(key, ','.join(ids))
 
     def _set_category_defaults(self):
         for company in self:

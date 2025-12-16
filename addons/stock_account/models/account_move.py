@@ -6,6 +6,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     stock_move_ids = fields.One2many('stock.move', 'account_move_id', string='Stock Move')
+    inventory_closing = fields.Boolean(string='Inventory Closing', default=False)
 
     # -------------------------------------------------------------------------
     # OVERRIDE METHODS
