@@ -1316,6 +1316,7 @@ test("Show values is taken into account in the runtime", async () => {
     });
     const runtime = model.getters.getChartRuntime(chartId);
     expect(runtime.chartJsConfig.options.plugins.chartShowValuesPlugin.showValues).toBe(true);
+    expect(runtime.chartJsConfig.options.plugins.chartShowValuesPlugin.type).toBe("bar"); // Not odoo_bar
 });
 
 test("Odoo line and bar charts display only horizontal grid lines", async () => {

@@ -1,7 +1,11 @@
 import { registries, chartHelpers } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
 import { OdooChart } from "./odoo_chart";
-import { onOdooChartItemClick, onOdooChartItemHover } from "./odoo_chart_helpers";
+import {
+    onOdooChartItemClick,
+    onOdooChartItemHover,
+    changeTypeToSpreadsheetChart,
+} from "./odoo_chart_helpers";
 
 const { chartRegistry } = registries;
 
@@ -87,7 +91,10 @@ function createOdooChartRuntime(chart, getters) {
                 title: getChartTitle(definition, getters),
                 legend: getBarChartLegend(definition, chartData),
                 tooltip: getBarChartTooltip(definition, chartData),
-                chartShowValuesPlugin: getChartShowValues(definition, chartData),
+                chartShowValuesPlugin: getChartShowValues(
+                    changeTypeToSpreadsheetChart(definition),
+                    chartData
+                ),
             },
             onHover: onOdooChartItemHover(),
             onClick: onOdooChartItemClick(getters, chart),
