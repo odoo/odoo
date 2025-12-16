@@ -12,7 +12,10 @@
         <template id="message_activity_done">
 <div>
     <p>
-        <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/><span t-field="activity.activity_type_id.name"/> done
+        <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/>
+        <t name="activity_done_label_xpath_target">
+            <span t-field="activity.activity_type_id.name"/> done
+        </t>
         <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
         <span t-if="activity.summary">: </span><span t-if="activity.summary" t-field="activity.summary"/>
     </p>
