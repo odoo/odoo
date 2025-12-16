@@ -682,8 +682,11 @@ class PosOrder(models.Model):
         if self.refunded_order_id.exists():
             return _('%(refunded_order)s REFUND', refunded_order=self.refunded_order_id.name)
         else:
-            last_reference_part = self.pos_reference.split('-')[-1]
+            last_reference_part = self.get_reference_last_part()
             return f"{session.config_id.name} - {last_reference_part}"
+
+    def get_reference_last_part(self):
+        return self.pos_reference.split('-')[-1]
 
     def action_stock_picking(self):
         self.ensure_one()
