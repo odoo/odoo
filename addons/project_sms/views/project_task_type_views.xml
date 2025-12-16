@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="project.task_type_edit"/>
         <field name="arch" type="xml">
             <field name="mail_template_id" position="after">
-                <field name="sms_template_id" context="{'default_model': 'project.task'}" options="{'no_quick_create': True}" invisible="user_id"/>
+                <field name="sms_template_id" placeholder="No text message" invisible="user_id"
+                    context="{'default_model': 'project.task'}" options="{'no_quick_create': True}"/>
             </field>
         </field>
     </record>

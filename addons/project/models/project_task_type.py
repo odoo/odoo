@@ -21,7 +21,7 @@ class ProjectTaskType(models.Model):
         return not self.env.context.get('default_project_id', False) and self.env.uid
 
     active = fields.Boolean('Active', default=True, export_string_translation=False)
-    name = fields.Char(string='Name', required=True, translate=True)
+    name = fields.Char(string='Stage Name', required=True, translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
         default=lambda self: self._get_default_project_ids(),
@@ -37,9 +37,7 @@ class ProjectTaskType(models.Model):
     rating_template_id = fields.Many2one(
         'mail.template',
         string='Rating Email Template',
-        domain=[('model', '=', 'project.task')],
-        help="If set, a rating request will automatically be sent by email to the customer when the task reaches this stage. \n"
-             "Alternatively, it will be sent at a regular interval as long as the task remains in this stage.")
+        domain=[('model', '=', 'project.task')])
     auto_validation_state = fields.Boolean('Automatic Kanban Status', default=False,
         help="Automatically modify the state when the customer replies to the feedback for this stage.\n"
             " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
@@ -55,8 +53,8 @@ class ProjectTaskType(models.Model):
     rating_status = fields.Selection(
         string='Customer Ratings Status',
         selection=[
-            ('stage', 'when reaching this stage'),
-            ('periodic', 'on a periodic basis'),
+            ('stage', 'When reaching this stage'),
+            ('periodic', 'On a periodic basis'),
         ],
         default='stage',
         required=True,
