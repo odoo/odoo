@@ -811,9 +811,15 @@ class SaleOrderLine(models.Model):
         for line in self:
             base_line = line._prepare_base_line_for_taxes_computation()
             self.env['account.tax']._add_tax_details_in_base_line(base_line, line.company_id)
-            line.price_subtotal = base_line['tax_details']['raw_total_excluded_currency']
-            line.price_total = base_line['tax_details']['raw_total_included_currency']
-            line.price_tax = line.price_total - line.price_subtotal
+            self.env['account.tax']._round_base_lines_tax_details([base_line], line.company_id)
+            tax_totals = self.env['account.tax']._get_tax_totals_summary(
+                base_lines=[base_line],
+                currency=line.currency_id or line.order_id.company_id.currency_id,
+                company=line.company_id,
+            )
+            line.price_subtotal = tax_totals['base_amount_currency']
+            line.price_total = tax_totals['total_amount_currency']
+            line.price_tax = tax_totals['tax_amount_currency']
 
     @api.depends('price_subtotal', 'product_uom_qty')
     def _compute_price_reduce_taxexcl(self):

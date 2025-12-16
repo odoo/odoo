@@ -1049,6 +1049,38 @@ class TestSalesTeam(SaleCommon):
         })
         self.assertEqual(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', 0.0)]), sale_order.order_line)
 
+    def test_line_order_rounding_amounts(self):
+        """Checks that amounts on the line and order are the same"""
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        included_tax_20 = self.env['account.tax'].create({
+            'name': "included_tax_20",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'include_base_amount': True,
+            'price_include_override': 'tax_included',
+        })
+
+        self.product.write({
+            'lst_price': 69.99,
+            'taxes_id': [Command.set(included_tax_20.ids)],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        })
+
+        self.assertEqual(order.order_line.price_total, 69.99)
+        self.assertEqual(order.amount_total, 69.99)
+        self.assertEqual(order.order_line.price_subtotal, 58.32)
+        self.assertEqual(order.amount_untaxed, 58.32)
+        self.assertEqual(order.amount_tax, 11.67)
+
     def test_action_recompute_taxes(self):
         '''
         This test verifies the taxes recomputation action that can be triggered
