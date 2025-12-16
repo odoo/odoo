@@ -24,9 +24,9 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
         # EXTENDS account_edi_ubl_cii
         return f"{invoice.name.replace('/', '_')}_pint_jp.xml"
 
-    def _ubl_default_tax_subtotal_grouping_key(self, tax_grouping_key, vals):
+    def _ubl_default_tax_subtotal_grouping_key(self, tax_category_grouping_key, vals):
         # EXTENDS account.edi.xml.ubl_bis3
-        tax_subtotal_grouping_key = super()._ubl_default_tax_subtotal_grouping_key(tax_grouping_key, vals)
+        tax_subtotal_grouping_key = super()._ubl_default_tax_subtotal_grouping_key(tax_category_grouping_key, vals)
 
         # If there is a TaxTotal section in company currency,
         # its TaxSubtotals nodes should contain a 'Percent' node.
@@ -36,7 +36,7 @@ class AccountEdiXmlPint_Jp(models.AbstractModel):
             currency != company.currency_id
             and tax_subtotal_grouping_key['currency'] == company.currency_id
         ):
-            tax_subtotal_grouping_key['percent'] = tax_grouping_key['percent']
+            tax_subtotal_grouping_key['percent'] = tax_category_grouping_key['percent']
 
         return tax_subtotal_grouping_key
 
