@@ -30,7 +30,7 @@
     </div>
     <div class="position-relative d-flex flex-column flex-grow-1 justify-content-center ps-2 lh-sm">
         <b class="o_media_heading fs-6 fw-bold" t-esc="employee.name"/>
-        <small class="o_employee_job text-muted" t-attf-class="#{is_self ? 'fw-bold' : 'opacity-75 opacity-100-hover'}" t-esc="employee.job_name"/>
+        <small class="o_employee_job text-muted" t-attf-class="#{is_self ? 'fw-bold' : 'opacity-75 opacity-100-hover'}" t-esc="employee.job_title"/>
     </div>
 </t>
 
