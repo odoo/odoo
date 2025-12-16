@@ -116,7 +116,7 @@ export class LivechatService {
                 channel_id: options.channel_id ?? this.options.channel_id,
                 previous_operator_id: expirableStorage.getItem(OPERATOR_STORAGE_KEY),
                 chatbot_script_id:
-                    originThread?.chatbot?.script.id ??
+                    originThread?.channel?.chatbot?.script.id ??
                     this.store.livechat_rule?.chatbot_script_id?.id,
                 persisted: options.persist ?? persist,
                 ...this.getSessionExtraParams(originThread, options),

@@ -97,7 +97,7 @@ class LivechatChatbotScriptController(http.Controller):
                 res.attr("currentStep", chatbot_next_step),
                 res.attr("id", (chatbot.id, discuss_channel.id)),
                 res.attr("script", chatbot.id),
-                res.one("thread", [], as_thread=True, value=discuss_channel),
+                res.one("channel_id", [], value=discuss_channel),
                 res.attr("steps", [("ADD", [chatbot_next_step])]),
             ),
         )
