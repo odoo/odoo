@@ -30,7 +30,9 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
 
     getTagProps(record) {
         return {
-            imageUrl: imageUrl(this.relation, record.resId, "avatar_128"),
+            imageUrl: imageUrl(this.relation, record.resId, "avatar_128", {
+                unique: record.data.write_date,
+            }),
             onDelete: !this.props.readonly ? () => this.deleteTag(record.id) : undefined,
             text: record.data.display_name,
             tooltip: record.data.display_name,
@@ -41,6 +43,11 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
 export const many2ManyTagsAvatarField = {
     ...many2ManyTagsField,
     component: Many2ManyTagsAvatarField,
+    relatedFields: (fieldInfo) => {
+        const relatedFields = many2ManyTagsField.relatedFields(fieldInfo);
+        relatedFields.push({ name: "write_date", type: "datetime" });
+        return relatedFields;
+    },
     extractProps({ viewType }, dynamicInfo) {
         const props = many2ManyTagsField.extractProps(...arguments);
         props.withCommand = viewType === "form" || viewType === "list";

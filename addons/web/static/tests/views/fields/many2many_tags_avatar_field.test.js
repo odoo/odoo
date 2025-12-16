@@ -18,9 +18,9 @@ describe.current.tags("desktop");
 class Partner extends models.Model {
     name = fields.Char({ string: "Displayed name" });
     _records = [
-        { id: 1, name: "first record" },
-        { id: 2, name: "second record" },
-        { id: 4, name: "aaa" },
+        { id: 1, name: "first record", write_date: "2023-02-13 10:00:00" },
+        { id: 2, name: "second record", write_date: "2023-02-13 10:00:00" },
+        { id: 4, name: "aaa", write_date: "2023-02-13 10:00:00" },
     ];
 }
 
@@ -79,7 +79,7 @@ test("widget many2many_tags_avatar img src", async () => {
 
     expect(".o_field_many2many_tags_avatar.o_field_widget .o_avatar img").toHaveCount(2);
     expect(
-        `.o_field_many2many_tags_avatar.o_field_widget .o_avatar:nth-child(1) img[data-src='${getOrigin()}/web/image/partner/2/avatar_128']`
+        `.o_field_many2many_tags_avatar.o_field_widget .o_avatar:nth-child(1) img[data-src='${getOrigin()}/web/image/partner/2/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
 });
 
@@ -88,6 +88,7 @@ test("widget many2many_tags_avatar in list view", async () => {
         Partner._records.push({
             id,
             name: `record ${id}`,
+            write_date: "2023-02-13 10:00:00",
         });
     }
 
@@ -109,7 +110,7 @@ test("widget many2many_tags_avatar in list view", async () => {
             </list>`,
     });
     expect(
-        `.o_data_row:nth-child(1) .o_field_many2many_tags_avatar .o_avatar img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/1/avatar_128']`
+        `.o_data_row:nth-child(1) .o_field_many2many_tags_avatar .o_avatar img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/1/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
     expect(
         ".o_data_row .o_many2many_tags_avatar_cell .o_field_many2many_tags_avatar:eq(0)"
@@ -127,16 +128,16 @@ test("widget many2many_tags_avatar in list view", async () => {
         ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
     ).toHaveText("+2");
     expect(
-        `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(1) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/1/avatar_128']`
+        `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(1) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/1/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
     expect(
-        `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/2/avatar_128']`
+        `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/2/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
     expect(
-        `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(3) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128']`
+        `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(3) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
     expect(
-        `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(4) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/5/avatar_128']`
+        `.o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(4) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/5/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
     expect(
         ".o_data_row:nth-child(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
@@ -156,9 +157,13 @@ test("widget many2many_tags_avatar in list view", async () => {
         ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
     );
     expect(tag).toHaveAttribute("data-tooltip-template", "web.TagsList.Tooltip");
-    expect(tag).toHaveAttribute("data-tooltip-info", JSON.stringify({ tags: ["record 6", "record 7"] }), {
-        message: "shows a tooltip on hover",
-    });
+    expect(tag).toHaveAttribute(
+        "data-tooltip-info",
+        JSON.stringify({ tags: ["record 6", "record 7"] }),
+        {
+            message: "shows a tooltip on hover",
+        }
+    );
 
     await contains(".o_data_row .o_many2many_tags_avatar_cell:eq(0)").click();
     await contains(
@@ -208,6 +213,7 @@ test("widget many2many_tags_avatar in kanban view", async () => {
         Partner._records.push({
             id,
             name: `record ${id}`,
+            write_date: "2023-02-13 10:00:00",
         });
     }
 
@@ -255,10 +261,10 @@ test("widget many2many_tags_avatar in kanban view", async () => {
         ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar img"
     ).toHaveCount(2);
     expect(
-        `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(1 of .o_tag) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/5/avatar_128']`
+        `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(1 of .o_tag) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/5/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
     expect(
-        `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(2 of .o_tag) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128']`
+        `.o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:nth-child(2 of .o_tag) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
     expect(
         ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_m2m_avatar_empty"
@@ -299,7 +305,7 @@ test("widget many2many_tags_avatar in kanban view", async () => {
     expect(".o-overlay-container .o_tag").toHaveCount(5);
     expect(".o_kanban_record:nth-child(3) .o_tag").toHaveCount(2);
     expect(
-        `.o_kanban_record:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128']`
+        `.o_kanban_record:nth-child(2) img.o_m2m_avatar[data-src='${getOrigin()}/web/image/partner/4/avatar_128?unique=1676282400000']`
     ).toHaveCount(1);
     await contains(".o_kanban_record .o_field_many2many_tags_avatar img.o_m2m_avatar").click();
 });

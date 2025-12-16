@@ -25,3 +25,18 @@ test("basic rendering", async () => {
     await click(".o-mail-Avatar img");
     await contains(".o_avatar_card");
 });
+
+test("avatar with uniqueId props", async () => {
+    await start();
+    await mountWithCleanup(Avatar, {
+        props: {
+            resId: serverState.userId,
+            resModel: "res.users",
+            displayName: "User display name",
+            uniqueId: 123789,
+        },
+    });
+    await contains(
+        ".o-mail-Avatar img[data-src='/web/image/res.users/7/avatar_128?unique=123789']"
+    );
+});

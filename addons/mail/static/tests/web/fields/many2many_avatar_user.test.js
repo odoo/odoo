@@ -233,6 +233,7 @@ test("avatar_user widget displays the appropriate user image in list view", asyn
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({
         partner_id: pyEnv["res.partner"].create({ name: "Mario" }),
+        write_date: "2023-02-13 10:00:00",
     });
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
     await start();
@@ -241,12 +242,14 @@ test("avatar_user widget displays the appropriate user image in list view", asyn
         arch: "<list><field name='user_id' widget='many2one_avatar_user'/></list>",
     });
 
-    await contains(`.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128"]`);
+    await contains(
+        `.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128?unique=1676282400000"]`
+    );
 });
 
 test("avatar_user widget displays the appropriate user image in kanban view", async () => {
     const pyEnv = await startServer();
-    const userId = pyEnv["res.users"].create({ name: "Mario" });
+    const userId = pyEnv["res.users"].create({ name: "Mario", write_date: "2023-02-13 10:00:00" });
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
     await start();
     await openKanbanView("m2x.avatar.user", {
@@ -262,7 +265,9 @@ test("avatar_user widget displays the appropriate user image in kanban view", as
         `,
     });
     await start();
-    await contains(`.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128"]`);
+    await contains(
+        `.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128?unique=1676282400000"]`
+    );
 });
 
 test("avatar card preview", async () => {
@@ -366,6 +371,7 @@ test("avatar_user widget displays the appropriate user image in form view", asyn
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({
         partner_id: pyEnv["res.partner"].create({ name: "Mario" }),
+        write_date: "2023-02-13 10:00:00",
     });
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_ids: [userId] });
     await start();
@@ -373,7 +379,7 @@ test("avatar_user widget displays the appropriate user image in form view", asyn
         arch: "<form><field name='user_ids' widget='many2many_avatar_user'/></form>",
     });
     await contains(
-        `.o_field_many2many_avatar_user.o_field_widget .o_avatar img[data-src="${getOrigin()}/web/image/res.users/${userId}/avatar_128"]`
+        `.o_field_many2many_avatar_user.o_field_widget .o_avatar img[data-src="${getOrigin()}/web/image/res.users/${userId}/avatar_128?unique=1676282400000"]`
     );
 });
 

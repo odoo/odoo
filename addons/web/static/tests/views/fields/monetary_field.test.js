@@ -554,7 +554,7 @@ test("MonetaryField with currency set by an onchange", async () => {
     // onchange)
     Partner._onChanges = {
         int_field: function (obj) {
-            obj.currency_id = obj.int_field ? 2 : null;
+            obj.currency_id = obj.int_field ? 2 : false;
         },
     };
 

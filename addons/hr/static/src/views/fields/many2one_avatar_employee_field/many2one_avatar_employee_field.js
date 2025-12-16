@@ -34,10 +34,15 @@ export class Many2OneAvatarEmployeeField extends Component {
     get relation() {
         return this.props.relation ?? (this.isHrUser ? "hr.employee" : "hr.employee.public");
     }
+
+    get uniqueId() {
+        return this.props.record.data[this.props.name].write_date.toMillis();
+    }
 }
 
 registry.category("fields").add("many2one_avatar_employee", {
     ...buildM2OFieldDescription(Many2OneAvatarEmployeeField),
+    relatedFields: [{ name: "write_date", type: "datetime" }],
     additionalClasses: [
         "o_field_many2one_avatar",
         "o_field_many2one_avatar_kanban",
@@ -47,9 +52,10 @@ registry.category("fields").add("many2one_avatar_employee", {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),
             relation: staticInfo.options.relation,
-            canOpen: "no_open" in staticInfo.options
-                ? !staticInfo.options.no_open
-                : staticInfo.viewType === "form",
+            canOpen:
+                "no_open" in staticInfo.options
+                    ? !staticInfo.options.no_open
+                    : staticInfo.viewType === "form",
         };
     },
 });

@@ -5,7 +5,7 @@
         <t t-set="value" t-value="props.record.data[props.name]"/>
         <div class="d-flex align-items-center gap-1">
             <t t-if="value !== false">
-                <AvatarEmployee cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id" noSpacing="true"/>
+                <AvatarEmployee cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id" noSpacing="true" uniqueId="uniqueId"/>
             </t>
             <Many2One t-props="m2oProps" cssClass="'w-100'">
                 <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">

@@ -4,7 +4,7 @@
     <t t-name="mail.Many2OneAvatarUserField">
         <div class="d-flex align-items-center gap-1">
             <t t-if="value !== false">
-                <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id" noSpacing="true"/>
+                <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id" uniqueId="uniqueId" noSpacing="true"/>
             </t>
             <Many2OneAvatarUser t-props="m2oProps" cssClass="'w-100'">
                 <t t-set-slot="inviteTeammates" t-slot-scope="inviteTeammatesScope">
