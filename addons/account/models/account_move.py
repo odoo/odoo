@@ -5348,6 +5348,7 @@ class AccountMove(models.Model):
                     invoice.invoice_date = fields.Date.context_today(self)
 
         for move in self:
+            move.line_ids._check_constrains_account_id_journal_id()
             if move.state in ['posted', 'cancel']:
                 validation_msgs.add(_('The entry %(name)s (id %(id)s) must be in draft.', name=move.name, id=move.id))
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
