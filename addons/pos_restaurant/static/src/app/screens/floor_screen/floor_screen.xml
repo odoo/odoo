@@ -6,7 +6,7 @@
             <t t-set="hasSelectedTable" t-value="selectedTables.length > 0" />
             <t t-set="firstSelectedTable" t-value="selectedTables.length ? selectedTables[0] : null" />
             <div t-attf-class="d-flex flex-row {{pos.isEditMode ? 'flex-wrap' : ''}} justify-content-between px-2 gap-1 border-bottom bg-view">
-                <button t-if="!pos.isEditMode" class="new-order btn btn-lg lh-lg my-2" t-attf-class="{{ this.pos.getOrder()?.isDirectSale ? 'btn-secondary' : 'btn-primary'}}" 
+                <button t-if="!pos.isEditMode" class="new-order btn btn-lg lh-lg my-2" t-attf-class="{{ this.pos.getOrder()?.isDirectSale ? 'btn-secondary' : 'btn-primary'}}"
                     t-on-click="() => this.clickNewOrder()">
                     <t t-if="this.pos.getOrder()?.isDirectSale">
                         <i class="fa fa-angle-double-left fa-fw" role="img" aria-label="Back" title="Back"/>
@@ -19,7 +19,7 @@
                 </button>
                 <!-- Center Side Div -->
                 <div class="floor-selector d-flex gap-1 py-2 overflow-auto">
-                    <t t-foreach="pos.models['restaurant.floor'].getAll()" t-as="floor" t-key="floor.id">
+                    <t t-foreach="pos.models['restaurant.floor'].filter(f => f.active !== false)" t-as="floor" t-key="floor.id">
                         <button class="button button-floor btn btn-outline-secondary btn-lg px-3 lh-lg text-nowrap text-body" t-attf-class="{{ floor.id === state.selectedFloorId ? 'active' : '' }}" t-on-click="() => this.selectFloor(floor)">
                             <t t-esc="floor.name" />
                             <t t-set="changeCount" t-value="this.getFloorChangeCount(floor)"/>
@@ -105,10 +105,10 @@
             </div>
             <t t-set="isKanban" t-value="pos.floorPlanStyle == 'kanban'"/>
             <div
-                t-ref="floor-map-scroll" 
-                class="overflow-auto flex-grow-1 flex-shrink-1 flex-basis-0 w-auto" 
+                t-ref="floor-map-scroll"
+                class="overflow-auto flex-grow-1 flex-shrink-1 flex-basis-0 w-auto"
                 t-att-class="{
-                    'floor-grid': pos.isEditMode, 
+                    'floor-grid': pos.isEditMode,
                     'bg-view': !activeFloor?.background_color
                 }"
                 t-attf-style="background-color: rgba({{this._getColors()[activeFloor?.background_color]}},.75)">
