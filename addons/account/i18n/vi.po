@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2025-12-06 17:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-18/"
@@ -1916,6 +1916,14 @@ msgstr "Tài khoản làm tròn tiền mặt"
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Mẫu hệ thống tài khoản"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_code_mapping.py:0
+msgid ""
+"Account Code Mapping cannot be accessed directly. It is designed to be used "
+"only through the Chart of Accounts."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -9157,11 +9165,6 @@ msgid "Invoice Outstanding Credits Debits Widget"
 msgstr "Tiện ích hiển thị các khoản dư có/dư nợ chưa phân bổ của hóa đơn"
 
 #. module: account
-#: model:ir.actions.report,name:account.account_invoices
-msgid "Invoice PDF"
-msgstr "Hoá đơn PDF"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
@@ -11841,6 +11844,7 @@ msgstr "PAY001"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.actions.report,name:account.account_invoices
 msgid "PDF"
 msgstr "PDF"
 
@@ -19656,6 +19660,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Biên lai thanh toán (Mã {{ object.name or "
 "'Không có' }})"
+
+#~ msgid "Invoice PDF"
+#~ msgstr "Hoá đơn PDF"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "Không thể thay đổi cài đặt này sau khi hóa đơn được tạo."

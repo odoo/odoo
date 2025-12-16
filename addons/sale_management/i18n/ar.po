@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
 # Wil Odoo, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ar\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -547,8 +548,7 @@ msgid ""
 "This e-mail template will be sent on confirmation. Leave empty to send "
 "nothing."
 msgstr ""
-"سيتم إرسال هذا القالب البريدي عند التأكيد. اتركه خاليًا لكي لا يتم إرسال "
-"شيء."
+"سيتم إرسال هذا القالب البريدي عند التأكيد. اتركه خاليًا لكي لا يتم إرسال شيء."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
@@ -597,11 +597,13 @@ msgstr "وحدة القياس"
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
-"                Send these quotes by email and let your customers sign online.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
 "                Use cross-selling and discounts to push and boost your sales."
 msgstr ""
 "استخدم القوالب لإنشاء عروض أسعار احترافية ومثالية في دقائق.\n"
-"                يمكنك إرسال عروض الأسعار عن طريق البريد الكتروني والسماح للعملاء بتسجيل الدخول عبر الإنترنت.\n"
+"                يمكنك إرسال عروض الأسعار عن طريق البريد الكتروني والسماح "
+"للعملاء بتسجيل الدخول عبر الإنترنت.\n"
 "                استخدم نظام البيع العابر والخصومات لدفع وتعزيز مبيعاتك. "
 
 #. module: sale_management
@@ -624,27 +626,46 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid ""
-"Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
-" Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
+"Your quotation contains products from company %(product_company)s whereas "
+"your quotation belongs to company %(quote_company)s. \n"
+" Please change the company of your quotation or remove the products from "
+"other companies (%(bad_products)s)."
 msgstr ""
-"يحتوي عرض السعر الخاص بك على منتجات من الشركة %(product_company)s بينما ينتمي عرض سعرك إلى الشركة %(quote_company)s. \n"
-"يرجى تغيير شركة عرض السعر أو إزالة المنتجات من الشركات الأخرى (%(bad_products)s). "
-
-#. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
-msgstr "لا يمكن أن يحتوي قالبك على منتجات من عدة شركات. "
+"يحتوي عرض السعر الخاص بك على منتجات من الشركة %(product_company)s بينما "
+"ينتمي عرض سعرك إلى الشركة %(quote_company)s. \n"
+"يرجى تغيير شركة عرض السعر أو إزالة المنتجات من الشركات الأخرى (%"
+"(bad_products)s). "
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
 msgstr ""
-"يحتوي قالبك على منتجات من الشركة %(product_company)s بينما ينتمي قالبك إلى الشركة %(template_company)s. \n"
-"يرجى تغيير شركة قالبك أو إزالة المنتجات من الشركات الأخرى. "
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -655,3 +676,16 @@ msgstr "أيام "
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
 msgstr "مثال: الباقة الاستشارية القياسية "
+
+#~ msgid "Your template cannot contain products from multiple companies."
+#~ msgstr "لا يمكن أن يحتوي قالبك على منتجات من عدة شركات. "
+
+#~ msgid ""
+#~ "Your template contains products from company %(product_company)s whereas "
+#~ "your template belongs to company %(template_company)s. \n"
+#~ " Please change the company of your template or remove the products from "
+#~ "other companies."
+#~ msgstr ""
+#~ "يحتوي قالبك على منتجات من الشركة %(product_company)s بينما ينتمي قالبك "
+#~ "إلى الشركة %(template_company)s. \n"
+#~ "يرجى تغيير شركة قالبك أو إزالة المنتجات من الشركات الأخرى. "

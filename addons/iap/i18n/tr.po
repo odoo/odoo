@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:55+0000\n"
-"PO-Revision-Date: 2025-11-25 09:48+0000\n"
+"PO-Revision-Date: 2025-12-09 17:36+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-18/iap/tr/>"
 "\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -35,6 +35,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                                    Buy Credit"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                    Alacak Satın Alın"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
@@ -51,6 +53,8 @@ msgstr "Hesap Jetonu"
 msgid ""
 "Account token is your authentication key for this service. Do not share it."
 msgstr ""
+"Hesap belirteci, bu hizmet için kimlik doğrulama anahtarınızdır. Bunu "
+"paylaşmayın."
 
 #. module: iap
 #. odoo-python
@@ -59,6 +63,8 @@ msgid ""
 "An error occurred while reaching %s. Please contact Odoo support if this "
 "error persists."
 msgstr ""
+"%s adresine ulaşırken bir hata oluştu. Bu hata devam ederse lütfen Odoo "
+"destek ile iletişime geçin."
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
@@ -133,6 +139,10 @@ msgid ""
 "leads, generate leads based on a set of criteria and enrich the company data"
 " of your opportunities."
 msgstr ""
+"Kaliteli potansiyel müşteriler ve fırsatlar elde edin: web sitenizin "
+"ziyaretçilerini potansiyel müşterilere dönüştürün, bir dizi kritere göre "
+"potansiyel müşteriler oluşturun ve fırsatlarınızın şirket verilerini "
+"zenginleştirin."
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -160,7 +170,7 @@ msgstr "IAP Aday Zenginleştirme API"
 #. module: iap
 #: model:ir.model,name:iap.model_iap_service
 msgid "IAP Service"
-msgstr ""
+msgstr "IAP Hizmeti"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
@@ -177,7 +187,7 @@ msgstr "Bu hizmeti vermek için yetersiz kredi."
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
 msgid "Integer Balance"
-msgstr ""
+msgstr "Tamsayı Dengesi"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -195,7 +205,7 @@ msgstr "Son Güncelleme"
 #. odoo-javascript
 #: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 msgid "Manage Service & Buy Credits"
-msgstr ""
+msgstr "Hizmeti Yönet & Alacak Satın Al"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
@@ -215,17 +225,19 @@ msgid ""
 "One of the email alert recipients doesn't have an email address set. Users: "
 "%s"
 msgstr ""
+"E-posta uyarısı alıcılarından birinin ayarlanmış bir e-posta adresi yok. "
+"Kullanıcılar: %s"
 
 #. module: iap
 #: model:ir.model.constraint,message:iap.constraint_iap_service_unique_technical_name
 msgid "Only one service can exist with a specific technical_name"
-msgstr ""
+msgstr "Belirli bir technical_name ile yalnızca bir hizmet mevcut olabilir"
 
 #. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
-msgstr ""
+msgstr "Lütfen olumlu bir e-posta uyarı eşiği belirleyin."
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -240,7 +252,7 @@ msgstr "Hizmet"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
-msgstr ""
+msgstr "Servis Kilitli"
 
 #. module: iap
 #. odoo-javascript
@@ -266,6 +278,8 @@ msgid ""
 "The request to the service timed out. Please contact the author of the app. "
 "The URL it tried to contact was %s"
 msgstr ""
+"Hizmete yapılan istek zaman aşımına uğradı. Lütfen uygulamanın yazarıyla "
+"iletişime geçin. İletişim kurmaya çalıştığı URL şöyleydi %s"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__unit_name

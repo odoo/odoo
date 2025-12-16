@@ -100,16 +100,13 @@ class StockPicking(models.Model):
     def _set_sale_id(self):
         if self.group_id:
             self.group_id.sale_id = self.sale_id
-        else:
-            if self.sale_id:
-                vals = {
-                    'sale_id': self.sale_id.id,
-                    'name': self.sale_id.name,
-                }
-            else:
-                vals = {}
-
+        elif self.sale_id:
+            vals = {
+                'sale_id': self.sale_id.id,
+                'name': self.sale_id.name,
+            }
             pg = self.env['procurement.group'].create(vals)
+            self.move_ids.group_id = pg
             self.group_id = pg
 
     def _auto_init(self):

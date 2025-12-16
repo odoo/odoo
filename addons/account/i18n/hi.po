@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-05 18:36+0000\n"
+"POT-Creation-Date: 2025-12-12 18:36+0000\n"
 "PO-Revision-Date: 2025-11-21 06:39+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/account/hi/"
@@ -1766,6 +1766,14 @@ msgstr "अकाउंटिंग कैश राउंडिंग"
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "अकाउंट चार्ट टेंप्लेट"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_code_mapping.py:0
+msgid ""
+"Account Code Mapping cannot be accessed directly. It is designed to be used "
+"only through the Chart of Accounts."
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -8953,11 +8961,6 @@ msgid "Invoice Outstanding Credits Debits Widget"
 msgstr "इनवॉइस आउटस्टैंडिंग क्रेडिट डेबिट विजेट"
 
 #. module: account
-#: model:ir.actions.report,name:account.account_invoices
-msgid "Invoice PDF"
-msgstr "इनवॉइस पीडीएफ़"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
@@ -11643,6 +11646,7 @@ msgstr "PAY001"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: model:ir.actions.report,name:account.account_invoices
 msgid "PDF"
 msgstr "पीडीएफ"
 
@@ -19295,6 +19299,9 @@ msgstr "{{ object.company_id.name }} इनवॉइस (Ref {{ object.name or '
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} पेमेंट रसीद (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "Invoice PDF"
+#~ msgstr "इनवॉइस पीडीएफ़"
 
 #~ msgid "This setting cannot be changed after an invoice is created."
 #~ msgstr "एक बार इनवॉइस बन जाने के बाद, इस सेटिंग में बदलाव नहीं किया जा सकता."

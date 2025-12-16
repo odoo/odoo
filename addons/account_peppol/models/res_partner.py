@@ -267,9 +267,6 @@ class ResPartner(models.Model):
             self_partner.peppol_eas,
             self_partner._get_peppol_edi_format(),
         )
-        if new_value == 'valid' and not self_partner.invoice_sending_method:
-            self_partner.invoice_sending_method = 'peppol'
-
         if (
                 new_value != 'valid'
                 and self_partner.peppol_eas in ('0208', '9925')

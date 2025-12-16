@@ -322,10 +322,9 @@ export class PosOrderline extends Base {
         const price = window.parseFloat(
             roundDecimals(this.price_unit || 0, productPriceUnit).toFixed(productPriceUnit)
         );
-        let order_line_price = orderline
+        const order_line_price = orderline
             .get_product()
             .get_price(orderline.order_id.pricelist_id, this.get_quantity());
-        order_line_price = roundDecimals(order_line_price, this.currency.decimal_places);
 
         const isSameCustomerNote =
             (Boolean(orderline.get_customer_note()) === false &&
@@ -341,7 +340,9 @@ export class PosOrderline extends Base {
             // don't merge discounted orderlines
             this.get_discount() === 0 &&
             floatIsZero(
-                price - order_line_price - orderline.get_price_extra(),
+                roundDecimals(price, this.currency.decimal_places) -
+                    roundDecimals(order_line_price, this.currency.decimal_places) -
+                    orderline.get_price_extra(),
                 this.currency.decimal_places
             ) &&
             !this.isLotTracked() &&

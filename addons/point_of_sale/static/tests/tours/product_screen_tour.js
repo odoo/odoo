@@ -790,3 +790,16 @@ registry.category("web_tour.tours").add("test_dynamic_product_price", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_orderline_merge_with_higher_price_precision", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("High Precision Product"),
+            ProductScreen.selectedOrderlineHas("High Precision Product", "1.0", "8.25"),
+            ProductScreen.clickDisplayedProduct("High Precision Product"),
+            ProductScreen.selectedOrderlineHas("High Precision Product", "2.0", "16.49"), // 8.245 * 2 = 16.49
+            Chrome.endTour(),
+        ].flat(),
+});

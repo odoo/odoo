@@ -439,7 +439,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
             'invoice_edi_format': 'ubl_bis3',
-            'invoice_sending_method': 'peppol',
         }])
         # but not valid for company 2
         new_partner.with_company(company_2).invoice_edi_format = 'nlcius'
@@ -448,7 +447,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
             'invoice_edi_format': 'nlcius',
-            'invoice_sending_method': 'peppol',
         }])
         move_1 = self.create_move(new_partner)
         move_2 = self.create_move(new_partner)
@@ -460,8 +458,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         self.assertEqual((move_1 + move_2 + move_3).mapped('is_being_sent'), [True, True, True])
         # the cron is run asynchronously and should be agnostic from the current self.env.company
         self.env.ref('account.ir_cron_account_move_send').with_company(company_2).method_direct_trigger()
-        # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should fail to send
-        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'error'])
+        # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should not be sent by Peppol
+        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', False])
 
     def test_available_peppol_sending_methods(self):
         company_us = self.setup_other_company()['company']  # not a valid Peppol country
