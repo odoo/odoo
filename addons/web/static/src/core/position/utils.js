@@ -155,15 +155,7 @@ function computePosition(
     // Boxes
     const popBox = popper.getBoundingClientRect();
     const targetBox = target.getBoundingClientRect();
-    const contRect = container.getBoundingClientRect();
-    // Shrink the container a little bit (up to 20px) so that the popper avoids sticking to its edges
-    const getContainerMargin = (val) => Math.min(20, Math.max(0, Math.round((val - 40) / 2)));
-    const contBox = {
-        top: contRect.top + getContainerMargin(contRect.height),
-        left: contRect.left + getContainerMargin(contRect.width),
-        right: contRect.right - getContainerMargin(contRect.width),
-        bottom: contRect.bottom - getContainerMargin(contRect.height),
-    };
+    const contBox = container.getBoundingClientRect();
     const iframeBox = iframe?.getBoundingClientRect() ?? { top: 0, left: 0 };
 
     const containerIsHTMLNode = container === container.ownerDocument.firstElementChild;
