@@ -147,13 +147,13 @@
                 action = records.action_open_label_type()</field>
         </record>
 
-        <record id="action_plan_with_components_availability" model="ir.actions.server">
-            <field name="name">Plan based on Components Availability</field>
+        <record id="action_plan_at_date" model="ir.actions.server">
+            <field name="name">Plan at Date</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_model_id" ref="mrp.model_mrp_production"/>
             <field name="binding_view_types">list,kanban,form</field>
             <field name="state">code</field>
-            <field name="code">action = records.action_plan_with_components_availability()</field>
+            <field name="code">records.button_plan(as_soon_as_possible=False)</field>
         </record>
 
         <record id="action_production_order_merge" model="ir.actions.server">
@@ -195,7 +195,7 @@
                     <button name="button_mark_done" invisible="move_raw_ids or not show_produce_all" string="Produce All" type="object" class="oe_highlight" data-hotkey="g"
                             confirm="There are no components to consume. Are you still sure you want to continue?"/>
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight" data-hotkey="q"/>
-                    <button name="button_plan" invisible="state not in ('confirmed', 'progress', 'to_close') or not workorder_ids or is_planned" type="object" string="Plan" class="oe_highlight" data-hotkey="z"/>
+                    <button name="button_plan" invisible="state not in ('confirmed', 'progress', 'to_close') or is_planned" type="object" string="Plan" class="oe_highlight" data-hotkey="z"/>
                     <button name="button_unplan" type="object" string="Unplan" invisible="not is_planned or state in ['cancel', 'done']" data-hotkey="z"/>
                     <button name="action_start"  type="object" string="Start" invisible="state != 'confirmed'"/>
                     <button name="action_assign" invisible="state in ('draft', 'done', 'cancel') or not reserve_visible" string="Check availability" type="object" data-hotkey="c"/>

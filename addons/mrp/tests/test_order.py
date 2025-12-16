@@ -2344,7 +2344,7 @@ class TestMrpOrder(TestMrpCommon):
         mo.workorder_ids[1].duration_expected = 60
 
         mo.action_confirm()
-        mo.button_plan()
+        mo.button_plan(as_soon_as_possible=False)
 
         # Asia/Bangkok is UTC+7 and the start date is on Monday at 06:00 UTC (i.e., 13:00 UTC+7).
         # So, in Bangkok, the first workorder uses the entire Monday afternoon slot 13:00 - 17:00 UTC+7 (i.e., 06:00 - 10:00 UTC)
@@ -5379,6 +5379,34 @@ class TestMrpOrder(TestMrpCommon):
         self.assertNotEqual(mo1.workorder_ids.product_uom_id, mo2.workorder_ids.product_uom_id)
         self.assertEqual(mo1.product_qty, mo2.product_qty)
         self.assertEqual(wo1.qty_produced, wo2.qty_produced)
+
+    def test_plan_as_soon_as_possible(self):
+        now = datetime.now()
+        self.product_1.is_storable = True
+        # Receive component in 3 weeks on next monday
+        receipt_form = Form(self.env['stock.picking'])
+        receipt_form.partner_id = self.partner
+        receipt_form.picking_type_id = self.picking_type_in
+        receipt_form.scheduled_date = now + timedelta(days=21 + (7 - now.weekday()))
+        receipt = receipt_form.save()
+        with receipt_form.move_ids.new() as move_line:
+            move_line.product_id = self.product_1
+            move_line.product_uom_qty = 100
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+        # Make production order
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_4
+        production = production_form.save()
+        production.action_confirm()
+        # Check plan at date : on receipt's date or later
+        production.date_start = max(production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date'))
+        production.button_plan(as_soon_as_possible=False)
+        self.assertGreaterEqual(production.date_start, receipt.scheduled_date)
+        # Check plan as soon as possible : now or later
+        production.button_unplan()
+        production.button_plan()
+        self.assertGreaterEqual(production.date_start, now)
 
 
 @tagged('-at_install', 'post_install')

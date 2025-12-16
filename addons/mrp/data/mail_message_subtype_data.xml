@@ -36,4 +36,10 @@
         <field name="sequence" eval="105"/>
         <field name="description">MO Cancelled</field>
     </record>
+
+    <record id="mrp_mo_planned" model="mail.message.subtype">
+        <field name="name">MO Planned</field>
+        <field name="res_model">mrp.production</field>
+        <field name="default" eval="False"/>
+    </record>
 </odoo>

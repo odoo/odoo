@@ -96,7 +96,7 @@ class ChangeProductionQty(models.TransientModel):
             # replan production based on new workorder durations
             if factor != 1.0 and production.is_planned and (production.state == 'confirmed'
                 or (production.state == 'progress' and not any(wo.state in ['done', 'progress'] for wo in production.workorder_ids))):
-                production.button_unplan()
+                production._unplan_workorders()
                 production._plan_workorders()
         # run scheduler for moves forecasted to not have enough in stock
         self.mo_id.filtered(lambda mo: mo.state in ['confirmed', 'progress']).move_raw_ids._trigger_scheduler()
