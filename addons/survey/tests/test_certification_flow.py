@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import Command
@@ -14,6 +15,7 @@ from odoo.tests.common import HttpCase
 @tagged('-at_install', 'post_install', 'functional', 'is_query_count')
 class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
 
+    @freeze_time("2020-02-15 18:00")
     def test_flow_certification(self):
         # Step: survey user creates the certification
         # --------------------------------------------------
@@ -187,6 +189,21 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
             new_company.invalidate_model()  # cache pollution
         self.env['ir.actions.report'].with_user(user_new_company).with_company(new_company)\
             ._render_qweb_pdf('survey.certification_report_view', res_ids=user_inputs.ids)
+
+        # Check the rendering of all layout in html
+        for layout_value, _ in self.env['survey.survey']._fields['certification_report_layout'].selection:
+            with self.subTest(layout_value=layout_value):
+                user_inputs.survey_id.certification_report_layout = layout_value
+                layout, color = layout_value.split('_')
+                html = str(self.env['ir.actions.report'].with_user(user_new_company).with_company(
+                    new_company)._render_qweb_html('survey.certification_report_view', user_inputs.ids)[0])
+                self.assertIn(f'o_layout_{layout}', html)
+                self.assertIn(f'o_color_{color}_{self.survey_user.company_id.id}', html)
+                self.assertIn('Eglantine Employee', html)
+                self.assertIn(self.survey_user.company_id.name, html)
+                self.assertIn(str(user_inputs.id), html)
+                self.assertIn('02/15/2020', html)
+                self.assertNotIn('Certification failed', html)
 
     def test_randomized_certification(self):
         # Step: survey user creates the randomized certification

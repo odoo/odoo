@@ -855,6 +855,32 @@
                 }
             }
 
+            .o_border_color {
+                border-color: #000000;
+            }
+
+            .o_bg_color {
+                background-color: #000000;
+            }
+
+            .o_bg_color_15 {
+                background-color: rgba(0, 0, 0, .15);
+            }
+
+            .o_color_company_<t t-out='company.id'/> {
+                .o_border_color {
+                    border-color: <t t-out='primary'/>;
+                }
+
+                &amp;.o_bg_color, .o_bg_color {
+                    background-color: <t t-out='primary'/>;
+                }
+
+                .o_bg_color_15 {
+                    background-color: rgba(<t t-out='primary'/>, .15);
+                }
+            }
+
             .o_company_<t t-out='company.id'/>_layout {
                 font-family: <t t-out="font" />;
 
