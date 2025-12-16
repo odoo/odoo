@@ -6,9 +6,16 @@
         t-on-keydown="props.colorPickerNavigation">
         <div class="o_colorpicker_section">
             <t t-foreach="props.defaultThemeColorVars" t-as="color" t-key="color">
-                <button t-att-data-color="color" t-att-class="{'selected': color === props.defaultColorSet}"
-                    t-att-style="`background-color: var(--${props.cssVarColorPrefix + color})` + (color_index === 3 ? '; grid-column: 5' : '')"
-                    class="btn p-0 o_color_button o_color_picker_button"/>
+                <t t-if="color.startsWith('#')">
+                    <button t-att-data-color="color" t-att-class="{'selected': color === props.defaultColorSet}"
+                        t-att-style="`background-color: ${color}` + (color_index === 3 ? '; grid-column: 5' : '')"
+                        class="btn p-0 o_color_button o_color_picker_button"/>
+                </t>
+                <t t-else="">
+                    <button t-att-data-color="color" t-att-class="{'selected': color === props.defaultColorSet}"
+                        t-att-style="`background-color: var(--${props.cssVarColorPrefix + color})` + (color_index === 3 ? '; grid-column: 5' : '')"
+                        class="btn p-0 o_color_button o_color_picker_button"/>
+                </t>
             </t>
         </div>
 
