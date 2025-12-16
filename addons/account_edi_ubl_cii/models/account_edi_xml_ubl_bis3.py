@@ -885,6 +885,14 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     # EXPORT: Gathering data
     # -------------------------------------------------------------------------
 
+    def _ubl_default_tax_subtotal_tax_category_grouping_key(self, tax_grouping_key, vals):
+        # EXTENDS
+        return {
+            **super()._ubl_default_tax_subtotal_tax_category_grouping_key(tax_grouping_key, vals),
+            # Temporary solution to have withholding taxes merged with others until we know how to manage them.
+            'is_withholding': False,
+        }
+
     def _setup_base_lines(self, vals):
         # OVERRIDE
         AccountTax = self.env['account.tax']
