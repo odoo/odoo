@@ -18,7 +18,7 @@ class AccountPayment(models.Model):
 
     def _compute_show_require_partner_bank(self):
         expense_payments = self.filtered(lambda pay: pay.move_id.expense_ids)
-        super(AccountPayment, self - expense_payments)._compute_show_require_partner_bank()
+        super()._compute_show_require_partner_bank()
         expense_payments.require_partner_bank_account = False
 
     def write(self, vals):
