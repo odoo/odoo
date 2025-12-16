@@ -42,7 +42,7 @@
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
                                 <t t-esc="this.getNumberOfProducts()" /> product(s) selected
                             </div>
-                            <t t-set="discountPc" t-value="getGlobalDiscountPc()" />
+                            <t t-set="discountPc" t-value="currentOrder.globalDiscountPc" />
                             <div t-if="discountPc" class="text-dark"
                                 t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
                                 With <t t-esc="discountPc" />% discount

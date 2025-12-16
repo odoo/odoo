@@ -26,7 +26,7 @@
             </t>
             <t t-if="pos.config.module_pos_restaurant">
                 <button t-att-class="buttonClass"
-                    t-att-disabled="pos.getOrder()?.getOrderlines()?.reduce((sum, line) => sum + line.qty, 0) lt 2"
+                    t-att-disabled="pos.getOrder()?.getOrderlines()?.filter((line) => line.isGlobalDiscountApplicable()).reduce((sum, line) => sum + line.qty, 0) lt 2"
                     t-on-click="openSplitPage">
                     <i class="fa fa-files-o me-1"/>Split
                 </button>
