@@ -1,4 +1,5 @@
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
@@ -27,6 +28,42 @@ export const ctrlClickTable = (name) =>
                 .dispatchEvent(new MouseEvent("click", { bubbles: true, ctrlKey: true }));
         },
     });
+export const addTable = ({ shape = "Square", name, close = true }) => {
+    const steps = [
+        {
+            content: `add table`,
+            trigger: `.o_fp_edit_toolbar button:contains('Add Table')`,
+            run: "click",
+        },
+        {
+            trigger: `.o_fp_table_format_popover button:contains('${shape}')`,
+            run: "click",
+        },
+    ];
+
+    if (name) {
+        steps.push(
+            {
+                content: `rename table to ${name}`,
+                trigger: `.o_fp_action_menu button.o_edit`,
+                run: "click",
+            },
+            {
+                content: `enter table name ${name}`,
+                trigger: `.o_fp_edit_menu div:contains('Table Number') + input[type='number']`,
+                run: `edit ${name}`,
+            }
+        );
+    }
+    if (close) {
+        steps.push({
+            content: `close edit menu`,
+            trigger: `.o_fp_edit_menu button.btn-close`,
+            run: "click",
+        });
+    }
+    return steps;
+};
 export function clickFloor(name) {
     return [
         {
@@ -34,6 +71,61 @@ export function clickFloor(name) {
             trigger: `.floor-selector .button-floor:contains("${name}")`,
             run: "click",
         },
+    ];
+}
+export function hasFloor(name) {
+    return [
+        {
+            content: `has '${name}' floor`,
+            trigger: `.floor-selector .button-floor:contains("${name}")`,
+        },
+    ];
+}
+export function hasNotFloor(name) {
+    return [
+        {
+            content: `has not '${name}' floor`,
+            trigger: negate(`.floor-selector .button-floor:contains("${name}")`),
+        },
+    ];
+}
+export function selectFloorEditMode(name) {
+    return [
+        {
+            content: `select '${name}' floor in edit mode`,
+            trigger: `.o_fp_edit_toolbar .toolbar-floor-selector`,
+            run: "click",
+        },
+        {
+            content: `click '${name}' floor`,
+            trigger: `.toolbar-floor-selector-item:contains("${name}")`,
+            run: "click",
+        },
+    ];
+}
+export function openFloorProperties(name) {
+    const steps = [];
+
+    if (name) {
+        steps.push(...selectFloorEditMode(name));
+    }
+
+    steps.push({
+        content: "open floor properties",
+        trigger: `.o_fp_edit_toolbar button[title='Edit Floor']`,
+        run: "click",
+    });
+    return steps;
+}
+export function deleteFloor(name) {
+    return [
+        ...openFloorProperties(name),
+        {
+            content: "delete floor",
+            trigger: `.o_fp_edit_menu button:contains('Delete Floor')`,
+            run: "click",
+        },
+        Dialog.confirm("Delete"),
     ];
 }
 export function clickEditButton(button) {
@@ -48,12 +140,9 @@ export function clickEditButton(button) {
 export function clickSaveEditButton() {
     return [
         {
-            content: "add table",
-            trigger: '.edit-buttons button:contains("Save")',
+            content: "Save changes",
+            trigger: '.o_fp_edit_navbar button:contains("Save")',
             run: "click",
-        },
-        {
-            trigger: negate(".edit-buttons button:contains('Save')"),
         },
     ];
 }
@@ -194,7 +283,11 @@ export function clickNewOrder() {
 export function addFloor(floorName) {
     return [
         {
-            trigger: ".floor-selector button i[aria-label='Add Floor']",
+            trigger: ".o_fp_edit_toolbar .toolbar-floor-selector",
+            run: "click",
+        },
+        {
+            trigger: ".toolbar-floor-selector-item:contains('Add Floor')",
             run: "click",
         },
         {
@@ -205,6 +298,5 @@ export function addFloor(floorName) {
             trigger: ".modal-footer button.btn-primary",
             run: "click",
         },
-        ...selectedFloorIs(floorName),
     ];
 }

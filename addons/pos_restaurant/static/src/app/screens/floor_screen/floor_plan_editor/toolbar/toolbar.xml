@@ -4,13 +4,13 @@
         <div class="o_fp_edit_toolbar d-flex p-2">
             <div class="d-flex me-3 me-sm-4">
                 <Dropdown menuClass="'py-1'">
-                    <div class="button btn btn-secondary btn-lg px-3 lh-lg text-nowrap text-body  o-dropdown-caret o-dropdown dropdown-toggle dropdown">
+                    <div class="toolbar-floor-selector button btn btn-secondary btn-lg px-3 lh-lg text-nowrap text-body  o-dropdown-caret o-dropdown dropdown-toggle dropdown">
                         <t t-out="floorStore.selectedFloor?.name"/>
                     </div>
                     <t t-set-slot="content">
                         <t t-if="floorStore.floors.length > 1">
                             <t t-foreach="floorStore.floors" t-as="floor" t-key="floor.uuid">
-                                <DropdownItem class="{'btn btn-lg ps-2 py-2':true}"
+                                <DropdownItem class="{'toolbar-floor-selector-item btn btn-lg ps-2 py-2':true}"
                                               onSelected="()=>this.selectFloor(floor.uuid)">
                                     <i class="fa fa-fw fa-check me-1 fs-5" style="color:var(--success)"
                                        t-attf-class="{{floor === floorStore.selectedFloor ? 'visible' : 'invisible' }}"/>
@@ -19,7 +19,7 @@
                             </t>
                             <div class="dropdown-divider mx-1 my-1"/>
                         </t>
-                        <DropdownItem class="{'btn btn-lg ps-2 py-2':true}" onSelected="()=>this.addFloor()">
+                        <DropdownItem class="{'toolbar-floor-selector-item btn btn-lg ps-2 py-2':true}" onSelected="()=>this.addFloor()">
                             <i class="fa fa-fw fa-plus me-1 fs-5"/>Add Floor
                         </DropdownItem>
                     </t>
