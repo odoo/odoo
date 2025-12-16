@@ -9,3 +9,4 @@ from .ubl_21_credit_note import CreditNote
 from .ubl_21_debit_note import DebitNote
 from .ubl_21_order import Order
 from .ubl_21_order import OrderChange
+from .ubl_21_order import OrderCancel

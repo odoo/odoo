@@ -82,3 +82,20 @@ OrderChange = {
     'cac:AnticipatedMonetaryTotal': cac.MonetaryTotal,
     'cac:OrderLine': ChangeOrderLine,
 }
+
+OrderCancel = {
+    '_tag': 'OrderCancellation',
+    'cbc:CustomizationID': {},
+    'cbc:ProfileID': {},
+    'cbc:ID': {},
+    'cbc:IssueDate': {},
+    'cbc:Note': {},
+    'cbc:CancellationNote': {},
+    'cac:OrderReference': {
+        'cbc:ID': {},
+    },
+    'cac:QuotationDocumentReference': cac.DocumentReference,
+    'cac:OriginatorDocumentReference': cac.DocumentReference,
+    'cac:BuyerCustomerParty': cac.CustomerParty,
+    'cac:SellerSupplierParty': cac.SupplierParty,
+}
