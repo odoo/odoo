@@ -10,7 +10,7 @@ import { findInSelection } from "@html_editor/utils/selection";
 
 describe("Selection collapsed", () => {
     describe("Basic", () => {
-        test("should duplicate an empty paragraph", async () => {
+        test("should duplicate an empty paragraph (1)", async () => {
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
                 stepFunction: splitBlock,
@@ -24,6 +24,9 @@ describe("Selection collapsed", () => {
             //     stepFunction: splitBlock,
             //     contentAfter: '<p><br></p><p>[]<br></p>',
             // });
+        });
+
+        test("should duplicate an empty paragraph (2)", async () => {
             await testEditor({
                 contentBefore: "<p><br>[]</p>",
                 stepFunction: splitBlock,
@@ -31,12 +34,15 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should insert an empty paragraph before a paragraph", async () => {
+        test("should insert an empty paragraph before a paragraph (1)", async () => {
             await testEditor({
                 contentBefore: "<p>[]abc</p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p><br></p><p>[]abc</p>",
             });
+        });
+
+        test("should insert an empty paragraph before a paragraph (2)", async () => {
             await testEditor({
                 contentBefore: "<p>[] abc</p>",
                 stepFunction: splitBlock,
@@ -45,12 +51,15 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should split a paragraph in two", async () => {
+        test("should split a paragraph in two (1)", async () => {
             await testEditor({
                 contentBefore: "<p>ab[]cd</p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p>ab</p><p>[]cd</p>",
             });
+        });
+
+        test("should split a paragraph in two (2)", async () => {
             await testEditor({
                 contentBefore: "<p>ab []cd</p>",
                 stepFunction: splitBlock,
@@ -58,6 +67,9 @@ describe("Selection collapsed", () => {
                 // space so it is visible.
                 contentAfter: "<p>ab&nbsp;</p><p>[]cd</p>",
             });
+        });
+
+        test("should split a paragraph in two (3)", async () => {
             await testEditor({
                 contentBefore: "<p>ab[] cd</p>",
                 stepFunction: splitBlock,
@@ -67,12 +79,15 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should insert an empty paragraph after a paragraph", async () => {
+        test("should insert an empty paragraph after a paragraph (1)", async () => {
             await testEditor({
                 contentBefore: "<p>abc[]</p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p>abc</p><p>[]<br></p>",
             });
+        });
+
+        test("should insert an empty paragraph after a paragraph (2)", async () => {
             await testEditor({
                 contentBefore: "<p>abc[] </p>",
                 stepFunction: splitBlock,
@@ -249,7 +264,7 @@ describe("Selection collapsed", () => {
     });
 
     describe("Consecutive", () => {
-        test("should duplicate an empty paragraph twice", async () => {
+        test("should duplicate an empty paragraph twice (1)", async () => {
             await testEditor({
                 contentBefore: "<p>[]<br></p>",
                 stepFunction: async (editor) => {
@@ -269,6 +284,9 @@ describe("Selection collapsed", () => {
             //     },
             //     contentAfter: '<p><br></p><p><br></p><p>[]<br></p>',
             // });
+        });
+
+        test("should duplicate an empty paragraph twice (2)", async () => {
             await testEditor({
                 contentBefore: "<p><br>[]</p>",
                 stepFunction: async (editor) => {
@@ -326,18 +344,24 @@ describe("Selection collapsed", () => {
     });
 
     describe("Format", () => {
-        test("should split a paragraph before a format node", async () => {
+        test("should split a paragraph before a format node (1)", async () => {
             await testEditor({
                 contentBefore: "<p>abc[]<b>def</b></p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p>abc</p><p><b>[]def</b></p>",
             });
+        });
+
+        test("should split a paragraph before a format node (2)", async () => {
             await testEditor({
                 // That selection is equivalent to []<b>
                 contentBefore: "<p>abc<b>[]def</b></p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p>abc</p><p><b>[]def</b></p>",
             });
+        });
+
+        test("should split a paragraph before a format node (3)", async () => {
             await testEditor({
                 contentBefore: "<p>abc <b>[]def</b></p>",
                 stepFunction: splitBlock,
@@ -346,6 +370,9 @@ describe("Selection collapsed", () => {
                 // <br>).
                 contentAfter: "<p>abc&nbsp;</p><p><b>[]def</b></p>",
             });
+        });
+
+        test("should split a paragraph before a format node (4)", async () => {
             await testEditor({
                 contentBefore: "<p>abc<b>[] def </b></p>",
                 stepFunction: splitBlock,
@@ -357,18 +384,24 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should split a paragraph after a format node", async () => {
+        test("should split a paragraph after a format node (1)", async () => {
             await testEditor({
                 contentBefore: "<p><b>abc</b>[]def</p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p><b>abc</b></p><p>[]def</p>",
             });
+        });
+
+        test("should split a paragraph after a format node (2)", async () => {
             await testEditor({
                 // That selection is equivalent to </b>[]
                 contentBefore: "<p><b>abc[]</b>def</p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p><b>abc</b></p><p>[]def</p>",
             });
+        });
+
+        test("should split a paragraph after a format node (3)", async () => {
             await testEditor({
                 contentBefore: "<p><b>abc[]</b> def</p>",
                 stepFunction: splitBlock,
@@ -376,6 +409,9 @@ describe("Selection collapsed", () => {
                 // space so it is visible.
                 contentAfter: "<p><b>abc</b></p><p>[]&nbsp;def</p>",
             });
+        });
+
+        test("should split a paragraph after a format node (4)", async () => {
             await testEditor({
                 contentBefore: "<p><b>abc []</b>def</p>",
                 stepFunction: splitBlock,
@@ -386,18 +422,24 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should split a paragraph at the beginning of a format node", async () => {
+        test("should split a paragraph at the beginning of a format node (1)", async () => {
             await testEditor({
                 contentBefore: "<p>[]<b>abc</b></p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p><br></p><p><b>[]abc</b></p>",
             });
+        });
+
+        test("should split a paragraph at the beginning of a format node (2)", async () => {
             await testEditor({
                 // That selection is equivalent to []<b>
                 contentBefore: "<p><b>[]abc</b></p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p><br></p><p><b>[]abc</b></p>",
             });
+        });
+
+        test("should split a paragraph at the beginning of a format node (3)", async () => {
             await testEditor({
                 contentBefore: "<p><b>[] abc</b></p>",
                 stepFunction: splitBlock,
@@ -407,12 +449,15 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should split a paragraph within a format node", async () => {
+        test("should split a paragraph within a format node (1)", async () => {
             await testEditor({
                 contentBefore: "<p><b>ab[]cd</b></p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p><b>ab</b></p><p><b>[]cd</b></p>",
             });
+        });
+
+        test("should split a paragraph within a format node (2)", async () => {
             await testEditor({
                 contentBefore: "<p><b>ab []cd</b></p>",
                 stepFunction: splitBlock,
@@ -420,6 +465,9 @@ describe("Selection collapsed", () => {
                 // space so it is visible.
                 contentAfter: "<p><b>ab&nbsp;</b></p><p><b>[]cd</b></p>",
             });
+        });
+
+        test("should split a paragraph within a format node (3)", async () => {
             await testEditor({
                 contentBefore: "<p><b>ab[] cd</b></p>",
                 stepFunction: splitBlock,
@@ -429,18 +477,24 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should split a paragraph at the end of a format node", async () => {
+        test("should split a paragraph at the end of a format node (1)", async () => {
             await testEditor({
                 contentBefore: "<p><b>abc</b>[]</p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p><b>abc</b></p><p>[]<br></p>",
             });
+        });
+
+        test("should split a paragraph at the end of a format node (2)", async () => {
             await testEditor({
                 // That selection is equivalent to </b>[]
                 contentBefore: "<p><b>abc[]</b></p>",
                 stepFunction: splitBlock,
                 contentAfter: "<p><b>abc</b></p><p>[]<br></p>",
             });
+        });
+
+        test("should split a paragraph at the end of a format node (3)", async () => {
             await testEditor({
                 contentBefore: "<p><b>abc[] </b></p>",
                 stepFunction: splitBlock,
@@ -464,27 +518,39 @@ describe("Selection collapsed", () => {
         // skipping these tests cause with the link isolation the cursor can be put
         // inside/outside the link so the user can choose where to insert the line break
         // see `anchor.nodeName === "A" && brEls.includes(anchor.firstChild)` in line_break_plugin.js
-        test("should insert line breaks outside the edges of an anchor in unbreakable", async () => {
+        test("should insert line breaks outside the edges of an anchor in unbreakable (1)", async () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable">ab<a>[]cd</a></div>`,
                 stepFunction: splitBlockA,
                 contentAfter: `<div class="oe_unbreakable">ab<br><a>[]cd</a></div>`,
             });
+        });
+
+        test("should insert line breaks outside the edges of an anchor in unbreakable (2)", async () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable"><a>a[]b</a></div>`,
                 stepFunction: splitBlockA,
                 contentAfter: `<div class="oe_unbreakable"><a>a<br>[]b</a></div>`,
             });
+        });
+
+        test("should insert line breaks outside the edges of an anchor in unbreakable (3)", async () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable"><a>ab[]</a></div>`,
                 stepFunction: splitBlockA,
                 contentAfter: `<div class="oe_unbreakable"><a>ab</a><br><br>[]</div>`,
             });
+        });
+
+        test("should insert line breaks outside the edges of an anchor in unbreakable (4)", async () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable"><a>ab[]</a>cd</div>`,
                 stepFunction: splitBlockA,
                 contentAfter: `<div class="oe_unbreakable"><a>ab</a><br>[]cd</div>`,
             });
+        });
+
+        test("should insert line breaks outside the edges of an anchor in unbreakable (5)", async () => {
             await testEditor({
                 contentBefore: `<div class="oe_unbreakable"><a style="display: block;">ab[]</a></div>`,
                 stepFunction: splitBlockA,
@@ -519,7 +585,7 @@ describe("Selection collapsed", () => {
                 contentAfter: "<p><a>a</a></p><p><a>[]b</a></p>",
             });
         });
-        test("should insert a paragraph break outside the ending edge of an anchor", async () => {
+        test("should insert a paragraph break outside the ending edge of an anchor (1)", async () => {
             await testEditor({
                 contentBefore: "<p><a>ab[]</a></p>",
                 stepFunction: async (editor) => {
@@ -531,6 +597,8 @@ describe("Selection collapsed", () => {
                 contentAfterEdit: `<p>\ufeff<a href="">\ufeffab\ufeff</a>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 contentAfter: `<p><a href="">ab</a></p><p>[]<br></p>`,
             });
+        });
+        test("should insert a paragraph break outside the ending edge of an anchor (2)", async () => {
             await testEditor({
                 contentBefore: "<p><a>ab[]</a>cd</p>",
                 stepFunction: splitBlockA,
@@ -604,13 +672,16 @@ describe("Selection collapsed", () => {
 });
 
 describe("Selection not collapsed", () => {
-    test("should delete the first half of a paragraph, then split it", async () => {
+    test("should delete the first half of a paragraph, then split it (1)", async () => {
         // Forward selection
         await testEditor({
             contentBefore: "<p>[ab]cd</p>",
             stepFunction: splitBlock,
             contentAfter: "<p><br></p><p>[]cd</p>",
         });
+    });
+
+    test("should delete the first half of a paragraph, then split it (2)", async () => {
         // Backward selection
         await testEditor({
             contentBefore: "<p>]ab[cd</p>",
@@ -619,13 +690,16 @@ describe("Selection not collapsed", () => {
         });
     });
 
-    test("should delete part of a paragraph, then split it", async () => {
+    test("should delete part of a paragraph, then split it (1)", async () => {
         // Forward selection
         await testEditor({
             contentBefore: "<p>a[bc]d</p>",
             stepFunction: splitBlock,
             contentAfter: "<p>a</p><p>[]d</p>",
         });
+    });
+
+    test("should delete part of a paragraph, then split it (2)", async () => {
         // Backward selection
         await testEditor({
             contentBefore: "<p>a]bc[d</p>",
@@ -634,13 +708,16 @@ describe("Selection not collapsed", () => {
         });
     });
 
-    test("should delete the last half of a paragraph, then split it", async () => {
+    test("should delete the last half of a paragraph, then split it (1)", async () => {
         // Forward selection
         await testEditor({
             contentBefore: "<p>ab[cd]</p>",
             stepFunction: splitBlock,
             contentAfter: "<p>ab</p><p>[]<br></p>",
         });
+    });
+
+    test("should delete the last half of a paragraph, then split it (2)", async () => {
         // Backward selection
         await testEditor({
             contentBefore: "<p>ab]cd[</p>",
@@ -649,13 +726,16 @@ describe("Selection not collapsed", () => {
         });
     });
 
-    test("should delete all contents of a paragraph, then split it", async () => {
+    test("should delete all contents of a paragraph, then split it (1)", async () => {
         // Forward selection
         await testEditor({
             contentBefore: "<p>[abcd]</p>",
             stepFunction: splitBlock,
             contentAfter: "<p><br></p><p>[]<br></p>",
         });
+    });
+
+    test("should delete all contents of a paragraph, then split it (2)", async () => {
         // Backward selection
         await testEditor({
             contentBefore: "<p>]abcd[</p>",
