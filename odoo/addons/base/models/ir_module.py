@@ -1,31 +1,34 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import functools
-from collections import defaultdict, OrderedDict
-from textwrap import dedent
 import logging
 import os
 import platform
 import shutil
+from collections import OrderedDict, defaultdict
+from textwrap import dedent
 
+import lxml.html
+import psycopg2
 from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
 from docutils.writers.html4css1 import Writer
-import lxml.html
-import psycopg2
 
 import odoo
-from odoo import api, fields, models, modules, tools, _
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import config
-from odoo.tools.parse_version import parse_version
-from odoo.tools.misc import topological_sort, get_flag
-from odoo.tools.translate import TranslationImporter, get_po_paths, get_datafile_translation_path
 from odoo.http import request
 from odoo.modules.module import Manifest, MissingDependency
+from odoo.tools import config
+from odoo.tools.misc import get_flag, topological_sort
+from odoo.tools.parse_version import parse_version
+from odoo.tools.translate import (
+    TranslationImporter,
+    get_datafile_translation_path,
+    get_po_paths,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -514,7 +517,7 @@ class IrModuleModule(models.Model):
         they rely on data that don't exist anymore if the module is removed.
         """
         domain = Domain.OR(Domain('key', '=like', m.name + '.%') for m in self)
-        orphans = self.env['ir.ui.view'].with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
+        orphans = self.env['ir.ui.view'].with_context(active_test=False, force_delete=True).search(domain)
         orphans.unlink()
 
     def downstream_dependencies(self, known_deps=None,

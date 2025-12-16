@@ -17,11 +17,7 @@ class IrModelData(models.Model):
             theme_records = self.env['ir.module.module']._theme_model_names.values()
             if record._name in theme_records:
                 # use active_test to also unlink archived models
-                # and use MODULE_UNINSTALL_FLAG to also unlink inherited models
-                copy_ids = record.with_context({
-                    'active_test': False,
-                    'MODULE_UNINSTALL_FLAG': True
-                }).copy_ids
+                copy_ids = record.with_context(active_test=False).copy_ids
                 if request:
                     # we are in a website context, see `write()` override of
                     # ir.module.module in website

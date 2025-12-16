@@ -8,8 +8,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import ormcache, make_index_name, create_index
 
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-
 
 class AccountAnalyticPlan(models.Model):
     _name = 'account.analytic.plan'
@@ -319,7 +317,7 @@ class AccountAnalyticPlan(models.Model):
                 # If there is a parent, we just need to make sure there is a field to group by the hierarchy level
                 # of this plan, allowing to group by sub plan
                 if prev_stored:
-                    prev_stored.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                    prev_stored.with_context(force_delete=True).unlink()
                 description = f"{plan.root_id.name} ({depth})"
                 if not prev_related:
                     self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
@@ -339,7 +337,7 @@ class AccountAnalyticPlan(models.Model):
             else:
                 # If there is no parent, then we need to create a new stored field as this is the root plan
                 if prev_related:
-                    prev_related.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                    prev_related.with_context(force_delete=True).unlink()
                 description = plan.name
                 if not prev_stored:
                     column = plan._strict_column_name()

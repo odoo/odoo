@@ -11,7 +11,6 @@ import logging
 import re
 
 from odoo import Command, api, models
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessError, UserError
 from odoo.modules import get_resource_from_path
 from odoo.tools import file_open, float_compare, get_lang, groupby, SQL
@@ -230,7 +229,7 @@ class AccountChartTemplate(models.AbstractModel):
                         records -= records_to_keep
                         for records_for_companies in records_to_keep.grouped('company_ids').values():
                             records_for_companies.company_ids -= children_companies
-                    records.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                    records.with_context(force_delete=True).unlink()
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
