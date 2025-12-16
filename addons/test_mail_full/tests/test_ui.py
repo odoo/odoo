@@ -69,6 +69,17 @@ class TestUIPortal(TestPortal):
             "message_actions_tour",
         )
 
+    def test_message_actions_portal_when_follower(self):
+        portal_user = self._create_portal_user()
+        self.record_portal.message_subscribe(partner_ids=[portal_user.partner_id.id])
+        self.assertTrue(self.record_portal.with_user(portal_user).has_access('read'))
+        self.assertFalse(self.record_portal.partner_id.with_user(portal_user).has_access('read'))
+        self.start_tour(
+            f"/my/test_portal_records/{self.record_portal.id}?token={self.record_portal._portal_ensure_token()}",
+            "message_actions_tour",
+            login=portal_user.login,
+        )
+
     def test_rating_record_portal(self):
         record_rating = self.env["mail.test.rating"].create({"name": "Test rating record"})
         self.start_tour(

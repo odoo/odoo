@@ -13,5 +13,11 @@
         <field name="domain_force">[('message_partner_ids', 'in', [user.partner_id.id])]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
+    <record id="mail_test_portal_rule_portal" model="ir.rule">
+        <field name="name">TestPortal: Portal should follow</field>
+        <field name="model_id" ref="test_mail_full.model_mail_test_portal"/>
+        <field name="domain_force">[('message_partner_ids', 'in', [user.partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
 
 </odoo>
