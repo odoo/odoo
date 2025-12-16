@@ -13,7 +13,7 @@ def uninstall_hook(env):
     # TODO: This should be an Odoo generic fix, not a website specific one
     website_domain = [('website_id', '!=', False)]
     env['ir.asset'].search(website_domain).unlink()
-    env['ir.ui.view'].search(website_domain).with_context(active_test=False, _force_unlink=True).unlink()
+    env['ir.ui.view'].search(website_domain).with_context(active_test=False, force_delete=True).unlink()
 
     # Cleanup records which are related to websites and will not be autocleaned
     # by the uninstall operation. This must be done here in the uninstall_hook
