@@ -71,7 +71,7 @@ export class WelcomePage extends Component {
     }
 
     get noActiveParticipants() {
-        return !this.store.discuss.thread.rtc_session_ids.length;
+        return !this.store.discuss.thread.channel.hasRtcSessionActive;
     }
 
     get showCallPreview() {

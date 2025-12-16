@@ -1471,7 +1471,7 @@ export class Rtc extends Record {
             }
             return;
         }
-        if (this.localChannel.rtc_session_ids.length === 0) {
+        if (!this.localChannel.hasRtcSessionActive) {
             return;
         }
         const sequence = getSequence();

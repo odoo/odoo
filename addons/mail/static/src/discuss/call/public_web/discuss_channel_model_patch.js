@@ -1,8 +1,8 @@
-import { Thread } from "@mail/core/common/thread_model";
+import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Thread} */
-const ThreadPatch = {
+const DiscussChannelPatch = {
     get isCallDisplayedInChatWindow() {
         return (
             super.isCallDisplayedInChatWindow &&
@@ -10,4 +10,4 @@ const ThreadPatch = {
         );
     },
 };
-patch(Thread.prototype, ThreadPatch);
+patch(DiscussChannel.prototype, DiscussChannelPatch);

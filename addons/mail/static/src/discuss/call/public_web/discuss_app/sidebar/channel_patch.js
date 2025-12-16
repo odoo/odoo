@@ -10,7 +10,7 @@ patch(DiscussSidebarChannel.prototype, {
     get attClass() {
         return {
             ...super.attClass,
-            "o-ongoingCall": this.channel.rtc_session_ids.length > 0,
+            "o-ongoingCall": this.channel.hasRtcSessionActive,
         };
     },
     get attClassContainer() {
@@ -20,6 +20,6 @@ patch(DiscussSidebarChannel.prototype, {
         };
     },
     get bordered() {
-        return super.bordered || this.channel.rtc_session_ids.length > 0;
+        return super.bordered || this.channel.hasRtcSessionActive;
     },
 });
