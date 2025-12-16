@@ -1728,7 +1728,7 @@ class MrpProduction(models.Model):
                 if move.product_id not in expected_qty_by_product and move.picked and not move.product_id.uom_id.is_zero(quantity):
                     issues.append((order, move.product_id, quantity, 0.0))
                     continue
-                done_qty_by_product[move.product_id] += quantity if move.picked else 0.0
+                done_qty_by_product[move.product_id] += move.should_consume_qty if move.manual_consumption and not move.picked else quantity if move.picked else 0.0
 
             # origin lines from bom with different qty
             for product, qty_to_consume in expected_qty_by_product.items():
@@ -2280,9 +2280,10 @@ class MrpProduction(models.Model):
         production_missing_lot_ids = set()
         for production in self:
             if not production.product_uom_id.is_zero(production.qty_producing):
-                production.move_raw_ids.filtered(
-                    lambda move: move.manual_consumption and not move.picked
-                ).picked = True
+                if not self.env.context.get('mrp_display'):
+                    production.move_raw_ids.filtered(
+                        lambda move: move.manual_consumption and not move.picked
+                    ).picked = True
                 continue
             if production._auto_production_checks():
                 production_auto_ids.add(production.id)
