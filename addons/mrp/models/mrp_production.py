@@ -149,7 +149,7 @@ class MrpProduction(models.Model):
     date_start = fields.Datetime(
         'Start', copy=False, default=_get_default_date_start,
         help="Date you plan to start production or date you actually started production.",
-        index=True, required=True)
+        index=True, required=True, tracking=True)
     date_finished = fields.Datetime(
         'End', copy=False, default=_get_default_date_finished,
         compute='_compute_date_finished', store=True,
@@ -1005,7 +1005,7 @@ class MrpProduction(models.Model):
                 if production.state in ['done', 'cancel']:
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
                 if production.is_planned:
-                    production.button_unplan()
+                    production._unplan_workorders()
             if vals.get('date_start'):
                 production.move_raw_ids.write({'date': production.date_start, 'date_deadline': production.date_start})
             if vals.get('date_finished'):
@@ -1177,7 +1177,7 @@ class MrpProduction(models.Model):
                 if production.is_planned:
                     new_durations = production.workorder_ids.mapped('duration_expected')
                     if old_durations != new_durations:
-                        production.button_unplan()
+                        production._unplan_workorders()
                         production._plan_workorders()
         self.is_outdated_bom = False
 
@@ -1652,13 +1652,16 @@ class MrpProduction(models.Model):
             production.move_raw_ids._action_assign()
         return True
 
-    def button_plan(self):
+    def button_plan(self, as_soon_as_possible=True):
         """ Create work orders. And probably do stuff, like things. """
         orders_to_plan = self.filtered(lambda order: not order.is_planned)
         orders_to_confirm = orders_to_plan.filtered(lambda mo: mo.state == 'draft')
         orders_to_confirm.action_confirm()
         for order in orders_to_plan:
+            if as_soon_as_possible:
+                order.date_start = fields.Datetime.now()
             order._plan_workorders()
+            order.message_post(body=self.env._("The manufacturing order has been planned."), subtype_id=self.env.ref('mrp.mrp_mo_planned').id)
         return True
 
     def _plan_workorders(self, replan=False):
@@ -1691,6 +1694,20 @@ class MrpProduction(models.Model):
         })
 
     def button_unplan(self):
+        self._unplan_workorders()
+        for order in self:
+            previous_date_start = None
+            for message in order.message_ids:
+                if message.tracking_value_ids.field_id.mapped('name') == ['date_start']:
+                    previous_date_start = message.tracking_value_ids.old_value_datetime
+                    break
+                if message.subtype_id.id == self.env.ref('mrp.mrp_mo_planned').id:
+                    break
+            if previous_date_start:
+                order.date_start = previous_date_start
+            order.message_post(body=self.env._("The manufacturing order has been unplanned."))
+
+    def _unplan_workorders(self):
         if any(wo.state == 'done' for wo in self.workorder_ids):
             raise UserError(_("Some work orders are already done, so you cannot unplan this manufacturing order.\n\n"
                 "It’d be a shame to waste all that progress, right?"))
@@ -2540,16 +2557,6 @@ class MrpProduction(models.Model):
             'view_mode': 'form',
             'res_id': production.id,
         }
-
-    def action_plan_with_components_availability(self):
-        for production in self.filtered(lambda p: p.state in ('draft', 'confirmed')):
-            if production.state == 'draft':
-                production.action_confirm()
-            move_expected_date = production.move_raw_ids.filtered('forecast_expected_date').mapped('forecast_expected_date')
-            expected_date = max(move_expected_date, default=False)
-            if expected_date and production.components_availability_state != 'unavailable':
-                production.date_start = expected_date
-        self.filtered(lambda p: p.state == 'confirmed').button_plan()
 
     def _has_workorders(self):
         return self.workorder_ids
