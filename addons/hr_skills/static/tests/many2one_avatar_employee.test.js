@@ -16,6 +16,7 @@ test("many2one_avatar_employee widget in kanban view with skills on avatar card"
         name: "Pierre",
         user_id: pierreUid,
         user_partner_id: pierrePid,
+        write_date: "2023-02-13 10:00:00",
     });
     const [javaForPierre, tigrinyaForPierre] = pyEnv["hr.employee.skill"].create([
         { employee_id: pierreEid, skill_id: java },
@@ -43,7 +44,7 @@ test("many2one_avatar_employee widget in kanban view with skills on avatar card"
     await contains(".o_field_many2one_avatar_employee img", { count: 1 });
     expect(
         queryAttribute(".o_kanban_record .o_field_many2one_avatar_employee img", "data-src")
-    ).toBe(`/web/image/hr.employee.public/${pierreEid}/avatar_128`);
+    ).toBe(`/web/image/hr.employee.public/${pierreEid}/avatar_128?unique=1676282400000`);
     await click(".o_kanban_record .o_m2o_avatar > img");
     await contains(".o_avatar_card");
     await contains(".o_avatar_card .o_employee_skills_tags > .o_tag", { count: 2 });

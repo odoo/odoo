@@ -40,10 +40,12 @@ class Users extends models.Model {
         {
             id: 1,
             name: "Aline",
+            write_date: "2023-02-13 10:00:00",
         },
         {
             id: 2,
             name: "Christine",
+            write_date: "2023-02-13 10:00:00",
         },
     ];
 }
@@ -63,23 +65,31 @@ test("basic form view flow", async () => {
     });
 
     expect(".o_field_widget[name=user_id] input").toHaveValue("Aline");
-    expect('.o_m2o_avatar > img[data-src="/web/image/res.users/1/avatar_128"]').toHaveCount(1);
+    expect(
+        '.o_m2o_avatar > img[data-src="/web/image/res.users/1/avatar_128?unique=1676282400000"]'
+    ).toHaveCount(1);
     expect(".o_field_many2one_avatar > div").toHaveCount(1);
 
     expect(".o_input_dropdown").toHaveCount(1);
     expect(".o_input_dropdown input").toHaveValue("Aline");
     expect(".o_external_button").toHaveCount(1);
-    expect('.o_m2o_avatar > img[data-src="/web/image/res.users/1/avatar_128"]').toHaveCount(1);
+    expect(
+        '.o_m2o_avatar > img[data-src="/web/image/res.users/1/avatar_128?unique=1676282400000"]'
+    ).toHaveCount(1);
 
     await clickFieldDropdown("user_id");
     expect(".o_field_many2one_selection .o_avatar_many2x_autocomplete").toHaveCount(2);
     await clickFieldDropdownItem("user_id", "Christine");
 
-    expect('.o_m2o_avatar > img[data-src="/web/image/res.users/2/avatar_128"]').toHaveCount(1);
+    expect(
+        '.o_m2o_avatar > img[data-src="/web/image/res.users/2/avatar_128?unique=1676282400000"]'
+    ).toHaveCount(1);
     await clickSave();
 
     expect(".o_field_widget[name=user_id] input").toHaveValue("Christine");
-    expect('.o_m2o_avatar > img[data-src="/web/image/res.users/2/avatar_128"]').toHaveCount(1);
+    expect(
+        '.o_m2o_avatar > img[data-src="/web/image/res.users/2/avatar_128?unique=1676282400000"]'
+    ).toHaveCount(1);
 
     await contains('.o_field_widget[name="user_id"] input').clear({ confirm: "blur" });
 
@@ -95,11 +105,15 @@ test("onchange in form view flow", async () => {
     Partner._fields.int_field = fields.Integer({
         onChange: (obj) => {
             if (obj.int_field === 1) {
-                obj.user_id = [2, "Christine"];
+                obj.user_id = {
+                    id: 2,
+                    display_name: "Christine",
+                    write_date: "2023-02-13 10:00:00",
+                };
             } else if (obj.int_field === 2) {
                 obj.user_id = false;
             } else {
-                obj.user_id = [1, "Aline"]; // default value
+                obj.user_id = { id: 1, display_name: "Aline", write_date: "2023-02-13 10:00:00" }; // default value
             }
         },
     });
@@ -115,12 +129,16 @@ test("onchange in form view flow", async () => {
     });
 
     expect(".o_field_widget[name=user_id]").toHaveText("Aline");
-    expect('.o_m2o_avatar > img[data-src="/web/image/res.users/1/avatar_128"]').toHaveCount(1);
+    expect(
+        '.o_m2o_avatar > img[data-src="/web/image/res.users/1/avatar_128?unique=1676282400000"]'
+    ).toHaveCount(1);
 
     await contains("div[name=int_field] input").edit(1);
 
     expect(".o_field_widget[name=user_id]").toHaveText("Christine");
-    expect('.o_m2o_avatar > img[data-src="/web/image/res.users/2/avatar_128"]').toHaveCount(1);
+    expect(
+        '.o_m2o_avatar > img[data-src="/web/image/res.users/2/avatar_128?unique=1676282400000"]'
+    ).toHaveCount(1);
 
     await contains("div[name=int_field] input").edit(2);
 
@@ -142,9 +160,18 @@ test("basic list view flow", async () => {
         "",
     ]);
     const imgs = queryAll(".o_m2o_avatar > img");
-    expect(imgs[0]).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
-    expect(imgs[1]).toHaveAttribute("data-src", "/web/image/res.users/2/avatar_128");
-    expect(imgs[2]).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
+    expect(imgs[0]).toHaveAttribute(
+        "data-src",
+        "/web/image/res.users/1/avatar_128?unique=1676282400000"
+    );
+    expect(imgs[1]).toHaveAttribute(
+        "data-src",
+        "/web/image/res.users/2/avatar_128?unique=1676282400000"
+    );
+    expect(imgs[2]).toHaveAttribute(
+        "data-src",
+        "/web/image/res.users/1/avatar_128?unique=1676282400000"
+    );
 });
 
 test("basic flow in editable list view", async () => {
@@ -162,15 +189,24 @@ test("basic flow in editable list view", async () => {
     ]);
 
     const imgs = queryAll(".o_m2o_avatar > img");
-    expect(imgs[0]).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
-    expect(imgs[1]).toHaveAttribute("data-src", "/web/image/res.users/2/avatar_128");
-    expect(imgs[2]).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
+    expect(imgs[0]).toHaveAttribute(
+        "data-src",
+        "/web/image/res.users/1/avatar_128?unique=1676282400000"
+    );
+    expect(imgs[1]).toHaveAttribute(
+        "data-src",
+        "/web/image/res.users/2/avatar_128?unique=1676282400000"
+    );
+    expect(imgs[2]).toHaveAttribute(
+        "data-src",
+        "/web/image/res.users/1/avatar_128?unique=1676282400000"
+    );
 
     await contains(".o_data_row .o_data_cell:eq(0)").click();
 
     expect(".o_m2o_avatar > img:eq(0)").toHaveAttribute(
         "data-src",
-        "/web/image/res.users/1/avatar_128"
+        "/web/image/res.users/1/avatar_128?unique=1676282400000"
     );
 });
 
@@ -334,6 +370,7 @@ test("widget many2one_avatar in kanban view (load more dialog)", async () => {
         Users._records.push({
             id,
             display_name: `record ${id}`,
+            write_date: "2023-02-13 10:00:00",
         });
     }
 
@@ -365,7 +402,7 @@ test("widget many2one_avatar in kanban view (load more dialog)", async () => {
     await contains(".o_dialog .o_list_table .o_data_row .o_data_cell").click();
     expect(
         ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
-    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
+    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128?unique=1676282400000");
 });
 
 test("widget many2one_avatar in kanban view", async () => {
@@ -387,7 +424,7 @@ test("widget many2one_avatar in kanban view", async () => {
 
     expect(
         ".o_kanban_record:nth-child(1) .o_field_many2one_avatar .o_m2o_avatar > img"
-    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
+    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128?unique=1676282400000");
     expect(
         ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > .o_quick_assign"
     ).toHaveCount(1);
@@ -399,10 +436,10 @@ test("widget many2one_avatar in kanban view", async () => {
     expect.verifySteps(["web_name_search"]);
     // select first input
     await contains(".o-overlay-container .o-autocomplete--dropdown-item").click();
-    expect.verifySteps(["web_save"]);
+    expect.verifySteps(["web_read", "web_save"]);
     expect(
         ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > img"
-    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
+    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128?unique=1676282400000");
     expect(
         ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > .o_quick_assign"
     ).toHaveCount(0);
@@ -426,7 +463,7 @@ test("widget many2one_avatar in kanban view without access rights", async () => 
     });
     expect(
         ".o_kanban_record:nth-child(1) .o_field_many2one_avatar .o_m2o_avatar > img"
-    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128");
+    ).toHaveAttribute("data-src", "/web/image/res.users/1/avatar_128?unique=1676282400000");
     expect(
         ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > .o_quick_assign"
     ).toHaveCount(0);

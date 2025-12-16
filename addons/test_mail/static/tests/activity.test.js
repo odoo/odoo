@@ -819,6 +819,7 @@ test("Activity view: many2one_avatar_user widget in activity view", async () => 
     const resUsersId1 = pyEnv["res.users"].create({
         display_name: "first user",
         avatar_128: "Atmaram Bhide",
+        write_date: "2023-02-13 10:00:00",
     });
     pyEnv["mail.test.activity"].write([mailTestActivityId1], { activity_user_id: resUsersId1 });
     registerArchs({
@@ -838,7 +839,7 @@ test("Activity view: many2one_avatar_user widget in activity view", async () => 
     });
     await contains(".o_m2o_avatar", { count: 1 });
     await contains(
-        `tr:nth-child(2) .o_m2o_avatar > img[data-src="/web/image/res.users/${resUsersId1}/avatar_128"]`
+        `tr:nth-child(2) .o_m2o_avatar > img[data-src="/web/image/res.users/${resUsersId1}/avatar_128?unique=1676282400000"]`
     );
     // "should not have text on many2one_avatar_user if onlyImage node option is passed"
     await contains(".o_m2o_avatar > span", { count: 0 });

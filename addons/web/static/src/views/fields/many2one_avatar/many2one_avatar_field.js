@@ -19,6 +19,7 @@ export class Many2OneAvatarField extends Component {
 
 export const many2OneAvatarField = {
     ...buildM2OFieldDescription(Many2OneAvatarField),
+    relatedFields: [{ name: "write_date", type: "datetime" }],
     extractProps(staticInfo, dynamicInfo) {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),

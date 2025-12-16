@@ -88,6 +88,7 @@ test("many2one in kanban view", async () => {
     const employeeId = env["hr.employee.public"].create({
         user_id: userId,
         user_partner_id: partnerId,
+        write_date: "2023-02-13 10:00:00",
     });
     env["m2x.avatar.employee"].create({
         employee_id: employeeId,
@@ -109,7 +110,7 @@ test("many2one in kanban view", async () => {
     await waitFor(".o_m2o_avatar");
     expect(".o_m2o_avatar > img:eq(0)").toHaveAttribute(
         "data-src",
-        `/web/image/hr.employee.public/${employeeId}/avatar_128`
+        `/web/image/hr.employee.public/${employeeId}/avatar_128?unique=1676282400000`
     );
 });
 
@@ -135,6 +136,7 @@ test("many2one with hr group widget in kanban view", async () => {
     const employeeId = env["hr.employee.public"].create({
         user_id: userId,
         user_partner_id: partnerId,
+        write_date: "2023-02-13 10:00:00",
     });
     env["m2x.avatar.employee"].create({
         employee_id: employeeId,
@@ -155,7 +157,7 @@ test("many2one with hr group widget in kanban view", async () => {
     await waitFor(".o_m2o_avatar");
     expect(".o_m2o_avatar > img:eq(0)").toHaveAttribute(
         "data-src",
-        `/web/image/hr.employee/${employeeId}/avatar_128`
+        `/web/image/hr.employee/${employeeId}/avatar_128?unique=1676282400000`
     );
 });
 
@@ -166,6 +168,7 @@ test("many2one with relation set in options", async () => {
     const employeeId = env["hr.employee.public"].create({
         user_id: userId,
         user_partner_id: partnerId,
+        write_date: "2023-02-13 10:00:00",
     });
     env["m2x.avatar.employee"].create({
         employee_id: employeeId,
@@ -186,7 +189,7 @@ test("many2one with relation set in options", async () => {
     await waitFor(".o_m2o_avatar");
     expect(".o_m2o_avatar > img:eq(0)").toHaveAttribute(
         "data-src",
-        `/web/image/hr.employee.public/${employeeId}/avatar_128`
+        `/web/image/hr.employee.public/${employeeId}/avatar_128?unique=1676282400000`
     );
 });
 
@@ -235,11 +238,13 @@ test("many2one in form view", async () => {
             user_partner_id: partnerId_1,
             name: "Mario",
             work_email: "Mario@partner.com",
+            write_date: "2023-02-13 10:00:00",
         },
         {
             name: "Luigi",
             user_id: userId_2,
             user_partner_id: partnerId_2,
+            write_date: "2023-02-13 10:00:00",
         },
     ]);
     const avatarId_1 = env["m2x.avatar.employee"].create({
@@ -256,7 +261,7 @@ test("many2one in form view", async () => {
     expect(".o_field_many2many_avatar_employee .o_tag").toHaveCount(2);
     expect(".o_field_many2many_avatar_employee .o_tag img:eq(0)").toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+        `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128?unique=1676282400000`
     );
 
     // Clicking on first employee's avatar
@@ -286,8 +291,8 @@ test("many2one with hr group widget in form view", async () => {
         { partner_id: partnerId_2 },
     ]);
     const [employeeData_1, employeeData_2] = [
-        { user_id: userId_1, user_partner_id: partnerId_1 },
-        { user_id: userId_2, user_partner_id: partnerId_2 },
+        { user_id: userId_1, user_partner_id: partnerId_1, write_date: "2023-02-13 10:00:00" },
+        { user_id: userId_2, user_partner_id: partnerId_2, write_date: "2023-02-13 10:00:00" },
     ];
     env["hr.employee"].create([{ ...employeeData_1 }, { ...employeeData_2 }]);
     const [employeeId_1, employeeId_2] = env["hr.employee.public"].create([
@@ -308,7 +313,7 @@ test("many2one with hr group widget in form view", async () => {
     expect(".o_field_many2many_avatar_employee .o_tag").toHaveCount(2);
     expect(".o_field_many2many_avatar_employee .o_tag img:eq(0)").toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/hr.employee/${employeeId_1}/avatar_128`
+        `${getOrigin()}/web/image/hr.employee/${employeeId_1}/avatar_128?unique=1676282400000`
     );
     await contains(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar:eq(0)").click();
     await contains(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar:eq(1)").click();
@@ -384,11 +389,13 @@ test("many2many in kanban view", async () => {
             user_partner_id: partnerId_1,
             name: "Mario",
             work_email: "Mario@partner.com",
+            write_date: "2023-02-13 10:00:00",
         },
         {
             name: "Luigi",
             user_id: userId_2,
             user_partner_id: partnerId_2,
+            write_date: "2023-02-13 10:00:00",
         },
     ]);
     env["m2x.avatar.employee"].create({
@@ -416,13 +423,13 @@ test("many2many in kanban view", async () => {
         ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar:eq(0)"
     ).toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/hr.employee.public/${employeeId_2}/avatar_128`
+        `${getOrigin()}/web/image/hr.employee.public/${employeeId_2}/avatar_128?unique=1676282400000`
     );
     expect(
         ".o_kanban_record .o_field_many2many_avatar_employee img.o_m2m_avatar:eq(1)"
     ).toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+        `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128?unique=1676282400000`
     );
 
     // Clicking on first employee's avatar
@@ -452,11 +459,13 @@ test("many2many: click on an employee not associated with a user", async () => {
         {
             name: "Mario",
             work_email: "Mario@partner.com",
+            write_date: "2023-02-13 10:00:00",
         },
         {
             name: "Luigi",
             user_id: userId,
             user_partner_id: partnerId,
+            write_date: "2023-02-13 10:00:00",
         },
     ]);
     const avatarId = env["m2x.avatar.employee"].create({
@@ -473,7 +482,7 @@ test("many2many: click on an employee not associated with a user", async () => {
     expect(".o_field_many2many_avatar_employee .o_tag").toHaveCount(2);
     expect(".o_field_many2many_avatar_employee .o_tag img:eq(0)").toHaveAttribute(
         "data-src",
-        `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128`
+        `${getOrigin()}/web/image/hr.employee.public/${employeeId_1}/avatar_128?unique=1676282400000`
     );
 
     // Clicking on first employee's avatar (employee with no user)

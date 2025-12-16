@@ -9,6 +9,7 @@ export class Avatar extends Component {
     static props = {
         resModel: { type: String },
         resId: { type: Number },
+        uniqueId: { type: Number, optional: true },
         canOpenPopover: { type: Boolean, optional: true },
         cssClass: { type: [String, Object], optional: true },
         displayName: { type: String, optional: true },
@@ -31,6 +32,14 @@ export class Avatar extends Component {
             id: this.props.resId,
             model: this.props.resModel,
         };
+    }
+
+    get src() {
+        let src = `/web/image/${this.props.resModel}/${this.props.resId}/avatar_128`;
+        if (this.props.uniqueId) {
+            src += `?unique=${this.props.uniqueId}`;
+        }
+        return src;
     }
 
     onClickAvatar(ev) {

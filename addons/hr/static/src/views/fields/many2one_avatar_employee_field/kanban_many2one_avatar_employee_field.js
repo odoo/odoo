@@ -45,12 +45,18 @@ export class KanbanMany2OneAvatarEmployeeField extends Component {
     get value() {
         return this.props.record.data[this.props.name];
     }
+
+    get uniqueId() {
+        // hr_leave_stats widget uses this field but doesn't provide the write_date
+        return this.value?.write_date ? this.value.write_date.toMillis() : undefined;
+    }
 }
 
 /** @type {import("registries").FieldsRegistryItemShape} */
 const fieldDescr = {
     ...buildM2OFieldDescription(KanbanMany2OneAvatarEmployeeField),
     additionalClasses: ["o_field_many2one_avatar_kanban", "o_field_many2one_avatar_user"],
+    relatedFields: [{ name: "write_date", type: "datetime" }],
     extractProps(staticInfo, dynamicInfo) {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),
