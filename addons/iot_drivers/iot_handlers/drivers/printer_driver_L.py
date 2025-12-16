@@ -155,7 +155,13 @@ class PrinterDriver(PrinterDriverBase):
                     dev.printer.textln(title.decode())
                     dev.printer.set_with_default(align='center', double_height=False, double_width=False)
                     dev.writelines(body.decode())
-                    dev.printer.qr(f"http://{helpers.get_ip()}", size=6)
+                    ip = helpers.get_ip()
+                    if ip:
+                        dev.printer.qr(f"http://{ip}", size=6)
+                    else:
+                        wifi_qr = wifi.get_qr_data_for_wifi()
+                        if wifi_qr:
+                            dev.printer.qr(wifi_qr, size=6)
                 self.send_status(status='success')
                 return
             except (escpos.exceptions.Error, OSError, AssertionError):
@@ -222,11 +228,14 @@ class PrinterDriver(PrinterDriverBase):
         else:
             ip = '\nIoT Box IP Addresses:\n%s\n' % '\n'.join(ips)
 
-        network_quality = "\nNetwork quality:\n - To Odoo server: %s\n" % wan_quality
-        if to_gateway_quality:
-            network_quality += " - To Modem: %s\n" % to_gateway_quality
-        if to_printer_quality:
-            network_quality += " - To Printer (%s): %s\n" % (self.ip, to_printer_quality)
+        if len(ips) == 0:
+            network_quality = ""
+        else:
+            network_quality = "\nNetwork quality:\n - To Odoo server: %s\n" % wan_quality
+            if to_gateway_quality:
+                network_quality += " - To Modem: %s\n" % to_gateway_quality
+            if to_printer_quality:
+                network_quality += " - To Printer (%s): %s\n" % (self.ip, to_printer_quality)
 
         if len(ips) >= 1:
             identifier = '\nIdentifier:\n%s\n' % iot_status["identifier"]
