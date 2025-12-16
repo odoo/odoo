@@ -104,3 +104,12 @@ export function addEmptyGranularity(groupBys, fields) {
         return dimension;
     });
 }
+
+export async function getRelationalFieldDefinition(resModel, fieldName, fieldService) {
+    const { modelsInfo, names } = await fieldService.loadPath(resModel, fieldName);
+    return {
+        ...modelsInfo.at(-1).fieldDefs[fieldName.split(".").at(-1)],
+        string: names.map((name, i) => modelsInfo[i].fieldDefs[name].string).join(" > "),
+        name: fieldName,
+    };
+}
