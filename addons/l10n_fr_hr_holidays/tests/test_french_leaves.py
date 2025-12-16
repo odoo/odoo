@@ -443,3 +443,41 @@ class TestFrenchLeaves(TransactionCase):
             leave_1.date_to)
 
         self.assertEqual(work_hours_data[0][1], 7.50)
+    
+    def test_leave_employee_part_time_on_public_holiday(self):
+        """Test Case:
+        - Employee works part-time: Tuesday, Wednesday, Friday
+        - Company calendar includes a public holiday on a working day of the employee (Wednesday)
+        - Employee requests leave on the public holiday date
+        - The number of days for the leave should be 0 since it's a public holiday
+        """
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Part-Time Calendar',
+            'attendance_ids': [
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tueday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+            ],
+        })
+        self.company.resource_calendar_id = self.base_calendar
+        self.employee.resource_calendar_id = employee_calendar
+
+        # Assuming Wednesday is a public holiday
+        public_holiday = self.env['resource.calendar.leaves'].create({
+            'name': 'Public holiday',
+            'date_from': '2025-12-17 00:00:00',
+            'date_to': '2025-12-17 23:59:59',
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test Leave with Public Holiday',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2025-12-17',
+            'request_date_to': '2025-12-17',
+        })
+
+        self.assertEqual(leave.number_of_days, 0, 'The number of days should be equal to 0, since it is a public holiday.')
