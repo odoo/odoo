@@ -281,6 +281,16 @@ def is_access_point():
     ).returncode == 0
 
 
+def get_qr_data_for_wifi():
+    if is_access_point():
+        return f"WIFI:S:{get_access_point_ssid()};T:nopass;;;"
+    wifi_ssid = get_conf('wifi_ssid')
+    wifi_password = get_conf('wifi_password')
+    if wifi_ssid and wifi_password:
+        return f"WIFI:S:{wifi_ssid};T:WPA;P:{wifi_password};;;"
+    return None
+
+
 @cache
 def generate_qr_code_image(qr_code_data):
     """Generate a QR code based on data argument and return it in base64 image format
@@ -312,20 +322,8 @@ def generate_network_qr_codes():
     :return: A dictionary containing the QR codes in base64 format
     :rtype: dict
     """
-    qr_code_images = {
-        'qr_wifi': None,
+    wifi_network_qr_data = get_qr_data_for_wifi()
+    return {
+        'qr_wifi': generate_qr_code_image(wifi_network_qr_data) if wifi_network_qr_data else None,
         'qr_url': generate_qr_code_image(f'http://{get_ip()}'),
     }
-
-    # Generate QR codes which can be used to connect to the IoT Box Wi-Fi network
-    if not is_access_point():
-        wifi_ssid = get_conf('wifi_ssid')
-        wifi_password = get_conf('wifi_password')
-        if wifi_ssid and wifi_password:
-            wifi_data = f"WIFI:S:{wifi_ssid};T:WPA;P:{wifi_password};;;"
-            qr_code_images['qr_wifi'] = generate_qr_code_image(wifi_data)
-    else:
-        access_point_data = f"WIFI:S:{get_access_point_ssid()};T:nopass;;;"
-        qr_code_images['qr_wifi'] = generate_qr_code_image(access_point_data)
-
-    return qr_code_images
