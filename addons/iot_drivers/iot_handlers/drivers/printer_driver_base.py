@@ -238,7 +238,7 @@ class PrinterDriverBase(Driver, ABC):
                     return False
                 elif paper_status == 1:
                     self.send_status(status='warning', message='WARNING_LOW_PAPER')
-        except (escpos.exceptions.Error, OSError, AssertionError):
+        except (escpos.exceptions.Error, OSError, AssertionError, TypeError):
             self.escpos_device = None
             _logger.warning("Failed to query ESC/POS status")
 
