@@ -4,7 +4,7 @@ import { fields } from "@mail/model/misc";
 
 import { patch } from "@web/core/utils/patch";
 
-/** @type {import("@models").DiscussChannel} */
+/** @type {import("models").DiscussChannel} */
 const discussChannelPatch = {
     setup() {
         super.setup(...arguments);

@@ -19,6 +19,9 @@ declare module "models" {
     export interface LivechatChannelRule extends LivechatChannelRuleClass {}
     export interface LivechatExpertise extends LivechatExpertiseClass {}
 
+    export interface ChannelMember {
+        livechat_member_type: "agent"|"bot"|"visitor";
+    }
     export interface ChatWindow {
         livechatStep: undefined|"CONFIRM_CLOSE"|"FEEDBACK";
     }
