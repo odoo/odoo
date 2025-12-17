@@ -2,7 +2,6 @@ import { Component, useEffect, useRef } from "@odoo/owl";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { formatCurrency } from "@web/core/currency";
-import { _t } from "@web/core/l10n/translation";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
 // This methods is service-less, see PoS knowledges for more information
@@ -29,10 +28,6 @@ export class OrderDisplay extends Component {
 
     formatCurrency(amount) {
         return formatCurrency(amount, this.order.currency.id);
-    }
-
-    emptyCartText() {
-        return _t("Start adding products");
     }
 
     get comboSortedLines() {
