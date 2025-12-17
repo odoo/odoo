@@ -43,7 +43,6 @@ import {
     secondClick,
     thirdClick,
 } from "./_helpers/selection";
-import { strong } from "./_helpers/tags";
 import { delay } from "@web/core/utils/concurrency";
 import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "./_helpers/ui_expectations";
@@ -86,7 +85,7 @@ test("should show bold button highlighted after applying format when selection i
     await contains(".btn[name='bold']").click();
 
     expect(".btn[name='bold']").toHaveClass("active");
-    expect(getContent(el)).toBe(`<p>te${strong("[]\u200B", "first")}st</p>`);
+    expect(getContent(el)).toBe(`<p>te<strong data-oe-zws-empty-inline="">[]\u200B</strong>st</p>`);
 });
 
 test("toolbar closes when selection leaves editor", async () => {
@@ -886,15 +885,17 @@ test("keep the toolbar if the selection crosses two blocks, even if their conten
 
 test.tags("desktop");
 test("close the toolbar if the selection contains any nodes (traverseNode = [], ignore zws)", async () => {
-    const { el } = await setupEditor(`<p>ab${strong("\u200B", "first")}cd</p>`);
+    const { el } = await setupEditor(
+        `<p>ab<strong data-oe-zws-empty-inline="">\u200B</strong>cd</p>`
+    );
     await expectElementCount(".o-we-toolbar", 0);
 
-    setContent(el, `<p>a[b${strong("\u200B", "first")}c]d</p>`);
+    setContent(el, `<p>a[b<strong data-oe-zws-empty-inline="">\u200B</strong>c]d</p>`);
     await tick(); // selectionChange
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
 
-    setContent(el, `<p>ab${strong("[\u200B]", "first")}cd</p>`);
+    setContent(el, `<p>ab<strong data-oe-zws-empty-inline="">[\u200B]</strong>cd</p>`);
     await tick(); // selectionChange
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 0);
