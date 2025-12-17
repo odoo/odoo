@@ -184,12 +184,14 @@ export class BaseHeader extends Interaction {
     transformShow() {
         this.isVisible = true;
         this.el.style.transform = this.atTop ? "" : `translate(0, -${this.forcedScroll + this.topGap}px)`;
+        this.el.style.transition = this.atTop ? "none" : "";
         this.adaptToHeaderChangeLoop(1);
     }
 
     transformHide() {
         this.isVisible = false;
         this.el.style.transform = "translate(0, -100%)";
+        this.el.style.transition = "";
         this.adaptToHeaderChangeLoop(1);
     }
 
