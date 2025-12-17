@@ -404,6 +404,7 @@ class DiscussChannel(models.Model):
 
     def _sync_field_names(self, res):
         super()._sync_field_names(res)
+        res[None].attr("livechat_end_dt", predicate=is_livechat_channel)
         res[None].one(
             "livechat_operator_id",
             "_store_livechat_agent_fields",
@@ -528,7 +529,6 @@ class DiscussChannel(models.Model):
                 member.sudo()._rtc_leave_call()
             # sudo: discuss.channel - visitor left the conversation, state must be updated
             self.sudo().livechat_end_dt = fields.Datetime.now()
-            Store(bus_channel=self).add(self, ["livechat_end_dt"]).bus_send()
             # avoid useless notification if the channel is empty
             if not self.message_ids:
                 return
@@ -879,7 +879,6 @@ class DiscussChannel(models.Model):
         ):
             # sudo: discuss.channel - last operator left the conversation, state must be updated.
             channel_sudo.livechat_end_dt = fields.Datetime.now()
-            Store(bus_channel=self).add(channel_sudo, ["livechat_end_dt"]).bus_send()
 
     def livechat_join_channel_needing_help(self):
         """Join a live chat for which help was requested.
