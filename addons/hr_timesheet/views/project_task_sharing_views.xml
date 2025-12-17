@@ -114,7 +114,7 @@
                                             invisible="allocated_hours == 0.0 or not encode_uom_in_days or remaining_hours &gt;= 0"/>
                                     </div>
                                     <div class="col-4">
-                                        <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
+                                        <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator" decoration-danger="remaining_hours &lt; 0"
                                             invisible="allocated_hours == 0.0" nolabel="1"/>
                                     </div>
                                 </div>
