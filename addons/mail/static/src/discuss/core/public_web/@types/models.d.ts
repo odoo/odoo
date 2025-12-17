@@ -8,10 +8,15 @@ declare module "models" {
         _computeIsDisplayInSidebar: () => boolean;
         appAsUnreadChannels: DiscussApp;
         categoryAsChannelWithCounter: DiscussAppCategory;
+        createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
         discuss_category_id: DiscussCategory;
         discussAppCategory: DiscussAppCategory;
+        hasSubChannelFeature: Readonly<boolean>;
         isDisplayInSidebar: boolean;
         isLocallyPinned: boolean;
+        lastSubChannelLoaded: DiscussChannel;
+        loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<void>;
+        loadSubChannelsDone: boolean;
         notifyDescriptionToServer: (description: string) => Promise<unknown>;
         notifyMessageToUser: (message: Message) => Promise<void>;
         subChannelsInSidebar: DiscussChannel[];
@@ -22,13 +27,6 @@ declare module "models" {
         fetchSsearchConversationsSequential: () => Promise<any>;
         has_unpinned_channels: boolean;
         searchConversations: (searchValue: string) => Promise<void>;
-    }
-    export interface Thread {
-        createSubChannel: (param0: { initialMessage: Message, name: string }) => Promise<void>;
-        hasSubChannelFeature: Readonly<boolean>;
-        lastSubChannelLoaded: DiscussChannel;
-        loadMoreSubChannels: (param0: { searchTerm: string }) => Promise<void>;
-        loadSubChannelsDone: boolean;
     }
 
     export interface Models {

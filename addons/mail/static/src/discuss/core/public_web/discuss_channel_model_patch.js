@@ -1,6 +1,6 @@
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
 import { fields } from "@mail/model/misc";
-
+import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").DiscussChannel} */
@@ -47,6 +47,8 @@ const discussChannelPatch = {
                 this.onPinStateUpdated();
             },
         });
+        this.lastSubChannelLoaded = fields.One("discuss.channel");
+        this.loadSubChannelsDone = false;
         this.subChannelsInSidebar = fields.Many("discuss.channel", {
             compute() {
                 return this.sub_channel_ids.filter((channel) => channel.isDisplayInSidebar);
@@ -88,6 +90,56 @@ const discussChannelPatch = {
             [[this.id]],
             { description }
         );
+    },
+    /**
+     * @param {Object} [param0={}]
+     * @param {import("models").Message} [param0.initialMessage]
+     * @param {string} [param0.name]
+     */
+    async createSubChannel({ initialMessage, name } = {}) {
+        const { store_data, sub_channel } = await rpc("/discuss/channel/sub_channel/create", {
+            parent_channel_id: this.parent_channel_id?.id || this.id,
+            from_message_id: initialMessage?.id,
+            name,
+        });
+        this.store.insert(store_data);
+        this.store["discuss.channel"].get(sub_channel).open({ focus: true });
+    },
+    get hasSubChannelFeature() {
+        return ["channel", "group"].includes(this.channel_type);
+    },
+    /**
+     * @param {*} param0
+     * @param {string} [param0.searchTerm]
+     */
+    async loadMoreSubChannels({ searchTerm } = {}) {
+        if (this.loadSubChannelsDone) {
+            return;
+        }
+        const limit = 30;
+        const { store_data, sub_channel_ids } = await rpc("/discuss/channel/sub_channel/fetch", {
+            before: this.lastSubChannelLoaded?.id,
+            limit,
+            parent_channel_id: this.id,
+            search_term: searchTerm,
+        });
+        this.store.insert(store_data);
+        const channels = sub_channel_ids.map((id) => this.store["discuss.channel"].get(id));
+        if (searchTerm) {
+            // Ignore holes in the sub-channel list that may arise when
+            // searching for a specific term.
+            return;
+        }
+        const subChannels = channels.filter((channel) =>
+            this.channel.eq(channel.parent_channel_id)
+        );
+        this.lastSubChannelLoaded = subChannels.reduce(
+            (min, channel) => (!min || channel.id < min.id ? channel : min),
+            this.lastSubChannelLoaded
+        );
+        if (subChannels.length < limit) {
+            this.loadSubChannelsDone = true;
+        }
     },
     /**
      * Handle the notification of a new message based on the notification setting of the user.

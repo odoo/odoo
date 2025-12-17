@@ -7,13 +7,13 @@ import { usePopover } from "@web/core/popover/popover_hook";
 registerThreadAction("show-threads", {
     actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: SubChannelList,
-    actionPanelComponentProps: ({ action, thread }) => ({
+    actionPanelComponentProps: ({ action, channel }) => ({
         close: () => action.actionPanelClose(),
-        thread,
+        channel,
     }),
     actionPanelOpen({ channel, owner }) {
         this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
-            thread: (channel?.parent_channel_id || channel).thread,
+            channel: channel.parent_channel_id || channel,
         });
     },
     actionPanelOuterClass: "bg-100 border border-secondary",
