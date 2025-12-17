@@ -33,6 +33,12 @@ export const TRANSLATABLE_ATTRIBUTES = [
         name: _t("Value"),
     },
     {
+        attribute: "data-video-description",
+        name: _t("Description"),
+        tooltip: _t("Add context for people using screen readers."),
+        placeholder: _t("Describe the video"),
+    },
+    {
         // This is a "fake attribute": it is present in the translation info
         // from the translation plugin, but it corresponds to the `textContent`
         // property of the element (not an attribute)

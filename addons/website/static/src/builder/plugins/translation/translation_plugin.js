@@ -28,6 +28,7 @@ const TRANSLATED_ATTRS = [
     "alt",
     "aria-label",
     "value",
+    "data-video-description",
     "data-oe-translate-src",
     "data-oe-translate-srcset",
 ];
@@ -164,7 +165,7 @@ export class TranslationPlugin extends Plugin {
         const translationRegex =
             /^\s*<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>\s*$/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
-        const matchTag = (el) => el.matches("input, select, textarea, img");
+        const matchTag = (el) => el.matches("input, select, textarea, img, div.media_iframe_video");
 
         // Placeholder attributes on non-form elements (i.e. not input, select,
         // textarea) are intended for content editors, not visible text
