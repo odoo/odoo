@@ -4,7 +4,6 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSmsController(TestMassSMSCommon):
 
     @classmethod

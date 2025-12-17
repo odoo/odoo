@@ -5,7 +5,6 @@ from odoo.tests.common import tagged, users
 from odoo.addons.test_mass_mailing.tests import common
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLinkTracker(common.TestMassMailCommon):
 
     def setUp(self):

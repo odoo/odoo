@@ -12,7 +12,6 @@ from odoo.tools import mute_logger
 
 
 @tagged('digest', 'mass_mailing')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailingStatistics(TestMassMailCommon):
 
     @classmethod

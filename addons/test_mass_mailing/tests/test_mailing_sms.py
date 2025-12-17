@@ -13,7 +13,6 @@ from odoo.tools import mute_logger
 
 
 @tagged('mass_mailing', 'mass_mailing_sms')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassSMSInternals(TestMassSMSCommon):
 
     @users('user_marketing')
@@ -282,7 +281,6 @@ class TestMassSMSInternals(TestMassSMSCommon):
 
 
 @tagged('mass_mailing', 'mass_mailing_sms', 'mailing_test')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassSMSTest(TestMassSMSCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_render_mixin')
@@ -323,7 +321,6 @@ class TestMassSMSTest(TestMassSMSCommon):
 
 
 @tagged('mass_mailing', 'mass_mailing_sms')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassSMS(TestMassSMSCommon):
 
     @users('user_marketing')
@@ -467,7 +464,6 @@ class TestMassSMS(TestMassSMSCommon):
 
 
 @tagged('mass_mailing', 'mass_mailing_sms', 'twilio')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassSMSTwilio(TestMassSMSCommon, MockSmsTwilioApi):
 
     @classmethod
