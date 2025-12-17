@@ -1060,9 +1060,9 @@ class HrExpense(models.Model):
                 mail_lang = (manager_langs and manager_langs[0]) or self.env.lang or 'en_US'
                 departments = expenses_submitted.department_id
                 if len(departments) > 1:
-                    url = '/expenses-to-process'
+                    url = '/odoo/expenses-to-process'
                 else:
-                    url = f'/departments/{departments.id}/expenses-to-approve'
+                    url = f'/odoo/departments/{departments.id}/expenses-to-approve'
                 body = self.env['ir.qweb']._render(
                     template='hr_expense.hr_expense_template_submitted_expenses',
                     values={'manager_name': manager.name, 'url': url},
