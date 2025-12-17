@@ -1,7 +1,6 @@
 import { describe, test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
-import { BOLD_TAGS } from "./_helpers/tags";
 import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
 
 /**
@@ -307,16 +306,26 @@ describe("color normalization", () => {
 });
 
 describe("formatting normalization", () => {
-    let count = 1;
-    for (const tag of BOLD_TAGS) {
-        test(`should unwrap nested identical bold tags (${count})`, async () => {
-            await testEditor({
-                contentBefore: `<p>a${tag(`b${tag(`c${tag(`d`)}`)}e`)}f</p>`,
-                contentAfter: `<p>a${tag("bcde")}f</p>`,
-            });
+    test("should unwrap nested identical bold tags (1)", async () => {
+        await testEditor({
+            contentBefore: "<p>a<strong>b<strong>c<strong>d</strong></strong>e</strong>f</p>",
+            contentAfter: "<p>a<strong>bcde</strong>f</p>",
         });
-        count++;
-    }
+    });
+
+    test("should unwrap nested identical bold tags (2)", async () => {
+        await testEditor({
+            contentBefore: `<p>a<span style="font-weight: bolder;">b<span style="font-weight: bolder;">c<span style="font-weight: bolder;">d</span></span>e</span>f</p>`,
+            contentAfter: `<p>a<span style="font-weight: bolder;">bcde</span>f</p>`,
+        });
+    });
+
+    test("should unwrap nested identical bold tags (3)", async () => {
+        await testEditor({
+            contentBefore: "<p>a<b>b<b>c<b>d</b></b>e</b>f</p>",
+            contentAfter: "<p>a<b>bcde</b>f</p>",
+        });
+    });
 
     test("should merge nested strong inside formatting tags", async () => {
         await testEditor({
