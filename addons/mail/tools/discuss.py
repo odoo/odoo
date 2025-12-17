@@ -321,8 +321,6 @@ class Store:
             return False
         if as_thread:
             return {"id": record.id, "model": record._name}
-        if record._name == "discuss.channel":
-            return {"id": record.id, "model": "discuss.channel"}
         return record.id
 
     @staticmethod

@@ -948,7 +948,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "unpin_dt": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_channel_public_1 and partner == self.users[0].partner_id:
             return {
@@ -969,7 +969,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": last_message.id,
                 "unpin_dt": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_channel_public_2 and partner == self.users[0].partner_id:
             return {
@@ -990,7 +990,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": last_message.id,
                 "unpin_dt": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_channel_group_1 and partner == self.users[0].partner_id:
             return {
@@ -1011,13 +1011,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": member_0.rtc_inviting_session_id.id,
                 "seen_message_id": last_message_of_partner_0.id,
                 "unpin_dt": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_channel_group_1 and partner == self.users[2].partner_id:
             return {
                 "id": member_2.id,
                 "partner_id": self.users[2].partner_id.id,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_channel_group_2 and partner == self.users[0].partner_id:
             return {
@@ -1038,7 +1038,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": last_message.id,
                 "unpin_dt": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_group_1 and partner == self.users[0].partner_id:
             return {
@@ -1059,7 +1059,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "unpin_dt": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_group_1 and partner == self.users[12].partner_id:
             return {
@@ -1070,7 +1070,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": member_12.id,
                 "partner_id": self.users[12].partner_id.id,
                 "seen_message_id": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_chat_1 and partner == self.users[0].partner_id:
             return {
@@ -1091,7 +1091,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "unpin_dt": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_chat_1 and partner == self.users[14].partner_id:
             return {
@@ -1102,7 +1102,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": member_14.id,
                 "partner_id": self.users[14].partner_id.id,
                 "seen_message_id": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_chat_2 and partner == self.users[0].partner_id:
             return {
@@ -1123,7 +1123,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "unpin_dt": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_chat_2 and partner == self.users[15].partner_id:
             return {
@@ -1134,7 +1134,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": member_15.id,
                 "partner_id": self.users[15].partner_id.id,
                 "seen_message_id": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_chat_3 and partner == self.users[0].partner_id:
             return {
@@ -1155,7 +1155,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "unpin_dt": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_chat_3 and partner == self.users[2].partner_id:
             return {
@@ -1166,7 +1166,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": member_2.id,
                 "partner_id": self.users[2].partner_id.id,
                 "seen_message_id": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_chat_4 and partner == self.users[0].partner_id:
             return {
@@ -1187,7 +1187,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "unpin_dt": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_chat_4 and partner == self.users[3].partner_id:
             return {
@@ -1198,7 +1198,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": member_3.id,
                 "partner_id": self.users[3].partner_id.id,
                 "seen_message_id": False,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_livechat_1 and partner == self.users[0].partner_id:
             return {
@@ -1220,7 +1220,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "unpin_dt": fields.Datetime.to_string(member_0.unpin_dt),
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_livechat_1 and partner == self.users[1].partner_id:
             return {
@@ -1232,7 +1232,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_member_type": "visitor",
                 "partner_id": self.users[1].partner_id.id,
                 "seen_message_id": last_message.id,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_livechat_2 and partner == self.users[0].partner_id:
             return {
@@ -1254,7 +1254,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "rtc_inviting_session_id": False,
                 "seen_message_id": False,
                 "unpin_dt": fields.Datetime.to_string(member_0.unpin_dt),
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         if channel == self.channel_livechat_2 and guest:
             return {
@@ -1266,7 +1266,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_member_type": "visitor",
                 "guest_id": guest.id,
                 "seen_message_id": last_message.id,
-                "channel_id": {"id": channel.id, "model": "discuss.channel"},
+                "channel_id": channel.id,
             }
         return {}
 

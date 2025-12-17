@@ -102,7 +102,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 ),
                 makeKwArgs({
                     fields: [
-                        mailDataHelpers.Store.one("channel_id", makeKwArgs({ as_thread: true })),
+                        "channel_id",
                         mailDataHelpers.Store.one("guest_id", makeKwArgs({ fields: ["name"] })),
                         "livechat_member_type",
                         mailDataHelpers.Store.one("partner_id", makeKwArgs({ fields: ["name"] })),

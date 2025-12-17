@@ -166,7 +166,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             "last_seen_dt": False,
             "partner_id": member_bot.partner_id.id,
             "seen_message_id": False,
-            "channel_id": {"id": discuss_channel.id, "model": "discuss.channel"},
+            "channel_id": discuss_channel.id,
         }
 
         def get_forward_op_bus_params():
@@ -298,10 +298,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     ),
                                     "partner_id": self.partner_employee.id,
                                     "seen_message_id": False,
-                                    "channel_id": {
-                                        "id": discuss_channel.id,
-                                        "model": "discuss.channel",
-                                    },
+                                    "channel_id": discuss_channel.id,
                                 }
                             ],
                             "res.country": [

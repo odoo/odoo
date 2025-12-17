@@ -333,10 +333,7 @@ export class DiscussChannel extends models.ServerModel {
                         DiscussChannelMember.browse(memberOfCurrentUser.id),
                         makeKwArgs({
                             fields: [
-                                mailDataHelpers.Store.one(
-                                    "channel_id",
-                                    makeKwArgs({ as_thread: true, fields: [] })
-                                ),
+                                "channel_id",
                                 "fetched_message_id",
                                 ...DiscussChannelMember._to_store_persona([]),
                             ],

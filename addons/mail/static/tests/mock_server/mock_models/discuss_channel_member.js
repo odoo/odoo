@@ -164,10 +164,7 @@ export class DiscussChannelMember extends models.ServerModel {
                 data.message_unread_counter_bus_id = this.env["bus.bus"].lastBusNotificationId;
             }
             if (fields.includes("channel")) {
-                data.channel_id = mailDataHelpers.Store.one(
-                    this.env["discuss.channel"].browse(member.channel_id),
-                    makeKwArgs({ as_thread: true, only_id: true })
-                );
+                data.channel_id = member.channel_id;
             }
             if (fields.includes("persona")) {
                 store._add_record_fields(this.browse(member.id), this._to_store_persona());
@@ -211,7 +208,7 @@ export class DiscussChannelMember extends models.ServerModel {
 
     get _to_store_defaults() {
         return [
-            mailDataHelpers.Store.one("channel_id", makeKwArgs({ as_thread: true, only_id: true })),
+            "channel_id",
             "create_date",
             "fetched_message_id",
             "seen_message_id",
@@ -338,17 +335,11 @@ export class DiscussChannelMember extends models.ServerModel {
             BusBus._sendone(
                 target,
                 "mail.record/insert",
-                new mailDataHelpers.Store(
-                    DiscussChannelMember.browse(member.id),
-                    [
-                        mailDataHelpers.Store.one(
-                            "channel_id",
-                            makeKwArgs({ as_thread: true, only_id: true })
-                        ),
-
-                        "seen_message_id",
-                    ].concat(this._to_store_persona())
-                ).get_result()
+                new mailDataHelpers.Store(DiscussChannelMember.browse(member.id), [
+                    "channel_id",
+                    "seen_message_id",
+                    ...this._to_store_persona(),
+                ]).get_result()
             );
         }
     }
