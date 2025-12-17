@@ -50,6 +50,15 @@ class PosPaymentMethod(models.Model):
             else:
                 pm.has_an_online_payment_provider = False
 
+    @api.constrains('config_ids', 'is_online_payment')
+    def _check_pos_config_online_payment(self):
+        """ Check that each POS config has at most one online payment method,"""
+        for pm in self.filtered('is_online_payment'):
+            for config in pm.config_ids:
+                other_online_pms = config.payment_method_ids.filtered(lambda other_pm: other_pm.is_online_payment and other_pm.id != pm.id)
+                if other_online_pms:
+                    raise ValidationError(_("The %s already has one online payment.", config.name))
+
     def _is_write_forbidden(self, fields):
         return super(PosPaymentMethod, self)._is_write_forbidden(fields - {'online_payment_provider_ids'})
 
