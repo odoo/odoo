@@ -14,7 +14,12 @@ class ResPartner(models.Model):
         # OVERRIDE
         # If a belgian company has a VAT number then its company registry is its VAT Number (without country code).
         super()._compute_company_registry()
-        for partner in self.filtered(lambda p: p._deduce_country_code() == 'BE' and p.vat):
-            vat_country, vat_number = self._split_vat(partner.vat)
-            if vat_country in ('BE', '') and self._check_vat_number('BE', vat_number):
-                partner.company_registry = vat_number
+        for partner in self.filtered(lambda p: p._deduce_country_code() == 'BE'):
+            if partner.vat:
+                vat_country, vat_number = self._split_vat(partner.vat)
+                if vat_country in ('BE', '') and self._check_vat_number('BE', vat_number):
+                    partner.company_registry = vat_number
+            else:
+                # Since company registry = VAT - country code, when the VAT is empty, company registry should be too
+                # We do this because company registry is stored
+                partner.company_registry = False

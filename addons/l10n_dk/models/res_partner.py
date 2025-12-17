@@ -10,10 +10,15 @@ class ResPartner(models.Model):
         # OVERRIDE
         # In Denmark, if you have a VAT number, it's also your company registry (CVR) number
         super()._compute_company_registry()
-        for partner in self.filtered(lambda p: p.country_id.code == 'DK' and p.vat):
-            vat_country, vat_number = self._split_vat(partner.vat)
-            if vat_country in ('DK', '') and self._check_vat_number('DK', vat_number):
-                partner.company_registry = vat_number
+        for partner in self.filtered(lambda p: p.country_id.code == 'DK'):
+            if partner.vat:
+                vat_country, vat_number = self._split_vat(partner.vat)
+                if vat_country in ('DK', '') and self._check_vat_number('DK', vat_number):
+                    partner.company_registry = vat_number
+            else:
+                # Since company registry = VAT - country code, when the VAT is empty, company registry should be too
+                # We do this because company registry is stored
+                partner.company_registry = False
 
     @api.depends('country_id.code', 'ref_company_ids.account_fiscal_country_id.code')
     def _compute_company_registry_placeholder(self):
