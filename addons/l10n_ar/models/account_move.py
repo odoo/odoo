@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
+
 from odoo import models, fields, api, _
 from odoo.osv import expression
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
@@ -228,6 +230,18 @@ class AccountMove(models.Model):
         doctype_fa_exterior = self.env.ref('l10n_ar.fa_exterior', raise_if_not_found=False)
         if doctype_fa_exterior:
             foreign_vendor_bills.l10n_latam_document_type_id = doctype_fa_exterior
+
+    @api.depends('l10n_latam_document_type_id', 'journal_id')
+    def _compute_l10n_latam_manual_document_number(self):
+        """ Indicates if this document type uses a sequence or if the numbering is made manually """
+        super()._compute_l10n_latam_manual_document_number()
+        invoices = self.filtered(lambda x: (
+            not x.journal_id.l10n_ar_is_pos
+            and x.journal_id.l10n_latam_use_documents
+            and x.journal_id.type == 'sale'
+            and x.l10n_latam_document_type_id
+            and x.l10n_latam_document_type_id.country_id.code == 'AR'))
+        invoices.l10n_latam_manual_document_number = False
 
     def _post(self, soft=True):
         ar_invoices = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.l10n_latam_use_documents)

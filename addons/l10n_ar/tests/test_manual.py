@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import common
+from odoo import Command
 from odoo.tests import tagged
 from odoo.tests.common import Form
 from odoo.tools.float_utils import float_split_str
@@ -117,16 +118,15 @@ class TestManual(common.TestAr):
         doc_27_lu_a = self.env.ref('l10n_ar.dc_liq_uci_a')
         payment_term_id = self.env.ref("account.account_payment_term_end_following_month")
 
-        # 60, 61, 27, 28, 45, 46
-        # In this case manual numbering should be True and the latam document numer should be required
-        with self.assertRaisesRegex(AssertionError, 'l10n_latam_document_number is a required field'):
-            with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as invoice_form:
-                invoice_form.ref = "demo_liquido_producto_1: Vendor bill liquido producto (DOC 186)"
-                invoice_form.partner_id = self.res_partner_adhoc
-                invoice_form.invoice_payment_term_id = payment_term_id
-                invoice_form.journal_id = self.journal
-                invoice_form.l10n_latam_document_type_id = doc_27_lu_a
-            invoice = invoice_form.save()
+        inv = self.env['account.move'].create({
+            'ref': 'Invoice:1',
+            'partner_id': self.res_partner_adhoc.id,
+            'journal_id': self.journal.id,
+            'move_type': 'out_invoice',
+            'l10n_latam_document_type_id': doc_27_lu_a.id,
+        })
+
+        self.assertEqual(inv.l10n_latam_document_number, f'{self.journal.l10n_ar_afip_pos_number:0>5}-{1:0>8}')
 
         # Adding the document number will let us to save and validate the number without any problems
         with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as invoice_form:
@@ -135,8 +135,16 @@ class TestManual(common.TestAr):
             invoice_form.invoice_payment_term_id = payment_term_id
             invoice_form.journal_id = self.journal
             invoice_form.l10n_latam_document_type_id = doc_27_lu_a
-            invoice_form.l10n_latam_document_number = "00077-00000077"
+            with invoice_form.invoice_line_ids.new() as line_form:
+                line_form.product_id =self.product_iva_105_perc
         invoice = invoice_form.save()
+
+        with self.assertRaisesRegex(AssertionError, "can't write on invisible field 'l10n_latam_document_number'"):
+            with Form(invoice) as invoice_form:
+                invoice_form.l10n_latam_document_number = "00077-00000001"
+        self.assertEqual(invoice.l10n_latam_document_number, False)
+        invoice.action_post()
+        self.assertEqual(invoice.l10n_latam_document_number, f'{self.journal.l10n_ar_afip_pos_number:0>5}-{2:0>8}')
 
     def test_16_liquido_producto_purchase(self):
         """ Manual Numbering: Purchase POS/ NOT POS (Liquido Producto) """
@@ -273,3 +281,60 @@ class TestManual(common.TestAr):
         })
         debit_note_wizard.create_debit()
         self.assertTrue(invoice.reversal_move_id.debit_note_ids)
+
+    def test_19_corner_case(self):
+        """
+        Test for non AFIP POS sale journal:
+            - that the right documents are computed as available for invoice
+            - that the right document number is computed for a new invoice
+            - that the rights document numbers are computed for invoices of an empty journal
+        """
+        journal = self.env['account.journal'].create({
+            'name': 'non AFIP POS sale journal',
+            'type': 'sale',
+            'l10n_ar_is_pos': False,
+            'l10n_latam_use_documents': True,
+            'default_account_id': self.company_data['default_account_revenue'].id,
+            'code': '12345',
+        })
+        invoices = self.env['account.move'].create([{
+            'journal_id': journal.id,
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_cf.id,
+            'company_id': self.company_ri.id,
+            'invoice_date': "2021-03-20",
+            'invoice_line_ids': [
+                Command.create({'product_id': self.product_iva_105_perc.id,
+                'price_unit': 10000.0,
+                'quantity': 1,
+                'tax_ids': [(6, 0, [self.tax_no_gravado.id])]}),
+            ],
+        }, {
+            'journal_id': journal.id,
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_cf.id,
+            'company_id': self.company_ri.id,
+            'invoice_date': "2021-03-21",
+            'invoice_line_ids': [Command.create(
+                {'product_id': self.product_iva_105_perc.id,
+                'price_unit': 10000.0,
+                'quantity': 1,
+                'tax_ids': [(6, 0, [self.tax_no_gravado.id])]}),
+            ],
+        }, {
+            'journal_id': journal.id,
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_cf.id,
+            'company_id': self.company_ri.id,
+            'invoice_date': "2021-03-21",
+            'invoice_line_ids': [Command.create(
+                {'product_id': self.product_iva_105_perc.id,
+                'price_unit': 10000.0,
+                'quantity': 1,
+                'tax_ids': [(6, 0, [self.tax_no_gravado.id])]}),
+            ],
+        }])
+        self.assertListEqual([6, 7, 9], invoices[0].l10n_latam_available_document_type_ids.ids)
+        invoices[0].l10n_latam_document_number = '00001-00000003'
+        invoices[1].action_post()
+        self.assertEqual(invoices[1].l10n_latam_document_number, '00001-00000004')

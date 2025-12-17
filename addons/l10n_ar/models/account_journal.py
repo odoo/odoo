@@ -87,10 +87,10 @@ class AccountJournal(models.Model):
             msg = _('Can not create chart of account until you configure your company AFIP Responsibility and VAT.')
             raise RedirectWarning(msg, action.id, _('Go to Companies'))
 
-        letters = letters_data['issued' if self.l10n_ar_is_pos else 'received'][
+        letters = letters_data['issued' if self.type == 'sale' else 'received'][
             self.company_id.l10n_ar_afip_responsibility_type_id.code]
         if counterpart_partner:
-            counterpart_letters = letters_data['issued' if not self.l10n_ar_is_pos else 'received'].get(
+            counterpart_letters = letters_data['issued' if self.type != 'sale' else 'received'].get(
                 counterpart_partner.l10n_ar_afip_responsibility_type_id.code, [])
             letters = list(set(letters) & set(counterpart_letters))
         return letters
@@ -112,14 +112,14 @@ class AccountJournal(models.Model):
             '23', '24', '25', '26', '27', '28', '33', '43', '45', '46', '48', '58', '60', '61', '150', '151', '157',
             '158', '161', '162', '164', '166', '167', '171', '172', '180', '182', '186', '188', '332']
         codes = []
-        if (self.type == 'sale' and not self.l10n_ar_is_pos) or (self.type == 'purchase' and afip_pos_system in ['II_IM', 'RLI_RLM']):
+        if (self.type == 'purchase' and afip_pos_system in ['II_IM', 'RLI_RLM']):
             codes = codes_issuer_is_supplier
         elif self.type == 'purchase' and afip_pos_system == 'RAW_MAW':
             # electronic invoices (wsfev1) (intersection between available docs on ws and codes_issuer_is_supplier)
             codes = ['60', '61']
         elif self.type == 'purchase':
             return [('code', 'not in', codes_issuer_is_supplier)]
-        elif afip_pos_system == 'II_IM':
+        elif (self.type == 'sale' and not self.l10n_ar_is_pos) or afip_pos_system == 'II_IM':
             # pre-printed invoice
             codes = usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
         elif afip_pos_system == 'RAW_MAW':
