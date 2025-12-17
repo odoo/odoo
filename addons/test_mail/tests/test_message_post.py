@@ -403,6 +403,7 @@ class TestMailNotifyAPI(TestMessagePostCommon):
 
 
 @tagged('mail_post', 'mail_notify')
+@tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestMessageNotify(TestMessagePostCommon):
 
     @users('employee')

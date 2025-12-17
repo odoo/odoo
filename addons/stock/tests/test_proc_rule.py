@@ -11,6 +11,7 @@ from odoo.tools import mute_logger
 from odoo.exceptions import UserError
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestProcRule(TransactionCase):
 
     @classmethod
