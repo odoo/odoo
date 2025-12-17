@@ -50,6 +50,7 @@ class MailPoll(models.Model):
         thread_by_message = self.start_message_id._record_by_message()
         thread_by_poll = {poll: thread_by_message[poll.start_message_id] for poll in self}
         stores = lazymapping(lambda p: Store(**thread_by_poll[p]._store_target()))
+        self.poll_end_dt = fields.Datetime.now()
         for poll in self:
             poll.end_message_id = thread_by_poll[poll].message_post(
                 body="",

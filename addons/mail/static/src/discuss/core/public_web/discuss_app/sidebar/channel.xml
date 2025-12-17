@@ -35,9 +35,12 @@
                     <img class="w-100 h-100 rounded-2 object-fit-cover" t-att-class="threadAvatarAttClass" t-att-src="channel.avatarUrl" alt="Thread Image"/>
                     <ThreadIcon t-if="channel.channel_type?.includes('chat') or (channel.channel_type === 'channel' and !channel.group_public_id)" thread="channel.thread" size="'small'" className="'o-mail-DiscussSidebarChannel-threadIcon position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 d-flex align-items-center justify-content-center rounded-circle bg-inherit'"/>
                 </div>
-                <span t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName mx-2 text-truncate text-start lh-sm opacity-trigger-hove flex-grow-1" t-att-class="itemNameAttClass">
-                    <t t-esc="channel.displayName"/>
-                </span>
+                <div t-if="!store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName overflow-hidden mx-2 text-start lh-sm opacity-trigger-hove flex-grow-1" t-att-class="itemNameAttClass">
+                    <div class="d-flex justify-content-between align-items-baseline o-min-width-0">
+                        <span class="text-truncate" t-esc="channel.displayName"/>
+                        <div class="d-flex" t-if="!store.discuss.isSidebarCompact" t-ref="displayNameAdditionalContent"/>
+                    </div>
+                </div>
             </div>
             <div t-if="indicators.length" class="position-absolute rounded-circle p-0 smaller o-mail-DiscussSidebarChannel-indicatorCompact lh-1 bg-inherit" name="indicator-compact">
                 <t t-component="indicators[0]" t-props="{ channel }"/>

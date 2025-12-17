@@ -124,6 +124,12 @@ class DiscussChannel(models.Model):
         readonly=False,
         store=True,
     )
+    livechat_looking_for_help_since_dt = fields.Datetime(
+        compute="_compute_livechat_looking_for_help_since_dt",
+        help="Datetime when the chat entered the 'Looking for help' status.",
+        string="Requested At",
+        store=True
+    )
     livechat_outcome = fields.Selection(
         [
             ("no_answer", "Never Answered"),
@@ -181,6 +187,17 @@ class DiscussChannel(models.Model):
         "CHECK(livechat_end_dt IS NULL or livechat_status IS NULL)",
         "Closed Live Chat session should not have a status.",
     )
+    _livechat_looking_for_help_since_dt_constraint = models.Constraint(
+        """
+        CHECK (
+            CASE
+                WHEN livechat_status = 'need_help' THEN livechat_looking_for_help_since_dt IS NOT NULL
+                ELSE livechat_looking_for_help_since_dt IS NULL
+            END
+        )
+        """,
+        "Looking for help date should only be set if the channel is looking for help and must be empty otherwise.",
+    )
     _livechat_end_dt_idx = models.Index("(livechat_end_dt) WHERE livechat_end_dt IS NULL")
     _livechat_failure_idx = models.Index(
         "(livechat_failure) WHERE livechat_failure IN ('no_answer', 'no_agent')"
@@ -205,7 +222,7 @@ class DiscussChannel(models.Model):
         store.add(added_need_help, "_store_channel_fields")
         store.add(removed_need_help, ["livechat_status"])
         if "livechat_expertise_ids" in vals:
-            store.add(need_help_after, [Store.Many("livechat_expertise_ids", ["name"])])
+            store.add(need_help_after, lambda res: res.many("livechat_expertise_ids", ["name"]))
         store.bus_send()
         if added_need_help or removed_need_help:
             group_livechat_user._bus_send(
@@ -402,6 +419,13 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.livechat_week_day = str(channel.create_date.weekday())
 
+    @api.depends("livechat_status")
+    def _compute_livechat_looking_for_help_since_dt(self):
+        for channel in self:
+            channel.livechat_looking_for_help_since_dt = (
+                fields.Datetime.now() if channel.livechat_status == "need_help" else None
+            )
+
     def _sync_field_names(self, res):
         super()._sync_field_names(res)
         res[None].one(
@@ -412,6 +436,7 @@ class DiscussChannel(models.Model):
         res["internal_users"].attr("description", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_note", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_status", predicate=is_livechat_channel)
+        res["internal_users"].attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel)
         res["internal_users"].many(
             "livechat_expertise_ids",
             ["name"],
@@ -447,6 +472,7 @@ class DiscussChannel(models.Model):
             res.attr("livechat_note", predicate=is_livechat_channel)
             res.attr("livechat_outcome", predicate=is_livechat_channel)
             res.attr("livechat_status", predicate=is_livechat_channel)
+            res.attr("livechat_looking_for_help_since_dt", predicate=is_livechat_channel)
             res.many("livechat_expertise_ids", ["name"], predicate=is_livechat_channel)
 
     def _to_store(self, store: Store, res: Store.FieldList):

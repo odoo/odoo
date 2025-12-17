@@ -31,6 +31,7 @@ declare module "models" {
         livechat_channel_id: LivechatChannel;
         livechat_channel_member_history_ids: LivechatChannelMemberHistory[];
         livechat_customer_history_ids: LivechatChannelMemberHistory[];
+        livechat_looking_for_help_since_dt: import("luxon").DateTime;
     }
     export interface LivechatChannel {
         channel_ids: DiscussChannel[];

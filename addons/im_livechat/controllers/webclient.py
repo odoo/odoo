@@ -23,7 +23,9 @@ class WebClient(WebclientController):
             store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
         if name == "/im_livechat/looking_for_help":
             chats_looking_for_help = request.env["discuss.channel"].search(
-                [("livechat_status", "=", "need_help")], order="id ASC", limit=100
+                [("livechat_status", "=", "need_help")],
+                order="livechat_looking_for_help_since_dt ASC, id ASC",
+                limit=100,
             )
             request.update_context(
                 channels=request.env.context["channels"] | chats_looking_for_help

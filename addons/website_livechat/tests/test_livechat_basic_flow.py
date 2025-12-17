@@ -185,6 +185,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "livechat_status": "in_progress",
                         "livechat_outcome": "no_failure",
                         "livechat_expertise_ids": [],
+                        "livechat_looking_for_help_since_dt": False,
                         "livechat_operator_id": self.operator.partner_id.id,
                         "livechat_visitor_id": self.visitor.id,
                         "member_count": 2,
@@ -283,17 +284,23 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     {
                         "id": self.track_ids[2].id,
                         "page_id": self.page_1.id,
-                        "visit_datetime": fields.Datetime.to_string(self.track_ids[2].visit_datetime),
+                        "visit_datetime": fields.Datetime.to_string(
+                            self.track_ids[2].visit_datetime
+                        ),
                     },
                     {
                         "id": self.track_ids[1].id,
                         "page_id": self.page_2.id,
-                        "visit_datetime": fields.Datetime.to_string(self.track_ids[1].visit_datetime),
+                        "visit_datetime": fields.Datetime.to_string(
+                            self.track_ids[1].visit_datetime
+                        ),
                     },
                     {
                         "id": self.track_ids[0].id,
                         "page_id": self.page_1.id,
-                        "visit_datetime": fields.Datetime.to_string(self.track_ids[0].visit_datetime),
+                        "visit_datetime": fields.Datetime.to_string(
+                            self.track_ids[0].visit_datetime
+                        ),
                     },
                 ],
                 "website.visitor": [

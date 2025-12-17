@@ -314,8 +314,7 @@
             <field name="name">discuss.channel.looking.for.help.list</field>
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
-                <list js_class="im_livechat.discuss_channel_looking_for_help_list" sample="1" string="History" create="false" default_order="create_date asc">
-                    <field name="create_date" string="Date"/>
+                <list js_class="im_livechat.discuss_channel_looking_for_help_list" sample="1" string="History" create="false" default_order="livechat_looking_for_help_since_dt asc">
                     <field name="description" string="Description" optional="show"/>
                     <field name="livechat_agent_history_ids" string="Agents" widget="many2many_tags_avatar" optional="show"/>
                     <field name="livechat_bot_history_ids" string="Bot" widget="many2many_tags_avatar" optional="hide"/>
@@ -326,6 +325,7 @@
                     <field name="livechat_channel_id" optional="hide"/>
                     <field name="duration" widget="float_time" options="{'displaySeconds': True}" optional="hide"/>
                     <field name="message_count" string="Messages" optional="hide"/>
+                    <field name="livechat_looking_for_help_since_dt"/>
                     </list>
             </field>
         </record>
