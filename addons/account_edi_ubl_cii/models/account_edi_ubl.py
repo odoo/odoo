@@ -330,7 +330,7 @@ class AccountEdiUBL(models.AbstractModel):
                     else 0.0
                 )
             )
-            ubl_values['line_extension_amount'] = amount
+            ubl_values[f'line_extension_amount{suffix}'] = amount
 
     def _ubl_add_base_line_ubl_values_item(self, vals):
         """ Add 'base_line' -> '_ubl_values' -> 'item'.
