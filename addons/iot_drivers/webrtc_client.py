@@ -3,7 +3,11 @@ import json
 import logging
 from threading import Thread
 import time
-from aiortc import RTCDataChannel, RTCPeerConnection, RTCSessionDescription
+try:
+    from aiortc import RTCDataChannel, RTCPeerConnection, RTCSessionDescription
+    webrtc_client = True
+except ImportError:
+    webrtc_client = None
 
 from odoo.addons.iot_drivers import main
 from odoo.addons.iot_drivers.tools import helpers
@@ -111,5 +115,6 @@ class WebRtcClient(Thread):
         self.event_loop.run_forever()
 
 
-webrtc_client = WebRtcClient()
-webrtc_client.start()
+if webrtc_client:
+    webrtc_client = WebRtcClient()
+    webrtc_client.start()
