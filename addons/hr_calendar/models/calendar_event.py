@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
@@ -30,8 +31,23 @@ class CalendarEvent(models.Model):
                 schedule_by_partner, event_interval)
 
     @api.model
-    def get_unusual_days(self, date_from, date_to=None):
-        return self.env.user.employee_id._get_unusual_days(date_from, date_to)
+    def get_unusual_days(self, date_from, date_to=None, partner_ids=False):
+        """
+        Update unusual days to include the days an employee is unavailable according to their working schedule
+        """
+        has_employee = self.env['res.partner'].sudo().browse(partner_ids).employee_ids
+        if partner_ids and has_employee:
+            return self.env['res.partner']._get_unusual_days(partner_ids, date_from, date_to)
+        # Fallback to the current user's employee unusual days if no one is selected or if a partner without employee is selected.
+        start_period = (
+            datetime.fromisoformat(date_from).replace(hour=0, minute=0, second=0).strftime("%Y-%m-%d %H:%M:%S")
+        )
+        stop_period = (
+            (datetime.fromisoformat(date_to).replace(hour=23, minute=59, second=59).strftime("%Y-%m-%d %H:%M:%S"))
+            if date_to
+            else None
+        )
+        return self.env.user.employee_id._get_unusual_days(start_period, stop_period)
 
     def _get_events_interval(self):
         """

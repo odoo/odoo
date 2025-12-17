@@ -446,16 +446,17 @@ export class CalendarModel extends Model {
                 end: data.range.end.plus({ [`${this.scale}s`]: 1 }),
             };
         }
+        const { sections, dynamicFiltersInfo } = await this.loadFilters(data);
+
+        // Load records and dynamic filters only with fresh filters
+        data.filterSections = sections;
+
         if (this.meta.showUnusualDays) {
             unusualDaysProm = this.loadUnusualDays(data).then((unusualDays) => {
                 data.unusualDays = unusualDays;
             });
         }
 
-        const { sections, dynamicFiltersInfo } = await this.loadFilters(data);
-
-        // Load records and dynamic filters only with fresh filters
-        data.filterSections = sections;
         [data.records] = await Promise.all([
             this.loadRecords(data),
             this.meta.canScheduleEvents ? this.fetchEventsToSchedule({ data }) : null,
