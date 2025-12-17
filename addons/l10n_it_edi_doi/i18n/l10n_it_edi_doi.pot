@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-11 09:25+0000\n"
-"PO-Revision-Date: 2024-06-11 09:25+0000\n"
+"POT-Creation-Date: 2025-12-16 19:04+0000\n"
+"PO-Revision-Date: 2025-12-16 19:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/account_move.py:0
 #: code:addons/l10n_it_edi_doi/models/sale_order.py:0
-#, python-format
 msgid "A line using tax %s should not contain any other taxes"
 msgstr ""
 
@@ -91,6 +90,11 @@ msgid "Activity Exception Decoration"
 msgstr ""
 
 #. module: l10n_it_edi_doi
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
+
+#. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__activity_state
 msgid "Activity State"
 msgstr ""
@@ -118,10 +122,6 @@ msgstr ""
 
 #. module: l10n_it_edi_doi
 #: model:ir.model,name:l10n_it_edi_doi.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__company_id
 msgid "Company"
 msgstr ""
@@ -129,6 +129,11 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #: model:ir.model,name:l10n_it_edi_doi.model_res_partner
 msgid "Contact"
+msgstr ""
+
+#. module: l10n_it_edi_doi
+#: model:ir.model,website_form_label:l10n_it_edi_doi.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_it_edi_doi
@@ -164,7 +169,6 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_bank_statement_line__l10n_it_edi_doi_date
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_move__l10n_it_edi_doi_date
-#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_payment__l10n_it_edi_doi_date
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_sale_order__l10n_it_edi_doi_date
 msgid "Date on which Declaration of Intent is applied"
 msgstr ""
@@ -178,7 +182,6 @@ msgstr ""
 #: model:ir.model,name:l10n_it_edi_doi.model_l10n_it_edi_doi_declaration_of_intent
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_bank_statement_line__l10n_it_edi_doi_id
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_move__l10n_it_edi_doi_id
-#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_payment__l10n_it_edi_doi_id
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_sale_order__l10n_it_edi_doi_id
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.view_sales_order_filter
@@ -188,7 +191,6 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_bank_statement_line__l10n_it_edi_doi_amount
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_move__l10n_it_edi_doi_amount
-#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_payment__l10n_it_edi_doi_amount
 msgid "Declaration of Intent Amount"
 msgstr ""
 
@@ -210,7 +212,6 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_bank_statement_line__l10n_it_edi_doi_warning
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_move__l10n_it_edi_doi_warning
-#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_payment__l10n_it_edi_doi_warning
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_sale_order__l10n_it_edi_doi_warning
 msgid "Declaration of Intent Threshold Warning"
 msgstr ""
@@ -219,19 +220,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/account_move.py:0
 #: code:addons/l10n_it_edi_doi/models/sale_order.py:0
-#, python-format
 msgid "Declaration of Intent for %s"
 msgstr ""
 
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/res_partner.py:0
-#, python-format
 msgid "Declaration of Intent of %s"
 msgstr ""
 
 #. module: l10n_it_edi_doi
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_fiscal_position__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_res_partner__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_sale_order__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -239,6 +245,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_it_edi_doi.selection__l10n_it_edi_doi_declaration_of_intent__state__draft
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.view_l10n_it_edi_doi_declaration_of_intent_search
 msgid "Draft"
+msgstr ""
+
+#. module: l10n_it_edi_doi
+#: model:ir.model,name:l10n_it_edi_doi.model_account_tax
+msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_it_edi_doi
@@ -282,7 +293,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/account_move.py:0
 #: code:addons/l10n_it_edi_doi/models/sale_order.py:0
-#, python-format
 msgid ""
 "Given the tax %s is applied, there should be a Declaration of Intent "
 "selected."
@@ -294,7 +304,14 @@ msgid "Has Message"
 msgstr ""
 
 #. module: l10n_it_edi_doi
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_fiscal_position__id
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__id
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_res_partner__id
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_sale_order__id
 msgid "ID"
 msgstr ""
 
@@ -330,11 +347,6 @@ msgid "Invoiced"
 msgstr ""
 
 #. module: l10n_it_edi_doi
-#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_sale_order_line__qty_invoiced_posted
-msgid "Invoiced Quantity (posted)"
-msgstr ""
-
-#. module: l10n_it_edi_doi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.view_move_tree
 msgid "Invoices"
 msgstr ""
@@ -347,7 +359,6 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
-#, python-format
 msgid "Invoices using Declaration of Intent %s"
 msgstr ""
 
@@ -394,6 +405,11 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__my_activity_date_deadline
 msgid "My Activity Deadline"
+msgstr ""
+
+#. module: l10n_it_edi_doi
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: l10n_it_edi_doi
@@ -454,10 +470,9 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
-#, python-format
 msgid ""
-"Pay attention, the threshold of your Declaration of Intent %s of %s is exceeded by %s, this document included.\n"
-"Invoiced: %s; Not Yet Invoiced: %s"
+"Pay attention, the threshold of your Declaration of Intent %(name)s of %(threshold)s is exceeded by %(exceeded)s, this document included.\n"
+"Invoiced: %(invoiced)s; Not Yet Invoiced: %(not_yet_invoiced)s"
 msgstr ""
 
 #. module: l10n_it_edi_doi
@@ -473,6 +488,11 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.view_l10n_it_edi_doi_form
 msgid "Protocol Number"
+msgstr ""
+
+#. module: l10n_it_edi_doi
+#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_l10n_it_edi_doi_declaration_of_intent__rating_ids
+msgid "Ratings"
 msgstr ""
 
 #. module: l10n_it_edi_doi
@@ -523,11 +543,6 @@ msgid "Sales Order"
 msgstr ""
 
 #. module: l10n_it_edi_doi
-#: model:ir.model,name:l10n_it_edi_doi.model_sale_order_line
-msgid "Sales Order Line"
-msgstr ""
-
-#. module: l10n_it_edi_doi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.view_quotation_tree
 msgid "Sales Orders"
 msgstr ""
@@ -540,7 +555,6 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
-#, python-format
 msgid "Sales Orders using Declaration of Intent %s"
 msgstr ""
 
@@ -579,11 +593,6 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi_doi
-#: model:ir.model,name:l10n_it_edi_doi.model_account_tax
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_it_edi_doi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi_doi.view_move_tree
 msgid "Tax excluded"
 msgstr ""
@@ -606,43 +615,45 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
-#, python-format
-msgid "The Declaration of Intent belongs to company %s, not %s."
+msgid ""
+"The Declaration of Intent belongs to company %(declaration_company)s, not "
+"%(company)s."
 msgstr ""
 
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
-#, python-format
-msgid "The Declaration of Intent belongs to partner %s, not %s."
+msgid ""
+"The Declaration of Intent belongs to partner %(declaration_partner)s, not "
+"%(partner)s."
 msgstr ""
 
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
-#, python-format
 msgid "The Declaration of Intent is in draft."
 msgstr ""
 
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
-#, python-format
-msgid "The Declaration of Intent is valid from %s to %s, not on %s."
+msgid ""
+"The Declaration of Intent is valid from %(start_date)s to %(end_date)s, not "
+"on %(date)s."
 msgstr ""
 
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
-#, python-format
 msgid "The Declaration of Intent must be active."
 msgstr ""
 
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
-#, python-format
-msgid "The Declaration of Intent uses currency %s, not %s."
+msgid ""
+"The Declaration of Intent uses currency %(declaration_currency)s, not "
+"%(currency)s."
 msgstr ""
 
 #. module: l10n_it_edi_doi
@@ -694,7 +705,6 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,help:l10n_it_edi_doi.field_account_bank_statement_line__l10n_it_edi_doi_amount
 #: model:ir.model.fields,help:l10n_it_edi_doi.field_account_move__l10n_it_edi_doi_amount
-#: model:ir.model.fields,help:l10n_it_edi_doi.field_account_payment__l10n_it_edi_doi_amount
 msgid "Total amount of sales under the Declaration of Intent of this document"
 msgstr ""
 
@@ -718,7 +728,6 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_bank_statement_line__l10n_it_edi_doi_use
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_move__l10n_it_edi_doi_use
-#: model:ir.model.fields,field_description:l10n_it_edi_doi.field_account_payment__l10n_it_edi_doi_use
 #: model:ir.model.fields,field_description:l10n_it_edi_doi.field_sale_order__l10n_it_edi_doi_use
 msgid "Use Declaration of Intent"
 msgstr ""
@@ -741,7 +750,6 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/declaration_of_intent.py:0
-#, python-format
 msgid ""
 "You cannot delete Declarations of Intents that are already used on at least "
 "one Invoice or Sales Order."
@@ -750,7 +758,6 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/account_fiscal_position.py:0
-#, python-format
 msgid ""
 "You cannot delete the special fiscal position for Declarations of Intent."
 msgstr ""
@@ -758,7 +765,6 @@ msgstr ""
 #. module: l10n_it_edi_doi
 #. odoo-python
 #: code:addons/l10n_it_edi_doi/models/account_tax.py:0
-#, python-format
 msgid "You cannot delete the special tax for Declarations of Intent."
 msgstr ""
 

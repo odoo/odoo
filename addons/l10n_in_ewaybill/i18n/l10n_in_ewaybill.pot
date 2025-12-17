@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.2+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-29 09:25+0000\n"
-"PO-Revision-Date: 2025-08-29 09:25+0000\n"
+"POT-Creation-Date: 2025-12-16 19:04+0000\n"
+"PO-Revision-Date: 2025-12-16 19:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in_ewaybill/models/l10n_in_ewaybill.py:0
 #: code:addons/l10n_in_ewaybill/tests/test_ewaybill_json.py:0
-msgid "- Transporter %s does not have a GST Number"
+msgid "- Transporter %s does not have a valid GST Number"
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -155,6 +155,11 @@ msgstr ""
 #. module: l10n_in_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__activity_exception_decoration
 msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__activity_plans_ids
+msgid "Activity Plans"
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -420,22 +425,12 @@ msgid "Cess value should not be negative"
 msgstr ""
 
 #. module: l10n_in_ewaybill
-#. odoo-python
-#: code:addons/l10n_in_ewaybill/models/l10n_in_ewaybill.py:0
-msgid "Check Invoice Line(s)"
-msgstr ""
-
-#. module: l10n_in_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill.report_ewaybill
 msgid "Combination of 2 and 3"
 msgstr ""
 
 #. module: l10n_in_ewaybill
 #: model:ir.model,name:l10n_in_ewaybill.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: l10n_in_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__company_id
 msgid "Company"
 msgstr ""
@@ -1987,6 +1982,11 @@ msgid "My Activity Deadline"
 msgstr ""
 
 #. module: l10n_in_ewaybill
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: l10n_in_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
@@ -2193,6 +2193,11 @@ msgstr ""
 
 #. module: l10n_in_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill.report_ewaybill
+msgid "QR Code"
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill.report_ewaybill
 msgid "Quantity"
 msgstr ""
 
@@ -2209,6 +2214,11 @@ msgstr ""
 #. module: l10n_in_ewaybill
 #: model:ir.model.fields.selection,name:l10n_in_ewaybill.selection__l10n_in_ewaybill__mode__2
 msgid "Rail"
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__rating_ids
+msgid "Ratings"
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -2983,12 +2993,6 @@ msgstr ""
 #. module: l10n_in_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill.res_config_settings_view_form_inherit_l10n_in_edi_ewaybill
 msgid "Verify Username and Password"
-msgstr ""
-
-#. module: l10n_in_ewaybill
-#. odoo-python
-#: code:addons/l10n_in_ewaybill/models/l10n_in_ewaybill.py:0
-msgid "View Invoice Line(s)"
 msgstr ""
 
 #. module: l10n_in_ewaybill

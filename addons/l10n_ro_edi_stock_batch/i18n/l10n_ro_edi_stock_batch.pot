@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-09 15:12+0000\n"
-"PO-Revision-Date: 2025-01-09 15:12+0000\n"
+"POT-Creation-Date: 2025-12-16 19:05+0000\n"
+"PO-Revision-Date: 2025-12-16 19:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,14 +34,12 @@ msgstr ""
 #. module: l10n_ro_edi_stock_batch
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock_batch/models/stock_picking_batch.py:0
-#, python-format
 msgid "All Pickings in a Batch Transfer should have the same Carrier"
 msgstr ""
 
 #. module: l10n_ro_edi_stock_batch
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock_batch/models/stock_picking_batch.py:0
-#, python-format
 msgid ""
 "All Pickings in a Batch Transfer should have the same Commercial Partner"
 msgstr ""
@@ -678,6 +676,13 @@ msgid "Delivery operations with installation"
 msgstr ""
 
 #. module: l10n_ro_edi_stock_batch
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock_batch.field_l10n_ro_edi_document__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock_batch.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock_batch.field_stock_picking_batch__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_ro_edi_stock_batch
 #: model:ir.model,name:l10n_ro_edi_stock_batch.model_l10n_ro_edi_document
 msgid "Document object for tracking CIUS-RO XML sent to E-Factura"
 msgstr ""
@@ -780,6 +785,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock_batch.selection__stock_picking_batch__l10n_ro_edi_stock_end_bcp__29
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock_batch.selection__stock_picking_batch__l10n_ro_edi_stock_start_bcp__29
 msgid "Halmeu (UA)"
+msgstr ""
+
+#. module: l10n_ro_edi_stock_batch
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock_batch.field_l10n_ro_edi_document__id
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock_batch.field_stock_picking__id
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock_batch.field_stock_picking_batch__id
+msgid "ID"
 msgstr ""
 
 #. module: l10n_ro_edi_stock_batch
@@ -973,7 +985,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock_batch
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock_batch/models/stock_picking_batch.py:0
-#, python-format
 msgid ""
 "Romanian access token not found. Please generate or fill it in the settings."
 msgstr ""
@@ -1043,6 +1054,11 @@ msgid "Status"
 msgstr ""
 
 #. module: l10n_ro_edi_stock_batch
+#: model:ir.model,name:l10n_ro_edi_stock_batch.model_stock_picking
+msgid "Stock Picking - Delivery Guide (Uruguay)"
+msgstr ""
+
+#. module: l10n_ro_edi_stock_batch
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock_batch.selection__stock_picking_batch__l10n_ro_edi_stock_operation_type__14
 msgid "Stocks available to the customer (Call-off stock) - entry"
 msgstr ""
@@ -1067,21 +1083,18 @@ msgstr ""
 #. module: l10n_ro_edi_stock_batch
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock_batch/models/stock_picking_batch.py:0
-#, python-format
 msgid "This document has already been successfully sent to anaf."
 msgstr ""
 
 #. module: l10n_ro_edi_stock_batch
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock_batch/models/stock_picking_batch.py:0
-#, python-format
 msgid "This document has not been corrected yet because it contains errors."
 msgstr ""
 
 #. module: l10n_ro_edi_stock_batch
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock_batch/models/stock_picking_batch.py:0
-#, python-format
 msgid ""
 "This document has not been successfully sent yet because it contains errors."
 msgstr ""
@@ -1094,11 +1107,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock_batch
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock_batch.field_stock_picking_batch__l10n_ro_edi_stock_trailer_2_number
 msgid "Trailer 2 Number"
-msgstr ""
-
-#. module: l10n_ro_edi_stock_batch
-#: model:ir.model,name:l10n_ro_edi_stock_batch.model_stock_picking
-msgid "Transfer"
 msgstr ""
 
 #. module: l10n_ro_edi_stock_batch
@@ -1136,7 +1144,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock_batch
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock_batch/models/stock_picking_batch.py:0
-#, python-format
 msgid "Unhandled eTransport document state: %(state)s"
 msgstr ""
 
@@ -1183,7 +1190,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock_batch
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock_batch/models/stock_picking_batch.py:0
-#, python-format
 msgid "XML contains errors."
 msgstr ""
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.1+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-26 05:37+0000\n"
-"PO-Revision-Date: 2025-06-26 05:37+0000\n"
+"POT-Creation-Date: 2025-12-16 19:04+0000\n"
+"PO-Revision-Date: 2025-12-16 19:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,13 +34,13 @@ msgid "Challan"
 msgstr ""
 
 #. module: l10n_in_ewaybill_stock
-#: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill_stock.view_picking_form_inherit_ewaybill
-msgid "Create e-Waybill / Challan"
+#: model:ir.model.fields,field_description:l10n_in_ewaybill_stock.field_stock_move__company_currency_id
+msgid "Company Currency"
 msgstr ""
 
 #. module: l10n_in_ewaybill_stock
-#: model:ir.model.fields,field_description:l10n_in_ewaybill_stock.field_stock_move__company_currency_id
-msgid "Currency"
+#: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill_stock.view_picking_form_inherit_ewaybill
+msgid "Create e-Waybill / Challan"
 msgstr ""
 
 #. module: l10n_in_ewaybill_stock
@@ -50,6 +50,7 @@ msgstr ""
 
 #. module: l10n_in_ewaybill_stock
 #: model:ir.model.fields,field_description:l10n_in_ewaybill_stock.field_l10n_in_ewaybill__type_description
+#: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill_stock.view_l10n_in_ewaybill_stock_inherit
 msgid "Description"
 msgstr ""
 
@@ -58,6 +59,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_in_ewaybill_stock.field_stock_move__display_name
 #: model:ir.model.fields,field_description:l10n_in_ewaybill_stock.field_stock_picking__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: l10n_in_ewaybill_stock
+#: model:ir.model.fields,field_description:l10n_in_ewaybill_stock.field_stock_picking__l10n_in_ewaybill_feature_enabled
+msgid "E-Waybill"
 msgstr ""
 
 #. module: l10n_in_ewaybill_stock
@@ -113,6 +119,11 @@ msgid "Item Details"
 msgstr ""
 
 #. module: l10n_in_ewaybill_stock
+#: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill_stock.view_l10n_in_ewaybill_stock_inherit
+msgid "Max 100-character description is allowed"
+msgstr ""
+
+#. module: l10n_in_ewaybill_stock
 #. odoo-python
 #: code:addons/l10n_in_ewaybill_stock/models/l10n_in_ewaybill.py:0
 msgid "Only Delivery Challan and Cancelled E-waybill can be reset to pending."
@@ -160,6 +171,11 @@ msgid "Stock Moves"
 msgstr ""
 
 #. module: l10n_in_ewaybill_stock
+#: model:ir.model,name:l10n_in_ewaybill_stock.model_stock_picking
+msgid "Stock Picking - Delivery Guide (Uruguay)"
+msgstr ""
+
+#. module: l10n_in_ewaybill_stock
 #: model:ir.model.fields,field_description:l10n_in_ewaybill_stock.field_l10n_in_ewaybill__picking_id
 msgid "Stock Transfer"
 msgstr ""
@@ -173,11 +189,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in_ewaybill_stock/models/l10n_in_ewaybill.py:0
 msgid "The challan can only be generated in the Pending state."
-msgstr ""
-
-#. module: l10n_in_ewaybill_stock
-#: model:ir.model,name:l10n_in_ewaybill_stock.model_stock_picking
-msgid "Transfer"
 msgstr ""
 
 #. module: l10n_in_ewaybill_stock

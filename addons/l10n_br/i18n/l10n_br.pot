@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.5alpha1\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-18 00:40+0000\n"
-"PO-Revision-Date: 2024-09-18 00:40+0000\n"
+"POT-Creation-Date: 2025-12-16 19:03+0000\n"
+"PO-Revision-Date: 2025-12-16 19:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,6 +28,11 @@ msgid "%s is not a valid email."
 msgstr ""
 
 #. module: l10n_br
+#: model_terms:ir.ui.view,arch_db:l10n_br.address_form_fields
+msgid "<option value=\"\">City...</option>"
+msgstr ""
+
+#. module: l10n_br
 #: model_terms:ir.ui.view,arch_db:l10n_br.br_partner_address_form
 msgid "<span> - </span>"
 msgstr ""
@@ -43,8 +48,18 @@ msgid "Account Move Reversal"
 msgstr ""
 
 #. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_10
+msgid "Aircraft Knowledge"
+msgstr ""
+
+#. module: l10n_br
 #: model:ir.model,name:l10n_br.model_res_partner_bank
-msgid "Bank Accounts"
+msgid "Bank Account"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_26
+msgid "Bill of Lading Multimodal Transport"
 msgstr ""
 
 #. module: l10n_br
@@ -79,11 +94,6 @@ msgid "Brazilian city zip range"
 msgstr ""
 
 #. module: l10n_br
-#: model:ir.model.fields,field_description:l10n_br.field_res_company__l10n_br_cpf_code
-msgid "CPF"
-msgstr ""
-
-#. module: l10n_br
 #: model:ir.model.fields.selection,name:l10n_br.selection__res_partner_bank__proxy_type__br_cpf_cnpj
 msgid "CPF/CNPJ (BR)"
 msgstr ""
@@ -103,10 +113,11 @@ msgstr ""
 
 #. module: l10n_br
 #: model:ir.model,name:l10n_br.model_res_company
-msgid "Companies"
+msgid "Company"
 msgstr ""
 
 #. module: l10n_br
+#: model_terms:ir.ui.view,arch_db:l10n_br.address_form_fields
 #: model_terms:ir.ui.view,arch_db:l10n_br.br_partner_address_form
 msgid "Complement"
 msgstr ""
@@ -117,8 +128,18 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_br
+#: model_terms:ir.ui.view,arch_db:l10n_br.report_invoice_document
+msgid "Copy and paste below<br/>PIX code into your banking application"
+msgstr ""
+
+#. module: l10n_br
 #: model_terms:ir.ui.view,arch_db:l10n_br.br_partner_address_form
 msgid "Country"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model,website_form_label:l10n_br.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_br
@@ -132,18 +153,73 @@ msgid "Created on"
 msgstr ""
 
 #. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_18
+msgid "Daily Movement Summary"
+msgstr ""
+
+#. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_account_tax__tax_discount
 msgid "Discount this Tax in Price"
 msgstr ""
 
 #. module: l10n_br
+#: model:ir.model.fields,field_description:l10n_br.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_br.field_account_fiscal_position__display_name
+#: model:ir.model.fields,field_description:l10n_br.field_account_journal__display_name
+#: model:ir.model.fields,field_description:l10n_br.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_br.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_br.field_l10n_br_zip_range__display_name
+#: model:ir.model.fields,field_description:l10n_br.field_res_city__display_name
+#: model:ir.model.fields,field_description:l10n_br.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_br.field_res_partner__display_name
+#: model:ir.model.fields,field_description:l10n_br.field_res_partner_bank__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: l10n_br
 #: model_terms:ir.ui.view,arch_db:l10n_br.view_partner_bank_form_inherit_account
 msgid "Documentation"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_57
+msgid "Electronic Bill of Lading (CT-e)"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_55
+msgid "Electronic Invoice (NF-e)"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_65
+msgid "Electronic Invoice to the Final Consumer (NFC-e)"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_58
+msgid "Electronic Manifesto of Tax Documents (MDF-e)"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_SE
+msgid "Electronic Service Invoice - NFS-e"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_60
+msgid "Electronic Tax Coupon (CF-e-ECF)"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_59
+msgid "Electronic Tax Coupon (CF-e-SAT)"
 msgstr ""
 
 #. module: l10n_br
@@ -167,7 +243,22 @@ msgid "Frontend Zip Ranges"
 msgstr ""
 
 #. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_08
+msgid "Ground Bill of Lading"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model.fields,field_description:l10n_br.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_br.field_account_fiscal_position__id
+#: model:ir.model.fields,field_description:l10n_br.field_account_journal__id
+#: model:ir.model.fields,field_description:l10n_br.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_br.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:l10n_br.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_br.field_l10n_br_zip_range__id
+#: model:ir.model.fields,field_description:l10n_br.field_res_city__id
+#: model:ir.model.fields,field_description:l10n_br.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_br.field_res_partner__id
+#: model:ir.model.fields,field_description:l10n_br.field_res_partner_bank__id
 msgid "ID"
 msgstr ""
 
@@ -186,6 +277,11 @@ msgid "IM"
 msgstr ""
 
 #. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_02
+msgid "In-Consumer Sales Invoice"
+msgstr ""
+
+#. module: l10n_br
 #: model:ir.model.fields.selection,name:l10n_br.selection__account_fiscal_position__l10n_br_fp_type__internal
 msgid "Internal"
 msgstr ""
@@ -201,6 +297,46 @@ msgstr ""
 msgid ""
 "Invalid zip range format: %(start)s %(end)s. It should follow this format: "
 "01000-001"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_28
+msgid "Invoice / Gas Supply Channel Account"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_29
+msgid "Invoice / Water Supply Account"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_01
+msgid "Invoice 1 / 1A"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_27
+msgid "Invoice for Rail Transport De-Cargo"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_22
+msgid "Invoice for Telecommunication Service"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_07
+msgid "Invoice for Transport Service"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_21
+msgid "Invoice for de-Communication Service"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_04
+msgid "Invoice from Producer"
 msgstr ""
 
 #. module: l10n_br
@@ -224,8 +360,18 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_8B
+msgid "Loose Ground Bill of Lading"
+msgstr ""
+
+#. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_account_tax__amount_mva
 msgid "MVA Percent"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_09
+msgid "Maritime Bill of Lading"
 msgstr ""
 
 #. module: l10n_br
@@ -251,13 +397,19 @@ msgid "NIRE"
 msgstr ""
 
 #. module: l10n_br
-#: model:ir.model.fields,help:l10n_br.field_res_company__l10n_br_cpf_code
-msgid "Natural Persons Register."
+#: model_terms:ir.ui.view,arch_db:l10n_br.address_form_fields
+#: model_terms:ir.ui.view,arch_db:l10n_br.br_partner_address_form
+msgid "Neighborhood"
 msgstr ""
 
 #. module: l10n_br
-#: model_terms:ir.ui.view,arch_db:l10n_br.br_partner_address_form
-msgid "Neighborhood"
+#: model:l10n_latam.document.type,name:l10n_br.dt_06
+msgid "Nota Fiscal / Electricity Bill"
+msgstr ""
+
+#. module: l10n_br
+#: model_terms:ir.ui.view,arch_db:l10n_br.report_invoice_document
+msgid "Or"
 msgstr ""
 
 #. module: l10n_br
@@ -272,6 +424,16 @@ msgid "Proxy Type"
 msgstr ""
 
 #. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_11
+msgid "Railway Bill of Lading"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_16
+msgid "Railway Ticket"
+msgstr ""
+
+#. module: l10n_br
 #: model:ir.model.fields.selection,name:l10n_br.selection__res_partner_bank__proxy_type__br_random
 msgid "Random Key (BR)"
 msgstr ""
@@ -279,6 +441,11 @@ msgstr ""
 #. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_account_tax__base_reduction
 msgid "Redution"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_13
+msgid "Road Ticket"
 msgstr ""
 
 #. module: l10n_br
@@ -296,6 +463,11 @@ msgstr ""
 #. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_account_journal__l10n_br_invoice_serial
 msgid "Series"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_1B
+msgid "Single invoice"
 msgstr ""
 
 #. module: l10n_br
@@ -327,6 +499,7 @@ msgid "State Tax Identification Number. Should contain 9-14 digits."
 msgstr ""
 
 #. module: l10n_br
+#: model_terms:ir.ui.view,arch_db:l10n_br.address_form_fields
 #: model_terms:ir.ui.view,arch_db:l10n_br.br_partner_address_form
 msgid "Street"
 msgstr ""
@@ -337,13 +510,23 @@ msgid "Street #"
 msgstr ""
 
 #. module: l10n_br
+#: model_terms:ir.ui.view,arch_db:l10n_br.address_form_fields
+msgid "Street Number"
+msgstr ""
+
+#. module: l10n_br
 #: model_terms:ir.ui.view,arch_db:l10n_br.br_partner_address_form
 msgid "Street..."
 msgstr ""
 
 #. module: l10n_br
-#: model:ir.model,name:l10n_br.model_account_tax
-msgid "Tax"
+#: model:l10n_latam.document.type,name:l10n_br.dt_2D
+msgid "Tax Coupon"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_2E
+msgid "Tax Coupon-Ticket"
 msgstr ""
 
 #. module: l10n_br
@@ -400,6 +583,11 @@ msgid "Um percentual decimal em % entre 0-1."
 msgstr ""
 
 #. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_14
+msgid "Waterway Ticket"
+msgstr ""
+
+#. module: l10n_br
 #: model_terms:ir.ui.view,arch_db:l10n_br.br_partner_address_form
 msgid "ZIP"
 msgstr ""
@@ -407,4 +595,9 @@ msgstr ""
 #. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_res_city__l10n_br_zip_range_ids
 msgid "Zip Ranges"
+msgstr ""
+
+#. module: l10n_br
+#: model:l10n_latam.document.type,name:l10n_br.dt_15
+msgid "e-Baggage Ticket"
 msgstr ""

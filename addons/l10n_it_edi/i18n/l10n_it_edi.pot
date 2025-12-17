@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.5a1+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-01 13:51+0000\n"
-"PO-Revision-Date: 2025-08-01 13:51+0000\n"
+"POT-Creation-Date: 2025-12-16 19:04+0000\n"
+"PO-Revision-Date: 2025-12-16 19:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -196,7 +196,7 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_res_company
-msgid "Companies"
+msgid "Company"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -242,6 +242,11 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_origin_document_type__contract
 msgid "Contract"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model,website_form_label:l10n_it_edi.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -388,6 +393,11 @@ msgid "EPPI pension fund for industrial experts"
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
 msgid "Economic and Administrative Index"
 msgstr ""
@@ -517,29 +527,7 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "Invoices must have %s one %s tax set per line."
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "VAT"
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "at most"
-msgstr ""
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-#, python-format
-msgid "exactly"
+msgid "Invoices must have %(number)s one %(kind)s tax set per line."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -884,11 +872,6 @@ msgid "PEC e-mail"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__company_parent_id
-msgid "Parent Company"
-msgstr ""
-
-#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Partner not found, useful informations from XML file:"
@@ -935,7 +918,7 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model,name:l10n_it_edi.model_account_payment_method_line
-msgid "Payment Methods"
+msgid "Payment Method Line"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -946,7 +929,7 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi_withholding/models/account_move.py:0
+#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Pension Fund"
 msgstr ""
 
@@ -1165,11 +1148,6 @@ msgid "TP02 pagamento completo"
 msgstr ""
 
 #. module: l10n_it_edi
-#: model:ir.model,name:l10n_it_edi.model_account_tax
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_tax.py:0
 msgid ""
@@ -1189,6 +1167,22 @@ msgstr ""
 msgid ""
 "Tax '%s' has a withholding type, so the withholding reason must also be "
 "specified"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_tax.py:0
+msgid ""
+"Tax '%s' has one of withholding and pension fund types that do not relate to"
+" ENASARCO, and one that does."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_tax.py:0
+msgid ""
+"Tax '%s' has withholding type ENASARCO, the withholding reason should be "
+"[ZO] - Other reason."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1410,6 +1404,11 @@ msgid "This document is being sent by another process already."
 msgstr ""
 
 #. module: l10n_it_edi
+#: model:ir.model.constraint,message:l10n_it_edi.constraint_account_edi_proxy_client_user_unique_identification_l10n_it_edi
+msgid "This edi identification is already assigned to an active user"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_eco_index_number
 msgid ""
 "This field must contain the number under which the        seller/provider is"
@@ -1489,6 +1488,12 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_it_edi.field_account_move__l10n_it_edi_header
 msgid ""
 "User description of the current state, with hints to make the flow progress"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "VAT"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1926,6 +1931,12 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "at most"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #: code:addons/l10n_it_edi/models/res_partner.py:0
 msgid "city"
@@ -1947,6 +1958,12 @@ msgstr ""
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "exactly"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "from XML file:"
 msgstr ""
 
@@ -1954,6 +1971,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "l10n_it_tax_system"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "pension_fund"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1967,6 +1990,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_partner.py:0
 msgid "vat"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "withholding_no_enasarco"
 msgstr ""
 
 #. module: l10n_it_edi

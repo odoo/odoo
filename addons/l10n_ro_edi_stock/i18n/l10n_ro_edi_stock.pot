@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-09 15:04+0000\n"
-"PO-Revision-Date: 2025-01-09 15:04+0000\n"
+"POT-Creation-Date: 2025-12-16 19:05+0000\n"
+"PO-Revision-Date: 2025-12-16 19:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,54 +18,47 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "%(location_group)s is missing following fields: %(field_names)s"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "%(location_group)s is missing the %(field_name)s field."
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "'End Location Type' is missing"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "'End Location'"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "'Start Location Type' is missing"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "'Start Location'"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.l10n_ro_edi_stock_report_delivery_document
-msgid "<strong>eTransport UIT:</strong>"
+msgid "<strong>eTransport UIT</strong>"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/etransport_api.py:0
-#, python-format
 msgid "Access token is forbidden."
 msgstr ""
 
@@ -647,7 +640,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Both 'End' and 'Start Location Type' are missing"
 msgstr ""
 
@@ -672,8 +664,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "City"
 msgstr ""
 
@@ -707,8 +697,20 @@ msgid "Călărași(BG)"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
+#: model:ir.model,name:l10n_ro_edi_stock.model_delivery_carrier
+msgid "Delivery Method"
+msgstr ""
+
+#. module: l10n_ro_edi_stock
 #: model:ir.model.fields.selection,name:l10n_ro_edi_stock.selection__stock_picking__l10n_ro_edi_stock_operation_scope__703
 msgid "Delivery operations with installation"
+msgstr ""
+
+#. module: l10n_ro_edi_stock
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_l10n_ro_edi_document__display_name
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
@@ -823,6 +825,13 @@ msgid "Halmeu (UA)"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_l10n_ro_edi_document__id
+#: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_ro_edi_stock
 #: model:ir.model.fields,help:l10n_ro_edi_stock.field_l10n_ro_edi_document__l10n_ro_edi_stock_load_id
 msgid "Id of this document used for interacting with the anaf api."
 msgstr ""
@@ -862,7 +871,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Invalid picking type %(type_code)s"
 msgstr ""
 
@@ -1002,14 +1010,12 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Operation scope is missing."
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Operation type is missing."
 msgstr ""
 
@@ -1069,21 +1075,18 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Postal Code"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Product %(name)s is missing the intrastat code value."
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Products %(names)s are missing the intrastat code value."
 msgstr ""
 
@@ -1095,8 +1098,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid ""
 "Romanian access token not found. Please generate or fill it in the settings."
 msgstr ""
@@ -1134,12 +1135,8 @@ msgstr ""
 msgid ""
 "Sent -> Successfully sent to the SPV, waiting for validation.\n"
 "                Validated -> Sent & validated by the SPV.\n"
-"                Error -> Sending error or validation error from the SPV."
-msgstr ""
-
-#. module: l10n_ro_edi_stock
-#: model:ir.model,name:l10n_ro_edi_stock.model_delivery_carrier
-msgid "Shipping Methods"
+"                Refused -> Sent & refused by the SPV.\n"
+"        "
 msgstr ""
 
 #. module: l10n_ro_edi_stock
@@ -1177,13 +1174,17 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "State"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi_stock.l10n_ro_edi_stock_view_picking_form
 msgid "Status"
+msgstr ""
+
+#. module: l10n_ro_edi_stock
+#: model:ir.model,name:l10n_ro_edi_stock.model_stock_picking
+msgid "Stock Picking - Delivery Guide (Uruguay)"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
@@ -1199,8 +1200,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Street"
 msgstr ""
 
@@ -1219,21 +1218,18 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "The border crossing point is missing under %(location_group)s"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "The customs office is missing under %(location_group)s"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid ""
 "The delivery carrier of %(picking_name)s is missing the partner field value."
 msgstr ""
@@ -1241,14 +1237,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
-msgid "The delivery carrier partner has to be located in Romania."
-msgstr ""
-
-#. module: l10n_ro_edi_stock
-#. odoo-python
-#: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid ""
 "The delivery carrier partner is missing following fields: %(field_names)s"
 msgstr ""
@@ -1256,35 +1244,30 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "The delivery carrier partner is missing the %(field_name)s field."
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "The picking %(picking_name)s is missing a delivery carrier."
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "This document has already been successfully sent to anaf."
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "This document has not been corrected yet because it contains errors."
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid ""
 "This document has not been successfully sent yet because it contains errors."
 msgstr ""
@@ -1297,11 +1280,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #: model:ir.model.fields,field_description:l10n_ro_edi_stock.field_stock_picking__l10n_ro_edi_stock_trailer_2_number
 msgid "Trailer 2 Number"
-msgstr ""
-
-#. module: l10n_ro_edi_stock
-#: model:ir.model,name:l10n_ro_edi_stock.model_stock_picking
-msgid "Transfer"
 msgstr ""
 
 #. module: l10n_ro_edi_stock
@@ -1344,7 +1322,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Unhandled eTransport document state: %(state)s"
 msgstr ""
 
@@ -1357,7 +1334,6 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "VAT"
 msgstr ""
 
@@ -1387,14 +1363,12 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Vehicle number and trailer number fields must be unique."
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "Vehicle number is missing."
 msgstr ""
 
@@ -1413,14 +1387,12 @@ msgstr ""
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/stock_picking.py:0
-#, python-format
 msgid "XML contains errors."
 msgstr ""
 
 #. module: l10n_ro_edi_stock
 #. odoo-python
 #: code:addons/l10n_ro_edi_stock/models/etransport_api.py:0
-#, python-format
 msgid "You reached the limit of requests. Please try again later."
 msgstr ""
 

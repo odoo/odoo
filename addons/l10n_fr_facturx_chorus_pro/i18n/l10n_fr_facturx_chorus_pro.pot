@@ -4,16 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-04 08:46+0000\n"
-"PO-Revision-Date: 2024-11-04 08:46+0000\n"
+"POT-Creation-Date: 2025-12-16 19:03+0000\n"
+"PO-Revision-Date: 2025-12-16 19:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_fr_facturx_chorus_pro
+#: model:ir.model.fields,help:l10n_fr_facturx_chorus_pro.field_account_bank_statement_line__buyer_reference
+#: model:ir.model.fields,help:l10n_fr_facturx_chorus_pro.field_account_move__buyer_reference
+msgid "'Code de Service' in Chorus PRO."
+msgstr ""
 
 #. module: l10n_fr_facturx_chorus_pro
 #: model:ir.model.fields,help:l10n_fr_facturx_chorus_pro.field_account_bank_statement_line__purchase_order_reference
@@ -25,12 +31,6 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_fr_facturx_chorus_pro.field_account_bank_statement_line__contract_reference
 #: model:ir.model.fields,help:l10n_fr_facturx_chorus_pro.field_account_move__contract_reference
 msgid "'Numéro de Marché' in Chorus PRO."
-msgstr ""
-
-#. module: l10n_fr_facturx_chorus_pro
-#: model:ir.model.fields,help:l10n_fr_facturx_chorus_pro.field_account_bank_statement_line__buyer_reference
-#: model:ir.model.fields,help:l10n_fr_facturx_chorus_pro.field_account_move__buyer_reference
-msgid "'Code de Service' in Chorus PRO."
 msgstr ""
 
 #. module: l10n_fr_facturx_chorus_pro
@@ -51,6 +51,18 @@ msgid "Contract Reference"
 msgstr ""
 
 #. module: l10n_fr_facturx_chorus_pro
+#: model:ir.model.fields,field_description:l10n_fr_facturx_chorus_pro.field_account_edi_xml_ubl_bis3__display_name
+#: model:ir.model.fields,field_description:l10n_fr_facturx_chorus_pro.field_account_move__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_fr_facturx_chorus_pro
+#: model:ir.model.fields,field_description:l10n_fr_facturx_chorus_pro.field_account_edi_xml_ubl_bis3__id
+#: model:ir.model.fields,field_description:l10n_fr_facturx_chorus_pro.field_account_move__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_fr_facturx_chorus_pro
 #: model:ir.model,name:l10n_fr_facturx_chorus_pro.model_account_move
 msgid "Journal Entry"
 msgstr ""
@@ -65,13 +77,24 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_fr_facturx_chorus_pro/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
-"The siret is mandatory for french suppliers when invoicing to Chorus Pro."
+"The Company Registry (Siret) is mandatory for french suppliers when "
+"invoicing through Chorus Pro."
 msgstr ""
 
 #. module: l10n_fr_facturx_chorus_pro
 #. odoo-python
 #: code:addons/l10n_fr_facturx_chorus_pro/models/account_edi_xml_ubl_bis3.py:0
-msgid "The siret is mandatory for the customer when invoicing to Chorus Pro."
+msgid ""
+"The Company Registry (Siret) of the final recipient is mandatory for the "
+"customer when invoicing through Chorus Pro."
+msgstr ""
+
+#. module: l10n_fr_facturx_chorus_pro
+#. odoo-python
+#: code:addons/l10n_fr_facturx_chorus_pro/models/account_edi_xml_ubl_bis3.py:0
+msgid ""
+"The VAT is mandatory for non-french suppliers when invoicing through Chorus "
+"Pro."
 msgstr ""
 
 #. module: l10n_fr_facturx_chorus_pro

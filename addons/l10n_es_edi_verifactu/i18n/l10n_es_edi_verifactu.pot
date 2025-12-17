@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-17 16:41+0000\n"
-"PO-Revision-Date: 2025-07-17 16:41+0000\n"
+"POT-Creation-Date: 2025-12-16 19:03+0000\n"
+"PO-Revision-Date: 2025-12-16 19:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,48 @@ msgid ""
 "- Rejected: Successfully sent to the AEAT, but it was rejected during validation\n"
 "                - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record\n"
 "                - Accepted: Registered by the AEAT without errors"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+msgid "02"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+msgid "11"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+msgid "17_igic"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+msgid "17_iva"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+msgid "18_iva"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+msgid "19_iva"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#. odoo-python
+#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+msgid "20_iva"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -90,6 +132,14 @@ msgstr ""
 #. module: l10n_es_edi_verifactu
 #: model:ir.model,name:l10n_es_edi_verifactu.model_account_move_send
 msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_account_resequence_inherit_l10n_es_edi_verifactu
+msgid ""
+"Al usar Veri*factu, el número de factura no puede modificarse sin alterar la integridad e\n"
+"                        inalterabilidad exigidas por los artículos 8 y 13 del RD 007/2023. Existe un alto riesgo de que\n"
+"                        la factura quede invalidada a efectos fiscales."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -151,10 +201,6 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #: model:ir.model,name:l10n_es_edi_verifactu.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__company_id
 msgid "Company"
 msgstr ""
@@ -167,6 +213,11 @@ msgstr ""
 #. module: l10n_es_edi_verifactu
 #: model:ir.model,name:l10n_es_edi_verifactu.model_res_partner
 msgid "Contact"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model,website_form_label:l10n_es_edi_verifactu.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -185,13 +236,28 @@ msgid "Created on"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_resequence_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_certificate_certificate__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__document_type
 msgid "Document Type"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_account_tax
+msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -240,12 +306,22 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 msgid "Go to the journal entry"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_resequence_wizard__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_certificate_certificate__id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_res_partner__id
 msgid "ID"
 msgstr ""
 
@@ -285,6 +361,11 @@ msgstr ""
 #: model:ir.model,name:l10n_es_edi_verifactu.model_account_move
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_l10n_es_edi_verifactu_document__move_id
 msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
+#: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_resequence_wizard__l10n_es_edi_verifactu_required_in_prod
+msgid "L10N Es Edi Verifactu Required In Prod"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -441,6 +522,11 @@ msgid "Rejected"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
+#: model:ir.model,name:l10n_es_edi_verifactu.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr ""
+
+#. module: l10n_es_edi_verifactu
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_verifactu.view_move_form_inherit_l10n_es_edi_verifactu
 msgid "Request Veri*Factu Cancellation"
 msgstr ""
@@ -508,11 +594,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_bank_statement_line__l10n_es_edi_verifactu_substituted_entry_id
 #: model:ir.model.fields,field_description:l10n_es_edi_verifactu.field_account_move__l10n_es_edi_verifactu_substituted_entry_id
 msgid "Substitution of"
-msgstr ""
-
-#. module: l10n_es_edi_verifactu
-#: model:ir.model,name:l10n_es_edi_verifactu.model_account_tax
-msgid "Tax"
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
@@ -675,14 +756,14 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
 msgid "There is no Veri*Factu document for the refunded record."
 msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
 msgid ""
 "There is no Veri*Factu document for the reversal of the substituted record."
@@ -690,7 +771,7 @@ msgstr ""
 
 #. module: l10n_es_edi_verifactu
 #. odoo-python
-#: code:addons/l10n_es_edi_verifactu/models/account_move.py:0
+#: code:addons/l10n_es_edi_verifactu/models/account_move_send.py:0
 #: code:addons/l10n_es_edi_verifactu/models/verifactu_document.py:0
 msgid "There is no Veri*Factu document for the substituted record."
 msgstr ""

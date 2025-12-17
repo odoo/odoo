@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-20 08:59+0000\n"
-"PO-Revision-Date: 2025-08-20 08:59+0000\n"
+"POT-Creation-Date: 2025-12-16 19:06+0000\n"
+"PO-Revision-Date: 2025-12-16 19:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -89,6 +89,14 @@ msgid ""
 "79: No.9 The bonded area operator sells the goods that the taxable area "
 "operator deposits into the bonded warehouse or logistics center managed by "
 "the free port area or customs administration for export"
+msgstr ""
+
+#. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid ""
+"A tax ID is required for company contact or individual contact under a "
+"company."
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
@@ -194,7 +202,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
 msgid ""
-"Clearance mark and Zero tax rate reason is required for zero tax rate "
+"Clearance mark and zero tax rate reason are required for a zero tax rate "
 "invoice."
 msgstr ""
 
@@ -206,7 +214,7 @@ msgstr ""
 
 #. module: l10n_tw_edi_ecpay
 #: model:ir.model,name:l10n_tw_edi_ecpay.model_res_company
-msgid "Companies"
+msgid "Company"
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
@@ -233,6 +241,11 @@ msgid ""
 "Core business revenues from the banking and insurance business of the "
 "banking and insurance industries (Applicable to sales after June 2014): Tax "
 "rate is 5%"
+msgstr ""
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,website_form_label:l10n_tw_edi_ecpay.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
@@ -271,8 +284,16 @@ msgid "Disagreed"
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_reversal__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__display_name
 #: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_partner__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -301,7 +322,7 @@ msgstr ""
 #: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
 msgid ""
 "Duty free with special tax type cannot be mixed with duty free without "
-"special tax type."
+"special tax type or having more than one special tax type."
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
@@ -355,6 +376,11 @@ msgstr ""
 #. module: l10n_tw_edi_ecpay
 #: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_carrier_type__1
 msgid "ECpay e-invoice carrier"
+msgstr ""
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_account_tax
+msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
@@ -476,8 +502,16 @@ msgid "Hashkey"
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_line__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_reversal__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__id
 #: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_res_partner__id
 msgid "ID"
 msgstr ""
 
@@ -561,8 +595,18 @@ msgid "Is Zero Tax Rate"
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
+#: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_account_move_line__l10n_tw_edi_ecpay_item_sequence
+msgid "Item Sequence"
+msgstr ""
+
+#. module: l10n_tw_edi_ecpay
 #: model:ir.model,name:l10n_tw_edi_ecpay.model_account_move
 msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.model,name:l10n_tw_edi_ecpay.model_account_move_line
+msgid "Journal Item"
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
@@ -646,16 +690,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
 msgid ""
-"Phone number contains invalid characters! Only digits, '+' and spaces are "
-"allowed."
-msgstr ""
-
-#. module: l10n_tw_edi_ecpay
-#. odoo-python
-#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
-msgid ""
-"Phone number must start with country code and please add a space after the "
-"country code (i.e +866 234 567 890)."
+"Phone number contains invalid characters! It should be in the format: '+886 "
+"0997624293'."
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
@@ -794,25 +830,6 @@ msgid "Taiwan Electronic Invoicing"
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
-#: model:ir.model,name:l10n_tw_edi_ecpay.model_account_tax
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_tw_edi_ecpay
-#. odoo-python
-#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
-msgid "Tax id is invalid. Should be 8 digits."
-msgstr ""
-
-#. module: l10n_tw_edi_ecpay
-#. odoo-python
-#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
-msgid ""
-"Tax id is required for company contact or individual contact under a "
-"company."
-msgstr ""
-
-#. module: l10n_tw_edi_ecpay
 #. odoo-python
 #: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
 msgid ""
@@ -855,6 +872,12 @@ msgid "The sales amounts from reinsurance premiums shall be taxed at 1%"
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay
+#. odoo-python
+#: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
+msgid "The tax ID is invalid. It should be in the format: '12345678'."
+msgstr ""
+
+#. module: l10n_tw_edi_ecpay
 #: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_refund_state__to_be_agreed
 msgid "To be agreed"
 msgstr ""
@@ -879,8 +902,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
 msgid ""
-"You cannot issue an allowance for an invoice that was not sent to Ecpay. "
-"Invoice number: %(invoice_number)s"
+"You cannot issue an allowance for invoice %(invoice_number)s as it was not "
+"sent to Ecpay. "
 msgstr ""
 
 #. module: l10n_tw_edi_ecpay

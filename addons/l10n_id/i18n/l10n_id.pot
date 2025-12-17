@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.1alpha1+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-12 10:05+0000\n"
-"PO-Revision-Date: 2024-01-12 10:05+0000\n"
+"POT-Creation-Date: 2025-12-16 19:04+0000\n"
+"PO-Revision-Date: 2025-12-16 19:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,23 +16,32 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_id
-#: model_terms:res.company,report_footer:l10n_id.demo_company_id
-msgid "+62 812-345-678 info@company.idexample.com http://www.idexample.com"
-msgstr ""
-
-#. module: l10n_id
 #: model:ir.model,name:l10n_id.model_account_chart_template
 msgid "Account Chart Template"
 msgstr ""
 
 #. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__bank_id
+msgid "Bank"
+msgstr ""
+
+#. module: l10n_id
 #: model:ir.model,name:l10n_id.model_res_partner_bank
-msgid "Bank Accounts"
+msgid "Bank Account"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,help:l10n_id.field_l10n_id_qris_transaction__bank_id
+msgid "Bank used to generate the current QRIS transaction"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.actions.server,name:l10n_id.action_fetch_qris_status
+msgid "Check QRIS Payment Status"
 msgstr ""
 
 #. module: l10n_id
 #. odoo-python
-#: code:addons/l10n_id/models/res_bank.py:0
 #: code:addons/l10n_id/models/res_bank.py:0
 msgid ""
 "Communication with QRIS failed. QRIS returned with the following error: %s"
@@ -45,12 +54,70 @@ msgid "Could not establish a connection to the QRIS API."
 msgstr ""
 
 #. module: l10n_id
-#: model_terms:res.company,company_details:l10n_id.demo_company_id
-msgid ""
-"ID Company<br>\n"
-"AE<br>\n"
-"Moncongloe YO 90241<br>\n"
-"Indonesia"
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_id.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__display_name
+#: model:ir.model.fields,field_description:l10n_id.field_res_partner_bank__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_id.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__id
+#: model:ir.model.fields,field_description:l10n_id.field_res_partner_bank__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model,name:l10n_id.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_account_bank_statement_line__l10n_id_qris_transaction_ids
+#: model:ir.model.fields,field_description:l10n_id.field_account_move__l10n_id_qris_transaction_ids
+msgid "L10N Id Qris Transaction"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__model
+msgid "Model"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__model_id
+msgid "Model ID"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__paid
+msgid "Paid"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,help:l10n_id.field_l10n_id_qris_transaction__paid
+msgid "Payment Status of QRIS"
 msgstr ""
 
 #. module: l10n_id
@@ -66,9 +133,65 @@ msgid "QRIS API Key"
 msgstr ""
 
 #. module: l10n_id
+#: model:ir.actions.server,name:l10n_id.qris_fetch_cron_ir_actions_server
+msgid "QRIS Fetch Status"
+msgstr ""
+
+#. module: l10n_id
 #: model:ir.model.fields,field_description:l10n_id.field_account_setup_bank_manual_config__l10n_id_qris_mid
 #: model:ir.model.fields,field_description:l10n_id.field_res_partner_bank__l10n_id_qris_mid
 msgid "QRIS Merchant ID"
+msgstr ""
+
+#. module: l10n_id
+#. odoo-python
+#: code:addons/l10n_id/models/qris_transaction.py:0
+msgid "QRIS capability is not extended to model %s yet!"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__qris_amount
+msgid "Qris Amount"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__qris_content
+msgid "Qris Content"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__qris_creation_datetime
+msgid "Qris Creation Datetime"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model.fields,field_description:l10n_id.field_l10n_id_qris_transaction__qris_invoice_id
+msgid "Qris Invoice"
+msgstr ""
+
+#. module: l10n_id
+#: model:ir.model,name:l10n_id.model_l10n_id_qris_transaction
+msgid "Record of QRIS transactions"
+msgstr ""
+
+#. module: l10n_id
+#. odoo-python
+#: code:addons/l10n_id/models/res_bank.py:0
+msgid "The amount must be set to generate a QR code."
+msgstr ""
+
+#. module: l10n_id
+#. odoo-python
+#: code:addons/l10n_id/models/account_move.py:0
+msgid ""
+"This invoice was paid by %(customer)s using QRIS with the payment method "
+"%(method)s."
+msgstr ""
+
+#. module: l10n_id
+#. odoo-python
+#: code:addons/l10n_id/models/account_move.py:0
+msgid "This invoice was paid using QRIS."
 msgstr ""
 
 #. module: l10n_id

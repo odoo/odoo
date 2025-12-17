@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.5a1+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-23 07:06+0000\n"
-"PO-Revision-Date: 2025-07-23 07:06+0000\n"
+"POT-Creation-Date: 2025-12-16 19:05+0000\n"
+"PO-Revision-Date: 2025-12-16 19:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -307,6 +307,11 @@ msgid "<option value=\"\">select...</option>"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_move_form_inherit_l10n_my_myinvois
+msgid "<span class=\"o_stat_text\">MyInvois<br/>Documents</span>"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_partner_form_inherit_l10n_my_myinvois
 msgid ""
 "<span class=\"text-success fa fa-check\" title=\"Validation Successful\" invisible=\"not l10n_my_edi_display_tin_warning or l10n_my_tin_validation_state != 'valid'\"/>\n"
@@ -318,11 +323,6 @@ msgstr ""
 msgid ""
 "<span invisible=\"l10n_my_edi_mode != 'test'\">• In Pre-Production mode Odoo"
 " will send the invoices to a non-production service.</span>"
-msgstr ""
-
-#. module: l10n_my_edi
-#: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_move_form_inherit_l10n_my_myinvois
-msgid "<span>MyInvois<br/>Documents</span>"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -356,6 +356,11 @@ msgid "Activity Exception Decoration"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__activity_state
 msgid "Activity State"
 msgstr ""
@@ -363,6 +368,14 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__activity_type_icon
 msgid "Activity Type Icon"
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid ""
+"All invoices linked to a same MyInvois Document must have the same "
+"move_type."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -448,10 +461,6 @@ msgstr ""
 
 #. module: l10n_my_edi
 #: model:ir.model,name:l10n_my_edi.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__company_id
 msgid "Company"
 msgstr ""
@@ -472,6 +481,16 @@ msgid "Consolidate Invoice Wizard"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_list_view
+msgid "Consolidate Invoices"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_search_view
+msgid "Consolidated Invoice"
+msgstr ""
+
+#. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/myinvois_document.py:0
 msgid "Consolidated Invoices"
@@ -488,8 +507,19 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "Create Consolidated Invoice"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_consolidate_invoice_wizard_form
 msgid "Create Consolidated Invoices"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model,website_form_label:l10n_my_edi.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -514,6 +544,16 @@ msgid "Currency"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model.fields.selection,name:l10n_my_edi.selection__myinvois_document__move_type__out_refund
+msgid "Customer Credit Note"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields.selection,name:l10n_my_edi.selection__myinvois_document__move_type__out_invoice
+msgid "Customer Invoice"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_custom_form_reference
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move__l10n_my_edi_custom_form_reference
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__myinvois_custom_form_reference
@@ -531,6 +571,11 @@ msgid "Date To"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_search_view
+msgid "Debit Note"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_company__l10n_my_edi_default_import_journal_id
 #: model:ir.model.fields,field_description:l10n_my_edi.field_res_config_settings__l10n_my_edi_default_import_journal_id
 msgid "Default import journal"
@@ -539,6 +584,7 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_edi_proxy_client_user__display_name
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_edi_xml_ubl_myinvois_my__display_name
+#: model:ir.model.fields,field_description:l10n_my_edi.field_account_journal__display_name
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move_send__display_name
@@ -567,6 +613,7 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/myinvois_document.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_search_view
 msgid "Draft"
 msgstr ""
 
@@ -578,6 +625,11 @@ msgstr ""
 #. module: l10n_my_edi
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.view_partner_form_inherit_l10n_my_myinvois
 msgid "EI00000000020"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model,name:l10n_my_edi.model_account_tax
+msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -644,6 +696,7 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_edi_proxy_client_user__id
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_edi_xml_ubl_myinvois_my__id
+#: model:ir.model.fields,field_description:l10n_my_edi.field_account_journal__id
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move_line__id
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move_send__id
@@ -692,6 +745,11 @@ msgid "Identification"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model.fields,help:l10n_my_edi.field_res_config_settings__l10n_my_edi_company_vat
+msgid "Identification Number for selected type"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,help:l10n_my_edi.field_myinvois_document__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
@@ -700,6 +758,11 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_my_edi.field_myinvois_document__message_has_error
 #: model:ir.model.fields,help:l10n_my_edi.field_myinvois_document__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_search_view
+msgid "In Progress"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -726,9 +789,31 @@ msgid "Invalid"
 msgstr ""
 
 #. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/wizard/myinvois_consolidate_invoice_wizard.py:0
+msgid "Invalid Operation. No invoices to consolidate."
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__invoice_ids
 #: model:ir.model.fields.selection,name:l10n_my_edi.selection__myinvois_consolidate_invoice_wizard__consolidation_type__invoice
 msgid "Invoice"
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "Invoice(s)"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__is_consolidated_invoice
+msgid "Is Consolidated Invoice"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__is_debit_note
+msgid "Is Debit Note"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -755,6 +840,12 @@ msgstr ""
 msgid ""
 "It has been more than 72h since the invoice validation, you can no longer update it.\n"
 "Instead, you should issue or request a debit or credit note."
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model,name:l10n_my_edi.model_account_journal
+#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__journal_id
+msgid "Journal"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -817,6 +908,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__write_date
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document_status_update_wizard__write_date
 msgid "Last Updated on"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__linked_invoice_count
+msgid "Linked Invoice Count"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -906,7 +1002,9 @@ msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
-#: code:addons/l10n_my_edi/models/account_move.py:0
+#: code:addons/l10n_my_edi/models/account_journal_dashboard.py:0
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.account_journal_dashboard_kanban_view_inherit_l10n_my_myinvois
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_list_view
 msgid "MyInvois Documents"
 msgstr ""
@@ -976,6 +1074,11 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,help:l10n_my_edi.field_myinvois_document_status_update_wizard__new_status
 msgid "New status to set on the document."
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1081,6 +1184,11 @@ msgid "Proxy Type"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document_status_update_wizard__reason
 msgid "Reason"
 msgstr ""
@@ -1164,6 +1272,23 @@ msgid "Service Tax"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model.fields,help:l10n_my_edi.field_myinvois_document__is_consolidated_invoice
+msgid ""
+"Set to true when a document is created through the consolidation wizard. "
+"Affects the sequence and way of generating the xml data."
+msgstr ""
+
+#. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_form_view
+msgid "Source Documents"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_search_view
+msgid "State"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,help:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_state
 #: model:ir.model.fields,help:l10n_my_edi.field_account_move__l10n_my_edi_state
 #: model:ir.model.fields,help:l10n_my_edi.field_myinvois_document__myinvois_state
@@ -1190,11 +1315,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_form_view
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_list_view
 msgid "Submit To MyInvois"
-msgstr ""
-
-#. module: l10n_my_edi
-#: model:ir.model,name:l10n_my_edi.model_account_tax
-msgid "Tax"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1248,14 +1368,6 @@ msgid ""
 "The TIN number of the supplier in the invoices does not match with the one provided at the time of registering for the e-invoice service.\n"
 "If the TIN of the supplier's record changed after that, you will need to archive your EDI Proxy User and re-register.\n"
 "The TIN found in the document is %(tin_number)s"
-msgstr ""
-
-#. module: l10n_my_edi
-#: model:ir.model.fields,help:l10n_my_edi.field_res_config_settings__l10n_my_edi_company_vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1425,8 +1537,19 @@ msgid "This document has been %(status)s for reason: %(reason)s"
 msgstr ""
 
 #. module: l10n_my_edi
+#: model:ir.model.constraint,message:l10n_my_edi.constraint_account_edi_proxy_client_user_unique_identification_l10n_my_edi
+msgid "This edi identification is already assigned to an active user"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields.selection,name:l10n_my_edi.selection__account_tax__l10n_my_tax_type__03
 msgid "Tourism Tax"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__move_type
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_search_view
+msgid "Type"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1468,6 +1591,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_my_edi.selection__account_move__l10n_my_edi_state__valid
 #: model:ir.model.fields.selection,name:l10n_my_edi.selection__myinvois_document__myinvois_state__valid
 #: model:ir.model.fields.selection,name:l10n_my_edi.selection__res_partner__l10n_my_tin_validation_state__valid
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_search_view
 msgid "Valid"
 msgstr ""
 
@@ -1485,6 +1609,16 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__myinvois_validation_time
 msgid "Validation Time"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields.selection,name:l10n_my_edi.selection__myinvois_document__move_type__in_invoice
+msgid "Vendor Bill"
+msgstr ""
+
+#. module: l10n_my_edi
+#: model:ir.model.fields.selection,name:l10n_my_edi.selection__myinvois_document__move_type__in_refund
+msgid "Vendor Credit Note"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1575,7 +1709,7 @@ msgstr ""
 #: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
 msgid ""
 "You must set a Tax Exemption Reason on each tax exempt taxes in order to use"
-" them in a Myinvois Document."
+" them in a Consolidated Invoice."
 msgstr ""
 
 #. module: l10n_my_edi

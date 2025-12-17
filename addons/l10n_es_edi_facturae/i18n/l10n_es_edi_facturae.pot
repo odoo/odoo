@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~18.2\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-04 12:40+0000\n"
-"PO-Revision-Date: 2025-06-04 12:40+0000\n"
+"POT-Creation-Date: 2025-12-16 19:03+0000\n"
+"PO-Revision-Date: 2025-12-16 19:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,6 +48,11 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #: model:ir.model,name:l10n_es_edi_facturae.model_account_move_send
 msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model,name:l10n_es_edi_facturae.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -187,6 +192,18 @@ msgid "Certified cheque"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_company.py:0
+msgid "Check Company Data"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_partner.py:0
+msgid "Check Partner(s)"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_payment_means__11
 msgid "Cheque"
 msgstr ""
@@ -216,7 +233,13 @@ msgstr ""
 
 #. module: l10n_es_edi_facturae
 #: model:ir.model,name:l10n_es_edi_facturae.model_res_company
-msgid "Companies"
+msgid "Company"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_company.py:0
+msgid "Company must have a valid Factura-e certificate configured."
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -249,6 +272,11 @@ msgid "Could not retrieve the tax: %(tax_rate)s %% for line '%(line)s'."
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#: model:ir.model,website_form_label:l10n_es_edi_facturae.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
 #: model_terms:ir.actions.act_window,help:l10n_es_edi_facturae.l10n_es_edi_facturae_certificate_action
 msgid "Create the first certificate"
 msgstr ""
@@ -256,12 +284,6 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__create_uid
 msgid "Created by"
-msgstr ""
-
-#. module: l10n_es_edi_facturae
-#. odoo-python
-#: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-msgid "Created from attachment in %s"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -302,6 +324,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move_reversal__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move_send_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_certificate_certificate__display_name
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__display_name
@@ -319,6 +342,11 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__uom_uom__l10n_es_edi_facturae_uom_code__18
 msgid "Dozens"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model,name:l10n_es_edi_facturae.model_account_tax
+msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -343,13 +371,20 @@ msgid "FACe Center"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/account_move_send.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.view_move_form
 msgid "Factura-e"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/account_move.py:0
+msgid "Factura-e XML"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__certificate_certificate__scope__facturae
-#: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__res_partner__invoice_edi_format__es_facturae
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.certificate_certificate_view_search
 msgid "Facturae"
 msgstr ""
@@ -365,12 +400,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_partner__l10n_es_edi_facturae_residence_type
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_res_users__l10n_es_edi_facturae_residence_type
 msgid "Facturae EDI Residency Type Code"
-msgstr ""
-
-#. module: l10n_es_edi_facturae
-#. odoo-python
-#: code:addons/l10n_es_edi_facturae/models/account_move.py:0
-msgid "Factura-e XML"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -409,6 +438,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move_reversal__id
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move_send_wizard__id
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_certificate_certificate__id
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_l10n_es_edi_facturae_ac_role_type__id
@@ -698,6 +728,12 @@ msgid "Packages"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_partner.py:0
+msgid "Partner must be a company or have a VAT number"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_bank_statement_line__l10n_es_payment_means
 #: model:ir.model.fields,field_description:l10n_es_edi_facturae.field_account_move__l10n_es_payment_means
 msgid "Payment Means"
@@ -771,7 +807,13 @@ msgstr ""
 
 #. module: l10n_es_edi_facturae
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_facturae.corrective_type
-msgid "Rectificación modelo íntegro."
+msgid "Rectificación íntegra"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/wizard/account_move_reversal.py:0
+msgid "Reversal of: %(move_name)s - %(reason)s"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -798,6 +840,17 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_payment_means__14
 msgid "Set-off by reciprocal credits"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_company.py:0
+msgid "Settings"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__res_partner__invoice_edi_format__es_facturae
+msgid "Spain (FacturaE)"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -836,11 +889,6 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_move__l10n_es_payment_means__13
 msgid "Special payment"
-msgstr ""
-
-#. module: l10n_es_edi_facturae
-#: model:ir.model,name:l10n_es_edi_facturae.model_account_tax
-msgid "Tax"
 msgstr ""
 
 #. module: l10n_es_edi_facturae
@@ -916,6 +964,12 @@ msgstr ""
 
 #. module: l10n_es_edi_facturae
 #. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_company.py:0
+msgid "The company's currency must be set to Euro (€)."
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
 #: code:addons/l10n_es_edi_facturae/models/account_move.py:0
 msgid ""
 "The credit note/refund appears to have been issued manually. For the purpose"
@@ -964,6 +1018,24 @@ msgstr ""
 #. module: l10n_es_edi_facturae
 #: model:ir.model.fields.selection,name:l10n_es_edi_facturae.selection__account_tax__l10n_es_edi_facturae_tax_type__01
 msgid "Value-Added Tax"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_company.py:0
+msgid "View Certificate(s)"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_company.py:0
+msgid "View Company(s)"
+msgstr ""
+
+#. module: l10n_es_edi_facturae
+#. odoo-python
+#: code:addons/l10n_es_edi_facturae/models/res_partner.py:0
+msgid "View Partner(s)"
 msgstr ""
 
 #. module: l10n_es_edi_facturae

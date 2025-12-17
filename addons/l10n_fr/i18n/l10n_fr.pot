@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-25 09:22+0000\n"
-"PO-Revision-Date: 2024-11-25 09:22+0000\n"
+"POT-Creation-Date: 2025-12-16 19:03+0000\n"
+"PO-Revision-Date: 2025-12-16 19:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_res_company
-msgid "Companies"
+msgid "Company"
 msgstr ""
 
 #. module: l10n_fr
@@ -31,8 +31,14 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_fr
-#: model:res.country.group,name:l10n_fr.dom-tom
-msgid "DOM-TOM"
+#: model:ir.model,website_form_label:l10n_fr.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_fr
+#: model:ir.model.fields,field_description:l10n_fr.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_fr.field_res_partner__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: l10n_fr
@@ -41,15 +47,20 @@ msgid "France and Monaco"
 msgstr ""
 
 #. module: l10n_fr
+#: model:ir.model.fields,field_description:l10n_fr.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_fr.field_res_partner__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_fr
 #: model:ir.model.fields,field_description:l10n_fr.field_res_company__is_france_country
 msgid "Is Part of DOM-TOM"
 msgstr ""
 
 #. module: l10n_fr
-#: model:ir.model.fields,field_description:l10n_fr.field_res_company__siret
-#: model:ir.model.fields,field_description:l10n_fr.field_res_partner__siret
-#: model:ir.model.fields,field_description:l10n_fr.field_res_users__siret
-msgid "SIRET"
+#: model:ir.model.fields,field_description:l10n_fr.field_res_partner__l10n_fr_is_french
+#: model:ir.model.fields,field_description:l10n_fr.field_res_users__l10n_fr_is_french
+msgid "L10N Fr Is French"
 msgstr ""
 
 #. module: l10n_fr
@@ -61,4 +72,9 @@ msgstr ""
 #. module: l10n_fr
 #: model:ir.model.fields,field_description:l10n_fr.field_res_company__l10n_fr_closing_sequence_id
 msgid "Sequence to use to build sale closings"
+msgstr ""
+
+#. module: l10n_fr
+#: model_terms:ir.ui.view,arch_db:l10n_fr.view_partner_form_inherit_l10n_fr
+msgid "Siret"
 msgstr ""

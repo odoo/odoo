@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.4alpha1+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-07 13:57+0000\n"
-"PO-Revision-Date: 2024-06-07 13:57+0000\n"
+"POT-Creation-Date: 2025-12-16 19:04+0000\n"
+"PO-Revision-Date: 2025-12-16 19:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,42 +46,51 @@ msgid "Account Move Send"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#: model:ir.model,name:l10n_ke_edi_tremol.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
+#. odoo-python
+#: code:addons/l10n_ke_edi_tremol/models/account_move.py:0
+msgid ""
+"An OSCU has been initialized for this company. Please send the e-invoice via"
+" Send and Print -> Send to eTIMS instead."
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_bank_statement_line__l10n_ke_cu_invoice_number
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move__l10n_ke_cu_invoice_number
-#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_payment__l10n_ke_cu_invoice_number
 msgid "CU Invoice Number"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_bank_statement_line__l10n_ke_cu_qrcode
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move__l10n_ke_cu_qrcode
-#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_payment__l10n_ke_cu_qrcode
 msgid "CU QR Code"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_bank_statement_line__l10n_ke_cu_serial_number
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move__l10n_ke_cu_serial_number
-#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_payment__l10n_ke_cu_serial_number
 msgid "CU Serial Number"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_bank_statement_line__l10n_ke_cu_datetime
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move__l10n_ke_cu_datetime
-#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_payment__l10n_ke_cu_datetime
 msgid "CU Signing Date and Time"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
 #. odoo-python
-#: code:addons/l10n_ke_edi_tremol/wizard/account_move_send.py:0
+#: code:addons/l10n_ke_edi_tremol/models/account_move_send.py:0
 msgid "Check Invoice(s)"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
 #: model:ir.model,name:l10n_ke_edi_tremol.model_res_company
-msgid "Companies"
+msgid "Company"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -98,6 +107,21 @@ msgstr ""
 #. module: l10n_ke_edi_tremol
 #: model:ir.model,name:l10n_ke_edi_tremol.model_res_partner
 msgid "Contact"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
+#: model:ir.model,website_form_label:l10n_ke_edi_tremol.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move_send__display_name
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move_send_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_res_partner__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -126,6 +150,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_res_company__l10n_ke_cu_proxy_address
 #: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_res_config_settings__l10n_ke_cu_proxy_address
 msgid "Fiscal Device Proxy Address"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move_send__id
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move_send_wizard__id
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_res_config_settings__id
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_res_partner__id
+msgid "ID"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
@@ -213,6 +247,12 @@ msgid "Sending Invoices to Fiscal Device"
 msgstr ""
 
 #. module: l10n_ke_edi_tremol
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_bank_statement_line__l10n_ke_cu_show_send_button
+#: model:ir.model.fields,field_description:l10n_ke_edi_tremol.field_account_move__l10n_ke_cu_show_send_button
+msgid "Show Send to Tremol button"
+msgstr ""
+
+#. module: l10n_ke_edi_tremol
 #: model:ir.model.fields,help:l10n_ke_edi_tremol.field_res_company__l10n_ke_cu_proxy_address
 #: model:ir.model.fields,help:l10n_ke_edi_tremol.field_res_config_settings__l10n_ke_cu_proxy_address
 msgid "The address of the proxy server for the fiscal device."
@@ -241,7 +281,7 @@ msgstr ""
 
 #. module: l10n_ke_edi_tremol
 #. odoo-python
-#: code:addons/l10n_ke_edi_tremol/wizard/account_move_send.py:0
+#: code:addons/l10n_ke_edi_tremol/models/account_move_send.py:0
 msgid "The following documents have no details related to the fiscal device."
 msgstr ""
 
@@ -263,7 +303,7 @@ msgstr ""
 
 #. module: l10n_ke_edi_tremol
 #. odoo-python
-#: code:addons/l10n_ke_edi_tremol/wizard/account_move_send.py:0
+#: code:addons/l10n_ke_edi_tremol/models/account_move_send.py:0
 msgid ""
 "This document does not have details related to the fiscal device, a proforma"
 " invoice will be used."
@@ -317,6 +357,6 @@ msgstr ""
 
 #. module: l10n_ke_edi_tremol
 #. odoo-python
-#: code:addons/l10n_ke_edi_tremol/wizard/account_move_send.py:0
+#: code:addons/l10n_ke_edi_tremol/models/account_move_send.py:0
 msgid "View Invoice(s)"
 msgstr ""

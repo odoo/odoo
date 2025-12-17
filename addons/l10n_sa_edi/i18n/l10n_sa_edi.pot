@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.5a1+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-13 12:35+0000\n"
-"PO-Revision-Date: 2025-10-13 12:35+0000\n"
+"POT-Creation-Date: 2025-12-16 19:05+0000\n"
+"PO-Revision-Date: 2025-12-16 19:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -56,6 +56,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
+"- No Private Key was generated for company %s. A Private Key is mandatory in"
+" order to generate Certificate Signing Requests (CSR)."
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
+msgid ""
 "- Please make sure the 'Customer Reference' contains the sequential number "
 "of the original invoice(s) that the Credit/Debit Note is related to."
 msgstr ""
@@ -79,14 +87,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
-"- Please set the VAT Number on the Company to be 15 digits, with first and "
-"last digits being 3."
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid ""
 "- Please set the following fields on the %(company_name)s: "
 "%(missing_fields)s"
 msgstr ""
@@ -94,14 +94,17 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
-msgid "- Something went wrong. Please onboard the journal again."
+msgid ""
+"- The Journal (%s) is not onboarded yet. Please onboard it and try again."
 msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_edi_format.py:0
 msgid ""
-"- The Journal (%s) is not onboarded yet. Please onboard it and try again."
+"- The company VAT identification must contain 15 digits, with the first and "
+"last digits being '3' as per the BR-KSA-39 and BR-KSA-40 of ZATCA KSA "
+"business rule."
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -239,7 +242,7 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model,name:l10n_sa_edi.model_res_company
-msgid "Companies"
+msgid "Company"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -292,6 +295,11 @@ msgid "Country"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model,website_form_label:l10n_sa_edi.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__create_uid
 msgid "Created by"
 msgstr ""
@@ -325,14 +333,18 @@ msgid "Display Name"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid "Do you really want to re-onboard this Journal with ZATCA?"
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_company_form
+msgid "District"
 msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_company_form
-msgid "District"
+msgid "District..."
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
+msgid "Do you really want to re-onboard this Journal with ZATCA?"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -344,6 +356,11 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model,name:l10n_sa_edi.model_account_edi_format
 msgid "EDI format"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model,name:l10n_sa_edi.model_account_tax
+msgid "ETA tax codes mixin"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -565,11 +582,6 @@ msgid "National ID"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
-msgid "Neighborhood..."
-msgstr ""
-
-#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__l10n_sa_otp
 msgid "OTP"
 msgstr ""
@@ -647,12 +659,6 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
-#: code:addons/l10n_sa_edi/migrations/0.2/post-migrate.py:0
-msgid "Please Re-Onboard the Journal for a new serial number"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 msgid "Please change the (%s)'s country to Saudi Arabia and try again."
 msgstr ""
@@ -678,14 +684,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.l10n_sa_edi_otp_wizard_view_form
 msgid "Please input the OTP generated from the Fatoora Portal."
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_move.py:0
-msgid ""
-"Please make sure that the invoice company matches the journal company on all"
-" invoices you wish to confirm"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -735,6 +733,11 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
+msgid "Re-onboarding Confirmation"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid "Renew"
 msgstr ""
 
@@ -767,12 +770,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid "Set whether the system should use the Production API"
-msgstr ""
-
-#. module: l10n_sa_edi
-#. odoo-python
-#: code:addons/l10n_sa_edi/models/account_move.py:0
-msgid "Simplified Tax Invoice"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -813,7 +810,7 @@ msgid "State"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_company_form
 msgid "Street 2..."
 msgstr ""
 
@@ -831,16 +828,6 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
 msgid "Success: Journal is onboarded and valid until"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_company_form
-msgid "Street 2..."
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model,name:l10n_sa_edi.model_account_tax
-msgid "Tax"
 msgstr ""
 
 #. module: l10n_sa_edi

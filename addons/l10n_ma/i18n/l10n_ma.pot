@@ -4,16 +4,25 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.3a1+e\n"
+"Project-Id-Version: Odoo Server 19.1a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-02 12:25+0000\n"
-"PO-Revision-Date: 2025-04-02 12:25+0000\n"
+"POT-Creation-Date: 2025-12-16 19:04+0000\n"
+"PO-Revision-Date: 2025-12-16 19:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_ma
+#: model_terms:ir.ui.view,arch_db:l10n_ma.address_form_fields
+msgid ""
+"<small class=\"form-text text-muted\">\n"
+"                        Modifying the ICE number is not allowed once documents have\n"
+"                        been issued for your account. Please contact us directly if that's what you intend to do.\n"
+"                    </small>"
+msgstr ""
 
 #. module: l10n_ma
 #: model:ir.model,name:l10n_ma.model_account_chart_template
@@ -36,6 +45,11 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_ma
+#: model:ir.model,website_form_label:l10n_ma.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_ma
 #: model:ir.model.fields,field_description:l10n_ma.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:l10n_ma.field_base_document_layout__display_name
 #: model:ir.model.fields,field_description:l10n_ma.field_res_partner__display_name
@@ -50,6 +64,7 @@ msgstr ""
 #. module: l10n_ma
 #. odoo-python
 #: code:addons/l10n_ma/models/res_partner.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_ma.address_form_fields
 #: model_terms:ir.ui.view,arch_db:l10n_ma.view_company_form
 #: model_terms:ir.ui.view,arch_db:l10n_ma.view_partner_property_form
 msgid "ICE"
@@ -57,13 +72,14 @@ msgstr ""
 
 #. module: l10n_ma
 #. odoo-python
-#: code:addons/l10n_ma/models/res_partner.py:0
-msgid "ICE number should have exactly 15 digits."
+#: code:addons/l10n_ma/controllers/portal.py:0
+msgid "ICE number should consist of 15 digits."
 msgstr ""
 
 #. module: l10n_ma
-#: model_terms:ir.ui.view,arch_db:l10n_ma.report_invoice_document
-msgid "ICE:"
+#. odoo-python
+#: code:addons/l10n_ma/models/res_partner.py:0
+msgid "ICE number should have exactly 15 digits."
 msgstr ""
 
 #. module: l10n_ma
