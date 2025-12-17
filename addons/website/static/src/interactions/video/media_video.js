@@ -52,6 +52,11 @@ export class MediaVideo extends Interaction {
             iframeEl.setAttribute("aria-label", _t("Media video"));
         }
 
+        const description = this.el.dataset.description?.trim();
+        if (iframeEl && description && !iframeEl.hasAttribute("title")) {
+            iframeEl.setAttribute("title", description);
+        }
+
         if (iframeEl?.hasAttribute("src")) {
             const promise = setupAutoplay(
                 iframeEl.getAttribute("src"),
