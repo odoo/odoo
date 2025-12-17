@@ -10,3 +10,4 @@ class PaymentTransaction(models.Model):
         """Override of `sale` to archive guest contacts."""
         confirmed_orders = super()._check_amount_and_confirm_order()
         confirmed_orders.filtered('website_id')._archive_partner_if_no_user()
+        return confirmed_orders

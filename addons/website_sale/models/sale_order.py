@@ -908,3 +908,15 @@ class SaleOrder(models.Model):
         """Recompute taxes and prices for the current cart."""
         self._recompute_taxes()
         self._recompute_prices()
+
+    def _validate_order(self):
+        self.filtered('website_id')._archive_partner_if_no_user()
+        super()._validate_order()
+
+    def _archive_partner_if_no_user(self):
+        partners_to_archive = self.env['res.partner']
+        for order in self:
+            if not (commercial_partner := order.partner_id).user_ids:
+                partners_to_archive |= commercial_partner + commercial_partner.child_ids
+
+        partners_to_archive.active = False
