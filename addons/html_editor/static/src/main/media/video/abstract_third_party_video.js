@@ -61,6 +61,18 @@ export class AbstractThirdPartyVideo {
         return "";
     }
 
+    /**
+     * Returns the url of an endpoint answering with the video metadata as
+     * JSON, including its `title` (e.g. an oEmbed endpoint).
+     * @see {@link getTitle}
+     *
+     * @param {string} videoId
+     * @return {string} url
+     */
+    static getTitleApiUrl(videoId) {
+        return "";
+    }
+
     // ------------------------------------------------------
     // Methods common to all video providers are implemented here.
     // ------------------------------------------------------
@@ -110,6 +122,25 @@ export class AbstractThirdPartyVideo {
             thumbnailUrl: this.getThumbnailUrl?.(videoId) || "",
             options,
         };
+    }
+
+    /**
+     * Returns the title of the video, fetched from {@link getTitleApiUrl}.
+     *
+     * @param {string} videoId
+     * @return {Promise<string>} title
+     */
+    static async getTitle(videoId) {
+        const url = this.getTitleApiUrl(videoId);
+        if (!url) {
+            return "";
+        }
+        const response = await fetch(url);
+        if (!response.ok) {
+            return "";
+        }
+        const data = await response.json();
+        return data.title || "";
     }
 
     /**
