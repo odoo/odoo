@@ -499,51 +499,6 @@ export class DiscussChannel extends models.ServerModel {
 
     /**
      * @param {number[]} ids
-     * @param {boolean} [pinned=false]
-     */
-    channel_pin(ids, pinned) {
-        const kwargs = getKwArgs(arguments, "ids", "pinned");
-        ids = kwargs.ids;
-        delete kwargs.ids;
-        pinned = kwargs.pinned ?? false;
-
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
-        /** @type {import("mock_models").DiscussChannel} */
-        const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").DiscussChannelMember} */
-        const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        const [channel] = this.browse(ids);
-        const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
-        if (memberOfCurrentUser && memberOfCurrentUser.is_pinned !== pinned) {
-            DiscussChannelMember.write([memberOfCurrentUser.id], {
-                unpin_dt: pinned ? false : serializeDateTime(today()),
-            });
-        }
-        const [partner] = ResPartner.read(this.env.user.partner_id);
-        if (!pinned) {
-            BusBus._sendone(
-                partner,
-                "mail.record/insert",
-                new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
-                    close_chat_window: true,
-                    id: channel.id,
-                }).get_result()
-            );
-        } else {
-            BusBus._sendone(
-                partner,
-                "mail.record/insert",
-                new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result()
-            );
-        }
-    }
-
-    /**
-     * @param {number[]} ids
      * @param {string} name
      */
     channel_rename(ids, name) {
@@ -725,7 +680,11 @@ export class DiscussChannel extends models.ServerModel {
         if (channel.channel_type === "channel") {
             this.action_unfollow([channel.id]);
         } else {
-            this.channel_pin([channel.id], false);
+            const memberIds = this.env["discuss.channel.member"].search([
+                ["channel_id", "=", channel.id],
+                ["is_self", "=", true],
+            ]);
+            this.env["discuss.channel.member"]._channel_pin(memberIds, false);
         }
     }
 

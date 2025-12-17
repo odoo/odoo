@@ -335,29 +335,6 @@ test("sidebar: open channel and leave it", async () => {
     await expect.waitForSteps(["action_unfollow"]);
 });
 
-test("sidebar: unpin chat from bus", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "chat",
-    });
-    await start();
-    await openDiscuss();
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
-    await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
-    await contains(".o-mail-Composer-input[placeholder='Message Demo…']");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Demo" });
-    // Simulate receiving a unpin chat notification
-    // (e.g. from user interaction from another device or browser tab)
-    pyEnv["discuss.channel"].channel_pin([channelId], false);
-    await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
-    await contains(".o-mail-DiscussContent-threadName", { count: 0, value: "Demo" });
-});
-
 test.tags("focus required");
 test("chat - channel should count unread message", async () => {
     const pyEnv = await startServer();

@@ -265,14 +265,20 @@ class DiscussChannelMember(models.Model):
             for field_name in ['channel_id', 'partner_id', 'guest_id']:
                 if field_name in vals and vals[field_name] != channel_member[field_name].id:
                     raise AccessError(_('You can not write on %(field_name)s.', field_name=field_name))
-        return super().write(vals)
+        res = super().write(vals)
+        self._write_after_hook(vals)
+        return res
+
+    def _write_after_hook(self, vals):
+        """Hook called after a write operation, including parent and children calls."""
 
     def _sync_field_names(self, res):
         super()._sync_field_names(res)
         # sudo: discuss.channel.member - reading channel ownership related to a member is considered acceptable
         res["channel_id", None].attr("channel_role", sudo=True)
         res[None].extend(["custom_channel_name", "custom_notifications", "is_favorite"])
-        res[None].extend(["last_interest_dt", "message_unread_counter", "mute_until_dt"])
+        res[None].extend(["is_pinned", "last_interest_dt", "message_unread_counter"])
+        res[None].extend(["mute_until_dt", "new_message_separator"])
         res[None].attr("new_message_separator")
         # sudo: discuss.channel.rtc.session - each member can see who is inviting them
         res[None].one("rtc_inviting_session_id", "_store_extra_fields", sudo=True)
@@ -283,6 +289,9 @@ class DiscussChannelMember(models.Model):
         self._store_identifying_fields(res)
         if "message_unread_counter" in res:
             res.attr("message_unread_counter_bus_id", self.env["bus.bus"].sudo()._bus_last_id())
+        if "is_pinned" in res:
+            res.remove("is_pinned")
+            res.one("channel_id", "_store_channel_fields", predicate=lambda m: m.is_pinned)
 
     def unlink(self):
         # sudo: discuss.channel.rtc.session - cascade unlink of sessions for self member

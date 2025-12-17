@@ -1104,6 +1104,13 @@ function _process_request_for_all(store, name, params, context = {}) {
             DiscussChannelMember.write(memberIds, { is_favorite: params.is_favorite });
         }
     }
+    if (name === "/discuss/channel/pin") {
+        const memberIds = DiscussChannelMember.search([
+            ["channel_id", "=", params.channel_id],
+            ["is_self", "=", true],
+        ]);
+        DiscussChannelMember._channel_pin(memberIds, params.pinned);
+    }
     if (name === "/discuss/get_or_create_chat") {
         const channelId = DiscussChannel._get_or_create_chat(params.partners_to);
         store.resolve_data_request({ channel: mailDataHelpers.Store.one(channelId) });

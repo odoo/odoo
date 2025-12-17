@@ -258,6 +258,7 @@ const threadPatch = {
         return this.self_member_id?.message_unread_counter_ui > 0;
     },
     executeCommand(command, body = "") {
+        command.onExecute?.(this.channel);
         return this.store.env.services.orm.call(
             "discuss.channel",
             command.methodName,

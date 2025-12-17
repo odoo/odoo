@@ -3,7 +3,7 @@
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
-from odoo import http
+from odoo import fields, http
 from odoo.http import request
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.tools.discuss import Store, add_guest_to_context
@@ -54,6 +54,11 @@ class DiscussChannelWebclientController(WebclientController):
             ):
                 member.is_favorite = params["is_favorite"]
         resolve_channel = request.env["discuss.channel"]
+        if name == "/discuss/channel/pin":
+            if member := request.env["discuss.channel.member"].search_fetch(
+                [("channel_id", "=", params["channel_id"]), ("is_self", "=", True)],
+            ):
+                member.unpin_dt = False if params["pinned"] else fields.Datetime.now()
         if name == "/discuss/get_or_create_chat":
             resolve_channel = request.env["discuss.channel"]._get_or_create_chat(
                 params["partners_to"],
