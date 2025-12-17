@@ -105,12 +105,12 @@ registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Combo"),
             inLeftSide([
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Combo", "1", "7.00"),
+                ...ProductScreen.selectedOrderlineHasDirect("Desk Combo", "1", "9.00"),
                 ...ProductScreen.orderLineHas("Desk Organizer", "1"),
                 ...ProductScreen.orderLineHas("Desk Pad", "1"),
                 ...ProductScreen.orderLineHas("Whiteboard Pen", "1"),
             ]),
-            ProductScreen.totalAmountIs("7.00"),
+            ProductScreen.totalAmountIs("9.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -246,5 +246,21 @@ registry.category("web_tour.tours").add("test_combo_item_image_not_display", {
             combo.checkImgAndSelect("Combo Product 4", false),
             combo.checkImgAndSelect("Combo Product 6", false),
             Dialog.confirm(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_display_line_attribute_combo", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Donut Combo"),
+            combo.select("Donut (Sugar)"),
+            combo.select("Donut (Chocolate)"),
+            Dialog.confirm(),
+            inLeftSide([
+                ...ProductScreen.orderComboLineHas("Donut", "1.0", "", "Sugar"),
+                ...ProductScreen.orderComboLineHas("Donut", "1.0", "", "Chocolate"),
+            ]),
         ].flat(),
 });

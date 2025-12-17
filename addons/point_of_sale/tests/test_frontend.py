@@ -3137,6 +3137,66 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_orderline_merge_with_higher_price_precision', login="pos_user")
 
+    def test_display_line_attribute_combo(self):
+        """
+        Tests that when ordering a combo which has products that have variants, the chosen variant will
+        be displayed on the line.
+        """
+        attribute = self.env['product.attribute'].create({
+            'name': 'Flavor',
+            'create_variant': 'always',
+        })
+
+        sugar, chocolate = self.env['product.attribute.value'].create([
+            {
+                'name': 'Sugar',
+                'attribute_id': attribute.id,
+            }, {
+                'name': 'Chocolate',
+                'attribute_id': attribute.id,
+            },
+        ])
+
+        donut_template = self.env['product.template'].create({
+            'name': 'Donut',
+            'available_in_pos': True,
+            'list_price': 2.0,
+            'taxes_id': [],
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attribute.id,
+                'value_ids': [(6, 0, [sugar.id, chocolate.id])],
+            })],
+        })
+
+        donut_sugar = donut_template.product_variant_ids[0]
+        donut_chocolate = donut_template.product_variant_ids[1]
+
+        donut_combo = self.env['product.combo'].create({
+            'name': 'Donut Choices',
+            'combo_item_ids': [
+                Command.create({
+                    'product_id': donut_sugar.id,
+                    'extra_price': 0,
+                }),
+                Command.create({
+                    'product_id': donut_chocolate.id,
+                    'extra_price': 0,
+                }),
+            ],
+            'qty_free': 2,
+            'qty_max': 2,
+        })
+        self.env['product.product'].create({
+            'name': 'Donut Combo',
+            'type': 'combo',
+            'available_in_pos': True,
+            'list_price': 2.0,
+            'combo_ids': [(6, 0, [donut_combo.id])],
+            'pos_categ_ids': [(4, self.pos_desk_misc_test.id)],
+            'taxes_id': [],
+        })
+        self.start_pos_tour("test_display_line_attribute_combo")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

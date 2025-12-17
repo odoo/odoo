@@ -30,9 +30,11 @@ export const computeComboItems = (
         if (comboItem.id == childLineConf[childLineConf.length - 1].combo_item_id.id) {
             priceUnit += remainingTotal;
         }
-        const attribute_value_ids = conf.configuration?.attribute_value_ids?.map(
-            (id) => productTemplateAttributeValueById[id]
-        );
+        const attribute_value_ids = conf.configuration
+            ? conf.configuration.attribute_value_ids?.map(
+                  (id) => productTemplateAttributeValueById[id]
+              )
+            : conf.combo_item_id.product_id.product_template_attribute_value_ids;
 
         const totalPriceExtra =
             priceUnit + getAttributesPriceExtra(attribute_value_ids) + comboItem.extra_price;
@@ -49,9 +51,11 @@ export const computeComboItems = (
     for (const extra of childLineExtra) {
         const comboItem = extra.combo_item_id;
         const priceUnit = ProductPrice.round(comboItem.combo_id.base_price);
-        const attribute_value_ids = extra.configuration?.attribute_value_ids.map(
-            (id) => productTemplateAttributeValueById[id]
-        );
+        const attribute_value_ids = extra.configuration
+            ? extra.configuration.attribute_value_ids.map(
+                  (id) => productTemplateAttributeValueById[id]
+              )
+            : extra.combo_item_id.product_id.product_template_attribute_value_ids;
 
         const totalPriceExtra =
             priceUnit + getAttributesPriceExtra(attribute_value_ids) + comboItem.extra_price;
