@@ -322,7 +322,7 @@ class AccountEdiUBL(models.AbstractModel):
                     for allowance_charges_excise in ubl_values[f'allowance_charges_excise{suffix}']
                 )
             )
-            ubl_values['line_extension_amount'] = amount
+            ubl_values[f'line_extension_amount{suffix}'] = amount
 
     def _ubl_add_base_line_ubl_values_item(self, vals):
         """ Add 'base_line' -> '_ubl_values' -> 'item'.
