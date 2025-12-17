@@ -925,6 +925,7 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(return_pick.picking_type_id, picking_client.location_id.warehouse_id.in_type_id)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):
         """ Check the good behavior of creating a backorder for an available stock move.
