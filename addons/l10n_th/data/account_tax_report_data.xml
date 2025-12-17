@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo auto_sequence="1">
     <record id="tax_report" model="account.report">
-        <field name="name">Tax Report</field>
+        <field name="name">P.P. 30 - VAT Report</field>
         <field name="name@th">รายงานภาษี</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.th"/>
@@ -60,6 +60,7 @@
                     <record id="tax_report_out_tax_taxable_sales_amount" model="account.report.line">
                         <field name="name">4. Taxable sales amount(1. -2. -3.)</field>
                         <field name="name@th">4. ยอดขายที่ต้องเสียภาษี(1. -2. -3.)</field>
+                        <field name="code">OUTPUTTAX_TAXABLESALE</field>
                         <field name="aggregation_formula">OUTPUTTAX_SALEAMOUNT.balance-(OUTPUTTAX_SALE_ZERO.balance+OUTPUTTAX_EXEMPTED.balance)</field>
                     </record>
                     <record id="tax_report_out_tax" model="account.report.line">
