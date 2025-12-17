@@ -75,9 +75,8 @@ class AccountReport(models.Model):
         selection=[('country', "Country Matches"), ('coa', "Chart of Accounts Matches"), ('always', "Always")],
         compute='_compute_default_availability_condition', readonly=False, store=True,
     )
-    load_more_limit = fields.Integer(string="Load More Limit")
+    load_more_limit = fields.Integer(string="Load More Limit", default=500)
     search_bar = fields.Boolean(string="Search Bar")
-    prefix_groups_threshold = fields.Integer(string="Prefix Groups Threshold", default=4000)
     integer_rounding = fields.Selection(string="Integer Rounding", selection=[('HALF-UP', "Nearest"), ('UP', "Up"), ('DOWN', "Down")])
     allow_foreign_vat = fields.Boolean(
         string="Allow Foreign VAT",
