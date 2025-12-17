@@ -8,7 +8,7 @@ import werkzeug
 
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
-from odoo.tools import clean_context, email_normalize, float_repr, float_round, format_date, is_html_empty, parse_version
+from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty, parse_version
 
 
 _logger = logging.getLogger(__name__)
