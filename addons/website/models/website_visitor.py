@@ -313,13 +313,29 @@ class WebsiteVisitor(models.Model):
         if website_page:
             website_track_values['page_id'] = website_page.id
 
-        self._upsert_visitor(
-            self._get_access_token(),
+        access_token = self._get_access_token()
+        kwargs = dict(
             user_id=self.env.uid,
             tz=self._get_visitor_timezone(),
             lang_id=request.lang.id, website_id=request.website.id, country_code=request.geoip.country_code,
             force_track_values=website_track_values
         )
+
+        if self.env.cr.readonly:
+            def callback_on_close(env, access_token, kwargs):
+                with env.registry.cursor(readonly=False) as cr:
+                    try:
+                        return env(cr)['website.visitor']._upsert_visitor(access_token, **kwargs)
+                    except (TransactionRollbackError, IntegrityError, OperationalError):
+                        # The response has already been sent to the client.
+                        # There is no need to repeat the transaction.
+                        # The loss of information is acceptable.
+                        pass
+            callback_on_close = functools.partial(callback_on_close, self.env, access_token, kwargs)
+            response.call_on_close(callback_on_close)
+        else:
+            self._upsert_visitor(access_token, **kwargs)
+            return None
 
     def _add_tracking(self, domain, website_track_values):
         """ Add the track and update the visitor"""
