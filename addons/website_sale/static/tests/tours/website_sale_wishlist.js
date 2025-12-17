@@ -1,7 +1,7 @@
 import { registry } from "@web/core/registry";
-import * as tourUtils from "@website_sale_wishlist/../tests/tours/tour_utils";
+import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
-registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates', {
+registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
     url: '/shop?search=Customizable Desk',
     steps: () => [
         ...tourUtils.addToWishlistFromShopPage(),
@@ -168,7 +168,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.wishlist_updates'
 });
 
 
-registry.category("web_tour.tours").add('website_sale_wishlist.dynamic_variants', {
+registry.category("web_tour.tours").add('website_sale.wishlist_dynamic_variants', {
     url: '/shop?search=Bottle',
     steps: () => [
         {
@@ -218,7 +218,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.dynamic_variants'
     ]
 });
 
-registry.category("web_tour.tours").add('website_sale_wishlist.archived_variant', {
+registry.category("web_tour.tours").add('website_sale.archived_variant', {
     url: '/shop?search=Bottle',
     steps: () => [
         {
@@ -253,7 +253,7 @@ registry.category("web_tour.tours").add('website_sale_wishlist.archived_variant'
     ]
 });
 
-registry.category("web_tour.tours").add('website_sale_wishlist.no_valid_combination', {
+registry.category("web_tour.tours").add('website_sale.no_valid_combination', {
     steps: () => [
         {
             content: "Check that there is no wishlist button on the product page",

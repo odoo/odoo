@@ -74,25 +74,3 @@ class ProductWishlist(models.Model):
             ("create_date", "<", fields.Datetime.to_string(datetime.now() - timedelta(weeks=kwargs.get('wishlist_week', 5)))),
             ("partner_id", "=", False),
         ]).unlink()
-
-
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
-
-    wishlist_ids = fields.One2many('product.wishlist', 'partner_id', string='Wishlist', domain=[('active', '=', True)])
-
-
-class ProductTemplate(models.Model):
-    _inherit = 'product.template'
-
-    def _is_in_wishlist(self):
-        self.ensure_one()
-        return self in self.env['product.wishlist'].current().mapped('product_id.product_tmpl_id')
-
-
-class ProductProduct(models.Model):
-    _inherit = 'product.product'
-
-    def _is_in_wishlist(self):
-        self.ensure_one()
-        return self in self.env['product.wishlist'].current().mapped('product_id')

@@ -61,7 +61,7 @@ class TestWishlistProcess(HttpCase):
 
         self.env.ref('base.user_admin').name = 'Mitchell Admin'
 
-        self.start_tour('/', 'website_sale_wishlist.wishlist_updates', timeout=120)
+        self.start_tour('/', 'website_sale.wishlist_updates', timeout=120)
 
     def test_wishlist_dynamic_attributes(self):
 
@@ -85,9 +85,9 @@ class TestWishlistProcess(HttpCase):
             ],
             'website_published': True,
         })
-        self.start_tour("/", 'website_sale_wishlist.dynamic_variants')
+        self.start_tour("/", 'website_sale.wishlist_dynamic_variants')
         bottle.product_variant_ids[:1].action_archive()
-        self.start_tour("/", 'website_sale_wishlist.archived_variant')
+        self.start_tour("/", 'website_sale.archived_variant')
         bottle.product_variant_ids.action_archive()
         # Republish the template after archiving all variants so the product
         # page stays reachable.
@@ -101,5 +101,5 @@ class TestWishlistProcess(HttpCase):
         })
         self.start_tour(
             bottle.website_url,
-            'website_sale_wishlist.no_valid_combination'
+            'website_sale.no_valid_combination',
         )

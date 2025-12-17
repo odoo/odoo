@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export class WishlistPageOption extends BaseOptionComponent {
-    static template = "website_sale_wishlist.WishlistPageOption";
+    static template = "website_sale.WishlistPageOption";
     static selector = ".o_wishlist_table"
     static editableOnly = false;
     static title = _t("Wishlist Page");

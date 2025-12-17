@@ -604,6 +604,44 @@
                 </div>
             </BuilderRow>
 
+            <BuilderRow
+                t-if="props.recordName === 'shop_opt_products_design_classes'"
+                label.translate="Wishlist"
+                level="1"
+            >
+                <BuilderButton
+                    title.translate="Wishlist"
+                    icon="'fa-heart'"
+                    classAction="'o_wsale_products_opt_has_wishlist'"
+                />
+                <BuilderSelect t-if="isOnHoverAvailable">
+                    <BuilderSelectItem
+                        classAction="''"
+                        t-if="this.isActiveItem('wsale_products_opt_actions_inline')"
+                    >
+                        Inline
+                    </BuilderSelectItem>
+                    <BuilderSelectItem classAction="'o_wsale_products_opt_wishlist_fixed'">
+                        Fixed
+                    </BuilderSelectItem>
+                    <BuilderSelectItem
+                        classAction="'o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_wishlist_fixed_onhover'"
+                    >
+                        Fixed - On Hover
+                    </BuilderSelectItem>
+                </BuilderSelect>
+                <div t-else="" class="d-content pe-none flex-grow-1 opacity-75">
+                    <!--
+                        Fake controller to showcase the user that the option is locked to "Inline"
+                    -->
+                    <BuilderSelect>
+                        <BuilderSelectItem classAction="''">
+                            <span class="opacity-50">Inline</span>
+                        </BuilderSelectItem>
+                    </BuilderSelect>
+                </div>
+            </BuilderRow>
+
             <BuilderRow label.translate="Style">
                 <BuilderSelect>
                     <BuilderSelectItem classAction="'o_wsale_products_opt_actions_subtle'">

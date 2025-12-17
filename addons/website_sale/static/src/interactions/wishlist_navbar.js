@@ -1,7 +1,7 @@
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { rpc } from '@web/core/network/rpc';
-import wishlistUtils from '@website_sale_wishlist/js/website_sale_wishlist_utils';
+import wishlistUtils from '@website_sale/js/website_sale_utils';
 
 export class WishlistNavbar extends Interaction {
     static selector = '.o_wsale_my_wish';
@@ -28,4 +28,4 @@ export class WishlistNavbar extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_wishlist.wishlist_navbar', WishlistNavbar);
+    .add('website_sale.wishlist_navbar', WishlistNavbar);

@@ -2,7 +2,7 @@ import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { redirect } from '@web/core/utils/urls';
 import { Interaction } from '@web/public/interaction';
-import wishlistUtils from '@website_sale_wishlist/js/website_sale_wishlist_utils';
+import wishlistUtils from '@website_sale/js/website_sale_wishlist_utils';
 
 export class WishlistPage extends Interaction {
     static selector = '.o_wsale_wishlist_page';
@@ -35,4 +35,4 @@ export class WishlistPage extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_wishlist.wishlist_page', WishlistPage);
+    .add('website_sale.wishlist_page', WishlistPage);

@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import OrderedDict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -77,7 +78,7 @@ class ProductProduct(models.Model):
                 url = f'{url}?attribute_values={",".join(pav_ids)}'
             product.website_url = url
 
-    #=== CONSTRAINT METHODS ===#
+    # === CONSTRAINT AND ONCHANGE METHODS === #
 
     @api.constrains('base_unit_count')
     def _check_base_unit_count(self):
@@ -87,12 +88,26 @@ class ProductProduct(models.Model):
                 " Use 0 to hide the price per unit on this product."
             ))
 
-    #=== BUSINESS METHODS ===#
+    @api.onchange('public_categ_ids')
+    def _onchange_public_categ_ids(self):
+        if self.public_categ_ids:
+            self.website_published = True
+        else:
+            self.website_published = False
 
-    def _prepare_variant_values(self, combination):
-        variant_dict = super()._prepare_variant_values(combination)
-        variant_dict['base_unit_count'] = self.base_unit_count
-        return variant_dict
+    # === CRUD METHODS === #
+
+    def write(self, vals):
+        if 'active' in vals and not vals['active']:
+            # unlink draft lines containing the archived product
+            self.env['sale.order.line'].sudo().search([
+                ('state', '=', 'draft'),
+                ('product_id', 'in', self.ids),
+                ('order_id', 'any', [('website_id', '!=', False)]),
+            ]).unlink()
+        return super().write(vals)
+
+    # === ACTION METHODS === #
 
     def website_publish_button(self):
         self.ensure_one()
@@ -107,6 +122,13 @@ class ProductProduct(models.Model):
     def action_unschedule(self):
         """Keep variants aligned with their template scheduling."""
         return self.product_tmpl_id.action_unschedule()
+
+    # === BUSINESS METHODS === #
+
+    def _prepare_variant_values(self, combination):
+        variant_dict = super()._prepare_variant_values(combination)
+        variant_dict['base_unit_count'] = self.base_unit_count
+        return variant_dict
 
     def _get_images(self):
         """Return a list of records implementing `image.mixin` to
@@ -151,12 +173,72 @@ class ProductProduct(models.Model):
             return False
         return request.website.has_ecommerce_access()
 
-    @api.onchange('public_categ_ids')
-    def _onchange_public_categ_ids(self):
-        if self.public_categ_ids:
-            self.website_published = True
-        else:
-            self.website_published = False
+    def _is_in_wishlist(self):
+        self.ensure_one()
+        return self in self.env['product.wishlist'].current().mapped('product_id')
+
+    def _prepare_categories_for_display(self):
+        """On the comparison page group on the same line the values of each
+        product that concern the same attributes, and then group those
+        attributes per category.
+
+        The returned categories are ordered following their default order.
+
+        :return: OrderedDict [{
+            product.attribute.category: OrderedDict [{
+                product.attribute: OrderedDict [{
+                    product: [product.template.attribute.value]
+                }]
+            }]
+        }]
+        """
+        attributes = self.product_tmpl_id.valid_product_template_attribute_line_ids.attribute_id.sorted()
+        categories = OrderedDict([(cat, OrderedDict()) for cat in attributes.category_id.sorted()])
+        if any(not pa.category_id for pa in attributes):
+            # category_id is not required and the mapped does not return empty
+            categories[self.env['product.attribute.category']] = OrderedDict()
+        for pa in attributes:
+            categories[pa.category_id][pa] = OrderedDict([(
+                product,
+                product.product_template_attribute_value_ids.filtered(
+                    lambda ptav: ptav.attribute_id == pa
+                ) or  # If no_variant, show all possible values
+                product.attribute_line_ids.filtered(lambda ptal: ptal.attribute_id == pa).value_ids
+            ) for product in self])
+        return categories
+
+    def _get_image_1024_url(self):
+        """ Returns the local url of the product main image.
+        Note: self.ensure_one()
+        :rtype: str
+        """
+        self.ensure_one()
+        return self.env['website'].image_url(self, 'image_1024')
+
+    def _get_image_1920_url(self):
+        """ Returns the local url of the product main image.
+
+        Note: self.ensure_one()
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return self.env['website'].image_url(self, 'image_1920')
+
+    def _get_extra_image_1920_urls(self):
+        """ Returns the local url of the product additional images, no videos. This includes the
+        variant specific images first and then the template images.
+
+        Note: self.ensure_one()
+
+        :rtype: list[str]
+        """
+        self.ensure_one()
+        return [
+            self.env['website'].image_url(extra_image, 'image_1920')
+            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
+            if extra_image.image_128  # only images, no video urls
+        ]
 
     def _to_markup_data(self, website):
         """ Generate JSON-LD markup data for the current product.
@@ -200,38 +282,3 @@ class ProductProduct(models.Model):
                 'reviewCount': self.rating_count,
             }
         return markup_data
-
-    def _get_image_1920_url(self):
-        """ Returns the local url of the product main image.
-
-        Note: self.ensure_one()
-
-        :rtype: str
-        """
-        self.ensure_one()
-        return self.env['website'].image_url(self, 'image_1920')
-
-    def _get_extra_image_1920_urls(self):
-        """ Returns the local url of the product additional images, no videos. This includes the
-        variant specific images first and then the template images.
-
-        Note: self.ensure_one()
-
-        :rtype: list[str]
-        """
-        self.ensure_one()
-        return [
-            self.env['website'].image_url(extra_image, 'image_1920')
-            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
-            if extra_image.image_128  # only images, no video urls
-        ]
-
-    def write(self, vals):
-        if 'active' in vals and not vals['active']:
-            # unlink draft lines containing the archived product
-            self.env['sale.order.line'].sudo().search([
-                ('state', '=', 'draft'),
-                ('product_id', 'in', self.ids),
-                ('order_id', 'any', [('website_id', '!=', False)]),
-            ]).unlink()
-        return super().write(vals)

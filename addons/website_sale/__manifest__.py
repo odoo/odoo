@@ -39,6 +39,7 @@
         'templates/shop_page_templates.xml',
         'templates/svg_templates.xml',
         'templates/website_templates.xml',
+        'templates/wishlist_templates.xml',
 
         # Qweb templates -> checkout
         'templates/checkout/checkout_templates.xml',  # Shared templates first
@@ -69,6 +70,7 @@
         'views/website_sale_menus.xml',
         'views/website_sale_visitor_views.xml',
         'views/website_views.xml',
+        'views/website_sale_wishlist_template_svg.xml',
 
         # Website snippets
         'templates/snippets/snippets.xml',
@@ -104,8 +106,10 @@
             'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/scss/product_tile.scss',
             'website_sale/static/src/scss/website_sale_comparison.options.scss',
+            'website_sale/static/src/scss/website_sale_wishlist.options.scss',
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_sale_comparison.scss',
+            'website_sale/static/src/scss/website_sale_wishlist.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss',
@@ -120,6 +124,7 @@
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/xml/website_sale_utils.xml',
             'website_sale/static/src/js/website_sale_comparison_utils.js',
+            'website_sale/static/src/js/website_sale_wishlist_utils.js',
             'website/static/lib/multirange/multirange_custom.js',
             'website/static/src/interactions/multirange_input.js',
             'website_sale/static/src/xml/website_sale_image_viewer.xml',
@@ -171,6 +176,7 @@
             'website_sale/static/src/website_builder/**/*',
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/js/website_sale_comparison_utils.js',
+            'website_sale/static/src/js/website_sale_wishlist_utils.js',
             ('remove', 'website_sale/static/src/**/*.edit.*'),
         ],
         'website.assets_wysiwyg': [
@@ -200,6 +206,7 @@
             'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/js/website_sale_comparison_utils.js',
+            'website_sale/static/src/js/website_sale_wishlist_utils.js',
             'website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.js',
             'website_sale/static/src/js/product_row/product_row.js',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
