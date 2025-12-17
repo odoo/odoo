@@ -3,6 +3,7 @@
 
 import datetime
 
+from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import _, Command, fields
@@ -800,7 +801,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         self.assertEqual(question_and_page_ids - invalid_records, returned_questions_and_pages)
 
     def test_survey_session_leaderboard(self):
-        """Check leaderboard rendering with small (max) scores values."""
+        """Check leaderboard rendering with small (max) and 0 scores values."""
         start_time = datetime.datetime(2023, 7, 7, 12, 0, 0)
         test_survey = self.env['survey.survey'].create({
             'title': 'Test This Survey',
@@ -816,12 +817,12 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
                         Command.create({'value': 'In Europe', 'answer_score': 0., 'is_correct': False}),
                     ],
                     'title': 'Where is india?',
-                }),
+                }) for _ in range(2)
             ]
         })
-        question_1 = test_survey.question_and_page_ids[0]
-        answer_correct = question_1.suggested_answer_ids[0]
+        question_1, question_2 = test_survey.question_and_page_ids
         user_input = self.env['survey.user_input'].create({'survey_id': test_survey.id, 'is_session_answer': True})
+        answer_correct = question_1.suggested_answer_ids[0]
         user_input_line = self.env['survey.user_input.line'].create({
             'user_input_id': user_input.id,
             'question_id': question_1.id,
@@ -829,6 +830,23 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
             'suggested_answer_id': answer_correct.id,
         })
         self.assertEqual(user_input_line.answer_score, 0.125)
+        self.env['ir.qweb']._render('survey.user_input_session_leaderboard', {
+            'animate': True,
+            'leaderboard': test_survey._prepare_leaderboard_values()
+        })
+        # Switch to the next question and answer incorrectly (everyone)
+        test_survey.write({
+            "session_question_id": question_2.id,
+            "session_question_start_time": start_time + relativedelta(seconds=10),
+        })
+        answer_wrong = question_2.suggested_answer_ids[1]
+        user_input_line = self.env['survey.user_input.line'].create({
+            'user_input_id': user_input.id,
+            'question_id': question_2.id,
+            'answer_type': 'suggestion',
+            'suggested_answer_id': answer_wrong.id,
+        })
+        self.assertEqual(user_input_line.answer_score, 0)
         self.env['ir.qweb']._render('survey.user_input_session_leaderboard', {
             'animate': True,
             'leaderboard': test_survey._prepare_leaderboard_values()

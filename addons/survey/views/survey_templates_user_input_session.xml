@@ -220,14 +220,14 @@
                             <span t-else="">Anonymous</span>
                         </div>
                     </div>
-                    <t t-set="width_ratio" t-value="round((current_score - min_current_score) / (max_updated_score - min_current_score), 3)"/>
+                    <t t-set="width_ratio" t-value="round((current_score - min_current_score) / ((max_updated_score - min_current_score) or 1), 3)"/>
                     <div class="o_survey_session_leaderboard_bar_landmark ms-2"/>
                     <div class="o_survey_session_leaderboard_bar align-top d-inline-block"
                         t-attf-style="width: calc(calc(100% - #{bar_reserved_with_rem}rem) * #{width_ratio})">
                     </div>
                     <div class="o_survey_session_leaderboard_bar_question me-2 align-top d-inline-block text-end fw-bold position-relative"
                         style="width: 0;"
-                        t-att-data-width-ratio="str(round(question_score / (max_updated_score - min_current_score), 3))"
+                        t-att-data-width-ratio="str(round(question_score / ((max_updated_score - min_current_score) or 1), 3))"
                         t-att-data-max-question-score="str(max_question_score)"
                         t-att-data-question-score="str(question_score)">
                     </div>
