@@ -350,7 +350,7 @@ class HrAttendance(models.Model):
                 overtime_vals_list.extend(
                     ruleset.rule_ids._generate_overtime_vals(employee, attendances, version_map)
                 )
-        self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
+        self.env['hr.attendance.overtime.line'].sudo().create(overtime_vals_list)
         self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
 
     @api.model_create_multi
