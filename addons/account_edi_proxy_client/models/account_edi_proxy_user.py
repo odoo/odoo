@@ -59,7 +59,7 @@ class AccountEdiProxyClientUser(models.Model):
 
     _sql_constraints = [
         ('unique_id_client', 'unique(id_client)', 'This id_client is already used on another user.'),
-        ('unique_active_edi_identification', '', 'This edi identification is already assigned to an active user'),
+        ('unique_active_edi_identification', '', 'A user with this identification already exists.'),
         ('unique_active_company_proxy', '', 'This company has an active user already created for this EDI type'),
     ]
 
