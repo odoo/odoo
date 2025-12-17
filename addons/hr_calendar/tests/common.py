@@ -138,7 +138,7 @@ class TestHrContractCalendarCommon(common.TransactionCase):
             },
         ])
         cls.env.user.company_id = cls.company_A
-        cls.calendar_35h, cls.calendar_28h, cls.calendar_35h_night = cls.env['resource.calendar'].create([
+        cls.calendar_35h, cls.calendar_28h, cls.calendar_35h_night, cls.sunday_morning_calendar, cls.sunday_afternoon_calendar = cls.env['resource.calendar'].create([
             {
                 'name': '35h calendar',
                 'hours_per_day': 7.0,
@@ -176,6 +176,18 @@ class TestHrContractCalendarCommon(common.TransactionCase):
                     (0, 0, {'dayofweek': '2', 'hour_from': 15, 'hour_to': 22}),
                     (0, 0, {'dayofweek': '3', 'hour_from': 15, 'hour_to': 22}),
                     (0, 0, {'dayofweek': '4', 'hour_from': 15, 'hour_to': 22}),
+                ],
+            },
+            {
+                "name": "Sunday Morning Calendar",
+                "attendance_ids": [
+                    (0, 0, {"dayofweek": "6", "hour_from": 0, "hour_to": 8}),
+                ],
+            },
+            {
+                "name": "Sunday Afternoon Calendar",
+                "attendance_ids": [
+                    (0, 0, {"dayofweek": "6", "hour_from": 8, "hour_to": 17}),
                 ],
             },
         ])

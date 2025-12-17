@@ -409,6 +409,118 @@ class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
             {'daysOfWeek': [5], 'startTime': '14:00', 'endTime': '16:00'}
         ])
 
+    def test_working_hours_split_correctly_with_negative_difference_in_timezones(self):
+        """
+        The working hours of a calendar are localized to the "viewer's"/currently logged in user's timezone.
+        if employee A starts working at 08:00 in the timezone GMT+5 and employee B, working in timezone GMT+1, views the
+        calendar they will see employee A starting at 04:00 as the difference between the two timezones is -4 hours and
+        08:00 + (-4hrs) is 04:00.
+        Additionally if a localization makes the workday of employee A start "yesterday" or ends "tomorrow", the working
+        hours should be split across the "yesterday", "today" and "tomorrow" depending on the scenario.
+        """
+        self.contractD.resource_calendar_id = self.sunday_morning_calendar
+        self.contractD.tz = "Asia/Ashgabat"
+        # "viewer"/self.env.user.tz = "Etc/GMT+1"
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            self.partnerD.ids,
+            datetime(2023, 12, 29).isoformat(),  # Friday
+            datetime(2024, 1, 1).isoformat(),  # Monday
+        )
+        # sunday_morning_calendar.tz = GMT+5, viewers_calendar.tz = GMT +1, difference = 4 hours "back in time"
+        expected_hours = [
+            {"daysOfWeek": [6], "startTime": "20:00", "endTime": "23:59"},  # Saturday
+            {"daysOfWeek": [0], "startTime": "00:00", "endTime": "04:00"},  # Sunday
+        ]
+        self.assertEqual(work_hours, expected_hours)
+
+    def test_split_working_hours_with_negative_difference_in_timezone_returns_relevant_portion(self):
+        """
+        If a working hours span across two days because of timezone difference then only return the working hours for
+        the requested days.
+        As an example if someone is working from 00:00 to 08:00 in GMT+5 and the working hours are viewed from GMT+1
+        it should show working hours from 20:00 - 23:59 yesterday and 00:00 - 04:00 today. However if the request is
+        to only get working hours for today it should only return 00:00 - 04:00 and not 20:00 - 23:59
+        """
+        self.contractD.resource_calendar_id = self.sunday_morning_calendar
+        self.contractD.tz = "Asia/Ashgabat"
+
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            self.partnerD.ids,
+            datetime(2023, 12, 30).isoformat(),  # Saturday
+            datetime(2023, 12, 30).isoformat(),  # Saturday
+        )
+        # sunday_morning_calendar.tz = GMT-8, viewers_calendar.tz = GMT +1, difference = 9 hours "forwards in time"
+        expected_hours = [
+            {"daysOfWeek": [6], "startTime": "20:00", "endTime": "23:59"},  # Saturday
+        ]
+        self.assertEqual(work_hours, expected_hours)
+
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            self.partnerD.ids,
+            datetime(2023, 12, 31).isoformat(),  # Sunday
+            datetime(2023, 12, 31).isoformat(),  # Sunday
+        )
+        # sunday_morning_calendar.tz = GMT-8, viewers_calendar.tz = GMT +1, difference = 9 hours "forwards in time"
+        expected_hours = [
+            {"daysOfWeek": [0], "startTime": "00:00", "endTime": "04:00"},  # Sunday
+        ]
+        self.assertEqual(work_hours, expected_hours)
+
+    def test_working_hours_split_correctly_with_positive_difference_in_timezones(self):
+        """
+        The working hours of a calendar are localized to the "viewer's"/currently logged in user's timezone.
+        If employee A starts working at 08:00 in the timezone GMT-8 and employee B, working in timezone GMT+1, views the
+        calendar they will see employee A starting at 17:00 as the difference between the two timezones is 9 hours and
+        08:00 + 9hrs is 17:00.
+        Additionally if a localization makes the workday of employee A start "yesterday" or ends "tomorrow", the working
+        hours should be split across the "yesterday", "today" and "tomorrow" depending on the scenario.
+        """
+        self.contractD.resource_calendar_id = self.sunday_afternoon_calendar
+        self.contractD.tz = "America/Los_Angeles"
+        # "viewer"/self.env.user.tz = "Etc/GMT+1"
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            self.partnerD.ids,
+            datetime(2023, 12, 29).isoformat(),  # Friday
+            datetime(2024, 1, 1).isoformat(),  # Monday
+        )
+        # sunday_morning_calendar.tz = GMT-8, viewers_calendar.tz = GMT +1, difference = 9 hours "forwards in time"
+        expected_hours = [
+            {"daysOfWeek": [0], "startTime": "17:00", "endTime": "23:59"},  # Sunday
+            {"daysOfWeek": [1], "startTime": "00:00", "endTime": "02:00"},  # Monday
+        ]
+        self.assertEqual(work_hours, expected_hours)
+
+    def test_split_working_hours_with_positive_difference_in_timezone_returns_relevant_portion(self):
+        """
+        If a working hours span across two days because of timezone difference then only return the working hours for
+        the requested days.
+        As an example if someone is working from 08:00 to 17:00 in GMT-8 and the working hours are viewed from GMT+1
+        it should show working hours from 17:00 - 23:59 yesterday and 00:00 - 02:00 today. However if the request is
+        to only get working hours for today it should only return 17:00 - 23:59 and not 00:00 - 02:00
+        """
+        self.contractD.resource_calendar_id = self.sunday_afternoon_calendar
+        self.contractD.tz = "America/Los_Angeles"
+
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            self.partnerD.ids,
+            datetime(2023, 12, 31).isoformat(),  # Sunday
+            datetime(2023, 12, 31).isoformat(),  # Sunday
+        )
+        expected_hours = [
+            {"daysOfWeek": [0], "startTime": "17:00", "endTime": "23:59"},  # Sunday
+        ]
+        self.assertEqual(work_hours, expected_hours)
+
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            self.partnerD.ids,
+            datetime(2024, 1, 1).isoformat(),  # Monday
+            datetime(2024, 1, 1).isoformat(),  # Monday
+        )
+        expected_hours = [
+            {"daysOfWeek": [1], "startTime": "00:00", "endTime": "02:00"},  # Monday
+        ]
+        self.assertEqual(work_hours, expected_hours)
+
     def test_working_hours_with_employee_without_contract(self):
         self.env.user.company_id = self.company_A
         self.env.user.company_ids = [self.company_A.id]
@@ -480,6 +592,154 @@ class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
             {'daysOfWeek': [5], 'startTime': '08:00', 'endTime': '12:00'},
             {'daysOfWeek': [5], 'startTime': '13:00', 'endTime': '22:00'},
         ])
+
+    def test_flexible_employee_is_available_in_the_middle_of_a_day(self):
+        self.env.user.company_id = self.company_A
+        self.contractD.resource_calendar_id = False
+        self.contractD.hours_per_week = 56
+        self.contractD.hours_per_day = 8
+
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            [self.partnerD.id],
+            datetime(2023, 12, 25).isoformat(),
+            datetime(2023, 12, 31).isoformat(),
+        )
+        expected_hours = [
+            {"daysOfWeek": [1], "startTime": "08:00", "endTime": "16:00"},  # Monday
+            {"daysOfWeek": [2], "startTime": "08:00", "endTime": "16:00"},  # Tuesday
+            {"daysOfWeek": [3], "startTime": "08:00", "endTime": "16:00"},  # Wednesday
+            {"daysOfWeek": [4], "startTime": "08:00", "endTime": "16:00"},  # Thursday
+            {"daysOfWeek": [5], "startTime": "08:00", "endTime": "16:00"},  # Friday
+            {"daysOfWeek": [6], "startTime": "08:00", "endTime": "16:00"},  # Saturday
+            {"daysOfWeek": [0], "startTime": "08:00", "endTime": "16:00"},  # Sunday
+        ]
+
+        self.assertEqual(
+            work_hours,
+            expected_hours,
+        )
+
+    def test_flexible_employee_is_available_in_the_middle_of_day_after_contract_start(self):
+        self.env.user.company_id = self.company_A
+        self.contractD.resource_calendar_id = False
+        self.contractD.hours_per_week = 56
+        self.contractD.hours_per_day = 8
+        self.contractD.contract_date_start = datetime(2023, 12, 28)
+
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            [self.partnerD.id],
+            datetime(2023, 12, 25).isoformat(),
+            datetime(2023, 12, 31).isoformat(),
+        )
+        expected_hours = [
+            {"daysOfWeek": [4], "startTime": "08:00", "endTime": "16:00"},  # Thursday
+            {"daysOfWeek": [5], "startTime": "08:00", "endTime": "16:00"},  # Friday
+            {"daysOfWeek": [6], "startTime": "08:00", "endTime": "16:00"},  # Saturday
+            {"daysOfWeek": [0], "startTime": "08:00", "endTime": "16:00"},  # Sunday
+        ]
+
+        self.assertEqual(
+            work_hours,
+            expected_hours,
+        )
+
+    def test_flexible_employee_is_always_available_until_contract_end(self):
+        self.env.user.company_id = self.company_A
+        self.contractD.resource_calendar_id = False
+        self.contractD.hours_per_week = 56
+        self.contractD.hours_per_day = 8
+        self.contractD.contract_date_end = datetime(2023, 12, 28)
+
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            [self.partnerD.id],
+            datetime(2023, 12, 25).isoformat(),
+            datetime(2023, 12, 31).isoformat(),
+        )
+        expected_hours = [
+            {"daysOfWeek": [1], "startTime": "08:00", "endTime": "16:00"},  # Monday
+            {"daysOfWeek": [2], "startTime": "08:00", "endTime": "16:00"},  # Tuesday
+            {"daysOfWeek": [3], "startTime": "08:00", "endTime": "16:00"},  # Wednesday
+            {"daysOfWeek": [4], "startTime": "08:00", "endTime": "16:00"},  # Thursday
+        ]
+
+        self.assertEqual(
+            work_hours,
+            expected_hours,
+        )
+
+    def test_fully_flexible_employee_is_always_available(self):
+        self.env.user.company_id = self.company_A
+        self.contractD.resource_calendar_id = False
+        self.contractD.hours_per_week = False
+        self.contractD.hours_per_day = False
+
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            [self.partnerD.id],
+            datetime(2023, 12, 25).isoformat(),
+            datetime(2023, 12, 31).isoformat(),
+        )
+        expected_hours = [
+            {"daysOfWeek": [1], "startTime": "00:00", "endTime": "23:59"},  # Monday
+            {"daysOfWeek": [2], "startTime": "00:00", "endTime": "23:59"},  # Tuesday
+            {"daysOfWeek": [3], "startTime": "00:00", "endTime": "23:59"},  # Wednesday
+            {"daysOfWeek": [4], "startTime": "00:00", "endTime": "23:59"},  # Thursday
+            {"daysOfWeek": [5], "startTime": "00:00", "endTime": "23:59"},  # Friday
+            {"daysOfWeek": [6], "startTime": "00:00", "endTime": "23:59"},  # Saturday
+            {"daysOfWeek": [0], "startTime": "00:00", "endTime": "23:59"},  # Sunday
+        ]
+
+        self.assertEqual(
+            work_hours,
+            expected_hours,
+        )
+
+    def test_fully_flexible_employee_is_always_available_after_contract_start(self):
+        self.env.user.company_id = self.company_A
+        self.contractD.resource_calendar_id = False
+        self.contractD.hours_per_week = False
+        self.contractD.hours_per_day = False
+        self.contractD.contract_date_start = datetime(2023, 12, 28)
+
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            [self.partnerD.id],
+            datetime(2023, 12, 25).isoformat(),
+            datetime(2023, 12, 31).isoformat(),
+        )
+        expected_hours = [
+            {"daysOfWeek": [4], "startTime": "00:00", "endTime": "23:59"},  # Thursday
+            {"daysOfWeek": [5], "startTime": "00:00", "endTime": "23:59"},  # Friday
+            {"daysOfWeek": [6], "startTime": "00:00", "endTime": "23:59"},  # Saturday
+            {"daysOfWeek": [0], "startTime": "00:00", "endTime": "23:59"},  # Sunday
+        ]
+
+        self.assertEqual(
+            work_hours,
+            expected_hours,
+        )
+
+    def test_fully_flexible_employee_is_always_available_until_contract_end(self):
+        self.env.user.company_id = self.company_A
+        self.contractD.resource_calendar_id = False
+        self.contractD.hours_per_week = False
+        self.contractD.hours_per_day = False
+        self.contractD.contract_date_end = datetime(2023, 12, 28)
+
+        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+            [self.partnerD.id],
+            datetime(2023, 12, 25).isoformat(),
+            datetime(2023, 12, 31).isoformat(),
+        )
+        expected_hours = [
+            {"daysOfWeek": [1], "startTime": "00:00", "endTime": "23:59"},  # Monday
+            {"daysOfWeek": [2], "startTime": "00:00", "endTime": "23:59"},  # Tuesday
+            {"daysOfWeek": [3], "startTime": "00:00", "endTime": "23:59"},  # Wednesday
+            {"daysOfWeek": [4], "startTime": "00:00", "endTime": "23:59"},  # Thursday
+        ]
+
+        self.assertEqual(
+            work_hours,
+            expected_hours,
+        )
 
     def test_event_with_flexible_and_default_calendar_employees(self):
         """
