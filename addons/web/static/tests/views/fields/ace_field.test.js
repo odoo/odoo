@@ -1,6 +1,6 @@
 /* global ace */
 
-import { expect, getFixture, test } from "@odoo/hoot";
+import { expect, getFixture, test, queryAll } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
@@ -187,4 +187,93 @@ test("Save and Discard buttons are displayed when necessary", async () => {
     await clickSave();
     expect(`.o_form_status_indicator_buttons`).toHaveCount(1);
     expect(`.o_form_status_indicator_buttons`).toHaveClass("invisible");
+});
+
+test("AceEditorField preserves python code when lineWrapping=false", async () => {
+    Partner._onChanges.foo = () => {};
+    for (const record of Partner._records) {
+        record.foo = false;
+    }
+
+    let lastWrite;
+    onRpc(({ method, args }) => {
+        if (method === "web_save") {
+            lastWrite = args;
+        }
+    });
+
+    await mountView({
+        resModel: "res.partner",
+        resId: 1,
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo" widget="code" options="{'lineWrapping': false, 'mode': 'python'}"/>
+            </form>
+        `,
+    });
+
+    const longLine = Array(150).fill("word").join(" ");
+    const pythonCode = `
+s = "${longLine}"
+if true:
+    pass`.trim();
+
+    await editAce(pythonCode);
+    await clickSave();
+
+    expect(lastWrite[1].foo).toBe(pythonCode);
+
+    const aceLines = queryAll(".ace_line");
+    expect(aceLines.length).toBe(3);
+});
+
+test("AceEditorField preserves python code and wraps lines when lineWrapping=true", async () => {
+    Partner._onChanges.foo = () => {};
+    for (const record of Partner._records) {
+        record.foo = false;
+    }
+
+    let lastWrite;
+    onRpc(({ method, args }) => {
+        if (method === "web_save") {
+            lastWrite = args;
+        }
+    });
+
+    await mountView({
+        resModel: "res.partner",
+        resId: 1,
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo" widget="code" options="{'lineWrapping': true, 'mode': 'python'}"/>
+            </form>
+        `,
+    });
+
+    const longLine = Array(150).fill("word").join(" ");
+    const pythonCode = `
+s = "${longLine}"
+if true:
+    pass`.trim();
+
+    await editAce(pythonCode);
+    await clickSave();
+
+    expect(lastWrite[1].foo).toBe(pythonCode);
+
+    // Verify DOM
+    const aceLineGroups = queryAll(".ace_line_group");
+    expect(aceLineGroups.length).toBe(3);
+
+    // First group (long line) should be wrapped into multiple ace lines
+    const firstGroupLines = queryAll(".ace_line", { root: aceLineGroups[0] });
+    expect(firstGroupLines.length).toBeGreaterThan(1);
+
+    // Other groups should each have exactly one ace line
+    for (let i = 1; i < aceLineGroups.length; i++) {
+        const lines = queryAll(".ace_line", { root: aceLineGroups[i] });
+        expect(lines.length).toBe(1);
+    }
 });

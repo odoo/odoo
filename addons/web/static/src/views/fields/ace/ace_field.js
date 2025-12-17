@@ -14,9 +14,11 @@ export class AceField extends Component {
     static props = {
         ...standardFieldProps,
         mode: { type: String, optional: true },
+        lineWrapping: { type: Boolean, optional: true },
     };
     static defaultProps = {
         mode: "qweb",
+        lineWrapping: false,
     };
     static components = { CodeEditor };
 
@@ -72,10 +74,16 @@ export const aceField = {
             name: "mode",
             type: "string",
         },
+        {
+            name: "lineWrapping",
+            label: "lineWrapping Lines",
+            type: "boolean",
+        },
     ],
     supportedTypes: ["text", "html"],
     extractProps: ({ options }) => ({
         mode: options.mode,
+        lineWrapping: options.lineWrapping,
     }),
 };
 
