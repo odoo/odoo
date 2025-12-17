@@ -482,9 +482,23 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_id')
     def _compute_payment_term_id(self):
+        default_payment_term = self.env['account.payment.term'].browse(
+            self.env['ir.default']._get(
+                model_name=self._name,
+                field_name='payment_term_id',
+            )
+        )
+        # Ignore default payment term if it is company-specific
+        if default_payment_term.company_id:
+            default_payment_term = False
+
         for order in self:
             order = order.with_company(order.company_id)
-            order.payment_term_id = order.partner_id.property_payment_term_id
+            order.payment_term_id = (
+                order.partner_id.property_payment_term_id
+                or order.payment_term_id
+                or default_payment_term
+            )
 
     @api.depends('partner_id', 'company_id')
     def _compute_preferred_payment_method_line_id(self):

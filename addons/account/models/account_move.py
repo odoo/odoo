@@ -1052,12 +1052,30 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id')
     def _compute_invoice_payment_term_id(self):
+        default_payment_term = self.env['account.payment.term'].browse(
+            self.env['ir.default']._get(
+                model_name=self._name,
+                field_name='invoice_payment_term_id',
+                condition='move_type=out_invoice',
+            )
+        )
+        # Ignore default payment term if it is company-specific
+        if default_payment_term.company_id:
+            default_payment_term = False
+
         for move in self:
             move = move.with_company(move.company_id)
-            if move.is_sale_document(include_receipts=True) and move.partner_id.property_payment_term_id:
-                move.invoice_payment_term_id = move.partner_id.property_payment_term_id
-            elif move.is_purchase_document(include_receipts=True) and move.partner_id.property_supplier_payment_term_id:
-                move.invoice_payment_term_id = move.partner_id.property_supplier_payment_term_id
+            if move.is_sale_document(include_receipts=True):
+                move.invoice_payment_term_id = (
+                    move.partner_id.property_payment_term_id
+                    or move.invoice_payment_term_id
+                    or (move.move_type == 'out_invoice' and default_payment_term)
+                )
+            elif move.is_purchase_document(include_receipts=True):
+                move.invoice_payment_term_id = (
+                    move.partner_id.property_supplier_payment_term_id
+                    or move.invoice_payment_term_id
+                )
             else:
                 move.invoice_payment_term_id = False
 

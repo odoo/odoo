@@ -383,7 +383,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 'move_type': 'out_invoice',
                 'currency_id': currency.id,
                 'invoice_date': fields.Date.from_string('2023-08-01'),
-                'invoice_date_due': fields.Date.from_string('2023-08-31'),
+                'invoice_date_due': fields.Date.from_string('2023-08-01'),  # Due to default payment term
                 'ref': 'INV/2023/00005',
                 'narration': '<p>Terms and conditions.</p>',
             },
@@ -395,7 +395,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
                 'move_type': 'out_invoice',
                 'currency_id': currency.id,
                 'invoice_date': fields.Date.from_string('2023-07-01'),
-                'invoice_date_due': fields.Date.from_string('2023-07-31'),
+                'invoice_date_due': fields.Date.from_string('2023-07-01'),  # Due to default payment term
                 'ref': 'INV/2023/00006',
                 'narration': '<p>Legal References.</p>',
             },
