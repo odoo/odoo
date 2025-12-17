@@ -188,9 +188,9 @@
                                                    placeholder="e.g. Building 2, Remote, etc."/>
                                         </group>
                                         <group name="departure" string="Departure" invisible="active">
-                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
-                                            <field name="departure_description"/>
-                                            <field name="departure_date"/>
+                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}" readonly="1"/>
+                                            <field name="departure_description" readonly="1"/>
+                                            <field name="departure_date" readonly="1"/>
                                         </group>
                                         <group string="Note" name="note" groups="hr.group_hr_user">
                                             <field name="additional_note" placeholder="Provide additional information about this version..." colspan="2" nolabel="1"/>
