@@ -123,14 +123,10 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
     def test_invoice_tax_reverse_charge(self):
         tax_21 = self.percent_tax(21.0)
         tax_minus_10_67 = self.percent_tax(-10.67)
-        product_1 = self._create_product(lst_price=1000.0, taxes_id=tax_21)
-        product_2 = self._create_product(lst_price=100.0, taxes_id=tax_minus_10_67)
-        invoice = self._create_invoice(
+        product = self._create_product(lst_price=1000.0, taxes_id=tax_21 + tax_minus_10_67)
+        invoice = self._create_invoice_one_line(
+            product_id=product,
             partner_id=self.partner_be,
-            invoice_line_ids=[
-                self._prepare_invoice_line(product_id=product_1),
-                self._prepare_invoice_line(product_id=product_2),
-            ],
             post=True,
         )
 
