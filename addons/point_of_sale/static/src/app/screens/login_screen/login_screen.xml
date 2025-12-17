@@ -3,16 +3,22 @@
     <t t-name="point_of_sale.LoginScreen">
         <div class="login-overlay o_attendance_background fixed-top w-100 h-100 p-4 d-flex flex-column">
             <div class="screen-login-header d-flex justify-content-between">
-                <div t-if="!ui.isSmall" class="screen-login-timer d-flex align-items-center gap-2 bg-transparent">
+                <div t-if="!ui.isSmall" class="screen-login-timer d-flex align-items-center gap-2 w-50">
                     <div class="timer-hours fs-1" t-esc="time.hours"> </div>
                     <div class="timer-date-container d-flex flex-column smaller">
                         <div class="timer-day" t-esc="time.day"> </div>
                         <div class="timer-date" t-esc="time.date"> </div>
                     </div>
                 </div>
-                <div t-attf-class="screen-login-logo {{ ui.isSmall ? 'mx-auto' : 'ms-auto'}}">
+                <div t-if="!ui.isSmall" class="fs-1 fw-bold d-flex justify-content-center align-items-end overflow-hidden w-100 fade-effect">
+                    <t t-esc="this.pos.config.name"/>
+                </div>
+                <div t-attf-class="screen-login-logo {{ ui.isSmall ? 'mx-auto' : 'd-flex justify-content-end w-50'}}">
                     <img t-attf-src="/web/image?model=res.company&amp;id={{pos.company.id}}&amp;field=logo" alt="Logo"/>
                 </div>
+            </div>
+            <div t-if="ui.isSmall" class="fs-1 fw-bold mt-4 d-flex justify-content-center fade-effect">
+                <t t-esc="this.pos.config.name"/>
             </div>
             <div class="screen-login flex-grow-1 d-flex flex-column">
                 <div class="login-body d-flex flex-column flex-md-row gap-3 m-auto">
