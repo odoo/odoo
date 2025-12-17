@@ -4,6 +4,7 @@
 
     &:not(.o-interest) {
         --border-opacity: .35;
+        opacity: var(--mail-NotificationItem-notInterestOpacity, .875);
     }
     &.o-active {
         outline-color: rgba($o-action, var(--mail-NotificationItem-activeOutlineOpacity, 0.5));
@@ -69,6 +70,10 @@
 
 .o-mail-NotificationItem-text {
     opacity: .75;
+
+    &.o-muted {
+        opacity: .5;
+    }
 
     &:before {
         // invisible character so that typing status bar has constant height, regardless of text content.

@@ -76,7 +76,7 @@
             </t>
         </div>
     </div>
-    <nav t-if="ui.isSmall" t-attf-class="o-mail-MessagingMenu-navbar d-flex flex-shrink-0 bg-view border-top w-100 p-2 gap-2 o-mail-MessagingMenu-navbar-with-{{tabs.length}}-elements {{ tabs.length > 4 ? 'overflow-x-scroll' : '' }}">
+    <nav t-if="ui.isSmall" t-attf-class="o-mail-MessagingMenu-navbar d-flex flex-shrink-0 border-top w-100 p-2 gap-2 o-mail-MessagingMenu-navbar-with-{{tabs.length}}-elements {{ tabs.length > 4 ? 'overflow-x-scroll' : '' }}">
         <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-shrink-1 p-1 bg-transparent position-relative border-0" t-att-class="{
             'active': store.discuss.activeTab === tab.id,
             'pb-4': isIosPwa,
