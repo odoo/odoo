@@ -117,7 +117,6 @@ class TestMailComposer(MailCommon, TestRecipients):
 
 
 @tagged('mail_composer')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComposerForm(TestMailComposer):
 
     @classmethod
@@ -587,7 +586,6 @@ class TestComposerForm(TestMailComposer):
 
 
 @tagged('mail_composer')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComposerInternals(TestMailComposer):
 
     @users('employee')
@@ -1473,7 +1471,6 @@ class TestComposerInternals(TestMailComposer):
 
 
 @tagged('mail_composer', 'multi_lang', 'multi_company')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComposerResultsComment(TestMailComposer, CronMixinCase):
     """ Test global output of composer used in comment mode. Test notably
     notification and emails generated during this process. """
@@ -2534,7 +2531,6 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
 
 
 @tagged('mail_composer', 'mail_blacklist')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComposerResultsCommentStatus(TestMailComposer):
     """ Test cases involving blacklist, opt-out, state management, ... specific
     class to avoid bloating the base comment-based composer tests. """
@@ -2627,7 +2623,6 @@ class TestComposerResultsCommentStatus(TestMailComposer):
 
 
 @tagged('mail_composer', 'multi_lang')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComposerResultsMass(TestMailComposer):
 
     @classmethod
@@ -3706,7 +3701,6 @@ class TestComposerResultsMass(TestMailComposer):
                                )
 
 @tagged('mail_composer', 'mail_blacklist')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestComposerResultsMassStatus(TestMailComposer):
     """ Test cases involving blacklist, opt-out, state management, ... specific
     class to avoid bloating the base mailing-based composer tests. """

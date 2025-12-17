@@ -6,7 +6,6 @@ from odoo.tests import Form, tagged, users
 
 
 @tagged('mail_template', 'multi_lang')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailTemplateTools(TestMailTemplateCommon):
 
     @classmethod

@@ -7,7 +7,6 @@ from odoo.tests import tagged
 from odoo.exceptions import AccessError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubtypeAccess(MailCommon):
 
     def test_subtype_access(self):

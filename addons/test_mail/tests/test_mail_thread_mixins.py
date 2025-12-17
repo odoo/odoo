@@ -203,7 +203,6 @@ class TestMailThreadRottingMixin(MailTrackingDurationMixinCase):
 
 
 @tagged('mail_thread', 'mail_blacklist')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailThread(MailCommon, TestRecipients):
 
     @mute_logger('odoo.models.unlink')
