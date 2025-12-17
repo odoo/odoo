@@ -48,8 +48,14 @@ export class MediaVideo extends Interaction {
             iframeEl = generateVideoIframe(this.el, this.services.website_cookies.manageIframeSrc);
         }
 
-        if (iframeEl && !iframeEl.getAttribute("aria-label")) {
-            iframeEl.setAttribute("aria-label", _t("Media video"));
+        const description = this.el.getAttribute("title")?.trim();
+        if (iframeEl) {
+            if (description) {
+                iframeEl.setAttribute("title", description);
+                iframeEl.removeAttribute("aria-label");
+            } else if (!iframeEl.getAttribute("aria-label")) {
+                iframeEl.setAttribute("aria-label", _t("Media video"));
+            }
         }
 
         if (iframeEl?.hasAttribute("src")) {

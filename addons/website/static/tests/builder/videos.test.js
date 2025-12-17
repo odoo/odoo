@@ -1,8 +1,20 @@
 import { expect, test, advanceTime } from "@odoo/hoot";
 import { animationFrame, dblclick, waitFor, queryOne } from "@odoo/hoot-dom";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
+
+const videoContent = `
+    <div>
+        <div data-oe-expression="//www.youtube.com/embed/wf9gPmNc2sc?rel=0&autoplay=0"
+             class="media_iframe_video o_snippet_drop_in_only">
+            <div class="css_editable_mode_display"></div>
+            <div class="media_iframe_video_size"></div>
+            <iframe frameborder="0" allowfullscreen="allowfullscreen" aria-label="Video"></iframe>
+        </div>
+    </div>
+`;
 
 test("double click on video", async () => {
     await setupWebsiteBuilder(`
@@ -21,16 +33,7 @@ test("double click on video", async () => {
 });
 
 test("vertical toggle of video options", async () => {
-    await setupWebsiteBuilder(`
-        <div>
-            <div data-oe-expression="//www.youtube.com/embed/wf9gPmNc2sc?rel=0&autoplay=0"
-                 class="media_iframe_video o_snippet_drop_in_only">
-                <div class="css_editable_mode_display"></div>
-                <div class="media_iframe_video_size"></div>
-                <iframe frameborder="0" allowfullscreen="allowfullscreen" aria-label="Video"></iframe>
-            </div>
-        </div>
-    `);
+    await setupWebsiteBuilder(videoContent);
 
     expect(".modal-content").toHaveCount(0);
     await dblclick(":iframe iframe");
@@ -64,4 +67,15 @@ test("vertical toggle of video options", async () => {
     await waitFor(
         ".modal-content:contains(Select a media) .media_iframe_video .media_iframe_video_size_for_vertical"
     );
+});
+
+test("Description option to set title attribute for video", async () => {
+    await setupWebsiteBuilder(videoContent);
+    await contains(":iframe .media_iframe_video").click();
+    expect(".o_customize_tab [data-label='Description'] input").toHaveCount(1);
+    expect(":iframe .media_iframe_video").not.toHaveAttribute("title");
+    await contains(".o_customize_tab [data-label='Description'] input").edit(
+        "My video description"
+    );
+    expect(":iframe .media_iframe_video").toHaveAttribute("title", "My video description");
 });
