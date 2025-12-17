@@ -356,7 +356,7 @@ class DiscussChannelMember(models.Model):
         members._notify_mute()
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
-        res.one("channel_id", [], as_thread=True)
+        res.attr("channel_id")
         self._store_persona(
             res,
             partner_fields=lambda res: (
@@ -375,7 +375,7 @@ class DiscussChannelMember(models.Model):
         pass
 
     def _store_persona_default_fields(self, res: Store.FieldList):
-        res.one("channel_id", [], as_thread=True)
+        res.attr("channel_id")
         self._store_persona(
             res,
             partner_fields=lambda res: (
@@ -386,7 +386,7 @@ class DiscussChannelMember(models.Model):
         )
 
     def _store_identifying_fields(self, res: Store.FieldList):
-        res.one("channel_id", [], as_thread=True)
+        res.attr("channel_id")
         self._store_persona(res, partner_fields=[], guest_fields=[])
 
     def _store_persona(self, res: Store.FieldList, *, partner_fields, guest_fields):

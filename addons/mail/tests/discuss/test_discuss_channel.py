@@ -150,7 +150,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "discuss.channel": [{"id": test_group.id, "member_count": 2}],
                             "discuss.channel.member": [
                                 {
-                                    "channel_id": {"id": test_group.id, "model": "discuss.channel"},
+                                    "channel_id": test_group.id,
                                     "channel_role": False,
                                     "create_date": fields.Datetime.to_string(member.create_date),
                                     "fetched_message_id": False,
@@ -205,8 +205,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "last_seen_dt": False,
                                     "partner_id": self.test_partner.id,
                                     "seen_message_id": False,
-                                    "channel_id": {"id": test_group.id, "model": "discuss.channel"},
-                                }
+                                    "channel_id": test_group.id,
+                                },
                             ],
                             "res.partner": self._filter_partners_fields(
                                 {
@@ -435,7 +435,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                 "payload": {
                     "discuss.channel.member": [
                         {
-                            "channel_id": {"id": chat.id, "model": "discuss.channel"},
+                            "channel_id": chat.id,
                             "id": member.id,
                             "message_unread_counter": 0,
                             "message_unread_counter_bus_id": 0,
@@ -453,7 +453,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "id": member.id,
                             "partner_id": self.user_admin.partner_id.id,
                             "seen_message_id": msg_1.id,
-                            "channel_id": {"id": chat.id, "model": "discuss.channel"},
+                            "channel_id": chat.id,
                         },
                     ],
                     "res.partner": self._filter_partners_fields(

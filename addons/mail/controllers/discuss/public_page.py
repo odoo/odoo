@@ -115,9 +115,10 @@ class PublicPageController(http.Controller):
             companyName=request.env.company.name,
             inPublicPage=True,
         )
+        store.add(channel, "_store_channel_fields")
         store.add_singleton_values(
             "DiscussApp",
-            lambda res: res.one("thread", "_store_channel_fields", value=channel),
+            lambda res: res.one("thread", [], as_thread=True, value=channel),
         )
         return request.render(
             "mail.discuss_public_channel_template",
