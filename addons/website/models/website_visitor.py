@@ -299,7 +299,8 @@ class WebsiteVisitor(models.Model):
         if website_page:
             website_track_values['page_id'] = website_page.id
 
-        self._get_visitor_from_request(force_create=True, force_track_values=website_track_values)
+        access_token = self._get_access_token()
+        self._upsert_visitor(access_token, website_track_values)
 
     def _add_tracking(self, domain, website_track_values):
         """ Add the track and update the visitor"""
