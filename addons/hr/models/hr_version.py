@@ -64,7 +64,7 @@ class HrVersion(models.Model):
         help="Enter the employee's National Identification Number issued by the government (e.g., Aadhaar, SIN, NIN). This is used for official records and statutory compliance.",
         groups="hr.group_hr_user",
         tracking=True)
-    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user", tracking=True)
+    ssnid = fields.Char('Social Security No', groups="hr.group_hr_user", tracking=True)
     passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     passport_expiration_date = fields.Date('Passport Expiration Date', groups="hr.group_hr_user", tracking=True)
     sex = fields.Selection([
