@@ -7,6 +7,9 @@ patch(Order.prototype, {
     wait_for_push_order() {
         return this.pos.config.l10n_es_edi_verifactu_required ? true : super.wait_for_push_order(...arguments);
     },
+    async fetch_l10n_es_edi_verifactu_qr_code(order_ids) {
+        return await this.pos.orm.read('pos.order', order_ids, ['l10n_es_edi_verifactu_qr_code']);
+    },
     //@override
     export_for_printing(baseUrl, headerData) {
         const result = super.export_for_printing(...arguments);
