@@ -186,7 +186,19 @@ class ResPartner(models.Model):
 
     def _get_peppol_endpoint_value(self, country_code, field):
         self.ensure_one()
-        return field in self._fields and self[field]
+        value = field in self._fields and self[field]
+
+        if (
+            country_code == 'BE'
+            and field == 'company_registry'
+            and not value
+            and self.vat
+        ):
+            value = self.vat
+            if value.isalnum():
+                value = value.removeprefix(country_code)
+
+        return value
 
     @api.depends(lambda self: self._peppol_eas_endpoint_depends() + ['peppol_eas'])
     def _compute_peppol_endpoint(self):

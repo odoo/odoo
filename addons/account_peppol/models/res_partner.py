@@ -33,12 +33,12 @@ class ResPartner(models.Model):
     )
     account_peppol_verification_label = fields.Selection(
         selection=[
-            ('not_verified', 'Not verified yet'),
-            ('not_valid', 'Not valid'),  # does not exist on Peppol at all
-            ('not_valid_format', 'Cannot receive this format'),  # registered on Peppol but cannot receive the selected document type
-            ('valid', 'Valid'),
+            ('not_verified', 'Unchecked'),
+            ('not_valid', 'Partner is not on Peppol'),  # does not exist on Peppol at all
+            ('not_valid_format', 'Partner cannot receive format'),  # registered on Peppol but cannot receive the selected document type
+            ('valid', 'Partner is on Peppol'),
         ],
-        string='Peppol endpoint validity',
+        string='Peppol status',
         compute='_compute_account_peppol_verification_label',
         copy=False,
     )  # field to compute the label to show for partner endpoint
@@ -168,6 +168,10 @@ class ResPartner(models.Model):
             if service_document_id and expected_customization_id in service_document_id:
                 return True
         return False
+
+    @api.onchange('ubl_cii_format', 'peppol_endpoint', 'peppol_eas')
+    def _onchange_verify_peppol_status(self):
+        self.button_account_peppol_check_partner_endpoint()
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
