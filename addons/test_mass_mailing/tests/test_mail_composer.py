@@ -9,7 +9,6 @@ from odoo.addons.test_mass_mailing.tests import common
 
 
 @tagged('mail_composer')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailComposerMassMailing(TestMailComposer, common.TestMassMailCommon):
 
     @users('user_marketing')

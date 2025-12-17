@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 from odoo.tests.common import tagged, users
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBLMixin(common.TestMassMailCommon):
 
     @classmethod

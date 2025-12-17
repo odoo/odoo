@@ -6,7 +6,6 @@ from odoo.addons.test_mass_mailing.tests import common
 from odoo.exceptions import AccessError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBLAccessRights(common.TestMassMailCommon):
 
     @classmethod
@@ -60,7 +59,6 @@ class TestBLAccessRights(common.TestMassMailCommon):
         self.bl_rec.with_user(self.env.user).unlink()
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBLConsistency(common.TestMassMailCommon):
     _base_list = ['Arya.Stark@example.com', 'ned.stark@example.com']
 
