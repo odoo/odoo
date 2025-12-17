@@ -19527,6 +19527,136 @@ test(`cache web_read_group (with sample data, change)`, async () => {
 });
 
 test.tags("desktop");
+test(`cache web_read_group (switch view, go back)`, async () => {
+    // This test ensures that the params of the web_read_group don't change between the first load
+    // and a reload, s.t. we reload does a cache hit
+    let def;
+    onRpc("web_read_group", () => {
+        expect.step("web_read_group");
+        return def;
+    });
+
+    Foo._views = {
+        "list,false": `<list default_group_by="int_field"><field name="foo"/></list>`,
+        "kanban,false": `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "foo",
+            views: [
+                [false, "list"],
+                [false, "kanban"],
+            ],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(`.o_list_view`).toHaveCount(1);
+    expect(`.o_group_header`).toHaveCount(4);
+    expect.verifySteps(["web_read_group"]);
+
+    await getService("action").switchView("kanban");
+    expect(`.o_kanban_view`).toHaveCount(1);
+    expect.verifySteps([]);
+
+    // go back to list, but slow down the web_read_group
+    def = new Deferred();
+    await getService("action").switchView("list");
+    expect(`.o_list_view`).toHaveCount(1);
+    expect(`.o_group_header`).toHaveCount(4);
+    expect.verifySteps(["web_read_group"]);
+
+    def.resolve();
+    await animationFrame();
+    expect(`.o_list_view`).toHaveCount(1);
+    expect(`.o_group_header`).toHaveCount(4);
+});
+
+test.todo(`cache web_read_group: do not send opening_info if not necessary`, async () => {
+    // This test ensures that the params of the web_read_group aren't polluted by the opening_info
+    // kwargs when successively toggling different filters
+    let def;
+    onRpc("web_read_group", async () => {
+        expect.step("web_read_group");
+        await def;
+        expect.step("done");
+    });
+
+    Foo._views = {
+        "list,false": `<list default_group_by="int_field"><field name="foo"/></list>`,
+        "search,false": `
+            <search>
+                <filter name="filter_1" string="First filter" domain="[('int_field', '>', 10)]"/>
+                <filter name="filter_2" string="Second filter" domain="[('int_field', '>', 0)]"/>
+            </search>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "foo",
+            views: [[false, "list"]],
+            search_view_id: [false, "search"],
+            context: {
+                search_default_filter_1: true,
+            },
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    // Populate the cache for action 1 with several filters
+    await getService("action").doAction(1);
+    expect(`.o_group_header`).toHaveCount(1);
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Second filter");
+    expect(`.o_group_header`).toHaveCount(3);
+
+    await removeFacet("First filter or Second filter");
+    expect(`.o_group_header`).toHaveCount(4);
+
+    expect.verifySteps([
+        "web_read_group",
+        "done",
+        "web_read_group",
+        "done",
+        "web_read_group",
+        "done",
+    ]);
+
+    // Execute action 1 again and rely on the cache
+    def = new Deferred();
+    await getService("action").doAction(1);
+    expect(`.o_group_header`).toHaveCount(1);
+
+    // Do not follow the same steps as earlier, directly remove the filter
+    await removeFacet("First filter");
+    expect(`.o_group_header`).toHaveCount(4);
+
+    expect.verifySteps(["web_read_group", "web_read_group"]);
+
+    def.resolve();
+    await animationFrame();
+    expect(`.o_group_header`).toHaveCount(4);
+
+    expect.verifySteps(["done", "done"]);
+});
+
+test.tags("desktop");
 test(`multi_edit: edit field with operator with localization`, async () => {
     await mountView({
         resModel: "foo",
