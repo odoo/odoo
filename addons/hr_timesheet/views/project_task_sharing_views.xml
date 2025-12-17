@@ -93,7 +93,7 @@
                                 <label class="fw-bold text-danger" for="remaining_hours" string="Days Remaining"
                                        invisible="allocated_hours == 0.0 or not encode_uom_in_days or remaining_hours &gt;= 0"/>
                             </span>
-                            <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
+                            <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator" decoration-danger="remaining_hours &lt; 0"
                                   invisible="allocated_hours == 0.0" nolabel="1"/>
                         </group>
                     </group>
