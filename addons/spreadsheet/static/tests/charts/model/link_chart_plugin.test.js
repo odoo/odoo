@@ -112,7 +112,11 @@ test("Links of Odoo charts are duplicated when duplicating a sheet", async funct
         chartId,
         odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceCoreId: pivotId },
     });
-    model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
+    model.dispatch("DUPLICATE_SHEET", {
+        sheetId,
+        sheetIdTo: secondSheetId,
+        sheetNameTo: "Next Name",
+    });
     const newChartId = model.getters.getChartIds(secondSheetId)[0];
     expect(model.getters.getChartOdooLink(newChartId)).toEqual(
         model.getters.getChartOdooLink(chartId)
@@ -128,7 +132,11 @@ test("Links of standard charts are duplicated when duplicating a sheet", async f
         chartId,
         odooLink: { type: "dataSource", dataSourceType: "pivot", dataSourceCoreId: pivotId },
     });
-    model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
+    model.dispatch("DUPLICATE_SHEET", {
+        sheetId,
+        sheetIdTo: secondSheetId,
+        sheetNameTo: "Next Name",
+    });
     const newChartId = model.getters.getChartIds(secondSheetId)[0];
     expect(model.getters.getChartOdooLink(newChartId)).toEqual(
         model.getters.getChartOdooLink(chartId)
