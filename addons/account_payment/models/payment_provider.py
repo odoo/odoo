@@ -14,7 +14,7 @@ class PaymentProvider(models.Model):
         compute='_compute_journal_id',
         inverse='_inverse_journal_id',
         check_company=True,
-        domain='[("type", "=", "bank")]',
+        domain='[("type", "in", ("bank", "credit"))]',
         copy=False,
     )
 
@@ -97,7 +97,7 @@ class PaymentProvider(models.Model):
                 provider.journal_id = self.env['account.journal'].search(
                     [
                         ('company_id', '=', provider.company_id.id),
-                        ('type', '=', 'bank'),
+                        ('type', 'in', ('bank', 'credit')),
                     ],
                     limit=1,
                 )
