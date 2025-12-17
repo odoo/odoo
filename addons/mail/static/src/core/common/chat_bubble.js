@@ -70,7 +70,7 @@ export class ChatBubble extends Component {
             (importantCounter) => {
                 this.state.bouncing = Boolean(importantCounter);
             },
-            () => [this.channel.importantCounter]
+            () => [this.channel?.importantCounter]
         );
         useSubEnv({ inChatBubble: true });
     }
