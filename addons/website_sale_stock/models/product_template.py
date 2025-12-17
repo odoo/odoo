@@ -104,6 +104,14 @@ class ProductTemplate(models.Model):
                 'cart_qty': 0,
             })
 
+        # Wishlist specific part
+        if (
+            self.env.context.get('website_sale_stock_wishlist_get_wish')
+            and product_or_template.is_product_variant
+        ):
+            product_sudo = product_or_template.sudo()
+            res['is_in_wishlist'] = product_sudo._is_in_wishlist()
+
         return res
 
     @api.model

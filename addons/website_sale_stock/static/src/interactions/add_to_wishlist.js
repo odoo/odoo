@@ -1,5 +1,5 @@
 import { patch } from '@web/core/utils/patch';
-import { AddToWishlist } from '@website_sale_wishlist/interactions/add_to_wishlist';
+import { AddToWishlist } from '@website_sale/interactions/add_to_wishlist';
 
 patch(AddToWishlist.prototype, {
     /**

@@ -1,7 +1,7 @@
 import { rpc } from '@web/core/network/rpc';
 import { isEmail } from '@web/core/utils/strings';
 import { patch } from '@web/core/utils/patch';
-import { renderToFragment } from '@web/core/utils/render';
+import { renderToElement, renderToFragment } from '@web/core/utils/render';
 import { formatFloat } from '@web/core/utils/numbers';
 import { setElementContent } from '@web/core/utils/html';
 import { patchDynamicContent } from '@web/public/utils';
@@ -143,6 +143,18 @@ patch(ProductPage.prototype, {
         this.el.querySelector('div.availability_messages').append(renderToFragment(
             'website_sale_stock.product_availability', combination
         ));
+
+        // to display additional info messages regarding the product's stock and the wishlist.
+        if (this.el.querySelector('.o_add_wishlist_dyn')) {
+            const messageEl = this.el.querySelector('div.availability_messages');
+            if (messageEl && !this.el.querySelector('#stock_wishlist_message')) {
+                this.services['public.interactions'].stopInteractions(messageEl);
+                messageEl.append(renderToElement(
+                    'website_sale_stock.wishlist_product_availability', combination
+                ) || '');
+                this.services['public.interactions'].startInteractions(messageEl);
+            }
+        }
     },
 
     async _getUnavailableQty(combination) {

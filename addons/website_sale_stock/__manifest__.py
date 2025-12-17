@@ -21,6 +21,9 @@ Then it can be made specific at the product level.
         'views/website_sale_stock_templates.xml',
         'data/template_email.xml',
         'data/ir_cron_data.xml',
+
+        # QWeb templates
+        'templates/wishlist_templates.xml',
     ],
     'demo': [
         'data/website_sale_stock_demo.xml',
@@ -34,6 +37,7 @@ Then it can be made specific at the product level.
             'website_sale_stock/static/src/js/product/*',
             'website_sale_stock/static/src/js/product_card/*',
             'website_sale_stock/static/src/js/product_configurator_dialog/*',
+            'website_sale_stock/static/src/scss/**/*',
             'website_sale_stock/static/src/xml/**/*',
         ],
         'web.assets_tests': [
