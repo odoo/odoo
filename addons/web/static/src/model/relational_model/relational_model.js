@@ -59,6 +59,7 @@ import { FetchRecordError } from "./errors";
  *  groups?: Record<string, unknown>;
  *  currentGroups?: Record<string, unknown>; // FIXME: could be cleaned: Object
  *  openGroupsByDefault?: boolean;
+ *  sendOpeningInfo?: boolean;
  * }} RelationalModelConfig
  *
  * @typedef {{
@@ -402,6 +403,7 @@ export class RelationalModel extends Model {
             // keep current root config if any, if the groupBy parameter is the same
             if (!shallowEqual(config.groupBy || [], currentGroupBy || [])) {
                 delete config.groups;
+                delete config.sendOpeningInfo;
             }
             if (!config.groupBy.length) {
                 config.orderBy = config.orderBy.filter((order) => order.name !== "__count");
@@ -750,11 +752,19 @@ export class RelationalModel extends Model {
             if (tmpConfig.isRoot) {
                 this.hooks.onWillLoadRoot(tmpConfig);
             }
+            if (tmpConfig.groupBy?.length && "groups" in patch) {
+                // usecase: @_toggleAllGroups
+                tmpConfig.sendOpeningInfo = true;
+            }
             data = await this._loadData(tmpConfig);
         }
         Object.assign(config, tmpConfig);
         if (data && commit) {
             commit(data);
+        }
+        if (!tmpConfig.isRoot && this.root && this.root.config.groupBy?.length) {
+            // usecase: toggle a group, use pager inside a group or filter with progressbar
+            this.root.config.sendOpeningInfo = true;
         }
         if (reload && config.isRoot) {
             await this.hooks.onRootLoaded(this.root);
@@ -827,7 +837,10 @@ export class RelationalModel extends Model {
         const aggregates = getAggregateSpecifications(
             pick(config.fields, ...config.fieldsToAggregate)
         );
-        const currentGroupInfos = getGroupInfo(config.groups);
+        let currentGroupInfos;
+        if (config.sendOpeningInfo) {
+            currentGroupInfos = getGroupInfo(config.groups);
+        }
         const { activeFields, fields } = config;
         const evalContext = getBasicEvalContext(config);
         const unfoldReadSpecification = getFieldsSpec(activeFields, fields, evalContext);
