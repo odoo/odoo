@@ -9,7 +9,6 @@ from odoo import Command
 
 
 @skip('Temporary to fast merge new valuation')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLotValuation(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):

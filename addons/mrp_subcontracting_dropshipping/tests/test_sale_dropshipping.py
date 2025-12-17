@@ -5,7 +5,6 @@ from odoo.tests import tagged, Form
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
 
     @classmethod

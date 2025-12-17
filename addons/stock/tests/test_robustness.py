@@ -6,7 +6,6 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import tagged, TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRobustness(TransactionCase):
 
     @classmethod

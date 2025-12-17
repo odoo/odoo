@@ -11,7 +11,6 @@ from odoo.tools import mute_logger
 from odoo.exceptions import UserError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProcRule(TransactionCase):
 
     @classmethod
@@ -914,7 +913,6 @@ class TestProcRule(TransactionCase):
         self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
         super(TestProcRuleLoad, cls).setUp()

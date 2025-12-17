@@ -9,7 +9,6 @@ from odoo.exceptions import UserError
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpCancelMO(TestMrpCommon):
 
     def test_cancel_mo_without_routing_1(self):

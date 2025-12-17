@@ -7,7 +7,6 @@ from odoo.tests import tagged, Form
 from unittest.mock import patch
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPackingDelivery(TestPackingCommon):
 
     @classmethod

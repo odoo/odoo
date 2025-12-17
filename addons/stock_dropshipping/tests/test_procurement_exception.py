@@ -4,7 +4,6 @@
 from odoo.tests import tagged, common, Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProcurementException(common.TransactionCase):
 
     def test_00_procurement_exception(self):

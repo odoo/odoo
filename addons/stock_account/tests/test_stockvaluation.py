@@ -12,7 +12,6 @@ from odoo.tests import tagged, Form
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuation(TestStockValuationCommon):
     def test_realtime(self):
         """ Stock moves update stock value with product x cost price,

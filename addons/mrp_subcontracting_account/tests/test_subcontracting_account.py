@@ -264,7 +264,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         self.assertFalse(amls)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSubcontractingBOMCost(TestBomPriceCommon):
     @classmethod
     def setUpClass(cls):

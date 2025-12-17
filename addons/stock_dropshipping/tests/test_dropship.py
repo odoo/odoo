@@ -7,7 +7,6 @@ from odoo.tests import common, tagged, Form
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDropship(common.TransactionCase):
 
     @classmethod

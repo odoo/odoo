@@ -14,7 +14,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPickShip(TestStockCommon):
     def create_pick_ship(self):
         picking_client = self.env['stock.picking'].create({
@@ -926,7 +925,6 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(return_pick.picking_type_id, picking_client.location_id.warehouse_id.in_type_id)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):
         """ Check the good behavior of creating a backorder for an available stock move.
@@ -2661,7 +2659,6 @@ class TestSinglePicking(TestStockCommon):
         ])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockUOM(TestStockCommon):
     @classmethod
     def setUpClass(cls):
@@ -2781,7 +2778,6 @@ class TestStockUOM(TestStockCommon):
         self.assertEqual(move_line.quantity_product_uom, quant.reserved_quantity)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRoutes(TestStockCommon):
     @classmethod
     def setUpClass(cls):
@@ -3082,7 +3078,6 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(ship.move_ids.location_dest_id, final_location)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAutoAssign(TestStockCommon):
     def create_pick_ship(self):
         self.warehouse_1.delivery_route_id.rule_ids.action = 'pull'

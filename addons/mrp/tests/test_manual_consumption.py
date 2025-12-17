@@ -54,7 +54,6 @@ class TestTourManualConsumption(HttpCase):
         self.assertEqual(move_nt.quantity, 16.0)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestManualConsumption(TestMrpCommon):
     @classmethod
     def setUpClass(cls):

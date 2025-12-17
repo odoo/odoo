@@ -77,7 +77,6 @@ class TestReportsCommon(TransactionCase):
         return res
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestReports(TestReportsCommon):
     def _check_closure_commands(self, zpl_rendered_template):
         wrong_xz_count = findall(r'\^XZ[^\\]+[^n]', str(zpl_rendered_template))
