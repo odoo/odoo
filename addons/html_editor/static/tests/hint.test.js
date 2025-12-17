@@ -9,7 +9,6 @@ import {
     setSelection,
 } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
-import { em, s, strong, u } from "./_helpers/tags";
 
 test("hints are removed when editor is destroyed", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
@@ -89,37 +88,36 @@ test("should not display hint in paragraph with tab", async () => {
 });
 
 test("should display hint in paragraph with strong (bold)", async () => {
-    const { el } = await setupEditor(`<p>${strong("[]\u200B", "first")}</p>`);
+    const { el } = await setupEditor(
+        `<p><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`
+    );
     // hint should be visible
     expect(getContent(el)).toBe(
-        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">${strong(
-            "[]\u200B",
-            "first"
-        )}</p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`
     );
 });
 
 test("should display hint in paragraph with em (italic)", async () => {
-    const { el } = await setupEditor(`<p>${em("[]\u200B", "first")}</p>`);
+    const { el } = await setupEditor(`<p><em data-oe-zws-empty-inline="">[]\u200B</em></p>`);
     // hint should be visible
     expect(getContent(el)).toBe(
-        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">${em("[]\u200B", "first")}</p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><em data-oe-zws-empty-inline="">[]\u200B</em></p>`
     );
 });
 
 test("should display hint in paragraph with u (underline)", async () => {
-    const { el } = await setupEditor(`<p>${u("[]\u200B", "first")}</p>`);
+    const { el } = await setupEditor(`<p><u data-oe-zws-empty-inline="">[]\u200B</u></p>`);
     // hint should be visible
     expect(getContent(el)).toBe(
-        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">${u("[]\u200B", "first")}</p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u></p>`
     );
 });
 
 test("should display hint in paragraph with s (strikethrough)", async () => {
-    const { el } = await setupEditor(`<p>${s("[]\u200B", "first")}</p>`);
+    const { el } = await setupEditor(`<p><s data-oe-zws-empty-inline="">[]\u200B</s></p>`);
     // hint should be visible
     expect(getContent(el)).toBe(
-        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">${s("[]\u200B", "first")}</p>`
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><s data-oe-zws-empty-inline="">[]\u200B</s></p>`
     );
 });
 
