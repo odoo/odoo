@@ -59,6 +59,7 @@ import { FetchRecordError } from "./errors";
  *  groups?: Record<string, unknown>;
  *  currentGroups?: Record<string, unknown>; // FIXME: could be cleaned: Object
  *  openGroupsByDefault?: boolean;
+ *  sendOpeningInfo?: boolean;
  * }} RelationalModelConfig
  *
  * @typedef {{
@@ -110,6 +111,26 @@ rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
         rpcBus.trigger("CLEAR-CACHES", ["web_read", "web_search_read", "web_read_group"]);
     }
 });
+
+function getGroupOpeningInfo(config) {
+    return Object.values(config.groups).map((group) => {
+        const field = group.fields[group.groupByFieldName];
+        const value =
+            field.type !== "many2many" ? getGroupServerValue(field, group.value) : group.value;
+        if (group.isFolded) {
+            return { value, folded: group.isFolded };
+        } else {
+            return {
+                value,
+                folded: group.isFolded,
+                limit: group.list.limit,
+                offset: group.list.offset,
+                progressbar_domain: group.extraDomain,
+                groups: group.list.groups && getGroupOpeningInfo(group.list),
+            };
+        }
+    });
+}
 
 export class RelationalModel extends Model {
     static services = ["action", "dialog", "notification", "orm", "offline"];
@@ -419,6 +440,7 @@ export class RelationalModel extends Model {
             // keep current root config if any, if the groupBy parameter is the same
             if (!shallowEqual(config.groupBy || [], currentGroupBy || [])) {
                 delete config.groups;
+                delete config.sendOpeningInfo;
             }
             if (!config.groupBy.length) {
                 config.orderBy = config.orderBy.filter((order) => order.name !== "__count");
@@ -642,6 +664,9 @@ export class RelationalModel extends Model {
             });
         }
         config.currentGroups = { params, groups };
+        if (!config.initialGroupOpeningInfo) {
+            config.initialGroupOpeningInfo = JSON.stringify(getGroupOpeningInfo(config));
+        }
 
         return { groups, length };
     }
@@ -780,6 +805,9 @@ export class RelationalModel extends Model {
         if (data && commit) {
             commit(data);
         }
+        if (this.root.config.groupBy.length && !tmpConfig.isRoot) {
+            this.root.config.sendOpeningInfo = true;
+        }
         if (reload && config.isRoot) {
             rootLoadResolve({ root: this.root, loadId: config.loadId });
             await this.hooks.onRootLoaded(this.root);
@@ -828,31 +856,9 @@ export class RelationalModel extends Model {
      * @param {Object} cache
      */
     async _webReadGroup(config, cache) {
-        function getGroupInfo(groups) {
-            return Object.values(groups).map((group) => {
-                const field = group.fields[group.groupByFieldName];
-                const value =
-                    field.type !== "many2many"
-                        ? getGroupServerValue(field, group.value)
-                        : group.value;
-                if (group.isFolded) {
-                    return { value, folded: group.isFolded };
-                } else {
-                    return {
-                        value,
-                        folded: group.isFolded,
-                        limit: group.list.limit,
-                        offset: group.list.offset,
-                        progressbar_domain: group.extraDomain,
-                        groups: group.list.groups && getGroupInfo(group.list.groups),
-                    };
-                }
-            });
-        }
         const aggregates = getAggregateSpecifications(
             pick(config.fields, ...config.fieldsToAggregate)
         );
-        const currentGroupInfos = getGroupInfo(config.groups);
         const { activeFields, fields } = config;
         const evalContext = getBasicEvalContext(config);
         const unfoldReadSpecification = getFieldsSpec(activeFields, fields, evalContext);
@@ -870,12 +876,17 @@ export class RelationalModel extends Model {
             }
         }
 
+        let groupOpeningInfo;
+        if (config.sendOpeningInfo) {
+            groupOpeningInfo = getGroupOpeningInfo(config);
+        }
+
         const params = {
             limit: config.limit !== Number.MAX_SAFE_INTEGER ? config.limit : undefined,
             offset: config.offset,
             order: orderByToString(config.orderBy),
             auto_unfold: config.openGroupsByDefault,
-            opening_info: currentGroupInfos,
+            opening_info: groupOpeningInfo,
             unfold_read_specification: unfoldReadSpecification,
             unfold_read_default_limit: this.initialLimit,
             groupby_read_specification: groupByReadSpecification,
