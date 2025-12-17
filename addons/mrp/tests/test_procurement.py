@@ -9,7 +9,6 @@ from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.exceptions import UserError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProcurement(TestMrpCommon):
 
     def test_procurement(self):

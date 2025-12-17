@@ -7,7 +7,6 @@ from odoo.tests import tagged, Form
 from odoo.exceptions import ValidationError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLotSerial(TestStockCommon):
     @classmethod
     def setUpClass(cls):

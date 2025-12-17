@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWarehouseMrp(common.TestMrpCommon):
     @classmethod
     def setUpClass(cls):
@@ -346,7 +345,6 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertNotIn(self.warehouse_1.pbm_mto_pull_id, self.route_mto.rule_ids)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestKitPicking(common.TestMrpCommon):
     @classmethod
     def setUpClass(cls):

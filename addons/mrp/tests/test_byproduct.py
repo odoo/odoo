@@ -6,7 +6,6 @@ from odoo.tests import common, tagged, Form
 from odoo.exceptions import ValidationError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpByProduct(common.TransactionCase):
 
     @classmethod

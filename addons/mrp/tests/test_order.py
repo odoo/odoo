@@ -13,7 +13,6 @@ from odoo.tests.common import HttpCase, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpOrder(TestMrpCommon):
 
     @classmethod

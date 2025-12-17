@@ -5,7 +5,6 @@ from odoo.tests import tagged, Form
 from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class StockMove(TransactionCase):
     @classmethod
     def setUpClass(cls):

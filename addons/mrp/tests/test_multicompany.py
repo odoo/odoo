@@ -6,7 +6,6 @@ from odoo.tests import tagged, common, Form
 from odoo.exceptions import UserError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMrpMulticompany(common.TransactionCase):
 
     @classmethod

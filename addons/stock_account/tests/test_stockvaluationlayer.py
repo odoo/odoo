@@ -7,7 +7,6 @@ from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationStandard(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -199,7 +198,6 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertEqual(sub_loc_quant.quantity, 30)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationAVCO(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -434,7 +432,6 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product.qty_available, 2)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationFIFO(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -633,7 +630,6 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(self.product.avg_cost, 0.0)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStockValuationChangeCostMethod(TestStockValuationCommon):
     def test_standard_to_fifo_1(self):
         """ The accounting impact of this cost method change is neutral.
@@ -825,7 +821,6 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
             self.assertAlmostEqual(abs(move.value), 1123.39)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAngloSaxonAccounting(TestStockValuationCommon):
     def test_avco_and_credit_note(self):
         """
