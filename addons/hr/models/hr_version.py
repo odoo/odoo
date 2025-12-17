@@ -269,8 +269,9 @@ class HrVersion(models.Model):
             if self.filtered(lambda v: len(v.employee_id.version_ids) == 1 and values['employee_id'] != v.employee_id.id):
                 raise ValidationError(self.env._("Cannot unassign the only active version of an employee."))
         if 'active' in values and not values['active']:
-            if self.filtered(lambda v: len(v.employee_id.version_ids) == 1):
-                raise ValidationError(self.env._("Cannot archive the only active version of an employee."))
+            for employee_id, versions in self.grouped('employee_id').items():
+                if employee_id.version_ids == versions:
+                    raise ValidationError(self.env._('Cannot archive the only active version of an employee.'))
 
         if self.env.context.get('sync_contract_dates') or "contract_date_start" not in values and "contract_date_end" not in values:
             return super().write(values)
