@@ -89,8 +89,8 @@
                         <group string="Driver">
                             <field name="active" invisible="1"/>
                             <field name="vehicle_type" invisible="1"/>
-                            <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar"/>
-                            <field name="future_driver_id" widget="many2one_avatar"/>
+                            <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar_user"/>
+                            <field name="future_driver_id" widget="many2one_avatar_user"/>
                             <field name="next_assignation_date"/>
                             <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         </group>
@@ -199,8 +199,8 @@
                 <field name="model_id" widget="many2one_avatar" readonly="1"/>
                 <field name="category_id"/>
                 <field name="manager_id" optional="hide" widget="many2one_avatar_user"/>
-                <field name="driver_id" widget="many2one_avatar" readonly="1" optional="show"/>
-                <field name="future_driver_id"  widget="many2one_avatar" readonly="1" optional="show"/>
+                <field name="driver_id" widget="many2one_avatar_user" readonly="1" optional="show"/>
+                <field name="future_driver_id"  widget="many2one_avatar_user" readonly="1" optional="show"/>
                 <field name="log_drivers" column_invisible="True"/>
                 <field name="vin_sn" readonly="1" optional="hide"/>
                 <field name="co2" string="CO2 Emissions" optional="hide" readonly="1"/>
@@ -304,7 +304,7 @@
                             </div>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             <div class="d-flex gap-1" t-if="record.driver_id.raw_value">
-                                <field name="driver_id" widget="many2one_avatar"/>
+                                <field name="driver_id" widget="many2one_avatar_user"/>
                                 <field name="driver_id" class="small pt-1 pb-1"/>
                             </div>
                             <div class="small">
@@ -414,7 +414,7 @@
             <list string="Odometer Logs" editable="top">
                 <field name="date" />
                 <field name="vehicle_id" widget="many2one_avatar"/>
-                <field name="driver_id" widget="many2one_avatar"/>
+                <field name="driver_id" widget="many2one_avatar_user"/>
                 <field name="value" />
                 <field name="unit" />
             </list>
@@ -594,7 +594,7 @@
         <field name="arch" type="xml">
             <list default_order="date_start desc, id desc" string="Assignment Logs" editable="bottom">
                 <field name="vehicle_id" />
-                <field name="driver_id" widget="many2one_avatar" string="Current Driver" />
+                <field name="driver_id" widget="many2one_avatar_user" string="Current Driver" />
                 <field name="date_start"/>
                 <field name="date_end"/>
             </list>
