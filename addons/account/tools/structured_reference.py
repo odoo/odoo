@@ -46,6 +46,21 @@ def is_valid_structured_reference_be(reference):
     be_ref = re.fullmatch(r'(\d{10})(\d{2})', ref)
     return be_ref and int(be_ref.group(1)) % 97 == int(be_ref.group(2)) % 97
 
+
+def is_valid_structured_reference_dk(reference):
+    """Check whether the provided reference is a valid structured reference for Denmark.
+    Example: +71<022646321691221+88655702<
+
+    :param reference: the reference to check
+    """
+    ref = sanitize_structured_reference(reference)
+    match = re.fullmatch(r'\+?(?:71<(\d{15})|75<(\d{16}))\+\d{8}<', ref)
+    if not match:
+        return False
+
+    payment_ref = match.group(1) or match.group(2)
+    return luhn.is_valid(payment_ref)
+
 def is_valid_structured_reference_fi(reference):
     """Check whether the provided reference is a valid structured reference for Finland.
 
@@ -117,6 +132,7 @@ def is_valid_structured_reference(reference):
 
     return (
         is_valid_structured_reference_be(reference) or
+        is_valid_structured_reference_dk(reference) or
         is_valid_structured_reference_fi(reference) or
         is_valid_structured_reference_no_se(reference) or
         is_valid_structured_reference_nl(reference) or
