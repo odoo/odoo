@@ -34,6 +34,7 @@ import {
     runAllTimers,
     tick,
     waitFor,
+    waitForNone,
 } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
@@ -2230,23 +2231,23 @@ test("composer state: attachments save and restore", async () => {
 });
 
 test("sidebar: cannot leave channel with group_ids", async () => {
-    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({
-        name: "General",
-        channel_member_ids: [
-            Command.create({
-                unpin_dt: "2021-01-01 12:00:00",
-                last_interest_dt: "2021-01-01 10:00:00",
-                partner_id: serverState.partnerId,
-            }),
-        ],
-        group_ids: [Command.create({ name: "test" })],
-    });
+    pyEnv["discuss.channel"].create([
+        {
+            name: "General",
+            group_ids: [Command.create({ name: "test" })],
+        },
+        {
+            name: "Special",
+        },
+    ]);
     await start();
     await openDiscuss();
-    await contains("button", { text: "General" });
-    await contains("[title='Leave Channel']", { count: 0 });
+    await click(".o-mail-DiscussSidebarChannel:text(General) .oi-ellipsis-h");
+    await waitFor(".dropdown-item:text(Advanced Settings)"); // check anything else in the dropdown
+    await waitForNone(".dropdown-item:text(Leave Channel)");
+    await click(".o-mail-DiscussSidebarChannel:text(Special) .oi-ellipsis-h");
+    await waitFor(".dropdown-item:text(Leave Channel)");
 });
 
 test("restore thread scroll position", async () => {
