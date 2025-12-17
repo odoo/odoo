@@ -5,6 +5,7 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { registry } from "@web/core/registry";
 
 const { DateTime } = luxon;
@@ -72,5 +73,38 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
             TicketScreen.nthRowContains(1, "T 101"),
             TicketScreen.nthRowContains(2, `${String(DateTime.now().year).slice(-2)}1`),
             TicketScreen.nthRowContains(2, "T 103"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_sync_lines_qty_update_ticket_screen", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            Chrome.clickRegister(),
+            ProductScreen.addOrderline("Coca-Cola", "1"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("A powerful Pos man!"),
+
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
+            TicketScreen.loadSelectedOrder(),
+
+            ProductScreen.isShown(),
+            ProductScreen.clickOrderline("Coca-Cola", "1"),
+            ProductScreen.clickNumpad("3"),
+            ProductScreen.selectedOrderlineHas("Coca-Cola", "3"),
+            Chrome.waitForOrdersSync(),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
+            Order.hasLine({
+                productName: "Coca-Cola",
+                quantity: 3,
+            }),
+            TicketScreen.loadSelectedOrder(),
+            Chrome.waitRequest(),
+            Chrome.isSynced(),
+            ProductScreen.clickOrderline("Coca-Cola", "3"),
         ].flat(),
 });
