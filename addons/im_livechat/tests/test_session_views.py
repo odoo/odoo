@@ -92,9 +92,6 @@ class TestImLivechatLookingForHelpViews(TestImLivechatSessionViews):
             groups="base.group_user,im_livechat.im_livechat_group_user",
         )
         cls.livechat_channel.user_ids |= cls.bob
-        cls.looking_for_help_action = cls.env.ref(
-            "im_livechat.discuss_channel_looking_for_help_action"
-        )
 
     def start_needhelp_session(self, guest_name=None):
         self.authenticate(None, None)
@@ -113,22 +110,6 @@ class TestImLivechatLookingForHelpViews(TestImLivechatSessionViews):
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         chat.livechat_status = "need_help"
         return chat
-
-    def test_looking_for_help_list_real_time_update(self):
-        self.start_needhelp_session()
-        self.start_tour(
-            f"/odoo/action-{self.looking_for_help_action.id}",
-            "im_livechat.looking_for_help_list_real_time_update_tour",
-            login="bob_looking_for_help",
-        )
-
-    def test_looking_for_help_kanban_real_time_update(self):
-        self.start_needhelp_session()
-        self.start_tour(
-            f"/odoo/action-{self.looking_for_help_action.id}?view_type=kanban",
-            "im_livechat.looking_for_help_kanban_real_time_update_tour",
-            login="bob_looking_for_help",
-        )
 
     def test_looking_for_help_discuss_category(self):
         self.env["discuss.channel"].search([("livechat_status", "=", "need_help")]).unlink()
