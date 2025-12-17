@@ -14,18 +14,6 @@ class DiscussChannel(models.Model):
     )
     livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor', index='btree_not_null')
 
-    def channel_pin(self, pinned=False):
-        """ Override to clean an empty livechat channel.
-         This is typically called when the operator send a chat request to a website.visitor
-         but don't speak to them and closes the chatter.
-         This allows operators to send the visitor a new chat request.
-         If active empty livechat channel,
-         delete discuss_channel as not useful to keep empty chat
-         """
-        super().channel_pin(pinned=pinned)
-        if self.channel_type == "livechat" and not pinned and not self.message_ids:
-            self.sudo().unlink()
-
     def _store_channel_fields(self, res: Store.FieldList):
         super()._store_channel_fields(res)
         res.one(

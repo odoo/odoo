@@ -11,6 +11,10 @@ commandRegistry
     .add("leave", {
         help: _t("Leave this channel"),
         methodName: "execute_command_leave",
+        /** @param {import("models").DiscussChannel} channel */
+        onExecute(channel) {
+            channel.chatWindow?.close();
+        },
     })
     .add("who", {
         channel_types: ["channel", "chat", "group"],

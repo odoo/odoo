@@ -261,7 +261,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "discuss.channel", discuss_channel.id),
                     (self.cr.dbname, "res.partner", self.partner_employee.id),
-                    (self.cr.dbname, "res.partner", self.env.user.partner_id.id),
                 ],
                 [
                     {
@@ -384,7 +383,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                         },
                     },
                     {"type": "mail.record/insert", "payload": channel_data_emp},
-                    {"type": "mail.record/insert", "payload": channel_data},
                 ],
             )
 

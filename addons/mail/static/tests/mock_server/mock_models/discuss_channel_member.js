@@ -227,6 +227,51 @@ export class DiscussChannelMember extends models.ServerModel {
 
     /**
      * @param {number[]} ids
+     * @param {boolean} [pinned=false]
+     */
+    _channel_pin(ids, pinned) {
+        const kwargs = getKwArgs(arguments, "ids", "pinned");
+        ids = kwargs.ids;
+        delete kwargs.ids;
+        pinned = kwargs.pinned ?? false;
+
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const members = this.browse(ids);
+        for (const member of members) {
+            if (member && member.is_pinned !== pinned) {
+                DiscussChannelMember.write([member.id], {
+                    unpin_dt: pinned ? false : serializeDateTime(today()),
+                });
+            }
+            const [partner] = ResPartner.read(this.env.user.partner_id);
+            if (!pinned) {
+                BusBus._sendone(
+                    partner,
+                    "mail.record/insert",
+                    new mailDataHelpers.Store(DiscussChannel.browse(member.channel_id), {
+                        id: member.channel_id,
+                    }).get_result()
+                );
+            } else {
+                BusBus._sendone(
+                    partner,
+                    "mail.record/insert",
+                    new mailDataHelpers.Store(DiscussChannel.browse(member.channel_id)).get_result()
+                );
+            }
+        }
+    }
+
+    /**
+     * @param {number[]} ids
      * @param {number} last_message_id
      */
     _mark_as_read(ids, last_message_id) {

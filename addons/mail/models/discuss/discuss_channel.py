@@ -1331,19 +1331,6 @@ class DiscussChannel(models.Model):
             channel._broadcast(partners.ids)
         return channel
 
-    def channel_pin(self, pinned=False):
-        self.ensure_one()
-        member = self.env['discuss.channel.member'].search(
-            [('partner_id', '=', self.env.user.partner_id.id), ('channel_id', '=', self.id), ('is_pinned', '!=', pinned)])
-        if member:
-            member.write({'unpin_dt': False if pinned else fields.Datetime.now()})
-        store = Store(bus_channel=self.env.user)
-        if not pinned:
-            store.add(self, {"close_chat_window": True})
-        else:
-            store.add(self, "_store_channel_fields")
-        store.bus_send()
-
     def _allow_invite_by_email(self):
         return self.channel_type == "group" or (
             self.channel_type == "channel" and not self.group_public_id
@@ -1611,7 +1598,7 @@ class DiscussChannel(models.Model):
         if self.channel_type in self._types_allowing_unfollow():
             self.action_unfollow()
         else:
-            self.channel_pin(False)
+            self.self_member_id.unpin_dt = fields.Datetime.now()
 
     def execute_command_who(self, **kwargs):
         if all_other_members := self.channel_member_ids.filtered(lambda m: not m.is_self):

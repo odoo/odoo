@@ -389,6 +389,14 @@ export class DiscussChannel extends Record {
         return false;
     }
 
+    pinRpc({ pinned = true } = {}) {
+        return this.store.fetchStoreData(
+            "/discuss/channel/pin",
+            { channel_id: this.id, pinned },
+            { readonly: false }
+        );
+    }
+
     /** @param {string} name */
     async rename(name) {
         const newName = name.trim();

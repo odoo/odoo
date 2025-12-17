@@ -948,7 +948,7 @@ class DiscussChannel(models.Model):
             )
             channel_sudo._add_next_step_message_to_store(chatbot_script_step)
             channel_sudo._broadcast(human_operator.partner_id.ids)
-            self.channel_pin(pinned=True)
+            self.self_member_id.last_interest_dt = fields.Datetime.now()
         else:
             # sudo: discuss.channel - visitor tried getting operator, outcome must be updated
             self.sudo().livechat_failure = "no_agent"

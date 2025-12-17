@@ -68,13 +68,10 @@ const threadModelPatch = {
         if (this.discussAppAsThread) {
             router.replaceState({ active_id: undefined });
         }
-        if (this.channel && this.self_member_id?.is_pinned !== false) {
-            await this.store.env.services.orm.silent.call(
-                "discuss.channel",
-                "channel_pin",
-                [this.id],
-                { pinned: false }
-            );
+        await this.store.chatHub.initPromise;
+        this.channel?.chatWindow?.close();
+        if (this.channel?.self_member_id?.is_pinned !== false) {
+            await this.channel.pinRpc({ pinned: false });
         }
     },
     /** @param {string} body */
