@@ -706,6 +706,12 @@ class TestFrontend(TestFrontendCommon):
         order = self.pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.lines[0].qty, 3)
 
+    def test_sync_lines_qty_update_ticket_screen(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_sync_lines_qty_update_ticket_screen')
+        order = self.pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.lines[0].qty, 3, "Quantity should be updated to 3 in the backend")
+
     def test_sync_set_partner(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_sync_set_partner')
