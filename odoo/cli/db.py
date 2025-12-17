@@ -27,7 +27,7 @@ def _exit_if_exists(db_name, *, drop_instead):
     if not db.exist(db_name):
         pass
     elif drop_instead:
-        db.drop(db.SKIP_ADMIN_PASSWORD, db_name)
+        db.drop(db_name)
     else:
         sys.exit(_db_exist_error_message.format(db_name=db_name))
 
