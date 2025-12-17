@@ -22,7 +22,6 @@ from odoo.tools import formataddr, mute_logger
 
 
 @tagged('mail_mail')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailMail(MailCommon):
 
     @classmethod
@@ -788,7 +787,6 @@ class TestMailMail(MailCommon):
         self.assertEqual(msg.message_type, 'email_outgoing', 'Mails should have outgoing email type by default')
 
 @tagged('mail_mail', 'mail_server')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailMailServer(MailCommon):
 
     @classmethod
@@ -1116,7 +1114,6 @@ class TestMailMailServer(MailCommon):
 
 
 @tagged('mail_mail')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMailMailRace(MailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')

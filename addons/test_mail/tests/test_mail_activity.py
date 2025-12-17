@@ -30,7 +30,6 @@ class TestActivityCommon(ActivityScheduleCase):
 
 
 @tests.tagged('mail_activity')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivityRights(TestActivityCommon):
 
     def test_activity_action_open_document_no_access(self):
@@ -255,7 +254,6 @@ class TestActivityRights(TestActivityCommon):
 
 
 @tests.tagged('mail_activity')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivityFlow(TestActivityCommon):
 
     def test_activity_flow_employee(self):
@@ -639,7 +637,6 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
 @tests.tagged('mail_activity')
 @freeze_time("2024-01-01 09:00:00")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivitySystrayBusNotify(TestActivityCommon):
 
     @classmethod
@@ -761,7 +758,6 @@ class TestActivitySystrayBusNotify(TestActivityCommon):
 
 
 @tests.tagged('mail_activity')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestActivityViewHelpers(TestActivityCommon):
 
     @classmethod

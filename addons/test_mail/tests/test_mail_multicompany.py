@@ -75,7 +75,6 @@ class TestMailMCCommon(MailCommon, TestRecipients):
 
 
 @tagged('multi_company')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
 
     @users('employee_c2')
