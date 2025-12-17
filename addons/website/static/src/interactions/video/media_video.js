@@ -56,8 +56,14 @@ export class MediaVideo extends Interaction {
             playerEl = generateVideoPlayer(this.el, this.services.website_cookies.manageIframeSrc);
         }
 
-        if (playerEl && !playerEl.getAttribute("aria-label")) {
-            playerEl.setAttribute("aria-label", _t("Media video"));
+        const description = this.el.getAttribute("title")?.trim();
+        if (playerEl) {
+            if (description) {
+                playerEl.setAttribute("title", description);
+                playerEl.removeAttribute("aria-label");
+            } else if (!playerEl.getAttribute("aria-label")) {
+                playerEl.setAttribute("aria-label", _t("Media video"));
+            }
         }
 
         if (playerEl?.tagName === "VIDEO") {
