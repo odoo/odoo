@@ -1,16 +1,17 @@
-import logging
 import datetime
+import logging
 import re
 
 import stdnum
 from stdnum import luhn
 from stdnum.eu.vat import check_vies
-from stdnum.exceptions import InvalidComponent, InvalidChecksum, InvalidFormat
+from stdnum.exceptions import InvalidChecksum, InvalidComponent, InvalidFormat
 from stdnum.util import clean
 
-from odoo import api, models, fields
-from odoo.tools import _, LazyTranslate
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import LazyTranslate, _, zeep
+
 from odoo.addons.base.models.res_partner import EU_EXTRA_VAT_CODES
 
 _lt = LazyTranslate(__name__)
@@ -97,6 +98,8 @@ class ResPartner(models.Model):
     country_id = fields.Many2one(inverse="_inverse_vat", store=True)
     vat = fields.Char(inverse="_inverse_vat", store=True)
 
+    __regex_cache = {}
+
     @api.model
     def _run_vat_checks(self, country, vat, partner_name='', validation='error'):
         """ OVERRIDE """
@@ -147,14 +150,13 @@ class ResPartner(models.Model):
             if do_eu_check:
                 try:
                     return self._run_vat_checks(self.env['res.country'].search([('code', '=', country_code)], limit=1), vat_prefix + vat_number, partner_name, validation)
-                except ValidationError:
+                except ValidationError as e:
                     msg = self._build_vat_error_message(code_to_check, vat, partner_label)
-                    raise ValidationError(msg + "\n\n" + _('If you are trying to input a European number, this is the expected format: ') + _ref_vat[country_code.lower()])
+                    raise ValidationError(msg + "\n\n" + _('If you are trying to input a European number, this is the expected format: ') + _ref_vat[country_code.lower()]) from e
             if validation == 'error':
                 msg = self._build_vat_error_message(code_to_check, vat, partner_label)
                 raise ValidationError(msg)
-            else:
-                return '', code_to_check
+            return '', code_to_check
         return vat_to_return, code_to_check
 
     def _inverse_vat(self):
@@ -173,13 +175,14 @@ class ResPartner(models.Model):
             company_code = self.env.company.account_fiscal_country_id.code
             partner.perform_vies_validation = (
                 to_check
-                and not to_check[:2].upper() == company_code
+                and to_check[:2].upper() != company_code
                 and self.env.company.vat_check_vies
             )
 
     @api.depends('vat')
     def _compute_vies_valid(self):
         """ Check the VAT number with VIES, if enabled."""
+
         if not self.env['res.company'].sudo().search_count([('vat_check_vies', '=', True)]):
             self.vies_valid = False
             return
@@ -191,22 +194,23 @@ class ResPartner(models.Model):
             if partner.parent_id and partner.parent_id.vat == partner.vat:
                 partner.vies_valid = partner.parent_id.vies_valid
                 continue
-            from odoo.tools import zeep  # noqa: PLC0415
+
+            msg = ""
             try:
                 vies_valid = check_vies(partner.vat, timeout=10)
                 partner.vies_valid = vies_valid['valid']
-            except (OSError, InvalidComponent, zeep.exceptions.Fault) as e:
-                if partner._origin.id:
-                    msg = ""
-                    if isinstance(e, OSError):
-                        msg = _("Connection with the VIES server failed. The VAT number %s could not be validated.", partner.vat)
-                    elif isinstance(e, InvalidComponent):
-                        msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vat)
-                    elif isinstance(e, zeep.exceptions.Fault):
-                        msg = _('The request for VAT validation was not processed. VIES service has responded with the following error: %s', e.message)
-                    partner._origin.message_post(body=msg)
+            except OSError:
+                msg = _("Connection with the VIES server failed. The VAT number %s could not be validated.", partner.vat)
+            except InvalidComponent:
+                msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vat)
+            except zeep.exceptions.Fault as e:
+                msg = _('The request for VAT validation was not processed. VIES service has responded with the following error: %s', e.message)
+
+            if msg:
                 _logger.warning("The VAT number %s failed VIES check.", partner.vat)
                 partner.vies_valid = False
+                if partner._origin.id:
+                    partner._origin.message_post(body=msg)
 
     def _split_vat(self, vat):
         vat_prefix, vat_number = vat[:2].upper(), vat[2:].replace(' ', '')
@@ -214,12 +218,129 @@ class ResPartner(models.Model):
             return '', vat
         return vat_prefix, vat_number
 
+    def _get_stdnum_module(self, country_code, name='vat'):
+        return stdnum.util.get_cc_module(country_code, name)
+
+    def _get_stdnum_validator(self, country_code, name='vat'):
+        module = self._get_stdnum_module(country_code, name)
+        return module and getattr(module, 'is_valid', False)
+
+    def _get_extra_validators(self, country_code):
+
+        def std(name):
+            def get_validator(vat):
+                return self._get_stdnum_validator(country_code, name)(vat)
+            return get_validator
+
+        def regex(pattern):
+            key, pattern = pattern, self.__regex_cache.get(pattern) or re.compile(pattern)
+            self.__regex_cache[key] = pattern
+
+            def validate(vat_number):
+                return re.match(pattern, vat_number)
+            return validate
+
+        match country_code:
+            case 'br':
+                return [
+                    std('cpf'),
+                    std('cnpj'),
+                ]
+            case 'cr':
+                return [
+                    # CÉDULA FÍSICA: 9 digits
+                    # CÉDULA JURÍDICA: 10 digits
+                    # CÉDULA DIMEX: 11 or 12 digits
+                    # CÉDULA NITE: 10 digits
+                    regex(r'^(?:[1-9]\d{8}|\d{10}|[1-9]\d{10,11})$'),
+                ]
+            case 'de':
+                return [std('vat'), std('stnr')]
+            case 'do':
+                return [std('cedula')]
+            case 'el' | 'gr':
+                validators = [self._get_stdnum_validator('gr')] if country_code == 'el' else []
+                # test values
+                return validators + [
+                    regex('047747270'),
+                    regex('047747210'),
+                    regex('047747220'),
+                    regex('117747270'),
+                    regex('127747270'),
+                ]
+            case 'gt':
+                return [
+                    regex(r'98[0-9]{10}K'),
+                    regex('11201220K'),  # test
+                    regex('11201350K'),  # test
+                ]
+            case 'hu':
+                return [
+                     regex(r'^\d{8}-?[1-5]-?\d{2}$'),  # companies
+                     regex(r'^8\d{9}$'),  # individuals
+                     regex(r'^\d{8}$'),  # european
+                 ]
+            case 'il':
+                return [std('idnr')]
+            case 'th':
+                return [std('tin')]
+            case 'tr':
+                return [std('tckimlik'), std('vkn')]
+            case 'in':
+                return [
+                    # reference: https://www.gstzen.in/a/format-of-a-gst-number-gstin.html
+                    # Normal, Composite, Casual GSTIN
+                    regex(r'[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Zz1-9A-Ja-j]{1}[0-9a-zA-Z]{1}'),
+                    # UN/ON Body GSTIN
+                    regex(r'[0-9]{4}[A-Z]{3}[0-9]{5}[UO]{1}[N][A-Z0-9]{1}'),
+                    # NRI GSTIN
+                    regex(r'[0-9]{4}[a-zA-Z]{3}[0-9]{5}[N][R][0-9a-zA-Z]{1}'),
+                    # TDS GSTIN
+                    regex(r'[0-9]{2}[a-zA-Z]{4}[a-zA-Z0-9]{1}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[DK]{1}[0-9a-zA-Z]{1}'),
+                    # TCS GSTIN
+                    regex(r'[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[C]{1}[0-9a-zA-Z]{1}'),
+                ]
+            case 'ma':
+                return [regex(r'\d{8}')]
+            case 'ph':
+                return [regex(r'\d{3}-\d{3}-\d{3}(-\d{3,5})?$')]  # TIN + branch code
+            case 'ro':
+                return [
+                    regex(r'[1-9]\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{6}'),  # natural person tin1
+                    regex(r'9000\d{9}'),  # natural person tin2
+                ]
+            case 'sa':
+                return [
+                    regex(r'^3[0-9]{13}3$'),  # ZATCA
+                ]
+            case 'vn':
+                return [
+                    # - 10-digit format (Enterprise tax ID): e.g., 0101243150
+                    # - 13-digit format with branch suffix: e.g., 0101243150-001
+                    # - 12-digit format (Personal ID / Citizen ID - CCCD): e.g., 079123456789
+                    # (used as tax ID for individuals from July 1st, 2025)
+                    # Note:
+                    # - stdnum.vn.mst.validate() currently only supports 10- and 13-digit VAT numbers
+                    # - and does not accept the 12-digit personal tax ID (CCCD) format introduced from 01/07/2025.
+                    # - This helper provides a lightweight format-level validator for use in the meantime.
+                    # - Can be removed once stdnum.vn.mst adds CCCD support.
+                    regex(r'^\d{10}(?:-?\d{3})?$'),
+                    regex(r'^\d{12}$'),
+                ]
+            case 'xi':
+                return [self._get_stdnum_validator('gb')]
+            case _:
+                return []
+
     @api.model
-    def _check_vat_number(self, country_code, vat_number):
-        ''' Low-level method directly calling stdnum or our own specific method. '''
-        check_func_name = 'check_vat_' + country_code.lower()
-        check_func = getattr(self, check_func_name, None) or getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'is_valid', None)
-        return check_func(vat_number) if check_func else True
+    def _check_vat_number(self, country_code, vat):
+        country_code = country_code.lower()
+        validators = []
+        method_name = f'check_vat_{country_code}'
+        if main_validator := getattr(self, method_name, None) or self._get_stdnum_validator(country_code):
+            validators.append(main_validator)
+        validators += self._get_extra_validators(country_code)
+        return any(f(vat) for f in validators)
 
     @api.model
     def _build_vat_error_message(self, country_code, wrong_vat, record_label):
@@ -238,7 +359,7 @@ class ResPartner(models.Model):
         if expected_format:
             expected_note = ' \n' + _(
                 'Note: the expected format is %(expected_format)s',
-                 expected_format=expected_format
+                 expected_format=expected_format,
             )
 
         # Catch use case where the record label is about the public user (name: False)
@@ -248,100 +369,28 @@ class ResPartner(models.Model):
                 vat_label=vat_label,
                 wrong_vat=wrong_vat,
                 record_label=record_label,
-                expected_note=expected_note
-            )
-        else:
-            return '\n' + _(
-                'The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %(expected_note)s',
-                vat_label=vat_label,
-                wrong_vat=wrong_vat,
                 expected_note=expected_note,
             )
+        return '\n' + _(
+            'The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %(expected_note)s',
+            vat_label=vat_label,
+            wrong_vat=wrong_vat,
+            expected_note=expected_note,
+        )
+
+    # CUSTOM CHECK VAT -----------------------
 
     _check_vat_al_re = re.compile(r'^[JKLM][0-9]{8}[A-Z]$')
 
     def check_vat_al(self, vat):
         """Check Albania VAT number"""
-        number = stdnum.util.get_cc_module('al', 'vat').compact(vat)
-        return len(number) == 10 and self._check_vat_al_re.match(number)
+        number = self._get_stdnum_module('al').compact(vat)
+        return self._check_vat_al_re.match(number)
 
     def check_vat_jp(self, vat):
         if vat and vat[0] == 'T':
             vat = vat[1:]
-        return stdnum.util.get_cc_module('jp', 'vat').is_valid(vat)
-
-    _check_tin1_ro_natural_persons = re.compile(r'[1-9]\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{6}')
-    _check_tin2_ro_natural_persons = re.compile(r'9000\d{9}')
-
-    def check_vat_do(self, vat):
-        is_valid_vat = stdnum.util.get_cc_module("do", "vat").is_valid
-        is_valid_cedula = stdnum.util.get_cc_module("do", "cedula").is_valid
-        return is_valid_vat(vat) or is_valid_cedula(vat)
-
-    def check_vat_ro(self, vat):
-        """
-            Check Romanian VAT number that can be for example 'RO1234567897 or 'xyyzzaabbxxxx' or '9000xxxxxxxx'.
-
-            - For xyyzzaabbxxxx, 'x' can be any number, 'y' is the two last digit of a year (in the range 00…99),
-              'a' is a month, b is a day of the month, the number 8 and 9 are Country or district code
-              (For those twos digits, we decided to let some flexibility  to avoid complexifying the regex and also
-              for maintainability)
-            - 9000xxxxxxxx, start with 9000 and then is filled by number In the range 0...9
-
-            Also stdum also checks the CUI or CIF (Romanian company identifier). So a number like '123456897' will pass.
-        """
-        tin1 = self._check_tin1_ro_natural_persons.match(vat)
-        if tin1:
-            return True
-        tin2 = self._check_tin2_ro_natural_persons.match(vat)
-        if tin2:
-            return True
-        # Check the vat number
-        return stdnum.util.get_cc_module('ro', 'vat').is_valid(vat)
-
-    def check_vat_gr(self, vat):
-        """ Allows some custom test VAT number to be valid to allow testing Greece EDI. """
-        greece_test_vats = ('047747270', '047747210', '047747220', '117747270', '127747270')
-        if vat in greece_test_vats:
-            return True
-        return stdnum.util.get_cc_module('gr', 'vat').is_valid(vat)
-
-    # Our EDI provider Infile has designated this range of testing VATs for our customers.
-    __check_vat_gt_testing_infile = re.compile(r'98[0-9]{10}K')
-
-    def check_vat_gt(self, vat):
-        """
-        Allow some custom Guatemala NIT numbers to pass the test to be used for testing the Guatemalan EDI.
-        """
-        guatemalan_test_vats = ('11201220K', '11201350K')
-        if vat in guatemalan_test_vats or self.__check_vat_gt_testing_infile.match(vat):
-            return True
-        return stdnum.util.get_cc_module('gt', 'vat').is_valid(vat)
-
-    _check_tin_hu_individual_re = re.compile(r'^8\d{9}$')
-    _check_tin_hu_companies_re = re.compile(r'^\d{8}-?[1-5]-?\d{2}$')
-    _check_tin_hu_european_re = re.compile(r'^\d{8}$')
-
-    def check_vat_hu(self, vat):
-        """
-            Check Hungary VAT number that can be for example 'HU12345676 or 'xxxxxxxx-y-zz' or '8xxxxxxxxy'
-
-            - For xxxxxxxx-y-zz, 'x' can be any number, 'y' is a number between 1 and 5 depending on the person and the 'zz'
-              is used for region code.
-            - 8xxxxxxxxy, Tin number for individual, it has to start with an 8 and finish with the check digit
-            - In case of EU format it will be the first 8 digits of the full VAT
-        """
-        companies = self._check_tin_hu_companies_re.match(vat)
-        if companies:
-            return True
-        individual = self._check_tin_hu_individual_re.match(vat)
-        if individual:
-            return True
-        european = self._check_tin_hu_european_re.match(vat)
-        if european:
-            return True
-        # Check the vat number
-        return stdnum.util.get_cc_module('hu', 'vat').is_valid(vat)
+        return self._get_stdnum_module('jp').is_valid(vat)
 
     _check_vat_ch_re = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})( )?(MWST|TVA|IVA)$')
 
@@ -367,16 +416,13 @@ class ResPartner(models.Model):
             # For new TVA numbers, the last digit is a MOD11 checksum digit build with weighting pattern: 5,4,3,2,7,6,5,4
             num = [s for s in match.group(1) if s.isdigit()]        # get the digits only
             factor = (5, 4, 3, 2, 7, 6, 5, 4)
-            csum = sum([int(num[i]) * factor[i] for i in range(8)])
+            csum = sum(int(num[i]) * factor[i] for i in range(8))
             check = (11 - (csum % 11)) % 11
             return check == int(num[8])
         return False
 
-
     def is_valid_ruc_ec(self, vat):
-        if len(vat) in (10, 13) and vat.isdecimal():
-            return True
-        return False
+        return len(vat) in (10, 13) and vat.isdecimal()
 
     def check_vat_ec(self, vat):
         vat = clean(vat, ' -.').upper().strip()
@@ -391,12 +437,8 @@ class ResPartner(models.Model):
             else:
                 # invalid
                 return -1
-        checksum = extra + sum((8-i) * int(x) for i, x in enumerate(vat[:7]))
+        checksum = extra + sum((8 - i) * int(x) for i, x in enumerate(vat[:7]))
         return 'WABCDEFGHIJKLMNOPQRSTUV'[checksum % 23]
-
-    # TODO: remove in master
-    def check_vat_ie(self, vat):
-        return stdnum.util.get_cc_module('ie', 'vat').is_valid(vat)
 
     # Mexican VAT verification, contributed by Vauxoo
     # and Panos Christeas <p_christ@hol.gr>
@@ -413,7 +455,7 @@ class ResPartner(models.Model):
         '''
         m = self._check_vat_mx_re.fullmatch(vat)
         if not m:
-            #No valid format
+            # No valid format
             return False
         ano = int(m['ano'])
         if ano > 30:
@@ -435,7 +477,7 @@ class ResPartner(models.Model):
         Check Norway VAT number.See http://www.brreg.no/english/coordination/number.html
         """
         if len(vat) == 12 and vat.upper().endswith('MVA'):
-            vat = vat[:-3] # Strictly speaking we should enforce the suffix MVA but...
+            vat = vat[:-3]  # Strictly speaking we should enforce the suffix MVA but...
 
         if len(vat) != 9:
             return False
@@ -461,18 +503,12 @@ class ResPartner(models.Model):
     def check_vat_pe(self, vat):
         if len(vat) != 11 or not vat.isdigit():
             return False
-        dig_check = 11 - (sum([int('5432765432'[f]) * int(vat[f]) for f in range(0, 10)]) % 11)
+        dig_check = 11 - (sum(int('5432765432'[f]) * int(vat[f]) for f in range(0, 10)) % 11)
         if dig_check == 10:
             dig_check = 0
         elif dig_check == 11:
             dig_check = 1
         return int(vat[10]) == dig_check
-
-    # Philippines TIN (+ branch code) validation
-    _check_vat_ph_re = re.compile(r"\d{3}-\d{3}-\d{3}(-\d{3,5})?$")
-
-    def check_vat_ph(self, vat):
-        return len(vat) >= 11 and len(vat) <= 17 and self._check_vat_ph_re.match(vat)
 
     def check_vat_ru(self, vat):
         '''
@@ -514,21 +550,7 @@ class ResPartner(models.Model):
     # VAT validation in Serbia
     def check_vat_rs(self, vat):
         vat = vat.removeprefix('RS')
-        return stdnum.util.get_cc_module('rs', 'vat').is_valid(vat)
-
-    # VAT validation in Turkey
-    def check_vat_tr(self, vat):
-        return stdnum.util.get_cc_module('tr', 'tckimlik').is_valid(vat) or stdnum.util.get_cc_module('tr', 'vkn').is_valid(vat)
-
-    _check_vat_sa_re = re.compile(r"^3[0-9]{13}3$")
-
-    # Saudi Arabia TIN validation
-    def check_vat_sa(self, vat):
-        """
-            Check company VAT TIN according to ZATCA specifications: The VAT number should start and begin with a '3'
-            and be 15 digits long
-        """
-        return self._check_vat_sa_re.match(vat) or False
+        return self._get_stdnum_module('rs').is_valid(vat)
 
     def check_vat_ua(self, vat):
         res = []
@@ -630,95 +652,6 @@ class ResPartner(models.Model):
 
         return check_digit == checksum_digit
 
-    def check_vat_in(self, vat):
-        #reference from https://www.gstzen.in/a/format-of-a-gst-number-gstin.html
-        if vat and len(vat) == 15:
-            all_gstin_re = [
-                r'[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Zz1-9A-Ja-j]{1}[0-9a-zA-Z]{1}', # Normal, Composite, Casual GSTIN
-                r'[0-9]{4}[A-Z]{3}[0-9]{5}[UO]{1}[N][A-Z0-9]{1}', #UN/ON Body GSTIN
-                r'[0-9]{4}[a-zA-Z]{3}[0-9]{5}[N][R][0-9a-zA-Z]{1}', #NRI GSTIN
-                r'[0-9]{2}[a-zA-Z]{4}[a-zA-Z0-9]{1}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[DK]{1}[0-9a-zA-Z]{1}', #TDS GSTIN
-                r'[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[C]{1}[0-9a-zA-Z]{1}' #TCS GSTIN
-            ]
-            return any(re.compile(rx).match(vat) for rx in all_gstin_re)
-        return False
-
-    def check_vat_br(self, vat):
-        is_cpf_valid = stdnum.get_cc_module('br', 'cpf').is_valid
-        is_cnpj_valid = stdnum.get_cc_module('br', 'cnpj').is_valid
-        return is_cpf_valid(vat) or is_cnpj_valid(vat)
-
-    _check_vat_cr_re = re.compile(r'^(?:[1-9]\d{8}|\d{10}|[1-9]\d{10,11})$')
-
-    def check_vat_cr(self, vat):
-        # CÉDULA FÍSICA: 9 digits
-        # CÉDULA JURÍDICA: 10 digits
-        # CÉDULA DIMEX: 11 or 12 digits
-        # CÉDULA NITE: 10 digits
-
-        return self._check_vat_cr_re.match(vat) or False
-
-    __check_vat_vn_re = re.compile(r'^\d{10}(?:-?\d{3})?$|^\d{12}$')
-    __check_vat_vn_companies_re = re.compile(r'^\d{10}(?:-?\d{3})?$')
-
-    def check_vat_vn(self, vat):
-        """
-        VAT format validator for Vietnam.
-        Supported formats:
-        - 10-digit format (Enterprise tax ID): e.g., 0101243150
-        - 13-digit format with branch suffix: e.g., 0101243150-001
-        - 12-digit format (Personal ID / Citizen ID - CCCD): e.g., 079123456789
-        (used as tax ID for individuals from July 1st, 2025)
-
-        Note:
-        - stdnum.vn.mst.validate() currently only supports 10- and 13-digit VAT numbers
-        - and does not accept the 12-digit personal tax ID (CCCD) format introduced from 01/07/2025.
-        - This helper provides a lightweight format-level validator for use in the meantime.
-        - Can be removed once stdnum.vn.mst adds CCCD support.
-        """
-        vat = vat.strip()
-        return bool(self.__check_vat_vn_re.match(vat))
-
-    def format_vat_eu(self, vat):
-        # Foreign companies that trade with non-enterprises in the EU
-        # may have a VATIN starting with "EU" instead of a country code.
-        return vat
-
-    def format_vat_ch(self, vat):
-        stdnum_vat_format = stdnum.util.get_cc_module('ch', 'vat').format
-        return stdnum_vat_format('CH' + vat)[2:]
-
-    def format_vat_cl(self, vat):
-        """ It is better to always have the -"""
-        vat = vat.replace('.', '').replace('CL', '').replace(' ', '').replace('-', '').upper()
-        if len(vat) > 2:
-            return vat[:-1] + '-' + vat[-1]
-        return vat
-
-    def format_vat_co(self, vat):
-        """ It is better to always have the -"""
-        stdnum_vat_format = stdnum.util.get_cc_module('co', 'vat').format
-        vat = stdnum_vat_format(vat).replace('.', '').replace('-', '')
-        if len(vat) > 2:
-            return vat[:-1] + '-' + vat[-1]
-        return vat
-
-    def format_vat_vn(self, vat):
-        """ It is better to always have the -"""
-        stdnum_vat_format = stdnum.util.get_cc_module('vn', 'vat').format
-        if self.__check_vat_vn_companies_re.match(vat):
-            return stdnum_vat_format(vat)
-        else:
-            return vat
-
-    def format_vat_hu(self, vat):
-        """ We put the - back as we require it for the EDI and the different parts will make it clear to the user"""
-        stdnum_vat_fix_func = stdnum.util.get_cc_module('hu', 'vat').compact
-        vat = stdnum_vat_fix_func(vat)
-        if self._check_tin_hu_companies_re.match(vat):
-            vat = vat[:8] + '-' + vat[8] + '-' + vat[9] + vat[10]
-        return vat
-
     def check_vat_id(self, vat):
         """ Temporary Indonesian VAT validation to support the new format
         introduced in January 2024."""
@@ -741,22 +674,6 @@ class ResPartner(models.Model):
 
         return True
 
-    def check_vat_de(self, vat):
-        is_valid_vat = stdnum.util.get_cc_module("de", "vat").is_valid
-        is_valid_stnr = stdnum.util.get_cc_module("de", "stnr").is_valid
-        return is_valid_vat(vat) or is_valid_stnr(vat)
-
-    def check_vat_il(self, vat):
-        check_func = stdnum.util.get_cc_module('il', 'idnr').is_valid
-        return check_func(vat)
-
-    def check_vat_ma(self, vat):
-        return vat.isdigit() and len(vat) == 8
-
-    def format_vat_sm(self, vat):
-        stdnum_vat_format = stdnum.util.get_cc_module('sm', 'vat').compact
-        return stdnum_vat_format('SM' + vat)[2:]
-
     def check_vat_tw(self, vat):
         """
         Since Feb. 2025, due to the imminent exhaustion of the UBN numbers, the validation logic was changed from using
@@ -766,7 +683,7 @@ class ResPartner(models.Model):
         The stdnum implementation of the VAT validation is not up to date with this latest update, so we implement our
         own validation to support these new valid UBNs.
         """
-        vat = stdnum.util.get_cc_module("tw", "vat").compact(vat)
+        vat = self._get_stdnum_module('tw').compact(vat)
         if len(vat) != 8:
             return False  # The length is fixed, and we will expect it to be 8 in the following checks.
 
@@ -780,18 +697,62 @@ class ResPartner(models.Model):
             # If the 7th number is not 7, we simply sum everything and check that the result is divisible by 5.
             checksum = sum(int(d) for d in ''.join(products))
             return checksum % 5 == 0
-        else:
-            # If the 7th number is 7, we calculate two sums:
-            # z1: Calculate the total sum where the 7th position's contribution is taken as 1.
-            # z2: Calculate the total sum where the 7th position's contribution is taken as 0.
-            # The VAT number is valid if either Z1 or Z2 (or both) is evenly divisible by 5.
-            base_checksum = sum(int(d) for d in "".join(products[0:6] + products[7:]))
-            return (base_checksum + 1) % 5 == 0 or base_checksum % 5 == 0
+
+        # If the 7th number is 7, we calculate two sums:
+        # z1: Calculate the total sum where the 7th position's contribution is taken as 1.
+        # z2: Calculate the total sum where the 7th position's contribution is taken as 0.
+        # The VAT number is valid if either Z1 or Z2 (or both) is evenly divisible by 5.
+        base_checksum = sum(int(d) for d in "".join(products[0:6] + products[7:]))
+        return (base_checksum + 1) % 5 == 0 or base_checksum % 5 == 0
+
+    # FORMAT VAT ----------------
+    def format_vat_eu(self, vat):
+        # Foreign companies that trade with non-enterprises in the EU
+        # may have a VATIN starting with "EU" instead of a country code.
+        return vat
+
+    def format_vat_ch(self, vat):
+        stdnum_vat_format = self._get_stdnum_module('ch').format
+        return stdnum_vat_format('CH' + vat)[2:]
+
+    def format_vat_cl(self, vat):
+        """ It is better to always have the -"""
+        vat = vat.replace('.', '').replace('CL', '').replace(' ', '').replace('-', '').upper()
+        if len(vat) > 2:
+            return vat[:-1] + '-' + vat[-1]
+        return vat
+
+    def format_vat_co(self, vat):
+        """ It is better to always have the -"""
+        stdnum_vat_format = self._get_stdnum_module('co').format
+        vat = stdnum_vat_format(vat).replace('.', '').replace('-', '')
+        if len(vat) > 2:
+            return vat[:-1] + '-' + vat[-1]
+        return vat
+
+    def format_vat_vn(self, vat):
+        """ It is better to always have the -"""
+        stdnum_vat_format = self._get_stdnum_module('vn').format
+        if re.match(r'^\d{10}(?:-?\d{3})?$', vat):
+            return stdnum_vat_format(vat)
+        return vat
+
+    def format_vat_hu(self, vat):
+        """ We put the - back as we require it for the EDI and the different parts will make it clear to the user"""
+        stdnum_vat_fix_func = self._get_stdnum_module('hu').compact
+        vat = stdnum_vat_fix_func(vat)
+        if self._check_tin_hu_companies_re.match(vat):
+            vat = vat[:8] + '-' + vat[8] + '-' + vat[9] + vat[10]
+        return vat
+
+    def format_vat_sm(self, vat):
+        stdnum_vat_format = self._get_stdnum_module('sm').compact
+        return stdnum_vat_format('SM' + vat)[2:]
 
     @api.model
     def _format_vat_number(self, country_code, vat):
         """ Low-level method directly calling stdnum or our own specific method returning the formatted VAT. """
-        stdnum_vat_fix_func = getattr(stdnum.util.get_cc_module(country_code, 'vat'), 'compact', None)
+        stdnum_vat_fix_func = getattr(self._get_stdnum_module(country_code), 'compact', None)
         # If any localization module needs to define vat fix method for its country then we give first priority to it.
         format_func_name = 'format_vat_' + country_code.lower()
         format_func = getattr(self, format_func_name, None) or stdnum_vat_fix_func
