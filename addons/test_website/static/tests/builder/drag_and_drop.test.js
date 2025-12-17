@@ -11,7 +11,8 @@ defineWebsiteModels();
 test("Drag and drop an inner snippet having a drag image preview", async () => {
     await setupWebsiteBuilderWithSnippet(["s_text_image"]);
     const dragUtils = await contains(
-        "#snippet_content [name='Drag Image Preview Test'] .o_snippet_thumbnail"
+        "#snippet_content [name='Drag Image Preview Test'] .o_snippet_thumbnail",
+        { visible: false }
     ).drag();
     await dragUtils.moveTo(":iframe .s_text_image .oe_drop_zone");
     expect(":iframe .s_drag_image_preview_test").toHaveClass("o_snippet_previewing_on_drag");
