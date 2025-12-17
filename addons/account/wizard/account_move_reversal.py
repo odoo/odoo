@@ -104,6 +104,7 @@ class AccountMoveReversal(models.TransientModel):
             'invoice_payment_term_id': mixed_payment_term,
             'invoice_user_id': move.invoice_user_id.id,
             'auto_post': 'at_date' if reverse_date > fields.Date.context_today(self) else 'no',
+            'invoice_origin': move.invoice_origin,
         }
 
     def reverse_moves(self, is_modify=False):
