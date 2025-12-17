@@ -38,6 +38,9 @@ models which only purpose is to run tests.""",
         'web.assets_frontend': [
             'test_website/static/src/interactions/**/*',
         ],
+        'website.website_builder_assets': [
+            'test_website/static/src/website_builder/**/*',
+        ],
         'web.assets_tests': [
             'test_website/static/tests/tours/*',
         ],

@@ -41,6 +41,7 @@ class TestSnippets(HttpCase):
             's_icon',  # Avoid specific case where the media dialog opens on drop
             's_snippet_group',  # Snippet groups are not snippets
             's_inline_text',
+            's_drag_image_preview_test',
         ]
         snippets_names = ','.join({
             f"{el.attrib['data-oe-snippet-key']}:{el.attrib.get('data-o-group', '')}"
