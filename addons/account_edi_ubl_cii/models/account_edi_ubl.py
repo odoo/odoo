@@ -193,11 +193,13 @@ class AccountEdiUBL(models.AbstractModel):
                 if self._ubl_is_recycling_contribution_tax(tax_data):
                     allowance_charges_recycling_contribution.append({
                         'tax': tax_data['tax'],
+                        'is_charge': tax_data['tax_amount'] > 0.0,
                         'amount': tax_data['tax_amount'],
                         'currency': company_currency,
                     })
                     allowance_charges_recycling_contribution_currency.append({
                         'tax': tax_data['tax'],
+                        'is_charge': tax_data['tax_amount_currency'] > 0.0,
                         'amount': tax_data['tax_amount_currency'],
                         'currency': currency,
                     })
@@ -240,11 +242,13 @@ class AccountEdiUBL(models.AbstractModel):
                 if self._ubl_is_excise_tax(tax_data):
                     allowance_charges_excise.append({
                         'tax': tax_data['tax'],
+                        'is_charge': tax_data['tax_amount'] > 0.0,
                         'amount': tax_data['tax_amount'],
                         'currency': company_currency,
                     })
                     allowance_charges_excise_currency.append({
                         'tax': tax_data['tax'],
+                        'is_charge': tax_data['tax_amount_currency'] > 0.0,
                         'amount': tax_data['tax_amount_currency'],
                         'currency': currency,
                     })
@@ -283,6 +287,7 @@ class AccountEdiUBL(models.AbstractModel):
                 ubl_values['allowance_charge_discount'] = {
                     'currency': company_currency,
                     'percent': base_line['discount'],
+                    'is_charge': raw_discount_amount < 0.0,
                     'amount': raw_discount_amount,
                     'base_amount': tax_details['raw_gross_total_excluded'],
                 }
@@ -290,6 +295,7 @@ class AccountEdiUBL(models.AbstractModel):
                     'currency': currency,
                     'percent': base_line['discount'],
                     'amount': raw_discount_amount_currency,
+                    'is_charge': raw_discount_amount_currency < 0.0,
                     'base_amount': tax_details['raw_gross_total_excluded_currency'],
                 }
 
@@ -311,15 +317,16 @@ class AccountEdiUBL(models.AbstractModel):
                 tax_details[f'total_excluded{suffix}']
                 + tax_details[f'delta_total_excluded{suffix}']
                 + sum(
-                    allowance_charges_recycling_contribution['amount']
-                    for allowance_charges_recycling_contribution in ubl_values[f'allowance_charges_recycling_contribution{suffix}']
+                    (1 if allowance_charge_values['is_charge'] else -1) * allowance_charge_values['amount']
+                    for allowance_charge_values in ubl_values[f'allowance_charges_recycling_contribution{suffix}']
                 )
                 + sum(
-                    allowance_charges_excise['amount']
-                    for allowance_charges_excise in ubl_values[f'allowance_charges_excise{suffix}']
+                    (1 if allowance_charge_values['is_charge'] else -1) * allowance_charge_values['amount']
+                    for allowance_charge_values in ubl_values[f'allowance_charges_excise{suffix}']
                 )
                 + (
-                    ubl_values[f'allowance_charge_discount{suffix}']['amount']
+                    (1 if ubl_values[f'allowance_charge_discount{suffix}']['is_charge'] else -1)
+                    * ubl_values[f'allowance_charge_discount{suffix}']['amount']
                     if (
                         ubl_values[f'allowance_charge_discount{suffix}']
                         and ubl_values[f'allowance_charge_discount{suffix}']['amount'] < 0.0
@@ -630,6 +637,7 @@ class AccountEdiUBL(models.AbstractModel):
                 allowance_charges_early_payment.append({
                     'currency': sub_currency,
                     'amount': values[f'total_excluded{suffix}'],
+                    'is_charge': values[f'total_excluded{suffix}'] > 0.0,
                     'tax_categories': {
                         grouping_key: {
                             **grouping_key,
@@ -725,9 +733,10 @@ class AccountEdiUBL(models.AbstractModel):
             charge_reason_code = 'CAV'
         else:
             charge_reason_code = 'AEO'
+        is_charge = recycling_contribution_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if amount > 0.0 else 'false'},
+            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:AllowanceChargeReasonCode': {'_text': charge_reason_code},
             'cbc:AllowanceChargeReason': {'_text': tax.name},
             'cbc:Amount': {
@@ -740,9 +749,10 @@ class AccountEdiUBL(models.AbstractModel):
         currency = excise_values['currency']
         amount = excise_values['amount']
         tax = excise_values['tax']
+        is_charge = excise_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if amount > 0.0 else 'false'},
+            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:AllowanceChargeReason': {'_text': tax.name},
             'cbc:Amount': {
                 '_text': FloatFmt(abs(amount), max_dp=currency.decimal_places),
@@ -755,9 +765,10 @@ class AccountEdiUBL(models.AbstractModel):
         amount = discount_values['amount']
         base_amount = discount_values['base_amount']
         percent = discount_values['percent']
+        is_charge = discount_values['is_charge']
         return {
             '_currency': currency,
-            'cbc:ChargeIndicator': {'_text': 'true' if amount < 0.0 else 'false'},
+            'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
             'cbc:MultiplierFactorNumeric': {'_text': abs(percent)},
             'cbc:AllowanceChargeReasonCode': {'_text': '95'},
             'cbc:AllowanceChargeReason': {'_text': _("Discount")},
@@ -774,7 +785,7 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_get_allowance_charge_early_payment(self, vals, early_payment_values):
         currency = early_payment_values['currency']
         amount = early_payment_values['amount']
-        is_charge = amount > 0.0
+        is_charge = early_payment_values['is_charge']
         return {
             '_currency': currency,
             'cbc:ChargeIndicator': {'_text': 'true' if is_charge else 'false'},
