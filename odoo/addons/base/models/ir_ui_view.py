@@ -441,7 +441,8 @@ actual arch.
                 combined_arch = view._get_combined_arch()
 
                 # check primary view that extends this current view
-                if view.inherit_id or view.inherit_children_ids:
+                # keep a way to skip this check to avoid marking too many views as failed during an upgrade
+                if not self.env.context.get('_skip_primary_extensions_check') and (view.inherit_id or view.inherit_children_ids):
                     root = view
                     while root.inherit_id and root.mode != 'primary':
                         root = root.inherit_id
