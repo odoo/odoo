@@ -16,7 +16,12 @@ patch(DiscussAppCategory.prototype, {
     },
     sortChannels(c1, c2) {
         if (this.eq(this.store.discuss?.livechatLookingForHelpCategory)) {
-            return compareDatetime(c1.lastInterestDt, c2.lastInterestDt) || c1.id - c2.id;
+            return (
+                compareDatetime(
+                    c1.livechat_looking_for_help_since_dt,
+                    c2.livechat_looking_for_help_since_dt
+                ) || c1.id - c2.id
+            );
         }
         return super.sortChannels(...arguments);
     },

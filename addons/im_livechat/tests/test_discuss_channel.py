@@ -318,3 +318,31 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise)
         channel._add_members(users=bob)
         self.assertEqual(channel.livechat_expertise_ids, operator_expertise_ids | cat_expertise)
+
+    def test_update_looking_for_help_dt(self):
+        bob = self._create_operator()
+        self.livechat_channel.user_ids = bob
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"channel_id": self.livechat_channel.id},
+        )
+        self.authenticate(bob.login, bob.login)
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        self.assertFalse(channel.livechat_looking_for_help_since_dt)
+        self.make_jsonrpc_request(
+            "/im_livechat/session/update_status",
+            {"channel_id": channel.id, "livechat_status": "need_help"},
+        )
+        self.assertTrue(channel.livechat_looking_for_help_since_dt)
+        self.make_jsonrpc_request(
+            "/im_livechat/session/update_status",
+            {"channel_id": channel.id, "livechat_status": "in_progress"},
+        )
+        self.assertFalse(channel.livechat_looking_for_help_since_dt)
+        self.make_jsonrpc_request(
+            "/im_livechat/session/update_status",
+            {"channel_id": channel.id, "livechat_status": "need_help"},
+        )
+        self.assertTrue(channel.livechat_looking_for_help_since_dt)
+        channel.livechat_end_dt = fields.Datetime.now()
+        self.assertFalse(channel.livechat_looking_for_help_since_dt)

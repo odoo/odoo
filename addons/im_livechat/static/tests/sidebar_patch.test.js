@@ -1,6 +1,6 @@
 import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { describe, test } from "@odoo/hoot";
+import { advanceTime, describe, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
@@ -384,5 +384,119 @@ test("live chat is displayed below its category", async () => {
     await click(".o-mail-DiscussSidebarCategory .btn", { text: "Helpdesk" });
     await contains(
         ".o-mail-DiscussSidebarCategory:contains(Helpdesk) + .o-mail-DiscussSidebarCategory-channels:contains(Visitor #12)"
+    );
+});
+
+test("looking for help category is sorted by looking for help duration", async () => {
+    mockDate("2023-01-03 14:00:00");
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const guestIds = pyEnv["mail.guest"].create([
+        { name: "Visitor #1" },
+        { name: "Visitor #2" },
+        { name: "Visitor #3" },
+        { name: "Visitor #4" },
+    ]);
+    const channelIds = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            livechat_looking_for_help_since_dt: "2023-01-03 13:00:00",
+            livechat_status: "need_help",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            livechat_looking_for_help_since_dt: "2023-01-03 11:00:00",
+            livechat_status: "need_help",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            livechat_looking_for_help_since_dt: "2023-01-03 14:00:00",
+            livechat_status: "need_help",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            livechat_looking_for_help_since_dt: "2023-01-03 13:58:00",
+            livechat_status: "need_help",
+        },
+    ]);
+    pyEnv["discuss.channel.member"].create([
+        { guest_id: guestIds[0], channel_id: channelIds[0], livechat_member_type: "visitor" },
+        { guest_id: guestIds[1], channel_id: channelIds[1], livechat_member_type: "visitor" },
+        { guest_id: guestIds[2], channel_id: channelIds[2], livechat_member_type: "visitor" },
+        { guest_id: guestIds[3], channel_id: channelIds[3], livechat_member_type: "visitor" },
+    ]);
+    await start();
+    await openDiscuss();
+    await waitFor(`
+        .o-mail-DiscussSidebarChannel-container:has(:text(Visitor #2))
+        + .o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) 
+        + .o-mail-DiscussSidebarChannel-container:has(:text(Visitor #4))
+        + .o-mail-DiscussSidebarChannel-container:has(:text(Visitor #3))
+    `);
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #2)) .o-livechat-LookingForHelp-timer:text(3h)"
+    );
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(1h)"
+    );
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #4)) .o-livechat-LookingForHelp-timer:text(2m)"
+    );
+    // The timer is not shown for chats newer than one minute to avoid excessive movement in the sidebar.
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #3)) .o-livechat-LookingForHelp-timer:text(< 1m)"
+    );
+});
+
+test("show looking for help duration in the sidebar", async () => {
+    mockDate("2023-01-03 14:00:00");
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor #1" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [],
+        channel_type: "livechat",
+        livechat_looking_for_help_since_dt: "2023-01-03 14:00:00",
+        livechat_status: "need_help",
+    });
+    pyEnv["discuss.channel.member"].create([
+        { guest_id: guestId, channel_id: channelId, livechat_member_type: "visitor" },
+    ]);
+    await start();
+    await openDiscuss();
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(< 1m)"
+    );
+    await advanceTime(60_000);
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(1m)"
+    );
+    await advanceTime(60_000 * 9);
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(10m)"
+    );
+    await advanceTime(60_000 * 50);
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(1h)"
+    );
+    await advanceTime(60_000 * 60 * 23);
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(1d)"
+    );
+    await advanceTime(60_000 * 60 * 24);
+    await waitFor(
+        ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(2d)"
     );
 });

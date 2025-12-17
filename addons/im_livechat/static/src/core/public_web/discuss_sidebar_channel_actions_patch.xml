@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
     <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
-        <xpath expr="//*[hasclass('o-mail-DiscussSidebarChannel-itemName')]" position="replace">
-            <div t-if="!store.discuss.isSidebarCompact and props.channel.discussAppCategory.eq(store.discuss.livechatLookingForHelpCategory) and props.channel.matchesSelfExpertise" class="d-flex justify-content-between align-items-baseline o-min-width-0">
-                <t>$0</t>
-                <i class="fa fa-star o-mail-starred me-2" role="image" title="Relevant to your expertise"/>
-            </div>
-            <t t-else="">$0</t>
+        <xpath expr="//*[@t-ref='displayNameAdditionalContent']" position="inside">
+            <t t-if="channel.livechat_status === 'need_help'">
+                <i t-if="channel.matchesSelfExpertise" class="fa fa-star o-mail-starred me-2" role="image" title="Relevant to your expertise"/>
+                <span t-if="helpState.text" class="o-livechat-LookingForHelp-timer text-muted fw-normal" t-esc="helpState.text"/>
+            </t>
         </xpath>
     </t>
 </templates>

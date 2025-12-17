@@ -44,26 +44,6 @@ export class MailPollModel extends Record {
         );
     }
 
-    get remainingTimeText() {
-        const diff = this.poll_end_dt.diffNow(["hours", "minutes", "seconds"]);
-        if (diff.valueOf() <= 0) {
-            return _t("Poll will end soon");
-        }
-        const hours = Math.ceil(diff.as("hours"));
-        const minutes = Math.ceil(diff.as("minutes"));
-        const seconds = Math.ceil(diff.as("seconds"));
-        if (hours > 1) {
-            return _t("%(hours)s hours left", { hours });
-        }
-        if (minutes > 1) {
-            return _t("%(minutes)s minutes left", { minutes });
-        }
-        if (seconds > 1) {
-            return _t("%(seconds)s seconds left", { seconds });
-        }
-        return _t("1 second left");
-    }
-
     get selfAlreadyVoted() {
         return this.option_ids.some((option) => option.selected_by_self);
     }

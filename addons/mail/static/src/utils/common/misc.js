@@ -1,4 +1,4 @@
-import { reactive } from "@odoo/owl";
+import { reactive, useEffect } from "@odoo/owl";
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { effect } from "@web/core/utils/reactive";
@@ -223,6 +223,31 @@ export const hasHardwareAcceleration = memoize(() => {
     }
     return true;
 });
+
+/**
+ * A hook that repeatedly calls a function with dynamically computed
+ * intervals.
+ *
+ * @template D type of dependencies
+ * @param {(...dependencies: D) => Number|void} fn A callback that is
+ * invoked initially, after dependencies change (if the dependencies are
+ * wrapped in `useState` or otherwise triggers a re-render) or when the
+ * delay has passed. Returning a falsy value cancels the interval.
+ * @param {() => D} dependencies Returns an array of dependencies.
+ */
+export function useDynamicInterval(fn, dependencies) {
+    useEffect((...dependencies) => {
+        let timer;
+        function tick() {
+            const nextDelay = fn(...dependencies);
+            if (nextDelay) {
+                timer = setTimeout(tick, Math.ceil(nextDelay));
+            }
+        }
+        tick();
+        return () => clearTimeout(timer);
+    }, dependencies);
+}
 
 /**
  * Runs a reactive effect whenever the dependencies change. The effect receives

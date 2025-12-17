@@ -1,8 +1,7 @@
-import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { useDynamicInterval } from "@mail/utils/common/misc";
+import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-
-const { DateTime } = luxon;
 
 /**
  * @typedef {Object} Props
@@ -16,22 +15,36 @@ export class Poll extends Component {
     setup() {
         this.state = useState({
             isShowingResults: false,
-            remainingTimeText: "",
             selectedOptionIds: new Set(),
             voting: false,
         });
-        let remainingTimeTimeout;
-        const updateRemainingTime = () => {
-            this.state.remainingTimeText = this.props.poll.remainingTimeText;
-            if (this.props.poll.poll_end_dt < DateTime.now()) {
-                return;
-            }
-            remainingTimeTimeout = setTimeout(() => updateRemainingTime(), 1000);
-        };
-        onMounted(() => {
-            updateRemainingTime();
-        });
-        onWillUnmount(() => clearTimeout(remainingTimeTimeout));
+        useDynamicInterval(
+            (endDt) => {
+                if (!endDt) {
+                    return;
+                }
+                const diff = endDt.diffNow(["hours", "minutes", "seconds"]);
+                if (diff.valueOf() <= 0) {
+                    this.state.remainingTimeText = _t("Poll will end soon");
+                    return;
+                }
+                const hours = Math.ceil(diff.as("hours"));
+                if (hours > 1) {
+                    this.state.remainingTimeText = _t("%(hours)s hours left", { hours });
+                    return (diff.as("hours") - hours + 1) * 3600 * 1000;
+                }
+                const minutes = Math.ceil(diff.as("minutes"));
+                if (minutes > 1) {
+                    this.state.remainingTimeText = _t("%(minutes)s minutes left", { minutes });
+                    return (diff.as("minutes") - minutes + 1) * 60 * 1000;
+                }
+                const seconds = Math.ceil(diff.as("seconds"));
+                this.state.remainingTimeText =
+                    seconds > 1 ? _t("%(seconds)s seconds left", { seconds }) : _t("1 second left");
+                return (diff.as("seconds") - seconds + 1) * 1000;
+            },
+            () => [this.props.poll.poll_end_dt]
+        );
     }
 
     showResults() {

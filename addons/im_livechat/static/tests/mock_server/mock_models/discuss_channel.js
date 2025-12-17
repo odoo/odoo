@@ -121,6 +121,8 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 } else {
                     channelInfo.livechat_operator_id = false;
                 }
+                channelInfo["livechat_looking_for_help_since_dt"] =
+                    channel.livechat_looking_for_help_since_dt;
                 channelInfo["livechat_end_dt"] = channel.livechat_end_dt;
                 channelInfo["livechat_note"] = ["markup", channel.livechat_note];
                 channelInfo["livechat_status"] = channel.livechat_status;

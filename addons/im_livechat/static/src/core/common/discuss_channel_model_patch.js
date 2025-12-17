@@ -20,6 +20,7 @@ const discussChannelPatch = {
         this.livechat_customer_history_ids = fields.Many("im_livechat.channel.member.history", {
             inverse: "channelAsCustomerHistory",
         });
+        this.livechat_looking_for_help_since_dt = fields.Datetime();
     },
     get allowDescriptionTypes() {
         return [...super.allowDescriptionTypes, "livechat"];
