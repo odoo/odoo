@@ -230,7 +230,7 @@ registerThreadAction("mark-read", {
         channel.self_member_id.message_unread_counter > 0 &&
         !channel.self_member_id.mute_until_dt &&
         owner.isDiscussSidebarChannelActions,
-    onSelected: ({ owner }) => owner.thread.markAsRead(),
+    onSelected: ({ channel }) => channel.markAsRead(),
     icon: "fa fa-fw fa-check",
     name: _t("Mark Read"),
     sequence: 10,
