@@ -102,10 +102,8 @@ class WebsiteVisitor(models.Model):
                 'livechat_visitor_id': visitor.id,
             })
         discuss_channels = self.env['discuss.channel'].create(discuss_channel_vals_list)
-        # Open empty channel to allow the operator to start chatting with the visitor
-        store = Store(bus_channel=self.env.user)
-        store.add(discuss_channels, "_store_open_chat_window_fields")
-        store.bus_send()
+        # Open empty channel to allow the agent to start chatting with the visitor
+        return discuss_channels.open_chat_window_action()
 
     def _merge_visitor(self, target):
         """ Copy sessions of the secondary visitors to the main partner visitor. """

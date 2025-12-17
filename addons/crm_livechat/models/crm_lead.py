@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
-from odoo.addons.mail.tools.discuss import Store
 
 
 class CrmLead(models.Model):
@@ -37,6 +36,4 @@ class CrmLead(models.Model):
         return super().write(vals)
 
     def action_open_livechat(self):
-        store = Store(bus_channel=self.env.user)
-        store.add(self.origin_channel_id, "_store_open_chat_window_fields")
-        store.bus_send()
+        return self.origin_channel_id.open_chat_window_action()

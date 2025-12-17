@@ -1,9 +1,10 @@
-import { fields } from "@mail/model/export";
 import { Store } from "@mail/core/common/store_service";
+import { fields } from "@mail/model/export";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
+import { registry } from "@web/core/registry";
 
 const unread_store = (() => {
     if (!window.idbKeyval) {
@@ -183,3 +184,7 @@ const StorePatch = {
     onLinkFollowed(fromThread) {},
 };
 patch(Store.prototype, StorePatch);
+
+registry.category("actions").add("mail.store_insert", function storeInsertAction(env, action) {
+    env.services["mail.store"].insert(action.params);
+});
