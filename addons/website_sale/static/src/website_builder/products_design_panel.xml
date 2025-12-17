@@ -570,6 +570,13 @@
                     classAction="'o_wsale_products_opt_has_cta'"
                     id="'wsale_products_opt_add_to_cart'"
                 />
+                <BuilderButton
+                    t-if="props.recordName === 'shop_opt_products_design_classes'"
+                    title.translate="Compare"
+                    icon="'fa-exchange'"
+                    classAction="'o_wsale_products_opt_has_comparison'"
+                />
+                <span/><!-- Spacer -->
                 <BuilderSelect t-if="isOnHoverAvailable || this.isActiveItem('wsale_design_bento_catalog')">
                     <BuilderSelectItem
                         classAction="'o_wsale_products_opt_actions_inline'"

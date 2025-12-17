@@ -21,6 +21,7 @@
         'data/digest_data.xml',
         'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
+        'data/product_attribute_category_data.xml',
         'data/product_ribbon_data.xml',
         'data/tour.xml',
         'data/website_checkout_step_data.xml',
@@ -31,6 +32,7 @@
 
         # QWeb templates
         'templates/product_tile_templates.xml',
+        'templates/comparison_templates.xml',
         'templates/gmc_templates.xml',
         'templates/product_page_templates.xml',
         'templates/sale_portal_templates.xml',
@@ -50,6 +52,7 @@
         'views/account_move_views.xml',
         'views/delivery_carrier_views.xml',
         'views/digest_views.xml',
+        'views/product_attribute_category_views.xml',
         'views/product_attribute_views.xml',
         'views/product_document_views.xml',
         'views/product_feed_views.xml',
@@ -89,6 +92,7 @@
     ],
     'demo': [
         'data/demo.xml',
+        'data/comparison_demo.xml',
     ],
     'application': True,
     'post_init_hook': '_post_init_hook',
@@ -99,7 +103,9 @@
             'website_sale/static/src/snippets/**/*.js',
             'website_sale/static/src/js/tours/tour_utils.js',
             'website_sale/static/src/scss/product_tile.scss',
+            'website_sale/static/src/scss/website_sale_comparison.options.scss',
             'website_sale/static/src/scss/website_sale.scss',
+            'website_sale/static/src/scss/website_sale_comparison.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss',
@@ -113,6 +119,7 @@
             'website_sale/static/src/xml/website_sale.xml',
             'website_sale/static/src/js/website_sale_utils.js',
             'website_sale/static/src/xml/website_sale_utils.xml',
+            'website_sale/static/src/js/website_sale_comparison_utils.js',
             'website/static/lib/multirange/multirange_custom.js',
             'website/static/src/interactions/multirange_input.js',
             'website_sale/static/src/xml/website_sale_image_viewer.xml',
@@ -135,8 +142,10 @@
             'sale/static/src/js/sale_utils.js',
             'website_sale/static/src/js/combo_configurator_dialog/*',
             'website_sale/static/src/js/product/*',
+            'website_sale/static/src/js/product_comparison_bottom_bar/*',
             'website_sale/static/src/js/product_configurator_dialog/*',
             'website_sale/static/src/js/product_list/*',
+            'website_sale/static/src/js/product_row/*',
             'website_sale/static/src/js/product_template_attribute_line/*',
             'website_sale/static/src/js/quantity_buttons/*',
 
@@ -161,6 +170,7 @@
             'website_sale/static/src/js/website_sale_form_editor.js',
             'website_sale/static/src/website_builder/**/*',
             'website_sale/static/src/js/website_sale_utils.js',
+            'website_sale/static/src/js/website_sale_comparison_utils.js',
             ('remove', 'website_sale/static/src/**/*.edit.*'),
         ],
         'website.assets_wysiwyg': [
@@ -189,6 +199,9 @@
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
             'website_sale/static/src/js/website_sale_utils.js',
+            'website_sale/static/src/js/website_sale_comparison_utils.js',
+            'website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.js',
+            'website_sale/static/src/js/product_row/product_row.js',
             'website_sale/static/src/js/components/website_sale_image_viewer.js',
             # TODO Find out why these do not work:
             #'website_sale/static/src/snippets/**/*.js',

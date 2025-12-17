@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="website_sale_comparison.ProductComparisonBottomBar">
+    <t t-name="website_sale.ProductComparisonBottomBar">
         <div class="o_not_editable position-absolute top-0 start-0 bottom-0 end-0 d-flex align-items-end justify-content-end p-0 pe-none">
             <div
                 t-if="state.products.size"
@@ -45,7 +45,7 @@
                         </ul>
 
                         <div class="d-flex gap-2 justify-content-end flex-grow-1 flex-xl-grow-0 flex-shrink-0">
-                            <t t-call="website_sale_comparison.ProductComparisonBottomBar.Actions"/>
+                            <t t-call="website_sale.ProductComparisonBottomBar.Actions"/>
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
         </div>
     </t>
 
-    <t t-name="website_sale_comparison.ProductComparisonBottomBar.Actions">
+    <t t-name="website_sale.ProductComparisonBottomBar.Actions">
         <a
             t-att-href="comparisonUrl"
             t-att-disabled="productCount lt 2"

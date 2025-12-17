@@ -2,6 +2,7 @@
 
 from . import cart
 from . import combo_configurator
+from . import comparison
 from . import delivery
 from . import main
 from . import payment

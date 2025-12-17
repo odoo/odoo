@@ -1,6 +1,6 @@
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
-import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
+import comparisonUtils from '@website_sale/js/website_sale_comparison_utils';
 import { redirect } from '@web/core/utils/urls';
 
 export class ComparisonPage extends Interaction {
@@ -141,4 +141,4 @@ export class ComparisonPage extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_comparison.comparison_page', ComparisonPage);
+    .add('website_sale.comparison_page', ComparisonPage);

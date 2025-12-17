@@ -3,7 +3,7 @@ import { registry } from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import wSaleUtils from '@website_sale/js/website_sale_utils';
-import comparisonUtils from '@website_sale_comparison/js/website_sale_comparison_utils';
+import comparisonUtils from '@website_sale/js/website_sale_comparison_utils';
 
 export class AddToComparison extends Interaction {
     static selector = '.o_add_compare, .o_add_compare_dyn, .o_add_to_compare';
@@ -107,4 +107,4 @@ export class AddToComparison extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_comparison.add_to_comparison', AddToComparison);
+    .add('website_sale.add_to_comparison', AddToComparison);

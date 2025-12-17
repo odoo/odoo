@@ -15,7 +15,6 @@ installed.""",
         'website_slides',
         'website_livechat',
         'website_crm_iap_reveal',
-        'website_sale_comparison',
         'website_sale_wishlist',
     ],
     'assets': {

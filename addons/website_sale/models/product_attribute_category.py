@@ -11,4 +11,9 @@ class ProductAttributeCategory(models.Model):
     name = fields.Char("Category Name", required=True, translate=True)
     sequence = fields.Integer("Sequence", default=10, index=True)
 
-    attribute_ids = fields.One2many('product.attribute', 'category_id', string="Related Attributes", domain="[('category_id', '=', False)]")
+    attribute_ids = fields.One2many(
+        'product.attribute',
+        'category_id',
+        string="Related Attributes",
+        domain="[('category_id', '=', False)]",
+    )

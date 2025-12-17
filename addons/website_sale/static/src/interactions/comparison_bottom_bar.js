@@ -2,7 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import {
     ProductComparisonBottomBar
-} from '@website_sale_comparison/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
+} from '@website_sale/js/product_comparison_bottom_bar/product_comparison_bottom_bar';
 
 export class ComparisonBottomBar extends Interaction {
     static selector = '.o_wsale_product_page, .o_wsale_products_page, .o_wsale_wishlist_page';
@@ -15,4 +15,4 @@ export class ComparisonBottomBar extends Interaction {
 
 registry
     .category('public.interactions')
-    .add('website_sale_comparison.comparison_bottom_bar', ComparisonBottomBar);
+    .add('website_sale.comparison_bottom_bar', ComparisonBottomBar);

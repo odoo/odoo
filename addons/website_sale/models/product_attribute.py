@@ -24,6 +24,13 @@ class ProductAttribute(models.Model):
         string="Show Thumbnails",
         help="Use product variant images instead of the attribute values displays."
     )
+    category_id = fields.Many2one(
+        comodel_name='product.attribute.category',
+        string="eCommerce Category",
+        index=True,
+        help="Set a category to regroup similar attributes under the same section in the Comparison"
+             " page of eCommerce.",
+    )
 
     @api.onchange('create_variant', 'display_type')
     def _onchange_disable_preview_variants(self):

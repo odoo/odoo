@@ -3,7 +3,7 @@
 from odoo.http import Controller, request, route
 
 
-class WebsiteSaleProductComparison(Controller):
+class Comparison(Controller):
 
     @route('/shop/compare', type='http', auth='public', website=True, sitemap=False)
     def product_compare(self, **post):
@@ -12,13 +12,11 @@ class WebsiteSaleProductComparison(Controller):
             return request.redirect('/shop')
 
         # use search to check read access on each record/ids
-        products = request.env['product.product'].search([('id', 'in', product_ids)])
-        return request.render(
-            'website_sale_comparison.product_compare',
-            {
-                'products': products.with_context(display_default_code=False),
-            }
-        )
+        return request.render('website_sale.product_compare', {
+            'products': request.env['product.product'].search(
+                [('id', 'in', product_ids)],
+            ).with_context(display_default_code=False),
+        })
 
     @route('/shop/compare/get_product_data', type='jsonrpc', auth='public', website=True)
     def get_product_data(self, product_ids):
