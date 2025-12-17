@@ -124,7 +124,7 @@ commandSetupRegistry.add("@", {
 async function makeNewChannel(name, store) {
     const { channel } = await store.fetchStoreData(
         "/discuss/create_channel",
-        { name, group_id: store.internalUserGroupId },
+        { name },
         { readonly: false, requestData: true }
     );
     channel.open({ focus: true, bypassCompact: true });

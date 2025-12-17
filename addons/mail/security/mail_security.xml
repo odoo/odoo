@@ -1,32 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
         <record id="ir_rule_discuss_channel_all" model="ir.rule">
-            <field name="name">discuss.channel: can access channels (as member or as group allowed)</field>
+            <field name="name">discuss.channel: can access channels (group allowed and access mode matching)</field>
             <field name="model_id" ref="mail.model_discuss_channel"/>
-            <field name="groups"
-                eval="[
-                    Command.link(ref('base.group_user')),
-                    Command.link(ref('base.group_portal')),
-                    Command.link(ref('base.group_public')),
-                ]"
-            />
+            <field name="groups" eval="[Command.link(ref('base.group_everyone'))]"/>
             <field name="domain_force">
                 [
                     "|",
-                        "&amp;",
-                            ("channel_type", "!=", "channel"),
-                            "|",
-                                ("is_member", "=", True),
-                                ("parent_channel_id.is_member", "=", True),
-                        "&amp;",
-                            ("channel_type", "=", "channel"),
-                            "|",
-                                ("group_public_id", "=", False),
-                                ("group_public_id", "in", user.all_group_ids.ids),
+                        ("group_public_id", "=", False),
+                        ("group_public_id", "in", user.all_group_ids.ids),
+                    "|",
+                        ("visibility_policy", "not in", ("member", "member_and_group")),
+                        "|",
+                            ("is_member", "=", True),
+                            ("parent_channel_id.is_member", "=", True)
                 ]
             </field>
         </record>
-
         <record id="ir_rule_discuss_channel_group_system" model="ir.rule">
             <field name="name">discuss.channel: admin full access</field>
             <field name="model_id" ref="mail.model_discuss_channel"/>
@@ -37,21 +27,13 @@
         <record id="ir_rule_discuss_channel_member_is_self_all" model="ir.rule">
             <field name="name">discuss.channel.member: access their own entries</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
-            <field name="groups"
-                eval="[
-                    Command.link(ref('base.group_user')),
-                    Command.link(ref('base.group_portal')),
-                    Command.link(ref('base.group_public')),
-                ]"
-            />
+            <field name="groups" eval="[Command.link(ref('base.group_everyone'))]"/>
             <field name="domain_force">
                 [
-                    ('is_self', '=', True),
+                    ("is_self", "=", True),
                     "|",
-                        ("channel_id.channel_type", "!=", "channel"),
-                        "|",
-                            ("channel_id.group_public_id", "=", False),
-                            ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                        ("channel_id.group_public_id", "=", False),
+                        ("channel_id.group_public_id", "in", user.all_group_ids.ids),
                 ]
             </field>
             <!--
@@ -69,26 +51,17 @@
         <record id="ir_rule_discuss_channel_member_read_all" model="ir.rule">
             <field name="name">discuss.channel.member: read members of accessible channels</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
-            <field name="groups"
-                eval="[
-                    Command.link(ref('base.group_user')),
-                    Command.link(ref('base.group_portal')),
-                    Command.link(ref('base.group_public')),
-                ]"
-            />
+            <field name="groups" eval="[Command.link(ref('base.group_everyone'))]"/>
             <field name="domain_force">
                 [
                     "|",
-                        "&amp;",
-                            ("channel_id.channel_type", "!=", "channel"),
-                            "|",
-                                ("channel_id.is_member", "=", True),
-                                ("channel_id.parent_channel_id.is_member", "=", True),
-                        "&amp;",
-                            ("channel_id.channel_type", "=", "channel"),
-                            "|",
-                                ("channel_id.group_public_id", "=", False),
-                                ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                        ("channel_id.group_public_id", "=", False),
+                        ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                    "|",
+                        ("channel_id.visibility_policy", "not in", ("member", "member_and_group")),
+                        "|",
+                            ("channel_id.is_member", "=", True),
+                            ("channel_id.parent_channel_id.is_member", "=", True)
                 ]
             </field>
             <field name="perm_create" eval="False"/>
@@ -99,13 +72,7 @@
         <record id="ir_rule_discuss_channel_member_is_channel_owner_unlink" model="ir.rule">
             <field name="name">discuss.channel.member: channel owner can remove members except owners</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
-            <field name="groups"
-                eval="[
-                    Command.link(ref('base.group_user')),
-                    Command.link(ref('base.group_portal')),
-                    Command.link(ref('base.group_public')),
-                ]"
-            />
+            <field name="groups" eval="[Command.link(ref('base.group_everyone'))]"/>
             <field name="domain_force">
                 [
                     ("channel_id.self_member_id.channel_role", "=", "owner"),
@@ -122,13 +89,7 @@
         <record id="ir_rule_discuss_channel_member_is_channel_admin_unlink" model="ir.rule">
             <field name="name">discuss.channel.member: channel admin can remove members except admins and owners</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
-            <field name="groups"
-                eval="[
-                    Command.link(ref('base.group_user')),
-                    Command.link(ref('base.group_portal')),
-                    Command.link(ref('base.group_public')),
-                ]"
-            />
+            <field name="groups" eval="[Command.link(ref('base.group_everyone'))]"/>
             <field name="domain_force">
                 [
                     ("channel_id.self_member_id.channel_role", "=", "admin"),
@@ -143,60 +104,42 @@
             <field name="perm_write" eval="False"/>
         </record>
         <record id="ir_rule_discuss_channel_member_create_is_group_matching_all" model="ir.rule">
-            <field name="name">discuss.channel.member: can join group restricted channels when group is matching</field>
+            <field name="name">discuss.channel.member: can join open accessible channels</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
-            <field name="groups"
-                eval="[
-                    Command.link(ref('base.group_user')),
-                    Command.link(ref('base.group_portal')),
-                    Command.link(ref('base.group_public')),
-                ]"
-            />
+            <field name="groups" eval="[Command.link(ref('base.group_everyone'))]"/>
             <field name="domain_force">
                 [
-                    ('is_self', '=', True),
-                    ('channel_id.channel_type', '=', 'channel'),
-                    '|',
-                        ('channel_id.group_public_id', '=', False),
-                        ('channel_id.group_public_id', 'in', user.all_group_ids.ids)
+                    ("is_self", "=", True),
+                    ("channel_id.membership_policy", "=", "open"),
+                    "|",
+                        ("channel_id.group_public_id", "=", False),
+                        ("channel_id.group_public_id", "in", user.all_group_ids.ids),
                 ]
             </field>
-            <!--
-                This is the only case where the current user can join themselves (is_self = True) when the channel
-                is already created, in all other cases they must be invited by someone else.
-            -->
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_unlink" eval="False"/>
         </record>
 
         <record id="ir_rule_discuss_channel_member_create_is_group_matching_group_user" model="ir.rule">
-            <field name="name">discuss.channel.member: internal users can invite others in group restricted channels when group is matching</field>
+            <field name="name">discuss.channel.member: internal users can invite others in accessible channels matching membership policy</field>
             <field name="model_id" ref="mail.model_discuss_channel_member"/>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="domain_force">
                 [
-                    ('is_self', '=', False),
-                    ('channel_id.channel_type', '=', 'channel'),
-                    '|',
-                        ('channel_id.group_public_id', '=', False),
-                        ('channel_id.group_public_id', 'in', user.all_group_ids.ids)
-                ]
-            </field>
-            <field name="perm_read" eval="False"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="ir_rule_discuss_channel_member_create_is_member_group_user" model="ir.rule">
-            <field name="name">discuss.channel.member: internal users can invite others in channels they are member of</field>
-            <field name="model_id" ref="mail.model_discuss_channel_member"/>
-            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
-            <field name="domain_force">
-                [
-                    ('is_self', '=', False),
-                    ('channel_id.channel_type', 'not in', ('channel', 'chat')),
-                    ('channel_id.is_member', '=', True)
+                    ("is_self", "=", False),
+                    ("channel_id.membership_policy", "!=", "blocked"),
+                    "|",
+                        ("channel_id.group_public_id", "=", False),
+                        ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                    "|",
+                        ("channel_id.visibility_policy", "not in", ("member", "member_and_group")),
+                        "|",
+                            ("channel_id.is_member", "=", True),
+                            ("channel_id.parent_channel_id.is_member", "=", True),
+                    "|",
+                        ("channel_id.membership_policy", "!=", "invite"),
+                        ("channel_id.is_member", "=", True),
                 ]
             </field>
             <!--
@@ -211,26 +154,17 @@
         <record id="ir_rule_discuss_call_history_read_all" model="ir.rule">
             <field name="name">discuss.call.history: read call history of accessible channels</field>
             <field name="model_id" ref="mail.model_discuss_call_history"/>
-            <field name="groups"
-                eval="[
-                    Command.link(ref('base.group_user')),
-                    Command.link(ref('base.group_portal')),
-                    Command.link(ref('base.group_public')),
-                ]"
-            />
+            <field name="groups" eval="[Command.link(ref('base.group_everyone'))]"/>
             <field name="domain_force">
                 [
                     "|",
-                        "&amp;",
-                            ("channel_id.channel_type", "!=", "channel"),
-                            "|",
-                                ("channel_id.is_member", "=", True),
-                                ("channel_id.parent_channel_id.is_member", "=", True),
-                        "&amp;",
-                            ("channel_id.channel_type", "=", "channel"),
-                            "|",
-                                ("channel_id.group_public_id", "=", False),
-                                ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                        ("channel_id.group_public_id", "=", False),
+                        ("channel_id.group_public_id", "in", user.all_group_ids.ids),
+                    "|",
+                        ("channel_id.visibility_policy", "not in", ("member", "member_and_group")),
+                        "|",
+                            ("channel_id.is_member", "=", True),
+                            ("channel_id.parent_channel_id.is_member", "=", True)
                 ]
             </field>
             <field name="perm_create" eval="False"/>
