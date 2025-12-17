@@ -444,10 +444,6 @@ class DiscussChannel(models.Model):
             predicate=is_livechat_channel,
         )
 
-    def _store_open_chat_window_fields(self, res: Store.FieldList):
-        self._store_channel_fields(res)
-        res.attr("open_chat_window", True)
-
     def _store_channel_fields(self, res: Store.FieldList):
         super()._store_channel_fields(res)
         res.attr("chatbot_current_step")

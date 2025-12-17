@@ -1412,6 +1412,10 @@ class DiscussChannel(models.Model):
         """
         self._add_members(users=self.env.user)
 
+    def open_chat_window_action(self):
+        """Return an action the web client can use to open this channel."""
+        return Store().add(self, "_store_open_chat_window_fields").get_client_action()
+
     @api.model
     def _create_channel(self, name, group_id):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
@@ -1551,6 +1555,10 @@ class DiscussChannel(models.Model):
 
     def _store_message_update_extra_fields(self, res: Store.FieldList):
         res.one("parent_id", "_store_message_fields")
+
+    def _store_open_chat_window_fields(self, res: Store.FieldList):
+        self._store_channel_fields(res)
+        res.attr("open_chat_window", True)
 
     # ------------------------------------------------------------
     # COMMANDS
