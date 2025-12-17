@@ -38,9 +38,11 @@ import { DEFAULT_LANGUAGE_ID } from "@html_editor/others/embedded_components/cor
  * @returns {string}
  */
 const highlight = (html, languageId = DEFAULT_LANGUAGE_ID, ejectBr = false) =>
-    `<span id="${languageId}">${ejectBr ? html.replace(/((<br>)*)$/, "") : html}</span>${
-        ejectBr ? html.match(/(?:<br>)+$/)?.[0] || "" : ""
-    }`;
+    languageId === DEFAULT_LANGUAGE_ID
+        ? html
+        : `<span id="${languageId}">${ejectBr ? html.replace(/((<br>)*)$/, "") : html}</span>${
+              ejectBr ? html.match(/(?:<br>)+$/)?.[0] || "" : ""
+          }`;
 
 /**
  * Patch the function that loads the Prism library so it doesn't crash when
@@ -183,22 +185,31 @@ export const highlightedPre = ({
     language = DEFAULT_LANGUAGE_ID,
     textareaRange = null,
     preHtml = value.replaceAll("\n", "<br>"),
-}) =>
-    unformat(
-        `<div data-embedded="syntaxHighlighting" data-oe-protected="true" contenteditable="false"
+}) => {
+    const innerHtml =
+        language === DEFAULT_LANGUAGE_ID
+            ? `<pre data-oe-protected="false" contenteditable="true">//PRE//</pre>${
+                  textareaRange === null ? "" : "[]"
+              }`
+            : `<pre>//PRE//</pre>${textareaRange === null ? "" : "[]"}
+               <textarea //TEXTAREA// class="o_prism_source" contenteditable="true"></textarea>`;
+    return (
+        unformat(
+            `<div data-embedded="syntaxHighlighting" data-oe-protected="true" contenteditable="false"
             class="o_syntax_highlighting"
             data-saved='{"value":"${value.replaceAll(
                 "\n",
                 "\\n"
             )}","languageId":"${language.toLowerCase()}"}'>
             ${TOOLBAR(LANGUAGES[language])}
-            <pre>//PRE//</pre>${textareaRange === null ? "" : "[]"}
-            <textarea //TEXTAREA// class="o_prism_source" contenteditable="true"></textarea>
+            ${innerHtml}
         </div>`
-    )
-        // Do not trim spaces within the PRE and in the textarea data:
-        .replace("//PRE//", highlight(preHtml || "<br>", language, true))
-        .replace(
-            " //TEXTAREA// ",
-            textareaRange ? "~~~" + textareaRange + "°°°" + value + "~~~ " : " "
-        );
+        )
+            // Do not trim spaces within the PRE and in the textarea data:
+            .replace("//PRE//", highlight(preHtml || "<br>", language, true))
+            .replace(
+                " //TEXTAREA// ",
+                textareaRange ? "~~~" + textareaRange + "°°°" + value + "~~~ " : " "
+            )
+    );
+};

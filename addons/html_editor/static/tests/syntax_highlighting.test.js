@@ -1,7 +1,8 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { getContent } from "./_helpers/selection";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
-import { insertText, splitBlock } from "./_helpers/user_actions";
+import { expandToolbar } from "./_helpers/toolbar";
+import { insertText, simulateArrowKeyPress, splitBlock } from "./_helpers/user_actions";
 import {
     compareHighlightedContent,
     highlightedPre,
@@ -1133,4 +1134,23 @@ test("can write in a highlighted code block within a nested list", async () => {
             <p>b</p>`
         ),
     });
+});
+
+test("should have toolbar within plaintext /code block, but not other syntaxes", async () => {
+    const { editor } = await setupEditor(`<div>[]</div>`);
+    await insertText(editor, "/code");
+    await press("Enter");
+    await insertText(editor, "let a = 1;");
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await simulateArrowKeyPress(editor, ["Shift", "ArrowLeft"]); // "1" is selected
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='font']").toHaveCount(1);
+    expect(".btn[name='bold']").toHaveCount(1);
+    expect(".btn[name='link']").toHaveCount(1);
+    expect(".btn[name='translate']").toHaveCount(0);
+    await expandToolbar("codeexpanded");
+    expect(".btn[name='font']").toHaveCount(1);
+    expect(".btn[name='bold']").toHaveCount(1);
+    expect(".btn[name='link']").toHaveCount(1);
+    expect(".btn[name='translate']").toHaveCount(1);
 });
