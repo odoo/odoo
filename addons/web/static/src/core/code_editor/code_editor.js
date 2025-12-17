@@ -24,6 +24,7 @@ export class CodeEditor extends Component {
         sessionId: { type: [Number, String], optional: true },
         initialCursorPosition: { type: Object, optional: true },
         showLineNumbers: { type: Boolean, optional: true },
+        lineWrapping: { type: Boolean, optional: true },
     };
     static defaultProps = {
         readonly: false,
@@ -67,6 +68,7 @@ export class CodeEditor extends Component {
                     maxLines: this.props.maxLines,
                     showPrintMargin: false,
                     useWorker: false,
+                    wrap: this.props.lineWrapping,
                 });
                 this.aceEditor.$blockScrolling = true;
 
