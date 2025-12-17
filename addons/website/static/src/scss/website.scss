@@ -1757,9 +1757,15 @@ header {
         @include o-apply-colors('header-sales_three-custom');
         @include o-add-gradient('menu-secondary-gradient');
     }
-    #wrapwrap header .o_header_sales_three_small_links {
-        // Force small links to be proportional to header font size
-        --nav-link-font-size: MAX(12px, .75em);
+    #wrapwrap header {
+        .o_header_sales_three_small_links {
+            // Force small links to be proportional to header font size
+            --nav-link-font-size: MAX(12px, .75em);
+        }
+        .ms-auto:has(> .o_header_sales_three_small_links + .top_menu.o_menu_loading) {
+            // Fix menu auto hide by preventing parent overflow
+            overflow: hidden !important;
+        }
     }
 } @else if o-website-value('header-template') == 'sales_four' {
     #wrapwrap .o_header_sales_four_bot {
