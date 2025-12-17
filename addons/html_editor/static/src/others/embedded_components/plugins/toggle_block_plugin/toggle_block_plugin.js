@@ -54,7 +54,10 @@ export class ToggleBlockPlugin extends Plugin {
         move_node_blacklist_selectors: `${toggleSelector} ${titleSelector} *`,
         selection_blocker_predicates: (blocker) => {
             // Prevent the insertion of selection placeholders around toggle blocks.
-            if (blocker.nodeType === Node.ELEMENT_NODE && blocker.dataset.embedded === "toggleBlock") {
+            if (
+                blocker.nodeType === Node.ELEMENT_NODE &&
+                blocker.dataset.embedded === "toggleBlock"
+            ) {
                 return false;
             }
         },
@@ -523,7 +526,15 @@ export class ToggleBlockPlugin extends Plugin {
     }
 
     insertToggleBlock() {
-        const block = this.renderToggleBlock();
+        let initialText;
+        const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        if (selection.isCollapsed) {
+            const selectedBlock = closestBlock(selection.startContainer);
+            initialText = selectedBlock.textContent;
+            selectedBlock.remove();
+        }
+
+        const block = this.renderToggleBlock(initialText);
         const target = block.querySelector(`${titleSelector} > ${baseContainerGlobalSelector}`);
         this.dependencies.dom.insert(block);
         this.dependencies.selection.setCursorStart(target);
@@ -571,7 +582,7 @@ export class ToggleBlockPlugin extends Plugin {
         }
     }
 
-    renderToggleBlock() {
+    renderToggleBlock(initialText) {
         const baseContainer = this.dependencies.baseContainer.createBaseContainer();
         return parseHTML(
             this.document,
@@ -581,6 +592,7 @@ export class ToggleBlockPlugin extends Plugin {
                     class: baseContainer.className,
                 },
                 embeddedProps: JSON.stringify({ toggleBlockId: this.getUniqueIdentifier() }),
+                initialText,
             })
         );
     }
