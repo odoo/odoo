@@ -2,6 +2,8 @@
 
 import uuid
 
+from psycopg2 import sql
+
 from odoo import fields, models, api
 from odoo.fields import Domain
 from odoo.tools.urls import urljoin as url_join
@@ -60,12 +62,12 @@ class ResCompany(models.Model):
             self.env.cr.execute("SELECT id FROM %s WHERE attendance_kiosk_key IS NULL" % self._table)
             attendance_ids = self.env.cr.dictfetchall()
             values_args = [(attendance_id['id'], self._default_company_token()) for attendance_id in attendance_ids]
-            query = """
+            query = sql.SQL("""
                 UPDATE {table}
                 SET attendance_kiosk_key = vals.token
                 FROM (VALUES %s) AS vals(id, token)
                 WHERE {table}.id = vals.id
-            """.format(table=self._table)
+            """).format(table=sql.Identifier(self._table))
             self.env.cr.execute_values(query, values_args)
 
     def write(self, vals):

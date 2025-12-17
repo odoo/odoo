@@ -94,12 +94,12 @@ class SQL(metaclass=_SQLMeta):
         ...
 
     @typing.overload
-    def __new__(cls: type[SQL], code: typing.LiteralString | SQL, /, *args, to_flush: Field | Iterable[Field] | None = None, **kw) -> LiteralSQL:
+    def __new__(cls: type[SQL], code: typing.LiteralString, /, *args, to_flush: Field | Iterable[Field] | None = None, **kw) -> LiteralSQL:
         ...
 
     def __new__(cls, *a, **kw):
         if cls is SQL:
-            cls = LiteralSQL  # noqa: PLW0642
+            return object.__new__(LiteralSQL)
         return object.__new__(cls)
 
     _sql_tuple: tuple[str, tuple, tuple[Field, ...]]
@@ -116,21 +116,49 @@ class SQL(metaclass=_SQLMeta):
     def __bool__(self):
         return bool(self._sql_tuple[0])
 
+    def join(self, args: Iterable) -> SQL:
+        """ Join SQL objects or parameters with ``self`` as a separator. """
+        match list(args):
+            case []:
+                return SQL()
+            case [SQL() as arg]:
+                return arg
+            case args:
+                code, params, to_flush = self._sql_tuple
+                if not params:
+                    return SQL(code.join(("%s",) * len(args)), *args, to_flush=to_flush)
+                # general case: alternate args with self
+                items = [self] * (len(args) * 2 - 1)
+                for index, arg in enumerate(args):
+                    items[index * 2] = arg
+                return SQL("%s" * len(items), *items, to_flush=to_flush)
+
 
 class LiteralSQL(SQL):
     __slots__ = ('__sql_tuple',)
     __sql_tuple: tuple[str, tuple, tuple[Field, ...]]
 
-    def __init__(self, code: typing.LiteralString | SQL = "", /, *args, to_flush: Field | Iterable[Field] | None = None, **kwargs):
-        if isinstance(code, SQL):
-            if args or kwargs or to_flush:
-                raise TypeError("SQL() unexpected arguments when code has type SQL")
-            self.__sql_tuple = code._sql_tuple
-            return
-
+    def __init__(self, code: typing.LiteralString = "", /, *args, to_flush: Field | Iterable[Field] | None = None, **kwargs):
         # validate the format of code and parameters
         if args and kwargs:
             raise TypeError("SQL() takes either positional arguments, or named arguments")
+
+        # fast paths
+        match code:
+            case "":
+                if args or kwargs or to_flush:
+                    raise TypeError("unexpected arguments for empty code")
+                self.__sql_tuple = "", (), ()
+                return
+            case "%s" if len(args) == 1 and isinstance(args[0], SQL):
+                c, p, f = args[0]._sql_tuple
+                self.__sql_tuple = c, p, to_flush or f
+                return
+            case SQL():
+                if args or kwargs or to_flush:
+                    raise TypeError("SQL() unexpected arguments when code has type SQL")
+                self.__sql_tuple = code._sql_tuple
+                return
 
         if kwargs:
             code, args = named_to_positional_printf(code, kwargs)
@@ -176,23 +204,6 @@ class LiteralSQL(SQL):
     def __repr__(self):
         code, params, _ = self.__sql_tuple
         return f"SQL({', '.join(map(repr, [code, *params]))})"
-
-    def join(self, args: Iterable) -> SQL:
-        """ Join SQL objects or parameters with ``self`` as a separator. """
-        args = list(args)
-        # optimizations for special cases
-        if len(args) == 0:
-            return SQL()
-        if len(args) == 1 and isinstance(args[0], SQL):
-            return args[0]
-        code, params, to_flush = self.__sql_tuple
-        if not params:
-            return SQL(code.join(("%s",) * len(args)), *args, to_flush=to_flush)
-        # general case: alternate args with self
-        items = [self] * (len(args) * 2 - 1)
-        for index, arg in enumerate(args):
-            items[index * 2] = arg
-        return SQL("%s" * len(items), *items)
 
 
 def existing_tables(cr, tablenames):

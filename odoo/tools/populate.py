@@ -61,7 +61,7 @@ def get_field_variation_date(model: Model, field: Field, factor: int, series_ali
     setting duplicated records too far back in the past.
     """
     total_days = min((MAX_DATETIME - MIN_DATETIME).days, factor)
-    cast_type = SQL(field._column_type[1])
+    cast_type = SQL.identifier(field._column_type[0])
 
     def redistribute(value):
         return SQL(

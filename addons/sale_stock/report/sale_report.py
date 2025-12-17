@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools import SQL
 
 
 class SaleReport(models.Model):
@@ -11,11 +12,8 @@ class SaleReport(models.Model):
 
     def _select_additional_fields(self):
         res = super()._select_additional_fields()
-        res['warehouse_id'] = "s.warehouse_id"
+        res['warehouse_id'] = SQL("s.warehouse_id")
         return res
 
     def _group_by_sale(self):
-        res = super()._group_by_sale()
-        res += """,
-            s.warehouse_id"""
-        return res
+        return SQL("%s, s.warehouse_id", super()._group_by_sale())

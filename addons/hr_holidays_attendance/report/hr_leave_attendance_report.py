@@ -74,7 +74,7 @@ class HrLeaveAttendanceReport(models.Model):
         return fields.Datetime.context_timestamp(self, date).date()
 
     def _select(self):
-        return """
+        return SQL("""
          SELECT row_number() OVER (ORDER BY gs.day DESC, emp.id) AS id,
                 gs.day::date AS date,
                 emp.id AS employee_id,
@@ -87,10 +87,10 @@ class HrLeaveAttendanceReport(models.Model):
                     - ROUND(COALESCE(rc.hours_per_day, 0.0)::numeric, 2)
                     + ROUND(COALESCE(dlh.leave_hours, 0.0)::numeric, 2)
                 ) AS difference_hours
-        """
+        """)
 
     def _from(self):
-        return """
+        return SQL("""
                 FROM hr_employee AS emp
           CROSS JOIN LATERAL generate_series(
                         (date_trunc('month', CURRENT_DATE) - INTERVAL '1 year')::date,
@@ -109,10 +109,10 @@ class HrLeaveAttendanceReport(models.Model):
                          LIMIT 1
                      ) AS ver
                   ON TRUE
-        """
+        """)
 
     def _join_attendance(self):
-        return """
+        return SQL("""
             LEFT JOIN (
                        SELECT employee_id,
                               (check_in AT TIME ZONE 'UTC')::date AS check_date,
@@ -122,16 +122,16 @@ class HrLeaveAttendanceReport(models.Model):
                       ) AS att
                    ON att.employee_id = emp.id
                   AND att.check_date = gs.day
-        """
+        """)
 
     def _join_calendar(self):
-        return """
+        return SQL("""
             JOIN resource_calendar AS rc
               ON ver.resource_calendar_id = rc.id
-        """
+        """)
 
     def _join_calendar_leaves(self):
-        return """
+        return SQL("""
             LEFT JOIN resource_calendar_leaves AS rcl
                    ON (
                                (rc.id = rcl.calendar_id OR rcl.calendar_id IS NULL)
@@ -141,10 +141,10 @@ class HrLeaveAttendanceReport(models.Model):
                        BETWEEN (rcl.date_from AT TIME ZONE 'UTC')::date
                            AND (rcl.date_to AT TIME ZONE 'UTC')::date
                       )
-        """
+        """)
 
     def _join_resource_calendar_attendance(self):
-        return """
+        return SQL("""
             LEFT JOIN (
                         SELECT DISTINCT ON (calendar_id, dayofweek) *
                           FROM resource_calendar_attendance
@@ -157,7 +157,7 @@ class HrLeaveAttendanceReport(models.Model):
                              ELSE EXTRACT(DOW FROM gs.day) - 1
                         END
                       )  -- to map days between Odoo (Monday = 0, Tuesday = 1, ...) and Postgres (Sunday = 0, Monday = 1, ...)
-        """
+        """)
 
     def _join_daily_leave_hours(self):
         """ Generates a SQL join clause to calculate the total `leave_hours` taken for a specific day:
@@ -166,7 +166,7 @@ class HrLeaveAttendanceReport(models.Model):
             - Handles leaves spanning multiple days, ensuring only working days are counted.
             - Converts all date fields to UTC to maintain consistency with Odoo's date storage.
         """
-        return """
+        return SQL("""
             LEFT JOIN LATERAL (
                         SELECT SUM(lv.number_of_hours / NULLIF(wd.working_days,0)) AS leave_hours
                           FROM hr_leave AS lv
@@ -208,13 +208,13 @@ class HrLeaveAttendanceReport(models.Model):
                            AND lv.state = 'validate'
                       ) AS dlh
                    ON TRUE
-        """
+        """)
 
     def _where(self):
-        return """
+        return SQL("""
             WHERE rca.id IS NOT NULL
               AND rcl.id IS NULL
-        """
+        """)
 
     def init(self):
         drop_view_if_exists(self.env.cr, self._table)
@@ -230,12 +230,12 @@ class HrLeaveAttendanceReport(models.Model):
                 %s -- where
             )""",
                 SQL.identifier(self._table),
-                SQL(self._select()),
-                SQL(self._from()),
-                SQL(self._join_attendance()),
-                SQL(self._join_calendar()),
-                SQL(self._join_calendar_leaves()),
-                SQL(self._join_resource_calendar_attendance()),
-                SQL(self._join_daily_leave_hours()),
-                SQL(self._where()),
+                self._select(),
+                self._from(),
+                self._join_attendance(),
+                self._join_calendar(),
+                self._join_calendar_leaves(),
+                self._join_resource_calendar_attendance(),
+                self._join_daily_leave_hours(),
+                self._where(),
             ))

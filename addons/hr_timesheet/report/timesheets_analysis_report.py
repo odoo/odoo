@@ -38,11 +38,11 @@ class TimesheetsAnalysisReport(models.Model):
 
     @property
     def _table_query(self):
-        return "%s %s %s" % (self._select(), self._from(), self._where())
+        return SQL("%s %s %s", self._select(), self._from(), self._where())
 
     @api.model
     def _select(self):
-        return """
+        return SQL("""
             SELECT
                 A.id AS id,
                 A.name AS name,
@@ -59,16 +59,16 @@ class TimesheetsAnalysisReport(models.Model):
                 A.amount AS amount,
                 A.unit_amount AS unit_amount,
                 A.partner_id AS partner_id
-        """
+        """)
 
     @api.model
     def _from(self):
-        return "FROM account_analytic_line A"
+        return SQL("FROM account_analytic_line A")
 
     @api.model
     def _where(self):
-        return "WHERE A.project_id IS NOT NULL"
+        return SQL("WHERE A.project_id IS NOT NULL")
 
     def init(self):
         drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute(SQL("""CREATE or REPLACE VIEW %s as (%s)""", SQL.identifier(self._table), SQL(self._table_query)))
+        self.env.cr.execute(SQL("CREATE or REPLACE VIEW %s as %s", SQL.identifier(self._table), self._table_sql))

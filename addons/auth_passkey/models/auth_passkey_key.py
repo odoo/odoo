@@ -49,9 +49,8 @@ class AuthPasskeyKey(models.Model):
         return super().unlink()
 
     def _compute_public_key(self):
-        query = 'SELECT public_key FROM auth_passkey_key WHERE id = %s'
         for passkey in self:
-            self.env.cr.execute(SQL(query, passkey.id))
+            self.env.cr.execute(SQL('SELECT public_key FROM auth_passkey_key WHERE id = %s', passkey.id))
             public_key = self.env.cr.fetchone()[0]
             passkey.public_key = public_key
 

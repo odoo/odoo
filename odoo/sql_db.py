@@ -25,9 +25,9 @@ import psycopg2.errorcodes
 import psycopg2.errors
 import psycopg2.extensions
 import psycopg2.extras
+from psycopg2 import sql
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
-from psycopg2.sql import Composable
 from werkzeug import urls
 
 import odoo
@@ -116,7 +116,7 @@ class Savepoint:
         self.name = str(uuid.uuid1())
         self._cr = cr
         self.closed: bool = False
-        cr.execute('SAVEPOINT "%s"' % self.name)
+        cr.execute(sql.SQL('SAVEPOINT {}').format(sql.Identifier(self.name)))
 
     def __enter__(self):
         return self
@@ -129,12 +129,12 @@ class Savepoint:
             self._close(rollback)
 
     def rollback(self):
-        self._cr.execute('ROLLBACK TO SAVEPOINT "%s"' % self.name)
+        self._cr.execute(sql.SQL('ROLLBACK TO SAVEPOINT {}').format(sql.Identifier(self.name)))
 
     def _close(self, rollback: bool):
         if rollback:
             self.rollback()
-        self._cr.execute('RELEASE SAVEPOINT "%s"' % self.name)
+        self._cr.execute(sql.SQL('RELEASE SAVEPOINT {}').format(sql.Identifier(self.name)))
         self.closed = True
 
 
@@ -415,16 +415,27 @@ class Cursor(BaseCursor):
         if isinstance(query, SQL):
             assert params is None, "Unexpected parameters for SQL query object"
             query, params, _fields = query._sql_tuple
-        elif params and not isinstance(params, (tuple, list, dict)):
-            # psycopg2's TypeError is not clear if you mess up the params
-            raise ValueError(f"SQL query parameters should be a tuple, list or dict; got {params!r}")
+        else:
+            if isinstance(query, str):
+                warnings.warn(
+                    "Use odoo.tools.sql.SQL, not string queries",
+                    category=PendingDeprecationWarning,
+                    stacklevel=2,
+                )
+            if params and not isinstance(params, (tuple, list, dict)):
+                # psycopg2's TypeError is not clear if you mess up the params
+                raise ValueError(f"SQL query parameters should be a tuple, list or dict; got {params!r}")
 
         start = real_time()
         try:
             self._obj.execute(query, params)
         except Exception as e:
             if log_exceptions:
-                _logger.error("bad query: %s\nERROR: %s", self._obj.query or query, e)
+                _logger.error(
+                    "bad query: %s\nERROR: %s",
+                    self._obj.query.decode() if self._obj.query else query,
+                    e,
+                )
             raise
         finally:
             delay = real_time() - start
@@ -467,8 +478,14 @@ class Cursor(BaseCursor):
         """
         # Odoo Cursor only proxies all methods of psycopg2 Cursor. This is a patch for problems caused by passing
         # self instead of self._obj to the first parameter of psycopg2.extras.execute_values.
-        if isinstance(query, Composable):
+        if isinstance(query, sql.Composable):
             query = query.as_string(self._obj)
+        elif isinstance(query, str):
+            warnings.warn(
+                "Use psycopg2.sql objects, not string queries",
+                category=DeprecationWarning,
+                stacklevel=2,
+            )
         return psycopg2.extras.execute_values(self, query, argslist, template=template, page_size=page_size, fetch=fetch)
 
     def print_log(self) -> None:

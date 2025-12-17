@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools import SQL
 
 
 class SaleReport(models.Model):
@@ -15,23 +16,23 @@ class SaleReport(models.Model):
 
     def _select_additional_fields(self):
         res = super()._select_additional_fields()
-        res['website_id'] = "s.website_id"
-        res['is_abandoned_cart'] = """
+        res['website_id'] = SQL("s.website_id")
+        res['is_abandoned_cart'] = SQL("""
             s.date_order <= (timezone('utc', now()) - ((COALESCE(w.cart_abandoned_delay, '1.0') || ' hour')::INTERVAL))
             AND s.website_id IS NOT NULL
             AND s.state = 'draft'
-            AND s.partner_id != %s""" % self.env.ref('base.public_partner').id
+            AND s.partner_id != %s""", self.env.ref('base.public_partner').id)
         return res
 
     def _from_sale(self):
         res = super()._from_sale()
-        res += """
-            LEFT JOIN website w ON w.id = s.website_id"""
+        res = SQL("""%s
+            LEFT JOIN website w ON w.id = s.website_id""", res)
         return res
 
     def _group_by_sale(self):
         res = super()._group_by_sale()
-        res += """,
+        res = SQL("""%s,
             s.website_id,
-            w.cart_abandoned_delay"""
+            w.cart_abandoned_delay""", res)
         return res

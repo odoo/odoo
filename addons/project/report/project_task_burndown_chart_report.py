@@ -77,7 +77,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
 
         # Computes the interval which needs to be used in the `SQL` depending on the date group by interval.
         interval = date_groupby.split(':')[1]
-        sql_interval = '1 %s' % interval if interval != 'quarter' else '3 month'
+        sql_interval = '3 month' if interval == 'quarter' else f'1 {interval}'
 
         simple_date_groupby_sql = self._read_group_groupby(TableSQL('project_task_burndown_chart_report', self, main_query), f"date:{interval}")
         # Removing unexistant table name from the expression
@@ -114,7 +114,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                                             pt.project_id,
                                             COALESCE(LAG(mm.date) OVER (PARTITION BY mm.res_id ORDER BY mm.id), pt.create_date) as date_begin,
                                             CASE WHEN mtv.id IS NOT NULL THEN mm.date
-                                                ELSE (now() at time zone 'utc')::date + INTERVAL '%(interval)s'
+                                                ELSE (now() at time zone 'utc')::date + INTERVAL %(interval)s
                                             END as date_end,
                                             CASE WHEN mtv.id IS NOT NULL THEN mtv.old_value_integer
                                                ELSE pt.stage_id
@@ -152,7 +152,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                                    pt.allocated_hours,
                                    pt.project_id,
                                    last_stage_id_change_mail_message.date as date_begin,
-                                   (now() at time zone 'utc')::date + INTERVAL '%(interval)s' as date_end,
+                                   (now() at time zone 'utc')::date + INTERVAL %(interval)s as date_end,
                                    pt.stage_id as old_value_integer,
                                    CASE WHEN pt.state IN ('1_done', '1_canceled') THEN 'closed'
                                        ELSE 'open'
@@ -186,14 +186,14 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
                      date,
                      __count
                 FROM all_stage_task_moves t
-                         JOIN LATERAL generate_series(t.date_begin, t.date_end-INTERVAL '1 day', '%(interval)s')
+                         JOIN LATERAL generate_series(t.date_begin, t.date_end-INTERVAL '1 day', %(interval)s)
                             AS date ON TRUE
             )
             """,
             task_query_subselect=project_task_query.subselect(),
             date_begin=SQL(simple_date_groupby_sql.replace('"date"', '"date_begin"')),
             date_end=SQL(simple_date_groupby_sql.replace('"date"', '"date_end"')),
-            interval=SQL(sql_interval),
+            interval=sql_interval,
             field_id=field_id,
         )
 

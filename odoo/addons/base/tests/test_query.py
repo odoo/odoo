@@ -10,7 +10,7 @@ class QueryTestCase(BaseCase):
 
     def test_basic_query(self):
         query = Query(None, 'product_product', SQL.identifier('product_product'))
-        query.add_where('1=1')
+        query.add_where(SQL('1=1'))
         # add inner join
         query.add_join('JOIN', 'aaa', 'product_template', SQL('aaa.id = "product_product"."product_template"'))
 

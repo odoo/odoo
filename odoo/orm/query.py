@@ -76,7 +76,7 @@ class Query:
         self.groupby: SQL | None = None
         self._order_groupby: list[SQL] = []
         self.having: SQL | None = None
-        self._order: SQL | None = None
+        self.order: SQL | None = None
         self.limit: int | None = None
         self.offset: int | None = None
 
@@ -114,9 +114,9 @@ class Query:
         self._joins[alias] = (sql_kind, table, condition)
         self._ids = self._ids and None
 
-    def add_where(self, where_clause: LiteralString | SQL, where_params=()):
+    def add_where(self, where_clause: SQL):
         """ Add a condition to the where clause. """
-        self._where_clauses.append(SQL(where_clause, *where_params))  # pylint: disable = sql-injection
+        self._where_clauses.append(where_clause)
         self._ids = self._ids and None
 
     def join(self, lhs_alias: str, lhs_column: str, rhs_table: str | SQL, rhs_column: str, link: str) -> str:
@@ -154,14 +154,6 @@ class Query:
         return rhs_alias
 
     @property
-    def order(self) -> SQL | None:
-        return self._order
-
-    @order.setter
-    def order(self, value: SQL | LiteralString | None):
-        self._order = SQL(value) if value is not None else None  # pylint: disable = sql-injection
-
-    @property
     def table(self) -> TableSQL:
         """ The query's main table, i.e., the first one in the FROM clause. """
         alias = next(iter(self._joins))
@@ -195,9 +187,9 @@ class Query:
             SQL(" WHERE %s", self.where_clause) if self._where_clauses else _SQL_EMPTY,
             SQL(" GROUP BY %s", self.groupby) if self.groupby else _SQL_EMPTY,
             SQL(" HAVING %s", self.having) if self.having else _SQL_EMPTY,
-            SQL(" ORDER BY %s", self._order) if self._order else _SQL_EMPTY,
-            SQL(f" LIMIT {int(self.limit)}") if self.limit is not None else _SQL_EMPTY,
-            SQL(f" OFFSET {int(self.offset)}") if self.offset else _SQL_EMPTY,
+            SQL(" ORDER BY %s", self.order) if self.order else _SQL_EMPTY,
+            SQL(" LIMIT %s", int(self.limit)) if self.limit is not None else _SQL_EMPTY,
+            SQL(" OFFSET %s", int(self.offset)) if self.offset else _SQL_EMPTY,
         )
 
     def subselect(self, *args: SQL | LiteralString) -> SQL:
@@ -245,7 +237,7 @@ class Query:
             "Method set_result_ids() can only be called on a virgin Query"
         ids = tuple(ids)
         if not ids:
-            self.add_where("FALSE")
+            self.add_where(SQL("FALSE"))
         elif ordered:
             # This guarantees that self.select() returns the results in the
             # expected order of ids:

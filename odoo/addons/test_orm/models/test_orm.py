@@ -2381,13 +2381,13 @@ class TestOrmCustomTable_Query(models.Model):
 
     @property
     def _table_query(self):
-        return """
+        return SQL("""
             SELECT tag.id AS id, SUM(child.quantity) AS sum_quantity, tag.id AS tag_id
             FROM test_orm_any_child AS child
             JOIN test_orm_any_child_test_orm_any_tag_rel AS rel ON rel.test_orm_any_child_id = child.id
             JOIN test_orm_any_tag AS tag ON tag.id = rel.test_orm_any_tag_id
             GROUP BY tag.id
-        """
+        """)
 
 
 class TestOrmCustomTable_Query_Sql(models.Model):
@@ -2461,7 +2461,7 @@ class Test_New_ViewStrId(models.Model):
     _name = 'test_orm.view.str.id'
     _description = 'test_orm.view.str.id'
     _auto = False
-    _table_query = "SELECT 'hello' AS id, 'test' AS name"
+    _table_query = SQL("SELECT 'hello' AS id, 'test' AS name")
 
     name = fields.Char()
 

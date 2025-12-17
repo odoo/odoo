@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields
+from odoo.tools import SQL
 
 
 class SaleReport(models.Model):
@@ -10,5 +11,5 @@ class SaleReport(models.Model):
 
     def _select_additional_fields(self):
         res = super()._select_additional_fields()
-        res['project_id'] = 's.project_id'
+        res['project_id'] = SQL('s.project_id')
         return res

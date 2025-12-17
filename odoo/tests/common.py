@@ -590,12 +590,12 @@ class BaseCase(case.TestCase):
                 "\n".join(actual_queries), "\n".join(expected),
             )
         )
-        for actual_query, expect_query in zip(actual_queries, expected):
-            self.assertEqual(
-                "".join(actual_query.lower().split()),
-                "".join(expect_query.lower().split()),
-                "\n---- actual query:\n%s\n---- not like:\n%s" % (actual_query, expect_query),
-            )
+        with patch.object(self, "maxDiff", None):
+            for actual_query, expect_query in zip(actual_queries, expected):
+                self.assertEqual(
+                    "".join(expect_query.lower().split()),
+                    "".join(actual_query.lower().split()),
+                )
 
     @contextmanager
     def assertQueriesContain(self, expected, flush=True):

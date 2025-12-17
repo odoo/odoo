@@ -113,7 +113,7 @@ class IrRule(models.Model):
         current user.
         """
         if mode not in self._MODES:
-            raise ValueError('Invalid mode: %r' % (mode,))
+            raise ValueError(f'Invalid mode: {mode!r}')
 
         if self.env.su:
             return self.browse(())
@@ -122,13 +122,13 @@ class IrRule(models.Model):
         sql = SQL("""
             SELECT r.id FROM ir_rule r
             JOIN ir_model m ON (r.model_id=m.id)
-            WHERE m.model = %s AND r.active AND r.perm_%s
+            WHERE m.model = %s AND r.active AND %s
                 AND (r.global OR r.id IN (
                     SELECT rule_group_id FROM rule_group_rel rg
                     WHERE rg.group_id IN %s
                 ))
             ORDER BY r.id
-        """, model_name, SQL(mode), tuple(self.env.user._get_group_ids()) or (None,))
+        """, model_name, SQL.identifier("r", f'perm_{mode}'), tuple(self.env.user._get_group_ids()) or (None,))
         return self.browse(v for v, in self.env.execute_query(sql))
 
     @api.model

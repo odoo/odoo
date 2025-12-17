@@ -990,6 +990,8 @@ class IrActionsServer(models.Model):
     def _run_action_code_multi(self, eval_context):
         if not self.code:
             return
+        # FIXME: intercept warning (using a contextvars callback?) to signal to
+        #        db admin if e.g. sql warning is raised from the python code
         safe_eval(self.code.strip(), eval_context, mode="exec", filename=str(self))
         return eval_context.get('action')
 
