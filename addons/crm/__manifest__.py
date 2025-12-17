@@ -58,6 +58,7 @@
         'views/crm_team_views.xml',
         'views/crm_menu_views.xml',
         'views/crm_helper_templates.xml',
+        'views/crm_lead_templates.xml',
     ],
     'demo': [
         'data/crm_team_demo.xml',

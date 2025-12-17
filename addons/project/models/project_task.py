@@ -1575,9 +1575,9 @@ class ProjectTask(models.Model):
     def _creation_message(self):
         self.ensure_one()
         if self.project_id:
-            return _('A new task has been created in the "%(project_name)s" project.',
+            return _('This new task has been created in the "%(project_name)s" project.',
                      project_name=self.project_id.display_name)
-        return _('A new task has been created and is not part of any project.')
+        return _('This new task is not part of any project.')
 
     def _track_subtype(self, init_values):
         self.ensure_one()

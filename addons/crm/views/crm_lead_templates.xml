@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="crm_lead_creation_message" name="crm lead creation message">
+        <t t-set="has_address_line" t-value="False"/>
+        <t t-if="env.context.get('import_file')">
+            Lead/Opportunity created<br/>
+        </t>
+        <t t-if="lead.partner_name or lead.contact_name">
+            <i class="fa fa-user fa-fw me-1"/>
+            <span>
+                <b t-if="lead.partner_name" t-out="lead.partner_name"/><t t-if="lead.contact_name and lead.partner_name">,</t>
+                <t t-if="lead.contact_name" t-out="lead.contact_name"/>
+            </span><br/>
+        </t>
+        <t t-if="lead.function">
+            <i class="fa fa-briefcase fa-fw me-1"/>
+            <span t-out="lead.function"/><br/>
+        </t>
+        <t t-if="lead.street or lead.street2">
+            <t t-set="has_address_line" t-value="True"/>
+            <i class="fa fa-map-marker fa-fw me-1"/>
+            <span t-out="', '.join(s_bit for s_bit in [lead.street, lead.street2] if s_bit)"/><br/>
+        </t>
+        <t t-if="lead.city or lead.zip or lead.state_id or lead.country_id">
+            <i t-if="has_address_line" class="fa fa-fw me-1"/>
+            <i t-else="" class="fa fa-map-marker fa-fw me-1"/>
+            <span t-out="', '.join(s_bit for s_bit in [lead.city, lead.zip, lead.state_id.display_name, lead.country_id.display_name] if s_bit)"/><br/>
+        </t>
+        <t t-if="lead.website">
+            <i class="fa fa-globe fa-fw me-1"/>
+            <span>
+                <a t-att-href="lead.website" t-out="lead.website" target='_blank'/>
+            </span><br/>
+        </t>
+    </template>
+</odoo>
