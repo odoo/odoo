@@ -17,7 +17,7 @@ export const ProjectTaskModelMixin = (T) =>
                     Domain.removeDomainLeaves(domain, ["has_template_ancestor"]).toList(),
                     [["has_template_ancestor", "=", true]],
                 ]);
-                const projectId = this.env.searchModel.context?.active_id || false;
+                const projectId = this.env.searchModel.context?.default_project_id || false;
                 if (projectId) {
                     domain = Domain.and([
                         Domain.removeDomainLeaves(domain, ["project_id"]).toList(),

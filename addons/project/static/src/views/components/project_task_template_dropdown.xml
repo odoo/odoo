@@ -2,15 +2,15 @@
 <templates>
     <t t-name="project.TemplateDropdown">
         <button t-if="!state.taskTemplates.length" type="button" t-att-class="props.newButtonClasses" t-att-data-hotkey="props.hotkey" t-on-click.stop="props.onCreate" data-bounce-button="">New</button>
-        <Dropdown t-else="">
+        <Dropdown t-else="" menuClass="'py-0'">
             <button t-attf-class="{{ props.newButtonClasses }} o-dropdown-caret" t-att-data-hotkey="props.hotkey" data-bounce-button="">
                 New
             </button>
             <t t-set-slot="content">
-                <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="props.onCreate">
+                <DropdownItem tag="'button'" class="'btn btn-link py-2'" onSelected="props.onCreate">
                     New Task
                 </DropdownItem>
-                <div role="separator" class="dropdown-divider"/>
+                <div role="separator" class="dropdown-divider my-0"/>
                 <div class="dropdown-header">Task Templates</div>
                 <t t-foreach="displayedtaskTemplates" t-as="template" t-key="template.id">
                     <DropdownItem tag="'button'" class="'btn btn-link o-dropdopwn-item-indent o-task-template d-flex align-items-center pe-0'"
@@ -19,8 +19,7 @@
                         <ProjectTemplateButtons resModel="'project.task'" resId="template.id"/>
                     </DropdownItem>
                 </t>
-                <div t-if="displayViewMoreButton" role="separator" class="dropdown-divider"/>
-                <DropdownItem t-if="displayViewMoreButton" tag="'button'" class="'btn btn-link'" onSelected="() => this.onClickViewMore()">
+                <DropdownItem t-if="displayViewMoreButton" tag="'button'" class="'btn btn-link o-dropdopwn-item-indent o_task_template_view_more py-2'" onSelected="() => this.onClickViewMore()">
                     View More
                 </DropdownItem>
             </t>

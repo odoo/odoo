@@ -59,7 +59,7 @@ class ProjectTask(models.Model):
 
     @api.constrains('project_id')
     def _check_project_root(self):
-        private_tasks = self.filtered(lambda t: not t.project_id)
+        private_tasks = self.filtered(lambda t: not t.project_id and not t.is_template)
         if private_tasks and self.env['account.analytic.line'].sudo().search_count([('task_id', 'in', private_tasks.ids)], limit=1):
             raise UserError(_("This task cannot be private because there are some timesheets linked to it."))
 
@@ -297,5 +297,5 @@ class ProjectTask(models.Model):
         fields = super()._get_template_field_blacklist()
         project_id = self.env.context.get('default_project_id')
         if project_id and not self.env['project.project'].browse(project_id).allow_timesheets:
-            fields.append("allocated_hours")
+            fields.append('allocated_hours')
         return fields

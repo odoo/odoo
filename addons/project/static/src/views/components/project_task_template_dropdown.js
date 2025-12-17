@@ -95,9 +95,12 @@ export class ProjectTaskTemplateDropdown extends Component {
             noCreate: true,
             multiSelect: false,
             resModel: "project.task",
+            context: {
+                list_view_ref: "project.project_task_view_tree_base",
+            },
             domain: [
-                ["is_template", "=", true],
                 ["project_id", "in", [this.props.projectId, false]],
+                ["is_template", "=", true],
             ],
             onSelected: ([taskTemplateId]) => {
                 this.createTaskFromTemplate(taskTemplateId);

@@ -191,7 +191,7 @@ class ProjectTask(models.Model):
             "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.")
 
     project_id = fields.Many2one('project.project', string='Project', domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
-                                 compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=True, change_default=True, falsy_value_label=_lt("🔒 Private"))
+                                 compute="_compute_project_id", store=True, precompute=True, recursive=True, readonly=False, index=True, tracking=True, change_default=True)
     display_in_project = fields.Boolean(compute='_compute_display_in_project', store=True, export_string_translation=False)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
     allocated_hours = fields.Float("Allocated Time", tracking=True)
@@ -281,12 +281,12 @@ class ProjectTask(models.Model):
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
                                      column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
-                                     domain="[('project_id', '!=', False), ('id', '!=', id)]")
+                                     domain="[('project_id', '!=', False), ('id', '!=', id), ('is_template', '=', False)]")
     depend_on_count = fields.Integer(string="Depending on Tasks", compute='_compute_depend_on_count', compute_sudo=True)
     closed_depend_on_count = fields.Integer(string="Closed Depending on Tasks", compute='_compute_depend_on_count', compute_sudo=True)
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
                                      column2="task_id", string="Block", copy=False,
-                                     domain="[('project_id', '!=', False), ('id', '!=', id)]", export_string_translation=False)
+                                     domain="[('project_id', '!=', False), ('id', '!=', id), ('is_template', '=', False)]", export_string_translation=False)
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count', export_string_translation=False)
 
     # Project sharing fields
@@ -915,6 +915,8 @@ class ProjectTask(models.Model):
                             vals['user_ids'] += [Command.link(user_id) for user_id in user_ids]
                 for field in set(self._get_template_field_blacklist()) & set(vals.keys()):
                     del vals[field]
+                if not vals.get('project_id'):
+                    vals['project_id'] = self.env.context.get('default_project_id')
         return vals_list
 
     def _create_task_mapping(self, copied_tasks):
