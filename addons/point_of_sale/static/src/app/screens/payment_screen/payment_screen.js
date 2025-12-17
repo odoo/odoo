@@ -414,6 +414,9 @@ export class PaymentScreen extends Component {
             this.validateOrder(false);
         }
     }
+    async clickTableGuests() {
+        this.pos.setCustomerCount();
+    }
 }
 
 registry.category("pos_pages").add("PaymentScreen", {

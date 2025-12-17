@@ -30,7 +30,7 @@ export class NumberPopup extends Component {
         close: Function,
     };
     static defaultProps = {
-        title: _t("Confirm?"),
+        title: _t("Amount of guests"),
         startingValue: "",
         isValid: () => true,
         formatDisplayedValue: (x) => x,
