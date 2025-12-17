@@ -13,6 +13,13 @@ export class BasicMany2Many extends Component {
         selection: { type: Array, element: Object },
         setSelection: Function,
         create: { type: Function, optional: true },
+        formatSelection: { type: Function, optional: true },
+        formatDropdownLabel: { type: Function, optional: true },
+        formatDropdownHeading: { type: Function, optional: true },
+        fullWidthDropdown: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        formatSelection: (entry) => entry.display_name,
     };
     static components = { SelectMany2X };
 

@@ -1,0 +1,46 @@
+.o_location_selector_marker_icon {
+    --LocationSelectorMarker-border-color: #{mix($body-bg, $body-color)};
+    --LocationSelectorMarker-background: #{$body-bg};
+    --LocationSelectorMarker-color: #{$body-color};
+}
+
+.o_location_selector_marker_icon_selected {
+    --LocationSelectorMarker-border-color: #{mix(map-get($theme-colors, 'primary'), color-contrast(map-get($theme-colors, 'primary')))};
+    --LocationSelectorMarker-background: #{map-get($theme-colors, 'primary')};
+    --LocationSelectorMarker-color: #{color-contrast(map-get($theme-colors, 'primary'))};
+}
+
+.o_location_selector_map {
+    min-height: 20vh;
+}
+
+.leaflet-container {
+    &::before {
+        opacity: 0;
+        content: "";
+        transition: opacity 1s ease;
+        color: #FFFFFF;
+        font-size: 2rem;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        display: flex;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        pointer-events:none;
+
+        // Leaflet elements could take up to z-index 700,
+        // see leafletjs.com/reference.html#map-pane
+        z-index: 800;
+    }
+    &.map_zoom_disabled {
+        &::before {
+            opacity: 1;
+            content: attr(data-zoom-disabled-text);
+        }
+    }
+}
+

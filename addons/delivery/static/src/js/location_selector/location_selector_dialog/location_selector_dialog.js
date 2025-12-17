@@ -1,5 +1,5 @@
-import { LocationList } from '@delivery/js/location_selector/location_list/location_list';
-import { MapContainer } from '@delivery/js/location_selector/map_container/map_container';
+import { LocationList } from '@website/components/location_selector/location_list/location_list';
+import { MapContainer } from '@website/components/location_selector/map_container/map_container';
 import { Component, onMounted, onWillUnmount, useEffect, useState } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
@@ -13,12 +13,19 @@ export class LocationSelectorDialog extends Component {
     static props = {
         orderId: Number,
         zipCode: String,
-        selectedLocationId: { type: String, optional: true},
+        selectedLocationId: { type: String, optional: true },
         save: Function,
         close: Function, // This is the close from the env of the Dialog Component
+        showDetailsTooltip: { type: Boolean, optional: true },
+        showDetailsTextArea: { type: Boolean, optional: true },
+        showEmail: { type: Boolean, optional: true },
+        showPhone: { type: Boolean, optional: true },
+        showSearchbar: { type: String, optional: true },
     };
     static defaultProps = {
         selectedLocationId: false,
+        showDetailsTextArea: true,
+        showSearchbar: true,
     };
 
     setup() {
@@ -125,6 +132,15 @@ export class LocationSelectorDialog extends Component {
     setSelectedLocation(locationId) {
         this.state.selectedLocationId = String(locationId);
     }
+
+    /**
+     * This function is intentonally left empty. The template contains a
+     * reference to this function, but it is employed only in website, where
+     * LocationSelector is used as a snippet.
+     *
+     * @return {void}
+     */
+    setVisibleLocations(locationsIds) {}
 
     /**
      * Confirm the current selected location.

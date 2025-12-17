@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.SelectMany2X">
     <SelectMenu
-        choices="this.filteredSearchResult().map(e => ({ value: e, label: e.display_name  }))"
+        choices="this.filteredSearchResult().map(e => ({ value: e, heading: props.formatHeading?.(e), label: props.formatLabel(e) }))"
         onSelect="props.select"
         onNavigated.bind="onNavigated"
         menuRef="menuRef"
@@ -12,7 +12,7 @@
         searchPlaceholder.translate="Search for records..."
         onInput.bind="onInput"
         class="'o-hb-selectMany2X-wrapper min-w-0'"
-        menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown'"
+        menuClass="'o-hb-select-dropdown o-hb-selectMany2X-dropdown' + (props.fullWidthDropdown ? ' o-hb-full-width-dropdown' : '' )"
         togglerClass="'o-hb-selectMany2X-toggle btn-secondary'"
     >
         <t t-out="props.message"/>

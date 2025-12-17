@@ -18,6 +18,10 @@ export class BuilderMany2Many extends Component {
         fields: { type: Array, element: String, optional: true },
         domain: { type: Array, optional: true },
         limit: { type: Number, optional: true },
+        formatSelection: { type: Function, optional: true },
+        formatDropdownLabel: { type: Function, optional: true },
+        formatDropdownHeading: { type: Function, optional: true },
+        fullWidthDropdown: { type: Boolean, optional: true },
     };
     static defaultProps = BuilderComponent.defaultProps;
     static components = { BuilderComponent, BasicMany2Many };

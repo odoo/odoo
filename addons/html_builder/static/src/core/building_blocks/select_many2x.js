@@ -42,6 +42,9 @@ export class SelectMany2X extends Component {
         message: { type: String, optional: true },
         create: { type: Function, optional: true },
         nullText: { type: String, optional: true },
+        formatHeading: { type: Function, optional: true },
+        formatLabel: { type: Function, optional: true },
+        fullWidthDropdown: { type: Boolean, optional: true },
     };
     static defaultProps = {
         fields: [],
@@ -49,6 +52,7 @@ export class SelectMany2X extends Component {
         limit: 5,
         closeOnEnterKey: true,
         message: _t("Choose a record..."),
+        formatLabel: (entry) => entry.display_name,
     };
     static components = { SelectMenu, SelectMany2XCreate };
 

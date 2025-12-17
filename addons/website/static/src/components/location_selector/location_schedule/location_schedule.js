@@ -1,8 +1,8 @@
-import { Component } from '@odoo/owl';
-import { _t } from '@web/core/l10n/translation';
+import { Component } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 export class LocationSchedule extends Component {
-    static template = 'delivery.locationSelector.schedule';
+    static template = "website.locationSelector.schedule";
     static props = {
         openingHours: {
             type: Object,
@@ -11,8 +11,12 @@ export class LocationSchedule extends Component {
                 element: String,
                 optional: true,
             },
+            optional: true,
         },
         wrapClass: { type: String, optional: true },
+    };
+    static defaultProps = {
+        openingHours: {},
     };
 
     /**
@@ -22,7 +26,7 @@ export class LocationSchedule extends Component {
      * @return {Object} the localized name of the day (long version).
      */
     getWeekDay(weekday) {
-        return luxon.Info.weekdays()[weekday]
+        return luxon.Info.weekdays()[weekday];
     }
 
     get closedLabel() {

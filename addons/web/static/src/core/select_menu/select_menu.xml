@@ -100,6 +100,10 @@
         >
             <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
             <t t-else="">
+                <t t-if="choice.heading">
+                    <b t-esc="choice.heading" />
+                    <br/>
+                </t>
                 <div t-esc="choice.label || choice.value" />
             </t>
         </DropdownItem>
