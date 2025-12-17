@@ -710,7 +710,7 @@ export class Thread extends Record {
 
     async closeChatWindow(options = {}) {
         await this.store.chatHub.initPromise;
-        await this.channel?.chatWindow?.close({ notifyState: false, ...options });
+        await this.channel?.chatWindow?.close(options);
     }
 
     addOrReplaceMessage(message, tmpMsg) {
