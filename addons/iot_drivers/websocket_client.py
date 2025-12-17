@@ -104,6 +104,8 @@ class WebsocketClient(Thread):
                     ws.close()
                     helpers.odoo_restart()
                 case 'webrtc_offer':
+                    if not webrtc_client:
+                        continue
                     answer = webrtc_client.offer(payload['offer'])
                     send_to_controller({
                         'iot_box_identifier': helpers.get_identifier(),
