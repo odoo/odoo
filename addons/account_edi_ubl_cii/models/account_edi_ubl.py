@@ -117,6 +117,53 @@ class AccountEdiUBL(models.AbstractModel):
             'currency': tax_subtotal_grouping_key['currency'],
         }
 
+    def _ubl_default_allowance_charge_early_payment_grouping_key(self, base_line, tax_data, vals, currency):
+        """ Give the grouping key when generating the allowance/charge from an early payment discount.
+
+        :param base_line:   A base line (see '_prepare_base_line_for_taxes_computation').
+        :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
+        :param vals:        Some custom data.
+        :param currency:    The currency for which the grouping key is expressed.
+        :return:            A dictionary that could be used as a grouping key for the taxes helpers.
+        """
+        if not self._ubl_is_early_payment_base_line(base_line):
+            return
+
+        tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+        if not tax_grouping_key or tax_grouping_key['is_withholding']:
+            return
+        return tax_grouping_key
+
+    def _ubl_default_payable_amount_tax_withholding_grouping_key(self, base_line, tax_data, vals, currency):
+        """ Give the grouping key when moving the tax withholding amounts to PrepaidAmount.
+
+        :param base_line:   A base line (see '_prepare_base_line_for_taxes_computation').
+        :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
+        :param vals:        Some custom data.
+        :param currency:    The currency for which the grouping key is expressed.
+        :return:            A dictionary that could be used as a grouping key for the taxes helpers.
+        """
+        if not tax_data:
+            return
+        tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+        if not tax_grouping_key:
+            return
+        return tax_grouping_key['is_withholding']
+
+    def _ubl_default_base_line_item_classified_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
+        """ Give the grouping key when computing taxes for Item -> ClassifiedTaxCategory.
+
+        :param base_line:   A base line (see '_prepare_base_line_for_taxes_computation').
+        :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
+        :param vals:        Some custom data.
+        :param currency:    The currency for which the grouping key is expressed.
+        :return:            A dictionary that could be used as a grouping key for the taxes helpers.
+        """
+        tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, currency)
+        if not tax_grouping_key or tax_grouping_key['is_withholding']:
+            return
+        return tax_grouping_key
+
     def _ubl_turn_emptying_taxes_as_new_base_lines(self, base_lines, company, vals):
         """ Extract emptying taxes such as "Vidanges" on bottles from the current base lines and turn them into
         additional base lines.
@@ -344,11 +391,11 @@ class AccountEdiUBL(models.AbstractModel):
         for sub_currency, suffix in ((currency, '_currency'), (company_currency, '')):
             base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
                 base_lines=base_lines,
-                grouping_function=lambda base_line, tax_data: self._ubl_default_tax_category_grouping_key(
-                    base_line,
-                    tax_data,
-                    vals,
-                    sub_currency,
+                grouping_function=lambda base_line, tax_data: self._ubl_default_base_line_item_classified_tax_category_grouping_key(
+                    base_line=base_line,
+                    tax_data=tax_data,
+                    vals=vals,
+                    currency=sub_currency,
                 ),
             )
             for base_line, aggregated_values in base_lines_aggregated_values:
@@ -553,6 +600,34 @@ class AccountEdiUBL(models.AbstractModel):
                         'subtotals': {},
                     }
 
+    def _ubl_add_values_payable_amount_tax_withholding(self, vals):
+        AccountTax = self.env['account.tax']
+        base_lines = vals['base_lines']
+        company = vals['company']
+        company_currency = company.currency_id
+        currency = vals['currency_id']
+
+        ubl_values = vals['_ubl_values']
+        ubl_values['payable_amount_tax_withholding'] = 0.0
+        ubl_values['payable_amount_tax_withholding_currency'] = 0.0
+        for sub_currency, suffix in ((currency, '_currency'), (company_currency, '')):
+            base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
+                base_lines=base_lines,
+                grouping_function=lambda base_line, tax_data: self._ubl_default_payable_amount_tax_withholding_grouping_key(
+                    base_line=base_line,
+                    tax_data=tax_data,
+                    vals=vals,
+                    currency=sub_currency,
+                ),
+            )
+            values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+
+            for grouping_key, values in values_per_grouping_key.items():
+                if not grouping_key:
+                    continue
+
+                ubl_values[f'payable_amount_tax_withholding{suffix}'] -= values[f'tax_amount{suffix}']
+
     def _ubl_add_values_payable_rounding_amount(self, vals):
         """ Add
             'vals' -> '_ubl_values' -> 'payable_rounding_amount[_currency]'.
@@ -612,14 +687,15 @@ class AccountEdiUBL(models.AbstractModel):
 
         ubl_values = vals['_ubl_values']
 
-        def grouping_function(base_line, tax_data, sub_currency):
-            if self._ubl_is_early_payment_base_line(base_line):
-                return self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, sub_currency)
-
         for sub_currency, suffix in ((currency, '_currency'), (company_currency, '')):
             base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
                 base_lines=base_lines,
-                grouping_function=lambda base_line, tax_data: grouping_function(base_line, tax_data, sub_currency),
+                grouping_function=lambda base_line, tax_data: self._ubl_default_allowance_charge_early_payment_grouping_key(
+                    base_line=base_line,
+                    tax_data=tax_data,
+                    vals=vals,
+                    currency=sub_currency,
+                ),
             )
             values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
 
