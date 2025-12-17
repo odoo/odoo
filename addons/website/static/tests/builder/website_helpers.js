@@ -77,6 +77,27 @@ export function defineWebsiteModels() {
     }));
 }
 
+const domParserCache = new Map();
+function patchDOMParser() {
+    patchWithCleanup(DOMParser.prototype, {
+        parseFromString(html, type) {
+            if (type !== "text/html") {
+                return super.parseFromString(html, type);
+            }
+            if (domParserCache.has(html)) {
+                return domParserCache.get(html).cloneNode(true);
+            }
+            const res = super.parseFromString(html, type);
+            if (res.body?.firstChild?.id === "snippet_groups") {
+                // Only cache the document containing the snippets
+                domParserCache.set(html, res);
+                return res.cloneNode(true);
+            }
+            return res;
+        },
+    });
+}
+
 /**
  * This helper will be moved to website. Prefer using setupHTMLBuilder
  * for builder-specific tests
@@ -145,6 +166,8 @@ export async function setupWebsiteBuilder(
     });
 
     onRpc("/website/get_translated_elements", () => getTranslatedElements());
+
+    patchDOMParser();
 
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         setIframeLoaded() {
@@ -415,6 +438,7 @@ export async function waitForSnippetDialog() {
  * @param {string | string[]} snippetName
  */
 export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) {
+    patchDOMParser();
     mockService("website", {
         get currentWebsite() {
             return {
