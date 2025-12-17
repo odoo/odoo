@@ -11,7 +11,7 @@
             </t>
         </Dropdown>
         <t t-else="" t-call="mail.DiscussSidebarCategory.main"/>
-        <div class="o-mail-DiscussSidebarCategory-channels">
+        <div class="o-mail-DiscussSidebarCategory-channels bg-inherit">
             <t t-if="category.is_open">
                 <DiscussSidebarChannel t-foreach="category.channels.filter((channel) => channel.isDisplayInSidebar)" t-as="channel" t-key="channel.localId" channel="channel"/>
             </t>
