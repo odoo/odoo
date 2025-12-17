@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2025-09-11 13:55+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-12-16 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -387,17 +387,17 @@ msgid ""
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                    <img src=\"/event/static/src/img/apple-calendar.svg\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                    <img src=\"/event/static/src/img/apple-calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                    <img src=\"/event/static/src/img/outlook-calendar.svg\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                    <img src=\"/event/static/src/img/outlook-calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description() }}\" target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                    <img src=\"/event/static/src/img/google-calendar.svg\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                                    <img src=\"/event/static/src/img/google-calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -541,7 +541,7 @@ msgid ""
 "                    <t t-if=\"event_address and location\">\n"
 "                        <table style=\"width:100%;\"><tr><td>\n"
 "                            <div>\n"
-"                                <i class=\"fa fa-map-marker\"/>\n"
+"                                <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
 "                                <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
 "                                    <img t-if=\"event_address.static_map_url and event_address.static_map_url_is_valid\" t-att-src=\"event_address.static_map_url\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
 "                                    <t t-else=\"\">See location on Google Maps</t>\n"
@@ -607,7 +607,7 @@ msgid ""
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <t t-if=\"object.barcode\">\n"
 "                        <div style=\"margin-bottom: 5px;\">\n"
-"                            <img t-attf-src=\"/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" height=\"100\" alt=\"QR Code\"/>\n"
+"                            <img t-attf-src=\"/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" height=\"100\" alt=\"QR Code\" t-att-style=\"'height: 100px !important;'\"/>\n"
 "                        </div>\n"
 "                    </t>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
@@ -645,17 +645,17 @@ msgid ""
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                    <img src=\"/event/static/src/img/apple-calendar.svg\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                    <img src=\"/event/static/src/img/apple-calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                    <img src=\"/event/static/src/img/outlook-calendar.svg\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                    <img src=\"/event/static/src/img/outlook-calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description() }}\" target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                    <img src=\"/event/static/src/img/google-calendar.svg\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                                    <img src=\"/event/static/src/img/google-calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -792,7 +792,7 @@ msgid ""
 "                    <!-- GOOGLE MAPS LINK -->\n"
 "                    <table t-if=\"event_address and location\" style=\"width:100%;\"><tr><td>\n"
 "                        <div>\n"
-"                            <i class=\"fa fa-map-marker\"/>\n"
+"                            <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
 "                            <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
 "                                <img t-if=\"event_address.static_map_url and event_address.static_map_url_is_valid\" t-attf-src=\"{{ event_address.static_map_url }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
 "                                <span t-else=\"\">See location on Google Maps</span>\n"
@@ -857,7 +857,7 @@ msgid ""
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <t t-if=\"object.barcode\"> \n"
 "                        <div style=\"margin-bottom: 5px;\">\n"
-"                            <img t-attf-src=\"/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" height=\"100\" alt=\"QR Code\"/>\n"
+"                            <img t-attf-src=\"/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0\" width=\"100\" height=\"100\" alt=\"QR Code\" t-att-style=\"'height: 100px !important;'\"/>\n"
 "                        </div>\n"
 "                    </t>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
@@ -893,8 +893,8 @@ msgid ""
 "                        <br/>\n"
 "                        The order for this ticket has reference <t t-out=\"object.sale_order_id.name\"/>\n"
 "                        and was placed on <t t-out=\"object.sale_order_id.date_order.date()\"/>\n"
-"                        <t t-if=\"object.sale_order_line_id.price_unit\"> for an amount of\n"
-"                            <t t-out=\"object.sale_order_line_id.price_unit\" t-options=\"{'widget': 'monetary', 'display_currency': object.sale_order_line_id.currency_id}\"/>\n"
+"                        <t t-if=\"object.sale_order_line_id.price_total\"> for an amount of\n"
+"                            <t t-out=\"object.sale_order_line_id.price_total\" t-options=\"{'widget': 'monetary', 'display_currency': object.sale_order_line_id.currency_id}\"/>\n"
 "                        </t>.\n"
 "                    </div>\n"
 "                    <br/>\n"
@@ -905,17 +905,17 @@ msgid ""
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                    <img src=\"/event/static/src/img/apple-calendar.svg\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                    <img src=\"/event/static/src/img/apple-calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/event/{{ slug(object.event_id) }}/ics?slot_id={{ object.event_slot_id.id }}\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                    <img src=\"/event/static/src/img/outlook-calendar.svg\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                    <img src=\"/event/static/src/img/outlook-calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description() }}\" target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                    <img src=\"/event/static/src/img/google-calendar.svg\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                <a t-attf-href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}\" target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
+"                                    <img src=\"/event/static/src/img/google-calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -1059,7 +1059,7 @@ msgid ""
 "                    <t t-if=\"event_address and location\">\n"
 "                        <table style=\"width:100%;\"><tr><td>\n"
 "                            <div>\n"
-"                                <i class=\"fa fa-map-marker\"/>\n"
+"                                <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
 "                                <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
 "                                    <img t-if=\"event_address.static_map_url and event_address.static_map_url_is_valid\" t-att-src=\"event_address.static_map_url\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
 "                                    <t t-else=\"\">See location on Google Maps</t>\n"
@@ -1110,8 +1110,8 @@ msgstr ""
 msgid ""
 "A slot cannot be scheduled outside of its event time range.\n"
 "\n"
-"Event:\t\t%(event_start)s - %(event_end)s\n"
-"Slot:\t\t%(slot_name)s"
+"Event:\t%(event_start)s - %(event_end)s\n"
+"Slot:\t%(slot_name)s"
 msgstr ""
 
 #. module: event
@@ -1171,6 +1171,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_exception_decoration
 msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_plans_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_plans_ids
+msgid "Activity Plans"
 msgstr ""
 
 #. module: event
@@ -1855,6 +1861,11 @@ msgid "Design Fair Los Angeles"
 msgstr ""
 
 #. module: event
+#: model:ir.model,name:event.model_digest_digest
+msgid "Digest"
+msgstr ""
+
+#. module: event
 #: model:event.event,subtitle:event.event_4
 msgid "Discover how to grow a sustainable business with our experts."
 msgstr ""
@@ -1865,6 +1876,7 @@ msgid "Discover more"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__display_name
 #: model:ir.model.fields,field_description:event.field_event_mail__display_name
@@ -1935,7 +1947,7 @@ msgstr ""
 
 #. module: event
 #: model:ir.model,name:event.model_mail_template
-msgid "Email Templates"
+msgid "Email Template"
 msgstr ""
 
 #. module: event
@@ -1993,6 +2005,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__event_id
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__event_id
 #: model:ir.model.fields,field_description:event.field_event_slot__event_id
+#: model_terms:ir.ui.view,arch_db:event.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_activity
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -2549,6 +2562,7 @@ msgid "How to Fold (4)"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_digest_digest__id
 #: model:ir.model.fields,field_description:event.field_event_event__id
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__id
 #: model:ir.model.fields,field_description:event.field_event_mail__id
@@ -2794,6 +2808,11 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Key"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_digest_digest__kpi_nbr_of_registrations_value
+msgid "Kpi Nbr Of Registrations Value"
 msgstr ""
 
 #. module: event
@@ -3544,6 +3563,7 @@ msgid "Registration statistics"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_digest_digest__kpi_nbr_of_registrations
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
 msgid "Registrations"
 msgstr ""
@@ -4463,12 +4483,6 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export."
-msgstr ""
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_barcode.js:0
-msgid "Warning"
 msgstr ""
 
 #. module: event

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:03+0000\n"
-"PO-Revision-Date: 2025-09-11 14:03+0000\n"
+"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"PO-Revision-Date: 2025-12-16 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
 msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary "
 "o_translate_inline\">Home page</a>"
 msgstr ""
 
@@ -114,9 +114,9 @@ msgid ""
 "    </div>\n"
 "    <br/><br/>\n"
 "    Thank you,\n"
-"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"    <t t-if=\"user.signature\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
 "    </t>\n"
 "</div>"
 msgstr ""
@@ -253,17 +253,17 @@ msgid ""
 "                                            </td>\n"
 "                                            <td>\n"
 "                                                <a t-if=\"iCal_url\" t-att-href=\"iCal_url\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                                    <img src=\"/event/static/src/img/apple-calendar.svg\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                                    <img src=\"/event/static/src/img/apple-calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                                </a>\n"
 "                                            </td>\n"
 "                                            <td>\n"
 "                                                <a t-if=\"iCal_url\" t-att-href=\"iCal_url\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                                    <img src=\"/event/static/src/img/outlook-calendar.svg\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                                    <img src=\"/event/static/src/img/outlook-calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                                </a>\n"
 "                                            </td>\n"
 "                                            <td>\n"
 "                                                <a t-if=\"google_url\" t-att-href=\"google_url\" target=\"new\" style=\"padding-top: 10px; padding-right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;\">\n"
-"                                                    <img src=\"/event/static/src/img/google-calendar.svg\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                                    <img src=\"/event/static/src/img/google-calendar-128.png\" alt=\"Google\" title=\"Google\" style=\"height: 20px; vertical-align: baseline;\"/>\n"
 "                                                </a>\n"
 "                                            </td>\n"
 "                                        </tr>\n"
@@ -404,7 +404,7 @@ msgid ""
 "                                <!-- GOOGLE MAPS LINK -->\n"
 "                                <table t-if=\"event_address and location\" style=\"width:100%;\"><tr><td>\n"
 "                                    <div>\n"
-"                                        <i class=\"fa fa-map-marker\"/>\n"
+"                                        <img src=\"/web_editor/font_to_img/61505/rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
 "                                        <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
 "                                            <img t-if=\"event_address.static_map_url and event_address.static_map_url_is_valid\" t-attf-src=\"{{ event_address.static_map_url }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
 "                                            <span t-else=\"\">See event location on Google Maps</span>\n"
@@ -466,6 +466,11 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
 msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_plans_ids
+msgid "Activity Plans"
 msgstr ""
 
 #. module: website_event_track
@@ -621,6 +626,16 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_1
 msgid "Audience"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__publish_on
+msgid "Auto publish on"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__publish_on
+msgid "Automatically publish the page on the chosen date and time."
 msgstr ""
 
 #. module: website_event_track
@@ -1027,12 +1042,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Email*"
-msgstr ""
-
-#. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
-msgid "Error"
 msgstr ""
 
 #. module: website_event_track
@@ -1959,6 +1968,11 @@ msgstr ""
 #: model:event.track.stage,name:website_event_track.event_track_stage3
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Published"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__published_date
+msgid "Published date"
 msgstr ""
 
 #. module: website_event_track

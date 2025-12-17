@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2025-09-11 14:01+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-12-16 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,14 +26,14 @@ msgid ""
 "                        We are glad to inform you that your order is in transit.\n"
 "                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
 "                            <t t-set=\"tracking_url\" t-value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
-"                            Your tracking number is <a t-attf-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            Your tracking number is <a t-att-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
 "                            <br/><br/>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            Your tracking numbers are:\n"
 "                            <ul>\n"
 "                                <li t-foreach=\"ctx['tracking_data']\" t-as=\"tracking_url\">\n"
-"                                    <a t-attf-href=\"{{tracking_url}}\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                    <a t-att-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
 "                                </li>\n"
 "                            </ul>\n"
 "                        </t>\n"
@@ -44,9 +44,9 @@ msgid ""
 "                        <br/><br/>\n"
 "                    </t>\n"
 "                    Thank you,\n"
-"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-container=\"1\">\n"
+"                    <t t-if=\"object.user_id.name\">\n"
 "                        <br/>\n"
-"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.name or ''\">Mitchell Admin</t></div>\n"
 "                    </t>\n"
 "                </p>\n"
 "            </div>\n"
@@ -67,7 +67,7 @@ msgstr ""
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_res_company
-msgid "Companies"
+msgid "Company"
 msgstr ""
 
 #. module: sale_gelato
@@ -95,6 +95,11 @@ msgstr ""
 #. module: sale_gelato
 #: model:ir.model,website_form_label:sale_gelato.model_res_partner
 msgid "Create a Customer"
+msgstr ""
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_delivery_carrier
+msgid "Delivery Method"
 msgstr ""
 
 #. module: sale_gelato
@@ -163,6 +168,11 @@ msgid "Gelato Template Reference"
 msgstr ""
 
 #. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_variant_image_ids
+msgid "Gelato Variant Print Images"
+msgstr ""
+
+#. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_webhook_secret
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_webhook_secret
 msgid "Gelato Webhook Secret"
@@ -179,12 +189,24 @@ msgstr ""
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
+msgid "Gelato has canceled order %(reference)s."
+msgstr ""
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/controlers/main.py:0
 msgid "Gelato has returned order %(reference)s."
 msgstr ""
 
 #. module: sale_gelato
 #: model:mail.template,name:sale_gelato.order_status_update
 msgid "Gelato: Order status update"
+msgstr ""
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
+msgid "Generate Print Images"
 msgstr ""
 
 #. module: sale_gelato
@@ -224,11 +246,19 @@ msgstr ""
 
 #. module: sale_gelato
 #. odoo-python
+#: code:addons/sale_gelato/models/product_product.py:0
+msgid "Missing images have been successfully created."
+msgstr ""
+
+#. module: sale_gelato
+#. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Missing product variants and images have been successfully created."
 msgstr ""
 
 #. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Print Images"
 msgstr ""
@@ -282,11 +312,6 @@ msgid "Sent to the customer when Gelato updates the status of an order"
 msgstr ""
 
 #. module: sale_gelato
-#: model:ir.model,name:sale_gelato.model_delivery_carrier
-msgid "Shipping Methods"
-msgstr ""
-
-#. module: sale_gelato
 #: model:delivery.carrier,name:sale_gelato.standard_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__normal
 msgid "Standard Delivery"
@@ -304,6 +329,14 @@ msgid "Successfully synchronized with Gelato"
 msgstr ""
 
 #. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/product_product.py:0
+msgid "Successfully updated print images."
+msgstr ""
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
 msgid "Synchronize"
 msgstr ""
@@ -327,7 +360,7 @@ msgstr ""
 
 #. module: sale_gelato
 #. odoo-python
-#: code:addons/sale_gelato/models/delivery_carrier.py:0
+#: code:addons/sale_gelato/models/sale_order.py:0
 msgid "The following required address fields are missing: %s"
 msgstr ""
 
@@ -346,6 +379,27 @@ msgid ""
 msgstr ""
 
 #. module: sale_gelato
+#: model:ir.model.fields,help:sale_gelato.field_product_product__gelato_image_ids
+#: model:ir.model.fields,help:sale_gelato.field_product_product__gelato_variant_image_ids
+#: model:ir.model.fields,help:sale_gelato.field_product_template__gelato_image_ids
+msgid ""
+"To ensure a good printing result, upload a PNG of the entire printing area "
+"with your graphics correctly placed on it."
+msgstr ""
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "Unable to confirm the order %s on Gelato."
+msgstr ""
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "Unable to delete the order %s on Gelato."
+msgstr ""
+
+#. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
 msgid "Webhook Secret"
 msgstr ""
@@ -355,6 +409,12 @@ msgstr ""
 #: code:addons/sale_gelato/models/sale_order.py:0
 msgid ""
 "You cannot mix Gelato products with non-Gelato products in the same order."
+msgstr ""
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order_line.py:0
+msgid "You cannot order unconfigured Gelato products."
 msgstr ""
 
 #. module: sale_gelato

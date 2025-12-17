@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-11 13:56+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-12-16 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -79,12 +79,6 @@ msgid "An error occurred when fetching the access token."
 msgstr ""
 
 #. module: google_gmail
-#. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "An error occurred: %s."
-msgstr ""
-
-#. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
 msgstr ""
@@ -138,12 +132,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:google_gmail.selection__fetchmail_server__server_type__gmail
 #: model:ir.model.fields.selection,name:google_gmail.selection__ir_mail_server__smtp_authentication__gmail
 msgid "Gmail OAuth Authentication"
-msgstr ""
-
-#. module: google_gmail
-#. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "Gmail is not configured on IAP."
 msgstr ""
 
 #. module: google_gmail
@@ -277,6 +265,12 @@ msgid "Server Type"
 msgstr ""
 
 #. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/tools.py:0
+msgid "Something went wrong. Try again later"
+msgstr ""
+
+#. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_google_gmail_mixin__google_gmail_uri
 #: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
@@ -297,6 +291,6 @@ msgstr ""
 
 #. module: google_gmail
 #. odoo-python
-#: code:addons/google_gmail/models/google_gmail_mixin.py:0
-msgid "You don't have an active subscription."
+#: code:addons/google_gmail/tools.py:0
+msgid "You don't have an active subscription"
 msgstr ""

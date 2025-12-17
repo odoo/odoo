@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:56+0000\n"
-"PO-Revision-Date: 2025-09-11 13:56+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-12-16 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -125,6 +125,14 @@ msgid "Activity Exception Decoration"
 msgstr ""
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_plans_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_plans_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_plans_ids
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_state
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_state
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_state
@@ -172,6 +180,14 @@ msgid "Air Filter Replacement"
 msgstr ""
 
 #. module: fleet
+#. odoo-javascript
+#: code:addons/fleet/static/src/js/fleet_form.js:0
+msgid ""
+"All services and contracts linked to this vehicle will also be archived.\n"
+"Are you sure you want to proceed?"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "All vehicles"
 msgstr ""
@@ -192,11 +208,24 @@ msgid "Archive"
 msgstr ""
 
 #. module: fleet
+#. odoo-javascript
+#: code:addons/fleet/static/src/js/fleet_form.js:0
+msgid "Archive Vehicle"
+msgstr ""
+
+#. module: fleet
+#. odoo-javascript
+#: code:addons/fleet/static/src/js/fleet_form.js:0
+msgid "Archive Vehicle & Contracts"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Archived"
@@ -599,6 +628,7 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__cost_type
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_search
 msgid "Cost Type"
 msgstr ""
 
@@ -969,14 +999,6 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_12
 msgid "Entry into service tax"
-msgstr ""
-
-#. module: fleet
-#. odoo-javascript
-#: code:addons/fleet/static/src/js/fleet_form.js:0
-msgid ""
-"Every service and contract of this vehicle will be considered as archived. "
-"Are you sure that you want to archive this record?"
 msgstr ""
 
 #. module: fleet
@@ -1980,6 +2002,14 @@ msgid "Range Unit"
 msgstr ""
 
 #. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__vehicle_range
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__vehicle_range
+msgid ""
+"Range represents the maximum distance a vehicle can travel on a full charge "
+"(for EVs) or             a full tank (for fuel-powered vehicles)"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
 msgid "Ready to manage your fleet more efficiently?"
 msgstr ""
@@ -2093,6 +2123,18 @@ msgid "Resurface Rotors"
 msgstr ""
 
 #. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+msgid "Review driver change"
+msgstr ""
+
+#. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+msgid "Review driver change of %s and specify End date"
+msgstr ""
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_39
 msgid "Rotate Tires"
 msgstr ""
@@ -2117,6 +2159,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__seats
 msgid "Seating Capacity"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__semi_automatic
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__transmission__semi_automatic
+msgid "Semi-Automatic"
 msgstr ""
 
 #. module: fleet
@@ -2159,7 +2207,9 @@ msgid "Service Activity"
 msgstr ""
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__service_type
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__service_type_id
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_search
 msgid "Service Type"
 msgstr ""
@@ -2224,12 +2274,6 @@ msgstr ""
 msgid ""
 "Specifies the total number of doors, including the truck and hatch doors, if"
 " applicable."
-msgstr ""
-
-#. module: fleet
-#. odoo-python
-#: code:addons/fleet/models/fleet_vehicle.py:0
-msgid "Specify the End date of %s"
 msgstr ""
 
 #. module: fleet
@@ -2337,6 +2381,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/fleet/wizard/fleet_vehicle_send_mail.py:0
 msgid "The following vehicle drivers are missing an email address: %s."
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_unique_license_plate
+msgid "The license plate must be unique"
 msgstr ""
 
 #. module: fleet
@@ -2518,11 +2567,6 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__description
 msgid "Vehicle Description"
-msgstr ""
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
-msgid "Vehicle Information"
 msgstr ""
 
 #. module: fleet
@@ -2788,4 +2832,10 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "show the services logs for this vehicle"
+msgstr ""
+
+#. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+msgid "user_id"
 msgstr ""

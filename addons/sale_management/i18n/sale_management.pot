@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:01+0000\n"
-"PO-Revision-Date: 2025-09-11 14:01+0000\n"
+"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"PO-Revision-Date: 2025-12-16 18:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -62,11 +62,17 @@ msgid "Archived"
 msgstr ""
 
 #. module: sale_management
-#: model:ir.model,name:sale_management.model_res_company
-msgid "Companies"
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__collapse_composition
+msgid "Collapse Composition"
 msgstr ""
 
 #. module: sale_management
+#: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__collapse_prices
+msgid "Collapse Prices"
+msgstr ""
+
+#. module: sale_management
+#: model:ir.model,name:sale_management.model_res_company
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__company_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__company_id
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -143,12 +149,6 @@ msgid "Display Type"
 msgstr ""
 
 #. module: sale_management
-#. odoo-python
-#: code:addons/sale_management/models/digest.py:0
-msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
-
-#. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
 msgstr ""
@@ -156,6 +156,18 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Hidden Composition Section"
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Hidden Prices Section"
 msgstr ""
 
 #. module: sale_management
@@ -244,6 +256,12 @@ msgid "Optional Line"
 msgstr ""
 
 #. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Optional Section"
+msgstr ""
+
+#. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__parent_id
 msgid "Parent Section Line"
 msgstr ""
@@ -313,6 +331,12 @@ msgid "Quotation Validity"
 msgstr ""
 
 #. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid "Regular Section"
+msgstr ""
+
+#. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_optional_product_quantity
 msgid "Remove one"
 msgstr ""
@@ -372,6 +396,13 @@ msgid "Sequence"
 msgstr ""
 
 #. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Set Optional"
+msgstr ""
+
+#. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid ""
 "Struggling with a complex product catalog? Try out the Product Configurator "
@@ -380,6 +411,8 @@ msgid ""
 msgstr ""
 
 #. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_subsection
 msgid "Subsection"
 msgstr ""
@@ -431,6 +464,13 @@ msgid "Unit"
 msgstr ""
 
 #. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale_management/static/src/fields/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Unset Optional"
+msgstr ""
+
+#. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
 msgid ""
 "Use templates to create polished, professional quotes in minutes.\n"
@@ -454,15 +494,26 @@ msgstr ""
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
-msgid "Your template cannot contain products from multiple companies."
+msgid ""
+"Your template belongs to company %(template_company)s but contains products from company (%(product_company)s) that are not accessible to %(template_company)s.\n"
+"Please change the company of your template or remove the products from other companies."
 msgstr ""
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid ""
-"Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
-" Please change the company of your template or remove the products from other companies."
+"Your template belongs to company %(template_company)s but contains products from other companies (%(product_company)s) that are not accessible to %(template_company)s.\n"
+"Please change the company of your template or remove the products from other companies."
+msgstr ""
+
+#. module: sale_management
+#. odoo-python
+#: code:addons/sale_management/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared"
+" between companies. Please restrict the template access, or remove those "
+"products."
 msgstr ""
 
 #. module: sale_management

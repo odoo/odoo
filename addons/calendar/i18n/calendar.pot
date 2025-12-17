@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:55+0000\n"
-"PO-Revision-Date: 2025-09-11 13:55+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-12-16 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,6 +48,12 @@ msgid "%s has declined the invitation"
 msgstr ""
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
+msgid "(No Title)"
+msgstr ""
+
+#. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
 msgid ""
 "<div style=\"font-size: 13px; color: #374151;\">\n"
@@ -85,11 +91,11 @@ msgid ""
 "        </t>\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/calendar/meeting/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; padding: 7px 14px; color: {{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{organizer.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/accept?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; padding: 7px 14px; color: {{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{organizer.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
 "            Accept</a>\n"
-"        <a t-attf-href=\"/calendar/meeting/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{organizer.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/decline?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{organizer.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{organizer.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
 "            Decline</a>\n"
-"        <a t-attf-href=\"/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <div style=\"margin: 16px 0 0;\">\n"
@@ -141,8 +147,9 @@ msgid ""
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 32px 0 0;\">\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};\">Attendees</h2>\n"
-"        <div t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
+"        <div t-foreach=\"object.event_id.attendee_ids[:max_shown_attendees]\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
 "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: 15px; vertical-align: text-bottom;\"/>\n"
 "            <t t-if=\"attendee != object\">\n"
 "                <span style=\"margin-left: 5px;\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
@@ -150,6 +157,9 @@ msgid ""
 "            <t t-else=\"\">\n"
 "                <span style=\"margin-left: 5px;\">You</span>\n"
 "            </t>\n"
+"        </div>\n"
+"        <div t-if=\"len(object.event_id.attendee_ids) &gt; max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
+"            ... and <t t-out=\"len(object.event_id.attendee_ids) - max_shown_attendees\"/> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" style=\"margin: 32px 0 0;\">\n"
@@ -195,11 +205,11 @@ msgid ""
 "\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}\" t-attf-style=\"display: inline-block; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/accept?token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}\" t-attf-style=\"display: inline-block; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
 "            Accept</a>\n"
-"        <a t-attf-href=\"/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}\" t-attf-style=\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/decline?token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}\" t-attf-style=\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
 "            Decline</a>\n"
-"        <a t-attf-href=\"/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}\" t-attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{object.sudo().access_token}}&amp;id={{object.event_id.id}}\" t-attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <div style=\"margin: 16px 0 0;\">\n"
@@ -251,8 +261,9 @@ msgid ""
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 32px 0 0;\">\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};\">Attendees</h2>\n"
-"        <div t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
+"        <div t-foreach=\"object.event_id.attendee_ids[:max_shown_attendees]\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
 "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: 15px; vertical-align: text-bottom;\"/>\n"
 "            <t t-if=\"attendee != object\">\n"
 "                <span style=\"margin-left: 5px;\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
@@ -260,6 +271,9 @@ msgid ""
 "            <t t-else=\"\">\n"
 "                <span style=\"margin-left: 5px;\">You</span>\n"
 "            </t>\n"
+"        </div>\n"
+"        <div t-if=\"len(object.event_id.attendee_ids) &gt; max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
+"            ... and <t t-out=\"len(object.event_id.attendee_ids) - max_shown_attendees\"/> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" style=\"margin: 32px 0 0;\">\n"
@@ -340,8 +354,9 @@ msgid ""
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 32px 0 0;\">\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};\">Attendees</h2>\n"
-"        <div t-foreach=\"object.attendee_ids\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
+"        <div t-foreach=\"object.attendee_ids[:max_shown_attendees]\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
 "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: 15px; vertical-align: text-bottom;\"/>\n"
 "            <t t-if=\"attendee.common_name\">\n"
 "                <span style=\"margin-left: 5px\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
@@ -349,6 +364,9 @@ msgid ""
 "            <t t-else=\"\">\n"
 "                <span style=\"margin-left: 5px;\">You</span>\n"
 "            </t>\n"
+"        </div>\n"
+"        <div t-if=\"len(object.attendee_ids) &gt; max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
+"            ... and <t t-out=\"len(object.attendee_ids) - max_shown_attendees\"/> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.description)\" style=\"margin: 32px 0 0;\">\n"
@@ -380,11 +398,11 @@ msgid ""
 "        <span style=\"display: block; margin-top: 8px;\">This is a reminder for the event below.</span>\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
+"        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/accept?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
 "            Accept</a>\n"
-"        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
+"        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/decline?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; margin-left: 6px; padding: 7px 14px; color: {{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none; background-color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; border-radius: 3px;\">\n"
 "            Decline</a>\n"
-"        <a t-attf-href=\"/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{ object.sudo().access_token }}&amp;id={{ object.event_id.id }}\" t-attf-style=\"display: inline-block; margin-left: 12px; padding: 7px 14px; color: #111827; text-decoration: none; background-color: #E7E9ED; border-radius: 3px;\">\n"
 "            View</a>\n"
 "    </div>\n"
 "    <div style=\"margin: 16px 0 0;\">\n"
@@ -440,8 +458,9 @@ msgid ""
 "        </table>\n"
 "    </div>\n"
 "    <div style=\"margin: 32px 0 0;\">\n"
+"        <t t-set=\"max_shown_attendees\" t-value=\"20\"/>\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};\">Attendees</h2>\n"
-"        <div t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
+"        <div t-foreach=\"object.event_id.attendee_ids[:max_shown_attendees]\" t-as=\"attendee\" style=\"margin-bottom: 5px;\">\n"
 "            <img t-if=\"attendee.state\" t-attf-src=\"/calendar/static/src/img/state_{{ attendee.state }}.png\" style=\"border:0; width: 15px; height: 15px; vertical-align: text-bottom;\"/>\n"
 "            <t t-if=\"attendee != object\">\n"
 "                <span style=\"margin-left: 5px;\" t-out=\"attendee.common_name or ''\">Mitchell Admin</span>\n"
@@ -449,6 +468,9 @@ msgid ""
 "            <t t-else=\"\">\n"
 "                <span style=\"margin-left: 5px;\">You</span>\n"
 "            </t>\n"
+"        </div>\n"
+"        <div t-if=\"len(object.event_id.attendee_ids) &gt; max_shown_attendees\" style=\"margin-bottom: 5px;\">\n"
+"            ... and <t t-out=\"len(object.event_id.attendee_ids) - max_shown_attendees\"/> more\n"
 "        </div>\n"
 "    </div>\n"
 "    <div t-if=\"not is_html_empty(object.event_id.description)\" style=\"margin: 32px 0 0;\">\n"
@@ -528,42 +550,52 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-clock-o text-600\" title=\"Dates\"/>"
+msgid "<i class=\"fa fa-fw flex-shrink-0 fa-clock-o text-600 me-2\" title=\"Dates\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-lock text-600\" title=\"Visibility\"/>"
+msgid ""
+"<i class=\"fa fa-fw flex-shrink-0 fa-lock text-600 me-2\" "
+"title=\"Visibility\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-map text-600\" title=\"Location\"/>"
+msgid "<i class=\"fa fa-fw flex-shrink-0 fa-map text-600 me-2\" title=\"Location\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid ""
+"<i class=\"fa fa-fw flex-shrink-0 fa-sticky-note mt-2 text-600 me-2\" "
+"title=\"Notes\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid ""
+"<i class=\"fa fa-fw flex-shrink-0 fa-tag text-600 me-2\" title=\"Booking "
+"Name\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid ""
+"<i class=\"fa fa-fw flex-shrink-0 fa-user mt-1 text-600 me-2\" "
+"title=\"Participants\"/>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid ""
+"<i class=\"fa fa-fw flex-shrink-0 fa-video-camera text-600 me-2\" "
+"title=\"Videocall URL\"/>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<i class=\"fa fa-remove\" title=\"Remove\"/>"
-msgstr ""
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-sticky-note mt-2 text-600\" title=\"Notes\"/>"
-msgstr ""
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-tag text-600\" title=\"Booking Name\"/>"
-msgstr ""
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-user mt-1 text-600\" title=\"Participants\"/>"
-msgstr ""
-
-#. module: calendar
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-msgid "<i class=\"fa fa-video-camera text-600\" title=\"Videocall URL\"/>"
 msgstr ""
 
 #. module: calendar
@@ -592,6 +624,13 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+msgid ""
+"<span class=\"me-1\">The following attendees are not available at the "
+"selected time</span>"
 msgstr ""
 
 #. module: calendar
@@ -871,7 +910,7 @@ msgstr ""
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
-msgid "Calendar Filters"
+msgid "Calendar Filter"
 msgstr ""
 
 #. module: calendar
@@ -1461,7 +1500,7 @@ msgstr ""
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/mail_activity.py:0
-msgid "Feedback: %(feedback)s"
+msgid "Feedback: %s"
 msgstr ""
 
 #. module: calendar
@@ -1925,6 +1964,12 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
+msgid "No email"
 msgstr ""
 
 #. module: calendar
@@ -2631,6 +2676,12 @@ msgid "Unable to save the recurrence with \"This Event\""
 msgstr ""
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
+msgid "Unavailable"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids
 msgid "Unavailable Attendees"
 msgstr ""
@@ -2821,20 +2872,8 @@ msgstr ""
 
 #. module: calendar
 #. odoo-javascript
-#: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
-msgid "no email"
-msgstr ""
-
-#. module: calendar
-#. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "props.placeholder"
-msgstr ""
-
-#. module: calendar
-#. odoo-javascript
-#: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
-msgid "unavailable"
 msgstr ""
 
 #. module: calendar

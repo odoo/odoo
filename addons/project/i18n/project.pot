@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 14:00+0000\n"
-"PO-Revision-Date: 2025-09-11 14:00+0000\n"
+"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"PO-Revision-Date: 2025-12-16 18:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -245,9 +245,9 @@ msgid ""
 "<div>\n"
 "    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
 "    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
-"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"    <t t-if=\"user.signature\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
@@ -264,9 +264,9 @@ msgid ""
 "    If you have any further questions or concerns in the meantime, please do not hesitate to let us know. We are here to help.<br/><br/>\n"
 "    Thank you for your patience.<br/>\n"
 "    Best regards,\n"
-"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"    <t t-if=\"user.signature\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -398,6 +398,11 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>View</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+msgid "<span>days</span>"
 msgstr ""
 
 #. module: project
@@ -538,6 +543,9 @@ msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_project_task_plan
+#: model:ir.model.fields,field_description:project.field_project_project__activity_plans_ids
+#: model:ir.model.fields,field_description:project.field_project_task__activity_plans_ids
+#: model:ir.model.fields,field_description:project.field_project_update__activity_plans_ids
 #: model:ir.ui.menu,name:project.mail_activity_plan_menu_config_project
 msgid "Activity Plans"
 msgstr ""
@@ -805,7 +813,8 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
-msgid "Are you sure you want to delete this record?"
+msgid ""
+"Are you sure you want to delete this subtask? All its content will be lost."
 msgstr ""
 
 #. module: project
@@ -1032,6 +1041,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 #: model:ir.actions.act_window,name:project.action_project_task_burndown_chart_report
+#: model:ir.embedded.actions,name:project.project_embedded_action_project_burndown_chart
+#: model:ir.embedded.actions,name:project.project_embedded_action_update_burndown_chart
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -1615,6 +1626,8 @@ msgid "Define the steps your tasks move through from creation to completion."
 msgstr ""
 
 #. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 #: model:ir.actions.server,name:project.unlink_project_stage_action
 #: model:ir.actions.server,name:project.unlink_task_type_action
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_kanban
@@ -1638,6 +1651,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 msgid "Delete Stage"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
+msgid "Delete Subtask"
 msgstr ""
 
 #. module: project
@@ -1687,6 +1706,11 @@ msgstr ""
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 #: model:project.tags,name:project.project_tags_08
 msgid "Design"
+msgstr ""
+
+#. module: project
+#: model:project.role,name:project.project_role_2
+msgid "Design Architect"
 msgstr ""
 
 #. module: project
@@ -1759,14 +1783,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
+#: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/digest_digest.py:0
-msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
 
 #. module: project
@@ -1845,6 +1864,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Editing"
+msgstr ""
+
+#. module: project
+#: model:project.role,name:project.project_role_5
+msgid "Electrician"
 msgstr ""
 
 #. module: project
@@ -2026,6 +2050,11 @@ msgid "Future Activities"
 msgstr ""
 
 #. module: project
+#: model:project.role,name:project.project_role_6
+msgid "Gas Technician"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
 msgid ""
 "Get a snapshot of the status of your project and share its progress with key"
@@ -2185,6 +2214,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
+#: model:ir.model.fields,field_description:project.field_res_users_settings__id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__id
 msgid "ID"
 msgstr ""
@@ -2291,6 +2321,12 @@ msgstr ""
 
 #. module: project
 #. odoo-javascript
+#: code:addons/project/static/src/webclient/share_target/project_share_target_item.xml:0
+msgid "In Project"
+msgstr ""
+
+#. module: project
+#. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "In development"
 msgstr ""
@@ -2324,7 +2360,7 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
-msgid "Invalid fields: "
+msgid "Invalid Display Name"
 msgstr ""
 
 #. module: project
@@ -2396,6 +2432,11 @@ msgstr ""
 msgid ""
 "Keep track of the progress of your tasks from creation to completion.<br>\n"
 "                Collaborate efficiently by chatting in real-time or via email."
+msgstr ""
+
+#. module: project
+#: model:project.project,name:project.project_template_2
+msgid "Kitchen Assembly"
 msgstr ""
 
 #. module: project
@@ -2497,6 +2538,12 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
+msgid "Let's create a regular <b>project</b>."
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create your first <b>project</b>."
 msgstr ""
 
@@ -2557,6 +2604,11 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_incoming_local
 msgid "Local-part based incoming detection"
+msgstr ""
+
+#. module: project
+#: model:project.role,name:project.project_role_3
+msgid "Logistics Staff"
 msgstr ""
 
 #. module: project
@@ -2879,6 +2931,11 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Parent Task"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "No Project"
 msgstr ""
 
@@ -3121,6 +3178,7 @@ msgstr ""
 
 #. module: project
 #. odoo-python
+#: code:addons/project/controllers/portal.py:0
 #: code:addons/project/models/project_task.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__parent_id
@@ -3188,6 +3246,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "Planned Date"
+msgstr ""
+
+#. module: project
+#: model:project.role,name:project.project_role_8
+msgid "Plumber"
 msgstr ""
 
 #. module: project
@@ -3319,6 +3382,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
+#: model:project.role,name:project.project_role_1
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3399,7 +3463,7 @@ msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
-msgid "Project Tags"
+msgid "Project Tag"
 msgstr ""
 
 #. module: project
@@ -3585,6 +3649,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Publishing"
+msgstr ""
+
+#. module: project
+#: model:project.role,name:project.project_role_9
+msgid "Quality & Safety Officer"
 msgstr ""
 
 #. module: project
@@ -3875,6 +3944,11 @@ msgid "Rotting"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_type_edit
+msgid "Rotting in"
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
 msgid "SAVE"
@@ -3948,6 +4022,12 @@ msgstr ""
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
+msgid "Search in Parent Task"
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
 msgid "Search in Priority"
 msgstr ""
 
@@ -3979,6 +4059,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
 #: model:ir.model.fields,field_description:project.field_project_task__access_token
 msgid "Security Token"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "See Parent Task"
 msgstr ""
 
 #. module: project
@@ -4290,6 +4375,11 @@ msgid "Summary"
 msgstr ""
 
 #. module: project
+#: model:project.role,name:project.project_role_7
+msgid "Surface Installer"
+msgstr ""
+
+#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "T-shirt Printing"
@@ -4310,6 +4400,8 @@ msgid "Tags"
 msgstr ""
 
 #. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/webclient/share_target/project_share_target_item.js:0
 #: model:ir.model,name:project.model_project_task
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__task_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__task_id
@@ -4505,6 +4597,7 @@ msgstr ""
 #: model:project.project,label_tasks:project.project_project_3
 #: model:project.project,label_tasks:project.project_project_4
 #: model:project.project,label_tasks:project.project_template_1
+#: model:project.project,label_tasks:project.project_template_2
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -4546,12 +4639,6 @@ msgstr ""
 #: code:addons/project/models/project_task.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
 msgid "Tasks in Recurrence"
-msgstr ""
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project_task.py:0
-msgid "Tasks in a project template cannot be converted into regular tasks."
 msgstr ""
 
 #. module: project
@@ -5196,6 +5283,11 @@ msgid "User"
 msgstr ""
 
 #. module: project
+#: model:ir.model,name:project.model_res_users_settings
+msgid "User Settings"
+msgstr ""
+
+#. module: project
 #: model:res.groups,comment:project.group_project_user
 msgid "User can user the your employees' schedule"
 msgstr ""
@@ -5290,6 +5382,11 @@ msgstr ""
 #. module: project
 #: model:project.tags,name:project.project_tags_14
 msgid "Work"
+msgstr ""
+
+#. module: project
+#: model:project.role,name:project.project_role_4
+msgid "Worker"
 msgstr ""
 
 #. module: project

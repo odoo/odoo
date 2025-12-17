@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:54+0000\n"
-"PO-Revision-Date: 2025-09-11 13:54+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-12-16 18:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -188,6 +188,7 @@ msgid "Analytic Mixin"
 msgstr ""
 
 #. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_plan
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
 msgid "Analytic Plan"
 msgstr ""
@@ -204,7 +205,6 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
-#: model:ir.model,name:analytic.model_account_analytic_plan
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_tree_view
 msgid "Analytic Plans"
@@ -464,6 +464,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__display_name
 #: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__display_name
+#: model:ir.model.fields,field_description:analytic.field_ir_config_parameter__display_name
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr ""
@@ -540,6 +541,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__id
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__id
 #: model:ir.model.fields,field_description:analytic.field_analytic_plan_fields_mixin__id
+#: model:ir.model.fields,field_description:analytic.field_ir_config_parameter__id
 #: model:ir.model.fields,field_description:analytic.field_res_config_settings__id
 msgid "ID"
 msgstr ""
@@ -875,6 +877,19 @@ msgstr ""
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_ir_config_parameter
+msgid "System Parameter"
+msgstr ""
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/ir_config_parameter.py:0
+msgid ""
+"The value for %s must be the ID to a valid analytic plan that is not a "
+"subplan"
 msgstr ""
 
 #. module: analytic
