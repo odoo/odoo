@@ -83,6 +83,7 @@
             <replace_media_option
                 t-att-selector="replaceMediaOptionSelector"
                 t-attf-exclude="{{replaceMediaOptionExclude}}"/>
+            <video_media_option template="html_builder.VideoMediaOption" selector=".media_iframe_video"/>
             <font_awesome_option selector="span.fa, i.fa, .social_media_img" exclude="[data-oe-xpath]"/>
             <video_size_option selector=".media_iframe_video"/>
             <image_tool_option selector="img" exclude="[data-oe-type='image'] > img:not([data-attachment-id])"/>
