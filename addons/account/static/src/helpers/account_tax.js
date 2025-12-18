@@ -861,7 +861,7 @@ export const accountTaxHelpers = {
                 const total_tax_amount = values[`tax_amount${delta_currency_indicator}`];
                 const delta_total_tax_amount = rounded_raw_total_tax_amount - total_tax_amount;
 
-                if (raw_total_tax_amount) {
+                if (!floatIsZero(delta_total_tax_amount, delta_currency.decimal_places)) {
                     const target_factors = values.base_line_x_taxes_data.flatMap(
                         ([_, taxes_data]) =>
                             taxes_data.map((tax_data) => ({
@@ -908,7 +908,7 @@ export const accountTaxHelpers = {
                     delta_total_base_amount = rounded_raw_total_base_amount - total_base_amount;
                 }
 
-                if (raw_total_base_amount) {
+                if (!floatIsZero(delta_total_base_amount, delta_currency.decimal_places)) {
                     const target_factors = values.base_line_x_taxes_data.flatMap(
                         ([_, taxes_data]) =>
                             taxes_data.map((tax_data) => ({
