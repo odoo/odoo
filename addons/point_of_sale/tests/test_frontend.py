@@ -3264,6 +3264,22 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_exclusion_attribute_values')
 
+    def test_lot_tracking_without_lot_creation(self):
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist',
+        })
+        self.main_pos_config.write({
+            'available_pricelist_ids': [(6, 0, [pricelist.id])],
+            'pricelist_id': pricelist.id,
+        })
+        self.main_pos_config.picking_type_id.write({
+            "use_create_lots": False,
+            "use_existing_lots": False,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.monitor_stand.tracking = 'lot'
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_lot_tracking_without_lot_creation', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
