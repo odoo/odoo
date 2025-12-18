@@ -143,7 +143,7 @@ class AttachmentController(ThreadController):
             raise request.not_found()
         # sudo: ir.attachment: access check is done above, sudo necessary for guests
         attachment_sudo = attachment.sudo()
-        if attachment_sudo.mimetype != "application/pdf":
+        if not attachment_sudo._allow_thumbnail():
             raise UserError(request.env._("Only PDF files can have thumbnail."))
         if not thumbnail:
             with file_open("web/static/img/mimetypes/unknown.svg") as unknown_svg:
