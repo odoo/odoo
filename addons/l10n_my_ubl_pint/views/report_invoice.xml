@@ -13,13 +13,13 @@
     <!-- Add the SST and TTx to the company -->
     <template id="l10n_my_ubl_pint_external_layout_standard" inherit_id="web.company_address_list">
         <xpath expr="//ul[@name='company_address_list']" position="inside">
-            <t t-if="sst_ttx_registration_number_external_layout" t-call="l10n_my_ubl_pint.sst_ttx_registration_number_external_layout"/>
+            <t t-if="not hide_sst_ttx_registration_number" t-call="l10n_my_ubl_pint.sst_ttx_registration_number_external_layout"/>
         </xpath>
     </template>
 
     <template id="l10n_my_ubl_pint_external_layout_folder" inherit_id="web.external_layout_folder">
         <xpath expr="//t[@t-call='web.company_address_list']" position="before">
-            <t t-set="sst_ttx_registration_number_external_layout" t-value="False"/>
+            <t t-set="hide_sst_ttx_registration_number" t-value="True"/>
         </xpath>
         <xpath expr="//div[hasclass('o_folder_company_info')]" position="after">
             <div t-if="company.sst_registration_number and company.account_fiscal_country_id.code == 'MY'">
