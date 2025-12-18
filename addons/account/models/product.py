@@ -322,5 +322,47 @@ class ProductProduct(models.Model):
             sorted_domains.append((15, Domain('name', '=', name)))
             # avoid matching unrelated products whose names merely contain that short string
             if len(name) > 4:
+<<<<<<< d5241c57b21253672a9026998a70269c98803b9f
                 sorted_domains.append((20, Domain('name', 'ilike', name)))
         return sorted_domains
+||||||| 47f8f9c247087d075e9e793d447f3cc0fb69a9d4
+                domains.append([('name', 'ilike', name)])
+
+        company = company or self.env.company
+        for company_domain in (
+            [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
+            [('company_id', '=', False)],
+        ):
+            products = self.env['product.product'].search(
+                expression.AND([
+                    expression.OR(domains),
+                    company_domain,
+                    extra_domain or [],
+                ]),
+            )
+            for domain in domains:
+                if products_by_domain := products.filtered_domain(domain):
+                    return products_by_domain[0]
+        return self.env['product.product']
+=======
+                domains.append([('name', 'ilike', name)])
+
+        company = company or self.env.company
+        for company_domain in (
+            [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
+            [('company_id', '=', False)],
+        ):
+            for domain in domains:
+                product = self.env['product.product'].search(
+                    expression.AND([
+                        domain,
+                        company_domain,
+                        extra_domain or [],
+                    ]),
+                    limit=1
+                )
+                # We need a single product. Exit early if one is found (implements the priority logic).
+                if product:
+                    return product
+        return self.env['product.product']
+>>>>>>> 13fc50e21284fd50875bf245696cd5329dc27d39
