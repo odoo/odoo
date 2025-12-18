@@ -3890,7 +3890,23 @@ export class OdooEditor extends EventTarget {
                 this.historyRollback();
                 ev.preventDefault();
                 this._handleAutomaticLinkInsertion();
-                getDeepRange(this.editable, { select: true, correctTripleClick: true });
+                const deepRange = getDeepRange(this.editable, { correctTripleClick: true });
+                const startEl = deepRange && closestElement(deepRange.startContainer);
+                const endEl = deepRange && closestElement(deepRange.endContainer);
+                if (startEl && endEl && startEl.isContentEditable && endEl.isContentEditable) {
+                    const { startContainer, startOffset, endContainer, endOffset } = deepRange;
+                    const direction = getCursorDirection(
+                        newSelection.anchorNode,
+                        newSelection.anchorOffset,
+                        newSelection.focusNode,
+                        newSelection.focusOffset
+                    );
+                    if (direction === DIRECTIONS.RIGHT) {
+                        setSelection(startContainer, startOffset, endContainer, endOffset);
+                    } else {
+                        setSelection(endContainer, endOffset, startContainer, startOffset);
+                    }
+                }
                 // To remove only the anchor cell's content when multiple table cells are selected on Enter,
                 // we need to change the selection to focus only on the anchor cell. This can't be done in `oEnter`
                 // because `deleteRange` responsible for removing content, execute before `oEnter` in `_applyRawCommand`.
