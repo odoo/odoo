@@ -38,11 +38,11 @@
                 <button name="%(action_purchase_requisition_to_so)d" type="action"
                     string="New Quotation" class="btn-primary"
                     context="{'default_currency_id': currency_id, 'default_user_id': user_id}"
-                    invisible="state != 'confirmed'"/>
-                <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="btn-primary"/>
-                <button name="action_done" invisible="state != 'confirmed' or requisition_type == 'purchase_template'" string="Close" type="object" class="btn-primary"/>
-                <button name="action_draft" invisible="state != 'cancel'" string="Reset to Draft" type="object"/>
-                <button name="action_cancel" invisible="state not in ('draft', 'confirmed')" string="Cancel" type="object"/>
+                    invisible="state != 'confirmed'" data-hotkey="q"/>
+                <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="btn-primary" data-hotkey="v"/>
+                <button name="action_done" invisible="state != 'confirmed' or requisition_type == 'purchase_template'" string="Close" type="object" class="btn-primary" data-hotkey="z"/>
+                <button name="action_draft" invisible="state != 'cancel'" string="Reset to Draft" type="object" data-hotkey="o"/>
+                <button name="action_cancel" invisible="state not in ('draft', 'confirmed')" string="Cancel" type="object" data-hotkey="x"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" invisible="requisition_type == 'purchase_template'"/>
             </header>
             <sheet>
