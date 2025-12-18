@@ -146,6 +146,7 @@ registerCallAction("raise-hand", {
     isActive: ({ store }) => store.rtc.selfSession?.raisingHand,
     isTracked: true,
     icon: "fa fa-hand-paper-o",
+    hotkey: "shift+h",
     onSelected: ({ store }) => store.rtc.raiseHand(!store.rtc.selfSession.raisingHand),
     sequence: 50,
     sequenceGroup: 200,

@@ -74,6 +74,7 @@ export class Call extends Component {
         });
         useHotkey("shift+d", () => this.rtc.toggleDeafen());
         useHotkey("shift+m", () => this.rtc.toggleMicrophone());
+        useHotkey("shift+h", () => this.rtc.raiseHand(!this.rtc.selfSession.raisingHand));
         useInDiscussCallView();
     }
 
