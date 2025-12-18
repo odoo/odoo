@@ -1670,7 +1670,9 @@ $_wsale_products_roundness_map: (
             --o-wsale-card-btn-aspect-ratio: 1;
             --o-wsale-card-btn-label-display: none;
             --o-wsale-card-btn-padding-x: 0;
-            --o-wsale-card-btn-submit-label-display: inline;
+            @include media-breakpoint-up(sm) {
+                --o-wsale-card-btn-submit-label-display: inline;
+            }
         }
     }
 }
