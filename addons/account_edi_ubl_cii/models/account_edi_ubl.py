@@ -164,6 +164,16 @@ class AccountEdiUBL(models.AbstractModel):
             return
         return tax_grouping_key
 
+    def _ubl_turn_base_lines_price_unit_as_always_positive(self, vals):
+        """ Helper to make sure the base_lines don't contain any negative price_unit.
+
+        :param vals: Some custom data.
+        """
+        for base_line in vals['base_lines']:
+            if base_line['price_unit'] < 0.0:
+                base_line['quantity'] *= -1
+                base_line['price_unit'] *= -1
+
     def _ubl_turn_emptying_taxes_as_new_base_lines(self, base_lines, company, vals):
         """ Extract emptying taxes such as "Vidanges" on bottles from the current base lines and turn them into
         additional base lines.
