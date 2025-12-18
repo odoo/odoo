@@ -4391,6 +4391,45 @@ class TestMrpOrder(TestMrpCommon):
         productions = mo.procurement_group_id.mrp_production_ids
         self.assertListEqual(productions.workorder_ids.mapped('duration_expected'), [60, 60])
 
+    def test_batch_production_05(self):
+        mo, bom, finished, comp_1, comp_2 = self.generate_mo(
+            tracking_final="serial",
+            tracking_base_1="serial",
+            qty_final=2,
+            qty_base_1=1,
+        )
+
+        sn_1, sn_2 = self.env["stock.lot"].create([{
+            "name": "SN1",
+            "product_id": comp_1.id
+        }, {
+            "name": "SN2",
+            "product_id": comp_1.id
+        }])
+
+        child_location = self.env.ref('stock.stock_location_stock').child_ids[0]
+        self.env["stock.quant"]._update_available_quantity(comp_1, child_location, quantity=1.0, lot_id=sn_1)
+        self.env["stock.quant"]._update_available_quantity(comp_1, child_location, quantity=1.0, lot_id=sn_2)
+        mo.action_confirm()
+        self.assertIn(sn_1, mo.move_raw_ids.move_line_ids.lot_id)
+        self.assertIn(sn_2, mo.move_raw_ids.move_line_ids.lot_id)
+        for ml in mo.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id == comp_1):
+            self.assertEqual(child_location, ml.location_id)
+
+        batch_produce_action = mo.button_mark_done()
+        batch_produce = Form(self.env['mrp.batch.produce'].with_context(**batch_produce_action['context']))
+        batch_produce.production_text = """
+            SN1,SN1
+            SN2,SN2
+        """
+        batch_produce = batch_produce.save()
+        batch_produce.action_prepare()
+
+        productions = mo.procurement_group_id.mrp_production_ids
+        for prod in productions:
+            for ml in prod.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id == comp_1):
+                self.assertEqual(child_location, ml.location_id)
+
     def test_multi_edit_start_date_wo(self):
         """
         Test setting the start date for multiple workorders, checking if the finish date
