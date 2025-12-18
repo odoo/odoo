@@ -196,8 +196,8 @@ export class PosOrderAccounting extends Base {
         this.amount_total = this.currency.round(this.priceIncl);
         this.amount_return = this.change; // Already rounded by the getter
         this.lines.forEach((line) => {
-            line.price_subtotal = line.priceExcl;
-            line.price_subtotal_incl = line.priceIncl;
+            line.price_subtotal = line.priceExcl * line.order_id.orderSign;
+            line.price_subtotal_incl = line.priceIncl * line.order_id.orderSign;
         });
     }
     /**

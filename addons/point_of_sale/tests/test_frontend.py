@@ -1272,6 +1272,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'FiscalPositionNoTaxRefund', login="pos_user")
         order = self.env['pos.order'].search([])
         self.assertTrue(order[0].name == order[1].name + " REFUND")
+        # The refunded order line should be negative
+        self.assertTrue(order[0].lines.price_subtotal == -100)
+        self.assertTrue(order[0].lines.price_subtotal_incl == -100)
 
     def test_lot_refund(self):
 
@@ -1588,7 +1591,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'refund_multiple_products_amounts_compliance', login="pos_user")
 
         refund_order = current_session.order_ids.filtered(lambda order: order.is_refund)
-        self.assertEqual(refund_order.lines[0].price_subtotal, 2 * test_product.list_price)
+        self.assertEqual(refund_order.lines[0].price_subtotal, -2 * test_product.list_price)
         total_cash_payment = sum(current_session.mapped('order_ids.payment_ids').filtered(
             lambda payment: payment.payment_method_id.type == 'cash').mapped('amount')
         )
