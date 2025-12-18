@@ -4,45 +4,35 @@
     <template id="sale_order_portal_content_inherit_sale_mrp"
         name="Orders MOs"
         inherit_id="sale.sale_order_portal_content">
-        <xpath expr="//div[@id='informations']" position="inside">
-            <t t-set="mrp_productions" t-value="sale_order.mrp_production_ids"/>
-            <t t-if="mrp_productions">
-                <div>
-                    <strong>Manufacturing Orders</strong>
-                </div>
-                <div>
-                    <t t-foreach="mrp_productions" t-as="mo">
-                        <div class="d-flex flex-wrap align-items-center justify-content-between">
-                            <div>
-                                <span t-out="mo.name"/>
-                                <div class="small d-lg-inline-block ms-3">
-                                    Date:
-                                    <span class="text-muted"
-                                        t-field="mo.date_finished"
-                                        t-options="{'date_only': True}"/>
-                                </div>
-                            </div>
-                            <span t-if="mo.state in ['to_close', 'done']"
-                                class="small badge text-bg-success orders_label_text_align">
-                                <i class="oi oi-fw" data-icon="check"/> <b>Manufactured</b>
-                            </span>
-                            <span t-elif="mo.state == 'cancel'"
-                                class="small badge text-bg-danger orders_label_text_align">
-                                <i class="oi oi-fw" data-icon="close"/> <b>Cancelled</b>
-                            </span>
-                            <span t-elif="mo.state in ['confirmed']"
-                                class="small badge text-bg-info orders_label_text_align">
-                                <i class="oi oi-fw" data-icon="schedule"/> <b>Confirmed</b>
-                            </span>
-                            <span t-elif="mo.state in ['progress']"
-                                class="small badge text-bg-warning orders_label_text_align">
-                                <i class="oi oi-fw" data-icon="schedule"/> <b>In progress</b>
-                            </span>
+
+        <div id="informations" position="inside">
+            <div t-if="mrp_productions" class="flex-grow-1 flex-shrink-1 flex-basis-0 min-w-0">
+                <t t-set="mo" t-value="mrp_productions[0]"/>
+                <div class="d-flex align-items-center align-items-lg-start justify-content-between gap-3">
+                    <div class="d-flex flex-column">
+                        <h5 class="mb-1">Manufacturing Orders</h5>
+                        <span t-out="mo.name"/>
+                        <div t-if="mo.date_finished" class="small text-muted">
+                            <span t-field="mo.date_finished" t-options="{'date_only': True}"/>
                         </div>
-                    </t>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <span t-if="mo.state in ['to_close', 'done']" class="small badge text-bg-success">
+                            <i class="oi oi-fw" data-icon="check"/> Manufactured
+                        </span>
+                        <span t-elif="mo.state == 'cancel'" class="small badge text-bg-danger">
+                            <i class="oi oi-fw" data-icon="close"/> Cancelled
+                        </span>
+                        <span t-elif="mo.state == 'confirmed'" class="small badge text-bg-info">
+                            <i class="oi oi-fw" data-icon="schedule"/> Confirmed
+                        </span>
+                        <span t-elif="mo.state == 'progress'" class="small badge text-bg-warning">
+                            <i class="oi oi-fw" data-icon="schedule"/> In Progress
+                        </span>
+                    </div>
                 </div>
-            </t>
-        </xpath>
+            </div>
+        </div>
     </template>
 
 </odoo>

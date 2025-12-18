@@ -179,9 +179,10 @@
                                 <h6 class="flex-basis-100"><small class="text-muted">Assignees</small></h6>
                                 <t t-foreach="task.user_ids" t-as="user">
                                     <t t-call="portal.portal_my_contact"
-                                        _spacingClass="'mb-3' if len(task.user_ids) > 1 else ''"
-                                        _contactAvatar="image_data_uri(user.avatar_128)"
-                                        _contactName="user.name">
+                                        _contact_no_card="True"
+                                        _spacing_class="'mb-3' if len(task.user_ids) > 1 else ''"
+                                        _contact_avatar="image_data_uri(user.avatar_128)"
+                                        _contact_name="user.name">
                                         <div t-out="user" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
                                     </t>
                                 </t>
@@ -190,8 +191,9 @@
                                 <h6><small class="text-muted">Customer</small></h6>
                                 <t t-if="task.partner_id">
                                     <t t-call="portal.portal_my_contact"
-                                        _contactAvatar="image_data_uri(task.partner_id.avatar_512)"
-                                        _contactName="task.partner_id.display_name">
+                                        _contact_no_card="True"
+                                        _contact_avatar="image_data_uri(task.partner_id.avatar_512)"
+                                        _contact_name="task.partner_id.display_name">
                                         <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
                                     </t>
                                 </t>
