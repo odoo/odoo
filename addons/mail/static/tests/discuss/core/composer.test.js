@@ -76,7 +76,7 @@ test("send is_typing on adding emoji", async () => {
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
     await insertText("input[placeholder='Search emoji']", "Santa Claus");
-    await click(".o-Emoji", { text: "🎅" });
+    await click(".o-Emoji:text('🎅')");
     await expect.waitForSteps(["notify_typing"]);
     testEnded = true;
 });
@@ -94,7 +94,7 @@ test("add an emoji after a command", async () => {
     await click(":nth-child(1 of .o-mail-Composer-suggestion)");
     await contains(".o-mail-Composer-input", { value: "/who " });
     await click("button[title='Add Emojis']");
-    await click(".o-Emoji", { text: "😊" });
+    await click(".o-Emoji:text('😊')");
     await contains(".o-mail-Composer-input", { value: "/who 😊" });
 });
 
@@ -116,8 +116,8 @@ test("html composer: send a message in a channel", async () => {
         editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
     };
     await htmlInsertText(editor, "Hello");
-    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "Hello" });
+    await contains(".o-mail-Composer-html.odoo-editor-editable:text('Hello')");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await click(".o-mail-Message[data-persistent]:contains(Hello)");
-    await contains(".o-mail-Composer-html.odoo-editor-editable", { text: "" });
+    await contains(".o-mail-Composer-html.odoo-editor-editable", { textContent: "" });
 });

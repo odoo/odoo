@@ -361,8 +361,7 @@ test("do not show message seen indicator on all the messages of the current user
     pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", {
-        text: "Message before last seen",
+    await contains(".o-mail-Message:has(:text('Message before last seen'))", {
         contains: [".o-mail-MessageSeenIndicator", { contains: [".fa-check", { count: 0 }] }],
     });
 });
@@ -484,10 +483,10 @@ test("no seen indicator in 'channel' channels (with is_typing)", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Message", { text: "channel-msg" });
+    await contains(".o-mail-Message:has(:text('channel-msg'))");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 0 }); // none in channel
-    await click(".o-mail-DiscussSidebar-item", { text: "Demo User" });
-    await contains(".o-mail-Message", { text: "chat-msg" });
+    await click(".o-mail-DiscussSidebarChannel-itemName:text('Demo User')");
+    await contains(".o-mail-Message:has(:text('chat-msg'))");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 1 }); // received in chat
     // simulate channel read by Demo User in both threads
     await withUser(demoUserId, () =>
@@ -516,8 +515,8 @@ test("no seen indicator in 'channel' channels (with is_typing)", async () => {
         })
     );
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 }); // seen in chat
-    await click(".o-mail-DiscussSidebar-item", { text: "test-channel" });
-    await contains(".o-mail-Message", { text: "channel-msg" });
+    await click(".o-mail-DiscussSidebarChannel-itemName:text('test-channel')");
+    await contains(".o-mail-Message:has(:text('channel-msg'))");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 0 }); // none in channel
 });
 
@@ -605,7 +604,7 @@ test("Title show some member seen info (partial seen), click show dialog with fu
     await click(".o-mail-MessageSeenIndicator");
     await contains("li", { count: 11 });
     for (let i = 0; i < 11; i++) {
-        await contains("li", { text: `User ${i}` }); // Not checking datetime because HOOT mocking of tz do not work
+        await contains(`li:text('User ${i}')`); // Not checking datetime because HOOT mocking of tz do not work
     }
 });
 

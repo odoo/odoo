@@ -222,7 +222,7 @@ test("Add GIF to favorite", async () => {
     await click(":nth-child(1 of div) > .o-discuss-Gif .fa-star-o");
     await contains(".o-discuss-Gif .fa-star");
     await click("i[aria-label='back']");
-    await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
+    await click(".o-discuss-GifPicker div[aria-label='list-item']:text('Favorites')");
     await contains(".o-discuss-Gif");
 });
 
@@ -231,7 +231,7 @@ test("Chatter should not have the GIF button", async () => {
     await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Log note" });
+    await click("button:text('Log note')");
     await contains("button[title='Add GIFs']", { count: 0 });
 });
 
@@ -279,7 +279,7 @@ test("Scrolling at the bottom should trigger the search to load more gif, even a
     await click("button[title='Add GIFs']");
     // gif picker quires extra delay before click (to give time to load initial state)
     await contains(".o-discuss-GifPicker");
-    await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
+    await click(".o-discuss-GifPicker div[aria-label='list-item']:text('Favorites')");
     await click("i[aria-label='back']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await contains(".o-discuss-Gif", { count: 4 });
@@ -313,8 +313,8 @@ test("Show help when no favorite GIF", async () => {
     await click("button[title='Add GIFs']");
     // gif picker quires extra delay before click (to give time to load initial state)
     await contains(".o-discuss-GifPicker");
-    await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
-    await contains("span", { text: "So uhh... maybe go favorite some GIFs?" });
+    await click(".o-discuss-GifPicker div[aria-label='list-item']:text('Favorites')");
+    await contains("span:text('So uhh... maybe go favorite some GIFs?')");
 });
 
 test("Clicking GIF preview does not raise an error", async () => {

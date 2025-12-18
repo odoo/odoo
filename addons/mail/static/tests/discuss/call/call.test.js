@@ -125,7 +125,7 @@ test("show call UI in chat window when in call", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-NotificationItem", { text: "General" });
+    await click(".o-mail-NotificationItem:text('General')");
     await contains(".o-mail-ChatWindow");
     await contains(".o-discuss-Call", { count: 0 });
     await click(".o-mail-ChatWindow-header [title='Start Call']");
@@ -282,7 +282,7 @@ test("Create a direct message channel when clicking on start a meeting", async (
     await contains(".o-mail-Thread:contains('Welcome to #Slytherin!')");
     await contains(".o-mail-Message");
     await click("button[title='New Meeting']");
-    await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')");
     await contains(".o-discuss-Call");
     await contains(".o-mail-Meeting .o-mail-ActionPanel:contains('Invite people')");
 });
@@ -357,17 +357,17 @@ test("'New Meeting' in mobile", async () => {
     await contains(".o-mail-Thread:contains('Welcome to #Slytherin!')");
     await contains(".o-mail-Message");
     await contains("button[title*='Close Chat Window']");
-    await click("button", { text: "Chats" });
+    await click("button:text('Chats')");
     await click("button[title='New Meeting']");
-    await click(".o-discuss-ChannelInvitation-selectable", { text: "Partner 2" });
-    await click("button:not([disabled])", { text: "Invite to Group Chat" });
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text('Partner 2'))");
+    await click("button:not([disabled]):text('Invite to Group Chat')");
     await contains(".o-discuss-Call");
     await click("[title='Exit Fullscreen']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Members" });
-    await contains(".o-discuss-ChannelMember", { text: "Partner 2" });
+    await click(".o-dropdown-item:text('Members')");
+    await contains(".o-discuss-ChannelMember:text('Partner 2')");
 });
 
 test("Dropzones below fullscreen meeting view are disabled", async () => {
@@ -586,7 +586,7 @@ test("expand call participants when joining a call", async () => {
     await contains("img[title='Bob']");
     await contains("img[title='Cathy']");
     await contains("img[title='David']");
-    await contains(".o-mail-AvatarStack-remainingCount", { text: "+2" });
+    await contains(".o-mail-AvatarStack-remainingCount:text('+2')");
     await click("[title='Join Call']");
     await contains(".o-mail-DiscussSidebarCallParticipants img", { count: 10 });
     await contains("img[title='Alice']");
@@ -624,8 +624,8 @@ test("Clicking sidebar call participant opens avatar card", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await click(".o-mail-DiscussSidebarCallParticipants-participant", { text: "Mitchell Admin" });
-    await contains(".o_avatar_card .o_card_user_infos", { text: "Mitchell Admin" });
+    await click(".o-mail-DiscussSidebarCallParticipants-participant:text('Mitchell Admin')");
+    await contains(".o-mail-avatar-card-name:text('Mitchell Admin')");
 });
 
 test("Use saved volume settings", async () => {
@@ -765,7 +765,7 @@ test("should also invite to the call when inviting to the channel", async () => 
     await contains(".o-discuss-Call");
     await click(".o-mail-DiscussContent-header button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation");
-    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
     await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await contains(".o-discuss-CallParticipantCard.o-isInvitation");
 });
@@ -824,8 +824,8 @@ test("single 'join' (without camera) button when last call was audio-only", asyn
     await openDiscuss(channelId);
     await click("button[title='Join Call']");
     await contains(".o-discuss-Call.o-selfInCall");
-    await click("button[title='Disconnect'");
-    await click("button[title='Join Call']", { text: "Join", contains: [".fa-phone"] });
+    await click("button[title='Disconnect']");
+    await click("button[title='Join Call']:text('Join')", { contains: [".fa-phone"] });
 });
 
 test("single 'join' (with camera) button when last call had camera on", async () => {
@@ -851,8 +851,7 @@ test("single 'join' (with camera) button when last call had camera on", async ()
     await click("button[title='Join Video Call']");
     await contains(".o-discuss-CallParticipantCard[title='Mitchell Admin'] video");
     await click("button[title='Disconnect']");
-    await click("button[title='Join Video Call']", {
-        text: "Join",
+    await click("button[title='Join Video Call']:text('Join')", {
         contains: [".fa-video-camera"],
     });
 });

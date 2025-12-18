@@ -17,9 +17,7 @@ test("Empty attachment panel", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-DiscussContent-header button[title='Attachments']");
-    await contains(".o-mail-ActionPanel", {
-        text: "This channel doesn't have any attachments.",
-    });
+    await contains(".o-mail-ActionPanel:text('This channel doesn't have any attachments.')");
 });
 
 test("Attachment panel sort by date", async () => {
@@ -42,13 +40,11 @@ test("Attachment panel sort by date", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-DiscussContent-header button[title='Attachments']");
-    await contains(".o-mail-AttachmentList", {
-        text: "file2.pdf",
-        after: [".o-mail-DateSection", { text: "September, 2023" }],
-        before: [".o-mail-DateSection", { text: "August, 2023" }],
+    await contains(".o-mail-AttachmentCard-info:text('file2.pdf')", {
+        after: [".o-mail-DateSection:text('September, 2023')"],
+        before: [".o-mail-DateSection:text('August, 2023')"],
     });
-    await contains(".o-mail-AttachmentList", {
-        text: "file1.pdf",
-        after: [".o-mail-DateSection", { text: "August, 2023" }],
+    await contains(".o-mail-AttachmentCard-info:text('file1.pdf')", {
+        after: [".o-mail-DateSection:text('August, 2023')"],
     });
 });

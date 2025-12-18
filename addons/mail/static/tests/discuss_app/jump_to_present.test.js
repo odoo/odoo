@@ -143,7 +143,7 @@ test("Jump to old reply should prompt jump to present", async () => {
     await contains(".o-mail-Message", { count: 30 });
     await click(".o-mail-MessageInReply .cursor-pointer");
     await contains(".o-mail-Message", { count: 30 });
-    await contains(":nth-child(1 of .o-mail-Message)", { text: "Hello world!" });
+    await contains(".o-mail-Message:eq(0):has(:text('Hello world!'))");
     await click("[title='Jump to Present']");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Message", { count: 30 });
@@ -235,9 +235,8 @@ test("Post message when seeing old message should jump to present", async () => 
     await press("Enter");
     await contains("[title='Jump to Present']", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
-    await contains(".o-mail-Message-content", {
-        text: "Newly posted",
-        after: [".o-mail-Message-content", { text: "Most Recent!" }], // should load around present
+    await contains(".o-mail-Message-content:has(:text('Newly posted'))", {
+        after: [".o-mail-Message-content:has(:text('Most Recent!'))"], // should load around present
     });
 });
 
@@ -274,15 +273,15 @@ test("when triggering jump to present, keeps showing old messages until recent o
     await openDiscuss(channelId);
     await expect.waitForSteps(["/discuss/channel/messages"]);
     await click("[title='Pinned Messages']");
-    await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
-    await contains(".o-mail-Thread .o-mail-Message", { text: "first-message" });
+    await click(".o-discuss-PinnedMessagesPanel a[role='button']:text('Jump')");
+    await contains(".o-mail-Thread .o-mail-Message:has(:text('first-message'))");
     await animationFrame();
     slowMessageFetchDeferred = new Deferred();
     await click("[title='Jump to Present']");
     await animationFrame();
     await expect.waitForSteps(["/discuss/channel/messages"]);
-    await contains(".o-mail-Thread .o-mail-Message", { text: "first-message" });
+    await contains(".o-mail-Thread .o-mail-Message:has(:text('first-message'))");
     slowMessageFetchDeferred.resolve();
-    await contains(".o-mail-Thread .o-mail-Message", { text: "first-message", count: 0 });
+    await contains(".o-mail-Thread .o-mail-Message:has(:text('first-message'))", { count: 0 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });

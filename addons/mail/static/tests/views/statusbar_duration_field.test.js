@@ -41,9 +41,9 @@ test("status bar duration field used in form view", async () => {
         arch: `<form><field name="stage_id" widget="statusbar_duration"/></form>`,
     });
     await contains("span[title='7 days, 30 minutes']", {
-        parent: [".o_statusbar_status button", { text: "New" }],
+        parent: [".o_statusbar_status button:has(:text('New'))"],
     });
-    await contains("span[title='3 hours']", { parent: ["button", { text: "Qualified" }] });
-    await contains("button", { text: "Proposition" });
-    await contains("span[title='2 days, 5 hours']", { parent: ["button", { text: "Won" }] });
+    await contains("span[title='3 hours']", { parent: ["button:has(:text('Qualified'))"] });
+    await contains("button:text('Proposition')");
+    await contains("span[title='2 days, 5 hours']", { parent: ["button:has(:text('Won'))"] });
 });

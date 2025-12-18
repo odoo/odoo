@@ -25,12 +25,12 @@ test("activity mark done popover simplest layout", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn", { text: "Mark Done" });
+    await click(".btn:text('Mark Done')");
     await contains(".o-mail-ActivityMarkAsDone");
     await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
     await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
-    await contains(".o-mail-ActivityMarkAsDone button", { text: "Discard" });
+    await contains(".o-mail-ActivityMarkAsDone button:text('Discard')");
 });
 
 test("activity with force next mark done popover simplest layout", async () => {
@@ -49,12 +49,12 @@ test("activity with force next mark done popover simplest layout", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn", { text: "Mark Done" });
+    await click(".btn:text('Mark Done')");
     await contains(".o-mail-ActivityMarkAsDone");
     await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
     await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done']", { count: 0 });
-    await contains(".o-mail-ActivityMarkAsDone button", { text: "Discard" });
+    await contains(".o-mail-ActivityMarkAsDone button:text('Discard')");
 });
 
 test("activity mark done popover mark done without feedback", async () => {
@@ -78,7 +78,7 @@ test("activity mark done popover mark done without feedback", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn", { text: "Mark Done" });
+    await click(".btn:text('Mark Done')");
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     await expect.waitForSteps(["action_feedback"]);
 });
@@ -110,7 +110,7 @@ test("activity mark done popover mark done with feedback", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn", { text: "Mark Done" });
+    await click(".btn:text('Mark Done')");
     await insertText(
         ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
         "This task is done"
@@ -155,7 +155,7 @@ test("activity mark done popover mark done and schedule next", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn", { text: "Mark Done" });
+    await click(".btn:text('Mark Done')");
     await insertText(
         ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
         "This task is done"
@@ -193,7 +193,7 @@ test("[technical] activity mark done & schedule next with new action", async () 
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn", { text: "Mark Done" });
+    await click(".btn:text('Mark Done')");
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     await def;
     await expect.waitForSteps(["activity_action"]);

@@ -33,7 +33,7 @@ test("bus subscription updated when joining/leaving thread as non member", async
     await waitForChannels([`discuss.channel_${channelId}`]);
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Channel')");
-    await click("button", { text: "Leave Conversation" });
+    await click("button:text('Leave Conversation')");
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
 });
 
@@ -45,17 +45,17 @@ test("bus subscription updated when opening/closing chat window as a non member"
     });
     setupChatHub({ opened: [channelId] });
     await start();
-    await contains(".o-mail-ChatWindow", { text: "Sales" });
+    await contains(".o-mail-ChatWindow:has(:text('Sales'))");
     await waitForChannels([`discuss.channel_${channelId}`]);
     await click("[title*='Close Chat Window']", {
-        parent: [".o-mail-ChatWindow", { text: "Sales" }],
+        parent: [".o-mail-ChatWindow:has(:text('Sales'))"],
     });
-    await contains(".o-mail-ChatWindow", { count: 0, text: "Sales" });
+    await contains(".o-mail-ChatWindow:has(:text('Sales'))", { count: 0 });
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
     await press(["control", "k"]);
     await click(".o_command_palette_search input");
     await edit("@");
-    await click(".o-mail-DiscussCommand", { text: "Sales" });
+    await click(".o-mail-DiscussCommand:text('Sales')");
     await waitForChannels([`discuss.channel_${channelId}`]);
 });
 
@@ -69,9 +69,7 @@ test("bus subscription updated when joining locally pinned thread", async () => 
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
     await click("[title='Invite People']");
-    await click(".o-discuss-ChannelInvitation-selectable", {
-        text: "Mitchell Admin",
-    });
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text('Mitchell Admin'))");
     await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
 });

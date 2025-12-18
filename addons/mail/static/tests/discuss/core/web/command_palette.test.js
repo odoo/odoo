@@ -22,8 +22,8 @@ test("can open DM from @username in command palette", async () => {
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
     await insertText("input[placeholder='Search a conversation']", "Mario");
-    await click(".o_command.focused:has(.oi-user)", { text: "Mario" });
-    await contains(".o-mail-ChatWindow", { text: "Mario" });
+    await click(".o_command.focused:has(.oi-user):text('Mario')");
+    await contains(".o-mail-ChatWindow:text('Mario')");
 });
 
 test("can open channel from @channel_name in command palette", async () => {
@@ -50,14 +50,14 @@ test("can open channel from @channel_name in command palette", async () => {
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
     await contains(".o_command", { count: 6 });
-    await contains(".o_command:eq(0):has(.fa-hashtag)", { text: "project" });
-    await contains(".o_command:eq(1):has(.fa-hashtag)", { text: "general" });
-    await contains(".o_command:has(.oi-user)", { text: "OdooBot" });
-    await contains(".o_command:has(.oi-user)", { text: "Mitchell Admin" }); // self-conversation
-    await contains(".o_command", { text: "Create Channel" });
-    await contains(".o_command", { text: "Create Chat" });
-    await click(".o_command.focused:has(.fa-hashtag)", { text: "project" });
-    await contains(".o-mail-ChatWindow", { text: "project" });
+    await contains(".o_command:eq(0):has(.fa-hashtag):text('project')");
+    await contains(".o_command:eq(1):has(.fa-hashtag):text('general')");
+    await contains(".o_command:has(.oi-user):text('OdooBot')");
+    await contains(".o_command:has(.oi-user):text('Mitchell Admin')"); // self-conversation
+    await contains(".o_command:text('Create Channel')");
+    await contains(".o_command:text('Create Chat')");
+    await click(".o_command.focused:has(.fa-hashtag):text('project')");
+    await contains(".o-mail-ChatWindow:text('project')");
 });
 
 test("Conversation mentions in the command palette with @", async () => {
@@ -87,16 +87,16 @@ test("Conversation mentions in the command palette with @", async () => {
     await insertText(".o_command_palette_search input", "@", { replace: true });
     await contains(".o_command_palette .o_command_category", {
         contains: [
-            ["span.fw-bold", { text: "Mentions" }],
-            [".o_command.focused .o_command_name", { text: "Mitchell Admin and Mario" }],
+            ["span.fw-bold:text('Mentions')"],
+            [".o_command.focused .o_command_name:text('Mitchell Admin and Mario')"],
         ],
     });
     // can also make self conversation
     await contains(".o_command_palette .o_command_category", {
-        contains: [[".o_command_name", { text: "Mitchell Admin" }]],
+        contains: [[".o_command_name:text('Mitchell Admin')"]],
     });
     await click(".o_command.focused");
-    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin and Mario" });
+    await contains(".o-mail-ChatWindow:has(:text('Mitchell Admin and Mario'))");
 });
 
 test("Max 3 most recent conversations in command palette of Discuss", async () => {
@@ -109,10 +109,7 @@ test("Max 3 most recent conversations in command palette of Discuss", async () =
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@", { replace: true });
     await contains(".o_command_palette .o_command_category", {
-        contains: [
-            ["span.fw-bold", { text: "Recent" }],
-            [".o_command", { count: 3 }],
-        ],
+        contains: [["span.fw-bold:text('Recent')"], [".o_command", { count: 3 }]],
     });
 });
 
@@ -125,12 +122,12 @@ test("only partners with dedicated users will be displayed in command palette", 
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
     await contains(".o_command_name", { count: 5 });
-    await contains(".o_command_name", { text: "Demo" });
-    await contains(".o_command_name", { text: "OdooBot" });
-    await contains(".o_command_name", { text: "Mitchell Admin" }); // self-conversation
-    await contains(".o_command_name", { text: "Create Channel" });
-    await contains(".o_command_name", { text: "Create Chat" });
-    await contains(".o_command_name", { text: "Portal", count: 0 });
+    await contains(".o_command_name:text('Demo')");
+    await contains(".o_command_name:text('OdooBot')");
+    await contains(".o_command_name:text('Mitchell Admin')"); // self-conversation
+    await contains(".o_command_name:text('Create Channel')");
+    await contains(".o_command_name:text('Create Chat')");
+    await contains(".o_command_name:text('Portal')", { count: 0 });
 });
 
 test("hide conversations in recent if they have mentions", async () => {
@@ -151,9 +148,8 @@ test("hide conversations in recent if they have mentions", async () => {
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@", { replace: true });
-    await contains(".o_command_category span.fw-bold", { text: "Mentions" });
-    await contains(".o_command_palette .o_command_category .o_command_name", {
-        text: "OdooBot",
+    await contains(".o_command_category span.fw-bold:text('Mentions')");
+    await contains(".o_command_palette .o_command_category .o_command_name:text('OdooBot')", {
         count: 1,
     });
 });
@@ -162,14 +158,14 @@ test("Ctrl-K opens @ command palette in discuss app", async () => {
     await start();
     await openDiscuss();
     triggerHotkey("control+k");
-    await contains(".o_command_palette_search", { text: "@" });
+    await contains(".o_command_palette_search:text('@')");
 });
 
 test("Can create group chat from ctrl-k without any user selected", async () => {
     await start();
     await openDiscuss();
     triggerHotkey("control+k");
-    await click(".o_command_name:contains(Create Chat)");
-    await click(".modal-footer > .btn:contains(Create Group Chat)");
-    await contains(".o-mail-DiscussSidebarChannel-itemName", { text: "Mitchell Admin" });
+    await click(".o_command_name:text('Create Chat')");
+    await click(".modal-footer > .btn:text('Create Group Chat')");
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')");
 });

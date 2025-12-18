@@ -62,8 +62,8 @@ test("should have correct members in member list", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMember", { count: 2 });
-    await contains(".o-discuss-ChannelMember", { text: serverState.partnerName });
-    await contains(".o-discuss-ChannelMember", { text: "Demo" });
+    await contains(".o-discuss-ChannelMember:text('" + serverState.partnerName + "')");
+    await contains(".o-discuss-ChannelMember:text('Demo')");
 });
 
 test("members should be correctly categorised into online/offline", async () => {
@@ -84,8 +84,8 @@ test("members should be correctly categorised into online/offline", async () => 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMemberList h6", { text: "Online - 2" });
-    await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 1" });
+    await contains(".o-discuss-ChannelMemberList h6:text('Online - 2')");
+    await contains(".o-discuss-ChannelMemberList h6:text('Offline - 1')");
 });
 
 test("chat with member should be opened after clicking on channel member", async () => {
@@ -103,9 +103,9 @@ test("chat with member should be opened after clicking on channel member", async
     await start();
     await openDiscuss(channelId);
     await click(".o-discuss-ChannelMember:has(:text('Demo')).cursor-pointer");
-    await contains(".o_avatar_card .o_card_user_infos", { text: "Demo" });
+    await contains(".o-mail-avatar-card-name:text('Demo')");
     await click(".o-discuss-ChannelMember:has(:text('Demo')).o-active");
-    await click(".o_avatar_card button", { text: "Send message" });
+    await click(".o_avatar_card button:text('Send message')");
     await contains(".o-mail-AutoresizeInput[title='Demo']");
 });
 
@@ -125,8 +125,7 @@ test("should show a button to load more members if they are not all loaded", asy
     await openDiscuss(channelId);
     pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await contains(
-        ".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members')) button",
-        { text: "Load more" }
+        ".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members')) button:text('Load more')"
     );
 });
 
@@ -158,13 +157,13 @@ test("Channel member count update after user joined", async () => {
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 1" });
+    await contains(".o-discuss-ChannelMemberList h6:text('Offline - 1')");
     await click("[title='Invite People']");
-    await click(".o-discuss-ChannelInvitation-selectable", { text: "Harry" });
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text('Harry'))");
     await click(".o-discuss-ChannelInvitation [title='Invite']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await click("[title='Members']");
-    await contains(".o-discuss-ChannelMemberList h6", { text: "Offline - 2" });
+    await contains(".o-discuss-ChannelMemberList h6:text('Offline - 2')");
 });
 
 test("Channel member count update after user left", async () => {
@@ -214,20 +213,17 @@ test("Members are partitioned by online/offline", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMember", { count: 3 });
-    await contains("h6", { text: "Online - 2" });
-    await contains("h6", { text: "Offline - 1" });
-    await contains(".o-discuss-ChannelMember", {
-        text: "John",
-        after: ["h6", { text: "Online - 2" }],
-        before: ["h6", { text: "Offline - 1" }],
+    await contains("h6:text('Online - 2')");
+    await contains("h6:text('Offline - 1')");
+    await contains(".o-discuss-ChannelMember:text('John')", {
+        after: ["h6:text('Online - 2')"],
+        before: ["h6:text('Offline - 1')"],
     });
-    await contains(".o-discuss-ChannelMember", {
-        text: "Mitchell Admin",
-        after: ["h6", { text: "Online - 2" }],
-        before: ["h6", { text: "Offline - 1" }],
+    await contains(".o-discuss-ChannelMember:text('Mitchell Admin')", {
+        after: ["h6:text('Online - 2')"],
+        before: ["h6:text('Offline - 1')"],
     });
-    await contains(".o-discuss-ChannelMember", {
-        text: "Dobby",
-        after: ["h6", { text: "Offline - 1" }],
+    await contains(".o-discuss-ChannelMember:text('Dobby')", {
+        after: ["h6:text('Offline - 1')"],
     });
 });

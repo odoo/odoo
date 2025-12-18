@@ -127,7 +127,7 @@ test("edit follower and close subtype dialog", async () => {
     await click("[title='Edit subscription']");
     await contains(".o-mail-FollowerSubtypeDialog");
     await expect.waitForSteps(["fetch_subtypes"]);
-    await click(".o-mail-FollowerSubtypeDialog button", { text: "Cancel" });
+    await click(".o-mail-FollowerSubtypeDialog button:text('Cancel')");
     await contains(".o-mail-FollowerSubtypeDialog", { count: 0 });
 });
 
@@ -151,15 +151,15 @@ test("remove a follower in a dirty form view", async () => {
             </form>`,
     });
     await click(".o_field_many2many_tags[name='channel_ids'] input");
-    await click(".dropdown-item", { text: "General" });
-    await contains(".o_tag", { text: "General" });
-    await contains(".o-mail-Followers-counter", { text: "1" });
+    await click(".dropdown-item:text('General')");
+    await contains(".o_tag:text('General')");
+    await contains(".o-mail-Followers-counter:text('1')");
     await editInput(document.body, ".o_field_char[name=name] input", "some value");
     await click(".o-mail-Followers-button");
     await click("[title='Remove this follower']");
-    await contains(".o-mail-Followers-counter", { text: "0" });
+    await contains(".o-mail-Followers-counter:text('0')");
     await contains(".o_field_char[name=name] input", { value: "some value" });
-    await contains(".o_tag", { text: "General" });
+    await contains(".o_tag:text('General')");
 });
 
 test("removing a follower should reload form view", async function () {
@@ -178,6 +178,6 @@ test("removing a follower should reload form view", async function () {
     await expect.waitForSteps([`read ${threadId}`]);
     await click(".o-mail-Followers-button");
     await click("[title='Remove this follower']");
-    await contains(".o-mail-Followers-counter", { text: "0" });
+    await contains(".o-mail-Followers-counter:text('0')");
     await expect.waitForSteps([`read ${threadId}`]);
 });

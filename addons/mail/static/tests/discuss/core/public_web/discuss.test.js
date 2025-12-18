@@ -65,6 +65,6 @@ test("notify message to user as non member", async () => {
             thread_model: "discuss.channel",
         })
     );
-    await contains(".o-mail-Message", { text: "Hello!" });
+    await contains(".o-mail-Message:has(:text('Hello!'))");
     expect.verifySteps(["push notification"]);
 });

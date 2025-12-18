@@ -134,5 +134,5 @@ test("Posting a message in discuss app should not open a chat window after leavi
     // leaving discuss.
     await openFormView("res.partner", partnerId);
     // weak test, no guarantee that we waited long enough for the potential chat window to open
-    await contains(".o-mail-ChatWindow", { count: 0, text: "Dumbledore" });
+    await contains(".o-mail-ChatWindow:text('Dumbledore')", { count: 0 });
 });

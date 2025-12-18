@@ -25,7 +25,7 @@ test("should update activities when opening the activity menu", async () => {
         res_model: "res.partner",
     });
     await click(".o_menu_systray i[aria-label='Activities']");
-    await contains(".o-mail-ActivityMenu-counter", { text: "1" });
+    await contains(".o-mail-ActivityMenu-counter:text('1')");
 });
 
 test("global shortcut", async () => {

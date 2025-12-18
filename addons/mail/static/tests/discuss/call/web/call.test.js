@@ -29,8 +29,8 @@ test("no auto-call on joining chat", async () => {
     await contains(".o_command_name", { count: 5 });
     await insertText("input[placeholder='Search a conversation']", "mario");
     await contains(".o_command_name", { count: 3 });
-    await click(".o_command_name", { text: "Mario" });
-    await contains(".o-mail-DiscussSidebar-item", { text: "Mario" });
+    await click(".o_command_name:text('Mario')");
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mario')");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-discuss-Call", { count: 0 });
 });
@@ -46,10 +46,10 @@ test("no auto-call on joining group chat", async () => {
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
-    await click("a", { text: "Create Chat" });
-    await click("li", { text: "Mario" });
-    await click("li", { text: "Luigi" });
-    await click("button", { text: "Create Group Chat" });
+    await click("a:text('Create Chat')");
+    await click("li:text('Mario')");
+    await click("li:text('Luigi')");
+    await click("button:text('Create Group Chat')");
     await contains(".o-mail-DiscussSidebar-item:contains('Mario, and Luigi')");
     await contains(".o-mail-Message", { count: 0 });
     await contains(".o-discuss-Call", { count: 0 });
@@ -70,18 +70,18 @@ test("show Push-to-Talk button on mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-ChatWindow-moreActions", { text: "General" });
+    await click(".o-mail-ChatWindow-moreActions:text('General')");
     await click(".o-dropdown-item:text('Start Call')");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
-    await click("button", { text: "Push to Talk" });
+    await click(".o-dropdown-item:text('Call Settings')");
+    await click("button:text('Push to Talk')");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
-    await contains("button", { text: "Push to talk" });
+    await click(".o-dropdown-item:text('Call Settings')");
+    await contains("button:text('Push to talk')");
 });
 
 test.tags("desktop");
