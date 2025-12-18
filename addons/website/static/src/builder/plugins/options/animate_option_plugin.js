@@ -346,14 +346,7 @@ export class AnimateOptionPlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(AnimateOptionPlugin.id, AnimateOptionPlugin);
-
-export class TranslationAnimateOptionPlugin extends AnimateOptionPlugin {
-    resources = Object.assign(this.resources, { builder_options: [] });
-}
-
-registry
-    .category("translation-plugins")
-    .add(TranslationAnimateOptionPlugin.id, TranslationAnimateOptionPlugin);
+registry.category("translation-plugins").add(AnimateOptionPlugin.id, AnimateOptionPlugin);
 
 export class SetAnimationModeAction extends BuilderAction {
     static id = "setAnimationMode";
