@@ -355,6 +355,35 @@ class TestWebPushNotification(SMSCommon):
         self.assertEqual(notification_count, 0)
 
 
+    @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post', side_effect=ConnectionError("Oops, network error"))
+    def test_push_notifications_device_raise_exception(self, post):
+        # Add 4 more devices to force sending via cron queue
+        for index in range(10, 14):
+            self.env['mail.partner.device'].sudo().create([{
+                'endpoint': 'https://test.odoo.com/webpush/user%d' % index,
+                'expiration_time': None,
+                'keys': json.dumps({
+                    'p256dh': 'BGbhnoP_91U7oR59BaaSx0JnDv2oEooYnJRV2AbY5TBeKGCRCf0HcIJ9bOKchUCDH4cHYWo9SYDz3U-8vSxPL_A',
+                    'auth': 'DJFdtAgZwrT6yYkUMgUqow'
+                }),
+                'partner_id': self.user_inbox.partner_id.id,
+            }])
+
+        self.record_simple.with_user(self.user_email).message_notify(
+            partner_ids=self.user_inbox.partner_id.ids,
+            body='Test message send via Web Push',
+            subject='Test Activity',
+            record_name=self.record_simple._name,
+        )
+
+        with self.assertLogs('odoo.addons.mail.models.web_push', level="ERROR") as capture:
+            self._assert_notification_count_for_cron(5)
+            self._trigger_cron_job()
+            self.assertEqual(capture.output, [
+                'ERROR:odoo.addons.mail.models.web_push:An error occurred while trying to send web push: Oops, network error',
+            ] * 5)
+
+
     def test_push_notification_regenerate_vpaid_keys(self):
         ir_params_sudo = self.env['ir.config_parameter'].sudo()
         ir_params_sudo.search([('key', 'in', [
