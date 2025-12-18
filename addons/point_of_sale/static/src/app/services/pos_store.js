@@ -668,10 +668,6 @@ export class PosStore extends WithLazyGetterTrap {
             this.addPendingOrder(paidUnsyncedOrderIds);
         }
 
-        this.data.models["pos.order"]
-            .filter((order) => order._isResidual)
-            .forEach((order) => (order.state = "cancel"));
-
         const openOrders = this.data.models["pos.order"].filter((order) => !order.finalized);
         await this.syncAllOrders();
 
