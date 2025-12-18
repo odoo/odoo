@@ -1,0 +1,22 @@
+<odoo>
+
+    <template id="portal_address_form_fields_my" inherit_id="portal.address_form_fields">
+
+        <xpath expr="//div[@id='div_vat']" position="after">
+            <div id="div_my_tin" class="col-lg-6 mb-2"
+                t-if="pos_order and pos_order.company_id.account_fiscal_country_id.code == 'MY'">
+                <label class="col-form-label fw-normal label-optional">
+                    Malaysian TIN
+                </label>
+                <input
+                    type="text"
+                    name="l10n_my_edi_malaysian_tin"
+                    class="form-control"
+                    t-att-value="partner.l10n_my_edi_malaysian_tin"
+                />
+            </div>
+        </xpath>
+
+    </template>
+
+</odoo>
