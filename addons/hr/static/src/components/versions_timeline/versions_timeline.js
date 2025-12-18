@@ -20,7 +20,12 @@ export class VersionsTimeline extends StatusBarField {
             this.specialData = useSpecialDataNoCache((orm, props) => {
                 const { foldField, name: fieldName, record } = props;
                 const { relation } = record.fields[fieldName];
-                const fieldNames = ["display_name", "contract_type_id", "contract_date_start", "contract_date_end"];
+                const fieldNames = [
+                    "display_name",
+                    "contract_type_id",
+                    "contract_date_start",
+                    "contract_date_end",
+                ];
                 if (foldField) {
                     fieldNames.push(foldField);
                 }
@@ -35,14 +40,20 @@ export class VersionsTimeline extends StatusBarField {
                         record.evalContext
                     );
                 }
-                return orm.searchRead(relation, domain, fieldNames.filter((fName) => fName in record.fields));
+                return orm.searchRead(
+                    relation,
+                    domain,
+                    fieldNames.filter((fName) => fName in record.fields)
+                );
             });
         }
 
         this.dateTimePicker = useDateTimePicker({
             target: `datetime-picker-target-version`,
             onApply: (date) => {
-                if (date) this.createVersion(date);
+                if (date) {
+                    this.createVersion(date);
+                }
             },
             get pickerProps() {
                 return { type: "date" };
@@ -57,13 +68,12 @@ export class VersionsTimeline extends StatusBarField {
     }
 
     async createVersion(date) {
+        await this.props.record.save();
         const version_id = await this.orm.call("hr.employee", "create_version", [
             this.props.record.evalContext.id,
             { date_version: date },
         ]);
 
-        const { record } = this.props;
-        await record.save();
         await this.props.record.model.load({
             context: {
                 ...this.props.record.model.env.searchModel.context,
@@ -97,9 +107,9 @@ export class VersionsTimeline extends StatusBarField {
         if (!this.displayContractLines) {
             return items;
         }
-        const dataById = new Map(this.specialData.data.map(d => [d.id, d]));
+        const dataById = new Map(this.specialData.data.map((d) => [d.id, d]));
 
-        const selectedVersion = items.find(item => item.isSelected)?.value;
+        const selectedVersion = items.find((item) => item.isSelected)?.value;
         const selectedContractDate = dataById.get(selectedVersion)?.contract_date_start;
 
         return items.map((item, index) => {
