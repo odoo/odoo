@@ -158,10 +158,11 @@ class AccountMove(models.Model):
 
         return super().action_invoice_sent()
 
-    def action_l10n_my_edi_send_invoice(self):
+    def action_l10n_my_edi_send_invoice(self, allow_raising=True):
         """
         This action will create the MyInvois Document for this invoice if it does not already exist.
         Once done, it will trigger the sending of said document to the platform.
+        :param allow_raising: whether the process can raise errors.
         """
         invoice_needing_new_document = self.env['account.move']
         myinvois_documents = self.env['myinvois.document']
@@ -180,7 +181,7 @@ class AccountMove(models.Model):
         myinvois_documents |= invoice_needing_new_document._create_myinvois_document()
 
         if myinvois_documents:
-            myinvois_documents.action_submit_to_myinvois()
+            myinvois_documents.action_submit_to_myinvois(allow_raising=allow_raising)
 
     def action_show_myinvois_documents(self):
         return self.l10n_my_edi_document_ids.action_show_myinvois_documents()

@@ -328,7 +328,7 @@ class MyInvoisDocument(models.Model):
     # Action methods
     # --------------
 
-    def action_submit_to_myinvois(self):
+    def action_submit_to_myinvois(self, allow_raising=True):
         """
         Submit all new documents in self to MyInvois.
         This can also be used on invalid documents to re-submit them after correcting the error.
@@ -339,12 +339,12 @@ class MyInvoisDocument(models.Model):
 
         # Documents linked to an invoice, and whose invoice is cancelled or draft, shouldn't be sent.
         invalid_documents = documents.filtered(lambda d: d.invoice_ids and any(invoice.state in ('draft', 'cancel') for invoice in d.invoice_ids))
-        if invalid_documents:
+        if invalid_documents and allow_raising:
             raise UserError(self.env._('You cannot send this document to MyInvois because the related invoice(s) %s are in draft or canceled state.', ','.join(invalid_documents.mapped('name'))))
 
         # Required for the file, this is the exact date at which the consolidated invoice was sent to MyInvois.
         documents.filtered(lambda d: not d.myinvois_issuance_date).myinvois_issuance_date = fields.Date.context_today(documents)
-        documents._submit_to_myinvois()
+        documents._submit_to_myinvois(allow_raising=allow_raising)
 
     def action_update_submission_status(self):
         """
@@ -356,7 +356,7 @@ class MyInvoisDocument(models.Model):
         else:
             self._myinvois_submission_statuses_update()
 
-    def action_generate_xml_file(self):
+    def action_generate_xml_file(self, allow_raising=True):
         """
         Generate a xml file for each of the MyInvois documents in self.
         If the document already as a file, the previous file's name is updated to include an (old) tag to avoid confusion in the attachment list.
@@ -371,6 +371,15 @@ class MyInvoisDocument(models.Model):
 
             xml_data, errors = document._myinvois_generate_xml_file()
             if errors:
+                # make log on portal in case of public user e.g pos ticket validation
+                if not allow_raising:
+                    document._myinvois_post_message_to_public(
+                        self.env._(
+                            "MyInvois could not validate the details provided. "
+                            "To finalize e-invoice issuance, please contact us directly.",
+                        ),
+                    )
+                    continue
                 raise UserError(document.env._("Error when generating the documents' files:\n\n- %(errors)s", errors='\n- '.join(errors)))
 
             new_documents_data.append({
@@ -474,6 +483,18 @@ class MyInvoisDocument(models.Model):
             raise UserError(self.env._("Please register for the E-Invoicing service in the settings first."))
 
         return proxy_user
+
+    def _myinvois_post_message_to_public(self, message=None):
+        """
+        Small helper to use when posting message for the public users.
+        """
+        if message:
+            for invoice in self.invoice_ids:
+                invoice.message_post(
+                    body=message,
+                    message_type="comment",
+                    subtype_xmlid="mail.mt_comment",
+                )
 
     def _myinvois_log_message(self, message=None, bodies=None):
         """
@@ -1094,35 +1115,57 @@ class MyInvoisDocument(models.Model):
         xml_content = dict_to_xml(document_node, nsmap=nsmap, template=template)
         return etree.tostring(xml_content, xml_declaration=True, encoding='UTF-8'), set(errors)
 
-    def _submit_to_myinvois(self):
+    def _submit_to_myinvois(self, allow_raising=True):
         """
         Submit the documents in self to MyInvois.
         This action will re-generate a new XML file, in order to ensure that we always send an up-to-date version.
         """
         # Make sure that all documents in self have a file ready to be sent.
-        self.action_generate_xml_file()
+        self.action_generate_xml_file(allow_raising=allow_raising)
+
+        valid_docs = self.filtered(lambda d: d.myinvois_file)
+        if not valid_docs:
+            return
 
         # Submit the documents to the API
         errors = self._myinvois_submit_documents({
             document: {
                 'name': document.name,
                 'xml': base64.b64decode(document.myinvois_file).decode('utf-8'),
-            } for document in self
+            } for document in valid_docs
         })
 
         # When sending an individual document, we can raise once we are sure we logged the errors.
         if len(self) == 1 and errors:
             if self._can_commit():
                 self.env.cr.commit()  # Save the error logged in the chatter.
-            raise UserError(errors[self.id]['plain_text_error'])
+            if not allow_raising:
+                self._myinvois_post_message_to_public(
+                        self.env._(
+                            "MyInvois could not validate the details provided. "
+                            "To finalize e-invoice issuance, please contact us directly.",
+                        ),
+                    )
+            else:
+                raise UserError(errors[self.id]['plain_text_error'])
 
         # Try and get the status, up to three time, stopping if all documents have a status already.
         for _i in range(3):
             self._myinvois_submission_statuses_update()
-            if not any(document.myinvois_state == 'in_progress' for document in self):
+            if not any(document.myinvois_state == 'in_progress' for document in valid_docs):
                 break
             if self._can_commit():  # avoid the sleep in tests.
                 time.sleep(1)
+
+        # If status is still in_progress than just make log for public users.
+        if not allow_raising:
+            for doc in (docs for docs in valid_docs if valid_docs.myinvois_state == 'in_progress'):
+                doc._myinvois_post_message_to_public(
+                self.env._(
+                    "Your input has been submitted. "
+                    "Please save this link and refresh later to view the final status.",
+                ),
+            )
 
     def _myinvois_check_can_update_status(self):
         """ The document status can only be updated (for rejection, or cancellation) up to 72h after the validation time.
@@ -1211,6 +1254,16 @@ class MyInvoisDocument(models.Model):
         """
         if message:
             self._myinvois_log_message(message)
+
+        # Case handling for invalid status responses from MyInvois.
+        if self.env.user.is_public:
+            if state in CANCELLED_STATES:
+                self._myinvois_post_message_to_public(
+                    self.env._(
+                        "MyInvois could not validate the details provided. "
+                        "To finalize e-invoice issuance, please contact us directly.",
+                    ),
+                )
 
         self.myinvois_state = state
 
