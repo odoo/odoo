@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="mail.ChatBubble">
         <div t-if="props.chatWindow?.channel" class="o-mail-ChatBubble position-relative" t-att-name="props.chatWindow.channel.displayName" t-att-class="{ 'o-bouncing': state.bouncing, 'o-active': state.isPopoverOpen, 'o-mobile': isMobileOS }" t-on-click="() => props.chatWindow.open({ focus: true })" t-on-animationend="() => state.bouncing = false" t-ref="root">
-            <span class="o-mail-ChatBubble-unreadIndicator position-absolute text-400" t-att-class="{ 'opacity-0': !channel.isUnread or channel.importantCounter }"><i class="fa fa-circle"/></span>
+            <span class="o-mail-ChatBubble-unreadIndicator position-absolute" t-att-class="{ 'opacity-0': !channel.isUnread or channel.importantCounter }"><i class="fa fa-circle"/></span>
             <div t-if="channel.importantCounter > 0" class="o-mail-ChatBubble-counter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow" t-out="channel.importantCounter"/>
             <button t-if="!env.embedLivechat and !isMobileOS" class="o-mail-ChatBubble-close position-absolute shadow rounded-circle fw-bold bg-view" title="Close Chat Bubble" t-on-click.stop="() => this.props.chatWindow.close()"><i class="oi oi-close"/></button>
             <ImStatus t-if="showImStatus" className="'o-mail-ChatBubble-status position-absolute'" member="channel.correspondent">
