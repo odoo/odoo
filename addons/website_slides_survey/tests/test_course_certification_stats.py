@@ -7,7 +7,6 @@ from odoo.tests import tagged
 from odoo.addons.survey.tests.common import TestSurveyCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCourseCertificationStats(TestSurveyCommon):
     @classmethod
     def setUpClass(cls):

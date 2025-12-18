@@ -6,7 +6,6 @@ from odoo.tests.common import HttpCase, tagged, users
 from unittest.mock import patch
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSlidesManagement(slides_common.SlidesCase, HttpCase):
 
     @users('user_officer')
@@ -354,7 +353,6 @@ class TestSlidesManagement(slides_common.SlidesCase, HttpCase):
         self.assertFalse(were_emails_sent(), "Participants should not receive emails when all remaining slides are deleted.")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSequencing(slides_common.SlidesCase):
 
     @users('user_officer')

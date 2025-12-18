@@ -7,7 +7,6 @@ from odoo.tests.common import tagged, HttpCase, new_test_user
 from odoo.tools.misc import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAttachmentController(HttpCase):
 
     @classmethod

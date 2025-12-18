@@ -7,7 +7,6 @@ from odoo.tests import tagged, users
 
 
 @tagged('forum_internals')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestForumInternals(TestForumCommon):
 
     @classmethod
@@ -80,7 +79,6 @@ class TestForumInternals(TestForumCommon):
 
 
 @tagged('forum_internals')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPostInternals(TestForumCommon):
 
     def test_post_fields(self):
@@ -105,7 +103,6 @@ class TestPostInternals(TestForumCommon):
 
 
 @tagged('forum_internals')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTags(TestForumCommon):
 
     def test_tag_creation_multi_forum(self):

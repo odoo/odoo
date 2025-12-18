@@ -9,7 +9,6 @@ from odoo.addons.project.tests.test_project_sharing import TestProjectSharingCom
 from odoo.addons.http_routing.tests.common import MockRequest
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
     def test_post_chatter_as_portal_user(self):
         self.project_no_collabo.privacy_visibility = 'portal'

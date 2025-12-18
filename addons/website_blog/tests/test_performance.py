@@ -9,7 +9,6 @@ import datetime
 from freezegun import freeze_time
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBlogPerformance(UtilPerf):
     def setUp(self):
         super().setUp()

@@ -12,7 +12,6 @@ from odoo.tests.common import tagged, users
 
 
 @tagged('event_track_internals')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTrackData(TestEventOnlineCommon):
 
     @users('user_eventmanager')
@@ -180,7 +179,6 @@ class TestTrackData(TestEventOnlineCommon):
             'Track customer should take over existing contact phone value')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTrackSuggestions(TestEventOnlineCommon):
 
     def test_track_suggestion(self):

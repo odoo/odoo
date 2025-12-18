@@ -5,7 +5,6 @@ from odoo.tests import tagged
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProductRibbon(WebsiteSaleCommon):
 
     def setUp(self):

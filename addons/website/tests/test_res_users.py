@@ -13,7 +13,6 @@ from odoo.tools import mute_logger
 from odoo.addons.http_routing.tests.common import MockRequest
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsiteResUsers(TransactionCase):
 
     def setUp(self):
