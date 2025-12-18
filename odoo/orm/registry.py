@@ -90,8 +90,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
     There is one registry instance per database.
 
     """
-    _lock: threading.RLock | DummyRLock = threading.RLock()
-    _saved_lock: threading.RLock | DummyRLock | None = None
+    _lock = threading.RLock()
 
     @lazy_classproperty
     def registries(cls) -> LRU[str, Registry]:
@@ -1157,18 +1156,6 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     _logger.warning("Failed to open a readonly cursor, falling back to read-write cursor for %dmin %dsec", *divmod(_REPLICA_RETRY_TIME, 60))
             threading.current_thread().cursor_mode = 'ro->rw'
         return self._db.cursor()
-
-
-class DummyRLock(object):
-    """ Dummy reentrant lock, to be used while running rpc and js tests """
-    def acquire(self):
-        pass
-    def release(self):
-        pass
-    def __enter__(self):
-        self.acquire()
-    def __exit__(self, type, value, traceback):
-        self.release()
 
 
 class TriggerTree(dict['Field', 'TriggerTree']):

@@ -1,23 +1,14 @@
 import re
-import requests
 from unittest.mock import patch
 
 import odoo
-from odoo.modules.registry import Registry, DummyRLock
-from odoo.tests.common import BaseCase, tagged, get_db_name
+from odoo.tests.common import HttpCase, tagged
 
 
 @tagged("-standard", "-at_install", "post_install", "database_breaking")
-class TestAuthLDAP(BaseCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.registry = Registry(get_db_name())
-
+class TestAuthLDAP(HttpCase):
     def setUp(self):
         super().setUp()
-        self.patch(Registry, "_lock", DummyRLock())  # prevent deadlock (see #161438)
-        self.opener = requests.Session()
 
         def remove_ldap_user():
             with self.registry.cursor() as cr:
