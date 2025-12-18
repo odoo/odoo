@@ -723,6 +723,10 @@
                     <p class="mb-0 text-muted" t-out="user_id.company_name"/>
                 </div>
             </div>
+            <div class="o_portal_lang mb-2" t-if="len(frontend_languages) &gt; 1">
+                <i class="fa fa-language fa-fw" role="img" aria-label="Language" title="Language"/>
+                <span t-out="frontend_languages[user_id.lang].name.split('/').pop()"/>
+            </div>
             <div class="o_portal_my_details">
                 <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>
             </div>
