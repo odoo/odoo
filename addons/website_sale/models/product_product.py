@@ -6,6 +6,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.website.structure_data_defination import SchemaBuilder
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -166,17 +168,13 @@ class ProductProduct(models.Model):
         else:
             self.website_published = False
 
-    def _to_markup_data(self, website):
-        """ Generate JSON-LD markup data for the current product.
-
-        :param website website: The current website.
-        :return: The JSON-LD markup data.
-        :rtype: dict
-        """
+    def _to_structured_data(self, website):
+        """Generate JSON-LD structured data for product."""
         self.ensure_one()
 
+        base_url = website.get_base_url()
         product_price = request.pricelist._get_product_price(
-            self, quantity=1, currency=website.currency_id
+            self, quantity=1, target_currency=website.currency_id,
         )
         # Use sudo to access cross-company taxes.
         product_taxes_sudo = self.sudo().taxes_id._filter_taxes_by_company(self.env.company)
@@ -185,22 +183,36 @@ class ProductProduct(models.Model):
             product_price, website.currency_id, product_taxes_sudo, taxes, self, website=website
         )
 
-        base_url = website.get_base_url()
-        markup_data = {
-            '@context': 'https://schema.org',
-            '@type': 'Product',
-            'name': self.with_context(display_default_code=False).display_name,
-            'url': f'{base_url}{self.website_url}',
-            'image': f'{base_url}{website.image_url(self, "image_1920")}',
-            'offers': {
-                '@type': 'Offer',
-                'price': price,
-                'priceCurrency': website.currency_id.name,
-            },
-        }
+        offer = SchemaBuilder(
+            "Offer",
+            price=price,
+            price_currency=website.currency_id.name,
+        )
+        seller = SchemaBuilder.create_id_reference("Organization", f"{base_url}/#organization")
+
+        if seller:
+            offer.add_nested(seller=seller)
+
+        product = SchemaBuilder(
+            "Product",
+            name=self.with_context(display_default_code=False).display_name,
+            url=f"{base_url}{self.website_url}",
+            image=f"{base_url}{website.image_url(self, 'image_1920')}",
+        )
+        product.add_nested(offers=offer)
+
         if self.website_meta_description or self.description_sale:
-            markup_data['description'] = self.website_meta_description or self.description_sale
-        return markup_data
+            product.set(description=self.website_meta_description or self.description_sale)
+
+        if website.is_view_active("website_sale.product_comment") and self.rating_count:
+            rating = SchemaBuilder(
+                "AggregateRating",
+                rating_value=self.sudo().rating_avg,
+                review_count=self.rating_count,
+            )
+            product.add_nested(aggregate_rating=rating)
+
+        return product
 
     def _get_image_1920_url(self):
         """ Returns the local url of the product main image.

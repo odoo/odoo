@@ -13,8 +13,8 @@
     <xpath expr="//div[@id='wrapwrap']" position="attributes">
         <attribute name="t-att-data-forum_id">forum and forum.id</attribute>
     </xpath>
-    <xpath expr="//body" position="inside">
-        <script t-if="seo_microdata" type="application/ld+json" t-out="seo_microdata"></script>
+    <xpath expr="//head" position="inside">
+        <script t-if="structured_data" type="application/ld+json" t-out="structured_data"></script>
     </xpath>
 </template>
 

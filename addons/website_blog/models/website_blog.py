@@ -5,7 +5,8 @@ from datetime import datetime
 import random
 
 from odoo import api, models, fields, _
-from odoo.addons.website.tools import text_from_html
+from odoo.addons.website.structure_data_defination import create_breadcrumbs, SchemaBuilder
+from odoo.addons.website.tools import text_from_html, truncate_text
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 from odoo.tools import html_escape
@@ -133,6 +134,27 @@ class BlogBlog(models.Model):
             data['url'] = '/blog/%s' % data['id']
         return results_data
 
+    def _to_structured_data(self, website=None):
+        self.ensure_one()
+        website = website or self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        slug = self.env["ir.http"]._slug(self)
+        description = self.website_meta_description or self.subtitle
+
+        if not description and self.content:
+            description = text_from_html(self.content, True)
+
+        blog_sd = SchemaBuilder(
+            "Blog",
+            name=self.name,
+            url=f"{base_url}/blog/{slug}",
+            description=description,
+        )
+        image = SchemaBuilder("ImageObject", url=self._get_background_url(website))
+        if image:
+            blog_sd.add_nested(image=image)
+        return blog_sd
+
 
 class BlogTagCategory(models.Model):
     _name = 'blog.tag.category'
@@ -173,6 +195,91 @@ class BlogPost(models.Model):
         'website.cover_properties.mixin', 'website.searchable.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
+
+    def _to_breadcrumb_structured_data(self, website=None):
+        self.ensure_one()
+        items = [
+            (website.name or website.get_base_url(), website.get_base_url()),
+        ]
+        # Add blog breadcrumb only if blog exists
+        if self.blog_id:
+            items.append((
+                self.blog_id.name,
+                f"{website.get_base_url()}/blog/{self.env['ir.http']._slug(self.blog_id)}",
+            ))
+        items.append((
+            self.name,
+            f"{website.get_base_url()}{self.website_url}",
+        ))
+        return create_breadcrumbs(items)
+
+    def _to_structured_data(self, website=None):
+        website = website or self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        company = website.company_id
+
+        schemas = []
+
+        for post in self.sudo():
+            post_url = f"{base_url}{post.website_url}"
+
+            description = (
+                post.website_meta_description
+                or post.subtitle
+                or post.teaser_manual
+                or post.teaser
+            )
+
+            content_text = text_from_html(post.content, True) if post.content else None
+            article_body = truncate_text(content_text, 300)
+            word_count = len(content_text.split()) if content_text else None
+
+            blog_post = SchemaBuilder(
+                "BlogPosting",
+                headline=post.name,
+                url=post_url,
+                date_published=SchemaBuilder.datetime(post.publish_on or post.create_date),
+                description=description,
+                article_body=article_body,
+                date_modified=SchemaBuilder.datetime(post.write_date),
+                keywords=", ".join(post.tag_ids.mapped("name")) if post.tag_ids else None,
+                article_section=post.blog_id.name if post.blog_id else None,
+                in_language=(
+                    (post.website_id.default_lang_id.code if post.website_id else website.default_lang_id.code)
+                    .replace("_", "-")
+                    if website.default_lang_id
+                    else None
+                ),
+                word_count=word_count,
+            )
+
+            image_url = post._get_background_url(website)
+            if image_url:
+                image = SchemaBuilder("ImageObject", url=image_url)
+                blog_post.add_nested(image=image)
+
+            if post.author_id:
+                author = SchemaBuilder("Person", name=post.author_id.display_name or post.author_name)
+                blog_post.add_nested(author=author)
+            if company:
+                blog_post.add_nested(publisher=self.env["website"].organization_structured_data(company))
+
+            if post.blog_id:
+                slug = self.env["ir.http"]._slug(post.blog_id)
+                blog = SchemaBuilder(
+                    "Blog",
+                    name=post.blog_id.name,
+                    url=f"{base_url}/blog/{slug}",
+                    description=post.blog_id.subtitle,
+                )
+                image = SchemaBuilder("ImageObject", url=post.blog_id._get_background_url(website))
+                if image:
+                    blog.add_nested(image=image)
+                blog_post.add_nested(is_part_of=blog)
+
+            schemas.append(blog_post)
+
+        return schemas
 
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()

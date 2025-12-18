@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.addons.website.structure_data_defination import SchemaBuilder
 from odoo.tools import mute_logger
 from odoo.tools.urls import urljoin as url_join
 from odoo.tools.translate import html_translate
@@ -152,3 +153,65 @@ spirit. To be successful, you will have solid solving problem skills.''')
             'mapping': mapping,
             'icon': 'fa-briefcase',
         }
+
+    def _to_structured_data(self):
+        self.ensure_one()
+        identifier = None
+        # TODO: Add support for validThrough field
+        valid_through = None
+        employement_type = None
+        if self.contract_type_id.sudo():
+            employement_type = {
+                'Permanent': 'FULL_TIME',       # Permanent is best described as Full Time
+                'Temporary': 'TEMPORARY',       # Exact match
+                'Interim': 'TEMPORARY',         # "Interim" is best described as Temporary
+                'Seasonal': 'TEMPORARY',        # "Seasonal" is a subset of Temporary
+                'Full-Time': 'FULL_TIME',       # Mapped to standard
+                'Part-Time': 'PART_TIME',       # Mapped to standard
+                'Intern': 'INTERN',             # Exact match
+                'Student': 'INTERN',            # "Student" jobs are usually Internships
+                'Apprenticeship': 'INTERN',     # Google treats apprenticeships under the INTERN umbrella
+                'Thesis': 'INTERN',             # Thesis work is academic/internship based
+                'Statutory': 'OTHER',           # Regulatory role, "Other" is safest
+                'Employee': 'FULL_TIME',        # Generic "Employee" usually implies Full Time
+            }.get(self.contract_type_id.sudo().name, 'OTHER')
+        hiring_organization = None
+        job_location = None
+        if self.department_id:
+            department_company = self.department_id.company_id.sudo()
+            identifier = SchemaBuilder(
+                "PropertyValue",
+                name=department_company.name,
+                value=f"{department_company.id}-{self.id}",
+            )
+            hiring_organization = self.website_id.organization_structured_data(department_company)
+            job_location = SchemaBuilder("Place").add_nested(
+                address=SchemaBuilder(
+                    "PostalAddress",
+                    street_address=" ".join(filter(None, [self.address_id.street, self.address_id.street2])),
+                    address_locality=self.address_id.city or '',
+                    postal_code=self.address_id.zip or '',
+                    address_region=self.address_id.state_id.code or '',
+                    address_country=self.address_id.country_id.code or '',
+                ),
+            )
+        base_salary = None  # TODO: Add support for baseSalary field
+        return SchemaBuilder(
+            "JobPosting",
+            title=self.name,
+            url=self.full_url,
+            description=self.website_description,
+            date_posted=SchemaBuilder.datetime(self.create_date),
+            valid_through=valid_through,
+            direct_apply=True,
+            employment_type=employement_type,
+        ).add_nested(
+            identifier=identifier,
+            hiring_organization=hiring_organization,
+            applicant_location_requirements=SchemaBuilder(
+                "Country",
+                name=self.address_id.country_id.code,
+            ),
+            job_location=job_location,
+            base_salary=base_salary,
+        )

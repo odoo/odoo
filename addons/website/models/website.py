@@ -18,6 +18,7 @@ from lxml import etree, html
 from urllib.parse import urlparse
 from werkzeug import urls
 
+from odoo.addons.website.structure_data_defination import SchemaBuilder
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
@@ -2410,3 +2411,108 @@ class Website(models.CachedModel):
             and menu.url not in ('/', '', '#')
             and not menu.url.startswith(('/?', '/#', ' '))
         )
+
+    @api.model
+    def organization_structured_data(self, company=None, with_id=False):
+        """
+        Generate structured data for the organization's information.
+
+        Args:
+            company (res.company): The company for which to generate structured data.
+                If None, uses the website's company.
+        Returns:
+            SchemaBuilder: The structured data schema builder for the organization.
+        """
+        company = company.sudo() if company else self.company_id.sudo()
+        if not company:
+            return False
+        company_name = company.name
+        base_url = self.get_base_url()
+
+        org = SchemaBuilder(
+            "Organization",
+            name=company_name,
+            url=base_url,
+        )
+        if with_id:
+            org.set(id=f"{base_url}/#organization")
+
+        social_handle_urls = {
+            'social_facebook': self.social_facebook,
+            'social_linkedin': self.social_linkedin,
+            'social_twitter': self.social_twitter,
+            'social_instagram': self.social_instagram,
+            'social_tiktok': self.social_tiktok,
+            'social_youtube': self.social_youtube,
+            'social_github': self.social_github,
+            'social_discord': self.social_discord,
+        }
+        if social_handle_urls:
+            org.set(same_as=list(social_handle_urls.values()))
+
+        logo_url = f"{base_url}/logo.png?company={company.id}"
+        logo = SchemaBuilder("ImageObject", url=logo_url)
+        org.add_nested(logo=logo)
+
+        contact_point = self.contact_structured_data(company)
+        if contact_point:
+            org.add_nested(contact_point=contact_point)
+        address = self.postal_address_structured_data(company)
+        if address:
+            org.add_nested(address=address)
+
+        return org
+
+    @api.model
+    def contact_structured_data(self, company=None):
+        """
+        Generate structured data for the contact point of a company.
+
+        Args:
+            company (res.company): The company for which to generate contact point structured data.
+        Returns:
+            SchemaBuilder: The structured data schema builder for the contact point.
+        """
+        company = company.sudo() if company else self.company_id.sudo()
+        if not company:
+            return False
+        telephone = company.phone.strip() if company.phone else None
+        email = company.email.strip() if company.email else None
+        if telephone or email:
+            return SchemaBuilder(
+                "ContactPoint",
+                telephone=telephone,
+                email=email,
+            )
+        return None
+
+    @api.model
+    def postal_address_structured_data(self, company=None):
+        """
+        Generate structured data for the postal address of a company.
+
+        Args:
+            company (res.company): The company for which to generate postal address structured data.
+        Returns:
+            SchemaBuilder: The structured data schema builder for the postal address.
+        """
+        company = company.sudo() if company else self.company_id.sudo()
+        if not company:
+            return False
+        street = company.street.strip() if company.street else None
+        street2 = company.street2.strip() if company.street2 else None
+        city = company.city.strip() if company.city else None
+        zip_code = company.zip.strip() if company.zip else None
+        state = company.state_id.code if company.state_id else None
+        country = company.country_id.code if company.country_id else None
+
+        if street or street2 or city or zip_code or state or country:
+            return SchemaBuilder(
+                "PostalAddress",
+                street_address=" ".join(filter(None, [street, street2])),
+                address_locality=city,
+                postal_code=zip_code,
+                address_region=state,
+                address_country=country,
+            )
+        return None

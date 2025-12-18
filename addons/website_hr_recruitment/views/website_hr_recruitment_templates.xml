@@ -101,6 +101,9 @@
 <!-- Job Detail -->
 <template id="detail" name="Job Detail" track="1">
     <t t-call="website.layout">
+        <t t-set="head">
+            <script type="application/ld+json"><t t-out="job_structured_data.render_json()"/></script>
+        </t>
         <!-- Topbar -->
         <nav class="navbar navbar-light border-top shadow-sm d-print-none">
             <div class="container">
@@ -116,6 +119,7 @@
         </nav>
         <!-- Content -->
         <div id="wrap" class="js_hr_recruitment">
+            <!-- old markup may needs to be removed, have to check during cleanup -->
             <div itemscope="itemscope" itemtype="https://schema.org/JobPosting">
                 <meta t-if="job.contract_type_id" itemprop="employmentType" t-att-content="job.contract_type_id.sudo().name"/>
                 <meta t-if="job.published_date" itemprop="datePosted" t-att-content="job.published_date and job.published_date.isoformat()"/>

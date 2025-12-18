@@ -23,6 +23,7 @@ from odoo.addons.html_editor.tools import get_video_thumbnail
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.structure_data_defination import create_breadcrumbs, SchemaBuilder
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.const import SHOP_PATH
 from odoo.addons.website_sale.models.website import (
@@ -810,6 +811,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _prepare_product_values(self, product, category, **kwargs):
         website = request.website
         ProductCategory = request.env['product.public.category']
+        product_markup_data = product._to_structured_data(request.website)
         category = (
             (category and ProductCategory.browse(int(category)).exists())
             or product.public_categ_ids[:1]
@@ -819,8 +821,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ]
         if category:
             # Add breadcrumb's SEO data.
-            markup_data.append(self._prepare_breadcrumb_markup_data(
-                website.get_base_url(), category
+            product_markup_data.append(self._prepare_breadcrumb_markup_data(
+                request.website.get_base_url(), category, product,
             ))
 
         if (last_attributes_search := request.session.get('attribute_values', [])):
@@ -861,30 +863,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'product': product,
             'product_variant': request.env['product.product'].browse(combination_info['product_id']),
             'view_track': view_track,
-            'markup_data_json': json_scriptsafe.dumps(markup_data, indent=2),
+            'product_markup_data': SchemaBuilder.render_structured_data_list(product_markup_data),
             'shop_path': SHOP_PATH,
         }
 
-    def _prepare_breadcrumb_markup_data(self, base_url, category):
-        """Generate JSON-LD breadcrumb markup data for the given category.
-
-        See https://schema.org/BreadcrumbList.
-
-        :param str base_url: The base URL of the current website.
-        :param product.public.category category: The current product category.
-        :return: The JSON-LD markup data.
-        :rtype: dict
-        """
-        return {
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            'itemListElement': [{
-                '@type': 'ListItem',
-                'position': i,
-                'name': cat.name,
-                'item': f'{base_url}{self._get_shop_path(cat)}',
-            } for i, cat in enumerate(category.parents_and_self, start=1)],
-        }
+    def _prepare_breadcrumb_markup_data(self, base_url, category, product):
+        return create_breadcrumbs([
+            ("All products", f"{base_url}{SHOP_PATH}"),
+            (category.name, f"{base_url}{self._get_shop_path(category)}"),
+            (product.name, f"{base_url}{product.website_url}"),
+        ])
 
     @route(
         '/shop/change_pricelist/<model("product.pricelist"):pricelist>',

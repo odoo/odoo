@@ -189,7 +189,9 @@ class WebsiteHrRecruitment(WebsiteForm):
 
     @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def job(self, job, **kwargs):
+        job_structured_data = job._to_structured_data()
         return request.render("website_hr_recruitment.detail", {
+            'job_structured_data': job_structured_data,
             'job': job,
             'main_object': job,
         })
