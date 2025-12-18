@@ -24,10 +24,10 @@ class HrWorkEntryType(models.Model):
     )
     country_code = fields.Char(related='country_id.code')
     category = fields.Selection(
-        [("working_time", "Working Time"), ("absence", "Absence")],
+        [("working_time", "Working Time"), ("absence", "Absence"), ("overtime_pay", "Overtime Pay")],
         default="working_time",
         required=True,
-        help="Determines if the entry counts as working time or absence.",
+        help="Determines if the entry counts as working time, overtime pay or absence.",
     )
     amount_rate = fields.Float(
         string="Rate",
