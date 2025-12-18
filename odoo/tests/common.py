@@ -62,7 +62,7 @@ import odoo.orm.registry
 from odoo import api
 from odoo.exceptions import AccessError
 from odoo.fields import Command
-from odoo.modules.registry import Registry, DummyRLock
+from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor, Savepoint
 from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
@@ -281,9 +281,29 @@ def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     arch_string = etree.fromstring(arch_string, parser=parser)
     return etree.tostring(arch_string, pretty_print=True, encoding='unicode')
 
+
 class BlockedRequest(requests.exceptions.ConnectionError):
     pass
+
+
 _super_send = requests.Session.send
+
+
+class DummyRLock:
+    """ Dummy reentrant lock, to be used while running rpc and js tests """
+    def acquire(self):
+        pass
+
+    def release(self):
+        pass
+
+    def __enter__(self):
+        self.acquire()
+
+    def __exit__(self, *args):
+        self.release()
+
+
 class BaseCase(case.TestCase):
     """ Subclass of TestCase for Odoo-specific code. This class is abstract and
     expects self.registry, self.cr and self.uid to be initialized by subclasses.
