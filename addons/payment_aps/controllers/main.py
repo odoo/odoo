@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hmac
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 
@@ -69,14 +67,8 @@ class APSController(http.Controller):
         :raise Forbidden: If the signatures don't match.
         """
         received_signature = payment_data.get('signature')
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
-
-        # Compare the received signature with the expected signature computed from the data.
         expected_signature = tx_sudo.provider_id._aps_calculate_signature(
             payment_data, incoming=True
         )
-        if not hmac.compare_digest(received_signature, expected_signature):
-            _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+        payment_utils.verify_signature(received_signature, expected_signature)
+        tx_sudo._process('aps', payment_data)

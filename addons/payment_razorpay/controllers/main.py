@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hmac
 import pprint
-
-from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_razorpay.const import HANDLED_WEBHOOK_EVENTS
 
@@ -96,18 +94,7 @@ class RazorpayController(http.Controller):
         :return: None
         :raise Forbidden: If the signatures don't match.
         """
-        # Check for the received signature.
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature.")
-            raise Forbidden()
-
-        # Compare the received signature with the expected signature.
         expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(
             payment_data, is_redirect=is_redirect
         )
-        if (
-            expected_signature is None
-            or not hmac.compare_digest(received_signature, expected_signature)
-        ):
-            _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden()
+        payment_utils.verify_signature(received_signature, expected_signature)

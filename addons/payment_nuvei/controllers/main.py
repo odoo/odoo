@@ -6,7 +6,6 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import consteq
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -78,14 +77,7 @@ class NuveiController(http.Controller):
                 raise Forbidden()
         else:  # The payment went through.
             received_signature = payment_data.get('advanceResponseChecksum')
-            if not received_signature:
-                _logger.warning("Received payment data with missing signature")
-                raise Forbidden()
-
-            # Compare the received signature with the expected signature computed from the data.
             expected_signature = tx_sudo.provider_id._nuvei_calculate_signature(
                 payment_data, incoming=True,
             )
-            if not consteq(received_signature, expected_signature):
-                _logger.warning("Received payment data with invalid signature")
-                raise Forbidden()
+            payment_utils.verify_signature(received_signature, expected_signature)
