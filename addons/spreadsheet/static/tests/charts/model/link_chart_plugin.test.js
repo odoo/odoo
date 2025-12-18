@@ -65,7 +65,11 @@ test("Links of Odoo charts are duplicated when duplicating a sheet", async funct
     const sheetId = model.getters.getActiveSheetId();
     const secondSheetId = "mySecondSheetId";
     const chartId = model.getters.getChartIds(sheetId)[0];
-    model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
+    model.dispatch("DUPLICATE_SHEET", {
+        sheetId,
+        sheetIdTo: secondSheetId,
+        sheetNameTo: "Next Name",
+    });
     const newChartId = model.getters.getChartIds(secondSheetId)[0];
     expect(model.getters.getChartOdooMenu(newChartId)).toEqual(
         model.getters.getChartOdooMenu(chartId)
@@ -82,7 +86,11 @@ test("Links of standard charts are duplicated when duplicating a sheet", async f
         chartId,
         odooMenuId: 1,
     });
-    model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
+    model.dispatch("DUPLICATE_SHEET", {
+        sheetId,
+        sheetIdTo: secondSheetId,
+        sheetNameTo: "Next Name",
+    });
     const newChartId = model.getters.getChartIds(secondSheetId)[0];
     expect(model.getters.getChartOdooMenu(newChartId)).toEqual(
         model.getters.getChartOdooMenu(chartId)
