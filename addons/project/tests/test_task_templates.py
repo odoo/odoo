@@ -2,7 +2,6 @@ from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo.tests import tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTaskTemplates(TestProjectCommon):
     @classmethod
     def setUpClass(cls):

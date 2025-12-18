@@ -8,7 +8,6 @@ from odoo.tests import tagged, HttpCase
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPortalProject(TestProjectPortalCommon, HttpCase):
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_portal_project_access_rights(self):

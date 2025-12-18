@@ -7,7 +7,6 @@ from odoo.addons.sms.tests.common import SMSCommon
 from odoo.tests import tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectSharingWithSms(TestProjectSharingCommon, SMSCommon):
     @classmethod
     def setUpClass(cls):

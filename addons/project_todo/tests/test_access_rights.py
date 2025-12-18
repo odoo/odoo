@@ -3,7 +3,6 @@ from odoo.exceptions import AccessError
 from odoo.addons.project.tests.test_access_rights import TestAccessRights
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessRightsTodo(TestAccessRights):
     @classmethod
     def setUpClass(cls):

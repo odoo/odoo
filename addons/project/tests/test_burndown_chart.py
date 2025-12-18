@@ -220,7 +220,6 @@ class TestBurndownChartCommon(TestProjectCommon):
             cls.env.cr.flush()
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestBurndownChart(TestBurndownChartCommon):
 
     def map_read_group_result(self, read_group_result):
