@@ -768,7 +768,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         '''
         self.product_a.available_in_pos = True
         self.pos_admin.write({
-            'group_ids': [Command.link(self.env.ref('base.group_system').id)],
+            'group_ids': [Command.link(self.env.ref('product.group_product_manager').id)],
         })
         self.main_pos_config.write({
             'is_margins_costs_accessible_to_every_user': True,
