@@ -36,10 +36,22 @@
         </xpath>
         <!-- Remove the mimetype on the second line. -->
         <xpath expr="//div[hasclass('caption', 'small')]" position="replace"/>
+        <!-- Set float left to add an icon on the right. -->
+        <xpath expr="//div[@name='attachment']" position="attributes">
+            <attribute name="t-attf-class"
+                       add="d-flex flex-row align-items-center gap-1 w-100 {{ iconsSupported ? 'float-start' : '' }}"
+                       separator=" "/>
+        </xpath>
+        <!-- Add Icon on the right of the Attachment -->
+        <xpath expr="//div[@name='attachment']" position="inside">
+            <div class="float-start" t-if="file.tooltip">
+                <i class="fa fa-fw o_button_icon fa-warning" t-att-data-tooltip="file.tooltip"></i>
+            </div>
+        </xpath>
     </t>
 
     <t t-name="account.mail_attachments">
-        <t t-set="data" t-value="getValue()"/>
+        <t t-set="data" t-value="getRenderedValue()"/>
 
         <div t-attf-class="oe_fileupload" aria-atomic="true">
             <div class="o_attachments">

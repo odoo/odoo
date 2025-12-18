@@ -17,6 +17,8 @@
                 <field name="send_mail_warning_message" invisible="1"/>
                 <field name="display_mail_composer" invisible="1"/>
                 <field name="mail_lang" invisible="1"/>
+                <field name="display_attachments_widget" invisible="1"/>
+                <field name="attachments_not_supported" invisible="1"/>
 
                 <div class="m-0" name="warnings">
                     <field name="send_mail_warning_message" class="o_field_html" widget="actionable_errors"/>
@@ -66,13 +68,6 @@
                            options="{'style-inline': true}"
                            invisible="not display_mail_composer"/>
                     <group>
-                        <group invisible="not display_mail_composer">
-                            <field name="mail_attachments_widget"
-                                   widget="mail_attachments"
-                                   string="Attach a file"
-                                   nolabel="1"
-                                   colspan="2"/>
-                        </group>
                         <group>
                             <field name="mail_template_id"
                                    required="mode == 'invoice_multi'"
@@ -81,6 +76,13 @@
                         </group>
                     </group>
                 </div>
+
+                <field name="mail_attachments_widget"
+                       widget="mail_attachments"
+                       string="Attach a file"
+                       nolabel="1"
+                       colspan="2"
+                       invisible="not display_attachments_widget"/>
 
                 <footer>
                     <button string="Send &amp; Print"
