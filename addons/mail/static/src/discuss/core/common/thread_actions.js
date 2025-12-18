@@ -72,8 +72,8 @@ registerThreadAction("add-to-favorites", {
             { readonly: false, silent: false }
         );
     },
-    sequence: 5, // before notification-settings
-    sequenceGroup: 30,
+    sequence: 40,
+    sequenceGroup: 20,
 });
 registerThreadAction("remove-from-favorites", {
     /**
@@ -96,8 +96,8 @@ registerThreadAction("remove-from-favorites", {
             { readonly: false, silent: false }
         );
     },
-    sequence: 5, // before notification-settings
-    sequenceGroup: 30,
+    sequence: 40,
+    sequenceGroup: 20,
 });
 registerThreadAction("notification-settings", {
     actionPanelClose: ({ action }) => action.popover?.close(),
