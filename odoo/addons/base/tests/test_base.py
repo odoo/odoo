@@ -121,6 +121,32 @@ class TestParentStore(TransactionCase):
         self.assertEqual(len(old_struct), 4, "After duplication, previous record must have old childs records only")
         self.assertFalse(new_struct & old_struct, "After duplication, nodes should not be mixed")
 
+    def test_missing_parent(self):
+        """ Missing parent id should not raise an error. """
+        # Missing parent with _parent_store
+        new_cat0 = self.cat0.copy()
+        records = new_cat0.search([('parent_id', 'parent_of', 999999999)])
+        self.assertEqual(len(records), 0)
+
+        # Missing parent without _parent_store
+        category = self.env['res.partner.category']
+        self.patch(self.env.registry['res.partner.category'], '_parent_store', False)
+        records = category.search([('parent_id', 'child_of', 999999999)])
+        self.assertEqual(len(records), 0)
+
+    def test_missing_child(self):
+        """ Missing child id should not raise an error. """
+        # Missing child with _parent_store
+        new_cat0 = self.cat0.copy()
+        records = new_cat0.search([('parent_id', 'child_of', 999999999)])
+        self.assertEqual(len(records), 0)
+
+        # Missing child without _parent_store
+        category = self.env['res.partner.category']
+        self.patch(self.env.registry['res.partner.category'], '_parent_store', False)
+        records = category.search([('parent_id', 'child_of', 999999999)])
+        self.assertEqual(len(records), 0)
+
     def test_duplicate_children_01(self):
         """ Duplicate the children then reassign them to the new parent (1st method). """
         new_cat1 = self.cat1.copy()
