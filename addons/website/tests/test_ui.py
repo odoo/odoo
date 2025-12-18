@@ -778,3 +778,13 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_website_custom_colors_picking(self):
         self.start_tour('/', 'website_custom_colors_picking', login='admin')
+
+    def test_adapt_custom_button_on_drop(self):
+        default_website = self.env.ref('website.default_website')
+        self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
+            name='Custom Button',
+            arch="""<a class="btn btn-primary o_default_snippet_text s_custom_snippet o_snippet_drop_in_only s_custom_button" href="#" data-bs-original-title="" title="">Button</a>""",
+            thumbnail_url='/website/static/src/img/snippets_thumbs/s_button.svg',
+            snippet_key='s_button',
+            template_key='website.snippets')
+        self.start_tour('/', 'adapt_custom_button_on_drop', login='admin')

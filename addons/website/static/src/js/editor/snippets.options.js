@@ -4520,7 +4520,7 @@ options.registry.Button = options.Class.extend({
                 } else if (siblingButtonEl.classList.contains("btn-lg")) {
                     this.$target[0].classList.add("btn-lg");
                 }
-            } else {
+            } else if (!siblingButtonEl) {
                 // To align with the editor's behavior, we need to enclose the
                 // button in a <p> tag if it's not dropped within a <p> tag. We only
                 // put the dropped button in a <p> if it's not next to another
