@@ -679,9 +679,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         '''Consider this test method to contain a test tour with miscellaneous tests/checks that require admin access.
         '''
         self.product_a.available_in_pos = True
-        self.pos_admin.write({
-            'groups_id': [Command.link(self.env.ref('base.group_system').id)],
-        })
         self.assertFalse(self.product_a.is_storable)
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CheckProductInformation', login="pos_admin")
