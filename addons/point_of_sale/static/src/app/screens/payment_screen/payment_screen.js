@@ -101,12 +101,6 @@ export class PaymentScreen extends Component {
         );
     }
 
-    get uiBackText() {
-        return this.pos.config.set_tip_after_payment && this.currentOrder.toBeValidate()
-            ? _t("Keep Open")
-            : _t("Back");
-    }
-
     get _getNumberBufferConfig() {
         const config = {
             // When the buffer is updated, trigger this event.
