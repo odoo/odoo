@@ -149,10 +149,15 @@ class SaleOrderLine(models.Model):
         return lines
 
     def write(self, vals):
+        sols_with_no_qty_ordered = self.env['sale.order.line']
+        if 'product_uom_qty' in vals and vals.get('product_uom_qty') > 0:
+            sols_with_no_qty_ordered = self.filtered(lambda sol: sol.product_uom_qty == 0)
         result = super().write(vals)
         # changing the ordered quantity should change the allocated hours on the
         # task, whatever the SO state. It will be blocked by the super in case
         # of a locked sale order.
+        if vals.get('product_uom_qty') and sols_with_no_qty_ordered:
+            sols_with_no_qty_ordered.filtered(lambda l: l.is_service and l.state == 'sale' and not l.is_expense)._timesheet_service_generation()
         if 'product_uom_qty' in vals and not self.env.context.get('no_update_allocated_hours', False):
             for line in self:
                 if line.task_id and line.product_id.type == 'service':
@@ -343,8 +348,14 @@ class SaleOrderLine(models.Model):
             new project/task. This explains the searches on 'sale_line_id' on project/task. This also
             implied if so line of generated task has been modified, we may regenerate it.
         """
-        so_line_task_global_project = self._get_so_lines_task_global_project()
-        so_line_new_project = self._get_so_lines_new_project()
+        sale_order_lines = self.filtered(
+            lambda sol:
+                sol.is_service
+                and sol.product_id.service_tracking in ['project_only', 'task_in_project', 'task_global_project']
+                and not (sol._is_line_optional() and sol.product_uom_qty == 0)
+        )
+        so_line_task_global_project = sale_order_lines._get_so_lines_task_global_project()
+        so_line_new_project = sale_order_lines._get_so_lines_new_project()
         task_templates = self.env['project.task']
 
         # search so lines from SO of current so lines having their project generated, in order to check if the current one can
