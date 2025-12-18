@@ -176,5 +176,55 @@ registry.category("web_tour.tours").add("hr_skills_tour", {
             content: "wait for save completion",
             trigger: ".o_form_readonly, .o_form_saved",
         },
+        {
+            content: "Add a new Skill",
+            trigger: ".o_field_skills_one2many button:contains('ADD')",
+            run: "click",
+        },
+        {
+            content: "Select a song",
+            trigger: ".modal:contains(select skills) .o_field_widget[name='skill_id'] input",
+            run: "edit Mary",
+        },
+        {
+            content: "Choose the song",
+            trigger: '.ui-autocomplete .ui-menu-item a:contains("Oh Mary")',
+            run: "click",
+        },
+        {
+            content: "Save new skill",
+            trigger: ".modal:contains(select skills) .o_form_button_save:contains(save & close)",
+            run: "click",
+        },
+        {
+            content: "Close validation error popup",
+            trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary",
+            run: "click",
+        },
+        {
+            content: "Close skill dialog",
+            trigger: ".modal:contains(select skills) .modal-header .btn-close",
+            run: "click",
+        },
+        {
+            content: "Wait for modal to close",
+            trigger: "body:not(:has(.modal))",
+        },
+        {
+            content: "Check that no duplicate skill was added",
+            trigger: ".o_data_row td.o_data_cell:contains('Oh Mary')",
+            run: function() {
+                const fortunateSonCount = Array.from(document.querySelectorAll(".o_data_row td.o_data_cell"))
+                    .filter(cell => cell.textContent.includes("Fortunate Son")).length;
+                if (fortunateSonCount !== 1) {
+                    console.error("Duplicate skill 'Fortunate Son' was added despite validation error");
+                }
+            },
+        },
+        {
+            content: "Discard changes",
+            trigger: ".o_form_button_cancel",
+            run: "click",
+        },
     ],
 });
