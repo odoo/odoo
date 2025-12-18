@@ -221,6 +221,7 @@ systemctl disable systemd-timesyncd.service
 systemctl unmask hostapd.service
 systemctl disable hostapd.service
 systemctl disable cups-browsed.service
+systemctl disable userconfig.service
 systemctl enable labwc.service
 systemctl enable odoo.service
 systemctl enable odoo-led-manager.service
