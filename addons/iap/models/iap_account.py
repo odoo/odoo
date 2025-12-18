@@ -40,8 +40,8 @@ class IapAccount(models.Model):
     company_ids = fields.Many2many('res.company')
 
     # Dynamic fields, which are received from iap server and set when loading the view
-    balance = fields.Char(readonly=True)
-    balance_amount = fields.Float(compute='_compute_balance_amount')
+    balance_amount = fields.Float()
+    balance = fields.Char(compute='_compute_balance')
     is_balance_below_warning_threshold = fields.Boolean(compute='_compute_is_balance_below_warning_threshold')
     warning_threshold = fields.Float(
         "Email Alert Threshold",
@@ -63,13 +63,11 @@ class IapAccount(models.Model):
         help="The In-App Purchase pack the system will automatically buy when reaching your refill threshold.",
     )
 
-    @api.depends('balance')
-    def _compute_balance_amount(self):
+    @api.depends('balance_amount', 'service_id.integer_balance', 'service_id.unit_name')
+    def _compute_balance(self):
         for account in self:
-            try:
-                account.balance_amount = float(account.balance.split(' ')[0])
-            except (ValueError, AttributeError):
-                account.balance_amount = 0.0
+            balance_amount = round(account.balance_amount, None if account.service_id.integer_balance else 4)
+            account.balance = f"{balance_amount} {account.service_id.unit_name or ''}"
 
     @api.depends("balance_amount", "warning_threshold")
     def _compute_is_balance_below_warning_threshold(self):
@@ -167,10 +165,7 @@ class IapAccount(models.Model):
             accounts = self.filtered(lambda acc: secrets.compare_digest(acc.sudo().account_token, token))
             for account in accounts:
                 # Default rounding of 4 decimal places to avoid large decimals
-                balance_amount = round(information['balance'], None if account.service_id.integer_balance else 4)
-                balance = f"{balance_amount} {account.service_id.unit_name or ''}"
-
-                account_info = self._get_account_info(account, balance, information)
+                account_info = self._get_account_info(account, information)
 
                 account = account.with_context(disable_iap_update=True, tracking_disable=True)
                 account.write({
@@ -196,9 +191,9 @@ class IapAccount(models.Model):
                         ('iap_service_pack_identifier', '=', information['auto_refill_pack_id']),
                     ], limit=1)
 
-    def _get_account_info(self, account_id, balance, information):
+    def _get_account_info(self, account_id, information):
         return {
-            'balance': balance,
+            'balance_amount': information['balance'],
             'warning_threshold': information['warning_threshold'],
             'auto_refill_threshold': information.get('auto_refill_threshold', 0),
             'auto_refill_pack_id': information.get('auto_refill_pack_id', False),
