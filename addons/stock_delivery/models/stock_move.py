@@ -73,7 +73,6 @@ class StockMoveLine(models.Model):
                 unit_price = sale_line_id.price_reduce_taxinc
                 qty = move_line.product_uom_id._compute_quantity(move_line.quantity, sale_line_id.product_uom_id)
             else:
-                # For kits, use the regular unit price
                 unit_price = move_line.product_id.list_price
                 qty = move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.product_id.uom_id)
             move_line.sale_price = unit_price * qty
