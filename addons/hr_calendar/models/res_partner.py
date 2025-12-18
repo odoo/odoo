@@ -16,16 +16,15 @@ from odoo.tools.intervals import Intervals
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    def _get_employees_from_attendees(self, everybody=False):
+    def _get_employees_from_attendees(self):
         domain = (
             Domain('company_id', 'in', self.env.companies.ids)
             & Domain('work_contact_id', '!=', False)
+            & Domain("work_contact_id", "in", self.ids)
         )
-        if not everybody:
-            domain &= Domain('work_contact_id', 'in', self.ids)
         return dict(self.env['hr.employee'].sudo()._read_group(domain, groupby=['work_contact_id'], aggregates=['id:recordset']))
 
-    def _get_schedule(self, start_period, stop_period, everybody=False, merge=True):
+    def _get_schedule(self, start_period, stop_period, merge=True):
         """
         This method implements the general case where employees might have different resource calendars at different
         times, even though this is not the case with only this module installed.
@@ -34,12 +33,11 @@ class ResPartner(models.Model):
 
         :param datetime start_period: the start of the period
         :param datetime stop_period: the stop of the period
-        :param boolean everybody: represents the "everybody" filter on calendar
         :param boolean merge: specifies if calendar's work_intervals needs to be merged
         :return: schedule (merged or not) by partner
         :rtype: defaultdict
         """
-        employees_by_partner = self._get_employees_from_attendees(everybody)
+        employees_by_partner = self._get_employees_from_attendees()
         if not employees_by_partner:
             return {}
         interval_by_calendar = defaultdict()
@@ -93,7 +91,7 @@ class ResPartner(models.Model):
         return schedules
 
     @api.model
-    def get_working_hours_for_all_attendees(self, attendee_ids, date_from, date_to, everybody=False):
+    def get_working_hours_for_all_attendees(self, attendee_ids, date_from, date_to):
         timezone = ZoneInfo(self.env.user.tz or "UTC")
         start_period = datetime.fromisoformat(date_from).replace(hour=0, minute=0, second=0, tzinfo=timezone)
         stop_period = datetime.fromisoformat(date_to).replace(hour=23, minute=59, second=59, tzinfo=timezone)
@@ -105,7 +103,6 @@ class ResPartner(models.Model):
             ._get_schedule(
                 start_period - offset,  # We use an 1 day offset to capture work entries that start the day before
                 stop_period + offset,  # We use an 1 day offset to capture work entries that span into the day after
-                everybody,
             )
         )
         if not schedule_by_partner:
