@@ -282,6 +282,40 @@ export class MailMessage extends models.ServerModel {
         }
     }
 
+    mark_as_unread(ids) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+
+        const messages = this.browse(ids);
+        const notifications = MailNotification._filter([
+            ["mail_message_id", "in", messages.map((messages) => messages.id)],
+            ["res_partner_id", "=", this.env.user.partner_id],
+            ["notification_type", "=", "inbox"],
+        ]);
+        if (notifications.length === 0) {
+            return;
+        }
+        MailNotification.write(
+            notifications.map((e) => e.id),
+            { is_read: false, read_date: false }
+        );
+        for (const message of messages) {
+            BusBus._sendone(
+                this._bus_notification_target(message.id),
+                "mail.message/mark_as_unread",
+                {
+                    message_ids: [message.id],
+                    store_data: new mailDataHelpers.Store(
+                        this.browse(message.id),
+                        makeKwArgs({ for_current_user: true })
+                    ).get_result(),
+                }
+            );
+        }
+    }
+
     unlink() {
         const messageByPartnerId = {};
         for (const message of this) {

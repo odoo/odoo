@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message">
-        <ActionSwiper onRightSwipe="props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
+        <ActionSwiper onRightSwipe="onRightSwipe">
             <t t-set="dummy" t-value="computeActions()"/>
             <div class="o-mail-Message position-relative rounded-0 bg-inherit"
                 t-att-data-starred="message.starred"

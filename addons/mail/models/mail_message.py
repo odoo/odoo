@@ -898,6 +898,22 @@ class MailMessage(models.Model):
             },
         )
 
+    def mark_as_unread(self):
+        """Sets the needaction on the messages for the current partner"""
+        notifications = self.env["mail.notification"].search([
+            ("mail_message_id", "in", self.ids),
+            ("res_partner_id", "=", self.env.user.partner_id.id),
+            ("notification_type", "=", "inbox"),
+        ])
+        if not notifications:
+            return
+        notifications.write({"is_read": False, "read_date": False})
+        store = Store().add(notifications.mail_message_id, "_store_message_fields")
+        self.env.user._bus_send(
+            "mail.message/mark_as_unread",
+            {"message_ids": notifications.mail_message_id.ids, "store_data": store.get_result()},
+        )
+
     @api.model
     def unstar_all(self):
         """ Unstar messages for the current partner. """

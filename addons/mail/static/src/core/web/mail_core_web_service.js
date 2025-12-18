@@ -41,15 +41,17 @@ export class MailCoreWeb {
             this.store.insert(store_data);
             /** @type {import("models").Message} */
             const message = this.store["mail.message"].get(messageId);
-            const inbox = this.store.inbox;
-            if (notifId > inbox.counter_bus_id) {
-                inbox.counter++;
-            }
-            inbox.messages.add(message);
-            if (message.thread && notifId > message.thread.message_needaction_counter_bus_id) {
-                message.thread.message_needaction_counter++;
-            }
+            this.addMessageToInbox(message, notifId);
             this.store.env.services["mail.out_of_focus"].notify(message);
+        });
+        this.busService.subscribe("mail.message/mark_as_unread", (payload, { id: notifId }) => {
+            const { message_ids: messageIds, store_data } = payload;
+            this.store.insert(store_data);
+            messageIds.forEach((messageId) => {
+                const message = this.store["mail.message"].get(messageId);
+                this.addMessageToInbox(message, notifId);
+                this.store.history.messages.delete(message);
+            });
         });
         this.busService.subscribe("mail.message/mark_as_read", (payload, { id: notifId }) => {
             const { message_ids: messageIds, needaction_inbox_counter } = payload;
@@ -69,7 +71,8 @@ export class MailCoreWeb {
                 if (
                     thread &&
                     message.needaction &&
-                    notifId > thread.message_needaction_counter_bus_id
+                    notifId > thread.message_needaction_counter_bus_id &&
+                    thread.message_needaction_counter > 0
                 ) {
                     thread.message_needaction_counter--;
                 }
@@ -87,6 +90,20 @@ export class MailCoreWeb {
                 inbox.fetchMoreMessages();
             }
         });
+    }
+    /**
+     * @param {import("models").Message} message
+     * @param {number} notifId the bus notification id
+     */
+    addMessageToInbox(message, notifId) {
+        const inbox = this.store.inbox;
+        if (notifId > inbox.counter_bus_id) {
+            inbox.counter++;
+        }
+        inbox.messages.add(message);
+        if (message.thread && notifId > message.thread.message_needaction_counter_bus_id) {
+            message.thread.message_needaction_counter++;
+        }
     }
 }
 

@@ -899,7 +899,8 @@ test("composer: add an attachment in reply to message in history", async () => {
     });
     await start();
     await openDiscuss("mail.box_history");
-    await click("[title='Reply']");
+    await click("[title='Expand']");
+    await click(".o-dropdown-item:contains('Reply')");
     await inputFiles(".o-mail-Composer .o_input_file", [text]);
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt) .fa-check");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList");
