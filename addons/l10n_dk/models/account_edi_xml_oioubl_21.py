@@ -18,6 +18,13 @@ UBL_TO_OIOUBL_TAX_CATEGORY_ID_MAPPING = {
     'M': 'ZeroRated',
 }
 
+SCHEME_ID_MAPPING = {
+    '0088': 'GLN',
+    '0184': 'DK:CVR',
+    '9918': 'IBAN',
+    '0198': 'DK:SE',
+}
+
 
 def format_vat_number(partner, vat):
     vat = (vat or '').replace(' ', '')
@@ -152,7 +159,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
             prefix = 'DK' if partner.nemhandel_identifier_type == '0184' else ''
             party_node['cbc:EndpointID'] = {
                 '_text': f'{prefix}{partner.nemhandel_identifier_value}',
-                'schemeID': partner.nemhandel_identifier_type,
+                'schemeID': SCHEME_ID_MAPPING[partner.nemhandel_identifier_type],
             }
 
         return party_node
