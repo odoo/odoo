@@ -93,12 +93,12 @@
         <div t-if="!state.defaultCategoryID" class="mb-3">
             <label for="category_id" class="col-form-label">Section</label>
             <SelectMenu
-                togglerClass="'form-control'"
+                togglerClass="'form-control form-select'"
                 choices="state.choices.categories"
                 value="state.choices.categoryId"
                 onSelect.bind="onCategorySelect"
+                placeholder.translate="Select or create a category"
             >
-                <t t-out="displayCategoryValue"/>
                 <t t-set-slot="bottomArea" t-slot-scope="select">
                     <DropdownItem
                             t-if="select.data.searchValue and !this.choiceExists(select.data.searchValue, select.data.choices)"
@@ -112,11 +112,13 @@
         </div>
         <div class="mb-3">
             <label for="tag_ids" class="col-form-label">Tags</label>
-            <SlideUploadSelectTags
+            <SelectMenu
+                togglerClass="'form-control form-select'"
                 choices="state.choices.tags"
                 multiSelect="true"
                 value="state.choices.tagIds"
                 onSelect.bind="onTagsSelect"
+                placeholder.translate="Select or create tags"
             >
                 <t t-set-slot="bottomArea" t-slot-scope="select">
                     <DropdownItem
@@ -127,7 +129,7 @@
                             Create New Tag "<i t-out="select.data.searchValue"/>"
                     </DropdownItem>
                 </t>
-            </SlideUploadSelectTags>
+            </SelectMenu>
         </div>
         <div class="mb-3">
             <label for="duration" class="col-form-label">Estimated Completion Time</label>
