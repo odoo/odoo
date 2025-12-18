@@ -3201,6 +3201,36 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("test_lot_refund_lower_qty")
 
+    def test_refund_line_keep_attributes(self):
+        """
+        Tests that when refunding an order that has lines that are variants, the new line keeps
+        this variant and displays it.
+        """
+        product_test = self.env['product.product'].create({
+            'name': 'Donut',
+            'list_price': 10,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        attribute = self.env['product.attribute'].create({
+            'name': 'Flavor',
+            'create_variant': 'always',
+        })
+        attribute_value_1 = self.env['product.attribute.value'].create({
+            'name': 'Sugar',
+            'attribute_id': attribute.id,
+        })
+        attribute_value_2 = self.env['product.attribute.value'].create({
+            'name': 'Chocolate',
+            'attribute_id': attribute.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_test.product_tmpl_id.id,
+            'attribute_id': attribute.id,
+            'value_ids': [(6, 0, [attribute_value_1.id, attribute_value_2.id])],
+        })
+        self.start_pos_tour("test_refund_line_keep_attributes")
+
     def test_orderline_merge_with_higher_price_precision(self):
         """ Test that orderline merging works correctly when product price has a higher precision than the currency. """
         self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 3
