@@ -923,7 +923,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         self._ubl_turn_base_lines_price_unit_as_always_positive(vals)
 
         # Manage taxes for emptying.
-        vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(vals['base_lines'], company, vals)
+        self._ubl_turn_emptying_taxes_as_new_base_lines(vals)
 
         vals['_ubl_values'] = {}
         for base_line in vals['base_lines']:
@@ -1025,8 +1025,12 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
     def _add_invoice_line_item_nodes(self, line_node, vals):
         # OVERRIDE
-        item_values = vals['base_line']['_ubl_values']['item_currency']
-        line_node['cac:Item'] = self._ubl_get_line_item_node(vals, item_values)
+        vals = {
+            **vals,
+            'line_vals': {'base_line': vals['base_line']},
+            'line_node': line_node,
+        }
+        self._ubl_add_line_item_node(vals)
 
     def _add_invoice_line_tax_category_nodes(self, line_node, vals):
         # OVERRIDE
@@ -1052,7 +1056,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # OVERRIDE
         ubl_values = vals['_ubl_values']
         document_node['cac:AllowanceCharge'] = [
-            self._ubl_get_allowance_charge_early_payment(vals, early_payment_values)
+            self._ubl_get_allowance_charge_node_for_early_payment(vals, early_payment_values)
             for early_payment_values in ubl_values['allowance_charges_early_payment_currency']
         ]
 
@@ -1141,3 +1145,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 'currencyID': vals['currency_name'],
             },
         }
+
+    def _export_invoice_new(self, invoice):
+        if self._name == 'account.edi.xml.ubl_bis3':
+            if invoice.move_type == 'out_invoice':
+                return self.env['account.edi.ubl.bis3.invoice']._export_invoice(invoice)
+
+        return super()._export_invoice_new(invoice)

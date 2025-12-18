@@ -163,6 +163,12 @@ class FloatFmt(float):
             max_dp_int = int(self.max_dp)
             return f"FloatFmt({self_float!r}, {min_dp_int!r}, {max_dp_int!r})"
 
+    def __add__(self, other):
+        return FloatFmt(super().__add__(other), min_dp=self.min_dp, max_dp=self.max_dp)
+
+    def __sub__(self, other):
+        return FloatFmt(super().__sub__(other), min_dp=self.min_dp, max_dp=self.max_dp)
+
 
 class AccountEdiCommon(models.AbstractModel):
     _name = "account.edi.common"
