@@ -194,7 +194,7 @@ patch(LinkPopover.prototype, {
 
         const stylePrefixRegex = /(outline|fill)/;
 
-        if (buttonContainerEl.tagName === "A") {
+        if (buttonContainerEl.classList.contains("btn")) {
             sizeClasses = [...buttonContainerEl.classList].filter((cls) =>
                 ["btn-lg", "btn-sm"].includes(cls)
             );
