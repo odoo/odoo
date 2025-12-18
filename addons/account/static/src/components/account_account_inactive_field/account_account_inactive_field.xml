@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="account.AccountAccountInactiveMany2One" t-inherit="web.Many2One">
+        <xpath expr="//t[@t-if='props.readonly']" position="before">
+            <i t-if="props.value?.id and !props.value?.active"
+               class="me-1 fa fa-exclamation-circle text-danger align-self-center"
+               title="This account is inactive"/>
+        </xpath>
+    </t>
+</templates>

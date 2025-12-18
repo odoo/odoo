@@ -85,7 +85,7 @@
                                     </div>
                                     <div class="row mt16">
                                         <label for="account_cash_basis_base_account_id" class="col-lg-3 o_light_label"/>
-                                        <field name="account_cash_basis_base_account_id"/>
+                                        <field name="account_cash_basis_base_account_id" widget="account_account_inactive_field"/>
                                     </div>
                                 </div>
                             </setting>
@@ -263,11 +263,11 @@
                                         </div>
                                         <div class="row mt8">
                                             <label for="income_currency_exchange_account_id" string="Gain" class="col-lg-4 o_light_label"/>
-                                            <field name="income_currency_exchange_account_id"/>
+                                            <field name="income_currency_exchange_account_id" widget="account_account_inactive_field"/>
                                         </div>
                                         <div class="row mt8">
                                             <label for="expense_currency_exchange_account_id" string="Loss" class="col-lg-4 o_light_label"/>
-                                            <field name="expense_currency_exchange_account_id"/>
+                                            <field name="expense_currency_exchange_account_id" widget="account_account_inactive_field"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -275,11 +275,11 @@
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_journal_suspense_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="account_journal_suspense_account_id"/>
+                                            <field name="account_journal_suspense_account_id" widget="account_account_inactive_field"/>
                                         </div>
                                         <div class="row mt8">
                                             <label for="transfer_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="transfer_account_id"/>
+                                            <field name="transfer_account_id" widget="account_account_inactive_field"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -288,11 +288,11 @@
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_discount_expense_allocation_id" class="col-lg-5 o_light_label" string="Customer Invoices"/>
-                                            <field name="account_discount_expense_allocation_id" placeholder="Same Account as product"/>
+                                            <field name="account_discount_expense_allocation_id" placeholder="Same Account as product" widget="account_account_inactive_field"/>
                                         </div>
                                         <div class="row mt8" id="account_discount_income_allocation">
                                             <label for="account_discount_income_allocation_id" class="col-lg-5 o_light_label" string="Vendor Bills"/>
-                                            <field name="account_discount_income_allocation_id" placeholder="Same Account as product"/>
+                                            <field name="account_discount_income_allocation_id" placeholder="Same Account as product" widget="account_account_inactive_field"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -300,11 +300,11 @@
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_journal_early_pay_discount_gain_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="account_journal_early_pay_discount_gain_account_id"/>
+                                            <field name="account_journal_early_pay_discount_gain_account_id" widget="account_account_inactive_field"/>
                                         </div>
                                         <div class="row mt8">
                                             <label for="account_journal_early_pay_discount_loss_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="account_journal_early_pay_discount_loss_account_id"/>
+                                            <field name="account_journal_early_pay_discount_loss_account_id" widget="account_account_inactive_field"/>
                                         </div>
                                     </div>
                                 </setting>
@@ -312,11 +312,11 @@
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="income_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="income_account_id"/>
+                                            <field name="income_account_id" widget="account_account_inactive_field"/>
                                         </div>
                                         <div class="row mt8">
                                             <label for="expense_account_id" class="col-lg-5 o_light_label"/>
-                                            <field name="expense_account_id"/>
+                                            <field name="expense_account_id" widget="account_account_inactive_field"/>
                                         </div>
                                     </div>
                                 </setting>
