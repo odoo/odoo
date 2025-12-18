@@ -377,6 +377,27 @@ export class Message extends Component {
         );
     }
 
+    get onRightSwipe() {
+        if (this.props.thread?.eq(this.store.inbox)) {
+            return {
+                action: () => this.message.setDone(),
+                bgColor: "bg-success",
+                icon: "fa-check-circle",
+            };
+        }
+        if (
+            this.props.thread?.eq(this.store.history) &&
+            this.message.canMarkAsUnread(this.props.thread)
+        ) {
+            return {
+                action: () => this.message.markAsUnread(this.props.thread),
+                bgColor: "bg-secondary",
+                icon: "fa-eye-slash",
+            };
+        }
+        return undefined;
+    }
+
     get translatedFromText() {
         return _t("(Translated from: %(language)s)", { language: this.message.translationSource });
     }

@@ -112,6 +112,13 @@ registerMessageAction("mark-as-read", {
     onSelected: ({ message }) => message.setDone(),
     sequence: 40,
 });
+registerMessageAction("mark-as-unread", {
+    condition: ({ message, thread }) => message.canMarkAsUnread(thread),
+    icon: "fa fa-eye-slash",
+    name: _t("Mark as Unread"),
+    onSelected: ({ message, thread }) => message.markAsUnread(thread),
+    sequence: 40,
+});
 registerMessageAction("reactions", {
     condition: ({ message }) => message.reactions.length,
     icon: "fa fa-smile-o",

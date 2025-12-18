@@ -126,6 +126,13 @@ export class Message extends Record {
         sort: (r1, r2) => r1.sequence - r2.sequence,
     });
     notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
+    self_notification = fields.One("mail.notification", {
+        compute() {
+            return this.notification_ids.find((n) =>
+                n.res_partner_id?.eq(this.store.self_user?.partner_id)
+            );
+        },
+    });
     partner_ids = fields.Many("res.partner");
     subtype_id = fields.One("mail.message.subtype");
     thread = fields.One("mail.thread");
@@ -552,6 +559,15 @@ export class Message extends Record {
         );
     }
 
+    /** @param {import("models").Thread} thread  */
+    canMarkAsUnread(thread) {
+        return (
+            !this.needaction &&
+            thread?.model !== "discuss.channel" &&
+            this.self_notification?.notification_type === "inbox"
+        );
+    }
+
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canReplyTo(thread) {
         return (
@@ -708,6 +724,16 @@ export class Message extends Record {
      */
     getPersonaName(persona) {
         return this.thread?.getPersonaName(persona) || persona?.displayName || persona?.name;
+    }
+
+    /** @param {import("models").Thread} thread  */
+    async markAsUnread(thread) {
+        await this.store.env.services.orm.silent.call("mail.message", "mark_as_unread", [
+            [this.id],
+        ]);
+        if (thread.model != "mail.box") {
+            this.store.env.services.notification.add(_t("Marked as unread"), { type: "info" });
+        }
     }
 
     async onClickToggleTranslation() {

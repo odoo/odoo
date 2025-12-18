@@ -26,6 +26,13 @@ patch(Message.prototype, {
         this.action = useService("action");
         this.avatarCard = usePopover(AvatarCardPopover);
     },
+    get attClass() {
+        return {
+            ...super.attClass,
+            "o-needaction-message o-rounded-bubble bg-view shadow-sm border pb-1 pt-sm-2":
+                this.message.needaction && this.env.inChatter,
+        };
+    },
     get authorAvatarAttClass() {
         return {
             ...super.authorAvatarAttClass,

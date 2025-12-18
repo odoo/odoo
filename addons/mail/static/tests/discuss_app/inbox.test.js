@@ -739,3 +739,33 @@ test("can reply to email message", async () => {
     await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Composer:has(:text('Replying to md@oilcompany.fr'))");
 });
+
+test("can mark message as unread from history", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "lorem ipsum",
+        model: "res.partner",
+        needaction: false,
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        is_read: true,
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss("mail.box_history");
+    await contains(".o-mail-Message-body:text(lorem ipsum)");
+    await click("[title='Expand']");
+    await click(".o-dropdown-item:contains(Mark as Unread)");
+    await contains(".o-mail-Message-body:text(lorem ipsum)", { count: 0 });
+    await click(".o-mail-Mailbox[data-mailbox-id='inbox'] .badge:text(1)");
+    await contains(".o-mail-Message-body:text(lorem ipsum)");
+    await click(".o-mail-MessagingMenu-counter:text(1)");
+    await contains(".o-mail-NotificationItem-text:text(John Doe: lorem ipsum)");
+});
