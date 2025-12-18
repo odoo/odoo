@@ -1758,6 +1758,17 @@ class AccountTax(models.Model):
             special_mode=base_line['special_mode'],
             filter_tax_function=base_line['filter_tax_function'],
         )
+
+        # Only python side for professional with reverse charge
+        if base_line['special_type'] == 'non_deductible':
+            taxes_data = taxes_computation['taxes_data']
+            taxes_computation['taxes_data'] = []
+            for tax_data in taxes_data:
+                if not tax_data.get('is_reverse_charge'):
+                    taxes_computation['taxes_data'].append(tax_data)
+                else:
+                    taxes_computation['total_included'] -= tax_data['tax_amount']
+
         rate = base_line['rate']
         tax_details = base_line['tax_details'] = {
             'raw_total_excluded_currency': taxes_computation['total_excluded'],
