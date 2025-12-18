@@ -215,6 +215,7 @@ class ResCompany(models.Model):
         store=True,
         readonly=False,
         help="The country to use the tax reports from for this company")
+    fiscal_country_code = fields.Char(string="Fiscal Country Code", related='account_fiscal_country_id.code')
     account_fiscal_country_group_codes = fields.Json(compute="_compute_account_fiscal_country_group_codes")
 
     account_enabled_tax_country_ids = fields.Many2many(
