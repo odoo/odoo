@@ -342,9 +342,6 @@ export class RelationalModel extends Model {
                         // in case there're less groups, we don't want to keep displaying groups
                         // that are no longer there => forget previous groups
                         delete this.root.config.currentGroups;
-                        // in case that the config of the groups changed (e.g. group is now folded)
-                        // we want to update the groups.
-                        this.root.config.groups = [];
                         result = await this._postprocessReadGroup(root.config, result);
                     }
                     root._setData(result);
@@ -528,13 +525,9 @@ export class RelationalModel extends Model {
                     currentConfig.domain
                 );
                 if (!currentConfig.groups[group.value]) {
-                    const isFolded =
-                        !Object.hasOwn(groupData, "__records") &&
-                        !Object.hasOwn(groupData, "__groups");
                     currentConfig.groups[group.value] = {
                         ...commonConfig,
                         groupByFieldName,
-                        isFolded: isFolded,
                         extraDomain: false,
                         value: group.value,
                         list: {
@@ -568,6 +561,7 @@ export class RelationalModel extends Model {
                 groupConfig.list.context = context;
                 groupConfig.context = context;
                 if (nextLevelGroupBy.length) {
+                    groupConfig.isFolded = !("__groups" in groupData);
                     if (!groupConfig.isFolded) {
                         const { groups, length } = groupData.__groups;
                         group.groups = await extractGroups(groupConfig.list, groups);
@@ -576,6 +570,7 @@ export class RelationalModel extends Model {
                         group.groups = [];
                     }
                 } else {
+                    groupConfig.isFolded = !("__records" in groupData);
                     if (!groupConfig.isFolded) {
                         group.records = groupData.__records;
                         group.length = groupData.__count;

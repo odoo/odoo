@@ -255,8 +255,8 @@ describe("RPC calls", () => {
     test("'web_read_group': 2 groups", async () => {
         const server = new DeterministicSampleServer("hobbit", fields.hobbit);
         const existingGroups = [
-            { profession: "gardener", count: 0 }, // fake group
-            { profession: "adventurer", count: 0 }, // fake group
+            { profession: "gardener", count: 0, __records: [] }, // fake group
+            { profession: "adventurer", count: 0, __records: [] }, // fake group
         ];
         server.setExistingGroups(existingGroups);
         const result = await server.mockRpc({
@@ -277,9 +277,9 @@ describe("RPC calls", () => {
     test("'web_read_group': all groups", async () => {
         const server = new DeterministicSampleServer("hobbit", fields.hobbit);
         const existingGroups = [
-            { profession: "gardener", count: 0 }, // fake group
-            { profession: "brewer", count: 0 }, // fake group
-            { profession: "adventurer", count: 0 }, // fake group
+            { profession: "gardener", count: 0, __records: [] }, // fake group
+            { profession: "brewer", count: 0, __records: [] }, // fake group
+            { profession: "adventurer", count: 0, __records: [] }, // fake group
         ];
         server.setExistingGroups(existingGroups);
         const result = await server.mockRpc({
