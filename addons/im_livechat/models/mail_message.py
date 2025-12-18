@@ -49,7 +49,7 @@ class MailMessage(models.Model):
                         res.attr(
                             "operatorFound",
                             step.step_type == "forward_operator" and
-                            channel.livechat_operator_id != chatbot,
+                            bool(channel.livechat_agent_partner_ids),
                         )
                         if answer := chatbot_message.user_script_answer_id:
                             res.attr("selectedAnswer", {"id": answer.id, "label": answer.name})

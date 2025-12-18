@@ -17,7 +17,6 @@ declare module "models" {
         chatbotTypingMessage: Message;
         hasWelcomeMessage: Readonly<boolean>;
         isLastMessageFromCustomer: Readonly<boolean>;
-        livechat_operator_id: ResPartner;
         livechatWelcomeMessage: Message;
         readyToSwapDeferred: Deferred;
         requested_by_operator: boolean;

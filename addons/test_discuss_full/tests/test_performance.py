@@ -869,7 +869,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_visitor_id": False,
                 "livechat_expertise_ids": [],
                 "livechat_looking_for_help_since_dt": False,
-                "livechat_operator_id": self.users[0].partner_id.id,
                 "member_count": 2,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "message_needaction_counter": 0,
@@ -899,7 +898,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "livechat_visitor_id": False,
                 "livechat_expertise_ids": [],
                 "livechat_looking_for_help_since_dt": False,
-                "livechat_operator_id": self.users[0].partner_id.id,
                 "member_count": 2,
                 "message_needaction_counter_bus_id": bus_last_id,
                 "message_needaction_counter": 0,
@@ -1267,12 +1265,18 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": histories.filtered(lambda h: h.livechat_member_type == "agent").id,
                     "livechat_member_type": "agent",
                     "partner_id": self.users[0].partner_id.id,
+                    "member_id": channel.channel_member_ids.filtered(
+                        lambda m: m.partner_id == self.users[0].partner_id
+                    ).id,
                 },
                 {
                     "channel_id": channel.id,
                     "id": histories.filtered(lambda h: h.livechat_member_type == "visitor").id,
                     "livechat_member_type": "visitor",
                     "partner_id": self.users[1].partner_id.id,
+                    "member_id": channel.channel_member_ids.filtered(
+                        lambda m: m.partner_id == self.users[1].partner_id
+                    ).id,
                 },
             ]
         if channel == self.channel_livechat_2:
@@ -1282,12 +1286,18 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": histories.filtered(lambda h: h.livechat_member_type == "agent").id,
                     "livechat_member_type": "agent",
                     "partner_id": self.users[0].partner_id.id,
+                    "member_id": channel.channel_member_ids.filtered(
+                        lambda m: m.partner_id == self.users[0].partner_id
+                    ).id,
                 },
                 {
                     "channel_id": channel.id,
                     "guest_id": self.guest.id,
                     "id": histories.filtered(lambda h: h.livechat_member_type == "visitor").id,
                     "livechat_member_type": "visitor",
+                    "member_id": channel.channel_member_ids.filtered(
+                        lambda m: m.guest_id == self.guest
+                    ).id,
                 },
             ]
         return []

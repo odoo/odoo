@@ -69,7 +69,6 @@ class TestUserLivechatUsername(TestGetOperatorCommon):
             {
                 "name": "Livechat session",
                 "channel_type": "livechat",
-                "livechat_operator_id": operator.partner_id.id,
                 "livechat_channel_id": livechat_channel.id,
             }
         )

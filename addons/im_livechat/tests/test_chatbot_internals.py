@@ -130,7 +130,12 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             discuss_channel = (
                 self.env["discuss.channel"].sudo().browse(data["channel_id"])
             )
-            self.assertEqual(discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id)
+            self.assertEqual(
+                discuss_channel.channel_member_ids.filtered(
+                    lambda m: m.livechat_member_type == "bot"
+                ).partner_id,
+                self.chatbot_script.operator_partner_id,
+            )
             discuss_channel._add_members(users=self.env.user)
             self_member = discuss_channel.channel_member_ids.filtered(lambda m: m.is_self)
             bot_member = discuss_channel.channel_member_ids.filtered(
@@ -157,7 +162,10 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         )
         discuss_channel._forward_human_operator(self.step_forward_operator)
         self.assertEqual(
-            discuss_channel.livechat_operator_id, self.chatbot_script.operator_partner_id
+            discuss_channel.channel_member_ids.filtered(
+                lambda m: m.livechat_member_type == "bot"
+            ).partner_id,
+            self.chatbot_script.operator_partner_id,
         )
         self.assertEqual(discuss_channel.name, "Testing Bot")
 
@@ -218,13 +226,22 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             channel_data_join["discuss.channel"][0]["livechat_outcome"] = "no_agent"
             channel_data_join["discuss.channel"][0]["chatbot"]["currentStep"]["message"] = messages[1].id
             channel_data_join["discuss.channel"][0]["chatbot"]["steps"][0]["message"] = messages[1].id
-            channel_data_join["discuss.channel"][0]["livechat_operator_id"] = self.chatbot_script.operator_partner_id.id
             channel_data_join["discuss.channel"][0]["member_count"] = 3
             channel_data_join["discuss.channel"][0]["name"] = "Testing Bot"
             channel_data_join["discuss.channel.member"].insert(0, member_bot_data)
             channel_data_join["discuss.channel.member"][2]["last_seen_dt"] = False
             channel_data_join["discuss.channel.member"][2]["seen_message_id"] = False
             channel_data_join["discuss.channel.member"][2]["unpin_dt"] = False
+            # adding member_id to livechat history
+            # since the joined message is calculated before removing the bot from members
+            member_bot_history = next(
+                filter(
+                    lambda h: h.get("partner_id", None)
+                    == self.chatbot_script.operator_partner_id.id,
+                    channel_data_join["im_livechat.channel.member.history"],
+                )
+            )
+            member_bot_history["member_id"] = member_bot_data["id"]
             del channel_data_join["res.partner"][1]
             channel_data_join["res.partner"].insert(
                 0,
@@ -342,13 +359,18 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     "id": agent_history_id,
                                     "livechat_member_type": "agent",
                                     "partner_id": self.partner_employee.id,
+                                    "member_id": member_emp.id,
                                 }
                             ],
                             "res.partner": [
                                 {
+                                    "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
                                     "id": self.partner_employee.id,
                                     "name": "Ernest Employee",
                                     "user_livechat_username": False,
+                                    "write_date": fields.Datetime.to_string(
+                                        self.partner_employee.write_date
+                                    ),
                                 }
                             ],
                         },
@@ -366,21 +388,9 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                             "discuss.channel": [
                                 {
                                     "id": discuss_channel.id,
-                                    "livechat_operator_id": self.partner_employee.id,
                                     "name": "OdooBot Ernest Employee",
                                 },
                             ],
-                            "res.partner": self._filter_partners_fields(
-                                {
-                                    "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
-                                    "id": self.partner_employee.id,
-                                    "name": "Ernest Employee",
-                                    "user_livechat_username": False,
-                                    "write_date": fields.Datetime.to_string(
-                                        self.partner_employee.write_date
-                                    ),
-                                }
-                            ),
                         },
                     },
                     {"type": "mail.record/insert", "payload": channel_data_emp},
@@ -391,7 +401,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         with self.assertBus(get_params=get_forward_op_bus_params):
             discuss_channel._forward_human_operator(self.step_forward_operator, users=self.user_employee)
         self.assertEqual(discuss_channel.name, "OdooBot Ernest Employee")
-        self.assertEqual(discuss_channel.livechat_operator_id, self.partner_employee)
+        self.assertEqual(discuss_channel.livechat_agent_partner_ids, self.partner_employee)
         self.assertEqual(discuss_channel.livechat_outcome, "no_answer")
         self.assertTrue(
             discuss_channel.channel_member_ids.filtered(

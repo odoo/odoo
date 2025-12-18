@@ -125,11 +125,17 @@ export class LivechatService {
         this.store.insert(store_data);
         const channel = this.store["discuss.channel"].get(channel_id);
         const ONE_DAY_TTL = 60 * 60 * 24;
-        expirableStorage.setItem(
-            "im_livechat_previous_operator",
-            channel.livechat_operator_id.id,
-            ONE_DAY_TTL * 7
+        // The channel has just been created and only has one agent member
+        const agent = channel.livechat_channel_member_history_ids.find(
+            (member) => member.livechat_member_type === "agent"
         );
+        if (agent?.partner_id) {
+            expirableStorage.setItem(
+                "im_livechat_previous_operator",
+                agent.partner_id.id,
+                ONE_DAY_TTL * 7
+            );
+        }
         return channel;
     }
 

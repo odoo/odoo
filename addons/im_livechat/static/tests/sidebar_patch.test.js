@@ -23,7 +23,6 @@ test("Unknown visitor", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -51,7 +50,6 @@ test("Do not show channel when visitor is typing", async () => {
         ],
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -89,7 +87,6 @@ test("Smiley face avatar for livechat item linked to a guest", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -112,7 +109,6 @@ test("Partner profile picture for livechat item linked to a partner", async () =
             Command.create({ partner_id: partnerId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss(channelId);
@@ -139,7 +135,6 @@ test("No counter if the category is unfolded and with unread messages", async ()
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -158,7 +153,6 @@ test("No counter if category is folded and without unread messages", async () =>
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -179,7 +173,6 @@ test("Counter should have count of unread conversations if category is folded an
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     pyEnv["mail.message"].create({
         author_guest_id: guestId,
@@ -203,7 +196,6 @@ test("Close manually by clicking the title", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -233,7 +225,6 @@ test("Open manually by clicking the title, invisible channels when closed", asyn
             }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -267,7 +258,6 @@ test("Active category item should be visible even if the category is closed", as
             }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -288,7 +278,6 @@ test("Clicking on leave button leaves the channel", async () => {
             }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
     pyEnv["mail.message"].create({
@@ -327,7 +316,6 @@ test("Message unread counter", async () => {
             }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -356,7 +344,6 @@ test("Local sidebar category state is shared between tabs", async () => {
                 livechat_member_type: "visitor",
             }),
         ],
-        livechat_operator_id: serverState.user,
     });
     const env1 = await start({ asTab: true });
     const env2 = await start({ asTab: true });
@@ -386,7 +373,6 @@ test("live chat is displayed below its category", async () => {
                 livechat_member_type: "visitor",
             }),
         ],
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();

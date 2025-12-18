@@ -46,7 +46,6 @@ test("Can invite a partner to a livechat channel", async () => {
             }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss(channelId);
@@ -128,7 +127,6 @@ test("Partners invited most frequently by the current user come first", async ()
                 livechat_member_type: "visitor",
             }),
         ],
-        livechat_operator_id: serverState.partnerId,
     });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor #2" });
     pyEnv["discuss.channel"].create({
@@ -145,7 +143,6 @@ test("Partners invited most frequently by the current user come first", async ()
                 livechat_member_type: "visitor",
             }),
         ],
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -228,7 +225,6 @@ test("Operator invite shows livechat_username", async () => {
                 livechat_member_type: "visitor",
             }),
         ],
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();

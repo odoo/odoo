@@ -33,8 +33,8 @@
         <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
         <field name="arch" type="xml">
             <field name="country_id" position="after">
-                <field name="livechat_operator_id"/>
                 <field name="session_count"/>
+                <field name="current_livechat_agent_ids"/>
             </field>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="before">
                 <div class="col-lg col-sm-4 col-6 py-0 my-2">
@@ -43,18 +43,17 @@
                     </span>
                     <div t-att-class="record.session_count.raw_value ? '' : 'text-muted'">Chats</div>
                 </div>
-                <div t-if="record.livechat_operator_id.raw_value" class="col-lg col-sm-4 col-6 py-0 my-2">
-                    <field name="livechat_operator_id" widget="image" options="{'preview_image': 'avatar_128', 'size': [19, 19]}" class="rounded-circle" alt="Operator Avatar"/>
-                    <field name="livechat_operator_name" class="fw-bold"/>
+                <div t-if="record.current_livechat_agent_ids.raw_value.length > 0" class="col-lg col-sm-4 col-6 py-0 my-2">
                     <div>Speaking With</div>
+                    <field name="current_livechat_agent_ids" widget="many2many_avatar_user" options="{'no_open': True}" class="rounded-circle" alt="Operator Avatar"/>
                 </div>
                 <div t-else="" class="col-lg d-none d-lg-block"/>
             </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
                 <button name="action_send_chat_request" type="object"
                         class="btn btn-secondary"
-                        invisible="livechat_operator_id or not is_connected">
-                        Chat
+                        invisible="current_livechat_agent_ids or not is_connected">
+                    Chat
                 </button>
             </xpath>
         </field>
@@ -67,11 +66,11 @@
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="action_send_chat_request" string="Send chat request" type="object" class="oe_highlight"
-                invisible="livechat_operator_id or not is_connected"/>
+                invisible="current_livechat_agent_ids or not is_connected"/>
             </xpath>
             <xpath expr="//group[@id='general_info']" position="before">
-                <group id="livechat_info" invisible="not livechat_operator_id">
-                    <field name="livechat_operator_id" widget="many2one_avatar"/>
+                <group id="livechat_info" invisible="not current_livechat_agent_ids">
+                    <field name="current_livechat_agent_ids" widget="many2many_avatar_user"/>
                 </group>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
@@ -89,9 +88,10 @@
         <field name="inherit_id" ref="website.website_visitor_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='last_visited_page_id']" position="after">
-                <field name="livechat_operator_id" optional="hide"/>
+                <field name="current_livechat_agent_ids" optional="hide"
+                       options="{'no_open': True}" widget="many2many_avatar_user"/>
                 <button name="action_send_chat_request" string="Chat" type="object" icon="fa-comments"
-                        invisible="livechat_operator_id or not is_connected"/>
+                        invisible="current_livechat_agent_ids or not is_connected"/>
             </xpath>
         </field>
     </record>
@@ -103,8 +103,8 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='filter_is_connected']" position="after">
                 <separator/>
-                <filter string="Available" name="filter_not_in_conversation" domain="[('livechat_operator_id', '=', False)]"/>
-                <filter string="In Conversation" name="filter_in_conversation" domain="[('livechat_operator_id', '!=', False)]"/>
+                <filter string="Available" name="filter_not_in_conversation" domain="[('discuss_channel_ids', 'not any', [('livechat_end_dt', '=', False)])]"/>
+                <filter string="In Conversation" name="filter_in_conversation" domain="[('discuss_channel_ids.livechat_end_dt', '=', False)]"/>
             </xpath>
         </field>
     </record>

@@ -3,6 +3,7 @@
 from odoo import fields, models, _
 from odoo.addons.im_livechat.models.discuss_channel import is_livechat_channel
 from odoo.addons.mail.tools.discuss import Store
+from odoo.tools import format_list
 from datetime import datetime, timedelta
 
 
@@ -38,15 +39,18 @@ class DiscussChannel(models.Model):
             predicate=is_livechat_channel,
         )
 
-    def _get_visitor_leave_message(self, operator=False, cancel=False):
+    def _get_visitor_leave_message(self, correspondents=False, cancel=False):
         if not cancel:
             if self.livechat_visitor_id.id:
                 return _("Visitor #%(id)d left the conversation.", id=self.livechat_visitor_id.id)
             return _("Visitor left the conversation.")
+        correspondents_names = correspondents.mapped(
+            lambda partner: partner.user_livechat_username or partner.name
+        ) if correspondents else [self.env._("an operator")]
         return _(
-            "%(visitor)s started a conversation with %(operator)s.\nThe chat request has been cancelled",
+            "%(visitor)s started a conversation with %(correspondents)s.\nThe chat request has been cancelled",
             visitor=self.livechat_visitor_id.display_name or _("The visitor"),
-            operator=operator or _("an operator"),
+            correspondents=format_list(self.env, correspondents_names),
         )
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):
@@ -76,7 +80,7 @@ class DiscussChannel(models.Model):
         message = super().message_post(**kwargs)
         message_author_id = message.author_id
         visitor = self.livechat_visitor_id
-        if len(self) == 1 and visitor and message_author_id != self.livechat_operator_id:
+        if len(self) == 1 and visitor and message_author_id not in self.livechat_agent_partner_ids:
             # sudo: website.visitor: updating data of a specific visitor
             visitor.sudo()._update_visitor_last_visit()
         return message

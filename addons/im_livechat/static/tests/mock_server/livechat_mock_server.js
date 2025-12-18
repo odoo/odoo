@@ -55,11 +55,17 @@ async function get_session(request) {
             fetchChannelInfoState: "fetched",
             id: -1,
             isLoaded: true,
-            livechat_operator_id: mailDataHelpers.Store.one(
+            livechat_channel_member_history_ids: [-1],
+            scrollUnread: false,
+        });
+        store.add("im_livechat.channel.member.history", {
+            id: -1,
+            channel_id: -1,
+            livechat_member_type: "agent",
+            partner_id: mailDataHelpers.Store.one(
                 ResPartner.browse(agent.partner_id),
                 makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
             ),
-            scrollUnread: false,
         });
         return { store_data: store.get_result(), channel_id: -1 };
     }

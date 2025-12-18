@@ -8,6 +8,7 @@ from werkzeug.exceptions import NotFound
 from odoo import _, http
 from odoo.http import request
 from odoo.http.stream import Stream, content_disposition
+from odoo.tools import format_list
 
 from odoo.addons.mail.tools.discuss import Store, add_guest_to_context
 
@@ -117,6 +118,7 @@ class LivechatController(http.Controller):
 
         if not persisted:
             channel_id = -1  # only one temporary thread at a time, id does not matter.
+            temp_member_history_id = -1
             chatbot_data = None
             if is_chatbot_script:
                 welcome_steps = chatbot_script._get_welcome_steps()
@@ -132,15 +134,24 @@ class LivechatController(http.Controller):
                     res.attr("fetchChannelInfoState", "fetched"),
                     res.attr("id", channel_id),
                     res.attr("isLoaded", True),
-                    res.one(
-                        "livechat_operator_id",
-                        "_store_livechat_agent_fields",
-                        value=operator_info["operator_partner"],
-                    ),
+                    res.attr("livechat_channel_member_history_ids", [temp_member_history_id]),
                     res.attr("scrollUnread", False),
                     res.attr("channel_type", "livechat"),
                     res.attr("chatbot", chatbot_data),
                     res.append(non_persisted_channel_params),
+                ),
+            )
+            store.add_model_values(
+                "im_livechat.channel.member.history",
+                lambda res: (
+                    res.attr("id", temp_member_history_id),
+                    res.attr("channel_id", channel_id),
+                    res.attr("livechat_member_type", "bot" if is_chatbot_script else "agent"),
+                    res.one(
+                        "partner_id",
+                        "_store_livechat_member_fields",
+                        value=operator_info["operator_partner"],
+                    ),
                 ),
             )
         else:
@@ -164,8 +175,8 @@ class LivechatController(http.Controller):
             channel_id = channel.id
             if is_chatbot_script:
                 chatbot_script._post_welcome_steps(channel)
-            if not is_chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
-                channel._broadcast([channel.livechat_operator_id.id])
+            if agents := channel.livechat_agent_partner_ids:
+                channel._broadcast(agents.ids)
             if guest:
                 store.add_global_values(guest_token=guest.sudo()._format_auth_cookie())
         store.add_global_values(request.env.user.sudo(False)._store_init_global_fields)
@@ -220,7 +231,18 @@ class LivechatController(http.Controller):
             ._render_qweb_pdf(
                 "im_livechat.action_report_livechat_conversation",
                 channel.ids,
-                data={"company": request.env.company, "tz": tz},
+                data={
+                    "company": request.env.company,
+                    "tz": tz,
+                    "correspondent_names": format_list(
+                        request.env,
+                        (
+                            # sudo - res.partner: visitors can access bots and agents name
+                            channel.sudo().livechat_agent_partner_ids
+                            or channel.sudo().livechat_bot_partner_ids
+                        ).mapped(lambda p: p.user_livechat_username or p.name),
+                    ),
+                },
             )
         )
         headers = [
@@ -238,4 +260,4 @@ class LivechatController(http.Controller):
         This allows also to re-send a new chat request to the visitor, as while the visitor is
         in conversation with an operator, it's not possible to send the visitor a chat request."""
         if channel := request.env["discuss.channel"].search([("id", "=", channel_id)]):
-            channel._close_livechat_session()
+            channel._close_livechat_session(message=channel._get_visitor_leave_message())

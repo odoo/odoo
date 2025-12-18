@@ -72,8 +72,8 @@ class ResPartner(models.Model):
         for partner in self:
             partner.livechat_channel_count = livechat_count_by_partner.get(partner, 0)
 
-    def _store_livechat_agent_fields(self, res: Store.FieldList):
-        """Return the standard fields to include for live chat agent."""
+    def _store_livechat_member_fields(self, res: Store.FieldList):
+        """Return the standard fields to include for live chat member."""
         self._store_avatar_fields(res)
         self._store_livechat_username_fields(res)
 

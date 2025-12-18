@@ -41,7 +41,6 @@ test("Visitor going offline shows disconnection banner to operator", async () =>
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
     setupChatHub({ opened: [channel_id] });

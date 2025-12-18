@@ -27,9 +27,15 @@ class Im_LivechatChannel(models.Model):
                 ("livechat_end_dt", "=", False),
             ]
             for discuss_channel in self.env["discuss.channel"].sudo().search(pending_chats_domain):
-                operator = discuss_channel.livechat_operator_id
-                operator_name = operator.user_livechat_username or operator.name
-                discuss_channel._close_livechat_session(cancel=True, operator=operator_name)
+                correspondents = (
+                    discuss_channel.livechat_agent_partner_ids
+                    or discuss_channel.livechat_bot_partner_ids
+                )
+                discuss_channel._close_livechat_session(
+                    message=discuss_channel._get_visitor_leave_message(
+                        cancel=True, correspondents=correspondents
+                    )
+                )
                 discuss_channel.is_pending_chat_request = False
 
         return discuss_channel_vals

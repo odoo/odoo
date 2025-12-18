@@ -23,6 +23,7 @@ export class LivechatChannelMemberHistory extends Record {
             return false;
         },
     });
+    member_id = fields.One("discuss.channel.member");
     guest_id = fields.One("mail.guest");
     /** @type {number} */
     id;

@@ -38,7 +38,10 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         chat_request = self.env["discuss.channel"].search(
             [("livechat_visitor_id", "=", self.visitor.id), ("livechat_end_dt", "=", False)]
         )
-        self.assertEqual(chat_request.livechat_operator_id, self.operator_b.partner_id, "Operator for active livechat session must be Operator Marc")
+        self.assertEqual(
+            self.operator_b.partner_id,
+            chat_request.livechat_agent_partner_ids,
+        )
 
         # Click on livechatbutton at client side
         res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
@@ -50,7 +53,11 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         # Check that the chat request has been canceled.
         self.assertTrue(chat_request.livechat_end_dt, "The livechat request must be inactive as the visitor started himself a livechat session.")
         self.assertEqual(len(channel), 1)
-        self.assertEqual(channel.livechat_operator_id, self.operator.partner_id, "Operator for active livechat session must be Michel Operator")
+        self.assertEqual(
+            self.operator.partner_id,
+            channel.livechat_agent_partner_ids,
+            "Operator for active livechat session must be Michel Operator"
+        )
 
         self._clean_livechat_sessions()
         self.visitor.with_user(self.operator_b).sudo().action_send_chat_request()
@@ -67,7 +74,7 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             [("livechat_visitor_id", "=", self.visitor.id), ("livechat_end_dt", "=", False)]
         )
         self.assertEqual(len(channel), 1)
-        self.assertEqual(channel.livechat_operator_id, self.operator.partner_id, "Michel Operator should be the operator of this channel.")
+        self.assertEqual(channel.livechat_agent_partner_ids, self.operator.partner_id, "Michel Operator should be the operator of this channel.")
         self.assertEqual(len(channel.message_ids), 0)
         self.assertEqual(channel.name, f"Visitor #{self.visitor.id} ({self.visitor.country_id.name}), {self.operator.livechat_username}")
 
@@ -80,7 +87,7 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(len(channel.message_ids), 2)
 
         # Visitor Leave the conversation
-        channel._close_livechat_session()
+        channel._close_livechat_session(message=channel._get_visitor_leave_message())
         self.assertEqual(len(channel.message_ids), 3)
         self.assertEqual(channel.message_ids[0].author_id, self.env.ref('base.partner_root'), "Odoobot must be the sender of the 'left the conversation' message.")
         self.assertIn(f"Visitor #{channel.livechat_visitor_id.id}", channel.message_ids[0].body)
@@ -94,7 +101,7 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             [("livechat_visitor_id", "=", self.visitor.id), ("livechat_end_dt", "=", False)]
         )
         for active_channel in active_channels:
-            active_channel._close_livechat_session()
+            active_channel._close_livechat_session(message=active_channel._get_visitor_leave_message())
 
     def test_update_guest_of_chat_request_if_outdated(self):
         self.visitor.with_user(self.operator).sudo().action_send_chat_request()

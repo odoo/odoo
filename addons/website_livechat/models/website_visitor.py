@@ -6,34 +6,44 @@ from odoo import api, Command, fields, models, _
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
 from odoo.tools import get_lang
-from odoo.tools.sql import column_exists, create_column
 
 
 class WebsiteVisitor(models.Model):
     _inherit = 'website.visitor'
 
-    livechat_operator_id = fields.Many2one('res.partner', compute='_compute_livechat_operator_id', store=True, string='Speaking with', index='btree_not_null')
-    livechat_operator_name = fields.Char('Operator Name', related="livechat_operator_id.name")
+    current_livechat_agent_ids = fields.Many2many(
+        "res.partner",
+        compute="_compute_current_livechat_agent_ids",
+        string="Speaking with",
+    )
     discuss_channel_ids = fields.One2many('discuss.channel', 'livechat_visitor_id',
                                        string="Visitor's livechat channels", readonly=True)
     session_count = fields.Integer('# Sessions', compute="_compute_session_count")
 
-    def _auto_init(self):
-        # Skip the computation of the field `livechat_operator_id` at the module installation
-        # We can assume no livechat operator attributed to visitor if it was not installed
-        if not column_exists(self.env.cr, "website_visitor", "livechat_operator_id"):
-            create_column(self.env.cr, "website_visitor", "livechat_operator_id", "int4")
-        return super()._auto_init()
-
-    @api.depends('discuss_channel_ids.livechat_end_dt', 'discuss_channel_ids.livechat_operator_id')
-    def _compute_livechat_operator_id(self):
-        results = self.env["discuss.channel"].search_read(
+    @api.depends(
+        "discuss_channel_ids.livechat_end_dt",
+        "discuss_channel_ids.livechat_channel_member_history_ids",
+    )
+    def _compute_current_livechat_agent_ids(self):
+        visitors_channel_query = self.env["discuss.channel"]._search(
             [("livechat_visitor_id", "in", self.ids), ("livechat_end_dt", "=", False)],
-            ["livechat_visitor_id", "livechat_operator_id"],
         )
-        visitor_operator_map = {int(result['livechat_visitor_id'][0]): int(result['livechat_operator_id'][0]) for result in results}
+        histories_by_visitor = dict(
+            self.env["im_livechat.channel.member.history"]._read_group(
+                [
+                    ("channel_id", "in", visitors_channel_query.subselect("id")),
+                    ("livechat_member_type", "!=", "visitor"),
+                    ("member_id", "!=", False),
+                ],
+                ["channel_id.livechat_visitor_id"],
+                ["id:recordset"],
+            )
+        )
         for visitor in self:
-            visitor.livechat_operator_id = visitor_operator_map.get(visitor.id, False)
+            correspondents_history = histories_by_visitor.get(
+                visitor, self.env["im_livechat.channel.member.history"]
+            )
+            visitor.current_livechat_agent_ids = correspondents_history.partner_id
 
     @api.depends('discuss_channel_ids')
     def _compute_session_count(self):
@@ -94,7 +104,6 @@ class WebsiteVisitor(models.Model):
             discuss_channel_vals_list.append({
                 "is_pending_chat_request": True,
                 'livechat_channel_id': visitor.website_id.channel_id.id,
-                'livechat_operator_id': operator.partner_id.id,
                 "channel_member_ids": members_to_add,
                 'channel_type': 'livechat',
                 'country_id': country.id,

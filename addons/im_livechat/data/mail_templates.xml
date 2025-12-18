@@ -9,8 +9,7 @@
 <div style="font-size: 13px; max-width: 600px; margin: 10px; padding: 24px 32px 0px 32px; background-color: #ffffff; border-radius: 0 0 8px 8px; border: thin solid #dee2e6;">
 <div style="font-size: 13px; padding: 5px 0; white-space:nowrap;">
     Here's a copy of your conversation with
-    <!-- sudo: res.users - visitor can access the name of the operator -->
-    <span t-attf-style="color: {{header_background_color}};" t-out="channel.livechat_operator_id.sudo().user_livechat_username or channel.livechat_operator_id.sudo().name"/> on
+    <span t-attf-style="color: {{header_background_color}};" t-out="correspondent_names"/> on
     <span t-out="channel.create_date.astimezone(tz).strftime('%m/%d/%y')"/> at
     <span t-out="channel.create_date.astimezone(tz).strftime('%I:%M %p')"/>.
 </div>

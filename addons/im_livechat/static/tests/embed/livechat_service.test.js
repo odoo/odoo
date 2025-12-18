@@ -34,7 +34,6 @@ test("persisted session history", async () => {
         ],
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
     });
     expirableStorage.setItem(
         "im_livechat.saved_state",
@@ -147,7 +146,6 @@ test("do not create new thread when operator answers to visitor", async () => {
         ],
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
         create_uid: serverState.publicUserId,
     });
     setupChatHub({ opened: [channelId] });

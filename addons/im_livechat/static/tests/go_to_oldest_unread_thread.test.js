@@ -36,7 +36,6 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
                 Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
@@ -50,7 +49,6 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
                 Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
         {
@@ -64,7 +62,6 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
                 Command.create({ guest_id: guestId_3, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 3",
         },
     ]);
@@ -123,7 +120,6 @@ test("Tab livechat picks ended livechats last", async () => {
                 Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
             ],
             livechat_channel_id: livechatChannelId,
-            livechat_operator_id: serverState.partnerId,
             create_uid: serverState.publicUserId,
         }))
     );
@@ -251,7 +247,6 @@ test("switching to folded chat window unfolds it", async () => {
                 Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
@@ -264,7 +259,6 @@ test("switching to folded chat window unfolds it", async () => {
                 Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
     ]);
@@ -304,7 +298,6 @@ test("switching to hidden chat window unhides it", async () => {
                 Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
@@ -317,7 +310,6 @@ test("switching to hidden chat window unhides it", async () => {
                 Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
         { name: "general" },
@@ -359,7 +351,6 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
                 Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
@@ -373,7 +364,6 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
                 Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
     ]);
@@ -398,7 +388,6 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
                 Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 1",
         },
         {
@@ -410,7 +399,6 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
                 Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
             name: "Livechat 2",
         },
     ]);

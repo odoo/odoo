@@ -49,7 +49,6 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
             const livechatId = DiscussChannel.create({
                 channel_member_ids: membersToAdd,
                 channel_type: "livechat",
-                livechat_operator_id: serverState.partnerId,
                 name: `${visitor_name}, ${
                     operator.livechat_username ? operator.livechat_username : operator.name
                 }`,

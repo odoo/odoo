@@ -31,7 +31,10 @@ class TestImLivechatReport(TestImLivechatCommon):
             )["channel_id"]
 
         channel = self.env['discuss.channel'].browse(channel_id)
-        self.operator = channel.livechat_operator_id
+        self.operator = self.env["im_livechat.channel.member.history"].search([
+            ("channel_id", "=", channel.id),
+            ("livechat_member_type", "=", "agent"),
+        ]).partner_id
 
         self._create_message(channel, self.visitor_user.partner_id, '2023-03-17 06:06:59')
         self._create_message(channel, self.operator, '2023-03-17 08:15:54')
@@ -89,27 +92,35 @@ class TestImLivechatReport(TestImLivechatCommon):
         )
         [partner_1, partner_2] = self.env["res.partner"].create([{"name": "test 1"}, {"name": "test 2"}])
         [channel_1, channel_2, channel_3] = self.env["discuss.channel"].create(
-            [{
-                "name": "test 1",
-                "channel_type": "livechat",
-                "livechat_channel_id": livechat_channel.id,
-                "livechat_operator_id": operator_1.partner_id.id,
-                "channel_member_ids": [Command.create({"partner_id": partner_1.id})],
-            },
-            {
-                "name": "test 2",
-                "channel_type": "livechat",
-                "livechat_channel_id": livechat_channel.id,
-                "livechat_operator_id": operator_2.partner_id.id,
-                "channel_member_ids": [Command.create({"partner_id": partner_2.id})],
-            },
-            {
-                "name": "test 3",
-                "channel_type": "livechat",
-                "livechat_channel_id": livechat_channel.id,
-                "livechat_operator_id": operator_2.partner_id.id,
-                "channel_member_ids": [Command.create({"partner_id": partner_2.id})],
-            }]
+            [
+                {
+                    "name": "test 1",
+                    "channel_type": "livechat",
+                    "livechat_channel_id": livechat_channel.id,
+                    "channel_member_ids": [
+                        Command.create({"partner_id": operator_1.partner_id.id}),
+                        Command.create({"partner_id": partner_1.id}),
+                    ],
+                },
+                {
+                    "name": "test 2",
+                    "channel_type": "livechat",
+                    "livechat_channel_id": livechat_channel.id,
+                    "channel_member_ids": [
+                        Command.create({"partner_id": operator_2.partner_id.id}),
+                        Command.create({"partner_id": partner_2.id}),
+                    ],
+                },
+                {
+                    "name": "test 3",
+                    "channel_type": "livechat",
+                    "livechat_channel_id": livechat_channel.id,
+                    "channel_member_ids": [
+                        Command.create({"partner_id": operator_2.partner_id.id}),
+                        Command.create({"partner_id": partner_2.id}),
+                    ],
+                },
+            ]
         )
         self._create_message(channel_1, operator_1.partner_id, "2025-06-26 10:05:00")
         self._create_message(channel_2, operator_2.partner_id, "2025-06-26 10:15:00")
@@ -140,7 +151,10 @@ class TestImLivechatReport(TestImLivechatCommon):
             frozen_time.tick(delta=timedelta(minutes=5))
             self.make_jsonrpc_request("/im_livechat/visitor_leave_session", {"channel_id": chat.id})
             frozen_time.tick(delta=timedelta(minutes=5))
-            self._create_message(chat, chat.livechat_operator_id, datetime.now())
+            agent = chat.channel_member_ids.filtered(
+                lambda m: m.livechat_member_type == "agent"
+            ).partner_id
+            self._create_message(chat, agent, datetime.now())
             report = self.env["im_livechat.report.channel"].search([("channel_id", "=", chat.id)])
             self.assertEqual(report.time_to_answer, 0.0)
 
@@ -158,7 +172,10 @@ class TestImLivechatReport(TestImLivechatCommon):
                     {"anonymous_name": f"Visitor_{i}", "channel_id": livechat_channel.id},
                 )["channel_id"]
                 channel = self.env["discuss.channel"].browse(channel_id)
-                self._create_message(channel, channel.livechat_operator_id, date)
+                channel_agent = channel.channel_member_ids.filtered(
+                    lambda m: m.livechat_member_type == "agent"
+                ).partner_id
+                self._create_message(channel, channel_agent, date)
         en_lang = self.env["res.lang"]._activate_lang("en_US")
         report_model = self.env["im_livechat.report.channel"].with_user(agent)
         result = report_model.formatted_read_group(domain=[], groupby=["day_number"])

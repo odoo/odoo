@@ -25,7 +25,6 @@ test("category 'Livechat' is folded", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     localStorage.setItem("discuss_sidebar_category_folded_im_livechat.category_default", "true");
     await start();
@@ -53,7 +52,6 @@ test("livechat info default open is 'off'", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     localStorage.setItem("im_livechat.no_livechat_info_default_open", "true");
     await start();

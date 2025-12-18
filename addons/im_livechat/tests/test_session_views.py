@@ -32,7 +32,7 @@ class TestImLivechatSessionViews(TestImLivechatCommon):
 
     @users("admin")
     def test_form_view_embed_thread(self):
-        operator = new_test_user(
+        new_test_user(
             self.env,
             login="operator",
             groups="base.group_user,im_livechat.im_livechat_group_manager",
@@ -44,14 +44,12 @@ class TestImLivechatSessionViews(TestImLivechatCommon):
                     "name": "test 1",
                     "channel_type": "livechat",
                     "livechat_channel_id": self.livechat_channel.id,
-                    "livechat_operator_id": operator.partner_id.id,
                     "channel_member_ids": [Command.create({"partner_id": user_1.id})],
                 },
                 {
                     "name": "test 2",
                     "channel_type": "livechat",
                     "livechat_channel_id": self.livechat_channel.id,
-                    "livechat_operator_id": operator.partner_id.id,
                     "channel_member_ids": [Command.create({"partner_id": user_2.id})],
                 },
             ]

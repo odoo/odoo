@@ -40,7 +40,9 @@ const discussChannelPatch = {
         if (this.channel_type !== "livechat" || this.self_member_id?.custom_channel_name) {
             return super.displayName;
         }
-        const selfMemberType = this.self_member_id?.livechat_member_type;
+        const selfMemberType = this.isTransient
+            ? "visitor"
+            : this.self_member_id?.livechat_member_type;
         let memberNames = this.correspondents
             .filter((m) => {
                 if (selfMemberType === "visitor") {
