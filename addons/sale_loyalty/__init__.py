@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import models, wizard
+from . import controllers, models, wizard
 
 
 def uninstall_hook(env):

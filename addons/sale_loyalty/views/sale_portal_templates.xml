@@ -48,27 +48,41 @@
     </template>
 
     <template id="sale_order_portal_loyalty_content">
-        <t t-set="loyalty_data" t-value="sale_order._get_loyalty_data()"/>
-        <div t-if="loyalty_data" class="col-xs-5 col-md-6 col-lg-5">
-            <table class="table table-sm">
-                <tr>
-                    <td><strong>Loyalty Card</strong></td>
-                </tr>
-                <tr t-if="loyalty_data['issued']">
-                    <td>Issued</td>
-                    <td class="text-end">
-                        +<span t-out="loyalty_data['issued']"/>
-                        <span class="d-none d-md-inline" t-out="loyalty_data['point_name']"/>
-                    </td>
-                </tr>
-                <tr t-if="loyalty_data['cost']">
-                    <td>Used</td>
-                    <td class="text-end">
-                        -<span t-out="loyalty_data['cost']"/>
-                        <span class="d-none d-md-inline" t-out="loyalty_data['point_name']"/>
-                    </td>
-                </tr>
-            </table>
+        <t t-set="has_issued" t-value="loyalty_data and loyalty_data['issued']"/>
+        <t t-set="has_cost" t-value="loyalty_data and loyalty_data['cost']"/>
+        <div t-if="has_issued or has_cost" class="d-flex flex-column gap-1">
+            <t t-if="not hide_heading">
+                <hr/>
+                <strong class="smaller text-uppercase text-muted">Loyalty Card</strong>
+            </t>
+            <t t-if="has_issued and has_cost">
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <small class="text-muted">Issued</small>
+                    <small class="text-success">
+                        +<t t-out="loyalty_data['issued']"/> <span class="text-muted" t-out="loyalty_data['point_name']"/>
+                    </small>
+                </div>
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <small class="text-muted">Used</small>
+                    <small class="text-danger">
+                        −<t t-out="loyalty_data['cost']"/> <span class="text-muted" t-out="loyalty_data['point_name']"/>
+                    </small>
+                </div>
+                <t t-set="net" t-value="round(loyalty_data['issued'] - loyalty_data['cost'], 2)"/>
+                <div class="d-flex justify-content-between align-items-baseline">
+                    <small class="fw-bold">Total</small>
+                    <small t-attf-class="{{ 'text-success' if net >= 0 else 'text-danger' }}">
+                        <t t-if="net > 0">+</t><t t-out="net"/> <span class="text-muted" t-out="loyalty_data['point_name']"/>
+                    </small>
+                </div>
+            </t>
+            <div t-else="" class="small">
+                <span t-attf-class="fs-5 {{ 'text-success' if has_issued else 'text-danger' }}">
+                    <t t-if="has_issued">+<t t-out="loyalty_data['issued']"/></t>
+                    <t t-else="">−<t t-out="loyalty_data['cost']"/></t>
+                </span>
+                <span class="text-muted" t-out="loyalty_data['point_name']"/>
+            </div>
         </div>
     </template>
 
@@ -82,8 +96,20 @@
         <xpath expr="//div[@id='total']" position="after">
             <t t-call="sale_loyalty.sale_purchased_gift_card" order="sale_order" hide_intro="1"/>
         </xpath>
-        <xpath expr="//div[@id='total']/*" position="after">
-            <t t-call="sale_loyalty.sale_order_portal_loyalty_content" />
+    </template>
+
+    <template id="sale_loyalty.sale_order_portal_template"
+              name="Loyalty Points"
+              inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//div[@id='sidebar_loyalty_anchor']" position="after">
+            <t t-if="loyalty_data" t-call="sale_loyalty.sale_order_portal_loyalty_content"/>
+        </xpath>
+        <xpath expr="//div[@id='provide_feedback']" position="before">
+            <div t-if="loyalty_data and (loyalty_data['issued'] or loyalty_data['cost'])"
+                 class="d-lg-none mt-4 p-3 rounded-3 border d-print-none">
+                <h4>Loyalty Card</h4>
+                <t t-call="sale_loyalty.sale_order_portal_loyalty_content" hide_heading="True"/>
+            </div>
         </xpath>
     </template>
 

@@ -112,9 +112,9 @@
                       <div t-if="order.user_id">
                           <h6 class="small text-muted">Buyer</h6>
                             <t t-call="portal.portal_my_contact"
-                                _contactAvatar="image_data_uri(order.user_id.avatar_128)"
-                                _contactName="order.user_id.name"
-                                _contactLink="True">
+                                _contact_avatar="image_data_uri(order.user_id.avatar_128)"
+                                _contact_name="order.user_id.name"
+                                _contact_link="True">
                                 <div t-field="order.user_id" t-options='{"widget": "contact", "fields": ["phone"], "no_marker": False}'/>
                             </t>
                       </div>
