@@ -920,10 +920,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         company = vals['company']
 
         # Avoid negative unit price.
-        for base_line in vals['base_lines']:
-            if base_line['price_unit'] < 0.0:
-                base_line['quantity'] *= -1
-                base_line['price_unit'] *= -1
+        self._ubl_turn_base_lines_price_unit_as_always_positive(vals)
 
         # Manage taxes for emptying.
         vals['base_lines'] = self._ubl_turn_emptying_taxes_as_new_base_lines(vals['base_lines'], company, vals)
