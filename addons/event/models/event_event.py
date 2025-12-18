@@ -95,6 +95,7 @@ class EventEvent(models.Model):
     tag_ids = fields.Many2many(
         'event.tag', string="Tags", readonly=False,
         store=True, compute="_compute_tag_ids")
+    onsite_course = fields.Boolean(string="Onsite Course")
     # properties
     registration_properties_definition = fields.PropertiesDefinition('Registration Properties')
     # Kanban fields
