@@ -119,7 +119,6 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.assertDictEqual(sql_into_tables, insert_tables_perf, f'Insert queries does not match: {insert}{query_separator}{queries}{query_separator}')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestStandardPerformance(UtilPerf):
 
     @classmethod
@@ -201,7 +200,6 @@ class TestWebsitePerformanceCommon(UtilPerf):
         return (page, menu)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsitePerformance(TestWebsitePerformanceCommon):
 
     def test_10_perf_sql_queries_page(self):

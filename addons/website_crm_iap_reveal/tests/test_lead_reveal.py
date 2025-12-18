@@ -7,7 +7,6 @@ from odoo.addons.website_crm_iap_reveal.tests.common import MockIAPReveal
 from odoo.tests.common import tagged, users
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadMine(TestCrmCommon, MockIAPReveal):
 
     @classmethod

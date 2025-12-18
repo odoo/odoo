@@ -10,7 +10,6 @@ from odoo.tests import tagged, common
 from odoo.exceptions import UserError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMenu(common.TransactionCase):
     def setUp(self):
         super(TestMenu, self).setUp()
@@ -312,7 +311,6 @@ class TestMenu(common.TransactionCase):
             self.main_menu.parent_id = self.another_menu.id
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMenuHttp(common.HttpCase):
     def setUp(self):
         super().setUp()

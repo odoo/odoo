@@ -8,7 +8,6 @@ from odoo.addons.website_event_exhibitor.tests.common import TestEventExhibitorC
 from odoo.tests.common import tagged, users
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSponsorData(TestEventExhibitorCommon):
 
     @users('user_eventmanager')

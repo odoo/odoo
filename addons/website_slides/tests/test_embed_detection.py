@@ -5,7 +5,6 @@ from odoo.addons.website_slides.tests import common
 from odoo.tests import tagged, HttpCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestEmbedDetection(HttpCase, common.SlidesCase):
 
     @classmethod

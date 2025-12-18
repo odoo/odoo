@@ -206,7 +206,6 @@ class TestCustomizeView(common.HttpCase):
         self.assertEqual('Test name (3)', name)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestViewSaving(TestViewSavingCommon):
 
     def eq(self, a, b):

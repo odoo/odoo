@@ -8,7 +8,6 @@ from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSlideInternals(slides_common.SlidesCase):
     def test_compute_category_completion_time(self):
         """
@@ -100,7 +99,6 @@ class TestSlideInternals(slides_common.SlidesCase):
         self.assertFalse(slide.html_content)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestVideoFromURL(slides_common.SlidesCase):
     def test_video_youtube(self):
         youtube_urls = {
