@@ -301,14 +301,16 @@ class ProductProduct(models.Model):
             [*self.env['res.partner']._check_company_domain(company), ('company_id', '!=', False)],
             [('company_id', '=', False)],
         ):
-            products = self.env['product.product'].search(
-                expression.AND([
-                    expression.OR(domains),
-                    company_domain,
-                    extra_domain,
-                ]),
-            )
             for domain in domains:
-                if products_by_domain := products.filtered_domain(domain):
-                    return products_by_domain[0]
+                product = self.env['product.product'].search(
+                    expression.AND([
+                        domain,
+                        company_domain,
+                        extra_domain,
+                    ]),
+                    limit=1,
+                )
+                # We need a single product. Exit early if one is found (implements the priority logic).
+                if product:
+                    return product
         return self.env['product.product']
