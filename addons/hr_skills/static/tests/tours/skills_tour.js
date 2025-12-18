@@ -151,5 +151,44 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
         trigger: ".o_data_row td.o_data_cell:contains('Oh Mary')",
         run: () => {},
     },
+    {
+        content: "Add a new Skill",
+        trigger: ".o_field_skills_one2many button:contains('ADD')",
+    },
+    {
+        content: "Select a song",
+        trigger: ".o_field_widget[name='skill_id'] input",
+        run: "text Mary",
+    },
+    {
+        content: "Choose the song",
+        trigger: '.ui-autocomplete .ui-menu-item a:contains("Oh Mary")',
+        run: "click",
+    },
+    {
+        content: "Save new skill",
+        trigger: ".o_form_button_save",
+        in_modal: true,
+        run: "click",
+    },
+    {
+        content: "Close validation error popup",
+        trigger: ".modal-footer .btn-primary",
+        run: "click",
+    },
+    {
+        content: "Close skill dialog",
+        trigger: ".modal-header .btn-close",
+        run: "click",
+    },
+    {
+        content: "Check that no duplicate skill was added",
+        trigger: ".o_data_row td.o_data_cell:contains('Oh Mary')",
+        run: function() {
+            if ($(".o_data_row td.o_data_cell:contains('Fortunate Son')").length !== 1) {
+                console.error("Duplicate skill was added while having validation error");
+            }
+        },
+    },
     ...stepUtils.saveForm(),
 ]});
