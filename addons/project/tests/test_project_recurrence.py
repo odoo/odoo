@@ -8,7 +8,6 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectRecurrence(TransactionCase):
     @classmethod
     def setUpClass(cls):

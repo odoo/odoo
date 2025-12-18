@@ -11,7 +11,6 @@ from odoo.addons.project.tests.test_project_base import TestProjectCommon
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProjectTaskType(TestProjectCommon):
 
     @classmethod

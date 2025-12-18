@@ -52,7 +52,6 @@ class TestProjectProfitabilityCommon(TransactionCase):
         })
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestProfitability(TestProjectProfitabilityCommon):
     def test_project_profitability(self):
         """ Test the project profitability has no data found

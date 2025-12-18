@@ -20,7 +20,6 @@ class TestAccessRights(TestProjectCommon):
         return self.env['project.task'].with_user(with_user or self.env.user).create(values)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRUDVisibilityFollowers(TestAccessRights):
 
     def setUp(self):
@@ -115,7 +114,6 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
             self.task.with_user(self.env.user).unlink()
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRUDVisibilityPortal(TestAccessRights):
 
     def setUp(self):
@@ -143,7 +141,6 @@ class TestCRUDVisibilityPortal(TestAccessRights):
         self.task.with_user(self.env.user).name
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestCRUDVisibilityEmployees(TestAccessRights):
 
     def setUp(self):
@@ -166,7 +163,6 @@ class TestCRUDVisibilityEmployees(TestAccessRights):
         self.task.with_user(self.env.user).name
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAllowedUsers(TestAccessRights):
 
     def setUp(self):
@@ -263,7 +259,6 @@ class TestProjectPortalCommon(TestProjectCommon):
             'name': 'Test5', 'user_ids': False, 'project_id': self.project_pigs.id})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestPortalProject(TestProjectPortalCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model')
@@ -337,7 +332,6 @@ class TestPortalProject(TestProjectPortalCommon):
             'mail_create_nolog': True}).create, {'name': 'Pigs task', 'project_id': pigs.id})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessRightsPrivateTask(TestAccessRights):
 
     @classmethod
@@ -426,7 +420,6 @@ class TestAccessRightsPrivateTask(TestAccessRights):
             self.private_task.with_user(self.env.user).unlink()
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestAccessRightsInvitedUsers(TestAccessRights):
 
     @classmethod
