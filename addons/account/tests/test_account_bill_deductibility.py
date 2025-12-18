@@ -429,3 +429,50 @@ class TestAccountBillPartialDeductibility(AccountTestInvoicingCommon):
             ],
         }
         self._assert_tax_totals_summary(refund.tax_totals, expected_values)
+
+    def test_bill_partial_deductibility_with_reverse_charge(self):
+        tax_reverse_charge = self.env['account.tax'].create({
+            'name': 'Reverse Charge 20%',
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'type_tax_use': 'purchase',
+            'invoice_repartition_line_ids': [
+                Command.create({'repartition_type': 'base'}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.company_data['default_account_tax_purchase'].id}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0, 'account_id': self.company_data['default_account_tax_purchase'].id}),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({'repartition_type': 'base'}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'account_id': self.company_data['default_account_tax_purchase'].id}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0, 'account_id': self.company_data['default_account_tax_purchase'].id}),
+            ],
+        })
+
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.today(),
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'RC Partial Item',
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'deductible_amount': 60.00,
+                    'tax_ids': [Command.set(tax_reverse_charge.ids)],
+                })
+            ]
+        })
+
+        self.assertInvoiceValues(
+            bill,
+            [
+                {'display_type': 'product',                      'name': 'RC Partial Item',       'balance': 100.0,   'tax_ids': [tax_reverse_charge.id]},
+                {'display_type': 'non_deductible_product',       'name': 'RC Partial Item',       'balance': -40.0,   'tax_ids': [tax_reverse_charge.id]},
+                {'display_type': 'non_deductible_product_total', 'name': 'private part',          'balance': 40.0,    'tax_ids': []},
+                {'display_type': 'non_deductible_tax',           'name': 'private part (taxes)',  'balance': 8.0,     'tax_ids': []},
+                {'display_type': 'tax',                          'name': 'Reverse Charge 20%',    'balance': -20.0,   'tax_ids': []},
+                {'display_type': 'tax',                          'name': 'Reverse Charge 20%',    'balance': 12.0,    'tax_ids': []},
+                {'display_type': 'payment_term',                 'name': False,                   'balance': -100.0,  'tax_ids': []},
+            ],
+            {}
+        )
