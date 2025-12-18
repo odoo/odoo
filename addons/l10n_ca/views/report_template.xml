@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="pst_external_layout">
-        <li t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst">
+        <li t-if="company.country_code == 'CA' and company.l10n_ca_pst">
             PST: <span t-field="company.l10n_ca_pst"/>
         </li>
     </template>
@@ -17,7 +17,7 @@
             <t t-set="hide_pst_in_address_list" t-value="True"/>
         </xpath>
         <xpath expr="//div[hasclass('o_folder_company_info')]" position="after">
-            <div t-if="company.account_fiscal_country_id.code == 'CA' and company.l10n_ca_pst">
+            <div t-if="company.country_code == 'CA' and company.l10n_ca_pst">
                 PST: <span t-field="company.l10n_ca_pst"/>
             </div>
         </xpath>
