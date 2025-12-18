@@ -139,7 +139,7 @@ patch(PosStore.prototype, {
     },
     async allowProductCreation() {
         if (this.config.module_pos_hr) {
-            return this.employeeIsAdmin;
+            return this.employeeIsAdmin && (await super.allowProductCreation());
         }
         return await super.allowProductCreation();
     },
