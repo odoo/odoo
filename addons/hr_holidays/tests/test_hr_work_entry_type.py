@@ -9,7 +9,6 @@ from odoo.tests import tagged
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrWorkEntryType(TestHrHolidaysCommon):
 
     def test_count_as(self):

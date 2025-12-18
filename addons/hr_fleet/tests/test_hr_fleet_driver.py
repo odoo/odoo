@@ -3,7 +3,6 @@
 from odoo.tests import tagged, common
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrFleetDriver(common.TransactionCase):
 
     @classmethod

@@ -6,7 +6,6 @@ from odoo.tests import tagged
 from odoo.addons.hr.tests.common import TestHrCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrEmployee(TestHrCommon):
 
     @classmethod

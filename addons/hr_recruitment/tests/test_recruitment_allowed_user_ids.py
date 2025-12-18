@@ -2,7 +2,6 @@ from odoo.tests import tagged, TransactionCase
 
 
 @tagged('recruitment_allowed_recruiters')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRecruitmentAllowedRecruiters(TransactionCase):
 
     def setUp(self):

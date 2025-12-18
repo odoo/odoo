@@ -10,7 +10,6 @@ from odoo.tests.common import tagged, TransactionCase, freeze_time
 
 
 @tagged('attendance_process')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrAttendance(TransactionCase):
     """Test for presence validity"""
 

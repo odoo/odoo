@@ -6,7 +6,6 @@ from odoo.tests.common import tagged, TransactionCase
 
 
 @tagged('jesaispas')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrAttendance(TransactionCase):
     """Tests for attendance date ranges validity"""
 

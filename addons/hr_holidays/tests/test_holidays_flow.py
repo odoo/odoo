@@ -14,7 +14,6 @@ from odoo.tests import tagged
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHolidaysFlow(TestHrHolidaysCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')

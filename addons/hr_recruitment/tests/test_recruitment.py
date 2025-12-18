@@ -7,7 +7,6 @@ from odoo.tests import tagged, TransactionCase, Form
 
 
 @tagged('recruitment')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRecruitment(MailCase, TransactionCase):
     @classmethod
     def setUpClass(cls):

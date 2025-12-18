@@ -7,7 +7,6 @@ from odoo.tests import tagged
 from odoo.tools.misc import file_open
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRecruitmentProcess(TestHrCommon):
 
     def test_00_recruitment_process(self):

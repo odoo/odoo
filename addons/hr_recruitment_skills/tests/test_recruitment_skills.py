@@ -6,7 +6,6 @@ from odoo.tests.common import new_test_user
 
 
 @tagged("recruitment")
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestRecruitmentSkills(TransactionCase):
     @classmethod
     def setUpClass(cls):

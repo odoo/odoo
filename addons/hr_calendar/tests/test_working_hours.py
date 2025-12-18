@@ -9,7 +9,6 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 @tagged('work_hours')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWorkingHours(TestHrCalendarCommon):
     @classmethod
     def setUpClass(cls):
@@ -300,7 +299,6 @@ class TestWorkingHours(TestHrCalendarCommon):
 
 
 @tagged('work_hours')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
     @classmethod
     def setUpClass(cls):
