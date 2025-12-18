@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
-from ast import literal_eval
 from collections import defaultdict
 from datetime import timedelta
 from operator import itemgetter
@@ -1104,55 +1103,63 @@ Please change the quantity done or the rounding precision in your settings.""",
         return vals_list
 
     def _push_apply(self):
-        new_moves = []
+        move_vals_list = []
+        move_auto = set()
+
+        StockRule = self.env['stock.rule']
+        StockMove = self.env['stock.move']
+
         for move in self:
-            new_move = self.env['stock.move']
-
-            # if the move is a returned move, we don't want to check push rules, as returning a returned move is the only decent way
-            # to receive goods without triggering the push rules again (which would duplicate chained operations)
-            # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
-
-            StockRule = self.env['stock.rule']
-            if move.location_dest_id.company_id not in self.env.companies:
-                StockRule = self.env['stock.rule'].sudo()
-                move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
+            if not move.location_dest_id.company_id:
                 warehouse_id = False
 
-            related_packages = self.env['stock.package'].search_fetch([('id', 'parent_of', move.move_line_ids.result_package_id.ids)], ['package_type_id'])
+            # Multi companies check
+            if move.location_dest_id.company_id not in self.env.companies:
+                StockRule = StockRule.sudo()
+                StockMove = StockMove.sudo()
+                move = move.with_context(allowed_companies=move.env.user.company_ids.ids)
 
-            rule = StockRule._get_push_rule(move.product_id, move.location_dest_id, {
-                'route_ids': move.route_ids | related_packages.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
-            })
+            route_ids = move.route_ids
 
-            excluded_rule_ids = []
-            while (rule and rule.push_domain and not move.filtered_domain(literal_eval(rule.push_domain))):
-                excluded_rule_ids.append(rule.id)
-                rule = StockRule._get_push_rule(move.product_id, move.location_dest_id, {
-                    'route_ids': move.route_ids | related_packages.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
-                    'domain': [('id', 'not in', excluded_rule_ids)],
-                })
+            # Group by exclusion keys and evaluate rules
+            mls_by_rule = defaultdict(lambda: self.env['stock.move.line'])
+            for (location_dest, package), mls in move.move_line_ids.grouped(lambda m: (m.location_dest_id, m.result_package_id)).items():
+                if package:
+                    related_packages = self.env['stock.package'].search_fetch(
+                        [('id', 'parent_of', move.move_line_ids.result_package_id.ids)], ['package_type_id'])
+                    route_ids |= related_packages.package_type_id.route_ids
+                rule = StockRule._get_push_rule(move, location_dest, route_ids, warehouse_id)
+                if rule:
+                    mls_by_rule[rule] |= mls
 
-            # Make sure it is not returning the return
-            if rule and (not move.origin_returned_move_id or move.origin_returned_move_id.location_dest_id.id != rule.location_dest_id.id):
-                new_move = rule._run_push(move) or new_move
-                if new_move:
-                    new_moves.append(new_move)
+            # in case of neg_move push, We apply push rules on moves with -ve quantity without move_lines
+            if not move.move_line_ids:
+                rule = StockRule._get_push_rule(move, move.location_dest_id, route_ids, warehouse_id)
+                if rule:
+                    mls_by_rule[rule] |= self.env['stock.move.line']
 
-            move_to_propagate_ids = set()
-            move_to_mts_ids = set()
-            for m in move.move_dest_ids - new_move:
-                if new_move and move.location_final_id and m.location_id == move.location_final_id:
-                    move_to_propagate_ids.add(m.id)
-                elif not m.location_id._child_of(move.location_dest_id):
-                    move_to_mts_ids.add(m.id)
-            self.env['stock.move'].browse(move_to_mts_ids)._break_mto_link(move)
-            move.move_dest_ids = [Command.unlink(m_id) for m_id in move_to_propagate_ids]
-            new_move.move_dest_ids = [Command.link(m_id) for m_id in move_to_propagate_ids]
+            for rule, mls in mls_by_rule.items():
+                if rule.auto == 'transparent':
+                    mls.location_dest_id = rule.location_dest_id._get_putaway_strategy(mls.product_id) or rule.location_dest_id
+                    move_auto.add(move.id)
+                else:
+                    move_vals = move.copy_data(rule._push_prepare_move_copy_values(move))[0]
+                    move_vals['product_uom_qty'] = sum(mls.mapped('quantity')) if mls else move.product_uom_qty
+                    move_vals_list.append(move_vals)
 
-        new_moves = self.env['stock.move'].concat(*new_moves)
-        new_moves = new_moves.sudo()._action_confirm()
+        moves_auto = StockMove.browse(move_auto)
+        new_moves = StockMove.create(move_vals_list)
 
+        # Recursively apply push rules on auto moves
+        if moves_auto:
+            new_moves |= moves_auto._push_apply()
+
+        # Locations dest has been updated on stock.move.line but the move still have its original dest loc.
+        for move in moves_auto:
+            move.write({'location_dest_id': move.move_line_ids[0].location_dest_id})
+
+        new_moves = new_moves._action_confirm()
         return new_moves
 
     def _merge_moves_fields(self):
@@ -2110,8 +2117,14 @@ Please change the quantity done or the rounding precision in your settings.""",
         moves_to_push = moves_todo.filtered(lambda m: not m._skip_push())
         if moves_to_push:
             moves_to_push._push_apply()
-        for move_dest in moves_todo.move_dest_ids:
-            move_dests_per_company[move_dest.company_id.id] |= move_dest
+
+        for move in moves_todo:
+            for move_dest in move.move_dest_ids:
+                if not move_dest.location_id._child_of(move.location_dest_id) and not move.location_dest_id._child_of(move_dest.location_id):
+                    move_dest._break_mto_link(move)
+                    continue
+                move_dests_per_company[move_dest.company_id.id] |= move_dest
+
         for company_id, move_dests in move_dests_per_company.items():
             move_dests.sudo().with_company(company_id)._action_assign()
 

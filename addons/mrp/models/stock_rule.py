@@ -238,8 +238,8 @@ class StockRule(models.Model):
             delay_description.append((_('Days to Supply Components'), _('+ %d day(s)', days_to_order)))
         return delays, delay_description
 
-    def _push_prepare_move_copy_values(self, move_to_copy, new_date):
-        new_move_vals = super()._push_prepare_move_copy_values(move_to_copy, new_date)
+    def _push_prepare_move_copy_values(self, move_to_copy):
+        new_move_vals = super()._push_prepare_move_copy_values(move_to_copy)
         new_move_vals['production_group_id'] = move_to_copy.production_group_id.id
         new_move_vals['production_id'] = False
         return new_move_vals

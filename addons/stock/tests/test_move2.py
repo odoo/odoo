@@ -2864,7 +2864,8 @@ class TestRoutes(TestStockCommon):
         # Output -> Customer rule should trigger, creating the next step
         self.assertEqual(pick_move.location_dest_id, subloc)
         self.assertEqual(len(pick_move.move_dest_ids), 1)
-        self.assertEqual(pick_move.move_dest_ids.location_id, subloc)
+        # The destination location will still reflect the location on the push rule itself
+        self.assertEqual(pick_move.move_dest_ids.location_id, warehouse.wh_output_stock_loc_id)
 
     def test_2_steps_delivery_reaches_customer_subloc(self):
         """
