@@ -21,7 +21,16 @@ export class DynamicSnippet extends Interaction {
         _window: { "t-on-resize": this.throttled(this.render) },
         _root: {
             "t-att-class": () => ({
-                "o_dynamic_snippet_empty": !this.isVisible,
+                // Compatibility code: A dynamic snippet may end up with one,
+                // several, or all of these classes as a default visibility one.
+                o_dynamic_empty: !this.isVisible,
+                s_dynamic_empty: !this.isVisible,
+                o_dynamic_snippet_empty: !this.isVisible,
+            }),
+        },
+        ".missing_option_warning": {
+            "t-att-class": () => ({
+                "d-none": !!this.data.length,
             }),
         },
     };
@@ -38,7 +47,6 @@ export class DynamicSnippet extends Interaction {
         this.renderedContentNode = document.createDocumentFragment();
         this.uniqueId = uniqueId("s_dynamic_snippet_");
         this.templateKey = "website.s_dynamic_snippet.grid";
-        this.isVisible = true;
         this.withSample = false;
     }
 
@@ -51,7 +59,6 @@ export class DynamicSnippet extends Interaction {
     }
 
     destroy() {
-        this.toggleVisibility(false);
         // Clear content.
         const templateAreaEl = this.el.querySelector(".dynamic_snippet_template");
         // Nested interactions are stopped implicitly.
@@ -140,10 +147,10 @@ export class DynamicSnippet extends Interaction {
 
     render() {
         if (this.data.length > 0 || this.withSample) {
-            this.isVisible = true;
+            this.toggleVisibility(true);
             this.prepareContent();
         } else {
-            this.isVisible = false;
+            this.toggleVisibility(false);
             this.renderedContentNode = document.createDocumentFragment();
         }
         this.renderContent();
