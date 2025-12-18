@@ -16,6 +16,11 @@
                         </span>
                     </div>
                 </t>
+                <div t-if="group.remaining_meetings" class="o-calendar-meeting d-flex px-2">
+                    <span class="fw-bold">
+                        <t t-out="group.remaining_meetings + ' additional meetings today'"/>
+                    </span>
+                </div>
             </div>
         </xpath>
     </t>

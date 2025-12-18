@@ -213,6 +213,13 @@ registerMessageAction("end-poll", {
     onSelected: ({ message }) => rpc("/mail/poll/end", { poll_id: message.poll.id }),
     sequence: 115,
 });
+registerMessageAction("reuse-activity", {
+    condition: ({ message }) => message.isActivity,
+    icon: "fa fa-recycle",
+    name: _t("Reuse"),
+    onSelected: ({ message }) => message.reuseActivity(),
+    sequence: 125,
+});
 
 export class MessageAction extends Action {
     /** @type {() => Message} */

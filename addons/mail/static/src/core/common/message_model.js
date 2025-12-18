@@ -168,6 +168,7 @@ export class Message extends Record {
     /** @type {string} */
     reply_to;
     subtype_id = fields.One("mail.message.subtype");
+    mail_activity_id = fields.One('mail.activity');
     thread = fields.One("mail.thread");
     threadAsNeedaction = fields.One("mail.thread", {
         compute() {
@@ -513,6 +514,10 @@ export class Message extends Record {
         );
     }
 
+    get isActivity() {
+        return !!this.mail_activity_id;
+    }
+
     get hasAttachments() {
         return this.attachment_ids?.length > 0;
     }
@@ -631,6 +636,22 @@ export class Message extends Record {
             type = "danger";
         }
         this.store.env.services.notification.add(notification, { type });
+    }
+
+    async reuseActivity() {
+        const context = {
+            default_activity_type_id: this.mail_activity_id.activity_type_id.id,
+            summary: this.mail_activity_id.summary,
+            default_user_id: this.mail_activity_id.user_id?.id,
+            default_note: this.mail_activity_id.note,
+        };
+        this.store.scheduleActivity(
+            this.thread.model,
+            [this.thread.id],
+            undefined,
+            context,
+            this.thread
+        );
     }
 
     async copyMessageText() {

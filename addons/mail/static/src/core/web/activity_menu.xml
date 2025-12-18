@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ActivityMenu">
-    <Dropdown position="'bottom-end'" state="dropdown" beforeOpen.bind="onBeforeOpen" menuClass="discussSystray.menuClass" bottomSheet="false">
+    <Dropdown position="'bottom-end'" state="dropdown" beforeOpen.bind="onBeforeOpen" menuClass="discussSystray.menuClass" bottomSheet="false" onOpened.bind="onOpened">
         <button>
             <i class="fa fa-lg fa-clock-o" role="img" aria-label="Activities"></i>
             <span t-if="store.activityCounter" class="o-mail-ActivityMenu-counter badge rounded-pill"><t t-esc="store.activityCounter"/></span>
@@ -35,7 +35,7 @@
                         </div>
                     </t>
                     <span class="list-group-item list-group-item-action border-0 text-primary text-center cursor-pointer" t-custom-click="(ev, isMiddleClick) => this.openMyActivities(isMiddleClick)">
-                        View all activities
+                        View all Activities
                     </span>
                 </div>
             </div>
