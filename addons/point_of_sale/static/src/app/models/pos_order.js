@@ -15,10 +15,6 @@ export class PosOrder extends PosOrderAccounting {
 
         if (!this.session_id?.id && (!this.finalized || !this.isSynced)) {
             this.session_id = this.session;
-
-            if (this.state === "draft" && this.lines.length == 0 && this.payment_ids.length == 0) {
-                this._isResidual = true;
-            }
         }
 
         // Data present in python model
