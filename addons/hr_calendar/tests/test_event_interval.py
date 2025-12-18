@@ -4,11 +4,11 @@ from datetime import datetime, UTC
 from zoneinfo import ZoneInfo
 
 from odoo.tests import tagged
-from odoo.addons.hr_calendar.tests.common import TestHrCalendarCommon
+from odoo.addons.hr_calendar.tests.common import TestHrContractCalendarCommon
 
 
 @tagged('event_interval')
-class TestEventInterval(TestHrCalendarCommon):
+class TestEventInterval(TestHrContractCalendarCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
