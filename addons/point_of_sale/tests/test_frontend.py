@@ -2126,6 +2126,11 @@ class TestUi(TestPointOfSaleHttpCommon):
             {'amount': 20.0, 'payment_method_id': self.bank_payment_method.id, 'is_change': False},
         ])
 
+        # References should not have gaps
+        references = self.env['pos.order'].search([], order="pos_reference").mapped("pos_reference")
+        for i in range(len(references) - 1):
+            self.assertEqual(int(references[i + 1].split('-')[-1]), int(references[i].split('-')[-1]) + 1, "There is a gap in the pos references")
+
     def test_reload_page_before_payment_with_customer_account(self):
         self.customer_account_payment_method = self.env['pos.payment.method'].create({
             'name': 'Customer Account',
