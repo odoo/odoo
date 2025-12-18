@@ -697,6 +697,19 @@ class StockPicking(models.Model):
         'Reference must be unique per company!',
     )
 
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        if self.env.context.get('formatted_display_name'):
+            for picking in self:
+                extra_display_info = []
+                if picking.origin:
+                    extra_display_info.append(picking.origin)
+                if picking.partner_id:
+                    extra_display_info.append(picking.partner_id.display_name)
+                if extra_display_info:
+                    picking.display_name += f'\t--{" ".join(extra_display_info)}--'
+
     def _compute_has_tracking(self):
         for picking in self:
             picking.has_tracking = any(m.has_tracking != 'none' for m in picking.move_ids)
@@ -718,6 +731,12 @@ class StockPicking(models.Model):
             self.date_category_to_domain('scheduled_date', item)
             for item in value
         )
+
+    @api.model
+    def _search_display_name(self, operator, value):
+        domain = super()._search_display_name(operator, value)
+        domain |= Domain('origin', operator, value) | Domain('partner_id', operator, value)
+        return domain
 
     @api.depends('move_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
