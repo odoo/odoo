@@ -611,7 +611,7 @@ export class LinkPlugin extends Plugin {
             document: this.document,
             linkElement,
             isImage: isImage,
-            containerElement: selection.anchorNode.parentElement,
+            containerElement: closestElement(selection.anchorNode),
             ignoreDOMMutations: this.dependencies.history.ignoreDOMMutations,
             onApply: (...args) => {
                 delete this._isNavigatingByMouse;
