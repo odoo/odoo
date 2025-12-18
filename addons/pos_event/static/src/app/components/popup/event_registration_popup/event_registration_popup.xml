@@ -12,7 +12,8 @@
                     <t t-esc="choice.name"/>
                 </option>
             </select>
-            <input t-else="" t-model="stateObject[question.id]" class="form-control flex-grow-1"/>
+            <input t-else="" class="form-control flex-grow-1" t-att-class="getValidationClass(question, stateObject, ticketIndex)" t-model="stateObject[question.id]"
+                t-on-blur="() => this.markTouched(question.id, ticketIndex)"/>
         </div>
     </t>
     <t t-name="pos_event.EventRegistrationPopup">
@@ -25,6 +26,7 @@
                     </div>
                     <t t-set="questions" t-value="this.questionsOncePerOrder"/>
                     <t t-set="stateObject" t-value="this.state.byOrder"/>
+                    <t t-set="ticketIndex" t-value="null"/>
                     <t t-call="pos_event.QuestionInputs" />
                 </div>
                 <t t-if="this.questionsByRegistration.length">
@@ -37,13 +39,14 @@
                         </div>
                         <t t-set="questions" t-value="this.questionsByRegistration"/>
                         <t t-set="stateObject" t-value="this.state.byRegistration[data_index].questions"/>
+                        <t t-set="ticketIndex" t-value="data_index"/>
                         <t t-call="pos_event.QuestionInputs" />
                     </div>
                 </t>
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-secondary" t-on-click="close">Discard</button>
-                <button class="btn btn-primary" t-on-click="confirm">Confirm</button>
+                <button class="btn btn-primary" t-on-click="confirm" t-att-disabled="!this.isConfirmEnabled()">Confirm</button>
             </t>
         </Dialog>
     </t>

@@ -5,7 +5,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { isValidEmail } from "@point_of_sale/utils";
+import { isValidEmail, isValidPhone } from "@point_of_sale/utils";
 
 export class SendReceiptPopup extends Component {
     static template = "point_of_sale.SendReceiptPopup";
@@ -46,7 +46,7 @@ export class SendReceiptPopup extends Component {
     }
 
     get isValidPhone() {
-        return this.state.phone && /^\+?[()\d\s-.]{8,18}$/.test(this.state.phone);
+        return isValidPhone(this.state.phone);
     }
 
     async _sendReceiptToCustomer({ action, destination }) {

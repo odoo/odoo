@@ -6,6 +6,7 @@ import { ProductCard } from "@point_of_sale/app/components/product_card/product_
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { isValidEmail, isValidPhone } from "@point_of_sale/utils";
 
 export class EventRegistrationPopup extends Component {
     static template = "pos_event.EventRegistrationPopup";
@@ -21,6 +22,7 @@ export class EventRegistrationPopup extends Component {
         this.state = useState({
             byRegistration: [],
             byOrder: {},
+            touchedFields: new Set(),
         });
         this.dataInQty = this.props.data.reduce((acc, data) => {
             for (let i = 0; i < data.qty; i++) {
@@ -76,9 +78,55 @@ export class EventRegistrationPopup extends Component {
         return this.props.event.question_ids.filter((question) => question.once_per_order);
     }
 
+    getFieldKey(questionId, ticketIndex = null) {
+        return ticketIndex === null ? `order:${questionId}` : `reg:${ticketIndex}:${questionId}`;
+    }
+
+    markTouched(questionId, ticketIndex = null) {
+        this.state.touchedFields.add(this.getFieldKey(questionId, ticketIndex));
+    }
+
+    validateQuestion(question, value) {
+        if (question.is_mandatory_answer && !value?.trim()) {
+            return false;
+        }
+        if (!value) {
+            return true;
+        }
+        if (question.question_type === "email") {
+            return isValidEmail(value);
+        }
+        if (question.question_type === "phone") {
+            return isValidPhone(value);
+        }
+        return true;
+    }
+
+    getValidationClass(question, stateObject, ticketIndex = null) {
+        const value = stateObject[question.id];
+        const key = this.getFieldKey(question.id, ticketIndex);
+
+        if (this.state.touchedFields.has(key) && !this.validateQuestion(question, value)) {
+            return "border border-danger";
+        }
+        return "";
+    }
+
     isQuestionMissingMandatoryAnswer(id, value) {
         const question = this.pos.models["event.question"].get(id);
         return !!(question && question.is_mandatory_answer && !value);
+    }
+
+    isConfirmEnabled() {
+        const areQuestionsValid = (questions, values) =>
+            questions.every((q) => this.validateQuestion(q, values[q.id]));
+
+        return (
+            areQuestionsValid(this.questionsOncePerOrder, this.state.byOrder) &&
+            this.state.byRegistration.every((reg) =>
+                areQuestionsValid(this.questionsByRegistration, reg.questions)
+            )
+        );
     }
 
     confirm() {
