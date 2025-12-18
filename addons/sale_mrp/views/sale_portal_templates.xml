@@ -4,45 +4,40 @@
     <template id="sale_order_portal_content_inherit_sale_mrp"
         name="Orders MOs"
         inherit_id="sale.sale_order_portal_content">
-        <xpath expr="//div[@id='informations']" position="inside">
+        <xpath expr="//t[@t-set='has_info_cards']" position="after">
             <t t-set="mrp_productions" t-value="sale_order.mrp_production_ids"/>
-            <t t-if="mrp_productions">
-                <div>
-                    <strong>Manufacturing Orders</strong>
-                </div>
-                <div>
-                    <t t-foreach="mrp_productions" t-as="mo">
-                        <div class="d-flex flex-wrap align-items-center justify-content-between">
-                            <div>
-                                <span t-out="mo.name"/>
-                                <div class="small d-lg-inline-block ms-3">
-                                    Date:
-                                    <span class="text-muted"
-                                        t-field="mo.date_finished"
-                                        t-options="{'date_only': True}"/>
-                                </div>
-                            </div>
-                            <span t-if="mo.state in ['to_close', 'done']"
-                                class="small badge text-bg-success orders_label_text_align">
-                                <i class="fa fa-fw fa-check"/> <b>Manufactured</b>
-                            </span>
-                            <span t-elif="mo.state == 'cancel'"
-                                class="small badge text-bg-danger orders_label_text_align">
-                                <i class="fa fa-fw fa-times"/> <b>Cancelled</b>
-                            </span>
-                            <span t-elif="mo.state in ['confirmed']"
-                                class="small badge text-bg-info orders_label_text_align">
-                                <i class="fa fa-fw fa-clock-o"/> <b>Confirmed</b>
-                            </span>
-                            <span t-elif="mo.state in ['progress']"
-                                class="small badge text-bg-warning orders_label_text_align">
-                                <i class="fa fa-fw fa-clock-o"/> <b>In progress</b>
-                            </span>
-                        </div>
-                    </t>
-                </div>
-            </t>
+            <t t-if="mrp_productions" t-set="has_info_cards" t-value="True"/>
         </xpath>
+
+        <div id="sale_order_info_hook" position="after">
+            <t t-set="mrp_productions" t-value="sale_order.mrp_production_ids"/>
+            <div t-if="mrp_productions" class="flex-grow-1 flex-shrink-1 flex-basis-0 min-w-0">
+                <t t-set="mo" t-value="mrp_productions[0]"/>
+                <div class="d-flex align-items-center align-items-lg-start justify-content-between gap-3">
+                    <div class="d-flex flex-column">
+                        <h5 class="mb-1">Manufacturing Orders</h5>
+                        <span t-out="mo.name"/>
+                        <div class="small text-muted" t-if="mo.date_finished">
+                            <span t-field="mo.date_finished" t-options="{'date_only': True}"/>
+                        </div>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <span t-if="mo.state in ['to_close', 'done']" class="small badge text-bg-success">
+                            <i class="fa fa-fw fa-check"/> Manufactured
+                        </span>
+                        <span t-elif="mo.state == 'cancel'" class="small badge text-bg-danger">
+                            <i class="fa fa-fw fa-times"/> Cancelled
+                        </span>
+                        <span t-elif="mo.state in ['confirmed']" class="small badge text-bg-info">
+                            <i class="fa fa-fw fa-clock-o"/> Confirmed
+                        </span>
+                        <span t-elif="mo.state in ['progress']" class="small badge text-bg-warning">
+                            <i class="fa fa-fw fa-cogs"/> In Progress
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </template>
 
 </odoo>

@@ -20,87 +20,83 @@
         name="Orders Shipping Followup"
         inherit_id="sale.sale_order_portal_content"
     >
-        <div id="sale_invoices" position="after">
+        <xpath expr="//t[@t-set='has_info_cards']" position="after">
             <t t-set="delivery_orders" t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing')"/>
-            <t t-set="latest_delivery_orders" t-value="delivery_orders.sorted('create_date', reverse=True)[:3]"/>
-            <div t-if="delivery_orders" class="col-12 col-lg-6 mb-4">
-                <h5 class="mb-1">Last Delivery Orders</h5>
-                <hr class="mt-1 mb-2"/>
-                <div class="d-flex flex-column gap-2">
-                    <t t-foreach="latest_delivery_orders" t-as="picking">
-                        <t t-set="delivery_report_url"
-                           t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
-                        <div name="delivery_order"
-                            class="d-flex flex-column">
-                            <div name="delivery_details" class="d-flex align-items-center justify-content-between">
+            <t t-if="delivery_orders" t-set="has_info_cards" t-value="True"/>
+        </xpath>
+
+        <div id="sale_order_info_hook" position="after">
+            <t t-set="delivery_orders" t-value="sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing')"/>
+            <div t-if="delivery_orders" class="flex-grow-1 flex-shrink-1 flex-basis-0 min-w-0">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <h5 class="mb-0">Delivery</h5>
+                    <t t-if="sale_order.commitment_date and sale_order.state in ['sent', 'sale']">
+                        <div class="badge px-2 py-1 bg-200 d-md-none align-self-center small">
+                            <i class="fa fa-calendar-o me-1"/>
+                            Expected delivery: <b t-field="sale_order.commitment_date" t-options='{"widget": "date"}'/>
+                        </div>
+                        <div class="badge px-2 py-1 bg-200 d-none d-md-inline-flex align-items-center gap-1 small"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Expected delivery">
+                            <i class="fa fa-calendar-o"/>
+                            <b t-field="sale_order.commitment_date" t-options='{"widget": "date"}'/>
+                        </div>
+                    </t>
+                </div>
+                <div class="d-flex flex-column gap-1 mt-2">
+                    <t t-foreach="delivery_orders.sorted('create_date', reverse=True)" t-as="picking">
+                        <t t-set="delivery_report_url" t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
+                        <div class="d-flex align-items-center gap-2 py-1">
+                            <div name="delivery_details" class="d-flex flex-wrap align-items-center gap-1 flex-grow-1 min-w-0">
                                 <a t-att-href="delivery_report_url">
                                     <span t-out="picking.name"/>
                                 </a>
-                                <div t-if="picking.state == 'done'">
-                                    <span class="small badge rounded-pill text-bg-success orders_label_text_align">
-                                        <i class="fa fa-fw fa-truck"/> Shipped
-                                    </span>
-                                </div>
-                                <span t-elif="picking.state == 'cancel'"
-                                    class="small badge rounded-pill text-bg-danger orders_label_text_align">
-                                    <i class="fa fa-fw fa-times"/>Cancelled
-                                </span>
-                                <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
-                                    class="small badge rounded-pill text-bg-info orders_label_text_align">
-                                    <i class="fa fa-fw fa-clock-o"/>Preparation
+                                <span class="text-muted small">
+                                    <span t-if="picking.state == 'done'" t-field="picking.date_done" t-options="{'date_only': True}"/>
+                                    <span t-elif="picking.scheduled_date" t-field="picking.scheduled_date" t-options="{'date_only': True}"/>
                                 </span>
                             </div>
-                            <div class="small d-lg-inline-block" t-if="picking.date_done or picking.scheduled_date">
-                                Date:
-                                <span class="text-muted"
-                                        t-field="picking.date_done"
-                                        t-options="{'date_only': True}"/>
-                                <span t-if="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
-                                        class="text-muted"
-                                        t-field="picking.scheduled_date"
-                                        t-options="{'date_only': True}"/>
+                            <div class="flex-shrink-0">
+                                <span t-if="picking.state == 'done'" class="small badge rounded-pill text-bg-success">
+                                    <i class="fa fa-fw fa-truck"/> Shipped</span>
+                                <span t-elif="picking.state == 'cancel'" class="small badge rounded-pill text-bg-danger">
+                                    <i class="fa fa-fw fa-times"/> Cancelled</span>
+                                <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']" class="small badge rounded-pill text-bg-info">
+                                    <i class="fa fa-fw fa-clock-o"/> Preparation</span>
                             </div>
                         </div>
                     </t>
                 </div>
             </div>
             <t t-set="returns" t-value="delivery_orders.return_ids.sorted('create_date', reverse=True)"/>
-            <div t-if="returns" class="col-12 col-lg-6 mb-4">
-                <h4 class="mb-1">Returns</h4>
-                <hr class="mt-1 mb-2"/>
-                <t t-foreach="returns" t-as="picking">
-                    <t t-set="delivery_report_url"
-                        t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
-                    <div name="return">
-                        <div name="return_details" class="d-flex justify-content-between align-items-center">
-                            <a t-att-href="delivery_report_url">
-                                <span t-out="picking.name"/>
-                            </a>
-                            <span t-if="picking.state == 'done'"
-                                class="small badge rounded-pill text-bg-success orders_label_text_align">
-                                <i class="fa fa-fw fa-truck"/> Received
-                            </span>
-                            <span t-elif="picking.state == 'cancel'"
-                                class="small badge rounded-pill text-bg-danger orders_label_text_align">
-                                <i class="fa fa-fw fa-times"/> Cancelled
-                            </span>
-                            <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
-                                class="small badge rounded-pill text-bg-info orders_label_text_align">
-                                <i class="fa fa-fw fa-clock-o"/> Awaiting arrival
-                            </span>
+            <t t-if="returns" t-set="has_info_cards" t-value="True"/>
+            <div t-if="returns" class="flex-grow-1 flex-shrink-1 flex-basis-0 min-w-0">
+                <h5 class="mb-2">Returns</h5>
+                <div class="d-flex flex-column gap-1 mt-2">
+                    <t t-foreach="returns" t-as="picking">
+                        <t t-set="delivery_report_url" t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
+                        <div class="d-flex align-items-center gap-2 py-1">
+                            <div class="d-flex flex-wrap align-items-center gap-1 flex-grow-1 min-w-0">
+                                <a t-att-href="delivery_report_url">
+                                    <span t-out="picking.name"/>
+                                </a>
+                                <span class="text-muted small">
+                                    <span t-if="picking.state == 'done'" t-field="picking.date_done" t-options="{'date_only': True}"/>
+                                    <span t-elif="picking.scheduled_date" t-field="picking.scheduled_date" t-options="{'date_only': True}"/>
+                                </span>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <span t-if="picking.state == 'done'" class="small badge rounded-pill text-bg-success">
+                                    <i class="fa fa-fw fa-truck"/> Received</span>
+                                <span t-elif="picking.state == 'cancel'" class="small badge rounded-pill text-bg-danger">
+                                    <i class="fa fa-fw fa-times"/> Cancelled</span>
+                                <span t-else="" class="small badge rounded-pill text-bg-info">
+                                    <i class="fa fa-fw fa-clock-o"/> Awaiting arrival</span>
+                            </div>
                         </div>
-                        <div class="small d-lg-inline-block">
-                            Date:
-                            <span class="text-muted"
-                                t-field="picking.date_done"
-                                t-options="{'date_only': True}"/>
-                            <span t-if="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
-                                class="text-muted"
-                                t-field="picking.scheduled_date"
-                                t-options="{'date_only': True}"/>
-                        </div>
-                    </div>
-                </t>
+                    </t>
+                </div>
             </div>
         </div>
     </template>
