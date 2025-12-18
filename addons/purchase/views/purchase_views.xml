@@ -217,7 +217,22 @@
                             <field name="tax_calculation_rounding_method" invisible="1"/>
                         </group>
                         <group>
-                            <field name="date_order" invisible="state  == 'purchase'" readonly="state in ['cancel', 'purchase']"/>
+                            <label for="date_order" invisible="state == 'purchase'"/>
+                            <div class="o_row d-flex" invisible="state == 'purchase'">
+                                <field name="date_order"
+                                    nolabel="1"
+                                    readonly="state == 'cancel'"
+                                    class="flex-grow-0"
+                                    style=" width: auto !important;"
+                                    decoration-danger="date_order and date_order &lt; context_today().strftime('%Y-%m-%d')"/>
+                                <button title="Reset to today's date to recompute expected arrival based on available lead time
+                                    and previous information from the RFQ."
+                                    name="button_reset_date_order"
+                                    type="object"
+                                    icon="fa-refresh"
+                                    class="btn-link p-0 ms-2"
+                                    invisible="date_order and date_order &gt;= context_today().strftime('%Y-%m-%d')"/>
+                            </div>
                             <label for="date_planned"/>
                             <div name="date_planned_div">
                                 <field name="date_planned" readonly="state not in ('draft', 'sent', 'to approve', 'purchase')"/>
