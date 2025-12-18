@@ -1,13 +1,20 @@
 import { expect, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-mock";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
-import { animationFrame, click, queryOne, setInputRange, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, press, queryOne, setInputRange, waitFor } from "@odoo/hoot-dom";
 import { patchDragImage } from "@website/../tests/builder/image_test_helpers";
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
+import { getContent } from "@html_editor/../tests/_helpers/selection";
+import {
+    insertText,
+    simulateArrowKeyPress,
+    splitBlock,
+} from "@html_editor/../tests/_helpers/user_actions";
 
 defineWebsiteModels();
 
@@ -315,4 +322,63 @@ test("cover image ratio option only act on the right card when two of them are n
     await click(".dropdown-menu [data-class-action='ratio o_card_img_ratio_custom']");
     await waitFor("[data-label='Custom Ratio'] input[type='range']");
     expect(":iframe figure.o_card_img_ratio_custom").toHaveCount(1);
+});
+
+test.tags("desktop");
+// Because up/down arrows are tested within a full page width layout.
+test("navigate between cards with keyboard", async () => {
+    const { getEditor } = await setupWebsiteBuilderWithSnippet("s_cards_grid");
+    const editor = getEditor();
+    const h2El = await waitFor(":iframe h2");
+    const rowEl = await waitFor(":iframe div.row");
+    await contains(":iframe .s_cards_grid :contains()").click(); // click on text
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    await tick(); // await selectionchange
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await tick(); // await selectionchange
+    expect(getContent(h2El)).toMatch(/^.+\[\]$/);
+    await splitBlock(editor);
+    expect(":iframe p[data-selection-placeholder]").toHaveCount(0);
+
+    await insertText(editor, "/table");
+    await press("Enter");
+    await waitFor(".o-we-tablepicker");
+    await press("Enter");
+    await tick(); // await selectionchange
+    expect(":iframe p[data-selection-placeholder]").toHaveCount(0);
+
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    await tick(); // await selectionchange
+    expect(":iframe p[data-selection-placeholder]").toHaveCount(0);
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    await tick(); // await selectionchange
+    expect(":iframe p[data-selection-placeholder]").toHaveCount(0);
+    await simulateArrowKeyPress(editor, "ArrowDown"); // exit table
+    await tick(); // await selectionchange
+    expect(":iframe p[data-selection-placeholder]").toHaveCount(0);
+    expect(getContent(rowEl)).toMatch(/>Q\[\]uality/);
+
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    await tick(); // await selectionchange
+    expect(getContent(rowEl)).toMatch(/>W\[\]e provide/);
+
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    await tick(); // await selectionchange
+    expect(getContent(rowEl)).toMatch(/>E\[\]xpertise/);
+
+    await simulateArrowKeyPress(editor, "ArrowUp");
+    await tick(); // await selectionchange
+    expect(getContent(rowEl)).toMatch(/>W\[\]e provide/);
+
+    await simulateArrowKeyPress(editor, "ArrowDown");
+    await tick(); // await selectionchange
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await tick(); // await selectionchange
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await tick(); // await selectionchange
+    expect(getContent(rowEl)).toMatch(/finish.\[\]<\/p>/);
+
+    await simulateArrowKeyPress(editor, "ArrowRight");
+    await tick(); // await selectionchange
+    expect(getContent(rowEl)).toMatch(/>\[\]Expertise/);
 });

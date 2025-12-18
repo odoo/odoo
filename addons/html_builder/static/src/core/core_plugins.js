@@ -44,6 +44,7 @@ const mainEditorPluginsToRemove = [
     "BannerPlugin",
     "MoveNodePlugin",
     "FontFamilyPlugin",
+    "SelectionPlaceholderPlugin",
     // Replaced plugins:
     "ColorUIPlugin",
     "ImagePlugin",
