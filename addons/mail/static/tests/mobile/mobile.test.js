@@ -35,10 +35,10 @@ test("auto-select 'Inbox' when discuss had channel as active thread", async () =
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-ChatWindow [title*='Close Chat Window']");
-    await contains(".o-mail-MessagingMenu-tab.active", { text: "Channels" });
-    await click("button", { text: "Inbox" });
-    await contains(".o-mail-MessagingMenu-tab.active", { text: "Inbox" });
-    await contains(".btn-secondary.active", { text: "Inbox" }); // in header
+    await contains(".o-mail-MessagingMenu-tab.active:text('Channels')");
+    await click("button:text('Inbox')");
+    await contains(".o-mail-MessagingMenu-tab.active:text('Inbox')");
+    await contains(".btn-secondary.active:text('Inbox')"); // in header
 });
 
 test("show loading on initial opening", async () => {
@@ -56,12 +56,12 @@ test("show loading on initial opening", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin");
-    await contains(".o-mail-NotificationItem", { text: "General", count: 0 });
+    await contains(".o-mail-NotificationItem:text('General')", { count: 0 });
     await expect.waitForSteps(["before channels_as_member"]);
     def.resolve();
     await waitStoreFetch("channels_as_member");
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin", { count: 0 });
-    await contains(".o-mail-NotificationItem", { text: "General" });
+    await contains(".o-mail-NotificationItem:text('General')");
 });
 
 test("can leave channel in mobile", async () => {
@@ -71,9 +71,9 @@ test("can leave channel in mobile", async () => {
     await start();
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains(".o-mail-ChatWindow-moreActions", { text: "General" });
-    await click(".o-mail-ChatWindow-moreActions", { text: "General" });
-    await contains(".o-dropdown-item", { text: "Leave Channel" });
+    await contains(".o-mail-ChatWindow-moreActions:text('General')");
+    await click(".o-mail-ChatWindow-moreActions:text('General')");
+    await contains(".o-dropdown-item:text('Leave Channel')");
 });
 
 test("enter key should create a newline in composer", async () => {
@@ -107,18 +107,18 @@ test("Can edit message comment in chatter (mobile)", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Message", { text: "original message" });
+    await contains(".o-mail-Message:has(:text('original message'))");
     await pointerDown(".o-mail-Message", { contains: "original message" });
     await advanceTime(LONG_PRESS_DELAY);
-    await click("button", { text: "Edit" });
-    await click("button", { text: "Discard editing" });
-    await contains(".o-mail-Message", { text: "original message" });
+    await click("button:text('Edit')");
+    await click("button:text('Discard editing')");
+    await contains(".o-mail-Message:has(:text('original message'))");
     await pointerDown(".o-mail-Message", { contains: "original message" });
     await advanceTime(LONG_PRESS_DELAY);
-    await click("button", { text: "Edit" });
+    await click("button:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click("button[title='Save editing']");
-    await contains(".o-mail-Message", { text: "edited message (edited)" });
+    await contains(".o-mail-Message:has(:text('edited message (edited)'))");
 });
 
 test("Don't show chat hub in discuss app on mobile", async () => {

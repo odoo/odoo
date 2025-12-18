@@ -55,7 +55,7 @@ test("Search in chatter", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-SearchMessageResult .o-mail-Message");
     await click(".o-mail-MessageCard-jump");
-    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content", { text: "not empty" });
+    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content:text('not empty')");
 });
 
 test("Close button should close the search panel", async () => {

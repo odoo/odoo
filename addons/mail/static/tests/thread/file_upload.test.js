@@ -29,7 +29,7 @@ test("no conflicts between file uploads", async () => {
     await start();
     // Uploading file in the first thread: res.partner chatter.
     await openFormView("res.partner", partnerId);
-    await click("button", { text: "Send message" });
+    await click("button:text('Send message')");
     await inputFiles(".o-mail-Chatter .o-mail-Composer input[type=file]", [text]);
     // Uploading file in the second thread: discuss.channel in chatWindow.
     await click("i[aria-label='Messages']");

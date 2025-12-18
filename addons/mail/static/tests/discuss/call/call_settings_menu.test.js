@@ -55,7 +55,7 @@ test("Renders the call settings", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
+    await click(".o-dropdown-item:text('Call Settings')");
     await contains(".o-discuss-CallSettings");
     await contains("label[aria-label='Camera']");
     await contains("label[aria-label='Microphone']");
@@ -70,13 +70,13 @@ test("Renders the call settings", async () => {
     await click(".o-mail-DeviceSelect-button[data-kind='videoinput']:has(:text('Default'))");
     await contains(".o-dropdown-item:has(:text('mockVideoDeviceLabel'))");
     await contains(`.o-dropdown-item:has(:text(${browserDefaultLabel}))`);
-    await contains("button", { text: "Voice Detection" });
-    await contains("button", { text: "Push to Talk" });
-    await contains("span", { text: "Voice detection sensitivity" });
-    await contains("button", { text: "Test" });
-    await contains("label", { text: "Show video participants only" });
-    await contains("label", { text: "Auto-focus speaker" });
-    await contains("label", { text: "Blur video background" });
+    await contains("button:text('Voice Detection')");
+    await contains("button:text('Push to Talk')");
+    await contains("span:text('Voice detection sensitivity')");
+    await contains(".o-discuss-CallSettings button:text('Test')");
+    await contains("label:text('Show video participants only')");
+    await contains("label:text('Auto-focus speaker')");
+    await contains("label:text('Blur video background')");
 });
 
 test("activate push to talk", async () => {
@@ -88,11 +88,11 @@ test("activate push to talk", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
-    await click("button", { text: "Push to Talk" });
+    await click(".o-dropdown-item:text('Call Settings')");
+    await click("button:text('Push to Talk')");
     await contains("i[aria-label='Register new key']");
-    await contains("label", { text: "Delay after releasing push-to-talk" });
-    await contains("label", { text: "Voice detection sensitivity", count: 0 });
+    await contains("label:has(:text('Delay after releasing push-to-talk'))");
+    await contains("span:text('Voice detection sensitivity')", { count: 0 });
 });
 
 test("activate blur", async () => {
@@ -104,10 +104,10 @@ test("activate blur", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
+    await click(".o-dropdown-item:text('Call Settings')");
     await click("input[title='Blur video background']");
-    await contains("label", { text: "Blur video background" });
-    await contains("label", { text: "Edge blur intensity" });
+    await contains("label:has(:text('Blur video background'))");
+    await contains("label:has(:text('Edge blur intensity'))");
 });
 
 test("local storage for call settings", async () => {
@@ -151,11 +151,11 @@ test("local storage for call settings", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
+    await click(".o-dropdown-item:text('Call Settings')");
     await contains("input[title='Show video participants only']:checked");
     await contains("input[title='Blur video background']:checked");
-    await contains("label[title='Background blur intensity']", { text: "15%" });
-    await contains("label[title='Edge blur intensity']", { text: "25%" });
+    await contains("label[title='Background blur intensity']:has(:text('15%'))");
+    await contains("label[title='Edge blur intensity']:has(:text('25%'))");
 
     // testing save to local storage
     await click("input[title='Show video participants only']");

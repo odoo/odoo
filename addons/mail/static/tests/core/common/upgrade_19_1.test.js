@@ -46,7 +46,7 @@ test("use blur is 'on'", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
+    await click(".o-dropdown-item:text('Call Settings')");
     await contains(".o-discuss-CallSettings");
     await contains(
         ".o-discuss-CallSettings-item:has(label:contains('Blur video background')) input:checked"
@@ -81,7 +81,7 @@ test("show only video 'on'", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
+    await click(".o-dropdown-item:text('Call Settings')");
     await contains(".o-discuss-CallSettings");
     await contains("input[title='Show video participants only']:checked");
     const showOnlyVideoKey = makeRecordFieldLocalId(Settings.localId(), "showOnlyVideo");
@@ -99,7 +99,7 @@ test("voice activation threshold", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item", { text: "Call Settings" });
+    await click(".o-dropdown-item:text('Call Settings')");
     await contains(".o-discuss-CallSettings");
     await contains(".o-Discuss-CallSettings-thresholdInput:value(0.3)");
     const voiceActivationThresholdKey = makeRecordFieldLocalId(

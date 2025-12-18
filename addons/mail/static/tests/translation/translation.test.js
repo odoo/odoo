@@ -35,13 +35,13 @@ test("Toggle display of original/translated version of chatter message", async (
     await contains("[title='Revert']", { count: 0 });
     // Click acts as a toogle affecting its appearence and the actual message content displayed.
     await click("[title='Translate']");
-    await contains(".o-mail-Message-body", {
-        text: "To bad weather, good face.(Translated from: Spanish)",
-    });
+    await contains(
+        ".o-mail-Message-body:text('To bad weather, good face. (Translated from: Spanish)')"
+    );
     await contains("[title='Translate']", { count: 0 });
     await contains("[title='Revert']");
     await click("[title='Revert']");
-    await contains(".o-mail-Message", { text: "Al mal tiempo, buena cara." });
+    await contains(".o-mail-Message:has(:text('Al mal tiempo, buena cara.'))");
     await click("[title='Translate']");
     // The translation button should not trigger more than one external request for a single message.
     await expect.waitForSteps(["Request"]);
@@ -65,23 +65,18 @@ test("translation of email message", async () => {
     }));
     await start();
     await openFormView("res.partner", partnerId);
-    await contains("span", {
-        text: "Al mal tiempo, buena cara.",
+    await contains("span:text('Al mal tiempo, buena cara.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
     await click("button[title='Expand']");
     await click(".o-dropdown-item:contains('Translate')");
-    await contains("span", {
-        text: "To bad weather, good face.",
+    await contains("span:text('To bad weather, good face.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
-    await contains(".o-mail-Message-body", {
-        text: "(Translated from: Spanish)",
-    });
+    await contains(".o-mail-Message-body:text('(Translated from: Spanish)')", {});
     await click("button[title='Expand']");
     await click(".o-dropdown-item:contains('Revert')");
-    await contains("span", {
-        text: "Al mal tiempo, buena cara.",
+    await contains("span:text('Al mal tiempo, buena cara.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
 });
@@ -150,7 +145,7 @@ test("Toggle message translation on mobile", async () => {
     await pointerDown(".o-mail-Message");
     await advanceTime(LONG_PRESS_DELAY);
     await click("button:contains('Translate')");
-    await contains(".o-mail-Message-body", {
-        text: "To bad weather, good face.(Translated from: Spanish)",
-    });
+    await contains(
+        ".o-mail-Message-body:text('To bad weather, good face. (Translated from: Spanish)')"
+    );
 });

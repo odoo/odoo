@@ -28,8 +28,8 @@ test("Messages are received cross-tab", async () => {
     await contains(`${env2.selector} .o-mail-Thread:contains('Welcome to #General!')`); // wait for loaded and focus in input
     await insertText(`${env1.selector} .o-mail-Composer-input`, "Hello World!");
     await press("Enter");
-    await contains(`${env1.selector} .o-mail-Message-content`, { text: "Hello World!" });
-    await contains(`${env2.selector} .o-mail-Message-content`, { text: "Hello World!" });
+    await contains(`${env1.selector} .o-mail-Message-content:text('Hello World!')`);
+    await contains(`${env2.selector} .o-mail-Message-content:text('Hello World!')`);
 });
 
 test.tags("focus required");
@@ -48,7 +48,7 @@ test("Thread rename", async () => {
     });
     triggerHotkey("Enter");
     await contains(`${env2.selector} .o-mail-DiscussContent-threadName[title='Sales']`);
-    await contains(`${env2.selector} .o-mail-DiscussSidebarChannel`, { text: "Sales" });
+    await contains(`${env2.selector} .o-mail-DiscussSidebarChannel:text('Sales')`);
 });
 
 test.tags("focus required");
@@ -153,10 +153,10 @@ test("Remove attachment from message", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await contains(`${env1.selector} .o-mail-AttachmentCard`, { text: "test.txt" });
+    await contains(`${env1.selector} .o-mail-AttachmentCard:has(:text('test.txt'))`);
     await click(`${env2.selector} .o-mail-Attachment-unlink`);
-    await click(`${env2.selector} .modal-footer .btn`, { text: "Delete Attachment" });
-    await contains(`${env1.selector} .o-mail-AttachmentCard`, { count: 0, text: "test.txt" });
+    await click(`${env2.selector} .modal-footer .btn:text('Delete Attachment')`);
+    await contains(`${env1.selector} .o-mail-AttachmentCard:has(:text('test.txt'))`, { count: 0 });
 });
 
 test("Message (hard) delete notification", async () => {
@@ -179,13 +179,13 @@ test("Message (hard) delete notification", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await click("[title='Add Star']");
-    await contains("button", { text: "Inbox", contains: [".badge", { text: "1" }] });
-    await contains("button", { text: "Starred messages", contains: [".badge", { text: "1" }] });
+    await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
+    await contains("button:has(:text('Starred messages'))", { contains: [".badge:text('1')"] });
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/delete", {
         message_ids: [messageId],
     });
     await contains(".o-mail-Message", { count: 0 });
-    await contains("button", { text: "Inbox", contains: [".badge", { count: 0 }] });
-    await contains("button", { text: "Starred messages", contains: [".badge", { count: 0 }] });
+    await contains("button:has(:text('Inbox'))", { contains: [".badge", { count: 0 }] });
+    await contains("button:has(:text('Starred messages'))", { contains: [".badge", { count: 0 }] });
 });

@@ -210,5 +210,5 @@ test("Display highligthed with escaped character must ignore them", async () => 
     await contains(`.o-mail-SearchMessageResult .o-mail-Message span.${HIGHLIGHT_CLASS}`, {
         count: 2,
     });
-    await contains(`.o-mail-Message-body`, { text: "<strong>test</strong> hello" });
+    await contains(`.o-mail-Message-body:has(:text("<strong>test</strong> hello"))`);
 });

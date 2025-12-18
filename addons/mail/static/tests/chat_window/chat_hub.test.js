@@ -42,10 +42,9 @@ test("chat window does not fetch messages if hidden", async () => {
     await start();
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatBubble", { count: 1 });
-    // FIXME: expected ordering: Banana, Apple, Orange
-    await contains(".o-mail-Message-content", { text: "Banana" });
-    await contains(".o-mail-Message-content", { text: "Apple" });
-    await contains(".o-mail-Message-content", { count: 0, text: "Orange" });
+    await contains(".o-mail-Message-content:text('Banana')");
+    await contains(".o-mail-Message-content:text('Apple')");
+    await contains(".o-mail-Message-content:contains('Orange')", { count: 0 });
     await expect.waitForSteps(["fetch_messages", "fetch_messages"]);
 });
 
@@ -78,14 +77,13 @@ test("click on hidden chat window should fetch its messages", async () => {
     await start();
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatBubble", { count: 1 });
-    // FIXME: expected ordering: Banana, Apple, Orange
-    await contains(".o-mail-Message-content", { text: "Banana" });
-    await contains(".o-mail-Message-content", { text: "Apple" });
-    await contains(".o-mail-Message-content", { count: 0, text: "Orange" });
+    await contains(".o-mail-Message-content:text('Banana')");
+    await contains(".o-mail-Message-content:text('Apple')");
+    await contains(".o-mail-Message-content:contains('Orange')", { count: 0 });
     await expect.waitForSteps(["fetch_messages", "fetch_messages"]);
     await click(".o-mail-ChatBubble");
-    await contains(".o-mail-Message-content", { text: "Orange" });
-    await contains(".o-mail-Message-content", { text: "Banana" });
-    await contains(".o-mail-Message", { count: 0, text: "Apple" });
+    await contains(".o-mail-Message-content:text('Orange')");
+    await contains(".o-mail-Message-content:text('Banana')");
+    await contains(".o-mail-Message-content:contains('Apple')", { count: 0 });
     await expect.waitForSteps(["fetch_messages"]);
 });

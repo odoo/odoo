@@ -20,7 +20,7 @@ test("basic rendering", async () => {
     await contains(".o-mail-Avatar img");
     await contains(".o-mail-Avatar img[data-src='/web/image/res.users/7/avatar_128']");
     await contains(".o-mail-Avatar span");
-    await contains(".o-mail-Avatar span", { text: "User display name" });
+    await contains(".o-mail-Avatar span:text('User display name')");
     await contains(".o_avatar_card", { count: 0 });
     await click(".o-mail-Avatar img");
     await contains(".o_avatar_card");

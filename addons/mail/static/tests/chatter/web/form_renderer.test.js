@@ -92,7 +92,7 @@ test("Attachments that have been unlinked from server should be visually unlinke
         resId: partnerId_1,
         resIds: [partnerId_1, partnerId_2],
     });
-    await contains("button[aria-label='Attach files']", { text: "2" });
+    await contains("button[aria-label='Attach files']:text('2')");
     // The attachment links are updated on (re)load,
     // so using pager is a way to reload the record "Partner1".
     await click(".o_pager_next");
@@ -100,7 +100,7 @@ test("Attachments that have been unlinked from server should be visually unlinke
     // Simulate unlinking attachment 1 from Partner 1.
     pyEnv["ir.attachment"].write([attachmentId_1], { res_id: 0 });
     await click(".o_pager_previous");
-    await contains("button[aria-label='Attach files']", { text: "1" });
+    await contains("button[aria-label='Attach files']:text('1')");
 });
 
 test("ellipsis button is not duplicated when switching from read to edit mode", async () => {

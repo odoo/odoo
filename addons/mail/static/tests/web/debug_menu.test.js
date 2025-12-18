@@ -29,7 +29,7 @@ test("Manage messages", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Bob" });
     await openFormView("res.partner", partnerId);
     await click(".o_debug_manager .dropdown-toggle");
-    await click(".dropdown-item", { text: "Messages" });
+    await click(".dropdown-item:text('Messages')");
     await expect.waitForSteps(["message_read"]);
-    await contains(".o_breadcrumb .active > span", { text: "Messages" });
+    await contains(".o_breadcrumb .active > span:text('Messages')");
 });

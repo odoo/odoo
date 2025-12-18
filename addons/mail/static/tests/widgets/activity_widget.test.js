@@ -45,7 +45,7 @@ test("list activity widget with no activity", async () => {
     });
     await expect.waitForSteps(["web_search_read"]);
     await contains(".o-mail-ActivityButton i.fa-clock-o");
-    await contains(".o-mail-ListActivity-summary", { text: "" });
+    await contains(".o-mail-ListActivity-summary", { textContent: "" });
 });
 
 test("list activity widget with activities", async () => {
@@ -76,13 +76,13 @@ test("list activity widget with activities", async () => {
     await contains(":nth-child(1 of .o_data_row)", {
         contains: [
             [".o-mail-ActivityButton i.text-warning.fa-phone"],
-            [".o-mail-ListActivity-summary", { text: "Call with Al" }],
+            [".o-mail-ListActivity-summary:text('Call with Al')"],
         ],
     });
     await contains(":nth-child(2 of .o_data_row)", {
         contains: [
             [".o-mail-ActivityButton i.text-success.fa-tasks"],
-            [".o-mail-ListActivity-summary", { text: "Type 2" }],
+            [".o-mail-ListActivity-summary:text('Type 2')"],
         ],
     });
 });
@@ -107,7 +107,7 @@ test("list activity widget with exception", async () => {
         arch: "<list><field name='activity_ids' widget='list_activity'/></list>",
     });
     await contains(".o-mail-ActivityButton i.text-warning.fa-warning");
-    await contains(".o-mail-ListActivity-summary", { text: "Warning" });
+    await contains(".o-mail-ListActivity-summary:text('Warning')");
 });
 
 test("list activity widget: open dropdown", async () => {
@@ -162,7 +162,7 @@ test("list activity widget: open dropdown", async () => {
     await openListView("res.users", {
         arch: "<list><field name='name'/><field name='activity_ids' widget='list_activity'/></list>",
     });
-    await contains(".o-mail-ListActivity-summary", { text: "Call with Al" });
+    await contains(".o-mail-ListActivity-summary:text('Call with Al')");
     await click(".o-mail-ActivityButton");
     await expect.waitForSteps(["activity_format"]);
     await click(
@@ -170,7 +170,7 @@ test("list activity widget: open dropdown", async () => {
     );
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     await expect.waitForSteps(["action_feedback"]);
-    await contains(".o-mail-ListActivity-summary", { text: "Meet FP" });
+    await contains(".o-mail-ListActivity-summary:text('Meet FP')");
 });
 
 test("list activity widget: batch selection from list", async (assert) => {
@@ -228,14 +228,14 @@ test("list activity widget: batch selection from list", async (assert) => {
     // We select 2 among the 3 partners created above and click on the clock of one of them
     await click(".o_list_record_selector .o-checkbox", { target: matildeRow });
     await click(".o_list_record_selector .o-checkbox", { target: marioRow });
-    await contains(".o_selection_box", { text: "2 selected" });
+    await contains(".o_selection_box:text('2 selected')");
     await click(".o-mail-ActivityButton", { target: matildeRow });
-    await contains(".o-mail-ActivityListPopover button", {
-        text: "Schedule an activity on selected records",
-    });
-    await contains(".o-mail-ActivityListPopover button", {
-        text: "Schedule an activity on selected records",
-    });
+    await contains(
+        ".o-mail-ActivityListPopover button:text('Schedule an activity on selected records')"
+    );
+    await contains(
+        ".o-mail-ActivityListPopover button:text('Schedule an activity on selected records')"
+    );
     await click(".o-mail-ActivityListPopover button");
     await wizardOpened;
     expect(scheduleWizardContext).toEqual({
@@ -246,7 +246,7 @@ test("list activity widget: batch selection from list", async (assert) => {
     // But when clicking on the clock of one of the non-selected row, it applies to only that row
     wizardOpened = new Deferred();
     await click(".o-mail-ActivityButton", { target: alexanderRow });
-    await contains(".o-mail-ActivityListPopover button", { text: "Schedule an activity" });
+    await contains(".o-mail-ActivityListPopover button:text('Schedule an activity')");
     await contains(
         ".o-mail-ActivityListPopover button:not(:contains('Schedule an activity on selected records'))"
     );
@@ -260,12 +260,12 @@ test("list activity widget: batch selection from list", async (assert) => {
     // We now check that when clicking on the clock of the other selected row, it applies to both row
     wizardOpened = new Deferred();
     await click(".o-mail-ActivityButton", { target: marioRow });
-    await contains(".o-mail-ActivityListPopover", {
-        text: "Schedule an activity on selected records",
-    });
-    await contains(".o-mail-ActivityListPopover button", {
-        text: "Schedule an activity on selected records",
-    });
+    await contains(
+        ".o-mail-ActivityListPopover button:text('Schedule an activity on selected records')"
+    );
+    await contains(
+        ".o-mail-ActivityListPopover button:text('Schedule an activity on selected records')"
+    );
     await click(".o-mail-ActivityListPopover button");
     await wizardOpened;
     expect(scheduleWizardContext).toEqual({

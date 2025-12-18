@@ -22,7 +22,7 @@ test("Channel subscription is renewed when channel is manually added", async () 
     });
     await openDiscuss(channelId);
     await click("[title='Invite People']");
-    await click(".o-discuss-ChannelInvitation-selectable", { text: "Mitchell Admin" });
+    await click(".o-discuss-ChannelInvitation-selectable:has(:text('Mitchell Admin'))");
     await click("[title='Invite']:enabled");
     await expect.waitForSteps(["update-channels"]);
 });

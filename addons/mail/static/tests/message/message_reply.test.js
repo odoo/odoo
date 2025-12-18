@@ -36,9 +36,9 @@ test("click on message in reply to highlight the parent message", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-MessageInReply-message", {
-        parent: [".o-mail-Message", { text: "Reply to Hey" }],
+        parent: [".o-mail-Message:has(:text('Reply to Hey'))"],
     });
-    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content", { text: "Hey lol" });
+    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content:has(:text('Hey lol'))");
 });
 
 test("click on message in reply to scroll to the parent message", async () => {
@@ -65,7 +65,7 @@ test("click on message in reply to scroll to the parent message", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-MessageInReply-message", {
-        parent: [".o-mail-Message", { text: "Response to first message" }],
+        parent: [".o-mail-Message:has(:text('Response to first message'))"],
     });
     await contains(":nth-child(1 of .o-mail-Message)", { visible: true });
 });
@@ -150,10 +150,10 @@ test("can reply to logged note in chatter", async () => {
     await contains(".o-dropdown-item:contains('Reply')");
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Message:contains('Test message from B') [title='Reply']");
-    await contains("button.active", { text: "Log note" });
+    await contains("button.active:text('Log note')");
     await contains(".o-mail-Composer.o-focused .o-mail-Composer-input", { value: "@Partner B " });
     await click(".o-mail-Composer-send:enabled");
-    await contains(".o-mail-Message a.o_mail_redirect", { text: "@Partner B" });
+    await contains(".o-mail-Message a.o_mail_redirect:text('@Partner B')");
     await contains(".o-mail-Message:contains('@Partner B') [title='Edit']");
     await contains(".o-mail-Message:contains('@Partner B') [title='Reply']", { count: 0 });
     await click(".o-mail-Message:contains('@Partner B') [title='Expand']");
@@ -181,9 +181,9 @@ test("Replying to a message containing line breaks should be correctly inlined",
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-MessageInReply-message", {
-        text: "Message first line. Message second line. Message third line.",
-    });
+    await contains(
+        ".o-mail-MessageInReply-message:text('Message first line. Message second line. Message third line.')"
+    );
 });
 
 test("Replying to a message containing attachments should display an attachment icon", async () => {
@@ -235,7 +235,5 @@ test("reply with only attachment shows parent message context", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-MessageInReply-message", {
-        text: "Original message content",
-    });
+    await contains(".o-mail-MessageInReply-message:text('Original message content')");
 });

@@ -35,7 +35,7 @@ test('[text composer] receive other member typing status "is typing"', async () 
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     // simulate receive typing notification from demo
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -43,7 +43,7 @@ test('[text composer] receive other member typing status "is typing"', async () 
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
 });
 
 test.tags("html composer");
@@ -63,14 +63,14 @@ test('receive other member typing status "is typing"', async () => {
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
 });
 
 test('[text composer] receive other member typing status "is typing" then "no longer is typing"', async () => {
@@ -87,7 +87,7 @@ test('[text composer] receive other member typing status "is typing" then "no lo
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     // simulate receive typing notification from demo "is typing"
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -95,7 +95,7 @@ test('[text composer] receive other member typing status "is typing" then "no lo
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
     // simulate receive typing notification from demo "is no longer typing"
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -104,7 +104,7 @@ test('[text composer] receive other member typing status "is typing" then "no lo
         })
     );
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
 });
 
 test.tags("html composer");
@@ -124,14 +124,14 @@ test('receive other member typing status "is typing" then "no longer is typing"'
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
@@ -139,7 +139,7 @@ test('receive other member typing status "is typing" then "no longer is typing"'
         })
     );
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
 });
 
 test('[text composer] assume other member typing status becomes "no longer is typing" after long without any updated typing status', async () => {
@@ -157,7 +157,7 @@ test('[text composer] assume other member typing status becomes "no longer is ty
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     // simulate receive typing notification from demo "is typing"
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -165,9 +165,9 @@ test('[text composer] assume other member typing status becomes "no longer is ty
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(Store.OTHER_LONG_TYPING);
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
 });
 
 test.tags("html composer");
@@ -188,16 +188,16 @@ test('assume other member typing status becomes "no longer is typing" after long
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(Store.OTHER_LONG_TYPING);
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
 });
 
 test('[text composer] other member typing status "is typing" refreshes of assuming no longer typing', async () => {
@@ -215,7 +215,7 @@ test('[text composer] other member typing status "is typing" refreshes of assumi
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     // simulate receive typing notification from demo "is typing"
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -223,7 +223,7 @@ test('[text composer] other member typing status "is typing" refreshes of assumi
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
     // simulate receive typing notification from demo "is typing" again after long time.
     await advanceTime(LONG_TYPING);
     await withUser(userId, () =>
@@ -233,9 +233,9 @@ test('[text composer] other member typing status "is typing" refreshes of assumi
         })
     );
     await advanceTime(LONG_TYPING);
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(Store.OTHER_LONG_TYPING - LONG_TYPING);
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
 });
 
 test.tags("html composer");
@@ -256,14 +256,14 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
     await openDiscuss(channelId);
     await advanceTime(Store.FETCH_DATA_DEBOUNCE_DELAY);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(LONG_TYPING);
     await withUser(userId, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -272,9 +272,9 @@ test('other member typing status "is typing" refreshes of assuming no longer typ
         })
     );
     await advanceTime(LONG_TYPING);
-    await contains(".o-discuss-Typing", { text: "Demo is typing..." });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
     await advanceTime(Store.OTHER_LONG_TYPING - LONG_TYPING);
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')");
 });
 
 test('[text composer] receive several other members typing status "is typing"', async () => {
@@ -301,7 +301,7 @@ test('[text composer] receive several other members typing status "is typing"', 
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     // simulate receive typing notification from other 10 (is typing)
     withUser(userId_1, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -309,7 +309,7 @@ test('[text composer] receive several other members typing status "is typing"', 
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Other 10 is typing..." });
+    await contains(".o-discuss-Typing:text('Other 10 is typing...')");
     // simulate receive typing notification from other 11 (is typing)
     withUser(userId_2, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -317,7 +317,7 @@ test('[text composer] receive several other members typing status "is typing"', 
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Other 10 and Other 11 are typing..." });
+    await contains(".o-discuss-Typing:text('Other 10 and Other 11 are typing...')");
     // simulate receive typing notification from other 12 (is typing)
     withUser(userId_3, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -325,7 +325,7 @@ test('[text composer] receive several other members typing status "is typing"', 
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Other 10, Other 11 and more are typing..." });
+    await contains(".o-discuss-Typing:text('Other 10, Other 11 and more are typing...')");
     // simulate receive typing notification from other 10 (no longer is typing)
     withUser(userId_1, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -333,7 +333,7 @@ test('[text composer] receive several other members typing status "is typing"', 
             is_typing: false,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Other 11 and Other 12 are typing..." });
+    await contains(".o-discuss-Typing:text('Other 11 and Other 12 are typing...')");
     // simulate receive typing notification from other 10 (is typing again)
     withUser(userId_1, () =>
         rpc("/discuss/channel/notify_typing", {
@@ -341,7 +341,7 @@ test('[text composer] receive several other members typing status "is typing"', 
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Other 11, Other 12 and more are typing..." });
+    await contains(".o-discuss-Typing:text('Other 11, Other 12 and more are typing...')");
 });
 
 test.tags("html composer");
@@ -371,42 +371,42 @@ test('receive several other members typing status "is typing"', async () => {
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     withUser(userId_1, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Other 10 is typing..." });
+    await contains(".o-discuss-Typing:text('Other 10 is typing...')");
     withUser(userId_2, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Other 10 and Other 11 are typing..." });
+    await contains(".o-discuss-Typing:text('Other 10 and Other 11 are typing...')");
     withUser(userId_3, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Other 10, Other 11 and more are typing..." });
+    await contains(".o-discuss-Typing:text('Other 10, Other 11 and more are typing...')");
     withUser(userId_1, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: false,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Other 11 and Other 12 are typing..." });
+    await contains(".o-discuss-Typing:text('Other 11 and Other 12 are typing...')");
     withUser(userId_1, () =>
         rpc("/discuss/channel/notify_typing", {
             channel_id: channelId,
             is_typing: true,
         })
     );
-    await contains(".o-discuss-Typing", { text: "Other 11, Other 12 and more are typing..." });
+    await contains(".o-discuss-Typing:text('Other 11, Other 12 and more are typing...')");
 });
 
 test("[text composer] current partner notify is typing to other thread members", async () => {
@@ -555,7 +555,7 @@ test("[text composer] current partner is typing should not translate on textual 
     await insertText(".o-mail-Composer-input", "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     testEnded = true;
 });
 
@@ -581,7 +581,7 @@ test("current partner is typing should not translate on textual typing status", 
     await htmlInsertText(editor, "a");
     await expect.waitForSteps(["notify_typing:true"]);
     await contains(".o-discuss-Typing");
-    await contains(".o-discuss-Typing", { count: 0, text: "Demo is typing...)" });
+    await contains(".o-discuss-Typing:text('Demo is typing...')", { count: 0 });
     testEnded = true;
 });
 
@@ -825,7 +825,7 @@ test("[text composer] switching to another channel triggers notify_typing to sto
     await openDiscuss(chatId);
     await insertText(".o-mail-Composer-input", "a");
     await expect.waitForSteps(["notify_typing:true"]);
-    await click(".o-mail-DiscussSidebar-item", { text: "general" });
+    await click(".o-mail-DiscussSidebarChannel-itemName:text('general')");
     await advanceTime(SHORT_TYPING / 2);
     await expect.waitForSteps(["notify_typing:false"]);
 });
@@ -861,7 +861,7 @@ test("switching to another channel triggers notify_typing to stop", async () => 
     };
     await htmlInsertText(editor, "a");
     await expect.waitForSteps(["notify_typing:true"]);
-    await click(".o-mail-DiscussSidebar-item", { text: "general" });
+    await click(".o-mail-DiscussSidebarChannel-itemName:text('general')");
     await advanceTime(SHORT_TYPING / 2);
     await expect.waitForSteps(["notify_typing:false"]);
 });
