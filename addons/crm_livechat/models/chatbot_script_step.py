@@ -39,10 +39,10 @@ class ChatbotScriptStep(models.Model):
 
     def _process_step(self, discuss_channel):
         self.ensure_one()
-        posted_message = super()._process_step(discuss_channel)
+        step_data = super()._process_step(discuss_channel)
         if self.step_type == 'create_lead':
             self._process_step_create_lead(discuss_channel)
-        return posted_message
+        return step_data
 
     def _process_step_create_lead(self, discuss_channel):
         """ When reaching a 'create_lead' step, we extract the relevant information: visitor's

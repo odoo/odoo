@@ -76,7 +76,6 @@ test("Show recent conversations in channel info list", async () => {
         },
         {
             channel_member_ids: [],
-            livechat_operator_id: serverState.partnerId,
             channel_type: "livechat",
             livechat_status: "in_progress",
             livechat_visitor_id: visitorId,

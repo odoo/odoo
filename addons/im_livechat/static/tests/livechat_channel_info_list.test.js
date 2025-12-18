@@ -33,7 +33,6 @@ test("livechat note is loaded when opening the channel info list", async () => {
         ],
         country_id: countryId,
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
         livechat_note: "<p>Initial note<br/>Second line</p>",
     });
     await start();
@@ -62,7 +61,6 @@ test("editing livechat note is synced between tabs", async () => {
         ],
         country_id: countryId,
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
         livechat_note: "<p>Initial note</p>",
     });
     const tab1 = await start({ asTab: true });
@@ -102,7 +100,6 @@ test("shows live chat status in discuss sidebar", async () => {
         ],
         country_id: countryId,
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
         livechat_status: "waiting",
     });
     await start();
@@ -137,7 +134,6 @@ test("editing livechat status is synced between tabs", async () => {
         ],
         country_id: countryId,
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
         livechat_status: "in_progress",
     });
     const tab1 = await start({ asTab: true });
@@ -178,7 +174,6 @@ test("Manage expertises from channel info list", async () => {
         ],
         country_id: countryId,
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
         livechat_expertise_ids: expertiseIds,
     });
     await start();
@@ -250,7 +245,6 @@ test("info panel toggle state persists across chats", async () => {
                 Command.create({ guest_id: guestId1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
         },
         {
             channel_member_ids: [
@@ -261,7 +255,6 @@ test("info panel toggle state persists across chats", async () => {
                 Command.create({ guest_id: guestId2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
         },
     ]);
     await start();
@@ -293,7 +286,6 @@ test("auto-open of livechat info & members panels should combine", async () => {
                 Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
         },
         {
             channel_type: "channel",

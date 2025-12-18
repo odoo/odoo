@@ -12,7 +12,7 @@
                     <field name="livechat_agent_providing_help_history"/>
                     <field name="country_id" string="Country"/>
                     <field name="livechat_customer_partner_ids" string="Customer"/>
-                    <filter name="filter_my_sessions" domain="[('livechat_operator_id.user_ids', '=', uid)]" string="My Sessions"/>
+                    <filter name="filter_my_sessions" domain="[('livechat_agent_partner_ids.user_ids', 'in', uid)]" string="My Sessions"/>
                     <separator/>
                     <filter name="ongoing" string="Ongoing" domain="[('livechat_end_dt', '=', False)]"/>
                     <separator/>
@@ -123,7 +123,7 @@
             <field name="model">discuss.channel</field>
             <field name="arch" type="xml">
                 <pivot string="Sessions" display_quantity="1" sample="1">
-                    <field name="livechat_operator_id" type="row"/>
+                    <field name="livechat_agent_partner_ids" type="row"/>
                     <field name="create_date" interval="day" type="col"/>
                     <field name="rating_last_value" type="measure" string="Rating (%)" widget="im_livechat.rating_percentage"/>
                 </pivot>

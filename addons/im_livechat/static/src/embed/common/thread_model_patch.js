@@ -9,14 +9,13 @@ import { Deferred } from "@web/core/utils/concurrency";
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        this.livechat_operator_id = fields.One("res.partner");
         this.chatbotTypingMessage = fields.One("mail.message", {
             compute() {
                 if (this.channel?.chatbot) {
                     return {
                         id: -0.1 - this.id,
                         thread: this,
-                        author_id: this.livechat_operator_id,
+                        author_id: this.channel.chatbot,
                     };
                 }
             },
@@ -29,7 +28,9 @@ patch(Thread.prototype, {
                         id: -0.2 - this.id,
                         body: livechatService.options.default_message,
                         thread: this,
-                        author_id: this.livechat_operator_id,
+                        author_id: this.channel?.livechat_agent_history_ids.sort(
+                            (a, b) => a.id - b.id
+                        )[0]?.partner_id,
                     };
                 }
             },

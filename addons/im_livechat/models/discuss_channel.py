@@ -8,7 +8,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _, tools
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tools import email_split, html2plaintext
+from odoo.tools import email_split, format_list, html2plaintext
 from odoo.tools.mimetypes import get_extension
 from odoo.tools.translate import LazyTranslate
 
@@ -41,7 +41,6 @@ class DiscussChannel(models.Model):
         help="Session is closed when either the visitor or the last agent leaves the conversation.",
     )
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null')
-    livechat_operator_id = fields.Many2one('res.partner', string='Operator', index='btree_not_null')
     livechat_channel_member_history_ids = fields.One2many("im_livechat.channel.member.history", "channel_id")
     livechat_expertise_ids = fields.Many2many(
         "im_livechat.expertise",
@@ -164,7 +163,6 @@ class DiscussChannel(models.Model):
         compute="_compute_livechat_matches_self_expertise",
         search="_search_livechat_matches_self_expertise",
     )
-
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
@@ -179,10 +177,6 @@ class DiscussChannel(models.Model):
     livechat_is_escalated = fields.Boolean("Is session escalated", compute="_compute_livechat_is_escalated", store=True)
     rating_last_text = fields.Selection(store=True)
 
-    _livechat_operator_id = models.Constraint(
-        "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
-        'Livechat Operator ID is required for a channel of type livechat.',
-    )
     _livechat_end_dt_status_constraint = models.Constraint(
         "CHECK(livechat_end_dt IS NULL or livechat_status IS NULL)",
         "Closed Live Chat session should not have a status.",
@@ -418,11 +412,6 @@ class DiscussChannel(models.Model):
     def _sync_field_names(self, res):
         super()._sync_field_names(res)
         res[None].attr("livechat_end_dt", predicate=is_livechat_channel)
-        res[None].one(
-            "livechat_operator_id",
-            "_store_livechat_agent_fields",
-            predicate=is_livechat_channel,
-        )
         res["internal_users"].attr("description", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_note", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_status", predicate=is_livechat_channel)
@@ -438,13 +427,6 @@ class DiscussChannel(models.Model):
         res.attr("chatbot_current_step")
         res.one("country_id", ["code", "name"], predicate=is_livechat_channel)
         res.attr("livechat_end_dt", predicate=is_livechat_channel)
-        # sudo - res.partner: accessing livechat operator is allowed
-        res.one(
-            "livechat_operator_id",
-            "_store_livechat_agent_fields",
-            predicate=is_livechat_channel,
-            sudo=True,
-        )
         # sudo - visitor can access to the channel member history of an accessible channel
         res.many(
             "livechat_channel_member_history_ids",
@@ -483,7 +465,7 @@ class DiscussChannel(models.Model):
                 "scriptStep": current_step_sudo.id,
                 "message": step_message.mail_message_id.id,
                 "operatorFound": current_step_sudo.step_type == "forward_operator"
-                and channel.livechat_operator_id != chatbot_script.operator_partner_id,
+                and bool(channel.livechat_agent_partner_ids),
             }
             store.add(current_step_sudo, "_store_script_step_fields")
             store.add(chatbot_script, "_store_script_fields")
@@ -527,10 +509,17 @@ class DiscussChannel(models.Model):
             {"id": self.id, "partner_id": self.env.user.partner_id.id},
         )
 
-    def _get_visitor_leave_message(self, operator=False, cancel=False):
+    def _get_visitor_leave_message(self, correspondents=False, cancel=False):
+        """ Return the message to post when the visitor leaves the conversation.
+
+        :param correspondents: partners with whom the visitor was chatting
+        :type correspondents: recordset of res.partner
+        :param cancel: whether the chat request has been cancelled
+        :type cancel: bool
+        """
         return _('Visitor left the conversation.')
 
-    def _close_livechat_session(self, **kwargs):
+    def _close_livechat_session(self, message):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
         self.ensure_one()
         if not self.livechat_end_dt:
@@ -547,8 +536,7 @@ class DiscussChannel(models.Model):
             # sudo: mail.message - posting visitor leave message is allowed
             self.sudo().message_post(
                 author_id=self.env.ref('base.partner_root').id,
-                body=Markup('<div class="o_mail_notification o_hide_author">%s</div>')
-                % self._get_visitor_leave_message(**kwargs),
+                body=Markup('<div class="o_mail_notification o_hide_author">%s</div>') % message,
                 message_type='notification',
                 subtype_xmlid='mail.mt_comment'
             )
@@ -567,10 +555,18 @@ class DiscussChannel(models.Model):
         lang = next((lang
                      for customer in self.sudo().livechat_customer_history_ids
                      if (lang := customer.partner_id.lang or customer.guest_id.lang)), self.env.lang)
+        # sudo: res.partner - visitors can access livechat agent/bot names
+        correspondent_names = format_list(
+            self.env,
+            (self.sudo().livechat_agent_partner_ids or self.sudo().livechat_bot_partner_ids).mapped(
+                lambda p: p.user_livechat_username or p.name
+            )
+        )
         render_context = {
             "company": company,
             "channel": self,
             "tz": ZoneInfo(tz),
+            "correspondent_names": correspondent_names,
         }
         mail_body = self.env['ir.qweb'].with_context(lang=lang)._render(
             'im_livechat.livechat_email_template', render_context, minimal_qcontext=True)
@@ -589,8 +585,7 @@ class DiscussChannel(models.Model):
             'body_html': mail_body_html,
             'email_from': company.catchall_formatted or company.email_formatted,
             'email_to': email_split(email)[0],
-            'subject': _('Conversation with %(agent)s',
-                         agent=self.livechat_operator_id.user_livechat_username or self.livechat_operator_id.name),
+            'subject': self.env._('Conversation with %s', correspondent_names),
         })
         mail.send()
 
@@ -938,7 +933,6 @@ class DiscussChannel(models.Model):
             # finally, rename the channel to include the operator's name
             channel_sudo._update_forwarded_channel_data(
                 livechat_failure="no_answer",
-                livechat_operator_id=human_operator.partner_id,
                 operator_name=human_operator.livechat_username if human_operator.livechat_username else human_operator.name,
             )
             channel_sudo._add_next_step_message_to_store(chatbot_script_step)
@@ -948,7 +942,7 @@ class DiscussChannel(models.Model):
             # sudo: discuss.channel - visitor tried getting operator, outcome must be updated
             self.sudo().livechat_failure = "no_agent"
 
-        return posted_message
+        return {"message": posted_message, "agent": human_operator}
 
     def _get_human_operator(self, users, chatbot_script_step):
         operator_params = {
@@ -979,11 +973,10 @@ class DiscussChannel(models.Model):
             member_params['partners'] = partners
         self._add_members(**member_params)
 
-    def _update_forwarded_channel_data(self, /, *, livechat_failure, livechat_operator_id, operator_name):
+    def _update_forwarded_channel_data(self, /, *, livechat_failure, operator_name):
         self.write(
             {
                 "livechat_failure": livechat_failure,
-                "livechat_operator_id": livechat_operator_id,
                 "name": " ".join(
                     [
                         self.env.user.display_name

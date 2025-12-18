@@ -8,24 +8,14 @@ patch(Thread.prototype, {
     setup() {
         super.setup();
         this.livechat_end_dt = fields.Datetime();
-        this.livechat_operator_id = fields.One("res.partner");
         this.livechatVisitorMember = fields.One("discuss.channel.member", {
             compute() {
                 if (this.channel?.channel_type !== "livechat") {
                     return;
                 }
-                // For live chat conversation, the correspondent is the first
-                // channel member that is not the operator.
-                const orderedChannelMembers = [...this.channel.channel_member_ids].sort(
-                    (a, b) => a.id - b.id
-                );
-                const isFirstMemberOperator = orderedChannelMembers[0]?.partner_id?.eq(
-                    this.livechat_operator_id
-                );
-                const visitor = isFirstMemberOperator
-                    ? orderedChannelMembers[1]
-                    : orderedChannelMembers[0];
-                return visitor;
+                return [...this.channel.channel_member_ids]
+                    .sort((a, b) => a.id - b.id)
+                    .find((member) => member.livechat_member_type === "visitor");
             },
         });
     },

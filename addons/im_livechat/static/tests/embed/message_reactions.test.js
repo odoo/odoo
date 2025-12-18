@@ -32,7 +32,6 @@ test("user custom live chat user name for message reactions", async () => {
         ],
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
     });
     pyEnv["mail.message"].create({
         body: "Hello world",

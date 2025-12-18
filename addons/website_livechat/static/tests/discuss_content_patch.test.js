@@ -21,7 +21,6 @@ test("Discuss header shows visitor avatar", async () => {
             Command.create({ guest_id: guestId }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
         livechat_visitor_id: visitorId,
     });
     await start();

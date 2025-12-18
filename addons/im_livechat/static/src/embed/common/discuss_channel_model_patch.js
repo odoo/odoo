@@ -32,17 +32,28 @@ const discussChannelPatch = {
             inverse: "activeLivechats",
         });
     },
-    get displayName() {
-        if (this.channel_type === "livechat" && this.isTransient && this.livechat_operator_id) {
-            return this.getPersonaName(this.livechat_operator_id);
-        }
-        return super.displayName;
-    },
     get avatarUrl() {
-        if (this.channel_type === "livechat") {
-            return this.livechat_operator_id.avatarUrl;
+        if (this.channel_type !== "livechat") {
+            return super.avatarUrl;
         }
-        return super.avatarUrl;
+        let bestScore = -1;
+        let bestMemberHistory;
+        // Agents are preferred over bots, current members over former members, and higher IDs over lower IDs
+        for (const memberHistory of this.livechat_channel_member_history_ids.sort(
+            (a, b) => b.id - a.id
+        )) {
+            if (memberHistory.livechat_member_type === "visitor") {
+                continue;
+            }
+            const score =
+                (memberHistory.livechat_member_type === "agent" ? 4 : 0) +
+                (memberHistory.member_id ? 2 : 0);
+            if (score > bestScore) {
+                bestScore = score;
+                bestMemberHistory = memberHistory;
+            }
+        }
+        return bestMemberHistory?.partner_id?.avatarUrl || super.avatarUrl;
     },
     get hasAttachmentPanel() {
         return this.channel_type !== "livechat" && super.hasAttachmentPanel;

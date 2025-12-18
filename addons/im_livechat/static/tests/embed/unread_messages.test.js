@@ -36,7 +36,6 @@ test("new message from operator displays unread counter", async () => {
         ],
         channel_type: "livechat",
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
     });
     expirableStorage.setItem(
         "im_livechat.saved_state",

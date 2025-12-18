@@ -32,7 +32,6 @@ test("can fold livechat chat windows in mobile", async () => {
             Command.create({ partner_id: partnerId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -61,7 +60,6 @@ test("closing a chat window with no message from admin side unpins it", async ()
             Command.create({ partner_id: partnerId_1, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -74,7 +72,6 @@ test("closing a chat window with no message from admin side unpins it", async ()
         ],
         channel_type: "livechat",
         livechat_end_dt: serializeDate(today()),
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -135,7 +132,6 @@ test("do not ask confirmation if other operators are present", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
             Command.create({ partner_id: otherOperatorId, livechat_member_type: "agent" }),
         ],
-        livechat_operator_id: serverState.partnerId,
         channel_type: "livechat",
     });
     setupChatHub({ opened: [channelId] });
@@ -162,7 +158,6 @@ test("Show livechats with new message in chat hub even when in discuss app)", as
                 Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
         },
         {
             channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
@@ -206,7 +201,6 @@ test("livechat: non-member can close immediately", async () => {
             Command.create({ partner_id: PartnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
-        livechat_operator_id: PartnerId,
         channel_type: "livechat",
     });
     await start();

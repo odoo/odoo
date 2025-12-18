@@ -21,7 +21,6 @@ test("agent can send conversation after livechat ends", async () => {
         ],
         channel_type: "livechat",
         livechat_end_dt: serializeDate(today()),
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss(channelId);

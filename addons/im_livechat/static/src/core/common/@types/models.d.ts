@@ -65,7 +65,6 @@ declare module "models" {
     export interface Thread {
         composerHidden: Readonly<boolean>;
         livechat_end_dt: import("luxon").DateTime;
-        livechat_operator_id: ResPartner;
         livechatVisitorMember: ChannelMember;
         transcriptUrl: Readonly<string>;
     }

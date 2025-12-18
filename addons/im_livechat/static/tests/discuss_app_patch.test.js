@@ -40,7 +40,6 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
         channel_type: "livechat",
         country_id: countryId,
         livechat_channel_id: livechatChannelId,
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -71,7 +70,6 @@ test("invite button should be present on livechat", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss(channelId);
@@ -96,7 +94,6 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
                 Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
         },
         {
             channel_member_ids: [
@@ -108,7 +105,6 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
                 Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
             ],
             channel_type: "livechat",
-            livechat_operator_id: serverState.partnerId,
         },
     ]);
     await start();
@@ -137,7 +133,6 @@ test("sidebar search finds livechats", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss();
@@ -155,7 +150,6 @@ test("open visitor's partner profile if visitor has one", async () => {
             Command.create({ partner_id: livechatPartner, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss(channel);
@@ -173,7 +167,6 @@ test("Conversation description works in livechat", async () => {
         ],
         channel_type: "livechat",
         description: "Yup, that customer again...",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss(channelId);

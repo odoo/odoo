@@ -84,7 +84,6 @@ export class LivechatChannel extends models.ServerModel {
         return {
             channel_partner_ids: [agent.partner_id],
             channel_member_ids: membersToAdd,
-            livechat_operator_id: agent.partner_id,
             livechat_channel_id: id,
             livechat_status: "in_progress",
             channel_type: "livechat",

@@ -21,7 +21,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
             ["chatbot_current_step_id.chatbot_script_id", "=", chatbot_script.id],
         ])
         for channel in channels:
-            channel._close_livechat_session()
+            channel._close_livechat_session(message=channel._get_visitor_leave_message())
         store.add(channels, {"close_chat_window": True})
 
         discuss_channel_values = {
@@ -43,7 +43,6 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
                     },
                 ),
             ],
-            'livechat_operator_id': chatbot_script.operator_partner_id.id,
             'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id,
             'channel_type': 'livechat',
             'name': chatbot_script.title,

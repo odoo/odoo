@@ -15,6 +15,7 @@ class DiscussChannelMember(models.Model):
     livechat_member_type = fields.Selection(
         [("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
         compute="_compute_livechat_member_type",
+        compute_sql="_compute_sql_livechat_member_type",
         # sudo - reading the history of a member the user has access to is acceptable.
         compute_sudo=True,
         inverse="_inverse_livechat_member_type",
@@ -73,6 +74,10 @@ class DiscussChannelMember(models.Model):
     def _compute_livechat_member_type(self):
         for member in self:
             member.livechat_member_type = member.livechat_member_history_ids.livechat_member_type
+
+    def _compute_sql_livechat_member_type(self, table):
+        history = table._join("livechat_member_history_ids")
+        return history.livechat_member_type
 
     @api.depends("livechat_member_history_ids.chatbot_script_id")
     def _compute_chatbot_script_id(self):

@@ -57,7 +57,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
         self._send_rating(channel, self.visitor, 5, "This deboulonnage was fine but not topitop.")
 
-        channel._close_livechat_session()
+        channel._close_livechat_session(message=channel._get_visitor_leave_message())
 
         self.assertEqual(len(channel.message_ids), 4)
         self.assertEqual(channel.message_ids[0].author_id, self.env.ref('base.partner_root'), "Odoobot must be the sender of the 'left the conversation' message.")
@@ -68,7 +68,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         channel = self._common_basic_flow()
 
         # left the conversation
-        channel._close_livechat_session()
+        channel._close_livechat_session(message=channel._get_visitor_leave_message())
         self.assertEqual(len(channel.message_ids), 3)
         self.assertEqual(channel.message_ids[0].author_id, self.env.ref('base.partner_root'), "Odoobot must be the author the message.")
         self.assertIn(f"Visitor #{channel.livechat_visitor_id.id}", channel.message_ids[0].body)
@@ -186,7 +186,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "livechat_outcome": "no_failure",
                         "livechat_expertise_ids": [],
                         "livechat_looking_for_help_since_dt": False,
-                        "livechat_operator_id": self.operator.partner_id.id,
                         "livechat_visitor_id": self.visitor.id,
                         "member_count": 2,
                         "message_needaction_counter": 0,
@@ -229,6 +228,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         ).id,
                         "livechat_member_type": "agent",
                         "partner_id": self.operator.partner_id.id,
+                        "member_id": operator_member.id,
                     },
                     {
                         "channel_id": channel.id,
@@ -237,6 +237,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                             lambda h: h.guest_id == guest
                         ).id,
                         "livechat_member_type": "visitor",
+                        "member_id": guest_member.id,
                     },
                 ],
                 "mail.guest": [
@@ -344,7 +345,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                     "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
                     "livechat_channel_member_history_ids": channel.livechat_channel_member_history_ids.ids,
                     "livechat_end_dt": fields.Datetime.to_string(agent_left_dt),
-                    "livechat_operator_id": self.operator.partner_id.id,
                     "member_count": 1,
                     "message_needaction_counter": 0,
                     "message_needaction_counter_bus_id": 0,

@@ -31,7 +31,6 @@ test("Thread name unchanged when inviting new users", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss(channelId);
@@ -56,7 +55,6 @@ test("Can set a custom name to livechat conversation", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss(channelId);
@@ -80,7 +78,6 @@ test("Display livechat custom username if defined", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: serverState.partnerId,
     });
     await start();
     await openDiscuss(channelId);
@@ -103,7 +100,6 @@ test("Display livechat custom name in typing status", async () => {
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: partnerId,
     });
     await start();
     await openDiscuss(channelId);

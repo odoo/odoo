@@ -197,10 +197,11 @@ class ImLivechatChannelMemberHistory(models.Model):
         res.attr("channel_id")
         res.one("guest_id", ["name"], predicate=lambda r: not r.partner_id)
         res.attr("livechat_member_type")
+        res.attr("member_id")
         # sudo: res.partner - reading partner related to an accessible channel member history is considered acceptable
         res.one(
             "partner_id",
-            "_store_livechat_username_fields",
+            "_store_livechat_member_fields",
             predicate=lambda r: not r.guest_id,
             sudo=True,
         )

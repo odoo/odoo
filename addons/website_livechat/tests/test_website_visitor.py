@@ -77,7 +77,7 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTestsCommon):
         channel_1 = self.env["discuss.channel"].browse(res_1["channel_id"])
         visitor_1 = self._get_last_visitor()
         self.assertEqual(channel_1.livechat_visitor_id, visitor_1)
-        channel_1._close_livechat_session()
+        channel_1._close_livechat_session(message=channel_1._get_visitor_leave_message())
 
         # After login, the same visitor record is retained
         self._authenticate_via_web(self.user_portal.login, "portal")
@@ -91,7 +91,7 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTestsCommon):
         visitor_2 = self._get_last_visitor()
         self.assertEqual(channel_2.livechat_visitor_id, visitor_2)
         self.assertEqual(visitor_2, visitor_1)
-        channel_2._close_livechat_session()
+        channel_2._close_livechat_session(message=channel_2._get_visitor_leave_message())
 
         # After logout, a new visitor is created and reassigned to the original session
         self.url_open(

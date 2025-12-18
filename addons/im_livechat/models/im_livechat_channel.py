@@ -127,7 +127,6 @@ class Im_LivechatChannel(models.Model):
         "user_ids.channel_ids.last_interest_dt",
         "user_ids.channel_ids.livechat_end_dt",
         "user_ids.channel_ids.livechat_channel_id",
-        "user_ids.channel_ids.livechat_operator_id",
         "user_ids.channel_member_ids",
         "user_ids.im_status",
         "user_ids.is_in_call",
@@ -337,7 +336,6 @@ class Im_LivechatChannel(models.Model):
         return {
             'channel_member_ids': members_to_add,
             "last_interest_dt": last_interest_dt,
-            'livechat_operator_id': operator_partner.id,
             'livechat_channel_id': self.id,
             "livechat_failure": "no_answer" if is_agent else "no_failure",
             "livechat_status": "in_progress",

@@ -65,7 +65,6 @@ class TestGetOperatorCommon(HttpCase):
                 "name": "Visitor 1",
                 "channel_type": "livechat",
                 "livechat_channel_id": livechat.id,
-                "livechat_operator_id": operator.partner_id.id,
                 "channel_member_ids": [Command.create({"partner_id": operator.partner_id.id})],
                 "last_interest_dt": fields.Datetime.now(),
             }

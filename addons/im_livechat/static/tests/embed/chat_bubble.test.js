@@ -26,7 +26,6 @@ test("Do not show bot IM status", async () => {
             Command.create({ partner_id: partnerId2, livechat_member_type: "bot" }),
         ],
         channel_type: "livechat",
-        livechat_operator_id: partnerId2,
     });
     setupChatHub({ folded: [channelId1, channelId2] });
     await start({ authenticateAs: false });

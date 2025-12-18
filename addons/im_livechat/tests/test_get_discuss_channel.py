@@ -19,7 +19,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         for _i in range(5):
             discuss_channels = self._open_livechat_discuss_channel()
             channel_operator_ids = [
-                channel_info["livechat_operator_id"] for channel_info in discuss_channels
+                channel_info["first_agent_id"] for channel_info in discuss_channels
             ]
             self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
 
@@ -224,7 +224,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             ('partner_id', '=', operator.partner_id.id),
         ]
         operator_member = self.env['discuss.channel.member'].search(operator_member_domain)
-        self.assertEqual(channel_info['livechat_operator_id'], operator.partner_id.id)
         self.assertEqual(channel_info["name"], "Michel Michel Operator")
         self.assertEqual(channel_info['country_id'], False)
         self.assertEqual(
@@ -300,6 +299,18 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
             ),
         )
+        self.assertEqual(
+            data["im_livechat.channel.member.history"],
+            [
+                {
+                    "channel_id": channel_info["id"],
+                    "livechat_member_type": "agent",
+                    "partner_id": operator.partner_id.id,
+                    "id": channel_info["livechat_channel_member_history_ids"][0],
+                    "member_id": operator_member.id,
+                }
+            ],
+        )
 
     def _open_livechat_discuss_channel(self):
         discuss_channels = []
@@ -307,13 +318,20 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data = self.make_jsonrpc_request(
                 "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
             )
-            discuss_channels.append(
-                next(
+            discuss_channels.append({
+                "channel": next(
+                        filter(
+                            lambda c: c["id"] == data["channel_id"],
+                            data["store_data"]["discuss.channel"],
+                        )
+                    ),
+                "first_agent_id": next(
                     filter(
-                        lambda c: c["id"] == data["channel_id"],
-                        data["store_data"]["discuss.channel"],
+                        lambda mh: mh["channel_id"] == data["channel_id"] and mh["livechat_member_type"] == "agent",
+                        data["store_data"]["im_livechat.channel.member.history"]
                     )
-                )
+                )["partner_id"],
+            }
             )
             # send a message to mark this channel as 'active'
             self.env["discuss.channel"].browse(data["channel_id"]).message_post(body="cc")
@@ -376,7 +394,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         channel = self.env["discuss.channel"].create(
             {
                 "channel_type": "livechat",
-                "livechat_operator_id": self.operators[2].partner_id.id,
                 "name": "test",
             }
         )
@@ -392,7 +409,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         livechat_session = self.env["discuss.channel"].create(
             {
                 "channel_type": "livechat",
-                "livechat_operator_id": self.operators[0].partner_id.id,
                 "name": "test",
             }
         )

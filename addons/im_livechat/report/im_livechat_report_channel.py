@@ -100,25 +100,18 @@ class Im_LivechatReportChannel(models.Model):
                 C.name as channel_name,
                 C.livechat_channel_id as livechat_channel_id,
                 C.create_date as start_date,
-                channel_member_history.visitor_partner_id AS visitor_partner_id,
+                livechat_visitor.partner_id AS visitor_partner_id,
                 to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
                 to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
                 to_char(date_trunc('minute', C.create_date), 'YYYY-MM-DD HH:MI:SS') AS start_date_minutes,
                 EXTRACT(dow from C.create_date)::text AS day_number,
                 EXTRACT('epoch' FROM COALESCE(C.livechat_end_dt, NOW() AT TIME ZONE 'utc') - C.create_date)/60 AS duration,
                 CASE
-                    WHEN C.livechat_end_dt IS NOT NULL
-                         AND channel_member_history.has_agent
-                         AND message_vals.first_agent_message_dt > C.livechat_end_dt THEN NULL
-                    WHEN C.livechat_end_dt IS NOT NULL
-                         AND NOT channel_member_history.has_agent
-                         AND message_vals.first_agent_message_dt_legacy > C.livechat_end_dt THEN NULL
-                    WHEN channel_member_history.has_agent AND channel_member_history.has_bot THEN
+                    WHEN message_vals.first_agent_message_dt > C.livechat_end_dt THEN NULL
+                    WHEN livechat_agent.partner_id IS NOT NULL AND livechat_bot.partner_id IS NOT NULL THEN
                         EXTRACT('epoch' FROM message_vals.first_agent_message_dt - message_vals.last_bot_message_dt)
-                    WHEN channel_member_history.has_agent THEN
+                    WHEN livechat_agent.partner_id IS NOT NULL THEN
                         EXTRACT('epoch' FROM message_vals.first_agent_message_dt - c.create_date)
-                    ELSE
-                        EXTRACT('epoch' FROM message_vals.first_agent_message_dt_legacy - c.create_date)
                 END/3600 AS time_to_answer,
                 message_vals.message_count as nbr_message,
                 CASE
@@ -133,10 +126,10 @@ class Im_LivechatReportChannel(models.Model):
                     WHEN C.rating_last_value = 3 THEN 'Neutral'
                     ELSE null
                 END as rating_text,
-                C.livechat_operator_id as partner_id,
-                CASE WHEN channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_agent,
-                CASE WHEN channel_member_history.has_bot and not channel_member_history.has_agent THEN 1 ELSE 0 END as handled_by_bot,
-                CASE WHEN channel_member_history.chatbot_script_id IS NOT NULL AND NOT channel_member_history.has_agent THEN channel_member_history.chatbot_script_id ELSE NULL END AS chatbot_script_id,
+                COALESCE(livechat_agent.partner_id, livechat_bot.partner_id) as partner_id,
+                CASE WHEN livechat_agent.partner_id IS NOT NULL THEN 1 ELSE 0 END as handled_by_agent,
+                CASE WHEN livechat_bot.partner_id IS NOT NULL AND livechat_agent.partner_id IS NULL THEN 1 ELSE 0 END as handled_by_bot,
+                CASE WHEN livechat_bot.chatbot_script_id IS NOT NULL AND livechat_agent.partner_id IS NULL THEN livechat_bot.chatbot_script_id END AS chatbot_script_id,
                 CASE WHEN call_history_data.call_duration_hour IS NOT NULL THEN 1 ELSE 0 END AS has_call,
                 call_history_data.call_duration_hour,
                 chatbot_answer_history.chatbot_answers_path,
@@ -150,13 +143,29 @@ class Im_LivechatReportChannel(models.Model):
             """
             FROM discuss_channel C
        LEFT JOIN LATERAL (
-                SELECT BOOL_OR(livechat_member_type = 'agent') AS has_agent,
-                       BOOL_OR(livechat_member_type = 'bot') AS has_bot,
-                       MIN(CASE WHEN livechat_member_type = 'visitor' THEN partner_id END) AS visitor_partner_id,
-                       MIN(chatbot_script_id) AS chatbot_script_id
-                  FROM im_livechat_channel_member_history
-                 WHERE channel_id = C.id
-        ) AS channel_member_history ON TRUE
+                SELECT partner_id
+                  FROM im_livechat_channel_member_history AS H_AGENT
+                 WHERE H_AGENT.channel_id = C.id
+                   AND H_AGENT.livechat_member_type = 'agent'
+              ORDER BY H_AGENT.create_date ASC, H_AGENT.id ASC
+                 LIMIT 1
+       ) AS livechat_agent ON TRUE
+       LEFT JOIN LATERAL (
+                SELECT partner_id, chatbot_script_id
+                  FROM im_livechat_channel_member_history AS H_BOT
+                 WHERE H_BOT.channel_id = C.id
+                   AND H_BOT.livechat_member_type = 'bot'
+              ORDER BY H_BOT.create_date ASC, H_BOT.id ASC
+                 LIMIT 1
+       ) AS livechat_bot ON TRUE
+       LEFT JOIN LATERAL (
+                SELECT partner_id
+                  FROM im_livechat_channel_member_history as H_VISITOR
+                 WHERE H_VISITOR.channel_id = C.id
+                   AND H_VISITOR.livechat_member_type = 'visitor'
+              ORDER BY H_VISITOR.create_date ASC, H_VISITOR.id ASC
+                 LIMIT 1
+       ) AS livechat_visitor ON TRUE
        LEFT JOIN LATERAL
             (
                 SELECT SUM(
@@ -219,8 +228,7 @@ class Im_LivechatReportChannel(models.Model):
             (
                 SELECT COUNT(DISTINCT M.id) AS message_count,
                        MIN(CASE WHEN H.livechat_member_type = 'agent' THEN M.create_date END) AS first_agent_message_dt,
-                       MAX(CASE WHEN H.livechat_member_type = 'bot' THEN M.create_date END) AS last_bot_message_dt,
-                       MIN(CASE WHEN M.author_id = C.livechat_operator_id THEN M.create_date END) AS first_agent_message_dt_legacy
+                       MAX(CASE WHEN H.livechat_member_type = 'bot' THEN M.create_date END) AS last_bot_message_dt
                   FROM mail_message M
              LEFT JOIN im_livechat_channel_member_history H on H.channel_id = M.res_id AND (M.author_id = H.partner_id OR M.author_guest_id = H.guest_id)
                  WHERE M.res_id = C.id and M.model = 'discuss.channel'
