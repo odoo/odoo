@@ -395,7 +395,9 @@ class HrEmployee(models.Model):
                 employee.current_version_id = new_current_version
 
     def _cron_update_current_version_id(self):
-        self.search([])._compute_current_version_id()
+        all_emps = self.search([])
+        all_emps._compute_current_version_id()
+        all_emps.current_version_id.filtered('contract_date_start')._trigger_l10n_be_next_activities()
 
     def _search_version_id(self, operator, value):
         if operator == 'any':
