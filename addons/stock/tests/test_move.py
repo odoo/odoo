@@ -6488,9 +6488,9 @@ class StockMove(TransactionCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
         })
-        self.assertEqual(move.forecast_availability, -1)
+        self.assertEqual(move.forecast_availability, 0)
         move._action_confirm()
-        self.assertEqual(move.forecast_availability, -1)
+        self.assertEqual(move.forecast_availability, 0)
 
     def test_move_compute_uom(self):
         move = self.env['stock.move'].create({
