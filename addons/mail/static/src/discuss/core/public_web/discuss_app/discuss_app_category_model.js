@@ -23,7 +23,9 @@ export class DiscussAppCategory extends Record {
         return (
             !this.hidden &&
             (!this.hideWhenEmpty ||
-                this.channels.some((channel) => channel.displayToSelf || channel.isLocallyPinned))
+                this.channels.some(
+                    (channel) => channel.self_member_id?.is_pinned || channel.isLocallyPinned
+                ))
         );
     }
 

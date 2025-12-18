@@ -54,7 +54,7 @@ test("can manually unpin a sub-thread", async () => {
     await click("button[aria-label='Create Thread']");
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
     await click("[title='Thread Actions']");
-    await click(".o-dropdown-item:contains('Unpin Conversation')");
+    await click(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('New Thread')", { count: 0 });
 });
 

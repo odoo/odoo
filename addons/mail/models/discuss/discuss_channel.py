@@ -67,6 +67,8 @@ class DiscussChannel(models.Model):
     # description
     name = fields.Char('Name', required=True)
     active = fields.Boolean(default=True, help="Set active to false to hide the channel without removing it.")
+    can_join = fields.Boolean("Can Join", compute="_compute_can_join")
+    can_leave = fields.Boolean("Can Leave", compute="_compute_can_leave")
     channel_type = fields.Selection([
         ('chat', 'Chat'),
         ('channel', 'Channel'),
@@ -101,7 +103,7 @@ class DiscussChannel(models.Model):
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
     message_count = fields.Integer("# Messages", readonly=True, compute="_compute_message_count")
     last_interest_dt = fields.Datetime(
-        "Last Interest",
+        "Last Activity",
         default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
         index=True,
         help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.",
@@ -228,8 +230,20 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.channel_name_member_ids = channel_id_to_member_ids.get(channel.id)
 
+    @api.depends("channel_type", "is_member")
+    @api.depends_context("uid", "guest")
+    def _compute_can_join(self):
+        for channel in self:
+            channel.can_join = not channel.is_member and channel.channel_type != "chat"
+
+    @api.depends("channel_type", "is_member")
+    @api.depends_context("uid", "guest")
+    def _compute_can_leave(self):
+        for channel in self:
+            channel.can_leave = channel.is_member and channel.channel_type != 'chat'
+
     @api.depends("channel_type", "is_member", "group_public_id")
-    @api.depends_context("uid")
+    @api.depends_context("uid", "guest")
     def _compute_is_editable(self):
         for channel in self:
             channel.is_editable = channel.has_access("write")
@@ -541,7 +555,10 @@ class DiscussChannel(models.Model):
             )
 
     def action_unfollow(self):
-        self._action_unfollow(self.env.user.partner_id)
+        if self.channel_type in self._types_allowing_unfollow():
+            self._action_unfollow(self.env.user.partner_id)
+        else:
+            self.self_member_id.unpin_dt = fields.Datetime.now()
 
     def _action_unfollow(self, partner=None, guest=None, post_leave_message=True):
         self.ensure_one()
@@ -1145,18 +1162,6 @@ class DiscussChannel(models.Model):
             )
         return self.env.user.partner_id if not guest else self.env["res.partner"], guest
 
-    @api.model
-    def _get_channels_as_member(self):
-        # 2 different queries because the 2 sub-queries together with OR are less efficient
-        member_domain = [("channel_type", "in", ("channel", "group")), ("is_member", "=", True)]
-        pinned_member_domain = [
-                ("channel_type", "not in", ("channel", "group")),
-                ("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)]),
-            ]
-        channels = self.env["discuss.channel"].search_fetch(member_domain)
-        channels += self.env["discuss.channel"].search_fetch(pinned_member_domain)
-        return channels
-
     def _store_target(self):
         return {"bus_channel": self, "bus_subchannel": None}
 
@@ -1410,7 +1415,10 @@ class DiscussChannel(models.Model):
         """Shortcut to add the current user as member of self channels.
         Prefer calling add_members() directly when possible.
         """
-        self._add_members(users=self.env.user)
+        if not self.self_member_id:
+            self._add_members(users=self.env.user)
+        else:
+            self.self_member_id.last_interest_dt = fields.Datetime.now()
 
     def open_chat_window_action(self):
         """Return an action the web client can use to open this channel."""
@@ -1601,12 +1609,6 @@ class DiscussChannel(models.Model):
             new_line=Markup("<br>"),
         )
         return msg
-
-    def execute_command_leave(self, **kwargs):
-        if self.channel_type in self._types_allowing_unfollow():
-            self.action_unfollow()
-        else:
-            self.self_member_id.unpin_dt = fields.Datetime.now()
 
     def execute_command_who(self, **kwargs):
         if all_other_members := self.channel_member_ids.filtered(lambda m: not m.is_self):

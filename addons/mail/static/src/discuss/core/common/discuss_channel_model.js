@@ -25,7 +25,10 @@ export class DiscussChannel extends Record {
                 }
             },
             dependencies: (channel) => [
-                channel.shouldSubscribeToBusChannel && channel.busChannel,
+                !channel.isTransient &&
+                    !channel.self_member_id &&
+                    channel.shouldSubscribeToBusChannel &&
+                    channel.busChannel,
                 channel.store.env.services.bus_service,
             ],
             reactiveTargets: [channel],
@@ -87,6 +90,9 @@ export class DiscussChannel extends Record {
     get allowDescription() {
         return this.allowDescriptionsTypes.includes(this.channel_type);
     }
+    get allowedToLeaveChannelTypes() {
+        return ["channel", "group"];
+    }
     get areAllMembersLoaded() {
         return this.member_count === this.channel_member_ids.length;
     }
@@ -101,6 +107,14 @@ export class DiscussChannel extends Record {
             this.typesAllowingCalls.includes(this.channel_type) &&
             !this.correspondent?.persona.eq(this.store.odoobot)
         );
+    }
+    canHide = fields.Attr(false, {
+        compute() {
+            return this._computeCanHide();
+        },
+    });
+    _computeCanHide() {
+        return Boolean(this.self_member_id?.is_pinned);
     }
     channel_member_ids = fields.Many("discuss.channel.member", {
         inverse: "channel_id",
@@ -125,6 +139,9 @@ export class DiscussChannel extends Record {
     }
     get hasMemberList() {
         return this.memberListTypes.includes(this.channel_type);
+    }
+    get isHideUntilNewMessageSupported() {
+        return Boolean(this.self_member_id);
     }
     last_interest_dt = fields.Datetime();
     lastInterestDt = fields.Datetime({
@@ -225,11 +242,7 @@ export class DiscussChannel extends Record {
     /** @type {Number|undefined} */
     member_count;
     get shouldSubscribeToBusChannel() {
-        return Boolean(
-            !this.isTransient &&
-                !this.self_member_id &&
-                (this.isLocallyPinned || this.chatWindow?.isOpen)
-        );
+        return this.chatWindow?.isOpen;
     }
     get isChatChannel() {
         return this.chatChannelTypes.includes(this.channel_type);
@@ -246,6 +259,16 @@ export class DiscussChannel extends Record {
             return this._computeOfflineMembers().sort(
                 (m1, m2) => this.store.sortMembers(m1, m2) // FIXME: sort are prone to infinite loop (see test "Display livechat custom name in typing status")
             );
+        },
+    });
+    /** @type {true|undefined} */
+    open_chat_window = fields.Attr(undefined, {
+        /** @this {import("models").Thread} */
+        onUpdate() {
+            if (this.open_chat_window) {
+                this.open_chat_window = undefined;
+                this.openChatWindow({ focus: true });
+            }
         },
     });
     parent_channel_id = fields.One("discuss.channel", {
@@ -290,7 +313,7 @@ export class DiscussChannel extends Record {
     }
 
     delete() {
-        this.chatWindow?.close();
+        this.chatWindow?.close({ force: true });
         super.delete(...arguments);
     }
 
@@ -434,6 +457,87 @@ export class DiscussChannel extends Record {
                     { name: newName }
                 );
             }
+        }
+    }
+
+    /**
+     * @param {Object} param0
+     * @param {boolean} [param0.notify=true]
+     * @param {Map<import("models").DiscussChannel, function[]>} [param0.undos]
+     */
+    async unpinChannel({ notify = true, undos = new Map() } = {}) {
+        undos.set(this, []);
+        // Unpin sub-channels first to prevent onPinStateUpdated of parent from removing
+        // isLocallyPinned from them before their values are saved for undo.
+        for (const subThread of this.sub_channel_ids) {
+            subThread.channel.unpinChannel({ notify: false, undos });
+        }
+        await this._unpinRegisterUndos(undos.get(this));
+        if (!this.exists()) {
+            this.store.env.services.notification.add(_t("The conversation was deleted."));
+            return;
+        }
+        await this._unpinExecute();
+        if (!this.exists()) {
+            this.store.env.services.notification.add(_t("The conversation was deleted."));
+            return;
+        }
+        if (!notify) {
+            return;
+        }
+        const closeFn = this.store.env.services.notification.add(
+            this.isHideUntilNewMessageSupported
+                ? _t("Conversation hidden until new messages arrive.")
+                : _t("Conversation hidden."),
+            {
+                buttons: [
+                    {
+                        name: _t("Undo"),
+                        onClick: () => {
+                            for (const channel of [...undos.keys()].reverse()) {
+                                if (channel.exists()) {
+                                    for (const fn of undos.get(channel)) {
+                                        fn();
+                                    }
+                                } else {
+                                    this.store.env.services.notification.add(
+                                        _t("Cannot undo; the conversation was deleted."),
+                                        { type: "danger" }
+                                    );
+                                }
+                            }
+                            closeFn();
+                        },
+                    },
+                ],
+                type: "success",
+            }
+        );
+    }
+
+    async _unpinExecute() {
+        this.chatWindow?.close({ force: true });
+        if (this.self_member_id?.is_pinned) {
+            await this.pinRpc({ pinned: false });
+        }
+    }
+    /** @param {function[]} undos */
+    async _unpinRegisterUndos(undos) {
+        if (this.self_member_id?.is_pinned) {
+            undos.push(() => {
+                if (this.self_member_id) {
+                    this.self_member_id.is_pinned = true;
+                }
+                this.pinRpc({ pinned: true });
+            });
+        }
+        await this.store.chatHub.initPromise;
+        if (this.chatWindow) {
+            const chatWindowOptions = {
+                bypassCompact: this.chatWindow.bypassCompact,
+                fromMessagingMenu: this.chatWindow.fromMessagingMenu,
+            };
+            undos.push(() => this.openChatWindow(chatWindowOptions));
         }
     }
 

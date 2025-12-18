@@ -117,7 +117,7 @@ test("chat window: basic rendering", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await contains(".o-dropdown-item", { count: 12 });
+    await contains(".o-dropdown-item", { count: 13 });
     await contains(".o-dropdown-item:text('Open in Discuss')");
     await contains(".o-dropdown-item:text('Attachments')");
     await contains(".o-dropdown-item:text('Pinned Messages')");
@@ -129,6 +129,7 @@ test("chat window: basic rendering", async () => {
     await contains(".o-dropdown-item:text('Notification Settings')");
     await contains(".o-dropdown-item:text('Add to Favorites')");
     await contains(".o-dropdown-item:text('Call Settings')");
+    await contains(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-dropdown-item:text('Leave Channel')");
 });
 
@@ -915,6 +916,7 @@ test("Chat window should be closed when leaving the channel", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
+    await click("button:text(Leave Conversation)");
     await contains(".o-mail-ChatWindow:text('general')", { count: 0 });
 });
 

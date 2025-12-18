@@ -63,17 +63,6 @@ const threadModelPatch = {
             this.store.env.services.action.currentController.action.context.active_id = activeId;
         }
     },
-    async unpin() {
-        this.isLocallyPinned = false;
-        if (this.discussAppAsThread) {
-            router.replaceState({ active_id: undefined });
-        }
-        await this.store.chatHub.initPromise;
-        this.channel?.chatWindow?.close();
-        if (this.channel?.self_member_id?.is_pinned !== false) {
-            await this.channel.pinRpc({ pinned: false });
-        }
-    },
     /** @param {string} body */
     async askLeaveConfirmation(body) {
         await new Promise((resolve) => {

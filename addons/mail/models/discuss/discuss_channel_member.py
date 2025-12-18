@@ -56,7 +56,7 @@ class DiscussChannelMember(models.Model):
     is_pinned = fields.Boolean("Is pinned on the interface", compute="_compute_is_pinned", search="_search_is_pinned")
     unpin_dt = fields.Datetime("Unpin date", index=True, help="Contains the date and time when the channel was unpinned by the user.")
     last_interest_dt = fields.Datetime(
-        "Last Interest",
+        "Last Activity",
         default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
         index=True,
         help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning",
@@ -279,7 +279,6 @@ class DiscussChannelMember(models.Model):
         res[None].extend(["custom_channel_name", "custom_notifications", "is_favorite"])
         res[None].extend(["is_pinned", "last_interest_dt", "message_unread_counter"])
         res[None].extend(["mute_until_dt", "new_message_separator"])
-        res[None].attr("new_message_separator")
         # sudo: discuss.channel.rtc.session - each member can see who is inviting them
         res[None].one("rtc_inviting_session_id", "_store_extra_fields", sudo=True)
         res[None].attr("unpin_dt")

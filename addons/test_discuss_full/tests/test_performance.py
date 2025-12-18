@@ -45,9 +45,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_channel
     #   1: search bus_bus (_bus_last_id)
     #   1. search discuss_channel (chathub given channel ids)
-    #   2: _get_channels_as_member
-    #       - search discuss_channel (member_domain)
-    #       - search discuss_channel (pinned_member_domain)
+    #   1: channels_as_member
     #   2: _init_messaging_global_fields (discuss)
     #       - fetch discuss_channel_member (is_self)
     #       - _compute_message_unread
@@ -81,16 +79,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - search_fetch ir_attachment (_compute_avatar_cache_key -> _compute_avatar_128)
     #           - fetch res_groups (group_public_id)
-    _query_count_init_messaging = 35
+    _query_count_init_messaging = 34
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
-    #   3: _search_is_member (for current user, first occurence _get_channels_as_member)
+    #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
     #       - search discuss_channel_member
     #       - fetch discuss_channel
-    #   2: _get_channels_as_member
-    #       - search_fetch discuss_channel (member_domain)
-    #       - search_fetch discuss_channel (pinned_member_domain)
+    #   1: channels_as_member
     #   34: store add channel:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
@@ -153,7 +149,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (author)
     #       - fetch user (author)
     #       - fetch discuss_call_history
-    _query_count_discuss_channels = 63
+    _query_count_discuss_channels = 62
 
     def setUp(self):
         super().setUp()
@@ -526,11 +522,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_channel(self.channel_channel_public_2),
                 self._expected_result_for_channel(self.channel_channel_group_1),
                 self._expected_result_for_channel(self.channel_channel_group_2),
-                self._expected_result_for_channel(self.channel_group_1),
                 self._expected_result_for_channel(self.channel_chat_1),
                 self._expected_result_for_channel(self.channel_chat_2),
                 self._expected_result_for_channel(self.channel_chat_3),
                 self._expected_result_for_channel(self.channel_chat_4),
+                self._expected_result_for_channel(self.channel_group_1),
                 self._expected_result_for_channel(self.channel_livechat_1),
                 self._expected_result_for_channel(self.channel_livechat_2),
             ),
@@ -541,8 +537,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._res_for_member(self.channel_channel_group_1, self.users[0].partner_id),
                 self._res_for_member(self.channel_channel_group_1, self.users[2].partner_id),
                 self._res_for_member(self.channel_channel_group_2, self.users[0].partner_id),
-                self._res_for_member(self.channel_group_1, self.users[0].partner_id),
-                self._res_for_member(self.channel_group_1, self.users[12].partner_id),
                 self._res_for_member(self.channel_chat_1, self.users[0].partner_id),
                 self._res_for_member(self.channel_chat_1, self.users[14].partner_id),
                 self._res_for_member(self.channel_chat_2, self.users[0].partner_id),
@@ -551,6 +545,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._res_for_member(self.channel_chat_3, self.users[2].partner_id),
                 self._res_for_member(self.channel_chat_4, self.users[0].partner_id),
                 self._res_for_member(self.channel_chat_4, self.users[3].partner_id),
+                self._res_for_member(self.channel_group_1, self.users[0].partner_id),
+                self._res_for_member(self.channel_group_1, self.users[12].partner_id),
                 self._res_for_member(self.channel_livechat_1, self.users[0].partner_id),
                 self._res_for_member(self.channel_livechat_1, self.users[1].partner_id),
                 self._res_for_member(self.channel_livechat_2, self.users[0].partner_id),
@@ -610,30 +606,30 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     also_notification=True,
                 ),
                 self._expected_result_for_persona(self.users[2]),
-                self._expected_result_for_persona(self.users[12]),
                 self._expected_result_for_persona(self.users[14]),
                 self._expected_result_for_persona(self.users[15]),
                 self._expected_result_for_persona(self.users[3]),
+                self._expected_result_for_persona(self.users[12]),
                 self._expected_result_for_persona(self.users[1], also_livechat=True),
                 self._expected_result_for_persona(self.user_root),
             ),
             "res.users": self._filter_users_fields(
                 self._res_for_user(self.users[0]),
-                self._res_for_user(self.users[12]),
                 self._res_for_user(self.users[14]),
                 self._res_for_user(self.users[15]),
                 self._res_for_user(self.users[2]),
                 self._res_for_user(self.users[3]),
+                self._res_for_user(self.users[12]),
                 self._res_for_user(self.user_root),
                 self._res_for_user(self.users[1]),
             ),
             "hr.employee": [
                 self._res_for_employee(self.users[0].employee_ids[0]),
-                self._res_for_employee(self.users[12].employee_ids[0]),
                 self._res_for_employee(self.users[14].employee_ids[0]),
                 self._res_for_employee(self.users[15].employee_ids[0]),
                 self._res_for_employee(self.users[2].employee_ids[0]),
                 self._res_for_employee(self.users[3].employee_ids[0]),
+                self._res_for_employee(self.users[12].employee_ids[0]),
             ],
         }
 

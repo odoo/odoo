@@ -44,11 +44,12 @@ declare module "models" {
         correspondent: ChannelMember;
         correspondentCountry: Country;
         correspondents: Readonly<ChannelMember[]>;
-        executeCommand: (command: unknown, body: string) => unknown;
+        executeCommand: (command: unknown, body: string) => Promise<void>;
         firstUnreadMessage: Message;
         group_ids: ResGroups[];
         leaveChannel: () => Promise<void>;
-        leaveChannelRpc: () => void;
+        leaveChannelProcess: () => Promise<void>;
+        leaveChannelRpc: () => Promise<void>;
         markedAsUnread: boolean;
         markingAsRead: boolean;
         markReadSequential: () => Promise<any>;

@@ -29,16 +29,6 @@ patch(Thread.prototype, {
                 return visitor;
             },
         });
-        /** @type {true|undefined} */
-        this.open_chat_window = fields.Attr(undefined, {
-            /** @this {import("models").Thread} */
-            onUpdate() {
-                if (this.open_chat_window) {
-                    this.open_chat_window = undefined;
-                    this.openChatWindow({ focus: true });
-                }
-            },
-        });
     },
     get autoOpenChatWindowOnNewMessage() {
         return (

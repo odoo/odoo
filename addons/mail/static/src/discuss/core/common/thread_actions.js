@@ -236,6 +236,56 @@ registerThreadAction("mark-read", {
     sequence: 10,
     sequenceGroup: 20,
 });
+registerThreadAction("hide", {
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    condition: ({ channel, owner }) =>
+        (channel?.canHide ||
+            channel?.sub_channel_ids.some((subThread) => subThread.channel.canHide)) &&
+        !owner.isDiscussContent,
+    icon: "fa fa-fw fa-times-circle",
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    name: ({ channel }) =>
+        channel.isHideUntilNewMessageSupported ? _t("Hide Until New Message") : _t("Hide"),
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    onSelected: ({ channel }) => channel.unpinChannel(),
+    partition: ({ owner }) => owner.env.inChatWindow,
+    sequence: 10,
+    sequenceGroup: 40,
+});
+registerThreadAction("leave", {
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     * @param {import("models").Store} param0.store
+     */
+    condition: ({ channel, owner, store }) =>
+        store.self_user &&
+        channel?.self_member_id &&
+        channel.allowedToLeaveChannelTypes.includes(channel.channel_type) &&
+        channel.group_ids.length === 0 &&
+        !owner.isDiscussContent,
+    icon: "fa fa-fw fa-sign-out",
+    name: _t("Leave Channel"),
+    /**
+     * @param {Object} param0
+     * @param {import("models").DiscussChannel} param0.channel
+     */
+    onSelected: ({ channel }) => channel.leaveChannel(),
+    partition: ({ owner }) => owner.env.inChatWindow,
+    sequence: 20,
+    sequenceGroup: 40,
+    tags: ACTION_TAGS.DANGER,
+});
+
 registerThreadAction("delete-thread", {
     actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: DeleteThreadDialog,

@@ -65,7 +65,6 @@ declare module "models" {
         livechat_end_dt: import("luxon").DateTime;
         livechat_operator_id: ResPartner;
         livechatVisitorMember: ChannelMember;
-        open_chat_window: true|undefined;
         transcriptUrl: Readonly<string>;
     }
 

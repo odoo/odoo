@@ -5,6 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
+/** @type {import("models").DiscussChannel} */
 const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
@@ -35,7 +36,10 @@ const discussChannelPatch = {
         this.unpinOnThreadSwitch = false;
     },
     _computeIsDisplayInSidebar() {
-        return this.livechat_status === "need_help" || super._computeIsDisplayInSidebar();
+        return (
+            (!this.self_member_id && this.livechat_status === "need_help") ||
+            super._computeIsDisplayInSidebar()
+        );
     },
     _computeDiscussAppCategory() {
         if (this.channel_type !== "livechat") {
@@ -49,14 +53,6 @@ const discussChannelPatch = {
         }
         return (
             this.livechat_channel_id?.appCategory ?? this.appAsLivechats?.defaultLivechatCategory
-        );
-    },
-    get canLeave() {
-        return (
-            super.canLeave &&
-            (!this.store.discuss.livechatLookingForHelpCategory ||
-                this.store.discuss.livechatLookingForHelpCategory.notEq(this.discussAppCategory) ||
-                this.self_member_id)
         );
     },
     get livechatStatusLabel() {
@@ -88,9 +84,6 @@ const discussChannelPatch = {
             return;
         }
         rpc("/im_livechat/session/update_status", { channel_id: this.id, livechat_status: status });
-    },
-    get allowedToLeaveChannelTypes() {
-        return [...super.allowedToLeaveChannelTypes, "livechat"];
     },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

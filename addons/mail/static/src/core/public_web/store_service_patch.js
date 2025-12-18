@@ -18,7 +18,7 @@ patch(Store.prototype, {
                 const searchTerm = cleanTerm(this.discuss.searchTerm);
                 let threads = Object.values(this["mail.thread"].records).filter(
                     (thread) =>
-                        (thread.channel?.displayToSelf ||
+                        (thread.channel?.self_member_id?.is_pinned ||
                             (thread.needactionMessages.length > 0 &&
                                 thread.model !== "mail.box")) &&
                         cleanTerm(thread.displayName).includes(searchTerm)
