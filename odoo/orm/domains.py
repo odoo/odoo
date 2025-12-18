@@ -62,7 +62,7 @@ import typing
 import warnings
 from datetime import date, datetime, time, timedelta, timezone
 
-from odoo.exceptions import UserError
+from odoo.exceptions import MissingError, UserError
 from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
 from odoo.tools.date_utils import parse_date, parse_iso_date
 from .identifiers import NewId
@@ -1745,9 +1745,13 @@ def _operator_hierarchy(condition, model):
 def _operator_child_of_domain(comodel: BaseModel, parent):
     """Return a set of ids or a domain to find all children of given model"""
     if comodel._parent_store and parent == comodel._parent_name:
+        try:
+            paths = comodel.mapped('parent_path')
+        except MissingError:
+            paths = comodel.exists().mapped('parent_path')
         domain = Domain.OR(
-            DomainCondition('parent_path', '=like', rec.parent_path + '%')  # type: ignore
-            for rec in comodel
+            DomainCondition('parent_path', '=like', path + '%')  # type: ignore
+            for path in paths
         )
         return domain
     else:
@@ -1766,16 +1770,24 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
     """Return a set of ids or a domain to find all parents of given model"""
     parent_ids: OrderedSet[int]
     if comodel._parent_store and parent == comodel._parent_name:
+        try:
+            paths = comodel.mapped('parent_path')
+        except MissingError:
+            paths = comodel.exists().mapped('parent_path')
         parent_ids = OrderedSet(
             int(label)
-            for rec in comodel
-            for label in rec.parent_path.split('/')[:-1]  # type: ignore
+            for path in paths
+            for label in path.split('/')[:-1]
         )
     else:
         # recursively retrieve all parent nodes with sudo() to avoid
         # access rights errors; the filtering of forbidden records is
         # done by the rest of the domain
         parent_ids = OrderedSet()
+        try:
+            comodel.mapped(parent)
+        except MissingError:
+            comodel = comodel.exists()
         while comodel:
             parent_ids.update(comodel._ids)
             comodel = comodel[parent].filtered(lambda p: p.id not in parent_ids)
