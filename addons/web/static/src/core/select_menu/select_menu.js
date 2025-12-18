@@ -294,7 +294,7 @@ export class SelectMenu extends Component {
                 this.inputRef.el.focus();
             }
             this.menuRef.el?.addEventListener("scroll", (ev) => this.onScroll(ev));
-            const selectedElement = this.menuRef.el?.querySelectorAll(".active")[0];
+            const selectedElement = this.menuRef.el?.querySelectorAll(".selected")[0];
             if (selectedElement) {
                 scrollTo(selectedElement);
             }
@@ -314,7 +314,7 @@ export class SelectMenu extends Component {
 
     getItemClass(choice) {
         if (this.isOptionSelected(choice)) {
-            return "o_select_menu_item fw-bolder active";
+            return "o_select_menu_item fw-bolder selected";
         } else {
             return "o_select_menu_item";
         }
