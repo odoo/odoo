@@ -75,11 +75,6 @@ const threadPatch = {
         }
         return true;
     },
-    async unpin() {
-        await this.store.chatHub.initPromise;
-        this.channel?.chatWindow?.close();
-        await super.unpin(...arguments);
-    },
     async follow() {
         const data = await rpc("/mail/thread/subscribe", {
             res_model: this.model,

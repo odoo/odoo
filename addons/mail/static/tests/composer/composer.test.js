@@ -638,6 +638,7 @@ test("leave command on channel", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
+    await click("button:text(Leave Conversation)");
     await contains(".o-mail-DiscussSidebarChannel:text('general')", { count: 0 });
     await contains(".o-mail-DiscussContent-threadName", { value: "Inbox" });
 });

@@ -287,7 +287,7 @@ test("sidebar: basic chat rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Demo')");
     await contains(".o-mail-DiscussSidebarChannel img[alt='Thread Image']");
     await click("[title='Chat Actions']");
-    await contains(".o-dropdown-item:contains('Unpin Conversation')");
+    await contains(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-mail-DiscussSidebarChannel .badge", { count: 0 });
 });
 
@@ -828,7 +828,7 @@ test("Can unpin chat channel", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')");
     await click("[title='Chat Actions']");
-    await click(".o-dropdown-item:contains('Unpin Conversation')");
+    await click(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')", { count: 0 });
 });
 

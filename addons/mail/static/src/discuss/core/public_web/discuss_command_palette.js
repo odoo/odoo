@@ -308,6 +308,14 @@ commandProviderRegistry.add("find_or_start_conversation", {
         if (!palette.store.inPublicPage) {
             palette.commands.push(palette.makeDiscussCommand(NEW_CHANNEL));
             palette.commands.push(palette.makeDiscussCommand(NEW_GROUP_CHAT));
+            if (palette.store.has_unpinned_channels) {
+                palette.commands.push({
+                    name: _t("View hidden conversations"),
+                    action: () => {
+                        env.services.action.doAction("mail.discuss_my_conversations_action");
+                    },
+                });
+            }
         }
         return palette.commands;
     },

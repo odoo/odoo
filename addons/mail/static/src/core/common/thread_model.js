@@ -215,12 +215,6 @@ export class Thread extends Record {
     canPostOnReadonly;
     /** @type {Boolean} */
     is_editable;
-    /** @type {Boolean} */
-    isLocallyPinned = fields.Attr(false, {
-        onUpdate() {
-            this.channel?.onPinStateUpdated();
-        },
-    });
     /** @type {integer|null} */
     highlightMessage = fields.One("mail.message");
     /** @type {String|undefined} */

@@ -27,5 +27,13 @@ class SearchController(http.Controller):
             query = channels._search(Domain('id', 'not in', channels.ids) & domain, limit=remaining_limit)
             channels |= channels.browse(query)
         store.add(channels, "_store_channel_fields")
+        # sudo: discuss.channel.member: sudo for performance. Checking existence of unpinned
+        # channels is acceptable, even if the channel is no longer accessible to the user.
+        store.add_global_values(
+            has_unpinned_channels=request.env["discuss.channel.member"]
+            .sudo()
+            .search_count([("is_self", "=", True), ("is_pinned", "=", False)], limit=1)
+            > 0,
+        )
         request.env["res.partner"]._search_for_channel_invite(store, search_term=term, limit=limit)
         return store.get_result()

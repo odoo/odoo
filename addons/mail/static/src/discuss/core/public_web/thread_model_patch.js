@@ -1,7 +1,8 @@
 import { Thread } from "@mail/core/common/thread_model";
 import { fields } from "@mail/model/misc";
-import { rpc } from "@web/core/network/rpc";
 
+import { router } from "@web/core/browser/router";
+import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Thread} */
@@ -30,6 +31,13 @@ const threadPatch = {
         });
         this.store.insert(store_data);
         this.store["discuss.channel"].get(sub_channel).open({ focus: true });
+    },
+    async leaveChannelProcess() {
+        this.channel.isLocallyPinned = false;
+        if (this.discussAppAsThread) {
+            router.replaceState({ active_id: undefined });
+        }
+        await super.leaveChannelProcess(...arguments);
     },
     /**
      * @param {*} param0
@@ -66,8 +74,8 @@ const threadPatch = {
     },
     setAsDiscussThread() {
         super.setAsDiscussThread(...arguments);
-        if (!this.channel || !this.channel.displayToSelf) {
-            this.isLocallyPinned = true;
+        if (this.channel && !this.channel?.self_member_id?.is_pinned) {
+            this.channel.isLocallyPinned = true;
         }
     },
 };

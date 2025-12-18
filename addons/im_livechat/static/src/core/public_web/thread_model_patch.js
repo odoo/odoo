@@ -51,6 +51,6 @@ patch(Thread.prototype, {
                 _t("Leaving will end the live chat. Do you want to proceed?")
             );
         }
-        super.leaveChannel(...arguments);
+        await super.leaveChannel(...arguments);
     },
 });

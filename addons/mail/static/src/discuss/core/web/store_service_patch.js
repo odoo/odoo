@@ -19,7 +19,7 @@ const StorePatch = {
                 ? this.initChannelsUnreadCounter
                 : Object.values(this.store["discuss.channel"].records).filter(
                       (channel) =>
-                          channel.displayToSelf &&
+                          channel.self_member_id?.is_pinned &&
                           !channel.self_member_id?.mute_until_dt &&
                           (channel.self_member_id?.message_unread_counter ||
                               channel.message_needaction_counter)

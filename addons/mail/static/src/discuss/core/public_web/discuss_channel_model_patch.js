@@ -37,22 +37,14 @@ const discussChannelPatch = {
         this.discuss_category_id = fields.One("discuss.category", {
             inverse: "channel_ids",
         });
-        this.displayToSelf = fields.Attr(false, {
-            compute() {
-                return (
-                    this.self_member_id?.is_pinned ||
-                    (["channel", "group"].includes(this.channel_type) &&
-                        this.self_member_id &&
-                        !this.parent_channel_id)
-                );
-            },
-            onUpdate() {
-                this.onPinStateUpdated();
-            },
-        });
         this.isDisplayInSidebar = fields.Attr(false, {
             compute() {
                 return this._computeIsDisplayInSidebar();
+            },
+        });
+        this.isLocallyPinned = fields.Attr(false, {
+            onUpdate() {
+                this.onPinStateUpdated();
             },
         });
         this.subChannelsInSidebar = fields.Many("discuss.channel", {
@@ -60,6 +52,9 @@ const discussChannelPatch = {
                 return this.sub_channel_ids.filter((channel) => channel.isDisplayInSidebar);
             },
         });
+    },
+    _computeCanHide() {
+        return Boolean(super._computeCanHide() || this?.isLocallyPinned);
     },
     _computeDiscussAppCategory() {
         if (["group", "chat"].includes(this.channel_type)) {
@@ -71,7 +66,8 @@ const discussChannelPatch = {
     },
     _computeIsDisplayInSidebar() {
         return (
-            this.displayToSelf ||
+            this.discussAppAsThread ||
+            this.self_member_id?.is_pinned ||
             this.isLocallyPinned ||
             this.sub_channel_ids.some((thread) => thread.channel?.isDisplayInSidebar)
         );
@@ -91,25 +87,6 @@ const discussChannelPatch = {
             "channel_change_description",
             [[this.id]],
             { description }
-        );
-    },
-    get allowedToLeaveChannelTypes() {
-        return ["channel", "group"];
-    },
-    get allowedToUnpinChannelTypes() {
-        return ["chat"];
-    },
-    get canLeave() {
-        return (
-            !this.parent_channel_id &&
-            this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
-            this.group_ids.length === 0 &&
-            this.store.self_user
-        );
-    },
-    get canUnpin() {
-        return (
-            this.parent_channel_id || this.allowedToUnpinChannelTypes.includes(this.channel_type)
         );
     },
     /**
@@ -161,6 +138,21 @@ const discussChannelPatch = {
         if (!this.self_member_id?.is_pinned && !this.isLocallyPinned) {
             this.sub_channel_ids.forEach((c) => (c.isLocallyPinned = false));
         }
+        if (!this.self_member_id?.is_pinned && !this.isLocallyPinned && this.discussAppAsThread) {
+            if (this.store.discuss.isActive) {
+                const newChannel =
+                    this.store.discuss.channelCategory.channels.find(
+                        (channel) => channel.self_member_id?.is_pinned || channel.isLocallyPinned
+                    ) || this.store.inbox;
+                if (newChannel) {
+                    newChannel.setAsDiscussThread();
+                } else {
+                    this.store.discuss.thread = undefined;
+                }
+            } else {
+                this.store.discuss.thread = undefined;
+            }
+        }
     },
     /** @override */
     openChannel() {
@@ -169,6 +161,27 @@ const discussChannelPatch = {
             return true;
         }
         return super.openChannel();
+    },
+    get shouldSubscribeToBusChannel() {
+        return super.shouldSubscribeToBusChannel || this.isLocallyPinned;
+    },
+    /** @override */
+    async _unpinExecute() {
+        await super._unpinExecute();
+        if (!this.exists()) {
+            return;
+        }
+        this.isLocallyPinned = false;
+    },
+    /** @override */
+    async _unpinRegisterUndos(undos) {
+        await super._unpinRegisterUndos(undos); // reset is_pinned first
+        if (this.discussAppAsThread) {
+            undos.push(() => this.setAsDiscussThread());
+        }
+        if (this.isLocallyPinned) {
+            undos.push(() => (this.isLocallyPinned = true));
+        }
     },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

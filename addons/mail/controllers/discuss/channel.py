@@ -41,7 +41,9 @@ class DiscussChannelWebclientController(WebclientController):
             channels = request.env["discuss.channel"].search_fetch(channel_domain)
             request.update_context(channels=request.env.context["channels"] | channels)
         if name == "channels_as_member":
-            channels = request.env["discuss.channel"]._get_channels_as_member()
+            channels = request.env["discuss.channel"].search_fetch(
+                [("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)])],
+            )
             request.update_context(
                 channels=request.env.context["channels"] | channels, add_channels_last_message=True
             )
@@ -80,9 +82,8 @@ class DiscussChannelWebclientController(WebclientController):
 
     @classmethod
     def _store_init_messaging_global_fields(cls, res: Store.FieldList, bus_last_id):
-        channels = request.env["discuss.channel"]._get_channels_as_member()
         members = request.env["discuss.channel.member"].search_fetch(
-            [("channel_id", "in", channels.ids), ("is_self", "=", True)],
+            [("is_self", "=", True), ("is_pinned", "=", True)],
         )
         members_with_unread = members.filtered(lambda member: member.message_unread_counter)
         res.attr("initChannelsUnreadCounter", len(members_with_unread))

@@ -72,6 +72,13 @@ export class DiscussChannel extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         const [channel] = this.browse(ids);
+        if (!["channel", "group", "im_livechat", "whatsapp"].includes(channel.channel_type)) {
+            const memberIds = this.env["discuss.channel.member"].search([
+                ["channel_id", "=", channel.id],
+                ["is_self", "=", true],
+            ]);
+            this.env["discuss.channel.member"]._channel_pin(memberIds, false);
+        }
         const custom_store = new mailDataHelpers.Store(this.browse(channel.id), {
             close_chat_window: true,
             isLocallyPinned: false,
@@ -668,24 +675,6 @@ export class DiscussChannel extends models.ServerModel {
     }
 
     /** @param {number[]} ids */
-    execute_command_leave(ids) {
-        const kwargs = getKwArgs(arguments, "ids");
-        ids = kwargs.ids;
-        delete kwargs.ids;
-
-        const [channel] = this.browse(ids);
-        if (channel.channel_type === "channel") {
-            this.action_unfollow([channel.id]);
-        } else {
-            const memberIds = this.env["discuss.channel.member"].search([
-                ["channel_id", "=", channel.id],
-                ["is_self", "=", true],
-            ]);
-            this.env["discuss.channel.member"]._channel_pin(memberIds, false);
-        }
-    }
-
-    /** @param {number[]} ids */
     execute_command_who(ids) {
         const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
@@ -1008,15 +997,9 @@ export class DiscussChannel extends models.ServerModel {
             : [["partner_id", "=", this.env.user.partner_id]];
         const members = DiscussChannelMember._filter(memberDomain);
         const pinnedMembers = members.filter((member) => member.is_pinned);
-        const channels = this._filter([
-            ["channel_type", "in", ["channel", "group"]],
-            ["channel_member_ids", "in", members.map((member) => member.id)],
-        ]);
-        const pinnedChannels = this._filter([
-            ["channel_type", "not in", ["channel", "group"]],
+        return this._filter([
             ["channel_member_ids", "in", pinnedMembers.map((member) => member.id)],
         ]);
-        return channels.concat(pinnedChannels);
     }
 
     /**

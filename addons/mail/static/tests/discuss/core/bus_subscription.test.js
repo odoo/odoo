@@ -32,8 +32,7 @@ test("bus subscription updated when joining/leaving thread as non member", async
     await openDiscuss(channelId);
     await waitForChannels([`discuss.channel_${channelId}`]);
     await click("[title='Channel Actions']");
-    await click(".o-dropdown-item:contains('Leave Channel')");
-    await click("button:text('Leave Conversation')");
+    await click(".o-dropdown-item:text(Hide)");
     await waitForChannels([`discuss.channel_${channelId}`], { operation: "delete" });
 });
 

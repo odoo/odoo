@@ -6,16 +6,12 @@ declare module "models" {
     export interface DiscussChannel {
         _computeDiscussAppCategory: () => unknown;
         _computeIsDisplayInSidebar: () => boolean;
-        allowedToLeaveChannelTypes: Readonly<string[]>;
-        allowedToUnpinChannelTypes: Readonly<string[]>;
         appAsUnreadChannels: DiscussApp;
-        canLeave: Readonly<boolean>;
-        canUnpin: Readonly<boolean>;
         categoryAsChannelWithCounter: DiscussAppCategory;
         discuss_category_id: DiscussCategory;
         discussAppCategory: DiscussAppCategory;
-        displayToSelf: boolean;
         isDisplayInSidebar: boolean;
+        isLocallyPinned: boolean;
         notifyDescriptionToServer: (description: string) => Promise<unknown>;
         notifyMessageToUser: (message: Message) => Promise<void>;
         subChannelsInSidebar: DiscussChannel[];
@@ -24,6 +20,7 @@ declare module "models" {
         channels: ReturnType<Store['makeCachedFetchData']>;
         "discuss.category": StaticMailRecord<DiscussCategory, typeof DiscussCategoryClass>;
         fetchSsearchConversationsSequential: () => Promise<any>;
+        has_unpinned_channels: boolean;
         searchConversations: (searchValue: string) => Promise<void>;
     }
     export interface Thread {

@@ -70,6 +70,9 @@ const threadPatch = {
         this.channel_name_member_ids = fields.Many("discuss.channel.member");
         this.self_member_id = fields.One("discuss.channel.member", {
             inverse: "threadAsSelf",
+            onDelete() {
+                this.channel?.onPinStateUpdated();
+            },
         });
         this.scrollUnread = true;
     },
@@ -257,17 +260,19 @@ const threadPatch = {
     get showUnreadBanner() {
         return this.self_member_id?.message_unread_counter_ui > 0;
     },
-    executeCommand(command, body = "") {
-        command.onExecute?.(this.channel);
-        return this.store.env.services.orm.call(
-            "discuss.channel",
-            command.methodName,
-            [[this.id]],
-            { body }
-        );
+    async executeCommand(command, body = "") {
+        await command.onExecute?.(this.channel);
+        if (command.methodName) {
+            await this.store.env.services.orm.call(
+                "discuss.channel",
+                command.methodName,
+                [[this.id]],
+                { body }
+            );
+        }
     },
     async leaveChannel() {
-        if (this.channel?.channel_type !== "group" && this.create_uid?.eq(this.store.self_user)) {
+        if (this.channel?.channel_type === "channel" && this.create_uid?.eq(this.store.self_user)) {
             await this.askLeaveConfirmation(
                 _t("You are the administrator of this channel. Are you sure you want to leave?")
             );
@@ -279,11 +284,18 @@ const threadPatch = {
                 )
             );
         }
-        await this.closeChatWindow();
-        this.leaveChannelRpc();
+        await this.leaveChannelProcess();
     },
-    leaveChannelRpc() {
-        this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [this.id]);
+    async leaveChannelProcess() {
+        await this.closeChatWindow();
+        if (this.exists()) {
+            await this.leaveChannelRpc();
+        }
+    },
+    async leaveChannelRpc() {
+        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
+            this.id,
+        ]);
     },
 };
 patch(Thread.prototype, threadPatch);

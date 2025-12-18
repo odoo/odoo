@@ -10,6 +10,13 @@ const StorePatch = {
         super.setup(...arguments);
         this.channels = this.makeCachedFetchData("channels_as_member");
         this.fetchSsearchConversationsSequential = useSequential();
+        /**
+         * Determines whether there is at least one unpinned conversation for the current user. This
+         * value is not dynamic, but statically fetched during `/discuss/search` to determine if the
+         * "View hidden conversations" should be displayed.
+         * @type {boolean}
+         */
+        this.has_unpinned_channels;
     },
     /** @param {string} searchValue */
     async searchConversations(searchValue) {

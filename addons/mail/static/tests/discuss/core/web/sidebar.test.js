@@ -41,7 +41,6 @@ test("unknown channel can be displayed and interacted with", async () => {
     await click("button:text('Inbox')");
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active):text('Not So Secret')");
     await click("[title='Channel Actions']");
-    await click(".o-dropdown-item:contains('Leave Channel')");
-    await click("button:text('Leave Conversation')");
+    await click(".o-dropdown-item:text(Hide)");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });

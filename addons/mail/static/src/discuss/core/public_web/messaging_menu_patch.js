@@ -10,15 +10,12 @@ patch(MessagingMenu.prototype, {
             thread.markAsRead();
         }
     },
-    canUnpinItem(thread) {
-        return thread.channel?.canUnpin && thread.self_member_id?.message_unread_counter === 0;
-    },
     onSwipeLeftThreadNotification(thread) {
         const res = super.onSwipeLeftThreadNotification(...arguments);
-        if (this.hasTouch() && this.canUnpinItem(thread)) {
+        if (this.hasTouch() && thread.channel?.canHide) {
             return {
                 ...res,
-                action: () => thread.unpin(),
+                action: () => thread.channel.unpinChannel(),
                 icon: "fa-times-circle",
                 bgColor: "bg-danger",
             };

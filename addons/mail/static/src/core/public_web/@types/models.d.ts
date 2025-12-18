@@ -11,6 +11,5 @@ declare module "models" {
         inChathubOnNewMessage: Readonly<boolean>;
         setActiveURL: () => void;
         setAsDiscussThread: (pushState: boolean) => void;
-        unpin: () => Promise<void>;
     }
 }

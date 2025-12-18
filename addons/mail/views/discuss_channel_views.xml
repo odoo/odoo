@@ -7,22 +7,29 @@
             <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban default_order="last_interest_dt desc" action="open_chat_window_action" type="object">
                     <field name="is_member"/>
                     <field name="group_ids"/>
                     <field name="active"/>
                     <templates>
+                        <t t-name="menu">
+                            <a type="open" class="dropdown-item" role="menuitem">Advanced Settings</a>
+                        </t>
                         <t t-name="card" class="row g-0">
                             <widget name="web_ribbon" class="d-flex" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                             <aside class="col-2 my-auto">
                                 <field name="avatar_128" widget="image" options="{'size': [50, 50], 'img_class': 'bg-transparent'}" alt="Channel"/>
                             </aside>
                             <main class="col me-4 ms-2">
-                                <span class="fw-bold fs-5">#<field name="name"/></span>
+                                <span class="fw-bold fs-5">#<field name="display_name"/></span>
                                 <field name="channel_type" groups="base.group_no_one"/>
                                 <field name="description" class="text-muted lh-1 small"/>
-                                <button type="object" invisible="is_member or group_ids" class="btn btn-primary ms-auto mt-auto" name="channel_join">Join</button>
-                                <button type="object" invisible="not is_member or group_ids" class="btn btn-secondary ms-auto mt-auto" name="action_unfollow">Leave</button>
+                                <button type="object" invisible="not can_leave" class="btn btn-secondary ms-auto mt-auto" name="action_unfollow">
+                                    <i class="fa fa-sign-out" role="img"></i> Leave
+                                </button>
+                                <button type="object" invisible="not can_join" class="btn btn-primary ms-auto mt-auto" name="channel_join">
+                                    <i class="fa fa-sign-in" role="img"></i> Join
+                                </button>
                             </main>
                         </t>
                     </templates>
@@ -35,12 +42,13 @@
             <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <list string="Channels" default_order="name">
+                <list default_order="last_interest_dt desc" action="open_chat_window_action" type="object">
                     <field name="avatar_128" invisible="parent_channel_id" widget="image" options="{'size': [24, 24]}" width="30" string=""/>
-                    <field name="name"/>
+                    <field name="display_name"/>
                     <field name="description"/>
-                    <button type="object" invisible="is_member or group_ids" class="btn btn-primary ms-auto mt-auto" name="channel_join" string="Join"/>
-                    <button type="object" invisible="not is_member or group_ids" class="btn btn-secondary ms-auto mt-auto" name="action_unfollow" string="Leave"/>
+                    <field name="last_interest_dt" optional="hide"/>
+                    <button type="object" invisible="not can_leave" class="btn btn-secondary" name="action_unfollow" string="Leave"/>
+                    <button type="object" invisible="not can_join" class="btn btn-primary" name="channel_join" string="Join"/>
                 </list>
             </field>
         </record>
@@ -51,6 +59,15 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Mail Channel Form">
+                    <header>
+                        <button type="object" invisible="not can_join" class="btn btn-primary" name="channel_join">
+                            <i class="fa fa-sign-in" role="img"></i> Join
+                        </button>
+                        <button type="object" class="btn btn-secondary" name="open_chat_window_action">View</button>
+                        <button type="object" invisible="not can_leave" class="btn btn-secondary" name="action_unfollow">
+                            <i class="fa fa-sign-out" role="img"></i> Leave
+                        </button>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box"/>
                         <field name="avatar_128" invisible="1"/>
@@ -120,9 +137,35 @@
             <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <search string="Search Groups">
-                    <field name="name"/>
-                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <search>
+                    <field name="display_name"/>
+                    <filter string="Joined" name="filter_joined" domain="[('is_member', '=', True)]"/>
+                    <filter string="Not Joined" name="filter_not_joined" domain="[('is_member', '=', False)]"/>
+                    <separator/>
+                    <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail.discuss_my_conversations_view_search" model="ir.ui.view">
+            <field name="name">discuss.channel.search</field>
+            <field name="model">discuss.channel</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="display_name"/>
+                    <filter string="Visible" name="filter_visible" domain="[('self_member_id.is_pinned', '=', True)]"/>
+                    <filter string="Hidden" name="filter_hidden" domain="[('self_member_id.is_pinned', '=', False)]"/>
+                    <separator/>
+                    <filter string="Channel" name="filter_channel" domain="[('channel_type', '=', 'channel')]"/>
+                    <filter string="Group" name="filter_group" domain="[('channel_type', '=', 'group')]"/>
+                    <filter string="Chat" name="filter_chat" domain="[('channel_type', '=', 'chat')]"/>
+                    <separator/>
+                    <filter string="Archived" name="filter_archived" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <group>
+                        <filter name="group_by_channel_type" string="Channel Type" domain="[]" context="{'group_by':'channel_type'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -137,9 +180,18 @@
         <record id="mail.discuss_channel_action" model="ir.actions.act_window">
             <field name="name">Channels</field>
             <field name="res_model">discuss.channel</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="domain" eval="[(('channel_type', '=', 'channel'))]" />
+            <field name="view_mode">kanban,list,form</field>
+            <field name="domain">[("channel_type", "=", "channel"), ("parent_channel_id", "=", False)]</field>
             <field name="search_view_id" ref="discuss_channel_view_search" />
+        </record>
+
+        <record id="mail.discuss_my_conversations_action" model="ir.actions.act_window">
+            <field name="name">Channels</field>
+            <field name="res_model">discuss.channel</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="domain">[("is_member", "=", True)]</field>
+            <field name="search_view_id" ref="mail.discuss_my_conversations_view_search" />
+            <field name="context" eval="{'search_default_filter_hidden': 1}"/>
         </record>
 
     <record id="mail.action_discuss" model="ir.actions.client">
