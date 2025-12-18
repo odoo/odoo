@@ -128,7 +128,6 @@ class TestCommonTimesheet(TransactionCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestTimesheet(TestCommonTimesheet):
 
     def setUp(self):

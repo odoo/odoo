@@ -5,7 +5,6 @@ from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestContractCalendars(TestHrCommon):
 
     @classmethod

@@ -2,7 +2,6 @@ from odoo.addons.hr.tests.test_multi_company import TestMultiCompany
 from odoo.tests import tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestHrDepartment(TestMultiCompany):
     @classmethod
     def setUpClass(cls):
