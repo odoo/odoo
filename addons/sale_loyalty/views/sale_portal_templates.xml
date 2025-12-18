@@ -49,26 +49,53 @@
 
     <template id="sale_order_portal_loyalty_content">
         <t t-set="loyalty_data" t-value="sale_order._get_loyalty_data()"/>
-        <div t-if="loyalty_data" class="col-xs-5 col-md-6 col-lg-5">
-            <table class="table table-sm">
-                <tr>
-                    <td><strong>Loyalty Card</strong></td>
-                </tr>
-                <tr t-if="loyalty_data['issued']">
-                    <td>Issued</td>
-                    <td class="text-end">
-                        +<span t-out="loyalty_data['issued']"/>
-                        <span class="d-none d-md-inline" t-out="loyalty_data['point_name']"/>
-                    </td>
-                </tr>
-                <tr t-if="loyalty_data['cost']">
-                    <td>Used</td>
-                    <td class="text-end">
-                        -<span t-out="loyalty_data['cost']"/>
-                        <span class="d-none d-md-inline" t-out="loyalty_data['point_name']"/>
-                    </td>
-                </tr>
-            </table>
+        <t t-set="has_issued" t-value="loyalty_data and loyalty_data['issued']"/>
+        <t t-set="has_cost" t-value="loyalty_data and loyalty_data['cost']"/>
+        <!-- Only issued -->
+        <div t-if="has_issued and not has_cost" class="d-flex flex-column gap-1">
+            <hr/>
+            <strong class="smaller text-uppercase text-muted">Loyalty Card</strong>
+            <div class="small">
+                <span class="text-success fs-5">
+                    +<t t-out="loyalty_data['issued']"/> 
+                </span>
+                <span class="text-muted"><t t-out="loyalty_data['point_name']"/></span>
+            </div>
+        </div>
+        <!-- Only used -->
+        <div t-elif="has_cost and not has_issued" class="d-flex flex-column gap-1">
+            <hr/>
+            <strong class="smaller text-uppercase text-muted">Loyalty Card</strong>
+            <div class="small">
+                <span class="text-danger fs-5">
+                    −<t t-out="loyalty_data['cost']"/>
+                </span>
+                <span class="text-muted small"><t t-out="loyalty_data['point_name']"/></span>
+            </div>
+        </div>
+        <!-- Both issued and used -->
+        <div t-elif="has_issued and has_cost" class="d-flex flex-column gap-1">
+            <hr/>
+            <strong class="smaller text-uppercase text-muted">Loyalty Card</strong>
+            <div class="d-flex justify-content-between align-items-baseline">
+                <small class="text-muted">Issued</small>
+                <small class="text-reset">
+                    <t t-out="loyalty_data['issued']"/> <t t-out="loyalty_data['point_name']"/>
+                </small>
+            </div>
+            <div class="d-flex justify-content-between align-items-baseline">
+                <small class="text-muted">Used</small>
+                <small class=" text-danger">
+                    −<t t-out="loyalty_data['cost']"/> <t t-out="loyalty_data['point_name']"/>
+                </small>
+            </div>
+            <t t-set="net" t-value="round(loyalty_data['issued'] - loyalty_data['cost'], 2)"/>
+            <div class="d-flex justify-content-between align-items-baseline">
+                <small class="fw-bold">Total</small>
+                <small t-attf-class=" {{ 'text-success' if net >= 0 else 'text-danger' }}">
+                    <t t-if="net >= 0"></t><t t-out="net"/> <t t-out="loyalty_data['point_name']"/>
+                </small>
+            </div>
         </div>
     </template>
 
@@ -82,8 +109,33 @@
         <xpath expr="//div[@id='total']" position="after">
             <t t-call="sale_loyalty.sale_purchased_gift_card" order="sale_order" hide_intro="1"/>
         </xpath>
-        <xpath expr="//div[@id='total']/*" position="after">
-            <t t-call="sale_loyalty.sale_order_portal_loyalty_content" />
+    </template>
+
+    <template id="sale_order_portal_template_inherit_loyalty"
+              name="Loyalty Points Sidebar"
+              inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//div[@id='sidebar_loyalty_anchor']" position="after">
+            <t t-call="sale_loyalty.sale_order_portal_loyalty_content"/>
+        </xpath>
+    </template>
+
+    <template id="sale_order_portal_template_inherit_loyalty_mobile"
+              name="Loyalty Points Mobile Bar"
+              inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//div[@id='mobile_action_bar']//span[hasclass('fw-bold') and hasclass('fs-5')]" position="after">
+            <t t-set="mobile_loyalty" t-value="sale_order._get_loyalty_data()"/>
+            <t t-if="mobile_loyalty">
+                <t t-set="mobile_loyalty_net" t-value="round(mobile_loyalty['issued'] - mobile_loyalty['cost'], 2)"/>
+                <t t-if="mobile_loyalty_net">
+                    <span class="ms-auto d-inline-flex align-items-center gap-1 small text-nowrap">
+                        <i class="fa fa-star text-warning"/>
+                        <span t-attf-class="fw-semibold {{ 'text-success' if mobile_loyalty_net > 0 else 'text-danger' }}">
+                            <t t-if="mobile_loyalty_net > 0">+</t><t t-out="mobile_loyalty_net"/>
+                        </span>
+                        <span class="text-muted"><t t-out="mobile_loyalty['point_name']"/></span>
+                    </span>
+                </t>
+            </t>
         </xpath>
     </template>
 
