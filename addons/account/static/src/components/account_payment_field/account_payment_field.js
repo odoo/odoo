@@ -26,6 +26,8 @@ export class AccountPaymentField extends Component {
     }
 
     getInfo() {
+        console.log(this.props.name)
+        console.log(this.props.record.data[this.props.name])
         const info = this.props.record.data[this.props.name] || {
             content: [],
             outstanding: false,
@@ -47,6 +49,8 @@ export class AccountPaymentField extends Component {
             outstanding: info.outstanding,
             title: info.title,
             moveId: info.move_id,
+            withhold_applicable: info.withhold_applicable,
+            hide_add_withhold: info.hide_add_withhold,
         };
     }
 
@@ -57,6 +61,31 @@ export class AccountPaymentField extends Component {
             _onRemoveMoveReconcile: this.removeMoveReconcile.bind(this),
             _onOpenMove: this.openMove.bind(this),
         });
+    }
+
+    onWithholdAdd() {
+        this.action.doAction(
+            "l10n_account_withholding_tax.l10n_account_withholding_entry_form_action",
+            {
+                additionalContext: {
+                    active_model: this.props.record.resModel,
+                    active_id: this.props.record.resId,
+                    active_ids: [this.props.record.resId],
+                },
+            }
+        );
+    }
+
+    async onPaymentAdd() {
+        const moveId = this.props.record.resId;
+        const action = await this.env.services.orm.call(
+            "account.move",
+            "action_register_payment",
+            [[moveId]]
+        );
+        if (action) {
+            this.env.services.action.doAction(action);
+        }
     }
 
     async assignOutstandingCredit(moveId, id) {

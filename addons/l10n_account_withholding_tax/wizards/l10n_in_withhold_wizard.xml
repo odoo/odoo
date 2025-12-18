@@ -2,13 +2,13 @@
 <odoo>
 
     <record id="l10n_account_withholding_entry_form_action" model="ir.actions.act_window">
-        <field name="name">Create TDS Entry</field>
+        <field name="name">Create Withhold Entry</field>
         <field name="res_model">l10n.account.withhold.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
 
-    <record id="tds_entry_view_form" model="ir.ui.view">
+    <record id="l10n_account_withhold_wizard_entry_view_form" model="ir.ui.view">
         <field name="name">l10n.account.withhold.wizard.view.form</field>
         <field name="model">l10n.account.withhold.wizard</field>
         <field name="arch" type="xml">

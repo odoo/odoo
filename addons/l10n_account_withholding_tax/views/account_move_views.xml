@@ -1,43 +1,1 @@
-<?xml version="1.0"?>
-<odoo>
-
-    <record id="account_invoice_view_form_inherit_l10n_account_withholding_tax" model="ir.ui.view">
-        <field name="name">account.move.view.form.inherit.l10n_account_withholding_tax</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_move_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@class='oe_invoice_lines_tab overflow-hidden']//group[@colspan='4']" position="after">
-                <group colspan="9"/>
-                <group colspan="3">
-                    <button name="%(l10n_account_withholding_entry_form_action)d" type="action" string="Tax Deduction"
-                            class="oe_highlight" invisible="amount_residual == 0.0 or state != 'posted'"/>
-                    <!-- Register Payment (only invoices / receipts) -->
-                    <button name="action_register_payment" id="account_invoice_payment_btn"
-                            type="object" class="oe_highlight"
-                            invisible="(
-                                    state != 'posted'
-                                    or payment_state not in ('not_paid', 'partial', 'in_payment')
-                                    or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
-                                    or invoice_has_outstanding
-                                )"
-                            context="{'dont_redirect_to_payments': True}"
-                            string="Pay" data-hotkey="g"
-                            groups="account.group_account_invoice"/>
-                    <!-- Register Payment (only invoices / receipts, with outstanding payments) -->
-                    <button name="action_register_payment" id="account_invoice_payment_secondary_btn"
-                            type="object"
-                            invisible="(
-                                    state != 'posted'
-                                    or payment_state not in ('not_paid', 'partial', 'in_payment')
-                                    or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
-                                    or not invoice_has_outstanding
-                                )"
-                            context="{'dont_redirect_to_payments': True}"
-                            string="Pay" data-hotkey="g"
-                            groups="account.group_account_invoice"/>
-                </group>
-            </xpath>
-        </field>
-    </record>
-
-</odoo>
+<?xml version="1.0"?><odoo>    <record id="account_invoice_view_form_inherit_l10n_account_withholding_tax" model="ir.ui.view">        <field name="name">account.move.view.form.inherit.l10n_account_withholding_tax</field>        <field name="model">account.move</field>        <field name="inherit_id" ref="account.view_move_form"/>        <field name="arch" type="xml">            <xpath expr="//group[@class='oe_invoice_lines_tab overflow-hidden']//group[@colspan='4']" position="after">                <group colspan="9"/>                <group colspan="3">                    <button name="%(l10n_account_withholding_entry_form_action)d" type="action" string="Tax Deduction"                            class="oe_highlight" invisible="amount_residual == 0.0 or state != 'posted'"/>                    <!-- Register Payment (only invoices / receipts) -->                    <button name="action_register_payment" id="account_invoice_payment_btn"                            type="object" class="oe_highlight"                            invisible="(                                    state != 'posted'                                    or payment_state not in ('not_paid', 'partial', 'in_payment')                                    or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')                                    or invoice_has_outstanding                                )"                            context="{'dont_redirect_to_payments': True}"                            string="Pay" data-hotkey="g"                            groups="account.group_account_invoice"/>                    <!-- Register Payment (only invoices / receipts, with outstanding payments) -->                    <button name="action_register_payment" id="account_invoice_payment_secondary_btn"                            type="object"                            invisible="(                                    state != 'posted'                                    or payment_state not in ('not_paid', 'partial', 'in_payment')                                    or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')                                    or not invoice_has_outstanding                                )"                            context="{'dont_redirect_to_payments': True}"                            string="Pay" data-hotkey="g"                            groups="account.group_account_invoice"/>                </group>            </xpath>        </field>    </record></odoo>

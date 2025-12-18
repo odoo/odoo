@@ -33,6 +33,8 @@ class AccountMove(models.Model):
                             move.invoice_payments_widget['content'][i].update({
                                 'is_withhold_line': False,
                             })
+                move.invoice_payments_widget['withhold_applicable'] = True if move.company_id.withhold_applicable_on == 'payment_bill' else False
+                move.invoice_payments_widget['hide_add_withhold'] = True if move.amount_residual == 0 else False
 
     def _get_withhold_account_by_sum(self):
         withhold_data = {}

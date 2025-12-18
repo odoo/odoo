@@ -17,3 +17,11 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.withholding_tax_control_account_id',
         readonly=False,
     )
+    withhold_applicable_on = fields.Selection(
+        related='company_id.withhold_applicable_on',
+        readonly=False,
+    )
+    withhold_applicable = fields.Boolean(
+        related='company_id.withhold_applicable',
+        readonly=False,
+    )

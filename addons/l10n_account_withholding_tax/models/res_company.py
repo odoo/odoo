@@ -19,3 +19,13 @@ class ResCompany(models.Model):
         string="Withholding Tax Control",
         help="This account will be set on withholding tax lines.",
     )
+    withhold_applicable_on = fields.Selection(
+        selection=[
+            ('payment', 'Payment'),
+            ('payment_bill', 'Payment and Bill')
+        ],
+        required=False,
+        string="Withholding On",
+        help="Determines whether withholding taxes are applied on payments only or on both payments and bills.",
+    )
+    withhold_applicable = fields.Boolean("Withholding Applicable")

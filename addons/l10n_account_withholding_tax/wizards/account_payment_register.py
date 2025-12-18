@@ -68,7 +68,7 @@ class AccountPaymentRegister(models.TransientModel):
     # Compute, inverse, search methods
     # --------------------------------
 
-    @ api.depends('withholding_line_ids.amount', 'amount')
+    @api.depends('amount')
     def _compute_withholding_net_amount(self):
         """
         The net amount is the one that will actually be paid by the payer.

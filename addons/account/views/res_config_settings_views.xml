@@ -229,6 +229,18 @@
                             <setting id="autopost_bills" help="Propose to validate bills automatically when AI accuracy is right 3 times in a row for a vendor.">
                                 <field name="autopost_bills"/>
                             </setting>
+                            <setting name="withholding_tax"
+                                     help="Manage withholding taxes on vendor bills"
+                                     company_dependent="1"
+                                     string="Withholding Taxes"
+                                     documentation="/applications/finance/accounting/payables/supplier_bills/withholding_tax.html">
+                                <field name="module_l10n_account_withholding_tax"/>
+                                <div class="content-group" invisible="not module_l10n_account_withholding_tax">
+                                    <div class="text-warning mt16 mb4">
+                                        Save this page and come back here to set up the feature.
+                                    </div>
+                                </div>
+                            </setting>
                         </block>
                         <block title="Vendor Payments" id="print_vendor_checks_setting_container">
                             <setting id="print_checks" groups="account.group_account_user" string="Checks" company_dependent="1" help="Print checks to pay your vendors"

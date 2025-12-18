@@ -97,6 +97,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_loan_extract = fields.Boolean("Loans Digitization", compute='_compute_module_account_loan_extract', readonly=False, store=True)
     module_snailmail_account = fields.Boolean(string="Snailmail")
     module_account_peppol = fields.Boolean(string='PEPPOL Invoicing')
+    module_l10n_account_withholding_tax = fields.Boolean(string='Withholding')
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
     tax_cash_basis_journal_id = fields.Many2one(
         'account.journal',

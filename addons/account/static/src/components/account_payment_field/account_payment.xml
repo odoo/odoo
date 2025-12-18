@@ -17,7 +17,16 @@
                 <t t-if="!info.outstanding">
                     <tr text-align="left">
                         <th text-align="left" colspan="3" style="padding:6px 0; font-weight:600; font-size:14px;">
-                            Payments
+                            <div class="d-flex align-items-center">
+                                <t t-if="!info.hide_add_withhold">
+                                    <a role="button"
+                                       class="fa fa-plus text-primary"
+                                       title="Add"
+                                       style="cursor:pointer;"
+                                       t-on-click="() => this.onPaymentAdd()"/>
+                                </t>
+                                <span class="ms-auto">Payments</span>
+                            </div>
                         </th>
                     </tr>
                     <tr><td colspan="3" style="border-bottom:2px solid #666;"></td></tr>
@@ -96,10 +105,19 @@
                 <t t-if="!info.outstanding">
                     <tr><td colspan="3" style="height:12px;"></td></tr>
                     <tr><td colspan="3" style="height:12px;"></td></tr>
-
                     <tr>
                         <th colspan="3" style="padding:6px 0; font-weight:600; font-size:14px;">
-                            Withhold Tax Deducted
+                            <div class="d-flex align-items-center">
+                                <t t-if="info.withhold_applicable and !info.hide_add_withhold">
+                                    <a role="button"
+                                       class="fa fa-plus text-primary"
+                                       title="Add"
+                                       style="cursor:pointer;"
+                                       t-on-click="() => this.onWithholdAdd()"/>
+                                </t>
+
+                                <span class="ms-auto">Withhold Tax Deducted</span>
+                            </div>
                         </th>
                     </tr>
                     <tr><td colspan="3" style="border-bottom:2px solid #666;"></td></tr>
