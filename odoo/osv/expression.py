@@ -121,6 +121,7 @@ import warnings
 from datetime import date, datetime, time
 
 import odoo.modules
+from odoo.exceptions import MissingError
 from odoo.models import check_property_field_value_name, READ_GROUP_NUMBER_GRANULARITY
 from odoo.tools import Query, SQL, get_lang
 from odoo.tools.sql import pattern_to_translated_trigram_pattern, value_to_translated_trigram_pattern
@@ -886,9 +887,13 @@ class expression(object):
                 return [FALSE_LEAF]
             left_model_sudo = left_model.sudo().with_context(active_test=False)
             if left_model._parent_store:
+                try:
+                    paths = left_model_sudo.browse(ids).mapped('parent_path')
+                except MissingError:
+                    paths = left_model_sudo.browse(ids).exists().mapped('parent_path')
                 domain = OR([
-                    [('parent_path', '=like', rec.parent_path + '%')]
-                    for rec in left_model_sudo.browse(ids)
+                    [('parent_path', '=like', path + '%')]
+                    for path in paths
                 ])
             else:
                 # recursively retrieve all children nodes with sudo(); the
@@ -916,10 +921,14 @@ class expression(object):
                 return [FALSE_LEAF]
             left_model_sudo = left_model.sudo().with_context(active_test=False)
             if left_model._parent_store:
+                try:
+                    paths = left_model_sudo.browse(ids).mapped('parent_path')
+                except MissingError:
+                    paths = left_model_sudo.browse(ids).exists().mapped('parent_path')
                 parent_ids = [
                     int(label)
-                    for rec in left_model_sudo.browse(ids)
-                    for label in rec.parent_path.split('/')[:-1]
+                    for path in paths
+                    for label in path.split('/')[:-1]
                 ]
                 domain = [('id', 'in', parent_ids)]
             else:
@@ -929,6 +938,10 @@ class expression(object):
                 parent_name = parent or left_model._parent_name
                 parent_ids = set()
                 records = left_model_sudo.browse(ids)
+                try:
+                    records.mapped(parent_name)
+                except MissingError:
+                    records = records.exists()
                 while records:
                     parent_ids.update(records._ids)
                     records = records[parent_name] - records.browse(parent_ids)
