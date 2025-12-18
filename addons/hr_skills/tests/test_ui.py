@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import tagged, Form, HttpCase
+from odoo.tools import mute_logger
 
 @tagged('-at_install', 'post_install')
 class SkillsTestUI(HttpCase):
+
+    @mute_logger('odoo.http', 'odoo.sql_db')
     def test_ui(self):
         with Form(self.env['hr.skill.type']) as skill_type:
             skill_type.name = 'Best Music'
