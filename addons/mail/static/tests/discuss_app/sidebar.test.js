@@ -17,7 +17,7 @@ import {
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, waitFor } from "@odoo/hoot";
 import { animationFrame, drag, press, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, mockDate } from "@odoo/hoot-mock";
 import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
@@ -26,6 +26,7 @@ import { browser } from "@web/core/browser/browser";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { getOrigin } from "@web/core/utils/urls";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -287,7 +288,20 @@ test("sidebar: basic chat rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Demo')");
     await contains(".o-mail-DiscussSidebarChannel img[alt='Thread Image']");
     await click("[title='Chat Actions']");
-    await contains(".o-dropdown-item:text('Hide Until New Message')");
+    await waitFor(".o-dropdown-item:count(7)", { timeout: 3000 });
+    await waitFor(".o-mail-ActionList-group:count(4)");
+    const group = range(0, 4).map((i) => `.o-mail-ActionList-group:eq(${i})`);
+    await waitFor(`${group[0]} .o-dropdown-item:count(2)`);
+    await waitFor(`${group[0]} .o-dropdown-item:eq(0):text('Start Video Call')`);
+    await waitFor(`${group[0]} .o-dropdown-item:eq(1):text('Start Call')`);
+    await waitFor(`${group[1]} .o-dropdown-item:count(2)`);
+    await waitFor(`${group[1]} .o-dropdown-item:eq(0):text('Invite People')`);
+    await waitFor(`${group[1]} .o-dropdown-item:eq(1):text('Add to Favorites')`);
+    await waitFor(`${group[2]} .o-dropdown-item:count(2)`);
+    await waitFor(`${group[2]} .o-dropdown-item:eq(0):text('Notification Settings')`);
+    await waitFor(`${group[2]} .o-dropdown-item:eq(1):text('Advanced Settings')`);
+    await waitFor(`${group[3]} .o-dropdown-item:count(1)`);
+    await waitFor(`${group[3]} .o-dropdown-item:text('Hide Until New Message')`);
     await contains(".o-mail-DiscussSidebarChannel .badge", { count: 0 });
 });
 
