@@ -1941,3 +1941,32 @@ class TestSaleProject(TestSaleProjectCommon):
         })
         so.action_confirm()
         self.assertEqual(sol.task_id.allocated_hours, 10, "The allocated hours should be 10.")
+
+    def test_quotation_with_zero_unit_project_service(self):
+        """
+        Test checking that a project doesn't get created on order when ordering 0 units of the corresponding
+         product service if it is optional. If the unit is increased to 1, a project should be created.
+        """
+        sale_order_with_option = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'display_type': 'line_section',
+                    'name': "Optional products",
+                    'is_optional': True,
+                }),
+                Command.create({
+                    'product_id': self.product_order_service4.id,
+                    'product_uom_qty': 0,
+                }),
+            ],
+        })
+        optional_product_line = sale_order_with_option.order_line.filtered(lambda line: not line.display_type and line._is_line_optional())
+        sale_order_with_option.action_confirm()
+        self.assertFalse(optional_product_line.project_id)
+        optional_product_line.write({'product_uom_qty': 1})
+        self.assertEqual(optional_product_line.project_id.sale_order_id, sale_order_with_option)
