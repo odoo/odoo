@@ -73,9 +73,7 @@ class MailActivitySchedule(models.TransientModel):
     date_deadline = fields.Date(
         'Due Date', compute="_compute_date_deadline",
         readonly=False, store=True)
-    summary = fields.Char(
-        'Summary', compute="_compute_summary",
-        readonly=False, store=True)
+    summary = fields.Char('Summary')
     note = fields.Html(
         'Note', compute="_compute_note",
         readonly=False, store=True, sanitize_style=True)
@@ -83,6 +81,7 @@ class MailActivitySchedule(models.TransientModel):
         'res.users', 'Assigned to', compute='_compute_activity_user_id',
         readonly=False, store=True)
     chaining_type = fields.Selection(related='activity_type_id.chaining_type', readonly=True)
+    is_summary_edited = fields.Boolean(compute="_compute_is_summary_edited")
 
     @api.depends('res_model')
     def _compute_res_model_id(self):
@@ -264,6 +263,8 @@ class MailActivitySchedule(models.TransientModel):
         """ Reset UX """
         if self.activity_type_id:
             self.plan_id = False
+        if not self.is_summary_edited:
+            self.summary = self.activity_type_id.summary
 
     @api.depends('activity_type_id')
     def _compute_date_deadline(self):
@@ -273,10 +274,13 @@ class MailActivitySchedule(models.TransientModel):
             elif not scheduler.date_deadline:
                 scheduler.date_deadline = fields.Date.context_today(scheduler)
 
-    @api.depends('activity_type_id')
-    def _compute_summary(self):
-        for scheduler in self:
-            scheduler.summary = scheduler.activity_type_id.summary
+    @api.depends('summary')
+    def _compute_is_summary_edited(self):
+        for record in self:
+            if record.summary and record.summary != record.activity_type_id.summary:
+                record.is_summary_edited = True
+            else:
+                record.is_summary_edited = False
 
     @api.depends('activity_type_id')
     def _compute_note(self):
