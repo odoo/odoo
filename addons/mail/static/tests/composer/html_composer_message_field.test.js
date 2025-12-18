@@ -143,7 +143,7 @@ test("media dialog: upload", async function () {
     expect("[name='attachment_ids'] .o_attachment[title='test.jpg']").toHaveCount(1);
 
     await contains(".o_form_button_save").click();
-    expect.verifySteps(["web_save"]);
+    await expect.waitForSteps(["web_save"]);
 });
 
 test("mention a partner", async () => {
