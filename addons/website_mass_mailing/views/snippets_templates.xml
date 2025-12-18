@@ -194,12 +194,12 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
             </we-select>
         </div>
         <t t-call="website_mass_mailing.newsletter_subscribe_options_common">
-            <t t-set="_selector">.o_newsletter_popup</t>
-            <t t-set="_target">.s_newsletter_list</t>
+            <t t-set="_selector" t-translation="off">.o_newsletter_popup</t>
+            <t t-set="_target" t-translation="off">.s_newsletter_list</t>
         </t>
         <t t-call="website_mass_mailing.newsletter_subscribe_options_common">
-            <t t-set="_selector">.s_newsletter_list</t>
-            <t t-set="_exclude">.s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list</t>
+            <t t-set="_selector" t-translation="off">.s_newsletter_list</t>
+            <t t-set="_exclude" t-translation="off">.s_newsletter_block .s_newsletter_list, .o_newsletter_popup .s_newsletter_list</t>
         </t>
         <div data-selector=".js_subscribe" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
     </xpath>
