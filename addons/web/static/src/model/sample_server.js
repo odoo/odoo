@@ -644,16 +644,17 @@ export class SampleServer {
         }
         // Don't care another params - and no subgroup:
         // order / opening_info / unfold_read_default_limit / groupby_read_specification
+        const openAllGroups = params.auto_unfold && !this.existingGroups;
         let nbOpenedGroup = 0;
         if (params.unfold_read_specification) {
             for (const group of groups) {
-                if (params.auto_unfold || "__records" in group) {
+                if (openAllGroups || "__records" in group) {
                     // if group has a "__records" key, it means that it is an existing group, and
                     // that the real webReadGroup returned a "__records" key for that group (which
                     // is empty, otherwise we wouldn't be here), i.e. that group is opened.
                     if (nbOpenedGroup < MAX_NUMBER_OPENED_GROUPS) {
                         nbOpenedGroup++;
-                        group["__records"] = this._mockWebSearchReadUnity({
+                        group.__records = this._mockWebSearchReadUnity({
                             model: params.model,
                             specification: params.unfold_read_specification,
                             recordIds: group["id:array_agg"],
