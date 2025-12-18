@@ -51,6 +51,8 @@ export class ActivityListPopover extends Component {
                 this.props.resModel,
                 this.props.resIds ? this.props.resIds : [this.props.resId],
                 this.props.defaultActivityTypeId
+                    ? { default_activity_type_id: this.props.defaultActivityTypeId }
+                    : {}
             )
             .then(() => this.props.onActivityChanged());
         this.props.close();

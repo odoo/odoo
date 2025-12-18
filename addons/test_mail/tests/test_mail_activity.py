@@ -261,6 +261,7 @@ class TestActivityFlow(TestActivityCommon):
 
     def test_activity_flow_employee(self):
         with self.with_user('employee'):
+            activity_type_id = self.env.ref('mail.mail_activity_data_email')
             test_record = self.env['mail.test.activity'].browse(self.test_record.id)
             self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
 
@@ -268,7 +269,7 @@ class TestActivityFlow(TestActivityCommon):
             activity = self.env['mail.activity'].create({
                 'summary': 'Test Activity',
                 'date_deadline': date.today() + relativedelta(days=1),
-                'activity_type_id': self.env.ref('mail.mail_activity_data_email').id,
+                'activity_type_id': activity_type_id.id,
                 'res_model_id': self.env['ir.model']._get(test_record._name).id,
                 'res_id': test_record.id,
             })
@@ -285,7 +286,10 @@ class TestActivityFlow(TestActivityCommon):
             activity.action_feedback(feedback='So much feedback')
             self.assertEqual(activity.feedback, 'So much feedback')
             self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
-            self.assertEqual(test_record.message_ids[0].subtype_id, self.env.ref('mail.mt_activities'))
+            last_message = test_record.message_ids[0]
+            self.assertEqual(last_message.subtype_id, self.env.ref('mail.mt_activities'))
+            self.assertEqual(last_message.mail_activity_type_id, activity_type_id)
+            self.assertEqual(last_message.mail_activity_id, activity)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_notify_other_user(self):

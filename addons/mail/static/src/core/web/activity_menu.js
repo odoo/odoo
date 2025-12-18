@@ -23,6 +23,7 @@ export class ActivityMenu extends Component {
         this.userId = user.userId;
         this.ui = useService("ui");
         this.dropdown = useDropdownState();
+        this.effect = useService("effect");
         useCommand(_t("Activity"), () => this.store.scheduleActivity(false, false), {
             category: "activity",
             hotkey: "alt+shift+a",
@@ -37,6 +38,15 @@ export class ActivityMenu extends Component {
 
     onBeforeOpen() {
         this.store.fetchStoreData("systray_get_activities");
+    }
+
+    onOpened() {
+        if (!this.store.activityGroups.length) {
+            this.effect.add({
+                message: "Congratulations, you're done with your activities.",
+                type: "rainbow_man",
+            });
+        }
     }
 
     availableViews(group) {

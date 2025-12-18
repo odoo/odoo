@@ -75,7 +75,15 @@ patch(Activity.prototype, {
         return action;
     },
     remove({ broadcast = true } = {}) {
-        this.delete();
+        // Only delete the activity if no message is linked to it.
+        // We keep it when marked as done because reuse action needs mail_activity_id.
+        if (
+            !Object.values(this.store["mail.message"].records).some(
+                (m) => m.mail_activity_id?.id === this.id
+            )
+        ) {
+            this.delete();
+        }
         if (broadcast) {
             this.activityBroadcastChannel?.postMessage({
                 type: "DELETE",
