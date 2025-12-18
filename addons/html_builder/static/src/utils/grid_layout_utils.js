@@ -187,10 +187,10 @@ function placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap, mobileB
         // Finding out if the images are alone in their column.
         const isImageColumn = checkIfImageColumn(columnEl);
         const imageEl = columnEl.querySelector("img");
-        // Checking if the column has a background color to take that into
+        // Checking if the column has a background color/image to take that into
         // account when computing its size and padding (to make it look good).
-        const hasBackgroundColor = columnEl.classList.contains("o_cc");
-        const isImageWithoutPadding = isImageColumn && !hasBackgroundColor;
+        const hasBackground = columnEl.matches(".o_cc, .oe_img_bg");
+        const isImageWithoutPadding = isImageColumn && !hasBackground;
 
         // Placing the column.
         const style = window.getComputedStyle(columnEl);
@@ -209,9 +209,9 @@ function placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap, mobileB
         const paddingLeft = parseFloat(style.paddingLeft);
         let width = isImageWithoutPadding
             ? parseFloat(imageEl.scrollWidth)
-            : parseFloat(columnEl.scrollWidth) - (hasBackgroundColor ? 0 : 2 * paddingLeft);
+            : parseFloat(columnEl.scrollWidth) - (hasBackground ? 0 : 2 * paddingLeft);
         const borderX = borderLeft + parseFloat(style.borderRight);
-        width += borderX + (hasBackgroundColor || isImageColumn ? 0 : 2 * defaultGridPadding);
+        width += borderX + (hasBackground || isImageColumn ? 0 : 2 * defaultGridPadding);
         let columnSpan = Math.round((width + columnGap) / (columnSize + columnGap));
         if (columnSpan < 1) {
             columnSpan = 1;
@@ -230,15 +230,14 @@ function placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap, mobileB
         // Getting the height of the column.
         let height = isImageWithoutPadding
             ? parseFloat(imageEl.scrollHeight)
-            : parseFloat(columnEl.scrollHeight) -
-              (hasBackgroundColor ? 0 : paddingTop + paddingBottom);
+            : parseFloat(columnEl.scrollHeight) - (hasBackground ? 0 : paddingTop + paddingBottom);
         const borderY = borderTop + parseFloat(style.borderBottom);
-        height += borderY + (hasBackgroundColor || isImageColumn ? 0 : 2 * defaultGridPadding);
+        height += borderY + (hasBackground || isImageColumn ? 0 : 2 * defaultGridPadding);
         const rowSpan = Math.ceil((height + rowGap) / (rowSize + rowGap));
         const rowStart =
             Math.round(columnTop / (rowSize + rowGap)) +
             1 +
-            (hasBackgroundColor || isImageWithoutPadding ? 0 : rowOffsetTop);
+            (hasBackground || isImageWithoutPadding ? 0 : rowOffsetTop);
         const rowEnd = rowStart + rowSpan;
 
         columnEl.style.gridArea = `${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}`;
@@ -249,7 +248,7 @@ function placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap, mobileB
         // Setting the initial z-index.
         columnEl.style.zIndex = zIndex++;
         // Setting the paddings.
-        if (hasBackgroundColor) {
+        if (hasBackground) {
             columnEl.style.setProperty("--grid-item-padding-y", `${paddingTop}px`);
             columnEl.style.setProperty("--grid-item-padding-x", `${paddingLeft}px`);
         }
