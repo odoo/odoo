@@ -122,8 +122,6 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("20%", "2.00"),
             TipScreen.percentAmountIs("25%", "2.50"),
             TipScreen.clickNoTip(),
-            TipScreen.inputAmountIs("0"),
-            TipScreen.clickSettle(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "10.00",
@@ -144,8 +142,8 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("15%", "1.80"),
             TipScreen.percentAmountIs("20%", "2.40"),
             TipScreen.percentAmountIs("25%", "3.00"),
-            TipScreen.setCustomTip("1.00"),
-            TipScreen.inputAmountIs("1.00"),
+            TipScreen.setCustomTip(1.0),
+            TipScreen.inputAmountIs(1.0),
             TipScreen.clickSettle(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
@@ -169,7 +167,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("20%", "2.80"),
             TipScreen.percentAmountIs("25%", "3.50"),
             TipScreen.inputAmountIs(""),
-            TipScreen.clickSettle(),
+            TipScreen.clickNoTip(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "14.00",
@@ -245,7 +243,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("20%", "20.00"),
             TipScreen.percentAmountIs("25%", "25.00"),
             TipScreen.inputAmountIs(""),
-            TipScreen.clickSettle(),
+            TipScreen.clickNoTip(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "100.00",
@@ -271,7 +269,7 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
             TipScreen.percentAmountIs("20%", "20.00"),
             TipScreen.percentAmountIs("25%", "25.00"),
             TipScreen.inputAmountIs(""),
-            TipScreen.clickSettle(),
+            TipScreen.clickNoTip(),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "100.00",

@@ -119,8 +119,8 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             TipScreen.percentAmountIs("15%", "1.20"),
             TipScreen.percentAmountIs("20%", "1.60"),
             TipScreen.percentAmountIs("25%", "2.00"),
-            TipScreen.setCustomTip("1.00"),
-            TipScreen.inputAmountIs("1.00"),
+            TipScreen.setCustomTip(1.0),
+            TipScreen.inputAmountIs(1.0),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
 
@@ -160,7 +160,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             PaymentScreen.clickValidate(),
             Chrome.closePrintingWarning(),
             TipScreen.isShown(),
-            TipScreen.clickSettle(),
+            TipScreen.clickNoTip(),
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),
             FloorScreen.isShown(),
@@ -213,7 +213,7 @@ registry.category("web_tour.tours").add("test_edit_payments_with_tip", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             TipScreen.isShown(),
-            TipScreen.setCustomTip("1.00"),
+            TipScreen.setCustomTip(1.0),
             TipScreen.clickSettle(),
             Dialog.confirm(),
             // Edit payment button shouldn't be available for posted orders
