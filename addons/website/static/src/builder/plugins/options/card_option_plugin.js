@@ -20,11 +20,16 @@ export class WebsiteBackgroundCardOption extends BaseWebsiteBackgroundOption {
     };
 }
 
-class CardOptionPlugin extends Plugin {
+export class CardOptionPlugin extends Plugin {
     static id = "cardOption";
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        content_editable_selectors: [
+            `${CardOption.selector} > *`,
+            `${CardOption.selector} figure > img`,
+        ],
+        content_not_editable_selectors: `${CardOption.selector} figure`,
         builder_options: [
             CardOption,
             CardWithoutWidthOption,
