@@ -2412,6 +2412,11 @@ $ribbon-padding: 100px;
             color: inherit;
         }
     }
+    a {
+        &:focus, &:hover {
+            background: var(--tertiary-bg) !important;
+        }
+    }
 }
 
 ul.o_checklist > li.o_checked::after {

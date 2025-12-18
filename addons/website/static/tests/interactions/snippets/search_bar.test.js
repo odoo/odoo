@@ -1,7 +1,7 @@
 import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { click, press, queryAll } from "@odoo/hoot-dom";
+import { click, press, queryAll, queryOne } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
@@ -30,13 +30,23 @@ const searchTemplate = /* html */ `
     </form>
 `;
 
-function supportAutocomplete() {
+function supportAutocomplete(numberOfResults = 3) {
     onRpc("/website/snippet/autocomplete", async (args) => {
         const json = JSON.parse(new TextDecoder().decode(await args.arrayBuffer()));
         expect(json.params.search_type).toBe("test");
         expect(json.params.term).toBe("xyz");
         expect(json.params.order).toBe("test desc");
         expect(json.params.limit).toBe(3);
+
+        const allData = [
+            { _fa: "fa-file-o", name: "Xyz 1", website_url: "/website/test/xyz-1" },
+            { _fa: "fa-file-o", name: "Xyz 2", website_url: "/website/test/xyz-2" },
+            { _fa: "fa-file-o", name: "Xyz 3", website_url: "/website/test/xyz-3" },
+            { _fa: "fa-file-o", name: "Xyz 4", website_url: "/website/test/xyz-1" },
+            { _fa: "fa-file-o", name: "Xyz 5", website_url: "/website/test/xyz-2" },
+            { _fa: "fa-file-o", name: "Xyz 6", website_url: "/website/test/xyz-3" },
+        ];
+
         return {
             results: {
                 pages: {
@@ -44,23 +54,7 @@ function supportAutocomplete() {
                     templateKey: "website.search_items_page",
                     search_count: 3,
                     limit: 3,
-                    data: [
-                        {
-                            _fa: "fa-file-o",
-                            name: "Xyz 1",
-                            website_url: "/website/test/xyz-1",
-                        },
-                        {
-                            _fa: "fa-file-o",
-                            name: "Xyz 2",
-                            website_url: "/website/test/xyz-2",
-                        },
-                        {
-                            _fa: "fa-file-o",
-                            name: "Xyz 3",
-                            website_url: "/website/test/xyz-3",
-                        },
-                    ],
+                    data: allData.slice(0, numberOfResults),
                 },
             },
             results_count: 3,
@@ -87,40 +81,56 @@ test("searchbar triggers a search when text is entered", async () => {
     expect(queryAll("form .o_search_result_item")).toHaveLength(3);
 });
 
-// Arrow key nevigation is no more working with new searchbar.
-// TODO: Bring back the arrow key nevigation. Here task-5424392.
+/**
+ * Test keyboard navigation in search results.
+ *
+ * Verifies that:
+ * 1. ArrowDown from input focuses the first result
+ * 2. ArrowUp from input focuses the last result
+ * 3. ArrowLeft/Right navigate horizontally within the grid
+ * 4. ArrowDown wraps around rows to next row's first column
+ */
+test.tags("desktop");
+test("search results keyboard navigation with arrow keys", async () => {
+    supportAutocomplete(6);
+    await startInteractions(searchTemplate);
+    const inputEl = queryOne("form input[type=search]");
 
-// test("searchbar selects first result on cursor down", async () => {
-//     supportAutocomplete();
-//     await startInteractions(searchTemplate);
-//     const inputEl = queryOne("form input[type=search]");
-//     await click(inputEl);
-//     await press("x");
-//     await press("y");
-//     await press("z");
-//     await advanceTime(400);
-//     const resultEls = queryAll("form .o_search_result_item");
-//     expect(resultEls).toHaveLength(3);
-//     expect(document.activeElement).toBe(inputEl);
-//     await press("down");
-//     expect(document.activeElement).toBe(resultEls[0]);
-// });
+    // Setup: Type search query to trigger autocomplete
+    await click(inputEl);
+    await press("x");
+    await press("y");
+    await press("z");
+    await advanceTime(400);
 
-// test("searchbar selects last result on cursor up", async () => {
-//     supportAutocomplete();
-//     await startInteractions(searchTemplate);
-//     const inputEl = queryOne("form input[type=search]");
-//     await click(inputEl);
-//     await press("x");
-//     await press("y");
-//     await press("z");
-//     await advanceTime(400);
-//     const resultEls = queryAll("form a:has(.o_search_result_item)");
-//     expect(resultEls).toHaveLength(3);
-//     expect(document.activeElement).toBe(inputEl);
-//     await press("up");
-//     expect(document.activeElement).toBe(resultEls[2]);
-// });
+    const resultEls = queryAll("form .o_search_result_item > a");
+    expect(resultEls).toHaveLength(6);
+    expect(inputEl).toBeFocused();
+
+    // ArrowDown from input focuses first result
+    await press("down");
+    expect(resultEls[0]).toBeFocused();
+
+    // ArrowDown moves to next row, same column
+    await press("down");
+    expect(resultEls[3]).toBeFocused();
+
+    // ArrowRight navigates to adjacent result (same row)
+    await press("right");
+    expect(resultEls[4]).toBeFocused();
+
+    // ArrowUp moves to previous row, same column
+    await press("up");
+    expect(resultEls[1]).toBeFocused();
+
+    // ArrowLeft navigates to adjacent result (same row)
+    await press("left");
+    expect(resultEls[0]).toBeFocused();
+
+    // ArrowUp moves back to input
+    await press("up");
+    expect(inputEl).toBeFocused();
+});
 
 test("searchbar removes results on escape", async () => {
     supportAutocomplete();
