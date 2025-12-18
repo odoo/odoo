@@ -2143,7 +2143,7 @@ export class PosStore extends WithLazyGetterTrap {
         await this.reloadData(true);
     }
     async allowProductCreation() {
-        return await user.hasGroup("base.group_system");
+        return await user.checkAccessRight("product.product", "create");
     }
     orderDetailsProps(order) {
         return {

@@ -14,7 +14,6 @@ import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scann
 import { barcodeService } from "@barcodes/barcode_service";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { user } from "@web/core/user";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { _t } from "@web/core/l10n/translation";
 import { uuidv4 } from "@point_of_sale/utils";
@@ -47,7 +46,7 @@ export class Navbar extends Component {
         this.timeout = null;
         this.bufferedInput = "";
         onMounted(async () => {
-            this.isSystemUser = await user.hasGroup("base.group_system");
+            this.hasProductCreationAccess = await this.pos.allowProductCreation();
         });
         useExternalListener(document, "keydown", this.handleKeydown.bind(this));
         this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming);
@@ -170,7 +169,7 @@ export class Navbar extends Component {
     }
 
     get showCreateProductButton() {
-        return this.isSystemUser;
+        return this.hasProductCreationAccess;
     }
 
     get shouldDisplayPresetTime() {
