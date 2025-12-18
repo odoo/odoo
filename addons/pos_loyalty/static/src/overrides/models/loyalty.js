@@ -1255,7 +1255,10 @@ patch(Order.prototype, {
                     if (lineReward.discount_applicability === "cheapest") {
                         remainingAmountPerLine[line.cid] *= 1 - discount / line.get_quantity();
                     } else {
-                        remainingAmountPerLine[line.cid] *= 1 - discount;
+                        remainingAmountPerLine[line.cid] += Math.max(
+                            remainingAmountPerLine[line.cid] * -discount,
+                            (lines[0].get_price_with_tax())
+                        );
                     }
                 }
             }

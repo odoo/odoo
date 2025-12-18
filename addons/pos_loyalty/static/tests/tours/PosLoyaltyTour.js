@@ -527,6 +527,20 @@ registry.category("web_tour.tours").add("PosLoyalty2DiscountsSpecificGlobal", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_pos_loyalty_multiple_discounts_specific_product", {
+    test: true,
+    url: "/pos/web",
+    steps: () => [
+        ProductScreen.confirmOpeningPopup(),
+        ProductScreen.clickHomeCategory(),
+        ProductScreen.addOrderline("product_a", "1"),
+        PosLoyalty.hasRewardLine("$ 100 per order on product_a", "-100.00"),
+        PosLoyalty.hasRewardLine("10% on product_a", "-105.00"),
+        PosLoyalty.hasRewardLine("20% on product_a", "-189.00"),
+        PosLoyalty.orderTotalIs("756.00"),
+    ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosRewardProductScan", {
     test: true,
     steps: () =>

@@ -1137,6 +1137,51 @@ class TestUi(TestPointOfSaleHttpCommon):
             login='pos_user',
         )
 
+    def test_pos_loyalty_multiple_discounts_specific_product(self):
+        """Test applying multiple discounts on the same specific product."""
+        self.env['loyalty.program'].search([]).write({'pos_ok': False})
+        self.product_a.available_in_pos = True
+        discounts = [
+            ('100 OFF Coupon', 100, 'per_order'),
+            ('10% OFF Coupon', 10, 'percent'),
+            ('20% OFF Coupon', 20, 'percent'),
+        ]
+        for name, discount, mode in discounts:
+            self.env['loyalty.program'].create({
+                'name': name,
+                'program_type': 'promotion',
+                'trigger': 'auto',
+                'applies_on': 'current',
+                'rule_ids': [
+                    Command.create({
+                        'reward_point_mode': 'order',
+                        'reward_point_amount': 1,
+                        'minimum_amount': 1,
+                    })
+                ],
+                'reward_ids': [
+                    Command.create({
+                        'reward_type': 'discount',
+                        'required_points': 1,
+                        'discount': discount,
+                        'discount_mode': mode,
+                        'discount_applicability': 'specific',
+                        'discount_product_ids': [
+                            Command.link(self.product_a.id),
+                        ],
+                    })
+                ],
+                'pos_config_ids': [
+                    Command.link(self.main_pos_config.id),
+                ],
+            })
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            '/pos/web?config_id=%d' % self.main_pos_config.id,
+            'test_pos_loyalty_multiple_discounts_specific_product',
+            login='pos_user',
+        )
+
     def test_point_per_money_spent(self):
         """Test the point per $ spent feature"""
         LoyaltyProgram = self.env['loyalty.program']
