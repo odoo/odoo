@@ -79,6 +79,7 @@ class WkhtmlInfo(typing.NamedTuple):
     dpi_zoom_ratio: bool
     bin: str
     version: str
+    is_patched_qt: bool
     wkhtmltoimage_bin: str
     wkhtmltoimage_version: tuple[str, ...] | None
 
@@ -88,6 +89,7 @@ def _wkhtml() -> WkhtmlInfo:
     state = 'install'
     bin_path = 'wkhtmltopdf'
     version = ''
+    is_patched_qt = False
     dpi_zoom_ratio = False
     try:
         bin_path = find_in_path('wkhtmltopdf')
@@ -100,6 +102,8 @@ def _wkhtml() -> WkhtmlInfo:
         _logger.info('Will use the Wkhtmltopdf binary at %s', bin_path)
         out, _err = process.communicate()
         version = out.decode('ascii')
+        if '(with patched qt)' in version:
+            is_patched_qt = True
         match = re.search(r'([0-9.]+)', version)
         if match:
             version = match.group(0)
@@ -143,6 +147,7 @@ def _wkhtml() -> WkhtmlInfo:
         dpi_zoom_ratio=dpi_zoom_ratio,
         bin=bin_path,
         version=version,
+        is_patched_qt=is_patched_qt,
         wkhtmltoimage_bin=image_bin_path,
         wkhtmltoimage_version=wkhtmltoimage_version,
     )
@@ -616,8 +621,7 @@ class IrActionsReport(models.Model):
                     pass
                 case 1:
                     if body_idx:
-                        wk_version = _wkhtml().version
-                        if '(with patched qt)' not in wk_version:
+                        if not _wkhtml().is_patched_qt:
                             if modules.module.current_test:
                                 raise unittest.SkipTest("Unable to convert multiple documents via wkhtmltopdf using unpatched QT")
                             raise UserError(_("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))
