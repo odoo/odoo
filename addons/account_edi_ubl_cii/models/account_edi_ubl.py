@@ -81,20 +81,25 @@ class AccountEdiUBL(models.AbstractModel):
                 'currency': currency,
             }
 
-    def _ubl_default_tax_subtotal_grouping_key(self, tax_grouping_key, vals):
-        """ Give the values about how taxes are grouped together in TaxTotal -> TaxSubtotal
+    def _ubl_default_tax_subtotal_tax_category_grouping_key(self, tax_grouping_key, vals):
+        """ Give the values about how taxes are grouped together in TaxTotal -> TaxSubtotal -> TaxCategory
         (or WithholdingTaxTotal depending on 'is_withholding').
 
         :param tax_grouping_key:            The grouping key returned by '_ubl_default_tax_category_grouping_key'.
         :param vals:                        Some custom data.
         :return:                            A dictionary that could be used as a grouping key for the taxes helpers.
         """
-        return {
-            **tax_grouping_key,
-            # Temporary solution to have withholding taxes merged with others until we know how to manage them.
-            # Should be: `'is_withholding': tax_grouping_key['is_withholding'],`
-            'is_withholding': False,
-        }
+        return dict(tax_grouping_key)
+
+    def _ubl_default_tax_subtotal_grouping_key(self, tax_category_grouping_key, vals):
+        """ Give the values about how taxes are grouped together in TaxTotal -> TaxSubtotal
+        (or WithholdingTaxTotal depending on 'is_withholding').
+
+        :param tax_category_grouping_key:   The grouping key returned by '_ubl_default_tax_subtotal_tax_category_grouping_key'.
+        :param vals:                        Some custom data.
+        :return:                            A dictionary that could be used as a grouping key for the taxes helpers.
+        """
+        return dict(tax_category_grouping_key)
 
     def _ubl_default_tax_total_grouping_key(self, tax_subtotal_grouping_key, vals):
         """ Give the values about how taxes are grouped together in TaxTotal
@@ -432,20 +437,23 @@ class AccountEdiUBL(models.AbstractModel):
         ubl_values['withholding_tax_totals'] = {}
         ubl_values['withholding_tax_totals_currency'] = {}
 
-        def tax_totals_grouping_function(base_line, tax_data, sub_currency):
+        def tax_category_grouping_function(base_line, tax_data, sub_currency):
             tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, sub_currency)
             if not tax_grouping_key:
                 return
-            tax_subtotal_grouping_key = self._ubl_default_tax_subtotal_grouping_key(tax_grouping_key, vals)
+            return self._ubl_default_tax_subtotal_tax_category_grouping_key(tax_grouping_key, vals)
+
+        def tax_subtotal_grouping_function(base_line, tax_data, sub_currency):
+            tax_category_grouping_key = tax_category_grouping_function(base_line, tax_data, sub_currency)
+            if not tax_category_grouping_key:
+                return
+            return self._ubl_default_tax_subtotal_grouping_key(tax_category_grouping_key, vals)
+
+        def tax_totals_grouping_function(base_line, tax_data, sub_currency):
+            tax_subtotal_grouping_key = tax_subtotal_grouping_function(base_line, tax_data, sub_currency)
             if not tax_subtotal_grouping_key:
                 return
             return self._ubl_default_tax_total_grouping_key(tax_subtotal_grouping_key, vals)
-
-        def tax_subtotal_grouping_function(base_line, tax_data, sub_currency):
-            tax_grouping_key = self._ubl_default_tax_category_grouping_key(base_line, tax_data, vals, sub_currency)
-            if not tax_grouping_key:
-                return
-            return self._ubl_default_tax_subtotal_grouping_key(tax_grouping_key, vals)
 
         for sub_currency, suffix in ((currency, '_currency'), (company_currency, '')):
 
@@ -507,12 +515,7 @@ class AccountEdiUBL(models.AbstractModel):
 
             base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(
                 base_lines=base_lines,
-                grouping_function=lambda base_line, tax_data: self._ubl_default_tax_category_grouping_key(
-                    base_line,
-                    tax_data,
-                    vals,
-                    sub_currency,
-                ),
+                grouping_function=lambda base_line, tax_data: tax_category_grouping_function(base_line, tax_data, sub_currency),
             )
             values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
             for grouping_key, values in values_per_grouping_key.items():

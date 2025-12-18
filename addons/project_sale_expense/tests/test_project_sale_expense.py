@@ -44,17 +44,30 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         # Set the expense policy to 'sales_price' to make the 'sale_order_id' field visible on the form view
         self.product_c.expense_policy = 'sales_price'
 
+        self.analytic_plan_2 = self.env['account.analytic.plan'].create({'name': 'Other Plan Test'})
+        self.analytic_account_3 = self.env['account.analytic.account'].create({
+            'name': 'analytic_account_3',
+            'plan_id': self.analytic_plan_2.id,
+        })
+
+        # Project Will use another analytic plan than the product
         project = self.env['project.project'].create({'name': 'SO Project'})
-        project.account_id = self.analytic_account_1
+        project.account_id = self.analytic_account_3
+
+        # Set an analytic distribution using account_1 on the product that will be used on the expense
+        self.env['account.analytic.distribution.model'].create([{
+            'product_id': self.product_c.id,
+            'analytic_distribution': {str(self.analytic_account_1.id): 100}
+        }])
 
         so_values = {
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({
-                'name': self.product_a.name,
-                'product_id': self.product_a.id,
+                'name': self.product_c.name,
+                'product_id': self.product_c.id,
                 'product_uom_qty': 2,
-                'product_uom': self.product_a.uom_id.id,
-                'price_unit': self.product_a.list_price,
+                'product_uom': self.product_c.uom_id.id,
+                'price_unit': self.product_c.list_price,
             })],
             'project_id': project.id,
         }
@@ -69,10 +82,11 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
 
         self.assertEqual(
             expense.analytic_distribution,
-            {str(self.analytic_account_1.id): 100},
-            "The analytic distribution of the expense should be set to the account of the project.",
+            {str(self.analytic_account_1.id): 100, str(self.analytic_account_3.id): 100},
+            "The analytic distribution of the expense should be set to the account of the project and the one from the sale order.",
         )
 
+        # Check that it default to the one from the sale order if the project has no analytic distribution
         project.account_id = False
         so2 = self.env['sale.order'].create(so_values)
 
@@ -80,9 +94,21 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         with Form(expense) as exp_form:
             exp_form.sale_order_id = so2
 
-        self.assertFalse(
+        self.assertEqual(
             expense.analytic_distribution,
-            "The analytic distribution of the expense should be unset as the project has no account.",
+            {str(self.analytic_account_1.id): 100},
+            "The analytic distribution of the expense should be the one from the sale order only",
+        )
+
+        # The analytic_account_2 has the same plan as the one from the sale order
+        project.account_id = self.analytic_account_2
+        so3 = self.env['sale.order'].create(so_values)
+        with Form(expense) as exp_form:
+            exp_form.sale_order_id = so3
+        self.assertEqual(
+            expense.analytic_distribution,
+            {str(self.analytic_account_2.id): 100},
+            "The analytic distribution of the expense should keep only the one from the project when the so and project share the same plan",
         )
 
     def test_change_product_expense_policy_analytic_distribution(self):

@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 from odoo import _, fields, http, tools
+from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.osv import expression
 
@@ -151,6 +152,8 @@ class WebsiteProfile(http.Controller):
             user = request.env.user
         values = self._profile_edition_preprocess_values(user, **kwargs)
         whitelisted_values = {key: values[key] for key in user.SELF_WRITEABLE_FIELDS if key in values}
+        if not user.partner_id.can_edit_vat() and whitelisted_values.get('country_id') != user.partner_id.country_id.id:
+            raise UserError(_("Changing the country is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."))
         user.write(whitelisted_values)
         if kwargs.get('url_param'):
             return request.redirect("/profile/user/%d?%s" % (user.id, kwargs['url_param']))

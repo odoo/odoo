@@ -26,8 +26,8 @@ class TableExporter(http.Controller):
         header_plain = workbook.add_format({'pattern': 1, 'bg_color': '#AAAAAA'})
         bold = workbook.add_format({'bold': True})
 
-        measure_count = jdata['measure_count']
-        origin_count = jdata['origin_count']
+        measure_count = min(jdata['measure_count'], 100000)
+        origin_count = min(jdata['origin_count'], 100000)
 
         # Step 1: writing col group headers
         col_group_headers = jdata['col_group_headers']
@@ -46,11 +46,12 @@ class TableExporter(http.Controller):
                     if cell['height'] > 1:
                         carry.append({'x': x, 'height': cell['height'] - 1})
                     x = x + measure_count * (2 * origin_count - 1)
-                for j in range(header['width']):
+                width = min(header['width'], 100000)
+                for j in range(width):
                     worksheet.write(y, x + j, header['title'] if j == 0 else '', header_plain)
                 if header['height'] > 1:
                     carry.append({'x': x, 'height': header['height'] - 1})
-                x = x + header['width']
+                x = x + width
             while (carry and carry[0]['x'] == x):
                 cell = carry.popleft()
                 for j in range(measure_count * (2 * origin_count - 1)):

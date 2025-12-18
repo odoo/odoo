@@ -84,8 +84,15 @@ export class PropertyValue extends Component {
                     return;
                 }
                 // maybe the record display name has changed
-                await record.load();
-                const recordData = m2oTupleFromData(record.data);
+                const records = await this.orm.read(
+                    record.resModel,
+                    [record.resId],
+                    ["display_name"],
+                    {
+                        context: this.context,
+                    }
+                );
+                const recordData = m2oTupleFromData(records[0]);
                 await this.onValueChange([{ id: recordData[0], name: recordData[1] }]);
             },
             fieldString: this.props.string,

@@ -5,7 +5,7 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="l10n_my_edi.view_partner_form_inherit_l10n_my_myinvois"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='l10n_my_edi']/group" position="inside">
+            <xpath expr="//group[@name='l10n_my_edi']" position="inside">
                 <field name="l10n_my_edi_industrial_classification" readonly="parent_id"/>
                 <field name="l10n_my_edi_malaysian_tin" placeholder="EI00000000020" readonly="parent_id"/>
             </xpath>
