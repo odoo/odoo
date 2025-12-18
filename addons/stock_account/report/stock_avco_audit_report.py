@@ -94,8 +94,8 @@ WHERE
             avco = 0.0
             for record in records:
                 if record.res_model_name == 'stock.move':
-                    added_value = record.value
-                    total_value += record.value
+                    added_value = record.value if self.product_id.cost_method != 'average' or record.value >= 0 or not avco else avco * record.quantity
+                    total_value += added_value
                     total_quantity += record.quantity
                 elif record.res_model_name == 'product.value':
                     added_value = (record.value * total_quantity) - total_value
