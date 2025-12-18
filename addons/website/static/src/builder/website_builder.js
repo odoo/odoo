@@ -2,7 +2,7 @@ import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS, MAIN_PLUGINS } from "@html_builder/core/core_plugins";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -12,6 +12,7 @@ import { ThemeTab } from "./plugins/theme/theme_tab";
 import { Plugin } from "@html_editor/plugin";
 import { revertPreview } from "@html_builder/core/utils";
 import { websiteSnippetModelPatch } from "./snippet_model";
+import { rpc } from "@web/core/network/rpc";
 
 // Other Plugins depend on those 2 plugins, but they are not used in translation
 // mode.
@@ -42,6 +43,11 @@ export class WebsiteBuilder extends Component {
         useSetupAction({
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),
+        });
+        onWillStart(async () => {
+            this.translatedElements = this.props.translation
+                ? await rpc("/website/get_translated_elements")
+                : [];
         });
     }
 
@@ -161,6 +167,7 @@ export class WebsiteBuilder extends Component {
                 type: editableEl.dataset["oeType"],
             };
         };
+        builderProps.config.translatedElements = this.translatedElements;
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
         const installSnippetModule = builderProps.installSnippetModule;
         builderProps.installSnippetModule = (snippet) =>
