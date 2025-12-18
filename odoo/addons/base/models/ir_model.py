@@ -998,7 +998,13 @@ class IrModelFields(models.Model):
 
         # The field we just deleted might be inherited, and the registry is
         # inconsistent in this case; therefore we reload the registry.
-        if not self.pool.uninstalling_modules:
+        # Beware: when renaming a field, method write() calls unlink() on the
+        # corresponding inherited fields with 'force_delete' in context, and
+        # method write() itself is in charge of cleaning up the registry. If
+        # done here, the field to be renamed regenerates an inherited field
+        # below, and we end up with two records for the inherited field: one
+        # with the old name, and one with the new name.
+        if not (self.env.context.get('force_delete') or self.pool.uninstalling_modules):
             # setup models; this re-initializes models in registry
             self.env.flush_all()
             self.pool._setup_models__(self.env.cr, model_names)
@@ -1103,6 +1109,11 @@ class IrModelFields(models.Model):
         if vals.get('translate') and not isinstance(vals['translate'], str):
             _logger.warning("Deprecated since Odoo 19, ir.model.fields.translate becomes Selection, the value should be a string")
             vals['translate'] = 'html_translate' if vals.get('ttype') == 'html' else 'standard'
+
+        if column_rename and self.state == 'manual':
+            # renaming a studio field, remove inherits fields
+            # we need to set the uninstall flag to allow removing them
+            (self._prepare_update() - self).with_context(force_delete=True).unlink()
 
         res = super().write(vals)
 
