@@ -6,7 +6,7 @@ import { escapeRegExp } from "@web/core/utils/strings";
 export class IrUiViewCodeEditor extends CodeEditor {
     static props = {
         ...this.props,
-        record: { type: Object },
+        invalidLocators: { type: Array, optional: true },
     };
 
     setup() {
@@ -27,46 +27,42 @@ export class IrUiViewCodeEditor extends CodeEditor {
                     return () => this.clearMarkers();
                 }
             },
-            () => [this.props.value, this.props.record?.data.invalid_locators]
+            () => [this.props.value, this.props.invalidLocators]
         );
     }
 
     async highlightInvalidLocators(arch, invalid_locators) {
-        const resModel = this.env.model?.config.resModel;
-        const resId = this.env.model?.config.resId;
-        if (resModel === "ir.ui.view" && resId) {
-            const { doc } = this.aceEditor.session;
-            for (const spec of invalid_locators) {
-                if (spec.broken_hierarchy) {
-                    continue
-                }
-                const { tag, attrib, sourceline } = spec;
-                const attribRegex = Object.entries(attrib)
-                    .map(([key, value]) => {
-                        const escapedValue = escapeRegExp(value).replace(/"/g, '("|&quot;)');
-                        return (
-                            `(?=[^>]*?\\b${escapeRegExp(key)}\\s*=\\s*` +
-                            `(?:"[^"]*${escapedValue}[^"]*"|'[^']*${escapedValue}[^']*'))`
-                        );
-                    })
-                    .join("");
-                const nodeRegex = new RegExp(`<${escapeRegExp(tag)}\\s+${attribRegex}[^>]*>`, "g");
-                for (const match of arch.matchAll(nodeRegex)) {
-                    const startIndex = match.index;
-                    const endIndex = startIndex + match[0].length;
-                    const startPos = doc.indexToPosition(startIndex);
-                    const endPos = doc.indexToPosition(endIndex);
-                    if (startPos.row + 1 === sourceline) {
-                        const range = new window.ace.Range(
-                            startPos.row,
-                            startPos.column,
-                            endPos.row,
-                            endPos.column
-                        );
-                        this.markers.push(
-                            this.aceEditor.session.addMarker(range, "invalid_locator", "text")
-                        );
-                    }
+        const { doc } = this.aceEditor.session;
+        for (const spec of invalid_locators) {
+            if (spec.broken_hierarchy) {
+                continue;
+            }
+            const { tag, attrib, sourceline } = spec;
+            const attribRegex = Object.entries(attrib)
+                .map(([key, value]) => {
+                    const escapedValue = escapeRegExp(value).replace(/"/g, '("|&quot;)');
+                    return (
+                        `(?=[^>]*?\\b${escapeRegExp(key)}\\s*=\\s*` +
+                        `(?:"[^"]*${escapedValue}[^"]*"|'[^']*${escapedValue}[^']*'))`
+                    );
+                })
+                .join("");
+            const nodeRegex = new RegExp(`<${escapeRegExp(tag)}\\s+${attribRegex}[^>]*>`, "g");
+            for (const match of arch.matchAll(nodeRegex)) {
+                const startIndex = match.index;
+                const endIndex = startIndex + match[0].length;
+                const startPos = doc.indexToPosition(startIndex);
+                const endPos = doc.indexToPosition(endIndex);
+                if (startPos.row + 1 === sourceline) {
+                    const range = new window.ace.Range(
+                        startPos.row,
+                        startPos.column,
+                        endPos.row,
+                        endPos.column
+                    );
+                    this.markers.push(
+                        this.aceEditor.session.addMarker(range, "invalid_locator", "text")
+                    );
                 }
             }
         }
