@@ -354,6 +354,34 @@ class TestWebPushNotification(SMSCommon):
         notification_count = self.env['mail.partner.device'].search_count([('endpoint', '=', 'https://test.odoo.com/webpush/user2')])
         self.assertEqual(notification_count, 0)
 
+    @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post',
+                  return_value=SimpleNamespace(status_code=201, text='Ok'))
+    def test_push_notifications_device_invalid_tld_domain(self, post):
+        self.env['mail.partner.device'].sudo().create([{
+            'endpoint': 'https://test.odoo.invalid/webpush/user',
+            'expiration_time': None,
+            'keys': json.dumps({
+                'p256dh': 'BGbhnoP_91U7oR59BaaSx0JnDv2oEooYnJRV2AbY5TBeKGCRCf0HcIJ9bOKchUCDH4cHYWo9SYDz3U-8vSxPL_A',
+                'auth': 'DJFdtAgZwrT6yYkUMgUqow'
+            }),
+            'partner_id': self.user_inbox.partner_id.id,
+        }])
+
+        device_count = self.env['mail.partner.device'].search_count([('endpoint', '=', 'https://test.odoo.invalid/webpush/user')])
+        self.assertEqual(device_count, 1)
+
+        self.record_simple.with_user(self.user_email).message_notify(
+            partner_ids=self.user_inbox.partner_id.ids,
+            body='Test message send via Web Push',
+            subject='Test Activity',
+            record_name=self.record_simple._name,
+        )
+
+        self._assert_notification_count_for_cron(0)
+        post.assert_called_once()
+        # Test that the device with the invalid TLD is deleted from the DB
+        device_count = self.env['mail.partner.device'].search_count([('endpoint', '=', 'https://test.odoo.invalid/webpush/user')])
+        self.assertEqual(device_count, 0)
 
     @patch.object(odoo.addons.mail.models.mail_thread.Session, 'post', side_effect=ConnectionError("Oops, network error"))
     def test_push_notifications_device_raise_exception(self, post):
