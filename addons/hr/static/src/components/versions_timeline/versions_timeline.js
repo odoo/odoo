@@ -51,12 +51,11 @@ export class VersionsTimeline extends StatusBarField {
     }
 
     async createVersion(date) {
+        await this.props.record.save();
         const version_id = await this.orm.call('hr.employee', 'create_version',
             [this.props.record.evalContext.id, {'date_version': date}]);
 
         // TODO: why chat button and org chart button disappear
-        const { record } = this.props;
-        await record.save();
         await this.props.record.model.load({
             context: {
                 ...this.props.record.model.env.searchModel.context,
