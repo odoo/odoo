@@ -77,6 +77,8 @@ class ReportController(http.Controller):
                      Masks allow adding elements on top of the generated image,
                      such as the Swiss cross in the center of QR-bill codes.
         :param barLevel: QR code Error Correction Levels. Default is 'L'.
+        :param download: Accepted values: 0 (default) or 1. 1 will make the browser download the code as a
+        PNG image.
         ref: https://hg.reportlab.com/hg-public/reportlab/file/830157489e00/src/reportlab/graphics/barcode/qr.py#l101
         """
         try:
@@ -84,10 +86,15 @@ class ReportController(http.Controller):
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 
-        return request.make_response(barcode, headers=[
+        headers = [
             ('Content-Type', 'image/png'),
             ('Cache-Control', f'public, max-age={http.STATIC_CACHE_LONG}, immutable'),
-        ])
+        ]
+
+        if int(kwargs.get('download', '0')):
+            headers.append(('Content-Disposition', f'attachment; filename={barcode_type}.png'))
+
+        return request.make_response(barcode, headers)
 
     @http.route(['/report/download'], type='http', auth="user")
     # pylint: disable=unused-argument
