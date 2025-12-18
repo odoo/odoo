@@ -22,4 +22,15 @@ export class ResUsers extends MailResUsers {
             role: "cashier",
         },
     ];
+
+    _post_read_pos_data(records) {
+        records.forEach((user) => {
+            if (user.id === 2) {
+                user._role = "manager";
+            } else {
+                user._role = "cashier";
+            }
+        });
+        return records;
+    }
 }
