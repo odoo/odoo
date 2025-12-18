@@ -6,7 +6,6 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import consteq
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -35,9 +34,7 @@ class NuveiController(http.Controller):
         tx_data = data or {'invoice_id': tx_ref}
         tx_sudo = request.env['payment.transaction'].sudo()._search_by_reference('nuvei', tx_data)
         if tx_sudo:
-            self._verify_signature(
-                tx_sudo, data, error_access_token=error_access_token
-            )
+            self._verify_signature(tx_sudo, data, error_access_token)
             tx_sudo._process('nuvei', data)
         return request.redirect('/payment/status')
 
@@ -63,8 +60,7 @@ class NuveiController(http.Controller):
     def _verify_signature(tx_sudo, payment_data, error_access_token=None):
         """Check that the received signature matches the expected one.
 
-        :param payment.transaction tx_sudo: The sudoed transaction referenced by the notification
-                                            data.
+        :param payment.transaction tx_sudo: The sudoed transaction referenced by the payment data.
         :param dict payment_data: The payment data.
         :param str error_access_token: The optional access token for verifying errored payments.
         :return: None
@@ -78,14 +74,7 @@ class NuveiController(http.Controller):
                 raise Forbidden()
         else:  # The payment went through.
             received_signature = payment_data.get('advanceResponseChecksum')
-            if not received_signature:
-                _logger.warning("Received payment data with missing signature")
-                raise Forbidden()
-
-            # Compare the received signature with the expected signature computed from the data.
             expected_signature = tx_sudo.provider_id._nuvei_calculate_signature(
                 payment_data, incoming=True,
             )
-            if not consteq(received_signature, expected_signature):
-                _logger.warning("Received payment data with invalid signature")
-                raise Forbidden()
+            payment_utils.verify_signature(received_signature, expected_signature)

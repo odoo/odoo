@@ -218,7 +218,7 @@ class PaymentProvider(models.Model):
 
         See https://razorpay.com/docs/webhooks/validate-test#validate-webhooks.
 
-        :param bytes data: The data to sign.
+        :param dict|bytes data: The data to sign.
         :param bool is_redirect: Whether the data should be treated as redirect data or as coming
                                  from a webhook notification.
         :return: The calculated signature.
