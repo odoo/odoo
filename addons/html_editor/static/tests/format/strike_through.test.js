@@ -49,7 +49,7 @@ test("should make a few characters strikeThrough then remove style inside", asyn
     });
 });
 
-test("should make strikeThrough then more then remove", async () => {
+test("should make strikeThrough then more then remove (1)", async () => {
     await testEditor({
         contentBefore: `<p>abc[ ]def</p>`,
         stepFunction: async (editor) => {
@@ -66,6 +66,9 @@ test("should make strikeThrough then more then remove", async () => {
         },
         contentAfter: `<p>ab${s(`[c d]`)}ef</p>`,
     });
+});
+
+test("should make strikeThrough then more then remove (2)", async () => {
     await testEditor({
         contentBefore: `<p>abc[ ]def</p>`,
         stepFunction: async (editor) => {
