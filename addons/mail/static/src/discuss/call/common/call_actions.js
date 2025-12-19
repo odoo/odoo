@@ -163,17 +163,18 @@ registerCallAction("share-screen", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.SUCCESS : undefined),
 });
 registerCallAction("fullscreen", {
-    btnClass: ({ owner, channel }) =>
+    btnClass: ({ channel }) =>
         attClassObjectToString({
             "o-discuss-CallActionList-pulse": Boolean(
-                !owner.env.pipWindow && channel.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
+                channel.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
             ),
         }),
     condition: ({ channel }) => channel?.isSelfInCall,
     name: ({ store }) => (store.rtc.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
     isActive: ({ store }) => store.rtc.isFullscreen,
     icon: ({ action }) => (action.isActive ? "fa fa-compress" : "fa fa-expand"),
-    onSelected: ({ store }) => {
+    onSelected: ({ channel, store }) => {
+        channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         if (store.rtc.isFullscreen) {
             store.rtc.exitFullscreen();
         } else {
@@ -195,7 +196,8 @@ registerCallAction("picture-in-picture", {
         store.rtc?.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
     isActive: ({ store }) => store.rtc?.isPipMode,
     icon: "oi oi-launch",
-    onSelected: ({ owner, store }) => {
+    onSelected: ({ owner, channel, store }) => {
+        channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         const isPipMode = store.rtc?.isPipMode;
         if (isPipMode) {
             store.rtc.closePip();
