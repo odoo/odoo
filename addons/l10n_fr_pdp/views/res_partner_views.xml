@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_l10n_fr_pdp" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n.fr.pdp</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account_edi_ubl_cii.view_partner_property_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//group[@id='invoice_send_settings']" position="inside">
+                    <field name="pdp_identifier" placeholder="Identifier" invisible="not is_using_pdp"/>
+                    <label for="pdp_verification_display_state"
+                           invisible="not pdp_identifier and not (peppol_endpoint and peppol_eas)"
+                    />
+                    <div class="row" invisible="not pdp_identifier and not (peppol_endpoint and peppol_eas)">
+                        <div class="col-6">
+                            <field name="pdp_verification_display_state" readonly="True"/>
+                        </div>
+                        <div class="col-6 pt-0">
+                            <button name="button_pdp_check_partner_endpoint"
+                                    class="btn btn-secondary"
+                                    type="object"
+                                    string="Verify"
+                                    help="Verify partner's PDP Identifier"/>
+                        </div>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="partner_action_verify_l10n_fr_pdp" model="ir.actions.server">
+        <field name="name">Verify PDP</field>
+        <field name="model_id" ref="l10n_fr_pdp.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                record.button_pdp_check_partner_endpoint()
+        </field>
+    </record>
+</odoo>

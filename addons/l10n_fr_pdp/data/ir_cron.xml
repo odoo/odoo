@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_cron_pdp_get_message_status" model="ir.cron">
+        <field name="name">PDP: update message status</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="code">model._cron_pdp_get_message_status()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="ir_cron_pdp_get_participant_status" model="ir.cron">
+        <field name="name">PDP: update participant status</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">weeks</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="code">model._cron_pdp_get_participant_status()</field>
+        <field name="state">code</field>
+    </record>
+
+    <record id="ir_cron_pdp_webhook_keepalive" model="ir.cron">
+        <field name="name">PDP: webhook keep alive</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">weeks</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="code">model._cron_pdp_webhook_keepalive()</field>
+        <field name="state">code</field>
+    </record>
+
+</odoo>

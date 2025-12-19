@@ -63,6 +63,8 @@ EAS_MAPPING = {
     'EE': {'9931': 'vat'},
     'ES': {'9920': 'vat'},
     'FI': {'0216': None, '0213': 'vat'},
+    # TODO: In case we use (peppol_eas, peppol_identifier) as pdp identifier
+    # 'FR': {'0225': 'siret', '0009': 'siret', '9957': 'vat', '0002': None},
     'FR': {'0009': 'siret', '9957': 'vat', '0002': None},
     'SG': {'0195': 'l10n_sg_unique_entity_number'},
     'GB': {'9932': 'vat'},

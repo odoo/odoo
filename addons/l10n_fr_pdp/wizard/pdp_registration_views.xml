@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pdp_registration_form" model="ir.ui.view">
+        <field name="name">pdp.registration.form</field>
+        <field name="model">pdp.registration</field>
+        <field name="groups_id" eval="[Command.link(ref('account.group_account_manager'))]"/>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="m-0" name="warnings" invisible="not warnings or not l10n_fr_pdp_proxy_state">
+                        <field name="warnings" class="o_field_html" widget="actionable_errors"/>
+                    </div>
+
+                    <group name="pdp_registration">
+                        <div colspan="2" class="text-muted mb-3">
+                            Send invoices and receive bills automatically on the PDP network.
+                        </div>
+
+                        <!-- business fields -->
+                        <field name="pdp_identifier"
+                               string="Identifier"/>
+                        <field name="contact_email"
+                               string="Email"/>
+                        <field name="phone_number"
+                               string="Phone"
+                               required="edi_mode != 'demo'"/>
+
+                    </group>
+
+                    <!-- edi mode info -->
+                    <div colspan="2" class="row" invisible="l10n_fr_pdp_proxy_state">
+                        <div class="text-muted col" invisible="edi_mode != 'prod'">
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'test'">
+                            Test mode allows sending e-invoices through the test PDP network.
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'demo'">
+                            In demo mode sending invoices is simulated.
+                            There will be no communication with the PDP network.
+                        </div>
+                    </div>
+                </sheet>
+
+                <footer>
+                    <button name="button_register_pdp_participant"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="q">
+                        <span invisible="edi_mode != 'prod'">
+                            Validate Registration (Production)
+                        </span>
+                        <span invisible="edi_mode != 'test'">
+                            Validate Registration (Test)
+                        </span>
+                        <span invisible="edi_mode != 'demo'">
+                            Validate Registration (Demo)
+                        </span>
+                    </button>
+                    <button name="button_deregister_pdp_participant"
+                            string="Cancel Registration"
+                            type="object"
+                            class="btn-secondary"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

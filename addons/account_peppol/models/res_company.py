@@ -300,36 +300,6 @@ class ResCompany(models.Model):
     # PEPPOL PARTICIPANT MANAGEMENT
     # -------------------------------------------------------------------------
 
-    def _peppol_modules_document_types(self):
-        """Override this function to add supported document types as modules are installed.
-
-        :returns: dictionary of the form: {module_name: [(document identifier, document_name)]}
-        """
-        return {
-            'default': {
-                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1":
-                    "Peppol BIS Billing UBL Invoice V3",
-                "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::2.1":
-                    "Peppol BIS Billing UBL CreditNote V3",
-                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1":
-                    "SI-UBL 2.0 Invoice",
-                "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0::2.1":
-                    "SI-UBL 2.0 CreditNote",
-                "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0::2.1":
-                    "XRechnung UBL Invoice V2.0",
-                "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0::2.1":
-                    "XRechnung UBL CreditNote V2.0",
-            }
-        }
-
-    def _peppol_supported_document_types(self):
-        """Returns a flattened dictionary of all supported document types."""
-        return {
-            identifier: document_name
-            for module, identifiers in self._peppol_modules_document_types().items()
-            for identifier, document_name in identifiers.items()
-        }
-
     def _get_peppol_edi_mode(self):
         self.ensure_one()
         config_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')

@@ -786,6 +786,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         })
         return constraints
 
+    def _export_invoice_constraints_new(self, invoice, vals):
+        # TODO: is it okay to use the "old" constraints? taken from nemhandel
+        return self._export_invoice_constraints(invoice, vals)
+
     def _export_invoice(self, invoice, convert_fixed_taxes=True):
         """ Generates an UBL 2.0 xml for a given invoice.
         :param convert_fixed_taxes: whether the fixed taxes are converted into AllowanceCharges on the InvoiceLines
