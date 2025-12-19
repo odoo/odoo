@@ -50,12 +50,15 @@ test("should make two paragraphs not bold", async () => {
     });
 });
 
-test("should make qweb tag bold", async () => {
+test("should make qweb tag bold (1)", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: bold,
         contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`,
     });
+});
+
+test("should make qweb tag bold (2)", async () => {
     await testEditor({
         contentBefore: `<div><p t-field="record.name" contenteditable="false">[Test]</p></div>`,
         stepFunction: bold,
@@ -145,13 +148,17 @@ test("should get ready to type in not bold", async () => {
     });
 });
 
-test("should remove a bold tag that was redondant while performing the command", async () => {
+describe("Redundant bold tags", () => {
+    let count = 1;
     for (const tag of BOLD_TAGS) {
-        await testEditor({
-            contentBefore: `<p>a${tag(`b[c]d`)}e</p>`,
-            stepFunction: bold,
-            contentAfter: `<p>a${tag("b")}[c]${tag("d")}e</p>`,
+        test(`should remove a tag that was redundant while performing the command. (${count})`, async () => {
+            await testEditor({
+                contentBefore: `<p>a${tag(`b[c]d`)}e</p>`,
+                stepFunction: bold,
+                contentAfter: `<p>a${tag("b")}[c]${tag("d")}e</p>`,
+            });
         });
+        count++;
     }
 });
 
@@ -337,16 +344,18 @@ describe("inside container or inline with class already bold", () => {
         });
     });
 
-    test("should force the font-weight to normal while removing redundant tag", async () => {
-        for (const tag of BOLD_TAGS) {
+    let count = 1;
+    for (const tag of BOLD_TAGS) {
+        test(`should force the font-weight to normal while removing redundant tag. (${count})`, async () => {
             await testEditor({
                 styleContent: styleContentBold,
                 contentBefore: `<p class="boldClass">a${tag("[b]")}c</p>`,
                 stepFunction: bold,
                 contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
             });
-        }
-    });
+        });
+        count++;
+    }
 });
 
 describe("inside container font-weight: 500 and strong being strong-weight: 500", () => {
