@@ -1215,7 +1215,7 @@ class AccountEdiFormat(models.Model):
 
     def _get_proxy_identification(self, company):
         if self.code != 'fattura_pa':
-            return super()._get_proxy_identification()
+            return super()._get_proxy_identification(company)
 
         if not company.l10n_it_codice_fiscale:
             raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
