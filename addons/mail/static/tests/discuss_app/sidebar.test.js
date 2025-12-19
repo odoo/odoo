@@ -159,6 +159,18 @@ test("channel - command: should have view command when category is unfolded", as
 });
 
 test("Category fold is locally persistent (saved in local storage)", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["discuss.channel"].create([
+        { name: "Main Channel" },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
     setDiscussSidebarCategoryFoldState("channels", true);
     setDiscussSidebarCategoryFoldState("chats", true);
     await start();
@@ -187,6 +199,8 @@ test("Category fold is locally persistent (saved in local storage)", async () =>
 });
 
 test("Category fold is crosstab synced", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
     setDiscussSidebarCategoryFoldState("channels", true);
     const env1 = await start({ asTab: true });
     const env2 = await start({ asTab: true });
@@ -1210,4 +1224,23 @@ test("add and remove channel from favorites updates sidebar", async () => {
     await click(`${favoriteContainerSelector} ${generalChannelSelector} button .oi-ellipsis-h`);
     await click(".o-dropdown-item:contains('Remove from Favorites')");
     await contains(`${channelContainerSelector} ${generalChannelSelector}`);
+});
+
+test("sidebar category toggle is visually disabled when no visible channels", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
+    setDiscussSidebarCategoryFoldState("channels", true);
+    await start();
+    await openDiscuss();
+    await click(
+        ".o-mail-DiscussSidebarCategory-toggler:enabled:contains('Channels') i.oi-chevron-right"
+    );
+    await contains(
+        ".o-mail-DiscussSidebarCategory-toggler:enabled:contains('Channels') i.oi-chevron-down"
+    );
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:text('Hide Until New Message')");
+    await contains(
+        ".o-mail-DiscussSidebarCategory-toggler:disabled:contains('Channels') i.oi-chevron-right"
+    );
 });
