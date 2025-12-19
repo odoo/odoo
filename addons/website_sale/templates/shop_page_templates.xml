@@ -488,46 +488,63 @@
                                     </t>
                                 </section>
                             </div>
-                            <div t-else="" class="text-center text-muted mt128 mb256">
-                                <t t-if="not search">
-                                    <div class="mt-5 mb-3"><t t-call="website.empty_search_svg"/></div>
-                                    <h3
-                                        class="mt8"
-                                        style="text-align: center;"
-                                    >
-                                        No product defined
-                                    </h3>
-                                    <p
-                                        t-if="category"
-                                        style="text-align: center;"
-                                    >
-                                        No product defined in this category.
-                                    </p>
-                                </t>
-                                <t t-else="">
-                                    <div class="mt-5 mb-3"><t t-call="website.empty_search_svg"/></div>
-                                    <h3 class="mt8" style="text-align: center;">No results</h3>
-                                    <p style="text-align: center;">
-                                        No results for "<strong t-out='search'/>"<t t-if="category"> in category "<strong t-out="category.display_name"/>"</t>.
-                                    </p>
-                                    <p style="text-align: center;">
-                                        <a
-                                            t-if="category"
-                                            t-att-href="keep(shop_path, search=search)"
-                                            t-attf-title="Search {{search}} globally"
-                                            class="d-block pb-5"
+                            <div t-else="" class="text-center mt128 mb256">
+                                <t groups="base.group_public">
+                                    <t t-if="not search">
+                                        <div class="mt-5 mb-3">
+                                            <t t-call="website.empty_search_svg"/>
+                                        </div>
+                                        <h3
+                                            class="mt8"
+                                            style="text-align: center;"
                                         >
-                                            Search globally
-                                        </a>
-                                    </p>
+                                            No product defined
+                                        </h3>
+                                        <p
+                                            t-if="category"
+                                            style="text-align: center;"
+                                        >
+                                            No product defined in this category.
+                                        </p>
+                                    </t>
+                                    <t t-else="">
+                                        <div class="mt-5 mb-3">
+                                            <t t-call="website.empty_search_svg"/>
+                                        </div>
+                                        <h3 class="mt8" style="text-align: center;">No results</h3>
+                                        <p style="text-align: center;">
+                                            No results for "<strong t-out='search'/>"<t t-if="category"> in category "<strong t-out="category.display_name"/>"</t>.
+                                        </p>
+                                        <p style="text-align: center;">
+                                            <a
+                                                t-if="category"
+                                                t-att-href="keep(shop_path, search=search)"
+                                                t-attf-title="Search {{search}} globally"
+                                                class="d-block pb-5"
+                                            >
+                                                Search globally
+                                            </a>
+                                        </p>
+                                    </t>
                                 </t>
-                                <div
+                                <t
                                     t-ignore="true"
                                     groups="sales_team.group_sale_manager"
-                                    class="alert alert-info d-inline-block mx-auto text-center"
                                 >
-                                    Click <i>'New'</i> in the top-right corner to create your first product.
-                                </div>
+                                    <t t-call="website_sale.shop_page_empty_screen"/>
+                                    <h2 class="h4-fs mt-md-4">
+                                        Create your first product
+                                    </h2>
+                                    <div>
+                                        <a
+                                            name="products_manager_button"
+                                            href="/odoo/action-website_sale.product_template_action_website"
+                                            class="btn btn-primary d-md-none mb-3"
+                                            >
+                                            Go to Products Manager
+                                        </a>
+                                    </div>
+                                </t>
                             </div>
                             <div id="o_wsale_pager" t-attf-class="products_pager d-flex justify-content-center {{opt_wsale_design_grid and 'py-4' or 'py-5 pb-4'}}">
                                 <t t-call="website.pager"/>

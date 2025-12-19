@@ -36,7 +36,8 @@
         'templates/product_page_templates.xml',
         'templates/sale_portal_templates.xml',
         'templates/shop_page_templates.xml',
-        'templates/svg_templates.xml',
+        'templates/shop_empty_screens/shop_page_empty_screen.xml',
+        'templates/shop_empty_screens/svg_templates.xml',
         'templates/website_templates.xml',
         'templates/wishlist_templates.xml',
 
@@ -107,6 +108,7 @@
             'website_sale/static/src/scss/product_tile.scss',
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
+            'website_sale/static/src/scss/shop_page_empty_screen.scss',
             'website_sale/static/src/scss/website_sale_comparison.scss',
             'website_sale/static/src/scss/website_sale_comparison.options.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
