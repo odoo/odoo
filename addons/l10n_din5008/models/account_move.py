@@ -18,6 +18,13 @@ class AccountMove(models.Model):
                 data.append((_("Invoice Date"), format_date(self.env, record.invoice_date)))
             if record.invoice_date_due:
                 data.append((_("Due Date"), format_date(self.env, record.invoice_date_due)))
+            if record.invoice_incoterm_id:
+                value = (
+                    f"{record.invoice_incoterm_id.code} - {record.incoterm_location}"
+                    if record.incoterm_location
+                    else record.invoice_incoterm_id.code
+                )
+                data.append((_("Incoterm"), value))
             if record.delivery_date:
                 data.append((_("Delivery Date"), format_date(self.env, record.delivery_date)))
             if record.invoice_origin:
