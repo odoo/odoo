@@ -1,7 +1,7 @@
 import logging
 import re
 
-from odoo import api, models, _
+from odoo import api, models
 
 from odoo.exceptions import ValidationError
 
@@ -28,21 +28,21 @@ class ResPartner(models.Model):
     def _l10n_uy_build_vat_error_message(self, partner):
         """ Similar to _build_vat_error_message but using latam doc type name instead of vat_label
         NOTE: maybe can be implemented in master to l10n_latam_base for the use of different doc types """
-        vat_label = _("CI/NIE")
-        expected_format = _("3:402.010-2 or 93:402.010-1 (CI or NIE)")
+        vat_label = self.env._("CI/NIE")
+        expected_format = self.env._("3:402.010-2 or 93:402.010-1 (CI or NIE)")
 
         # Catch use case where the record label is about the public user (name: False)
         if partner.name:
-            msg = "\n" + _(
+            msg = "\n" + self.env._(
                 "The %(vat_label)s number [%(wrong_vat)s] for %(partner_label)s does not seem to be valid."
                 "\nNote: the expected format is %(expected_format)s",
                 vat_label=vat_label,
                 wrong_vat=partner.vat,
-                partner_label=_("partner [%s]", partner.name),
+                partner_label=self.env._("partner [%s]", partner.name),
                 expected_format=expected_format,
             )
         else:
-            msg = "\n" + _(
+            msg = "\n" + self.env._(
                 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid."
                 "\nNote: the expected format is %(expected_format)s",
                 vat_label=vat_label,

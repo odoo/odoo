@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import RedirectWarning
 
 
@@ -27,7 +27,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
         res = super()._get_all_extra_edis()
-        res.update({'es_verifactu': {'label': _("Veri*Factu"), 'is_applicable': self._is_es_verifactu_applicable}})
+        res.update({'es_verifactu': {'label': self.env._("Veri*Factu"), 'is_applicable': self._is_es_verifactu_applicable}})
         return res
 
     # -------------------------------------------------------------------------
@@ -40,21 +40,21 @@ class AccountMoveSend(models.AbstractModel):
         verifactu_info = self._l10n_es_edi_verifactu_get_move_info(moves)
         if verifactu_info['waiting_moves']:
             alerts['l10n_es_edi_verifactu_warning_waiting_moves'] = {
-                'message': _(
+                'message': self.env._(
                     "The following entries wil be skipped. They are already waiting to send Veri*Factu records to the AEAT: %s.",
                     ', '.join(verifactu_info['waiting_moves'].mapped('name'))
                 ),
-                'action_text': _("View Invoice(s)"),
-                'action': verifactu_info['waiting_moves']._get_records_action(name=_("Check Invoice(s)")),
+                'action_text': self.env._("View Invoice(s)"),
+                'action': verifactu_info['waiting_moves']._get_records_action(name=self.env._("Check Invoice(s)")),
             }
         if verifactu_info['registered_moves']:
             alerts['l10n_es_edi_verifactu_warning_registered_moves'] = {
-                'message': _(
+                'message': self.env._(
                     "The following entries wil be skipped. They are already registered with the AEAT: %s.",
                     ', '.join(verifactu_info['registered_moves'].mapped('name'))
                 ),
-                'action_text': _("View Invoice(s)"),
-                'action': verifactu_info['registered_moves']._get_records_action(name=_("Check Invoice(s)")),
+                'action_text': self.env._("View Invoice(s)"),
+                'action': verifactu_info['registered_moves']._get_records_action(name=self.env._("Check Invoice(s)")),
             }
         return alerts
 
@@ -75,21 +75,21 @@ class AccountMoveSend(models.AbstractModel):
 
             if vals['verifactu_move_type'] == 'correction_substitution' and not vals['substituted_document']:
                 substituted_move = invoice.l10n_es_edi_verifactu_substituted_entry_id
-                msg = _("There is no Veri*Factu document for the substituted record.")
+                msg = self.env._("There is no Veri*Factu document for the substituted record.")
                 action = invoice._l10n_es_edi_verifactu_action_go_to_journal_entry(substituted_move)
             elif vals['verifactu_move_type'] == 'correction_substitution' and not vals['substituted_document_reversal_document']:
                 substituted_move = invoice.l10n_es_edi_verifactu_substituted_entry_id
-                msg = _("There is no Veri*Factu document for the reversal of the substituted record.")
+                msg = self.env._("There is no Veri*Factu document for the reversal of the substituted record.")
                 action = invoice._l10n_es_edi_verifactu_action_go_to_journal_entry(substituted_move.reversal_move_ids)
             elif vals['verifactu_move_type'] in ('correction_incremental', 'reversal_for_substitution') and not vals['refunded_document']:
                 reversed_move = invoice.reversed_entry_id
-                msg = _("There is no Veri*Factu document for the refunded record.")
+                msg = self.env._("There is no Veri*Factu document for the refunded record.")
                 action = invoice._l10n_es_edi_verifactu_action_go_to_journal_entry(reversed_move)
 
             if action and msg:
                 invoice_data['error'] = {
                     'verifactu_redirect_action': action,
-                    'error_title': _("Go to the journal entry"),
+                    'error_title': self.env._("Go to the journal entry"),
                     'errors': [msg],
                 }
 
@@ -104,8 +104,8 @@ class AccountMoveSend(models.AbstractModel):
         for invoice in invoices_to_send:
             if not created_document[invoice].chain_index:
                 invoices_data[invoice]['error'] = {
-                    'error_title': _("The Veri*Factu document could not be created for all invoices."),
-                    'errors': [_("See the 'Veri*Factu' tab for more information.")],
+                    'error_title': self.env._("The Veri*Factu document could not be created for all invoices."),
+                    'errors': [self.env._("See the 'Veri*Factu' tab for more information.")],
                 }
 
         if created_document and self._can_commit():

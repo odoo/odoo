@@ -5,7 +5,6 @@ from datetime import datetime
 import requests
 from lxml import etree
 
-from odoo import _
 from odoo.tools.safe_eval import json
 
 NS_STATUS = {"ns": "mfp:anaf:dgti:efactura:stareMesajFactura:v1"}
@@ -35,7 +34,7 @@ def make_efactura_request(session, company, endpoint, params, data=None) -> dict
     elif endpoint in ['stareMesaj', 'descarcare', 'listaMesajeFactura']:
         method = 'GET'
     else:
-        return {'error': _('Unknown endpoint.')}
+        return {'error': company.env._('Unknown endpoint.')}
     headers = {'Content-Type': 'application/xml',
                'Authorization': f'Bearer {company.l10n_ro_edi_access_token}'}
 
@@ -45,21 +44,21 @@ def make_efactura_request(session, company, endpoint, params, data=None) -> dict
         return {'error': e}
     except (requests.ConnectionError, requests.Timeout):
         return {
-            'error': _('Timeout while sending to SPV. Use Synchronise to SPV to update the status.'),
+            'error': company.env._('Timeout while sending to SPV. Use Synchronise to SPV to update the status.'),
             'timeout': True,
         }
 
     if response.status_code == 204:
-        return {'error': _('You reached the limit of requests. Please try again later.')}
+        return {'error': company.env._('You reached the limit of requests. Please try again later.')}
     if response.status_code == 400:
         error_json = response.json()
         return {'error': error_json['message']}
     if response.status_code == 401:
-        return {'error': _('Access token is unauthorized.')}
+        return {'error': company.env._('Access token is unauthorized.')}
     if response.status_code == 403:
-        return {'error': _('Access token is forbidden.')}
+        return {'error': company.env._('Access token is forbidden.')}
     if response.status_code == 500:
-        return {'error': _('There is something wrong with the SPV. Please try again later.')}
+        return {'error': company.env._('There is something wrong with the SPV. Please try again later.')}
 
     return {'content': response.content}
 
@@ -211,12 +210,12 @@ def _request_ciusro_download_answer(company, key_download, session):
         try:
             msg_content = json.loads(result['content'].decode())
         except ValueError:
-            return {'error': _("The SPV data could not be parsed.")}
+            return {'error': company.env._("The SPV data could not be parsed.")}
 
         if eroare := msg_content.get('eroare'):
             return {'error': eroare}
 
-    return {'error': _("The SPV data could not be parsed.")}
+    return {'error': company.env._("The SPV data could not be parsed.")}
 
 
 def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
@@ -257,7 +256,7 @@ def _request_ciusro_synchronize_invoices(company, session, nb_days=1):
     try:
         msg_content = json.loads(result['content'])
     except ValueError:
-        return {'error': _("The SPV data could not be parsed.")}
+        return {'error': company.env._("The SPV data could not be parsed.")}
 
     if eroare := msg_content.get('eroare'):
         return {'error': eroare}

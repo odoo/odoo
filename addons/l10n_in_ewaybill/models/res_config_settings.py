@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import models, fields
 from odoo.exceptions import UserError
-from odoo.tools import html_escape
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
 
 
@@ -29,13 +28,13 @@ class ResConfigSettings(models.TransientModel):
         except EWayBillError as e:
             raise UserError(e.get_all_error_message())
         if not self.company_id.sudo()._l10n_in_ewaybill_token_is_valid():
-            raise UserError(_("Incorrect username or password, or the GST number on company does not match."))
+            raise UserError(self.env._("Incorrect username or password, or the GST number on company does not match."))
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
                 'type': 'info',
                 'sticky': False,
-                'message': _("API credentials validated successfully"),
+                'message': self.env._("API credentials validated successfully"),
             }
         }

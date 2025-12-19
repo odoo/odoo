@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 from odoo.exceptions import ValidationError
 
 
@@ -33,7 +33,7 @@ class AccountJournal(models.Model):
     def check_use_document(self):
         for rec in self:
             if rec.env['account.move'].search_count([('journal_id', '=', rec.id), ('posted_before', '=', True)], limit=1):
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     'You can not modify the field "Use Documents?" if there are validated invoices in this journal!'))
 
     @api.depends('type', 'l10n_latam_use_documents')

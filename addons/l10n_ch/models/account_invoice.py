@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.exceptions import UserError
 from odoo.tools.misc import mod10r
 
@@ -99,10 +99,10 @@ class AccountMove(models.Model):
         Else, triggers the l10n_ch wizard that will display the informations.
         '''
         if any(x.move_type != 'out_invoice' for x in self):
-            raise UserError(_("Only customers invoices can be QR-printed."))
+            raise UserError(self.env._("Only customers invoices can be QR-printed."))
         if False in self.mapped('l10n_ch_is_qr_valid'):
             return {
-                'name': (_("Some invoices could not be printed in the QR format")),
+                'name': (self.env._("Some invoices could not be printed in the QR format")),
                 'type': 'ir.actions.act_window',
                 'res_model': 'l10n_ch.qr_invoice.wizard',
                 'view_mode': 'form',

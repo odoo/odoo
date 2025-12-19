@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
@@ -19,7 +19,7 @@ class ResPartner(models.Model):
     def _get_tax_office_missing_message(self):
         # OVERRIDE
         self.ensure_one()
-        return _("The Turkish Tax Office field must be filled") if not self.l10n_tr_tax_office_id else None
+        return self.env._("The Turkish Tax Office field must be filled") if not self.l10n_tr_tax_office_id else None
 
     def _get_tax_office_for_edispatch(self):
         # OVERRIDE

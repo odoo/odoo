@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ResPartner(models.Model):
@@ -17,27 +17,27 @@ class ResPartner(models.Model):
             country_code = record.country_id.code
             msg = []
             required_fields = {
-                _("Street"): record.street,
-                _("City"): record.city,
-                _("State"): record.state_id,
-                _("Country"): record.country_id,
+                self.env._("Street"): record.street,
+                self.env._("City"): record.city,
+                self.env._("State"): record.state_id,
+                self.env._("Country"): record.country_id,
             }
 
             missing_fields = [name for name, value in required_fields.items() if not value]
             if country_code == 'TR' and not record.vat:
-                missing_fields.append(_("TCKN/VKN"))
+                missing_fields.append(self.env._("TCKN/VKN"))
 
             if country_code == 'TR' and not record.zip:
-                missing_fields.append(_("ZIP"))
+                missing_fields.append(self.env._("ZIP"))
 
             if missing_fields:
-                msg.append(_("%s is required", ', '.join(missing_fields)))
+                msg.append(self.env._("%s is required", ', '.join(missing_fields)))
 
             if country_code != "TR" and (
                 not record.l10n_tr_nilvera_edispatch_customs_zip
                 or len(record.l10n_tr_nilvera_edispatch_customs_zip) != 5
             ):
-                msg.append(_("Customs ZIP of 5 characters must be present"))
+                msg.append(self.env._("Customs ZIP of 5 characters must be present"))
 
             if (
                 tax_office_required
@@ -50,9 +50,9 @@ class ResPartner(models.Model):
                 # Instead of using name, display_name is used, since name is not required
                 # if contact is of type "Delivery Address".
                 error_messages[f"invalid_partner_{record.id}"] = {
-                    'message': _("%(name)s's %(errors)s.", name=record.display_name, errors=', '.join(msg)),
-                    'action_text': _("View %s", record.display_name),
-                    'action': record._get_records_action(name=_("View Partner")),
+                    'message': self.env._("%(name)s's %(errors)s.", name=record.display_name, errors=', '.join(msg)),
+                    'action_text': self.env._("View %s", record.display_name),
+                    'action': record._get_records_action(name=self.env._("View Partner")),
                     'level': 'danger',
                 }
         return error_messages
@@ -60,7 +60,7 @@ class ResPartner(models.Model):
     def _get_tax_office_missing_message(self):
         """Overridden in l10n_tr_nilvera_einvoice_extended to use the tax office field instead of ref."""
         self.ensure_one()
-        return _("Reference field must be set to the tax office name") if not self.ref else None
+        return self.env._("Reference field must be set to the tax office name") if not self.ref else None
 
     def _get_tax_office_for_edispatch(self):
         """Overridden in l10n_tr_nilvera_einvoice_extended to return the tax office field instead of ref."""

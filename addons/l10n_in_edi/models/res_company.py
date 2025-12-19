@@ -1,8 +1,8 @@
 import datetime
 from zoneinfo import ZoneInfo
 
-from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, ValidationError
+from odoo import fields, models
+from odoo.exceptions import AccessError
 
 
 class ResCompany(models.Model):
@@ -61,7 +61,7 @@ class ResCompany(models.Model):
             return {
                 "error": [{
                     "code": "404",
-                    "message": _(
+                    "message": self.env._(
                         "Unable to connect to the online E-invoice service. "
                         "The web service may be temporary down. Please try again in a moment."
                     )
@@ -82,17 +82,17 @@ class ResCompany(models.Model):
         checks = {
             'company_address_missing': {
                 'fields': ('street', 'zip', 'city', 'state_id', 'country_id',),
-                'message': _("Companies should have a complete address, verify their Street, City, State, Country and Zip code."),
+                'message': self.env._("Companies should have a complete address, verify their Street, City, State, Country and Zip code."),
             },
         }
         return {
             f"l10n_in_edi_{key}": {
                 'message': check['message'],
                 'action_text': (
-                    _("View Companies") if len(invalid_records) > 1
-                    else _("View %s", invalid_records.name)
+                    self.env._("View Companies") if len(invalid_records) > 1
+                    else self.env._("View %s", invalid_records.name)
                 ),
-                'action': invalid_records._get_records_action(name=_("Check Company Data")),
+                'action': invalid_records._get_records_action(name=self.env._("Check Company Data")),
             }
             for key, check in checks.items()
             if (invalid_records := self.filtered(lambda record: any(not record[field] for field in check['fields'])))

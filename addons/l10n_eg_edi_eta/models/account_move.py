@@ -4,7 +4,7 @@ import base64
 import logging
 import json
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import float_is_zero
 from odoo.tools.sql import column_exists, create_column
@@ -84,31 +84,31 @@ class AccountMove(models.Model):
         company_ids = invoices.mapped('company_id')
         # since the middleware accepts only one drive at a time, we have to limit signing to one company at a time
         if len(company_ids) > 1:
-            raise UserError(_('Please only sign invoices from one company at a time'))
+            raise UserError(self.env._('Please only sign invoices from one company at a time'))
 
         company_id = company_ids[0]
         drive_id = self.env['l10n_eg_edi.thumb.drive'].search([('user_id', '=', self.env.user.id),
                                                                ('company_id', '=', company_id.id)])
 
         if not drive_id:
-            raise ValidationError(_('Please setup a personal drive for company %s', company_id.name))
+            raise ValidationError(self.env._('Please setup a personal drive for company %s', company_id.name))
 
         if not drive_id.certificate:
-            raise ValidationError(_('Please setup the certificate on the thumb drive menu'))
+            raise ValidationError(self.env._('Please setup the certificate on the thumb drive menu'))
 
         invoices.write({'l10n_eg_signing_time': datetime.utcnow()})
 
         for invoice in invoices:
             eta_invoice = self.env['account.edi.format']._l10n_eg_eta_prepare_eta_invoice(invoice)
             self.env['ir.attachment'].create({
-                    'name': _('ETA_INVOICE_DOC_%s', invoice.name),
+                    'name': self.env._('ETA_INVOICE_DOC_%s', invoice.name),
                     'res_id': invoice.id,
                     'res_model': invoice._name,
                     'res_field': 'l10n_eg_eta_json_doc_file',
                     'type': 'binary',
                     'raw': json.dumps(dict(request=eta_invoice)),
                     'mimetype': 'application/json',
-                    'description': _('Egyptian Tax authority JSON invoice generated for %s.', invoice.name),
+                    'description': self.env._('Egyptian Tax authority JSON invoice generated for %s.', invoice.name),
                 })
             invoice.invalidate_recordset(fnames=['l10n_eg_eta_json_doc_file'])
         return drive_id.action_sign_invoices(invoices)
@@ -122,7 +122,7 @@ class AccountMove(models.Model):
             _logger.warning('PDF Content Error:  %s.', eta_invoice_pdf.get('error'))
             return
         self.message_post(
-            body=_('ETA invoice has been received'),
+            body=self.env._('ETA invoice has been received'),
             attachments=[('ETA invoice of %s.pdf' % self.name, eta_invoice_pdf.get('data'))]
         )
 

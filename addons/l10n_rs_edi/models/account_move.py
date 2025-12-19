@@ -1,7 +1,7 @@
 import uuid
 import requests
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from requests.exceptions import Timeout, ConnectionError, HTTPError
 
 DEMO_EFAKTURA_URL = 'https://demoefaktura.mfin.gov.rs/api/publicApi/sales-invoice/ubl'
@@ -133,14 +133,14 @@ class AccountMove(models.Model):
             response = requests.post(url=url, params=params, headers=headers, data=xml, timeout=30)
             response.raise_for_status()
         except (Timeout, ConnectionError, HTTPError) as exception:
-            error_message = _("There was a problem with the connection with eFaktura: %s", exception)
+            error_message = self.env._("There was a problem with the connection with eFaktura: %s", exception)
             self.message_post(body=error_message)
             return xml, error_message
         dict_response = {}
         try:
             dict_response = response.json()
         except requests.exceptions.JSONDecodeError as e:
-            error_message = _("Invalid response from eFaktura: %s", str(e))
+            error_message = self.env._("Invalid response from eFaktura: %s", str(e))
         self.l10n_rs_edi_state = 'sending_failed' if error_message else 'sent'
         self.l10n_rs_edi_error = error_message
         self.l10n_rs_edi_invoice = dict_response.get('InvoiceId')
@@ -153,7 +153,7 @@ class AccountMove(models.Model):
         return {
             'name': self._l10n_rs_edi_get_xml_attachment_name(),
             'mimetype': 'application/xml',
-            'description': _('RS E-Invoice: %s', self.move_type),
+            'description': self.env._('RS E-Invoice: %s', self.move_type),
             'company_id': self.company_id.id,
             'res_id': self.id,
             'res_model': self._name,

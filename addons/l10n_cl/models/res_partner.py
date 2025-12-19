@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class ResPartner(models.Model):
@@ -36,7 +36,7 @@ class ResPartner(models.Model):
 
                 if validation == 'error':
                     if not partner._check_vat_number('CL', partner.vat):
-                        raise ValidationError(_('The format of your RUN is not valid.  It should be like 76086428-5.'))
+                        raise ValidationError(self.env._('The format of your RUN is not valid.  It should be like 76086428-5.'))
 
         return super(ResPartner, self - l10n_cl_partners)._run_check_identification(validation=validation)
 

@@ -1,6 +1,6 @@
 from base64 import b64encode
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -49,7 +49,7 @@ class StockPicking(models.Model):
             new_sequence_number = picking_type.l10n_ar_next_delivery_number
             delivery_guide_number = picking_type.l10n_ar_sequence_id.next_by_id()
             if not int(picking_type.l10n_ar_sequence_number_start) <= new_sequence_number <= int(picking_type.l10n_ar_sequence_number_end):
-                raise UserError(_("The delivery guide number %s exceeds the range specified in the CAI. Please update the range or use a different CAI with a different range.", delivery_guide_number))
+                raise UserError(self.env._("The delivery guide number %s exceeds the range specified in the CAI. Please update the range or use a different CAI with a different range.", delivery_guide_number))
             self.l10n_ar_delivery_guide_number = delivery_guide_number
             self.l10n_ar_cai_data = {
                 'document_type_id': picking_type.l10n_ar_document_type_id.id,
@@ -65,7 +65,7 @@ class StockPicking(models.Model):
         """
         self.ensure_one()
         if not self.partner_id.email:
-            raise UserError(_("The partner does not have an email address."))
+            raise UserError(self.env._("The partner does not have an email address."))
         template = self.env.ref('l10n_ar_stock.email_template_ar_remitos_delivery_guide')
         pdf_action = self.env.ref('l10n_ar_stock.action_delivery_guide_report_pdf')
         pdf_content, __ = self.env['ir.actions.report'].sudo()._render_qweb_pdf(pdf_action, self.id)

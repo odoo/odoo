@@ -8,7 +8,7 @@ import re
 from datetime import datetime
 from itertools import starmap
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import LockError, UserError
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
 
@@ -262,7 +262,7 @@ class L10nInEwaybill(models.Model):
     @api.depends('name', 'state')
     def _compute_display_name(self):
         for ewaybill in self:
-            ewaybill.display_name = ewaybill.state == 'pending' and _('Pending') or ewaybill.name
+            ewaybill.display_name = ewaybill.state == 'pending' and self.env._('Pending') or ewaybill.name
 
     @api.depends('mode')
     def _compute_vehicle_type(self):
@@ -287,12 +287,12 @@ class L10nInEwaybill(models.Model):
         self.ensure_one()
         return self.env['l10n.in.ewaybill.cancel'].with_context(
             default_l10n_in_ewaybill_id=self.id
-        )._get_records_action(name=_("Cancel Ewaybill"), target='new')
+        )._get_records_action(name=self.env._("Cancel Ewaybill"), target='new')
 
     def action_reset_to_pending(self):
         self.ensure_one()
         if self.state != 'cancel':
-            raise UserError(_("Only Cancelled E-waybill can be resent."))
+            raise UserError(self.env._("Only Cancelled E-waybill can be resent."))
         self.write({
             'name': False,
             'state': 'pending',
@@ -303,9 +303,9 @@ class L10nInEwaybill(models.Model):
     def action_print(self):
         self.ensure_one()
         if self.state in ['pending', 'cancel']:
-            raise UserError(_("Please generate the E-Waybill to print it."))
+            raise UserError(self.env._("Please generate the E-Waybill to print it."))
 
-        return self._generate_and_attach_pdf(_("Ewaybill"))
+        return self._generate_and_attach_pdf(self.env._("Ewaybill"))
 
     @api.model
     def _get_default_help_message(self, status):
@@ -334,9 +334,9 @@ class L10nInEwaybill(models.Model):
         error_message = []
         transporter = self.transporter_id
         if transporter and not transporter.check_vat_in(transporter.vat) and (self.mode != "1" or not self.vehicle_no):
-            error_message.append(_("- Transporter %s does not have a valid GST Number", transporter.name))
+            error_message.append(self.env._("- Transporter %s does not have a valid GST Number", transporter.name))
         if self.mode == "4" and self.vehicle_no and self.vehicle_type == "R":
-            error_message.append(_("- Vehicle type can not be regular when the transportation mode is ship"))
+            error_message.append(self.env._("- Vehicle type can not be regular when the transportation mode is ship"))
         return error_message
 
     def _check_partners(self):
@@ -351,7 +351,7 @@ class L10nInEwaybill(models.Model):
     def _check_state(self):
         error_message = []
         if self.account_move_id and self.account_move_id.state != 'posted':
-            error_message.append(_(
+            error_message.append(self.env._(
                 "An E-waybill cannot be generated for a %s move.",
                 dict(self.env['account.move']._fields['state']._description_selection(self.env))[self.account_move_id.state]
             ))
@@ -365,20 +365,20 @@ class L10nInEwaybill(models.Model):
         message = []
         if partner.country_id.code == "IN":
             if partner.state_id and not partner.state_id.l10n_in_tin:
-                message.append(_("- TIN number not set in state %s", partner.state_id.name))
+                message.append(self.env._("- TIN number not set in state %s", partner.state_id.name))
             if not partner.state_id:
-                message.append(_("- State is required"))
+                message.append(self.env._("- State is required"))
             if not partner.zip or not re.match("^[0-9]{6}$", partner.zip):
-                message.append(_("- Zip code required and should be 6 digits"))
+                message.append(self.env._("- Zip code required and should be 6 digits"))
         elif not partner.country_id:
-            message.append(_("- Country is required"))
+            message.append(self.env._("- Country is required"))
         if message:
             message.insert(0, "%s" % partner.display_name)
         return message
 
     def _check_document_number(self):
         if not re.match("^.{1,16}$", self.document_number):
-            return [_("Document number should be set and not more than 16 characters")]
+            return [self.env._("Document number should be set and not more than 16 characters")]
         return []
 
     def _check_lines(self):
@@ -386,13 +386,13 @@ class L10nInEwaybill(models.Model):
         invoice_lines = self.account_move_id.invoice_line_ids
         AccountMove = self.env['account.move']
         if not any(l.product_id for l in invoice_lines):
-            error_message.append(_("Ensure that at least one line item includes a product."))
+            error_message.append(self.env._("Ensure that at least one line item includes a product."))
             return error_message
         if all(
             AccountMove._l10n_in_is_service_hsn(l.l10n_in_hsn_code)
             for l in invoice_lines if l.product_id
         ):
-            error_message.append(_("You need at least one product having 'Product Type' as stockable or consumable."))
+            error_message.append(self.env._("You need at least one product having 'Product Type' as stockable or consumable."))
             return error_message
         for line in invoice_lines:
             if (
@@ -406,7 +406,7 @@ class L10nInEwaybill(models.Model):
     def _check_gst_treatment(self):
         partner = self._get_billing_partner()
         if not partner.l10n_in_gst_treatment:
-            return [_("Set GST Treatment for in %s", partner.display_name)]
+            return [self.env._("Set GST Treatment for in %s", partner.display_name)]
         return []
 
     def _get_billing_partner(self):
@@ -433,7 +433,7 @@ class L10nInEwaybill(models.Model):
         try:
             self.lock_for_update()
         except LockError:
-            raise UserError(_('This document is being sent by another process already.')) from None
+            raise UserError(self.env._('This document is being sent by another process already.')) from None
 
     def _l10n_in_ewaybill_handle_zero_distance_alert_if_present(self, response_data):
         if self.distance == 0 and (alert := response_data.get('alert')):
@@ -490,7 +490,7 @@ class L10nInEwaybill(models.Model):
         }
         ewb_api = EWayBillApi(self.company_id)
         if self.error_message and self.blocking_level == 'error':
-            self.message_post(body=_(
+            self.message_post(body=self.env._(
                 "Retrying to request cancellation of E-waybill on government portal."
             ))
         self._lock_ewaybill()
@@ -510,7 +510,7 @@ class L10nInEwaybill(models.Model):
 
     def _log_retry_message_on_generate(self):
         if self.error_message and self.blocking_level == 'error':
-            self.message_post(body=_(
+            self.message_post(body=self.env._(
                 "Retrying E-Waybill generation on the government portal."
             ))
 
@@ -727,7 +727,7 @@ class L10nInEwaybill(models.Model):
             'mimetype': 'application/pdf',
         })
         self.message_post(
-            body=_("%s has been generated.", doc_label),
+            body=self.env._("%s has been generated.", doc_label),
             attachment_ids=[attachment.id]
         )
         return {
@@ -738,4 +738,4 @@ class L10nInEwaybill(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_l10n_in_ewaybill_prevent(self):
         if self.filtered(lambda ewaybill: ewaybill.state != 'pending'):
-            raise UserError(_("You cannot delete a generated E-waybill. Instead, you should cancel it."))
+            raise UserError(self.env._("You cannot delete a generated E-waybill. Instead, you should cancel it."))

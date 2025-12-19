@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.exceptions import UserError
 
 
@@ -53,7 +53,7 @@ class AccountMoveReversal(models.TransientModel):
             if len(record.move_ids) > 1:
                 move_ids_use_document = record.move_ids._origin.filtered(lambda move: move.l10n_latam_use_documents)
                 if move_ids_use_document:
-                    raise UserError(_('You can only reverse documents with legal invoicing documents from Latin America one at a time.\nProblematic documents: %s', ", ".join(move_ids_use_document.mapped('name'))))
+                    raise UserError(self.env._('You can only reverse documents with legal invoicing documents from Latin America one at a time.\nProblematic documents: %s', ", ".join(move_ids_use_document.mapped('name'))))
             else:
                 record.l10n_latam_use_documents = record.journal_id.l10n_latam_use_documents
 

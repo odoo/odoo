@@ -1,4 +1,4 @@
-from odoo import _, api, models, SUPERUSER_ID
+from odoo import api, models, SUPERUSER_ID
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -12,7 +12,7 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         res = super()._get_all_extra_edis()
         res.update({'rs_edi': {'label': 'eFaktura', 'is_applicable': self._is_rs_edi_applicable, 'help': 'Send the E-Invoice to Government via eFaktura'}})
-        res.update({'rs_cir_checkbox': {'is_applicable': self._is_rs_edi_applicable, 'label': _("Send to CIR"), 'help': _("Send to Central Invoice Register(For B2G and the public sector)")}})
+        res.update({'rs_cir_checkbox': {'is_applicable': self._is_rs_edi_applicable, 'label': self.env._("Send to CIR"), 'help': self.env._("Send to Central Invoice Register(For B2G and the public sector)")}})
         return res
 
     @api.model
@@ -30,15 +30,15 @@ class AccountMoveSend(models.AbstractModel):
                 continue
             if not invoice.company_id.l10n_rs_edi_api_key:
                 invoice_data["error"] = {
-                    "error_title": _("eFaktura API Key is missing."),
-                    "errors": [_("Please configure the eFaktura API Key in the company settings.")],
+                    "error_title": self.env._("eFaktura API Key is missing."),
+                    "errors": [self.env._("Please configure the eFaktura API Key in the company settings.")],
                 }
                 continue
             send_to_cir = 'rs_cir_checkbox' in invoice_data['extra_edis']
             xml, error = invoice._l10n_rs_edi_send(send_to_cir)
             if error:
                 invoice_data["error"] = {
-                    "error_title": _("Errors when submitting the e-invoice to eFaktura:"),
+                    "error_title": self.env._("Errors when submitting the e-invoice to eFaktura:"),
                     "errors": [error],
                 }
                 continue

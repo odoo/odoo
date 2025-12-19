@@ -1,8 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from freezegun import freeze_time
-
-from odoo import _
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
 from odoo.tests import tagged
 
@@ -321,5 +318,5 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             "vehicle_type": "R",
             "transporter_id": self.partner_b.id,
         })
-        expected_msg = _('- Transporter %s does not have a valid GST Number', self.partner_b.name)
+        expected_msg = self.env._('- Transporter %s does not have a valid GST Number', self.partner_b.name)
         self.assertEqual(ewaybill_invoice_2._check_transporter(), [expected_msg])

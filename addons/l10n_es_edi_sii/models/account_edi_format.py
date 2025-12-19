@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import requests
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.tools import html_escape, zeep
 from odoo.tools.float_utils import float_round
 
@@ -469,9 +469,9 @@ class AccountEdiFormat(models.Model):
                 else:
                     res = serv.SuministroLRFacturasRecibidas(header, info_list)
         except requests.exceptions.SSLError as error:
-            error_msg = _("The SSL certificate could not be validated.")
+            error_msg = self.env._("The SSL certificate could not be validated.")
         except (zeep.exceptions.Error, requests.exceptions.ConnectionError) as error:
-            error_msg = _("Networking error:\n%s", error)
+            error_msg = self.env._("Networking error:\n%s", error)
         except Exception as error:
             error_msg = str(error)
 
@@ -485,7 +485,7 @@ class AccountEdiFormat(models.Model):
 
         if not res or not res.RespuestaLinea:
             return {inv: {
-                'error': _("The web service is not responding"),
+                'error': self.env._("The web service is not responding"),
                 'blocking_level': 'warning',
             } for inv in invoices}
 
@@ -543,14 +543,14 @@ class AccountEdiFormat(models.Model):
                 inv.l10n_es_edi_csv = l10n_es_edi_csv
                 results[inv] = {'success': True}
                 if resp_line_state == 'AceptadoConErrores':
-                    inv.message_post(body=_("This was accepted with errors: ") + html_escape(respl.DescripcionErrorRegistro))
+                    inv.message_post(body=self.env._("This was accepted with errors: ") + html_escape(respl.DescripcionErrorRegistro))
             elif (
                 (respl_dict.get('RegistroDuplicado') and respl.RegistroDuplicado.EstadoRegistro == 'Correcta')
                 or
                 (cancel and respl_dict.get('CodigoErrorRegistro') == 3001)
             ):
                 results[inv] = {'success': True}
-                inv.message_post(body=_("We saw that this invoice was sent correctly before, but we did not treat "
+                inv.message_post(body=self.env._("We saw that this invoice was sent correctly before, but we did not treat "
                                         "the response.  Make sure it is not because of a wrong configuration."))
 
             elif respl.CodigoErrorRegistro == 1117 and not self.env.context.get('error_1117'):
@@ -559,7 +559,7 @@ class AccountEdiFormat(models.Model):
 
             else:
                 results[inv] = {
-                    'error': _("[%(error_code)s] %(error_message)s", error_code=respl.CodigoErrorRegistro, error_message=respl.DescripcionErrorRegistro),
+                    'error': self.env._("[%(error_code)s] %(error_message)s", error_code=respl.CodigoErrorRegistro, error_message=respl.DescripcionErrorRegistro),
                     'blocking_level': 'error',
                 }
 
@@ -597,7 +597,7 @@ class AccountEdiFormat(models.Model):
             return res
 
         if not move.company_id.vat:
-            res.append(_("VAT number is missing on company %s", move.company_id.display_name))
+            res.append(self.env._("VAT number is missing on company %s", move.company_id.display_name))
         total_taxes = self.env['account.tax']
         for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_subsection', 'line_note')):
             taxes = line.tax_ids.flatten_taxes_hierarchy()
@@ -608,25 +608,25 @@ class AccountEdiFormat(models.Model):
             no_sujeto_count = taxes.mapped('l10n_es_type').count('no_sujeto')
             no_sujeto_loc_count = taxes.mapped('l10n_es_type').count('no_sujeto_loc')
             if retention_count > 1:
-                res.append(_("Line %s should only have one retention tax.", line.display_name))
+                res.append(self.env._("Line %s should only have one retention tax.", line.display_name))
             if recargo_count > 1:
-                res.append(_("Line %s should only have one recargo tax.", line.display_name))
+                res.append(self.env._("Line %s should only have one recargo tax.", line.display_name))
             if sujeto_count > 1:
-                res.append(_("Line %s should only have one sujeto tax.", line.display_name))
+                res.append(self.env._("Line %s should only have one sujeto tax.", line.display_name))
             if no_sujeto_count > 1:
-                res.append(_("Line %s should only have one no sujeto tax.", line.display_name))
+                res.append(self.env._("Line %s should only have one no sujeto tax.", line.display_name))
             if no_sujeto_loc_count > 1:
-                res.append(_("Line %s should only have one no sujeto (localizations) tax.", line.display_name))
+                res.append(self.env._("Line %s should only have one no sujeto (localizations) tax.", line.display_name))
             if sujeto_count + no_sujeto_loc_count + no_sujeto_count > 1:
-                res.append(_("Line %s should only have one main tax.", line.display_name))
+                res.append(self.env._("Line %s should only have one main tax.", line.display_name))
         if move.is_inbound() and move.commercial_partner_id._l10n_es_is_foreign() and not any(t.tax_scope for t in total_taxes):
             res.append(
-                _("In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
+                self.env._("In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
                   "\n".join(total_taxes.mapped('name')))
             )
         if move.move_type in ('in_invoice', 'in_refund'):
             if not move.ref:
-                res.append(_("You should put a vendor reference on this vendor bill. "))
+                res.append(self.env._("You should put a vendor reference on this vendor bill. "))
         return res
 
     def _is_compatible_with_journal(self, journal):
@@ -641,7 +641,7 @@ class AccountEdiFormat(models.Model):
         certificate = invoices.company_id.l10n_es_sii_certificate_id
         if not certificate:
             return {inv: {
-                'error': _("Please configure the certificate for SII."),
+                'error': self.env._("Please configure the certificate for SII."),
                 'blocking_level': 'error',
             } for inv in invoices}
 
@@ -649,7 +649,7 @@ class AccountEdiFormat(models.Model):
         l10n_es_sii_tax_agency = invoices.company_id.mapped('l10n_es_sii_tax_agency')[0]
         if not l10n_es_sii_tax_agency:
             return {inv: {
-                'error': _("Please specify a tax agency on your company for SII."),
+                'error': self.env._("Please specify a tax agency on your company for SII."),
                 'blocking_level': 'error',
             } for inv in invoices}
 

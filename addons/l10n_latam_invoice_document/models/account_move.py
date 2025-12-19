@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.sql import column_exists, create_column
 
@@ -168,7 +168,7 @@ class AccountMove(models.Model):
     def _post(self, soft=True):
         for rec in self.filtered(lambda x: x.l10n_latam_use_documents and (not x.name or x.name == '/')):
             if rec.move_type in ('in_receipt', 'out_receipt'):
-                raise UserError(_('We do not accept the usage of document types on receipts yet. '))
+                raise UserError(self.env._('We do not accept the usage of document types on receipts yet. '))
         return super()._post(soft)
 
     @api.constrains('state', 'l10n_latam_document_type_id')
@@ -180,14 +180,14 @@ class AccountMove(models.Model):
         validated_invoices = self.filtered(lambda x: x.l10n_latam_use_documents and x.state == 'posted')
         without_doc_type = validated_invoices.filtered(lambda x: not x.l10n_latam_document_type_id)
         if without_doc_type:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 'The journal require a document type but not document type has been selected on invoices %s.',
                 without_doc_type.ids
             ))
         without_number = validated_invoices.filtered(
             lambda x: not x.l10n_latam_document_number and x.l10n_latam_manual_document_number)
         if without_number:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 'Please set the document number on the following invoices %s.',
                 without_number.ids
             ))
@@ -198,9 +198,9 @@ class AccountMove(models.Model):
             internal_type = rec.l10n_latam_document_type_id.internal_type
             invoice_type = rec.move_type
             if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund']:
-                raise ValidationError(_('You can not use a %s document type with a refund invoice', internal_type))
+                raise ValidationError(self.env._('You can not use a %s document type with a refund invoice', internal_type))
             elif internal_type == 'credit_note' and invoice_type in ['out_invoice', 'in_invoice']:
-                raise ValidationError(_('You can not use a %s document type with a invoice', internal_type))
+                raise ValidationError(self.env._('You can not use a %s document type with a invoice', internal_type))
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()

@@ -1,6 +1,6 @@
 import logging
 
-from odoo import _, api, models, SUPERUSER_ID
+from odoo import api, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ class AccountMoveSend(models.AbstractModel):
         res = super()._get_all_extra_edis()
         res.update({
             'es_facturae': {
-                'label': _("Factura-e"),
+                'label': self.env._("Factura-e"),
                 'is_applicable': self._is_es_facturae_applicable,
             },
         })
@@ -83,7 +83,7 @@ class AccountMoveSend(models.AbstractModel):
                 xml_content, errors = invoice._l10n_es_edi_facturae_render_facturae()
                 if errors:
                     invoice_data['error'] = {
-                        'error_title': _("Errors occurred while creating the EDI document (format: %s):", "Facturae"),
+                        'error_title': self.env._("Errors occurred while creating the EDI document (format: %s):", "Facturae"),
                         'errors': errors,
                     }
                 else:

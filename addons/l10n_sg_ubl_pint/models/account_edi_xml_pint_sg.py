@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, _
+from odoo import models
 
 
 SG_TAX_CATEGORIES = {'SR', 'SRCA-S', 'SRCA-C', 'SROVR-RS', 'SRRC', 'SROVR-LVG', 'SRLVG', 'ZR', 'ES33', 'ESN33', 'DS', 'OS', 'NG', 'NA'}
@@ -87,7 +87,7 @@ class AccountEdiXmlPint_Sg(models.AbstractModel):
             for tax_subtotal_node in tax_total_node['cac:TaxSubtotal']:
                 for tax_category_node in tax_subtotal_node['cac:TaxCategory']:
                     if tax_category_node['cbc:ID']['_text'] not in SG_TAX_CATEGORIES:
-                        constraints['sg_vat_category_required'] = _("You must set a Singaporean tax category on each taxes of the invoice.")
+                        constraints['sg_vat_category_required'] = self.env._("You must set a Singaporean tax category on each taxes of the invoice.")
 
                     # Invoice with GST category code of value 'SR', 'SRCA-S', 'SRCA-C', 'ZR', 'SRRC',
                     # 'SROVR-RS', 'SROVR-LVG', 'SRLVG', 'NA' should contain seller address line and seller

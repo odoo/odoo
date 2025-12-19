@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -8,7 +8,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('es_coop_pymes')
     def _get_es_coop_pymes_template_data(self):
         return {
-            'name': _('Cooperatives - SMEs (2008)'),
+            'name': self.env._('Cooperatives - SMEs (2008)'),
             'parent': 'es_common_mainland',
         }
 

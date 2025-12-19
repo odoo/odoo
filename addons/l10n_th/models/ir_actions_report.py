@@ -1,4 +1,4 @@
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 
@@ -10,6 +10,6 @@ class IrActionsReport(models.Model):
         if self._get_report(report_ref).report_name == 'l10n_th.report_commercial_invoice':
             invoices = self.env['account.move'].browse(res_ids)
             if any(not x.is_invoice(include_receipts=True) for x in invoices):
-                raise UserError(_("Only invoices could be printed."))
+                raise UserError(self.env._("Only invoices could be printed."))
 
         return super()._pre_render_qweb_pdf(report_ref, res_ids=res_ids, data=data)

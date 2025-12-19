@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, _
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('cn_large_bis')
     def _get_cn_large_bis_template_data(self):
         return {
-            'name': _('Accounting Standards for Business Enterprises'),
+            'name': self.env._('Accounting Standards for Business Enterprises'),
             'parent': 'cn_common',
             'property_account_expense_categ_id': 'l10n_cn_large_bis_account_6401',
             'property_account_income_categ_id': 'l10n_cn_large_bis_account_6001',

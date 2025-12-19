@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -12,7 +12,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_all_extra_edis(self) -> dict:
         # EXTENDS 'account'
         res = super()._get_all_extra_edis()
-        res.update({'sa_edi': {'label': _("To ZATCA"), 'is_applicable': self._is_sa_edi_applicable}})
+        res.update({'sa_edi': {'label': self.env._("To ZATCA"), 'is_applicable': self._is_sa_edi_applicable}})
         return res
 
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):

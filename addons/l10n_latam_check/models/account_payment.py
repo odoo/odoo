@@ -1,4 +1,4 @@
-from odoo import fields, models, api, Command, _
+from odoo import fields, models, api, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date
 
@@ -28,7 +28,7 @@ class AccountPayment(models.Model):
                 payment.payment_method_code in ('own_checks', 'new_third_party_checks', 'in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks') and
                 not payment.outstanding_account_id
             ):
-                raise ValidationError(_("A payment with any Third Party Check or Own Check payment methods needs an outstanding account"))
+                raise ValidationError(self.env._("A payment with any Third Party Check or Own Check payment methods needs an outstanding account"))
 
     @api.depends('l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
     def _compute_amount(self):
@@ -75,26 +75,26 @@ class AccountPayment(models.Model):
         msgs = []
         for rec in self.filtered(lambda x: x.state == 'draft' and x._is_latam_check_payment()):
             if any(rec.currency_id != check.currency_id for check in rec._get_latam_checks()):
-                msgs.append(_('The currency of the payment and the currency of the check must be the same.'))
+                msgs.append(self.env._('The currency of the payment and the currency of the check must be the same.'))
             if not rec.currency_id.is_zero(sum(rec._get_latam_checks().mapped('amount')) - rec.amount):
                 msgs.append(
-                    _('The amount of the payment  does not match the amount of the selected check. '
+                    self.env._('The amount of the payment  does not match the amount of the selected check. '
                       'Please try to deselect and select the check again.')
                 )
             # checks being moved
             if rec._is_latam_check_payment(check_subtype='move_check'):
                 if any(check.payment_id.state == 'draft' for check in rec.l10n_latam_move_check_ids):
                     msgs.append(
-                        _('Selected checks "%s" are not posted', rec.l10n_latam_move_check_ids.filtered(lambda x: x.payment_id.state == 'draft').mapped('display_name'))
+                        self.env._('Selected checks "%s" are not posted', rec.l10n_latam_move_check_ids.filtered(lambda x: x.payment_id.state == 'draft').mapped('display_name'))
                     )
                 elif rec.payment_type == 'outbound' and any(check.current_journal_id != rec.journal_id for check in rec.l10n_latam_move_check_ids):
                     # check outbound payment and transfer or inbound transfer
-                    msgs.append(_(
+                    msgs.append(self.env._(
                         'Some checks are not anymore in journal, it seems it has been moved by another payment.')
                     )
                 elif rec.payment_type == 'inbound' and not rec._is_latam_check_transfer() and any(rec.l10n_latam_move_check_ids.mapped('current_journal_id')):
                     msgs.append(
-                        _("Some checks are already in hand and can't be received again. Checks: %s",
+                        self.env._("Some checks are already in hand and can't be received again. Checks: %s",
                           ', '.join(rec.l10n_latam_move_check_ids.mapped('display_name')))
                     )
 
@@ -104,7 +104,7 @@ class AccountPayment(models.Model):
                     last_operation = check._get_last_operation()
                     if last_operation and last_operation[0].date > date:
                         msgs.append(
-                            _(
+                            self.env._(
                               "It seems you're trying to move a check with a date (%(date)s) prior to last "
                               "operation done with the check (%(last_operation)s). This may be wrong, please "
                               "double check it. By continue, the last operation on "
@@ -118,7 +118,7 @@ class AccountPayment(models.Model):
         checks_reconciled = self.l10n_latam_new_check_ids.filtered(lambda x: x.issue_state in ['debited', 'voided'])
         if checks_reconciled:
             raise UserError(
-                _("You can't cancel or re-open a payment with checks if some check has been debited or been voided. "
+                self.env._("You can't cancel or re-open a payment with checks if some check has been debited or been voided. "
                   "Checks:\n%s", ('\n'.join(['* %s (%s)' % (x.name, x.issue_state) for x in checks_reconciled])))
             )
 
@@ -158,7 +158,7 @@ class AccountPayment(models.Model):
 
                 vals['line_ids'].append(
                     Command.create({
-                        'name': _(
+                        'name': self.env._(
                             'Check %(check_number)s - %(suffix)s',
                             check_number=check.name,
                             suffix=''.join([item[1] for item in payment._get_aml_default_display_name_list()])),
@@ -227,7 +227,7 @@ class AccountPayment(models.Model):
                         ('id', '!=', check._origin.id)], limit=1)
                 if same_checks:
                     msgs.append(
-                        _("Other checks were found with same number, issuer and bank. Please double check you are not "
+                        self.env._("Other checks were found with same number, issuer and bank. Please double check you are not "
                           "encoding the same check more than once. List of other payments/checks: %s",
                           ", ".join(same_checks.mapped('display_name')))
                     )
@@ -245,7 +245,7 @@ class AccountPayment(models.Model):
         # if only one check we don't create the split line, we add same data on liquidity line
         if self.payment_method_code == 'own_checks' and self.payment_type == 'outbound' and len(self.l10n_latam_new_check_ids) == 1:
             res[0].update({
-                'name': _(
+                'name': self.env._(
                     'Check %(check_number)s - %(suffix)s',
                     check_number=self.l10n_latam_new_check_ids.name,
                     suffix=''.join([item[1] for item in self._get_aml_default_display_name_list()])),
@@ -256,7 +256,7 @@ class AccountPayment(models.Model):
         elif (self.l10n_latam_new_check_ids or self.l10n_latam_move_check_ids) and self.payment_method_code != 'own_checks':
             check_name = [check_name for check_name in (self.l10n_latam_new_check_ids | self.l10n_latam_move_check_ids).mapped('name') if check_name]
             document_name = (
-                _('Checks %s received') if self.payment_type == 'inbound' else _('Checks %s delivered')) % (
+                self.env._('Checks %s received') if self.payment_type == 'inbound' else self.env._('Checks %s delivered')) % (
                 ', '.join(check_name)
             )
             res[0].update({

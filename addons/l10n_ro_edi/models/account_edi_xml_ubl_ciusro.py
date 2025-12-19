@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, _
+from odoo import models
 
 DEFAULT_VAT = '0000000000000'
 SECTOR_RO_CODES = ('SECTOR1', 'SECTOR2', 'SECTOR3', 'SECTOR4', 'SECTOR5', 'SECTOR6')
@@ -89,7 +89,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
             not _has_vat(supplier.vat)
             and not vals['supplier'].commercial_partner_id.company_registry
         ):
-            constraints["ciusro_supplier_tax_identifier_required"] = _(
+            constraints["ciusro_supplier_tax_identifier_required"] = self.env._(
                 "The following partner doesn't have a VAT nor Company ID: %s. "
                 "At least one of them is required. ",
                 vals['supplier'].display_name)
@@ -108,7 +108,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
                     and partner.state_id.code == 'B'
                     and partner.city
                     and get_formatted_sector_ro(partner.city) not in SECTOR_RO_CODES):
-                constraints[f"ciusro_{partner_type}_invalid_city_name"] = _(
+                constraints[f"ciusro_{partner_type}_invalid_city_name"] = self.env._(
                     "The following partner's city name is invalid: %s. "
                     "If partner's state is București, the city name must be 'SECTORX', "
                     "where X is a number between 1-6.",

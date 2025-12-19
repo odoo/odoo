@@ -4,7 +4,7 @@ import requests
 
 from unittest import mock
 
-from odoo import _, release, Command
+from odoo import release, Command
 from odoo.tools import file_open, html_sanitize, misc, zeep
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -154,15 +154,15 @@ class TestL10nEsEdiVerifactuCommon(AccountTestInvoicingCommon):
         return html_sanitize(self.env['account.move.send']._format_error_html(error))
 
     def _mock_format_document_generic_errors(self, errors):
-        title = _("Error")
+        title = self.env._("Error")
         return self._mock_format_document_errors(errors, title)
 
     def _mock_format_document_aeat_errors(self, errors):
-        title = _("The Veri*Factu document contains the following errors according to the AEAT")
+        title = self.env._("The Veri*Factu document contains the following errors according to the AEAT")
         return self._mock_format_document_errors(errors, title)
 
     def _mock_format_document_generation_errors(self, errors):
-        title = _("The Veri*Factu document could not be created")
+        title = self.env._("The Veri*Factu document could not be created")
         return self._mock_format_document_errors(errors, title)
 
     def _mock_last_document(self, document):

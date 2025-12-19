@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class ResCompany(models.Model):
@@ -79,7 +79,7 @@ class ResCompany(models.Model):
         if not self.l10n_es_edi_verifactu_chain_sequence_id:
             self_sudo = self.sudo()
             self_sudo.l10n_es_edi_verifactu_chain_sequence_id = self_sudo.env['ir.sequence'].create({
-                'name': _("Veri*Factu Document Sequence for company %(name)s (%(id)s)", name=self.name, id=self.id),
+                'name': self.env._("Veri*Factu Document Sequence for company %(name)s (%(id)s)", name=self.name, id=self.id),
                 'code': f'l10n_es_edi_verifactu.document.{self.id}',
                 'implementation': 'no_gap',
                 'company_id': self.id,

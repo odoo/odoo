@@ -35,18 +35,18 @@ class ResPartnerBank(models.Model):
     def _get_available_qr_methods(self):
         # EXTENDS account
         rslt = super()._get_available_qr_methods()
-        rslt.append(('id_qr', _("QRIS"), 40))
+        rslt.append(('id_qr', self.env._("QRIS"), 40))
         return rslt
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         # EXTENDS account
         if qr_method == 'id_qr':
             if self.country_code != 'ID':
-                return _("You cannot generate a QRIS QR code with a bank account that is not in Indonesia.")
+                return self.env._("You cannot generate a QRIS QR code with a bank account that is not in Indonesia.")
             if currency.name not in ['IDR']:
-                return _("You cannot generate a QRIS QR code with a currency other than IDR")
+                return self.env._("You cannot generate a QRIS QR code with a currency other than IDR")
             if not (self.sudo().l10n_id_qris_api_key and self.sudo().l10n_id_qris_mid):
-                return _("To use QRIS QR code, Please setup the QRIS API Key and Merchant ID on the bank's configuration")
+                return self.env._("To use QRIS QR code, Please setup the QRIS API Key and Merchant ID on the bank's configuration")
             return None
 
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
@@ -55,7 +55,7 @@ class ResPartnerBank(models.Model):
         # EXTENDS account
         if qr_method == 'id_qr':
             if not amount:
-                return _("The amount must be set to generate a QR code.")
+                return self.env._("The amount must be set to generate a QR code.")
 
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 

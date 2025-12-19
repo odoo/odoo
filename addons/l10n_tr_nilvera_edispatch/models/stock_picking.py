@@ -3,7 +3,7 @@ import uuid
 
 from lxml import etree
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import cleanup_xml_node
 from odoo.tools.xml_utils import find_xml_value
@@ -107,7 +107,7 @@ class StockPicking(models.Model):
                 picking.l10n_tr_nilvera_dispatch_state = 'to_send'
             else:
                 picking.message_post(
-                    body=_("e-Dispatch will not be generated as the Delivery Address is not set.")
+                    body=self.env._("e-Dispatch will not be generated as the Delivery Address is not set.")
                 )
         return res
 
@@ -132,7 +132,7 @@ class StockPicking(models.Model):
         if self.l10n_tr_nilvera_dispatch_type == 'MATBUDAN':
             if not self.l10n_tr_nilvera_delivery_date:
                 error_messages['invalid_matbudan_date'] = {
-                    'message': _("Printed Delivery Note Date is required."),
+                    'message': self.env._("Printed Delivery Note Date is required."),
                     'level': 'danger',
                 }
             if (
@@ -140,7 +140,7 @@ class StockPicking(models.Model):
                 or len(self.l10n_tr_nilvera_delivery_printed_number) != 16
             ):
                 error_messages['invalid_matbudan_number'] = {
-                    'message': _("Printed Delivery Note Number of 16 characters is required."),
+                    'message': self.env._("Printed Delivery Note Number of 16 characters is required."),
                     'level': 'danger',
                 }
 
@@ -153,24 +153,24 @@ class StockPicking(models.Model):
 
         if drivers := len(invalid_country_drivers):
             error_messages['invalid_driver_country'] = {
-                'message': _(
+                'message': self.env._(
                     "Only Drivers from Türkiye are valid. Please update the Country and enter a valid TCKN in the Tax ID."
                 ),
-                'action_text': _(
+                'action_text': self.env._(
                     "View %s",
-                    (drivers == 1 and invalid_country_drivers.name) or _("Drivers"),
+                    (drivers == 1 and invalid_country_drivers.name) or self.env._("Drivers"),
                 ),
                 'action': invalid_country_drivers._get_records_action(
-                    name=_("Drivers"),
+                    name=self.env._("Drivers"),
                 ),
                 'level': 'danger',
             }
         if drivers := len(invalid_tckn_drivers):
-            driver_placeholder = drivers > 1 and _("Drivers") or _("%s's", invalid_tckn_drivers.name)
+            driver_placeholder = drivers > 1 and self.env._("Drivers") or self.env._("%s's", invalid_tckn_drivers.name)
             error_messages['invalid_driver_tckn'] = {
-                'message': _("%s TCKN is required.", driver_placeholder),
-                'action_text': _("View %s", drivers == 1 and invalid_tckn_drivers.name or _("Drivers")),
-                'action': invalid_tckn_drivers._get_records_action(name=_("Drivers")),
+                'message': self.env._("%s TCKN is required.", driver_placeholder),
+                'action_text': self.env._("View %s", drivers == 1 and invalid_tckn_drivers.name or self.env._("Drivers")),
+                'action': invalid_tckn_drivers._get_records_action(name=self.env._("Drivers")),
                 'level': 'danger',
             }
 
@@ -180,19 +180,19 @@ class StockPicking(models.Model):
             and not self.l10n_tr_vehicle_plate
         ):
             error_messages['required_carrier_details'] = {
-                'message': _("Carrier is required (optional when both the Driver and Vehicle Plate are filled)."),
+                'message': self.env._("Carrier is required (optional when both the Driver and Vehicle Plate are filled)."),
                 'level': 'danger',
             }
 
         elif not self.l10n_tr_nilvera_carrier_id and not self.l10n_tr_nilvera_driver_ids:
             error_messages['required_driver_details'] = {
-                'message': _("At least one Driver is required."),
+                'message': self.env._("At least one Driver is required."),
                 'level': 'danger',
             }
 
         elif not self.l10n_tr_nilvera_carrier_id and not self.l10n_tr_vehicle_plate:
             error_messages['required_vehicle_details'] = {
-                'message': _("Vehicle Plate is required."),
+                'message': self.env._("Vehicle Plate is required."),
                 'level': 'danger',
             }
 
@@ -203,13 +203,13 @@ class StockPicking(models.Model):
         if self.state not in {'assigned', 'done'}:
             return {
                 'invalid_transfer_state': {
-                    'message': _("Please validate the transfer first to generate the XML"),
+                    'message': self.env._("Please validate the transfer first to generate the XML"),
                 }
             }
         if not self.partner_id:
             return {
                 'missing_delivery_partner_id': {
-                    'message': _("e-Dispatch will not be generated as the Delivery Address is not set."),
+                    'message': self.env._("e-Dispatch will not be generated as the Delivery Address is not set."),
                 }
             }
         if self.state == 'done':
@@ -267,7 +267,7 @@ class StockPicking(models.Model):
             'type': 'binary',
         })
         self.message_post(
-            body=_("e-Dispatch XML file generated successfully."),
+            body=self.env._("e-Dispatch XML file generated successfully."),
             attachment_ids=[attachment.id],
             subtype_xmlid='mail.mt_note',
         )
@@ -281,7 +281,7 @@ class StockPicking(models.Model):
                 else:
                     picking._l10n_tr_generate_edispatch_xml()
         if is_list and errors:
-            raise UserError(_("Error occurred in generating XML for following records:\n- %s", '\n- '.join(errors)))
+            raise UserError(self.env._("Error occurred in generating XML for following records:\n- %s", '\n- '.join(errors)))
 
     def action_mark_l10n_tr_edispatch_status(self):
         self.filtered(
@@ -502,7 +502,7 @@ class StockPicking(models.Model):
         vals_to_update.update(self._import_edispatch_fields(tree))
 
         self.write(vals_to_update)
-        self.message_post(body=_("e-Receipt uploaded successfully."), attachment_ids=[file_data['attachment'].id])
+        self.message_post(body=self.env._("e-Receipt uploaded successfully."), attachment_ids=[file_data['attachment'].id])
 
     def _l10n_tr_create_receipts_from_attachment(self, attachments):
         files_with_errors = []
@@ -530,7 +530,7 @@ class StockPicking(models.Model):
         if picking_ids:
             action_vals = {
                 'type': 'ir.actions.act_window',
-                'name': _("Imported E-Receipts"),
+                'name': self.env._("Imported E-Receipts"),
                 'res_model': 'stock.picking',
                 'domain': [('id', 'in', picking_ids.ids)],
             }

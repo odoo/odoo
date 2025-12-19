@@ -2,7 +2,7 @@
 import re
 import time
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -23,11 +23,11 @@ class ResPartnerBank(models.Model):
         bakong_id_re = re.compile(r"^[a-zA-Z0-9_].*@[a-zA-Z0-9_].*$")
         for bank in self.filtered(lambda b: b.country_code == 'KH'):
             if bank.proxy_type not in ['bakong_id_solo', 'bakong_id_merchant', 'none', False]:
-                raise ValidationError(_("The proxy type must be Bakong Account ID"))
+                raise ValidationError(self.env._("The proxy type must be Bakong Account ID"))
             if bank.proxy_type in ['bakong_id_solo', 'bakong_id_merchant'] and (not bank.proxy_value or not bakong_id_re.match(bank.proxy_value) or len(bank.proxy_value) > 32):
-                raise ValidationError(_("Please enter a valid Bakong Account ID."))
+                raise ValidationError(self.env._("Please enter a valid Bakong Account ID."))
             if bank.proxy_type == 'bakong_id_merchant' and not bank.l10n_kh_merchant_id:
-                raise ValidationError(_("Merchant ID is missing."))
+                raise ValidationError(self.env._("Merchant ID is missing."))
 
     def _get_qr_code_vals_list(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         res = super()._get_qr_code_vals_list(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
@@ -79,13 +79,13 @@ class ResPartnerBank(models.Model):
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         if qr_method == 'emv_qr' and self.country_code == 'KH':
             if currency.name not in ['KHR', 'USD']:
-                return _("Can't generate a KHQR code with a currency other than KHR or USD.")
+                return self.env._("Can't generate a KHQR code with a currency other than KHR or USD.")
             return None
 
         return super()._get_error_messages_for_qr(qr_method, debtor_partner, currency)
 
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'emv_qr' and self.country_code == 'KH' and self.proxy_type not in ['bakong_id_solo', 'bakong_id_merchant']:
-            return _("The proxy type of KHQR must be a Bakong Account ID")
+            return self.env._("The proxy type of KHQR must be a Bakong Account ID")
 
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)

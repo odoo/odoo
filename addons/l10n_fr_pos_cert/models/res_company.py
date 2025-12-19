@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, UTC
 
-from odoo import models, api, fields, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Datetime, Date
 from odoo.tools.misc import format_date
@@ -53,7 +53,7 @@ class ResCompany(models.Model):
         and raises an error with the result.
         """
         def build_order_info(order):
-            entry_reference = _('(Receipt ref.: %s)')
+            entry_reference = self.env._('(Receipt ref.: %s)')
             order_reference_string = order.pos_reference and entry_reference % order.pos_reference or ''
             return [ctx_tz(order, 'date_order'), order.l10n_fr_hash, order.name, order_reference_string, ctx_tz(order, 'write_date')]
 
@@ -64,7 +64,7 @@ class ResCompany(models.Model):
                                     ('l10n_fr_secure_sequence_number', '!=', 0)], order="l10n_fr_secure_sequence_number ASC")
 
             if not orders:
-                msg_alert = (_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS', self.env.company.name))
+                msg_alert = (self.env._('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS', self.env.company.name))
                 raise UserError(msg_alert)
 
             previous_hash = u''
@@ -72,7 +72,7 @@ class ResCompany(models.Model):
             for order in orders:
                 if order.l10n_fr_hash != order._compute_hash(previous_hash=previous_hash):
                     corrupted_orders.append(order.name)
-                    msg_alert = (_('Corrupted data on point of sale order with id %s.', order.id))
+                    msg_alert = (self.env._('Corrupted data on point of sale order with id %s.', order.id))
                 previous_hash = order.l10n_fr_hash
             orders.invalidate_recordset()
 
@@ -96,4 +96,4 @@ class ResCompany(models.Model):
                 'corrupted_orders': corrupted_orders or 'None'
             }
         else:
-            raise UserError(_('Accounting is not unalterable for the company %s. This mechanism is designed for companies where accounting is unalterable.', self.env.company.name))
+            raise UserError(self.env._('Accounting is not unalterable for the company %s. This mechanism is designed for companies where accounting is unalterable.', self.env.company.name))

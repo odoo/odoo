@@ -1,5 +1,5 @@
 from markupsafe import Markup
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class BaseDocumentLayout(models.TransientModel):
@@ -10,6 +10,6 @@ class BaseDocumentLayout(models.TransientModel):
         # Override to add the company.registry for FR companies
         if not (self.env.company.company_registry and self.env.company.country_code == 'FR'):
             return super()._default_report_footer()
-        return super()._default_report_footer() + Markup('<br/>%s') % _('SIRET: %s', self.env.company.company_registry)
+        return super()._default_report_footer() + Markup('<br/>%s') % self.env._('SIRET: %s', self.env.company.company_registry)
 
     report_footer = fields.Html(default=_default_report_footer)

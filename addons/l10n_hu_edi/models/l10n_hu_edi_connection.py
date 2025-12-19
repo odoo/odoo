@@ -13,7 +13,7 @@ import dateutil.parser
 from lxml import etree
 import requests
 
-from odoo import _, release
+from odoo import release
 from odoo.tools import cleanup_xml_node
 
 
@@ -110,12 +110,12 @@ class L10nHuEdiConnection:
             token_validity_to = datetime.utcnow() + timedelta(minutes=5)
 
         if not encrypted_token:
-            raise L10nHuEdiConnectionError(_('Missing token in response from NAV.'))
+            raise L10nHuEdiConnectionError(self.env._('Missing token in response from NAV.'))
 
         try:
             token = decrypt_aes128(credentials['replacement_key'].encode(), b64decode(encrypted_token.encode())).decode()
         except ValueError as e:
-            raise L10nHuEdiConnectionError(_('Error during decryption of ExchangeToken.')) from e
+            raise L10nHuEdiConnectionError(self.env._('Error during decryption of ExchangeToken.')) from e
 
         return {'token': token, 'token_validity_to': token_validity_to}
 
@@ -160,7 +160,7 @@ class L10nHuEdiConnection:
 
         transaction_code = response_xml.findtext('api:transactionId', namespaces=XML_NAMESPACES)
         if not transaction_code:
-            raise L10nHuEdiConnectionError(_('Invoice Upload failed: NAV did not return a Transaction ID.'))
+            raise L10nHuEdiConnectionError(self.env._('Invoice Upload failed: NAV did not return a Transaction ID.'))
 
         return transaction_code
 
@@ -291,7 +291,7 @@ class L10nHuEdiConnection:
             try:
                 send_time = datetime.fromisoformat(transaction_xml.findtext('api:insDate', namespaces=XML_NAMESPACES).replace('Z', ''))
             except ValueError as e:
-                raise L10nHuEdiConnectionError(_('Could not parse time of previous transaction')) from e
+                raise L10nHuEdiConnectionError(self.env._('Could not parse time of previous transaction')) from e
             transactions.append({
                 'transaction_code': transaction_xml.findtext('api:transactionId', namespaces=XML_NAMESPACES),
                 'annulment': transaction_xml.findtext('api:technicalAnnulment', namespaces=XML_NAMESPACES) == 'true',
@@ -346,7 +346,7 @@ class L10nHuEdiConnection:
 
         transaction_code = response_xml.findtext('api:transactionId', namespaces=XML_NAMESPACES)
         if not transaction_code:
-            raise L10nHuEdiConnectionError(_('Invoice Upload failed: NAV did not return a Transaction ID.'))
+            raise L10nHuEdiConnectionError(self.env._('Invoice Upload failed: NAV did not return a Transaction ID.'))
 
         return transaction_code
 
@@ -401,20 +401,20 @@ class L10nHuEdiConnection:
         elif mode == 'test':
             url = 'https://api-test.onlineszamla.nav.gov.hu/invoiceService/v3/'
         else:
-            raise L10nHuEdiConnectionError(_('Mode should be Production or Test!'))
+            raise L10nHuEdiConnectionError(self.env._('Mode should be Production or Test!'))
 
         headers = {'content-type': 'application/xml', 'accept': 'application/xml'}
         try:
             response_object = self.session.post(f'{url}{service}', data=data, headers=headers, timeout=timeout)
         except requests.Timeout as e:
-            raise L10nHuEdiConnectionError(_('Connection to NAV servers timed out.'), code='timeout') from e
+            raise L10nHuEdiConnectionError(self.env._('Connection to NAV servers timed out.'), code='timeout') from e
         except requests.RequestException as e:
             raise L10nHuEdiConnectionError(str(e)) from e
 
         try:
             response_xml = etree.fromstring(response_object.text.encode())
         except etree.ParseError as e:
-            raise L10nHuEdiConnectionError(_('Invalid NAV response!')) from e
+            raise L10nHuEdiConnectionError(self.env._('Invalid NAV response!')) from e
 
         return response_xml
 

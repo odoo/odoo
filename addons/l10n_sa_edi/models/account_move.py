@@ -1,7 +1,7 @@
 import base64
 import uuid
 from markupsafe import Markup
-from odoo import _, fields, models, api
+from odoo import fields, models, api
 from odoo.exceptions import UserError
 from odoo.tools import float_repr
 from datetime import datetime
@@ -36,7 +36,7 @@ class AccountMove(models.Model):
             if move.country_code == "SA" and \
                move.company_id.l10n_sa_edi_is_production and \
                move.attachment_ids.filtered(lambda a: a.description == descr and a.res_model == 'account.move'):
-                raise UserError(_("The Invoice(s) are linked to a validated EDI document and cannot be modified according to ZATCA rules"))
+                raise UserError(self.env._("The Invoice(s) are linked to a validated EDI document and cannot be modified according to ZATCA rules"))
 
     @api.depends('amount_total_signed', 'amount_tax_signed', 'l10n_sa_confirmation_datetime', 'company_id',
                  'company_id.vat', 'journal_id', 'journal_id.l10n_sa_production_csid_json', 'edi_document_ids',
@@ -156,7 +156,7 @@ class AccountMove(models.Model):
         # OVERRIDE
         for move in self:
             if move.country_code == "SA" and move.l10n_sa_chain_index and move.company_id.l10n_sa_edi_is_production:
-                raise UserError(_("The Invoice(s) are linked to a validated EDI document and cannot be modified according to ZATCA rules"))
+                raise UserError(self.env._("The Invoice(s) are linked to a validated EDI document and cannot be modified according to ZATCA rules"))
         return super().button_draft()
 
     def _l10n_sa_reset_confirmation_datetime(self):
@@ -190,7 +190,7 @@ class AccountMove(models.Model):
             Save submitted invoice XML hash in case of either Rejection or Acceptance.
         """
         self.ensure_one()
-        bootstrap_cls, title, subtitle, content = ("success", _("Success: Invoice accepted by ZATCA"), "", "" if (not error or not response_data) else response_data)
+        bootstrap_cls, title, subtitle, content = ("success", self.env._("Success: Invoice accepted by ZATCA"), "", "" if (not error or not response_data) else response_data)
         status_code = response_data.get('status_code')
         attachment = False
         if error:
@@ -205,12 +205,12 @@ class AccountMove(models.Model):
                 'type': 'binary',
                 'mimetype': 'application/xml',
             })
-            bootstrap_cls, title = ("danger", _("Error: Invoice rejected by ZATCA"))
-            subtitle = _('Please check the details below and retry after addressing them:')
+            bootstrap_cls, title = ("danger", self.env._("Error: Invoice rejected by ZATCA"))
+            subtitle = self.env._('Please check the details below and retry after addressing them:')
             content = response_data['error']
         if response_data and response_data.get('validationResults', {}).get('warningMessages'):
-            bootstrap_cls, title = ("warning", _("Warning: Invoice accepted by ZATCA with warnings"))
-            subtitle = _('Please check the details below:')
+            bootstrap_cls, title = ("warning", self.env._("Warning: Invoice accepted by ZATCA with warnings"))
+            subtitle = self.env._('Please check the details below:')
             content = Markup("""<b>%(status_code)s</b>%(errors)s""") % {
                 "status_code": f"[{status_code}] " if status_code else "",
                 "errors": Markup("<br/>").join([
@@ -221,12 +221,12 @@ class AccountMove(models.Model):
                 ]),
             }
         if response_data.get("error") and response_data.get("excepted"):
-            bootstrap_cls, title = ("warning", _("Warning: Unable to Retrieve a Response from ZATCA"))
-            subtitle = _('Please check the details below:')
+            bootstrap_cls, title = ("warning", self.env._("Warning: Unable to Retrieve a Response from ZATCA"))
+            subtitle = self.env._('Please check the details below:')
             content = response_data['error']
         if status_code == 409:
-            bootstrap_cls, title = ("warning", _("Warning: Invoice was already successfully reported to ZATCA"))
-            subtitle = _("Please check the details below:")
+            bootstrap_cls, title = ("warning", self.env._("Warning: Invoice was already successfully reported to ZATCA"))
+            subtitle = self.env._("Please check the details below:")
             content = Markup("""<b>%(status_code)s</b>%(errors)s""") % {
                 "status_code": f"[{status_code}] " if status_code else "",
                 "errors": Markup("<br/>").join([
@@ -324,7 +324,7 @@ class AccountMove(models.Model):
             Action to show the chain head of the invoice
         """
         self.ensure_one()
-        return self.l10n_sa_edi_chain_head_id._get_records_action(name=_("Chain Head"))
+        return self.l10n_sa_edi_chain_head_id._get_records_action(name=self.env._("Chain Head"))
 
 
 class AccountMoveLine(models.Model):

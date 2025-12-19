@@ -1,7 +1,7 @@
 import re
 from datetime import date
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class AccountMoveLine(models.Model):
@@ -72,9 +72,9 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         hsn_code = self.env['account.move']._l10n_in_extract_digits(self.l10n_in_hsn_code)
         if not hsn_code:
-            return _("HSN code is not set in product line %(name)s", name=self.name)
+            return self.env._("HSN code is not set in product line %(name)s", name=self.name)
         elif not re.match(r'^\d{4}$|^\d{6}$|^\d{8}$', hsn_code):
-            return _(
+            return self.env._(
                 "Invalid HSN Code (%(hsn_code)s) in product line %(product_line)s",
                 hsn_code=hsn_code,
                 product_line=self.product_id.name or self.name

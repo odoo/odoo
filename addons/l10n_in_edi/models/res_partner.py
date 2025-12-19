@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, models
+from odoo import models
 
 
 class ResPartner(models.Model):
@@ -17,18 +17,18 @@ class ResPartner(models.Model):
         """
         message = []
         if not re.match("^.{3,100}$", self.street or ""):
-            message.append(_("- Street required min 3 and max 100 characters"))
+            message.append(self.env._("- Street required min 3 and max 100 characters"))
         if not re.match("^.{3,100}$", self.city or ""):
-            message.append(_("- City required min 3 and max 100 characters"))
+            message.append(self.env._("- City required min 3 and max 100 characters"))
         if self.country_id.code == "IN" and not re.match("^.{3,50}$", self.state_id.name or ""):
-            message.append(_("- State required min 3 and max 50 characters"))
+            message.append(self.env._("- State required min 3 and max 50 characters"))
         if self.country_id.code == "IN" and not re.match("^([1-9][0-9]{5})$", self.zip or ""):
-            message.append(_("- ZIP code required 6 digits ranging from 100000 to 999999"))
+            message.append(self.env._("- ZIP code required 6 digits ranging from 100000 to 999999"))
         if (
             self.country_id.code == "IN"
             and not re.match(r"^(?!0+$)([0-9]{2})$", self.state_id.l10n_in_tin or "")
         ):
-            message.append(_("- State TIN Number must be exactly 2 digits."))
+            message.append(self.env._("- State TIN Number must be exactly 2 digits."))
         if message:
             message.insert(0, self.display_name)
         return message
@@ -37,7 +37,7 @@ class ResPartner(models.Model):
         checks = {
             'partner_address_missing': {
                 'fields': ('street', 'zip', 'city', 'state_id', 'country_id',),
-                'message': _(
+                'message': self.env._(
                     "Partners should have a complete address, verify their Street, City, State, Country and Zip code."
                 ),
             },
@@ -46,10 +46,10 @@ class ResPartner(models.Model):
             f"l10n_in_edi_{key}": {
                 'message': check['message'],
                 'action_text': (
-                    _("View Partners") if len(invalid_records) > 1
-                    else _("View %s", invalid_records.name)
+                    self.env._("View Partners") if len(invalid_records) > 1
+                    else self.env._("View %s", invalid_records.name)
                 ),
-                'action': invalid_records._get_records_action(name=_("Check Partner Data")),
+                'action': invalid_records._get_records_action(name=self.env._("Check Partner Data")),
             }
             for key, check in checks.items()
             if (invalid_records := self.filtered(lambda record: any(not record[field] for field in check['fields'])))

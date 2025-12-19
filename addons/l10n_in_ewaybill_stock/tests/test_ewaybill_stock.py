@@ -1,6 +1,5 @@
 from freezegun import freeze_time
 
-from odoo import _
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -49,7 +48,7 @@ class TestStockEwaybill(L10nInTestInvoicingCommon):
         })
         self.assertRecordValues(ewaybill, [{
             'state': 'pending',
-            'display_name': _('Pending'),
+            'display_name': self.env._('Pending'),
             'fiscal_position_id': self.fp_in_inter_state.id,
         }])
         ewaybill.fiscal_position_id = self.fp_in_inter_state

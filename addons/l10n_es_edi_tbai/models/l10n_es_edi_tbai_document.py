@@ -10,7 +10,7 @@ import requests
 from lxml import etree
 from requests.exceptions import RequestException
 
-from odoo import _, api, fields, models, release
+from odoo import api, fields, models, release
 from odoo.addons.certificate.tools import CertificateAdapter
 from odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_agencies import get_key
 from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
@@ -102,18 +102,18 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
     def _check_can_post(self, values):
         # Ensure a certificate is available.
         if not self.company_id.l10n_es_tbai_certificate_id:
-            return _("Please configure the certificate for TicketBAI.")
+            return self.env._("Please configure the certificate for TicketBAI.")
 
         # Ensure a tax agency is available.
         if not self.company_id.l10n_es_tbai_tax_agency:
-            return _("Please specify a tax agency on your company for TicketBAI.")
+            return self.env._("Please specify a tax agency on your company for TicketBAI.")
 
         # Ensure a vat is available.
         if not self.company_id.vat:
-            return _("Please configure the Tax ID on your company for TicketBAI.")
+            return self.env._("Please configure the Tax ID on your company for TicketBAI.")
 
         if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.company_id._l10n_es_freelancer() and not self.env['ir.config_parameter'].sudo().get_str('l10n_es_edi_tbai.epigrafe'):
-            return _("In order to use Ticketbai Batuz for freelancers, you will need to configure the "
+            return self.env._("In order to use Ticketbai Batuz for freelancers, you will need to configure the "
                         "Epigrafe or Main Activity.  In this version, you need to go in debug mode to "
                         "Settings > Technical > System Parameters and set the parameter 'l10n_es_edi_tbai.epigrafe'"
                         "to your epigrafe number. You can find them in %s",
@@ -126,11 +126,11 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             # Chain integrity check: chain head must have been REALLY posted
             chain_head_doc = self.company_id._get_l10n_es_tbai_last_chained_document()
             if chain_head_doc and chain_head_doc != self and chain_head_doc.state != 'accepted':
-                return _("TicketBAI: Cannot post invoice while chain head (%s) has not been posted", chain_head_doc.name)
+                return self.env._("TicketBAI: Cannot post invoice while chain head (%s) has not been posted", chain_head_doc.name)
 
             # Tax configuration check: In case of foreign customer we need the tax scope to be set
             if values['partner'] and values['partner']._l10n_es_is_foreign() and values['taxes'].filtered(lambda t: not t.tax_scope):
-                return _(
+                return self.env._(
                     "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
                     "\n".join(values['taxes'].mapped('name'))
                 )
@@ -148,13 +148,13 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                                   ('chain_index', '!=', 0)]
                         invoice_sent_before_original = self.search(domain, order="date", limit=1)
                     if invoice_sent_before_original:  # No error if the original invoice was imported from a previous system
-                        return _("TicketBAI: Cannot post a reversal document while the source document has not been posted")
+                        return self.env._("TicketBAI: Cannot post a reversal document while the source document has not been posted")
                 if not refund_reason:
-                    return _('Refund reason must be specified (TicketBAI)')
+                    return self.env._('Refund reason must be specified (TicketBAI)')
                 if is_simplified and refund_reason != 'R5':
-                    return _('Refund reason must be R5 for simplified invoices (TicketBAI)')
+                    return self.env._('Refund reason must be R5 for simplified invoices (TicketBAI)')
                 if not is_simplified and refund_reason == 'R5':
-                    return _('Refund reason cannot be R5 for non-simplified invoices (TicketBAI)')
+                    return self.env._('Refund reason cannot be R5 for non-simplified invoices (TicketBAI)')
 
     # -------------------------------------------------------------------------
     # WEB SERVICE CALLS
@@ -684,7 +684,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         try:
             xml_doc = self._sign_sale_document(xml_doc)
         except ValueError:
-            raise UserError(_('No valid certificate found for this company, TicketBAI file will not be signed.\n'))
+            raise UserError(self.env._('No valid certificate found for this company, TicketBAI file will not be signed.\n'))
 
         return xml_doc
 
@@ -694,7 +694,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         company = self.company_id
         certificate_sudo = company.sudo().l10n_es_tbai_certificate_id
         if not certificate_sudo:
-            raise UserError(_('No certificate found'))
+            raise UserError(self.env._('No certificate found'))
 
         # Identifiers
         document_id = "Document-" + str(uuid4())

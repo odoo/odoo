@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.barcode import check_barcode_encoding
 
@@ -53,7 +53,7 @@ class ResPartner(models.Model):
             if not p.l10n_es_edi_facturae_ac_physical_gln:
                 continue
             if not check_barcode_encoding(p.l10n_es_edi_facturae_ac_physical_gln, 'ean13'):
-                raise ValidationError(_('The Physical GLN entered is not valid.'))
+                raise ValidationError(self.env._('The Physical GLN entered is not valid.'))
 
     @api.constrains('l10n_es_edi_facturae_ac_logical_operational_point')
     def _validate_l10n_es_edi_facturae_ac_logical_operational_point(self):
@@ -61,7 +61,7 @@ class ResPartner(models.Model):
             if not p.l10n_es_edi_facturae_ac_logical_operational_point:
                 continue
             if not check_barcode_encoding(p.l10n_es_edi_facturae_ac_logical_operational_point, 'ean13'):
-                raise ValidationError(_('The Logical Operational Point entered is not valid.'))
+                raise ValidationError(self.env._('The Logical Operational Point entered is not valid.'))
 
     @api.depends('country_id')
     def _compute_l10n_es_edi_facturae_residence_type(self):
@@ -80,8 +80,8 @@ class ResPartner(models.Model):
         if invalid_records := self.filtered(lambda partner: not (partner.is_company or partner.vat)):
             errors["l10n_es_edi_facturae_partner_check"] = {
                 'level': 'danger',
-                'message': _("Partner must be a company or have a VAT number"),
-                'action_text': _("View Partner(s)"),
-                'action': invalid_records._get_records_action(name=_("Check Partner(s)")),
+                'message': self.env._("Partner must be a company or have a VAT number"),
+                'action_text': self.env._("View Partner(s)"),
+                'action': invalid_records._get_records_action(name=self.env._("Check Partner(s)")),
             }
         return errors

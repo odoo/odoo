@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import _, models
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -39,7 +39,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_kz_account_journal(self):
         return {
             'cash': {
-                'name': _("Cash"),
+                'name': self.env._("Cash"),
                 'type': 'cash',
                 'default_account_id': 'kz1010',
             },

@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, _
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -11,7 +11,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'property_account_receivable_id': 'base_deudores_por_ventas',
             'property_account_payable_id': 'base_proveedores',
-            'name': _('Generic Chart of Accounts Argentina Single Taxpayer / Basis'),
+            'name': self.env._('Generic Chart of Accounts Argentina Single Taxpayer / Basis'),
             'code_digits': '12',
             'sequence': 1,
         }

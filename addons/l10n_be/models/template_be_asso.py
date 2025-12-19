@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import _, models
+from odoo import models
 
 from odoo.addons.account.models.chart_template import template
 
@@ -27,7 +27,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('be_asso')
     def _get_be_asso_template_data(self):
         return {
-            'name': _('Associations and Foundations'),
+            'name': self.env._('Associations and Foundations'),
             'parent': 'be',
             'code_digits': '6',
         }

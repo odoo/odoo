@@ -1,10 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import models, fields, api, Command, _
+from odoo import models, fields, api, Command
 from odoo.exceptions import ValidationError
 from odoo.exceptions import UserError
-from datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -50,7 +49,7 @@ class AccountPaymentRegister(models.TransientModel):
                 if line.tax_id.l10n_ar_withholding_sequence_id:
                     line.name = line.tax_id.l10n_ar_withholding_sequence_id.next_by_id()
                 else:
-                    raise UserError(_('Please enter withholding number for tax %s') % line.tax_id.name)
+                    raise UserError(self.env._('Please enter withholding number for tax %s') % line.tax_id.name)
             dummy, account_id, tax_repartition_line_id = line._tax_compute_all_helper()
             balance = self.company_currency_id.round(line.amount * conversion_rate)
             # create withholding amount applied move line only if amount != 0
@@ -114,5 +113,5 @@ class AccountPaymentRegister(models.TransientModel):
 
     def action_create_payments(self):
         if self.l10n_ar_withholding_ids and not self.payment_method_line_id.payment_account_id:
-            raise ValidationError(_("A payment cannot have withholding if the payment method has no outstanding accounts"))
+            raise ValidationError(self.env._("A payment cannot have withholding if the payment method has no outstanding accounts"))
         return super().action_create_payments()

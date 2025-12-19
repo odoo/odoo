@@ -3,7 +3,7 @@
 import re
 from itertools import product
 
-from odoo import Command, _, api, models
+from odoo import Command, api, models
 from odoo.exceptions import RedirectWarning
 from .eu_account_map import EU_ACCOUNT_MAP
 from .eu_field_map import EU_FIELD_MAP
@@ -159,7 +159,7 @@ class ResCompany(models.Model):
                                 ('type_tax_use', '=', 'sale'),
                                 ('country_id', '=', company.account_fiscal_country_id.id),
                             ], order='sequence,id desc', limit=1)
-                            foreign_tax_copy_name = existing_foreign_tax and _('%(tax_name)s (Copy)', tax_name=existing_foreign_tax.name)
+                            foreign_tax_copy_name = existing_foreign_tax and self.env._('%(tax_name)s (Copy)', tax_name=existing_foreign_tax.name)
 
                             extra_fields = company._get_country_specific_account_tax_fields()
                             foreign_taxes[tax_amount] = self.env['account.tax'].create({

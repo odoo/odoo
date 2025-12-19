@@ -2,7 +2,7 @@ import datetime
 from freezegun import freeze_time
 from unittest import mock
 
-from odoo import _, Command
+from odoo import Command
 from odoo.exceptions import UserError, RedirectWarning, AccessError
 from odoo.tests import tagged
 from odoo.tools import zeep
@@ -496,7 +496,7 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertEqual(self.company.l10n_es_edi_verifactu_next_batch_time,
                          datetime.datetime(2024, 12, 5, 0, 1, 0))
 
-        errors = [_("We could not find any information about the record in the linked batch document.")]
+        errors = [self.env._("We could not find any information about the record in the linked batch document.")]
         expected_document_values = {
             'document_type': 'submission',
             'response_csv': 'A-X2CPJ3HE3AFADY',

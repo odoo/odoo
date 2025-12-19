@@ -1,5 +1,5 @@
-from odoo import _, fields, models
-from odoo.exceptions import UserError, ValidationError, RedirectWarning
+from odoo import fields, models
+from odoo.exceptions import ValidationError, RedirectWarning
 from odoo.tools.sql import column_exists, create_column
 from odoo.tools import SQL
 
@@ -117,7 +117,7 @@ class ResConfigSettings(models.TransientModel):
                 or self.l10n_in_gst_efiling_feature
             )
         ):
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 "Please ensure that at least one Indian service and production environment is enabled,"
                 " and save the configuration to proceed with purchasing credits."
             ))
@@ -137,7 +137,7 @@ class ResConfigSettings(models.TransientModel):
                 'res_id': company.id,
                 'views': [[self.env.ref('base.view_company_form').id, 'form']],
             }
-            raise RedirectWarning(_("Please set a valid GST number on company."), action, _("Go to Company"))
+            raise RedirectWarning(self.env._("Please set a valid GST number on company."), action, self.env._("Go to Company"))
 
     def reload_template(self):
         super().reload_template()

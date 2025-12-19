@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api, fields, _
+from odoo import models, api, fields
 from odoo.tools.float_utils import float_compare
 
 
@@ -97,7 +97,7 @@ class AccountMove(models.Model):
         return {
             'type': 'ir.actions.act_window',
             'view_mode': 'list,form',
-            'name': _("Linked deliveries"),
+            'name': self.env._("Linked deliveries"),
             'res_model': 'stock.picking',
             'domain': [('id', 'in', self.l10n_it_ddt_ids.ids)],
         }

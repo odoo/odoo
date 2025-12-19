@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -19,7 +19,7 @@ class AccountMove(models.Model):
     def _check_fapiao(self):
         for record in self:
             if record.fapiao and not record.fapiao.isdecimal():
-                raise ValidationError(_("Please enter a correct fapiao number."))
+                raise ValidationError(self.env._("Please enter a correct fapiao number."))
 
     @api.model
     def check_cn2an(self):
