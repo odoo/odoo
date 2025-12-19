@@ -1,9 +1,9 @@
 .o-discuss-CallMenu-buttonContent {
     max-width: 150px;
-    @include o-mail-call-bordered(.7);
+    @include o-mail-call-bordered(.5);
 
     &.o-is-talking {
-        box-shadow: inset 0 0 0 2px var(--discuss-talkingColor, $o-discuss-talkingColor);
+        box-shadow: 0 0 0 1px var(--discuss-talkingColor, $o-discuss-talkingColor);
     }
 
     &.o-isOdooCommunity {
@@ -14,6 +14,8 @@
 }
 
 .o-discuss-CallMenu-animation {
+    top: 4px;
+    left: 6px;
     animation: flash 2s;
     animation-direction: alternate;
     animation-iteration-count: 2;
