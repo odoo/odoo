@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.addons.account.models.company import PEPPOL_MAILING_COUNTRIES
 
@@ -31,7 +31,7 @@ class AccountMove(models.Model):
         # if the peppol_move_state is processing/done
         # then it means it has been already sent to peppol proxy and we can't cancel
         if any(move.peppol_move_state in {'processing', 'done'} for move in self):
-            raise UserError(_("Cannot cancel an entry that has already been sent to Peppol"))
+            raise UserError(self.env._("Cannot cancel an entry that has already been sent to Peppol"))
         self.peppol_move_state = False
         self.sending_data = False
 

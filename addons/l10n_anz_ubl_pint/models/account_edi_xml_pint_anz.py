@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, _
+from odoo import models
 from odoo.tools import float_is_zero
 
 ANZ_TAX_CATEGORIES = {'S', 'E', 'Z', 'G', 'O'}
@@ -89,7 +89,7 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         tax_total_node = vals['document_node']['cac:TaxTotal'][0]
         for tax_subtotal_node in tax_total_node['cac:TaxSubtotal']:
             if any(tax_category_node['cbc:ID']['_text'] not in ANZ_TAX_CATEGORIES for tax_category_node in tax_subtotal_node['cac:TaxCategory']):
-                constraints['anz_vat_category_required'] = _("You must set a tax category on each taxes of the invoice.\nValid categories are: S, E, Z, G, O")
+                constraints['anz_vat_category_required'] = self.env._("You must set a tax category on each taxes of the invoice.\nValid categories are: S, E, Z, G, O")
 
         # Tax category of type "Not subject to tax" must have tax amount 0
         count_outside_of_scope_breakdown = 0
@@ -128,8 +128,8 @@ class AccountEdiXmlPint_Anz(models.AbstractModel):
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
             if partner.country_code == 'AU' and partner.peppol_eas != '0151':
-                constraints[f'au_{partner_type}_eas_0151'] = _("The Peppol EAS must be set to ABN (0151) if the partner country is Australia.")
+                constraints[f'au_{partner_type}_eas_0151'] = self.env._("The Peppol EAS must be set to ABN (0151) if the partner country is Australia.")
             elif partner.country_code == 'NZ' and partner.peppol_eas != '0088':
-                constraints[f'nz_{partner_type}_eas_0088'] = _("The Peppol EAS must be set to EAN (0088) if the partner country is New Zealand.")
+                constraints[f'nz_{partner_type}_eas_0088'] = self.env._("The Peppol EAS must be set to EAN (0088) if the partner country is New Zealand.")
 
         return constraints

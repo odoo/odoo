@@ -3,7 +3,7 @@
 import logging
 from datetime import timedelta
 
-from odoo import _, api, fields, models, modules, tools
+from odoo import api, fields, models, modules, tools
 from odoo.exceptions import UserError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -48,7 +48,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         else:
             error_message = get_exception_message(error_vals)
 
-        return _(
+        return self.env._(
             "Peppol Error [code=%(error_code)s]: %(error_subject)s\n%(error_message)s",
             error_code=error_vals['code'],
             error_subject=error_vals['subject'],
@@ -59,7 +59,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     def _call_peppol_proxy(self, endpoint, params=None):
         self.ensure_one()
         if self.proxy_type != 'peppol':
-            raise UserError(_('EDI user should be of type Peppol'))
+            raise UserError(self.env._('EDI user should be of type Peppol'))
 
         token_out_of_sync_error_message = self.env._(
             "Failed to connect to Peppol Access Point. This might happen if you restored a database from a backup or copied it without neutralization. "
@@ -88,7 +88,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 # commit the above changes before raising below
                 if not modules.module.current_test:
                     self.env.cr.commit()
-                raise UserError(_('We could not find a user with this information on our server. Please check your information.'))
+                raise UserError(self.env._('We could not find a user with this information on our server. Please check your information.'))
 
             elif e.code == 'invalid_signature':
                 self._mark_connection_out_of_sync()
@@ -122,7 +122,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 self._peppol_out_of_sync_disconnect_this_database()
                 if not tools.config['test_enable'] and not modules.module.current_test:
                     self.env.cr.commit()
-                raise UserError(_('This connection has been superseded by another database. Register again.'))
+                raise UserError(self.env._('This connection has been superseded by another database. Register again.'))
             raise
 
     def _peppol_out_of_sync_reconnect_this_database(self):
@@ -196,7 +196,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if proxy_type == 'peppol':
             if not company.peppol_eas or not company.peppol_endpoint:
                 raise UserError(
-                    _("Please fill in the EAS code and the Participant ID code."))
+                    self.env._("Please fill in the EAS code and the Participant ID code."))
             return f'{company.peppol_eas}:{company.peppol_endpoint}'
         return super()._get_proxy_identification(company, proxy_type)
 
@@ -268,7 +268,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
             if not edi_user.company_id.peppol_purchase_journal_id:
-                msg = _('Please set a journal for Peppol invoices on %s before receiving documents.', edi_user.company_id.display_name)
+                msg = self.env._('Please set a journal for Peppol invoices on %s before receiving documents.', edi_user.company_id.display_name)
                 if skip_no_journal:
                     _logger.warning(msg)
                 else:
@@ -359,7 +359,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     # this rare edge case can happen if the participant is not active on the proxy side
                     # in this case we can't get information about the invoices
                     edi_user_moves.peppol_move_state = 'error'
-                    log_message = _("Peppol error: %s", content['message'])
+                    log_message = self.env._("Peppol error: %s", content['message'])
                     edi_user_moves._message_log_batch(bodies={move.id: log_message for move in edi_user_moves})
                     break
 
@@ -376,7 +376,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     continue
 
                 move.peppol_move_state = content['state']
-                move._message_log(body=_('Peppol status update: %s', content['state']))
+                move._message_log(body=self.env._('Peppol status update: %s', content['state']))
 
             edi_user._call_peppol_proxy(
                 "/api/peppol/1/ack",
@@ -449,7 +449,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             # a participant can only try registering as a receiver if they are currently a sender
             peppol_states = dict(self.env['ir.model.fields'].get_field_selection('res.company', 'account_peppol_proxy_state'))[company.account_peppol_proxy_state]  # handles translation correctly
             raise UserError(
-                _('Cannot register a user with a %s application', peppol_states))
+                self.env._('Cannot register a user with a %s application', peppol_states))
 
         edi_identification = self._get_proxy_identification(company, 'peppol')
         peppol_info = company._get_company_info_on_peppol(edi_identification)

@@ -1,6 +1,6 @@
 from markupsafe import Markup
 
-from odoo import api, Command, fields, models, _
+from odoo import api, Command, fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
@@ -90,7 +90,7 @@ class PeppolConfigWizard(models.TransientModel):
                     if identifier not in supported_doctypes
                 ]):
                     message = Markup('%s<ul>%s</ul>') % (
-                        _(
+                        self.env._(
                             "The following services are listed on your participant but cannot be configured here. "
                             "If you wish to configure them differently, please contact support."
                         ),
@@ -182,9 +182,9 @@ class PeppolConfigWizard(models.TransientModel):
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
                     'params': {
-                        'title': _("Registered to receive documents via Peppol."),
+                        'title': self.env._("Registered to receive documents via Peppol."),
                         'type': 'success',
-                        'message': _("Your registration on Peppol network should be activated within a day. The updated status will be visible in Settings."),
+                        'message': self.env._("Your registration on Peppol network should be activated within a day. The updated status will be visible in Settings."),
                         'next': {'type': 'ir.actions.act_window_close'},
                     }
                 }
