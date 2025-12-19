@@ -6,7 +6,7 @@
         <field name="model">spreadsheet.dashboard</field>
         <field name="arch" type="xml">
             <list create="false">
-                <field name="sequence" widget="handle" groups="base.group_system"/>
+                <field name="sequence" widget="handle" groups="spreadsheet_dashboard.group_dashboard_manager"/>
                 <field name="name"/>
                 <field name="group_ids" widget="many2many_tags" required="1"/>
                 <field name="company_ids" options="{'no_create': True}" widget="many2many_tags" groups="base.group_multi_company" placeholder="Visible to all"/>
@@ -36,7 +36,7 @@
         <field name="model">spreadsheet.dashboard.group</field>
         <field name="arch" type="xml">
             <list string="Dashboards" editable="bottom">
-                <field name="sequence" widget="handle" groups="base.group_system"/>
+                <field name="sequence" widget="handle" groups="spreadsheet_dashboard.group_dashboard_manager"/>
                 <field name="name"/>
             </list>
         </field>
