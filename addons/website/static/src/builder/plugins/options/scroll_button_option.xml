@@ -25,6 +25,15 @@
                 <BuilderSelectItem classAction="'anim-heartbeat'">Heartbeat</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
+        <BuilderRow label.translate="Size" level="1" applyTo="':scope > .o_scroll_button > i'">
+            <BuilderButtonGroup>
+                <BuilderButton classAction="'fa-1x'" title.translate="Size 1x">1x</BuilderButton>
+                <BuilderButton classAction="'fa-2x'" title.translate="Size 2x">2x</BuilderButton>
+                <BuilderButton classAction="'fa-3x'" title.translate="Size 3x">3x</BuilderButton>
+                <BuilderButton classAction="'fa-4x'" title.translate="Size 4x">4x</BuilderButton>
+                <BuilderButton classAction="'fa-5x'" title.translate="Size 5x">5x</BuilderButton>
+            </BuilderButtonGroup>
+        </BuilderRow>
         <BuilderRow label.translate="Colors" level="1" applyTo="':scope > .o_scroll_button'">
             <BuilderColorPicker styleAction="'background-color'" title.translate="Apply a background color"/>
             <BuilderColorPicker styleAction="'color'" title.translate="Apply an icon color"/>

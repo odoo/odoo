@@ -2314,8 +2314,13 @@ span.list-inline-item.o_add_language:last-child {
 .o_scroll_button {
     @include o-position-absolute(auto, 0, 0, 0);
     display: flex;
-    width: 50px;
-    height: 50px;
+    // Need to update button size based on icon size.
+    @for $i from 1 through 5 {
+        &:has(i.fa-#{$i}x) {
+            width: #{$i}em;
+            height: #{$i}em;
+        }
+    }
 
     &, &:hover {
         text-decoration: none;
