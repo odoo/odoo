@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -16,7 +16,7 @@ class PrintPrenumberedChecks(models.TransientModel):
     def _check_next_check_number(self):
         for check in self:
             if check.next_check_number and not re.match(r'^[0-9]+$', check.next_check_number):
-                raise ValidationError(_('Next Check Number should only contains numbers.'))
+                raise ValidationError(self.env._('Next Check Number should only contains numbers.'))
 
     def print_checks(self):
         check_number = int(self.next_check_number)

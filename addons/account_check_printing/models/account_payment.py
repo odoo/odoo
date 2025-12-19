@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.misc import formatLang, format_date
 from odoo.tools.sql import column_exists, create_column
@@ -48,7 +48,7 @@ class AccountPayment(models.Model):
     def _constrains_check_number(self):
         for payment_check in self.filtered('check_number'):
             if not payment_check.check_number.isdecimal():
-                raise ValidationError(_('Check numbers can only consist of digits'))
+                raise ValidationError(self.env._('Check numbers can only consist of digits'))
 
     def _auto_init(self):
         """
@@ -86,9 +86,9 @@ class AccountPayment(models.Model):
         })
         res = self.env.cr.dictfetchall()
         if res:
-            raise ValidationError(_(
+            raise ValidationError(self.env._(
                 'The following numbers are already used:\n%s',
-                '\n'.join(_(
+                '\n'.join(self.env._(
                     '%(number)s in journal %(journal)s',
                     number=r['check_number'],
                     journal=self.env['account.journal'].browse(r['journal_id']).display_name,
@@ -139,7 +139,7 @@ class AccountPayment(models.Model):
             return super()._get_aml_default_display_name_list()
 
         result = [
-            ('label', _("Checks")),
+            ('label', self.env._("Checks")),
             ('sep', ' - '),
             ('check_number', self.check_number),
         ]
@@ -165,10 +165,10 @@ class AccountPayment(models.Model):
         valid_payments = self.filtered(lambda r: r.payment_method_line_id.code == 'check_printing' and not r.is_sent)
 
         if len(valid_payments) == 0:
-            raise UserError(_("Payments to print as a checks must have 'Check' selected as payment method and "
+            raise UserError(self.env._("Payments to print as a checks must have 'Check' selected as payment method and "
                               "not have already been reconciled"))
         if any(payment.journal_id != valid_payments[0].journal_id for payment in valid_payments):
-            raise UserError(_("In order to print multiple checks at once, they must belong to the same bank journal."))
+            raise UserError(self.env._("In order to print multiple checks at once, they must belong to the same bank journal."))
 
         if not valid_payments[0].journal_id.check_manual_sequencing:
             # The wizard asks for the number printed on the first pre-printed check
@@ -188,7 +188,7 @@ class AccountPayment(models.Model):
             next_check_number = f'{int(last_check_number) + 1:0{number_len}}'
 
             return {
-                'name': _('Print Pre-numbered Checks'),
+                'name': self.env._('Print Pre-numbered Checks'),
                 'type': 'ir.actions.act_window',
                 'res_model': 'print.prenumbered.checks',
                 'view_mode': 'form',
@@ -210,12 +210,12 @@ class AccountPayment(models.Model):
         check_layout = self.journal_id.bank_check_printing_layout or self.company_id.account_check_printing_layout
         redirect_action = self.env.ref('account.action_account_config')
         if not check_layout or check_layout == 'disabled':
-            msg = _("You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one.")
-            raise RedirectWarning(msg, redirect_action.id, _('Go to the configuration panel'))
+            msg = self.env._("You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one.")
+            raise RedirectWarning(msg, redirect_action.id, self.env._('Go to the configuration panel'))
         report_action = self.env.ref(check_layout, False)
         if not report_action:
-            msg = _("Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again.")
-            raise RedirectWarning(msg, redirect_action.id, _('Go to the configuration panel'))
+            msg = self.env._("Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again.")
+            raise RedirectWarning(msg, redirect_action.id, self.env._('Go to the configuration panel'))
         self.write({'is_sent': True})
         return report_action.report_action(self)
 
@@ -308,8 +308,8 @@ class AccountPayment(models.Model):
 
         stub_lines = []
         type_groups = {
-            ('in_invoice', 'in_receipt'): _("Bills"),
-            ('out_refund',): _("Refunds"),
+            ('in_invoice', 'in_receipt'): self.env._("Bills"),
+            ('out_refund',): self.env._("Refunds"),
         }
         invoices_grouped = invoices.grouped(lambda i: next(group for group in type_groups if i.move_type in group))
         for type_group, invoices in invoices_grouped.items():
