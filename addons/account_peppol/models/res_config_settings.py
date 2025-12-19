@@ -31,6 +31,10 @@ class ResConfigSettings(models.TransientModel):
         inverse='_inverse_peppol_participation_role',
     )
 
+    def _get_peppol_proxy_type(self):
+        self.ensure_one()
+        return self.account_peppol_edi_user.proxy_type
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -95,7 +99,7 @@ class ResConfigSettings(models.TransientModel):
                 }
             }
             record.account_peppol_edi_user._call_peppol_proxy(
-                endpoint='/api/peppol/1/update_user',
+                endpoint=record.account_peppol_edi_user._get_peppol_proxy_endpoint('1/update_user'),
                 params=params,
             )
 
