@@ -4,20 +4,21 @@ import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 export class ProductCatalogOrderLine extends Component {
     static template = "product.ProductCatalogOrderLine";
     static props = {
-        isSample: { type: Boolean, optional: true},
+        isSample: { type: Boolean, optional: true },
         productId: Number,
         quantity: Number,
         price: Number,
         productType: String,
         uomDisplayName: String,
-        code: { type: String, optional: true},
+        uomFactor: { type: Number, optional: true },
+        code: { type: String, optional: true },
         readOnly: { type: Boolean, optional: true },
-        warning: { type: String, optional: true},
+        warning: { type: String, optional: true },
     };
 
     /**
      * Focus input text when clicked
-     * @param {Event} ev 
+     * @param {Event} ev
      */
     _onFocus(ev) {
         ev.target.select();

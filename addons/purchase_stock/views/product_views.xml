@@ -24,16 +24,18 @@
                 </t>
             </t>
             <div name="o_kanban_qty_available_and_on_hand" position="after">
-                <div class="d-flex" t-if="record.type.raw_value === 'consu' and record.monthly_demand.raw_value != 0" name="kanban_monthly_demand">
-                    <span class="text-muted small">Monthly Demand:</span>
+                <div class="d-flex mt-n1" t-if="record.type.raw_value === 'consu' and record.monthly_demand.raw_value != 0" name="kanban_monthly_demand">
+                    <small class="text-muted">Demand: </small>
                     <field name="monthly_demand" class="fw-bold small ms-1 d-inline-flex" widget="float" digits="[16, 2]"/>
                     <field name="uom_id" class="text-muted small ms-1" groups="uom.group_uom"/>
-                    <small class="text-muted"> / month</small>
+                    <span class="text-muted small ms-1" groups="!uom.group_uom">units</span>
+                    <small class="text-muted ms-1"> / month</small>
                 </div>
                 <div name="kanban_purchase_suggest" t-if="record.suggested_qty.raw_value != 0">
                     <span class="text-info fw-bold fs-5 me-1">Suggest</span>
                     <span class="text-info fw-bold fs-5 me-1" t-out="record.suggested_qty.raw_value or 0" name="kanban_purchase_suggest_qty" />
-                    <span class="text-info fw-bold fs-5 me-1">units</span>
+                    <field name="uom_id" class="text-info fw-bold fs-5 me-1" groups="uom.group_uom"/>
+                    <span class="text-info fw-bold fs-5 me-1" groups="!uom.group_uom">units</span>
                 </div>
             </div>
         </field>
