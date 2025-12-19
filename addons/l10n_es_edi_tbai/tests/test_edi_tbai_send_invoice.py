@@ -201,12 +201,13 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
 
     def test_tbai_credit_note_importe_total(self):
         invoice = self._create_posted_invoice()
+        invoice_send_wizard = self._get_invoice_send_wizard(invoice)
 
         with patch(
             'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
             return_value=self.mock_response_post_invoice_success,
         ):
-            self._get_invoice_send_wizard(invoice).action_send_and_print()
+            invoice_send_wizard.action_send_and_print()
 
             reversal = self.env['account.move.reversal'].with_context(
                 active_model="account.move", active_ids=invoice.ids
