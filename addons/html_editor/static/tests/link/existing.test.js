@@ -110,7 +110,7 @@ test("should add a character in the link after a br tag", async () => {
     });
 });
 
-test("should remove an empty link on save", async () => {
+test("should remove an empty link on save (1)", async () => {
     await testEditor({
         contentBefore: '<p>a<a href="http://test.test/">b[]</a>c</p>',
         contentBeforeEdit:
@@ -120,6 +120,9 @@ test("should remove an empty link on save", async () => {
             '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>',
         contentAfter: "<p>a[]c</p>",
     });
+});
+
+test("should remove an empty link on save (2)", async () => {
     await testEditor({
         contentBefore: '<p>a<a href="http://test.test/"></a>b</p>',
         contentBeforeEdit: '<p>a\ufeff<a href="http://test.test/">\ufeff</a>\ufeffb</p>',

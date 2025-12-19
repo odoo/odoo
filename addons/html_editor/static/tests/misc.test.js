@@ -18,13 +18,17 @@ test("can instantiate a Editor", async () => {
 
 test("cannot reattach an editor", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+    );
     expect(() => editor.attachTo(el)).toThrow("Cannot re-attach an editor");
 });
 
 test("cannot reattach a destroyed editor", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
-    expect(getContent(el)).toBe(`<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`);
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+    );
     editor.destroy();
     expect(getContent(el)).toBe(`<p>[]</p>`);
     expect(() => editor.attachTo(el)).toThrow("Cannot re-attach an editor");
@@ -70,11 +74,14 @@ test("with an empty selector and a <br>", async () => {
     );
 });
 
-test("no arrow key press or mouse click should keep selection near a contenteditable='false'", async () => {
+test("no arrow key press or mouse click should keep selection near a contenteditable='false' (1)", async () => {
     await testEditor({
         contentBefore: '[]<hr contenteditable="false">',
         contentAfter: "[]<hr>",
     });
+});
+
+test("no arrow key press or mouse click should keep selection near a contenteditable='false' (2)", async () => {
     await testEditor({
         contentBefore: '<hr contenteditable="false">[]',
         contentAfter: "<hr>[]",

@@ -167,7 +167,7 @@ describe("Range collapsed", () => {
             });
         });
 
-        test("should apply both color and size styles on list item", async () => {
+        test("should apply both color and size styles on list item (1)", async () => {
             await testEditor({
                 contentBefore:
                     '<p><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></p>',
@@ -175,6 +175,9 @@ describe("Range collapsed", () => {
                 contentAfter:
                     '<ul><li style="color: rgb(255, 0, 0); font-size: 18px;">[abc]</li></ul>',
             });
+        });
+
+        test("should apply both color and size styles on list item (2)", async () => {
             await testEditor({
                 contentBefore:
                     '<p><b><i><span style="font-size: 18px;"><font style="color: rgb(255, 0, 0);">[abc]</font></span></i></b></p>',
@@ -352,12 +355,15 @@ describe("Range collapsed", () => {
             });
         });
 
-        test("should convert list item with line breaks into a single paragraph", async () => {
+        test("should convert list item with line breaks into a single paragraph (1)", async () => {
             await testEditor({
                 contentBefore: "<ul><li>ab<br>cd<br>ef[]</li></ul>",
                 stepFunction: toggleUnorderedList,
                 contentAfter: "<p>ab<br>cd<br>ef[]</p>",
             });
+        });
+
+        test("should convert list item with line breaks into a single paragraph (2)", async () => {
             await testEditor({
                 contentBefore: "<ul><li>ab<br><b>cd</b><br><i>ef[]</i></li></ul>",
                 stepFunction: toggleUnorderedList,

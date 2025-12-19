@@ -315,7 +315,7 @@ describe("select a full table on cross over", () => {
                             </tr>
                         </tbody>
                     </table>`),
-                stepFunction: async editor => {
+                stepFunction: async (editor) => {
                     // Table selection happens on selectionchange
                     // event which is fired in the next tick.
                     await tick();
@@ -1202,7 +1202,7 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
-        test("should move cursor to the end in the cell above", async () => {
+        test("should move cursor to the end in the cell above (1)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1234,6 +1234,8 @@ describe("move cursor with arrow keys", () => {
                     </table>
                 `),
             });
+        });
+        test("should move cursor to the end in the cell above (2)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1400,7 +1402,7 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
-        test("should move cursor to the start of the cell below", async () => {
+        test("should move cursor to the start of the cell below (1)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
@@ -1432,6 +1434,8 @@ describe("move cursor with arrow keys", () => {
                     </table>
                 `),
             });
+        });
+        test("should move cursor to the start of the cell below (2)", async () => {
             await testEditor({
                 contentBefore: unformat(`
                     <table>
