@@ -86,7 +86,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_users
     #       - search discuss_channel_member
     #       - fetch discuss_channel
-    #   1: channels_as_member
+    #   2: channels_as_member
+    #       - search_fetch channel (channels)
+    #       - search_count member (has_unpinned_channels)
     #   34: store add channel:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
@@ -149,7 +151,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (author)
     #       - fetch user (author)
     #       - fetch discuss_call_history
-    _query_count_discuss_channels = 62
+    _query_count_discuss_channels = 63
 
     def setUp(self):
         super().setUp()
@@ -623,6 +625,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._res_for_user(self.user_root),
                 self._res_for_user(self.users[1]),
             ),
+            "Store": {"has_unpinned_channels": False},
             "hr.employee": [
                 self._res_for_employee(self.users[0].employee_ids[0]),
                 self._res_for_employee(self.users[14].employee_ids[0]),

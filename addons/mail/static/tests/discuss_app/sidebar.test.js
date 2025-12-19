@@ -844,6 +844,54 @@ test("Can unpin chat channel", async () => {
     await click("[title='Chat Actions']");
     await click(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')", { count: 0 });
+    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
+});
+
+test("opening a hidden channel re-pins it", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        {
+            channel_type: "channel",
+            name: "InitialChannel",
+        },
+        {
+            channel_type: "chat",
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    unpin_dt: "2021-01-01 12:00:00",
+                }),
+            ],
+        },
+        {
+            channel_type: "channel",
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    unpin_dt: "2021-01-01 12:00:00",
+                }),
+            ],
+            name: "General",
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel");
+    await contains(".o-mail-DiscussSidebarChannel:has(:text('InitialChannel'))");
+    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')", { count: 0 });
+    await click("input[placeholder='Search conversations']");
+    await insertText("input[placeholder='Search a conversation']", "Mitchell Admin");
+    await click(".o-mail-DiscussCommand-nameContainer:text('Mitchell Admin')");
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')");
+    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
+    await click("input[placeholder='Search conversations']");
+    await insertText("input[placeholder='Search a conversation']", "General");
+    await click(".o-mail-DiscussCommand-nameContainer:text('General')");
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
+    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))", {
+        count: 0,
+    });
 });
 
 test("Can leave channel", async () => {
