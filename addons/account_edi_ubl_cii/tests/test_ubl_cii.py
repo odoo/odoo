@@ -612,6 +612,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
             "ram": "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
             "rsm": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
         })
+<<<<<<< fcc397017c845303babfdca2ae6c9cb979609d1a
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
 
     def test_partner_name_in_xml(self):
@@ -637,3 +638,87 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
         xml_tree = etree.fromstring(xml_content)
         partner_name = xml_tree.find('.//cac:AccountingCustomerParty/cac:Party/cac:PartyName/cbc:Name', self.ubl_namespaces)
         self.assertEqual(partner_name.text, 'partner_a')
+||||||| d115cca1296c0bd20a2875bdaadf2a9136c33dda
+        self.assertEqual(node[0].text, company.vat, "Company VAT fallback")
+=======
+        self.assertEqual(node[0].text, company.vat, "Company VAT fallback")
+
+    def test_ubl_split_fixed_taxes_into_allowance_charges_or_extra_invoice_lines(self):
+        """Test that fixed taxes are split correctly:
+        - fixed taxes that affect the base are exported as AllowanceCharge.
+        - fixed taxes that not affect the base are exported as extra invoice lines."""
+
+        self.partner_a.country_id = self.env.ref('base.be')
+        standard_vat_21 = self.company_data['default_tax_sale']
+
+        # fixed AND include_base_amount => this should be treated as allowance charge
+        ecotax = self.env['account.tax'].create({
+            'name': 'Eco Tax',
+            'amount_type': 'fixed',
+            'amount': 3.0,
+            'include_base_amount': True,
+            'type_tax_use': 'sale',
+        })
+
+        # fixed AND not include_base_amount => this should be treated as extra invoice line
+        vidange = self.env['account.tax'].create({
+            'name': 'Tax Vidange',
+            'amount_type': 'fixed',
+            'amount': 5.0,
+            'include_base_amount': False,
+            'type_tax_use': 'sale',
+        })
+
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.place_prdct.id,
+                'product_uom_id': self.uom_units.id,
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': [Command.set((standard_vat_21 | ecotax | vidange).ids)],
+            })],
+        })
+        invoice.action_post()
+
+        xml_bytes = self.env["account.edi.xml.ubl_bis3"]._export_invoice(invoice)[0]
+        xml_tree = etree.fromstring(xml_bytes)
+
+        ns = {
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+        }
+
+        vidange_lines = xml_tree.xpath(
+            "./cac:InvoiceLine[cac:Item/cbc:Name='Tax Vidange']",
+            namespaces=ns,
+        )
+        self.assertTrue(vidange_lines)
+
+        ecotax_allowance_charge = xml_tree.xpath(
+            "./cac:InvoiceLine/cac:AllowanceCharge[cbc:AllowanceChargeReason='Eco Tax']",
+            namespaces=ns,
+        )
+        self.assertTrue(ecotax_allowance_charge)
+
+        # there should be a TaxSubtotal with VAT category 'E' for emptying taxes
+        subtotals = xml_tree.xpath(
+            "./cac:TaxTotal/cac:TaxSubtotal[cac:TaxCategory/cbc:ID='E']",
+            namespaces=ns,
+        )
+        self.assertTrue(subtotals)
+
+        # check TaxTotal ?= sum(TaxSubtotal)
+        tax_total_amount = float(xml_tree.xpath("string(./cac:TaxTotal/cbc:TaxAmount)", namespaces=ns) or 0.0)
+        subtotal_amounts = [
+            float(x) for x in xml_tree.xpath("./cac:TaxTotal/cac:TaxSubtotal/cbc:TaxAmount/text()", namespaces=ns)
+        ]
+        self.assertAlmostEqual(
+            tax_total_amount,
+            sum(subtotal_amounts),
+            places=2,
+            msg="TaxTotal != sum(TaxSubtotal)",
+        )
+>>>>>>> a8e988252ff111db76f1cc11a4f41648a1c7e215

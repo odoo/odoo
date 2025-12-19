@@ -279,6 +279,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_subtotal_vals': [],
         }
 
+        _fixed_taxes, emptying_taxes = self._split_fixed_taxes(taxes_vals)
+
         # If it's not on the whole invoice, don't manage the EPD.
         epd_tax_to_discount = {}
         if not taxes_vals.get('invoice_line'):
@@ -296,6 +298,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                         amounts['base_amount_currency'] * percentage / 100.0)
                     epd_accounted_tax_amount += amounts['tax_amount_currency']
 
+        # first, we add the non-fixed taxes to tax_subtotal_vals
         for grouping_key, vals in taxes_vals['tax_details'].items():
             if grouping_key['tax_amount_type'] != 'fixed' or not self._context.get('convert_fixed_taxes'):
                 subtotal = {
@@ -314,6 +317,25 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                         'taxable_amount': taxable_amount_after_epd,
                     })
                 tax_totals_vals['tax_subtotal_vals'].append(subtotal)
+
+        # then, we add the emptying taxes to it
+        for grouping_key, vals in emptying_taxes:
+            subtotal = {
+                'currency': invoice.currency_id,
+                'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
+                'taxable_amount': vals['tax_amount_currency'],
+                'tax_amount': 0.0,
+                'percent': 0.0,
+                'tax_category_vals': {
+                    'id': 'E',
+                    'percent': 0.0,
+                    'tax_scheme_vals': {
+                        'id': "VAT",
+                    },
+                    'tax_exemption_reason': "Exempt from tax",
+                },
+            }
+            tax_totals_vals['tax_subtotal_vals'].append(subtotal)
 
         if epd_tax_to_discount:
             # early payment discounts: hence, need to add a subtotal section
@@ -436,7 +458,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         :param line:    An invoice line.
         :return:        A list of python dictionaries.
         """
+        fixed_taxes_charge_list, _emptying_taxes = self._split_fixed_taxes(tax_values_list)
         fixed_tax_charge_vals_list = []
+<<<<<<< fcc397017c845303babfdca2ae6c9cb979609d1a
         if self._context.get('convert_fixed_taxes'):
             for grouping_key, tax_details in tax_values_list['tax_details'].items():
                 if grouping_key['tax_amount_type'] == 'fixed':
@@ -448,6 +472,29 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                         'allowance_charge_reason': grouping_key['tax_name'],
                         'amount': tax_details['tax_amount_currency'],
                     })
+||||||| d115cca1296c0bd20a2875bdaadf2a9136c33dda
+        for grouping_key, tax_details in tax_values_list['tax_details'].items():
+            if grouping_key['tax_amount_type'] == 'fixed':
+                fixed_tax_charge_vals_list.append({
+                    'currency_name': line.currency_id.name,
+                    'currency_dp': self._get_currency_decimal_places(line.currency_id),
+                    'charge_indicator': 'true',
+                    'allowance_charge_reason_code': 'AEO',
+                    'allowance_charge_reason': tax_details['tax_name'],
+                    'amount': tax_details['tax_amount_currency'],
+                })
+=======
+
+        for tax_key, tax_details in fixed_taxes_charge_list:
+            fixed_tax_charge_vals_list.append({
+                'currency_name': line.currency_id.name,
+                'currency_dp': self._get_currency_decimal_places(line.currency_id),
+                'charge_indicator': 'true',
+                'allowance_charge_reason_code': 'AEO',
+                'allowance_charge_reason': tax_details['tax_name'],
+                'amount': tax_details['tax_amount_currency'],
+            })
+>>>>>>> a8e988252ff111db76f1cc11a4f41648a1c7e215
 
             if not line.discount:
                 return fixed_tax_charge_vals_list
@@ -565,11 +612,16 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Rounding amounts belonging to a tax ('biggest_tax' strategy) are included already in the tax amounts.
         rounding_amls = invoice.line_ids.filtered(lambda line: line.display_type == 'rounding' and not line.tax_line_id)
         payable_rounding_amount = invoice.direction_sign * sum(rounding_amls.mapped('amount_currency'))
+
+        # sum the tax amounts of emptying taxes
+        _fixed_taxes, emptying_taxes = self._split_fixed_taxes(taxes_vals)
+        sum_emptying_taxes = sum(emptying_vals['tax_amount_currency'] for emptying_key, emptying_vals in emptying_taxes)
+
         return {
             'currency': invoice.currency_id,
             'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
             'line_extension_amount': line_extension_amount,
-            'tax_exclusive_amount': taxes_vals['base_amount_currency'],
+            'tax_exclusive_amount': taxes_vals['base_amount_currency'] + sum_emptying_taxes,
             'tax_inclusive_amount': invoice.amount_total - payable_rounding_amount,
             'allowance_total_amount': allowance_total_amount or None,
             'charge_total_amount': charge_total_amount or None,
@@ -609,6 +661,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 tax_to_discount[tax.amount] += line.amount_currency
         return tax_to_discount
 
+<<<<<<< fcc397017c845303babfdca2ae6c9cb979609d1a
     def _get_tax_grouping_key(self, base_line, tax_data):
         # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
         # If you change this method, please change the corresponding new helper as well (at the end of this file).
@@ -627,6 +680,67 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if tax.amount_type == 'fixed':
             grouping_key['tax_name'] = tax.name
         return grouping_key
+||||||| d115cca1296c0bd20a2875bdaadf2a9136c33dda
+    def _export_invoice_vals(self, invoice):
+        def grouping_key_generator(base_line, tax_values):
+            tax = tax_values['tax_repartition_line'].tax_id
+            tax_category_vals = self._get_tax_category_list(invoice, tax)[0]
+            grouping_key = {
+                'tax_category_id': tax_category_vals['id'],
+                'tax_category_percent': tax_category_vals['percent'],
+                '_tax_category_vals_': tax_category_vals,
+                'tax_amount_type': tax.amount_type,
+            }
+            # If the tax is fixed, we want to have one group per tax
+            # s.t. when the invoice is imported, we can try to guess the fixed taxes
+            if tax.amount_type == 'fixed':
+                grouping_key['tax_name'] = tax.name
+            return grouping_key
+=======
+    def _split_fixed_taxes(self, taxes_vals):
+        # Fixed Taxes: filter them on the document level, and adapt the totals
+        # Fixed taxes are not supposed to be taxes in real life. However, this is the way in Odoo to manage recupel
+        # taxes in Belgium. Since only one tax is allowed, the fixed tax is removed from totals of lines but added
+        # as an extra charge/allowance.
+        fixed_taxes_charge_list = []
+
+        # taxes that are FIXED but don't affect the base, will be considered as emptying taxes and added as extra invoice lines
+        emptying_taxes_lines_list = []
+
+        for key in list(taxes_vals['tax_details']):
+            if key['tax_amount_type'] == 'fixed' and key['include_base_amount']:
+                fixed_tax = taxes_vals['tax_details'].pop(key)
+                taxes_vals['tax_amount_currency'] -= fixed_tax['tax_amount_currency']
+                taxes_vals['tax_amount'] -= fixed_tax['tax_amount']
+                taxes_vals['base_amount_currency'] += fixed_tax['tax_amount_currency']
+                taxes_vals['base_amount'] += fixed_tax['tax_amount']
+                fixed_taxes_charge_list.append((key, fixed_tax))
+
+            elif key['tax_amount_type'] == 'fixed' and not key['include_base_amount']:
+                emptying_tax = taxes_vals['tax_details'][key]
+                taxes_vals['tax_amount_currency'] -= emptying_tax['tax_amount_currency']
+                taxes_vals['tax_amount'] -= emptying_tax['tax_amount']
+                emptying_taxes_lines_list.append((key, emptying_tax))
+
+        return fixed_taxes_charge_list, emptying_taxes_lines_list
+
+    def _export_invoice_vals(self, invoice):
+        def grouping_key_generator(base_line, tax_values):
+            tax = tax_values['tax_repartition_line'].tax_id
+            tax_category_vals = self._get_tax_category_list(invoice, tax)[0]
+            grouping_key = {
+                'tax_category_id': tax_category_vals['id'],
+                'tax_category_percent': tax_category_vals['percent'],
+                '_tax_category_vals_': tax_category_vals,
+                'tax_amount_type': tax.amount_type,
+                'include_base_amount': tax.include_base_amount,
+            }
+            # If the tax is fixed, we want to have one group per tax
+            # s.t. when the invoice is imported, we can try to guess the fixed taxes
+            if tax.amount_type == 'fixed':
+                grouping_key['tax_name'] = tax.name
+            return grouping_key
+>>>>>>> a8e988252ff111db76f1cc11a4f41648a1c7e215
 
     def _export_invoice_vals(self, invoice):
         # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
@@ -642,6 +756,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             round_from_tax_lines=True,
         )
 
+<<<<<<< fcc397017c845303babfdca2ae6c9cb979609d1a
         # Fixed Taxes: filter them on the document level, and adapt the totals
         # Fixed taxes are not supposed to be taxes in real live. However, this is the way in Odoo to manage recupel
         # taxes in Belgium. Since only one tax is allowed, the fixed tax is removed from totals of lines but added
@@ -654,6 +769,21 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 taxes_vals['tax_amount'] -= fixed_tax_details['tax_amount']
                 taxes_vals['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
                 taxes_vals['base_amount'] += fixed_tax_details['tax_amount']
+||||||| d115cca1296c0bd20a2875bdaadf2a9136c33dda
+        # Fixed Taxes: filter them on the document level, and adapt the totals
+        # Fixed taxes are not supposed to be taxes in real live. However, this is the way in Odoo to manage recupel
+        # taxes in Belgium. Since only one tax is allowed, the fixed tax is removed from totals of lines but added
+        # as an extra charge/allowance.
+        fixed_taxes_keys = [k for k in taxes_vals['tax_details'] if k['tax_amount_type'] == 'fixed']
+        for key in fixed_taxes_keys:
+            fixed_tax_details = taxes_vals['tax_details'].pop(key)
+            taxes_vals['tax_amount_currency'] -= fixed_tax_details['tax_amount_currency']
+            taxes_vals['tax_amount'] -= fixed_tax_details['tax_amount']
+            taxes_vals['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
+            taxes_vals['base_amount'] += fixed_tax_details['tax_amount']
+=======
+        _fixed_taxes, emptying_taxes = self._split_fixed_taxes(taxes_vals)
+>>>>>>> a8e988252ff111db76f1cc11a4f41648a1c7e215
 
         # Compute values for invoice lines.
         line_extension_amount = 0.0
@@ -661,12 +791,45 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
         document_allowance_charge_vals_list = self._get_document_allowance_charge_vals_list(invoice, taxes_vals)
         invoice_line_vals_list = []
+        # actual invoice lines are added to invoice_line_vals_list
         for line_id, line in enumerate(invoice_lines):
             line_taxes_vals = taxes_vals['tax_details_per_record'][line]
             line_vals = self._get_invoice_line_vals(line, line_id, {**line_taxes_vals, 'invoice_line': line})
             invoice_line_vals_list.append(line_vals)
 
             line_extension_amount += line_vals['line_extension_amount']
+
+        # add emptying taxes as extra invoice lines
+        for tax_key, tax_vals in emptying_taxes:
+            invoice_line_vals_list.append({
+                'currency': invoice.currency_id,
+                'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
+                'id': len(invoice_line_vals_list) + 1,
+                'line_quantity': 1,
+                'line_quantity_attrs': {'unitCode': 'C62'},
+                'line_extension_amount': tax_vals['tax_amount_currency'],
+                'allowance_charge_vals': [],
+                'tax_total_vals': [],
+                'item_vals': {
+                    'name': tax_key['tax_name'],
+                    'description': tax_key['tax_name'],
+                    'classified_tax_category_vals': [{
+                        'id': 'E',
+                        'percent': 0.0,
+                        'tax_scheme_vals': {'id': 'VAT'},
+                    }],
+                },
+                'price_vals': {
+                    'currency': invoice.currency_id,
+                    'currency_dp': self._get_currency_decimal_places(invoice.currency_id),
+                    'price_amount': tax_vals['tax_amount_currency'],
+                    'base_quantity': None,
+                    'base_quantity_attrs': {'unitCode': 'C62'},
+                    'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
+                },
+                'invoice_period_vals_list': []
+            })
+            line_extension_amount += tax_vals['tax_amount_currency']
 
         # Compute the total allowance/charge amounts.
         allowance_total_amount = 0.0
