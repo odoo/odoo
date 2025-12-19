@@ -1,11 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import {
-    fillEmpty,
-    fillShrunkPhrasingParent,
-    removeClass,
-} from "@html_editor/utils/dom";
+import { fillEmpty, fillShrunkPhrasingParent, removeClass } from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -836,7 +832,9 @@ export class TablePlugin extends Plugin {
      * @param {KeyboardEvent} ev
      */
     updateTableKeyboardSelection(ev) {
-        const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
+        const { isFocusNodeLine, deepEditableSelection } =
+            this.dependencies.selection.getSelectionData();
+        const selection = deepEditableSelection;
         const startTable = closestElement(selection.anchorNode, "table");
         const endTable = closestElement(selection.focusNode, "table");
         if (!(startTable || endTable)) {
@@ -877,17 +875,22 @@ export class TablePlugin extends Plugin {
         if (startTd === endTd && !startTd.classList.contains("o_selected_td")) {
             const { focusNode, focusOffset } = selection;
             // Do not prevent default when there is a text in cell.
-            if (focusNode.nodeType === Node.TEXT_NODE) {
+            if (
+                !(ev.ctrlKey && ["ArrowUp", "ArrowDown"].includes(ev.key)) &&
+                (focusNode.nodeType === Node.TEXT_NODE ||
+                    focusNode.matches("br, p, div.o-paragraph"))
+            ) {
                 const textNodes = descendants(startTd).filter(isTextNode);
                 const lastTextChild = textNodes[textNodes.length - 1];
                 const firstTextChild = textNodes[0];
                 const isAtTextBoundary = {
-                    ArrowRight: nodeSize(focusNode) === focusOffset && focusNode === lastTextChild,
-                    ArrowLeft: focusOffset === 0 && focusNode === firstTextChild,
-                    ArrowUp: focusNode === firstTextChild,
-                    ArrowDown: focusNode === lastTextChild,
+                    ArrowRight: () =>
+                        nodeSize(focusNode) === focusOffset && focusNode === lastTextChild,
+                    ArrowLeft: () => focusOffset === 0 && focusNode === firstTextChild,
+                    ArrowUp: () => isFocusNodeLine("td", "first"),
+                    ArrowDown: () => isFocusNodeLine("td", "last"),
                 };
-                if (isAtTextBoundary[ev.key]) {
+                if (isAtTextBoundary[ev.key]()) {
                     ev.preventDefault();
                     this.selectTableCells(this.dependencies.selection.getEditableSelection());
                 }
@@ -1139,14 +1142,29 @@ export class TablePlugin extends Plugin {
     }
 
     navigateCell(ev) {
-        const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
-        const anchorNode = selection.anchorNode;
+        const { isFocusNodeLine, deepEditableSelection } =
+            this.dependencies.selection.getSelectionData();
+        const selection = deepEditableSelection;
+        // Actually using focusNode because we might be leaving a multi-cell selection.
+        const anchorNode = selection.focusNode;
         const currentCell = closestElement(anchorNode, isTableCell);
-        const currentTable = closestElement(anchorNode, "table");
-        if (!selection.isCollapsed || !currentCell) {
+        if (!currentCell) {
             return;
         }
+        const currentTable = closestElement(anchorNode, "table");
+        const areCellsSelected = currentCell.classList.contains("o_selected_td");
         const isArrowUp = ev.key === "ArrowUp";
+        // Should navigate within multi-line text node itself ?
+        if (!areCellsSelected && isFocusNodeLine("td", isArrowUp ? "first" : "last") === false) {
+            if (ev.ctrlKey) {
+                ev.preventDefault();
+                this.dependencies.selection.setSelection({
+                    anchorNode: currentCell,
+                    anchorOffset: isArrowUp ? 0 : currentCell.childNodes.length,
+                });
+            }
+            return;
+        }
         const cellPosition = {
             row: getRowIndex(currentCell),
             col: getColumnIndex(currentCell),
