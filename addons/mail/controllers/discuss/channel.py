@@ -12,6 +12,16 @@ from odoo.exceptions import AccessError
 
 class DiscussChannelWebclientController(WebclientController):
     """Override to add discuss channel specific features."""
+    @classmethod
+    def _add_has_unpinned_channels_to_store(self, store: Store):
+        # sudo: discuss.channel.member: sudo for performance. Checking existence of unpinned
+        # channels is acceptable, even if the channel is no longer accessible to the user.
+        store.add_global_values(
+            has_unpinned_channels=request.env["discuss.channel.member"]
+            .sudo()
+            .search_count([("is_self", "=", True), ("is_pinned", "=", False)], limit=1)
+            > 0,
+        )
 
     @classmethod
     def _process_request_loop(self, store: Store, fetch_params):
@@ -47,6 +57,7 @@ class DiscussChannelWebclientController(WebclientController):
             request.update_context(
                 channels=request.env.context["channels"] | channels, add_channels_last_message=True
             )
+            self._add_has_unpinned_channels_to_store(store)
         if name == "discuss.channel":
             channels = request.env["discuss.channel"].search([("id", "in", params)])
             request.update_context(channels=request.env.context["channels"] | channels)
@@ -61,6 +72,7 @@ class DiscussChannelWebclientController(WebclientController):
                 [("channel_id", "=", params["channel_id"]), ("is_self", "=", True)],
             ):
                 member.unpin_dt = False if params["pinned"] else fields.Datetime.now()
+            self._add_has_unpinned_channels_to_store(store)
         if name == "/discuss/get_or_create_chat":
             resolve_channel = request.env["discuss.channel"]._get_or_create_chat(
                 params["partners_to"],
