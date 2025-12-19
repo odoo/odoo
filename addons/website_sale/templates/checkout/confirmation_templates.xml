@@ -42,9 +42,9 @@
                     <span t-field="order.name"/>
                 </h5>
             </div>
-            <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
+            <t t-if="signup_url">
                 <p class="alert alert-info mt-3" role="status">
-                    <a role="button" t-att-href="order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()" class="btn btn-primary o_translate_inline">Sign Up</a>
+                    <a role="button" t-att-href="signup_url" class="btn btn-primary o_translate_inline">Sign Up</a>
                     <span class="align-middle">to follow your order.</span>
                 </p>
             </t>

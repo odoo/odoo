@@ -4,6 +4,7 @@ import base64
 import itertools
 import json
 from datetime import datetime
+from urllib.parse import parse_qs, urlencode, urlparse
 
 from werkzeug import urls
 from werkzeug.exceptions import Forbidden, NotFound
@@ -1655,11 +1656,36 @@ class WebsiteSale(payment_portal.PaymentPortal):
         This method is called in the payment process route in order to prepare the dict
         containing the values to be rendered by the confirmation template.
         """
-        return {
+        rendering_values = {
             'order': order,
             'website_sale_order': order,
             'order_tracking_info': self.order_2_return_dict(order),
         }
+        if (
+            request.env['res.users']._get_signup_invitation_scope() == 'b2c'
+            and request.website.is_public_user()
+        ):
+            order.partner_id.signup_prepare()
+            signup_url = urlparse(
+                order.partner_id.with_context(relative_url=True)._get_signup_url()
+            )
+
+            rendering_values['signup_url'] = signup_url._replace(
+                query=urlencode(
+                    dict(parse_qs(signup_url.query), redirect='/shop/unarchive_user_addresses')
+                )
+            ).geturl()
+
+        return rendering_values
+
+    @route('/shop/unarchive_user_addresses', type='http', auth='user', sitemap=False)
+    def shop_unarchive_user_addresses(self):
+        request.env['res.partner'].sudo().search([
+            ('active', '=', False),
+            ('parent_id', '=', request.env.user.partner_id.id),
+        ]).active = True
+
+        return request.redirect('/my')
 
     @route(['/shop/print'], type='http', auth="public", website=True, sitemap=False)
     def print_saleorder(self, **kwargs):
