@@ -2,8 +2,7 @@
 from dateutil.relativedelta import relativedelta
 from lxml.builder import E
 
-from odoo import api, fields, models, _
-from odoo.tools import date_utils
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -95,7 +94,7 @@ class AnalyticPlanFieldsMixin(models.AbstractModel):
         fnames = self._get_plan_fnames()
         for line in self:
             if not any(line[fname] for fname in fnames):
-                raise ValidationError(_("At least one analytic account must be set"))
+                raise ValidationError(self.env._("At least one analytic account must be set"))
 
     @api.model
     def fields_get(self, allfields=None, attributes=None):

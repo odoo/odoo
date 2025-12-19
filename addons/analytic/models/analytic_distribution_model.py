@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.tools import SQL
 from odoo.exceptions import UserError
 
@@ -55,7 +55,7 @@ class AccountAnalyticDistributionModel(models.Model):
         self.flush_model(['company_id', 'analytic_distribution'])
         self.env.cr.execute(query)
         if self.env.cr.dictfetchone():
-            raise UserError(_('You defined a distribution with analytic account(s) belonging to a specific company but a model shared between companies or with a different company'))
+            raise UserError(self.env._('You defined a distribution with analytic account(s) belonging to a specific company but a model shared between companies or with a different company'))
 
     @api.model
     def _get_distribution(self, vals):
