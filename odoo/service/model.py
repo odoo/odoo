@@ -4,11 +4,12 @@ import threading
 from collections.abc import Mapping, Sequence
 from functools import partial
 
-from odoo import api, http
+from odoo import api
 from odoo.exceptions import (
     AccessDenied,
     UserError,
 )
+from odoo.http.retrying import retrying
 from odoo.models import BaseModel, get_public_method
 from odoo.modules.registry import Registry
 from odoo.tools import lazy
@@ -105,7 +106,7 @@ def execute_cr(cr, uid, obj, method, args, kw):
     if recs is None:
         raise UserError(f"Object {obj} doesn't exist")  # pylint: disable=missing-gettext
     thread_local.rpc_model_method = f'{obj}.{method}'
-    result = http.retrying(partial(call_kw, recs, method, args, kw), env)
+    result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would
     # error afterwards if the lazy isn't already evaluated (and cached)
     for l in _traverse_containers(result, lazy):

@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
+from odoo.http.router import root
+from odoo.http.session import get_default_session
+from odoo.tests.common import HOST, HttpCase, Opener, get_db_name, new_test_user, tagged
+
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.tests.common import get_db_name, HOST, HttpCase, new_test_user, Opener, tagged
 
 
 class TestWebLoginCommon(HttpCase):
@@ -14,8 +16,8 @@ class TestWebLoginCommon(HttpCase):
 
     def setUp(self):
         super().setUp()
-        self.session = http.root.session_store.new()
-        self.session.update(http.get_default_session(), db=get_db_name())
+        self.session = root.session_store.new()
+        self.session.update(get_default_session(), db=get_db_name())
         self.opener = Opener(self)
         self.opener.cookies.set('session_id', self.session.sid, domain=HOST, path='/')
 
@@ -24,7 +26,7 @@ class TestWebLoginCommon(HttpCase):
         res_post = self.url_open('/web/login', data={
             'login': username,
             'password': password,
-            'csrf_token':csrf_token or http.Request.csrf_token(self),
+            'csrf_token': csrf_token or self.csrf_token(),
         })
         res_post.raise_for_status()
 
@@ -39,7 +41,7 @@ class TestWebLogin(TestWebLoginCommon):
         self.url_open(
             '/web/session/check',
             headers={'Content-Type': 'application/json'},
-            data='{}'
+            data='{}',
         ).raise_for_status()
         # ensure we end up on the right page for internal users.
         self.assertEqual(res_post.request.path_url, '/odoo')
@@ -51,7 +53,7 @@ class TestWebLogin(TestWebLoginCommon):
 
     def test_web_login_bad_xhr(self):
         # simulate the user downloaded the login form
-        csrf_token = http.Request.csrf_token(self)
+        csrf_token = self.csrf_token()
 
         # simulate that the JS sended a bad XHR to a route that is
         # auth='none' using the same session (e.g. via a service worker)

@@ -1,17 +1,16 @@
-# -*- coding: utf-8 -*-
-import werkzeug
-from werkzeug.exceptions import InternalServerError
-
-from odoo import http
-from odoo.http import request
-from odoo.tools.misc import html_escape
-
 import json
 
+from werkzeug.exceptions import InternalServerError
 
-class StockReportController(http.Controller):
+from odoo.http import Controller, request, route
+from odoo.http.dispatcher import serialize_exception
+from odoo.http.stream import content_disposition
+from odoo.tools.misc import html_escape
 
-    @http.route('/stock/<string:output_format>/<string:report_name>', type='http', auth='user')
+
+class StockReportController(Controller):
+
+    @route('/stock/<string:output_format>/<string:report_name>', type='http', auth='user')
     def report(self, output_format, report_name=False, **kw):
         uid = request.session.uid
         domain = [('create_uid', '=', uid)]
@@ -23,16 +22,16 @@ class StockReportController(http.Controller):
                     stock_traceability.with_context(active_id=kw['active_id'], active_model=kw['active_model']).get_pdf(line_data),
                     headers=[
                         ('Content-Type', 'application/pdf'),
-                        ('Content-Disposition', 'attachment; filename=' + 'stock_traceability' + '.pdf;')
-                    ]
+                        ('Content-Disposition', content_disposition('stock_traceability.pdf')),
+                    ],
                 )
                 return response
         except Exception as e:
-            se = http.serialize_exception(e)
+            se = serialize_exception(e)
             error = {
                 'code': 0,
                 'message': 'Odoo Server Error',
-                'data': se
+                'data': se,
             }
             res = request.make_response(html_escape(json.dumps(error)))
             raise InternalServerError(response=res) from e

@@ -27,14 +27,11 @@ from werkzeug.local import LocalStack
 
 import odoo
 from odoo import modules
-from odoo.http import (
-    Request,
-    Response,
-    SessionExpiredException,
-    get_default_session,
-    retrying,
-    root,
-)
+from odoo.http.requestlib import Request
+from odoo.http.response import Response
+from odoo.http.retrying import retrying
+from odoo.http.router import root
+from odoo.http.session import SessionExpiredException, get_default_session
 from odoo.modules.registry import Registry
 from odoo.service.server import CommonServer
 from odoo.tools import config

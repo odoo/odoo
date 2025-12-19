@@ -1,31 +1,27 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import functools
 import json
 import logging
-import os
 
 import werkzeug.urls
-import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
-from odoo import api, http, SUPERUSER_ID, _
+from odoo import SUPERUSER_ID, _, api
 from odoo.exceptions import AccessDenied
-from odoo.http import request, Response
+from odoo.http import Controller, Response, request, route
+from odoo.http.router import db_filter
 from odoo.modules.registry import Registry
 from odoo.tools.misc import clean_context
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
-from odoo.addons.web.controllers.utils import ensure_db, _get_login_redirect_url
-
+from odoo.addons.web.controllers.utils import _get_login_redirect_url, ensure_db
 
 _logger = logging.getLogger(__name__)
 
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # helpers
-#----------------------------------------------------------
+# ----------------------------------------------------------
 def fragment_to_query_string(func):
     @functools.wraps(func)
     def wrapper(self, *a, **kw):
@@ -48,9 +44,9 @@ def fragment_to_query_string(func):
     return wrapper
 
 
-#----------------------------------------------------------
+# ----------------------------------------------------------
 # Controller
-#----------------------------------------------------------
+# ----------------------------------------------------------
 class OAuthLogin(Home):
     def list_providers(self):
         try:
@@ -85,7 +81,7 @@ class OAuthLogin(Home):
             state['t'] = token
         return state
 
-    @http.route()
+    @route()
     def web_login(self, *args, **kw):
         ensure_db()
         if request.httprequest.method == 'GET' and request.session.uid and request.params.get('redirect'):
@@ -93,7 +89,7 @@ class OAuthLogin(Home):
             return request.redirect(request.params.get('redirect'))
         providers = self.list_providers()
 
-        response = super(OAuthLogin, self).web_login(*args, **kw)
+        response = super().web_login(*args, **kw)
         if response.is_qweb:
             error = request.params.get('oauth_error')
             if error == '1':
@@ -112,14 +108,14 @@ class OAuthLogin(Home):
         return response
 
     def get_auth_signup_qcontext(self):
-        result = super(OAuthLogin, self).get_auth_signup_qcontext()
+        result = super().get_auth_signup_qcontext()
         result["providers"] = self.list_providers()
         return result
 
 
-class OAuthController(http.Controller):
+class OAuthController(Controller):
 
-    @http.route('/auth_oauth/signin', type='http', auth='none', readonly=False)
+    @route('/auth_oauth/signin', type='http', auth='none', readonly=False)
     @fragment_to_query_string
     def signin(self, **kw):
         state = json.loads(kw['state'])
@@ -127,7 +123,7 @@ class OAuthController(http.Controller):
         # make sure request.session.db and state['d'] are the same,
         # update the session and retry the request otherwise
         dbname = state['d']
-        if not http.db_filter([dbname]):
+        if not db_filter([dbname]):
             return BadRequest()
         ensure_db(db=dbname)
 
@@ -176,7 +172,7 @@ class OAuthController(http.Controller):
         redirect.autocorrect_location_header = False
         return redirect
 
-    @http.route('/auth_oauth/oea', type='http', auth='none', readonly=False)
+    @route('/auth_oauth/oea', type='http', auth='none', readonly=False)
     def oea(self, **kw):
         """login user via Odoo Account provider"""
         dbname = kw.pop('db', None)
@@ -184,7 +180,7 @@ class OAuthController(http.Controller):
             dbname = request.db
         if not dbname:
             raise BadRequest()
-        if not http.db_filter([dbname]):
+        if not db_filter([dbname]):
             raise BadRequest()
 
         registry = Registry(dbname)

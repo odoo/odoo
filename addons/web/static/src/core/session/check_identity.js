@@ -187,7 +187,7 @@ export class CheckIdentity {
 
     verifyUserErrorHandler(env, error, originalError) {
         if (originalError instanceof RPCError) {
-            if (originalError.data.name === "odoo.http.CheckIdentityException") {
+            if (originalError.data.name === "odoo.http.session.CheckIdentityException") {
                 this.run();
                 return true;
             }

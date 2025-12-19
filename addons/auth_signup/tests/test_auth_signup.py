@@ -1,17 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 import odoo
-from odoo import http
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
 from odoo.exceptions import AccessError, UserError
-
 from odoo.tests import tagged
 
-from datetime import datetime, timedelta
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -46,7 +43,7 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
 
         # Get csrf_token
         self.authenticate(None, None)
-        csrf_token = http.Request.csrf_token(self)
+        csrf_token = self.csrf_token()
 
         # Values from login form
         name = 'toto'

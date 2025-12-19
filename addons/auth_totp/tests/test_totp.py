@@ -139,7 +139,7 @@ class TestTOTP(TestTOTPMixin, HttpCase):
             '/web/session/logout',
             method='POST',
             data={
-                "csrf_token": http.Request.csrf_token(self),
+                "csrf_token": self.csrf_token(),
             },
         )
 

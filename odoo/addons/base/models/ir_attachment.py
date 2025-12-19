@@ -19,7 +19,9 @@ import werkzeug
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.http import Stream, request, root
+from odoo.http import request
+from odoo.http.router import root
+from odoo.http.stream import Stream
 from odoo.tools import (
     OrderedSet,
     config,

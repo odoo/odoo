@@ -5,28 +5,33 @@ import json
 import logging
 import os
 import re
-import requests
 import subprocess
 import tempfile
 import typing
 import unittest
 from ast import literal_eval
 from collections import OrderedDict
-from contextlib import closing, ExitStack
+from contextlib import ExitStack, closing
 from itertools import islice
 from urllib.parse import urlparse
 
 import lxml.html
-from PIL import Image, ImageFile
+import requests
 from lxml import etree
 from markupsafe import Markup
+from PIL import Image, ImageFile
 
-from odoo import api, fields, models, modules, tools, _
-from odoo.exceptions import UserError, AccessError, RedirectWarning, ValidationError
+from odoo import _, api, fields, models, modules, tools
+from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.http import request, root
+from odoo.http import request
+from odoo.http.router import root
 from odoo.tools import config, is_html_empty, parse_version, split_every
-from odoo.tools.barcode import check_barcode_encoding, createBarcodeDrawing, get_barcode_font
+from odoo.tools.barcode import (
+    check_barcode_encoding,
+    createBarcodeDrawing,
+    get_barcode_font,
+)
 from odoo.tools.misc import find_in_path
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
 from odoo.tools.safe_eval import safe_eval, time

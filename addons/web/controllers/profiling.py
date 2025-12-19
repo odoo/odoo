@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import json
 
 from odoo.exceptions import UserError
-from odoo.http import Controller, request, Response, route, content_disposition
+from odoo.http import Controller, Response, request, route
+from odoo.http.stream import content_disposition
 
 
 class Profiling(Controller):

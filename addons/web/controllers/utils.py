@@ -6,16 +6,12 @@ import logging
 import babel.messages.pofile
 import werkzeug
 import werkzeug.exceptions
-import werkzeug.utils
-import werkzeug.wrappers
-import werkzeug.wsgi
 from werkzeug.urls import iri_to_uri
 
-from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT
+from odoo.http import request, router
+from odoo.http.session import get_default_session
 from odoo.tools.misc import file_open
-from odoo import http
-from odoo.http import request
-
+from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT
 
 _logger = logging.getLogger(__name__)
 
@@ -50,16 +46,16 @@ def clean_action(action, env):
 def ensure_db(redirect='/web/database/selector', db=None):
     # This helper should be used in web client auth="none" routes
     # if those routes needs a db to work with.
-    # If the heuristics does not find any database, then the users will be
-    # redirected to db selector or any url specified by `redirect` argument.
-    # If the db is taken out of a query parameter, it will be checked against
-    # `http.db_filter()` in order to ensure it's legit and thus avoid db
-    # forgering that could lead to xss attacks.
+    # If the heuristics does not find any database, then the users will
+    # be redirected to db selector or any url specified by `redirect`
+    # argument. If the db is taken out of a query parameter, it will be
+    # checked against `http.router.db_filter()` in order to ensure it's
+    # legit and thus avoid db forgering that could lead to xss attacks.
     if db is None:
         db = request.params.get('db') and request.params.get('db').strip()
 
     # Ensure db is legit
-    if db and db not in http.db_filter([db]):
+    if db and db not in router.db_filter([db]):
         db = None
 
     if db and not request.session.db:
@@ -79,12 +75,12 @@ def ensure_db(redirect='/web/database/selector', db=None):
         werkzeug.exceptions.abort(request.redirect(url_redirect.to_url(), 302))
 
     # if db not provided, use the session one
-    if not db and request.session.db and http.db_filter([request.session.db]):
+    if not db and request.session.db and router.db_filter([request.session.db]):
         db = request.session.db
 
     # if no database provided and no database in session, use monodb
     if not db:
-        all_dbs = http.db_list(force=True)
+        all_dbs = router.db_list(force=True)
         if len(all_dbs) == 1:
             db = all_dbs[0]
 
@@ -95,8 +91,8 @@ def ensure_db(redirect='/web/database/selector', db=None):
 
     # always switch the session to the computed db
     if db != request.session.db:
-        request.session = http.root.session_store.new()
-        request.session.update(http.get_default_session(), db=db)
+        request.session = router.root.session_store.new()
+        request.session.update(get_default_session(), db=db)
         request.session.context['lang'] = request.default_lang()
         werkzeug.exceptions.abort(request.redirect(request.httprequest.url, 302))
 

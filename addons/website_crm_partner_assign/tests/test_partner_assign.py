@@ -287,7 +287,7 @@ class TestPartnerLeadPortal(TestCrmCommon):
             mock_request.render = render_function
             WebsiteAccount().portal_my_opportunities(filterby="today")
 
-    @patch('odoo.http.GeoIP')
+    @patch('odoo.http.geoip.GeoIP')
     def test_03_crm_partner_assign_geolocalization(self, GeoIpMock):
         """
             This test checks situation when "{OdooURL}/partners" is visited from foreign country without resellers.

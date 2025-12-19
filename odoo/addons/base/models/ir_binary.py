@@ -6,7 +6,8 @@ import werkzeug.http
 
 from odoo import models
 from odoo.exceptions import MissingError, UserError
-from odoo.http import Stream, request
+from odoo.http import request
+from odoo.http.stream import Stream
 from odoo.tools import file_open, replace_exceptions
 from odoo.tools.image import image_guess_size_from_field_name, image_process
 from odoo.tools.mimetypes import MIMETYPE_HEAD_SIZE, get_extension, guess_mimetype
@@ -64,7 +65,7 @@ class IrBinary(models.AbstractModel):
         :param record: the record where to load the data from.
         :param str field_name: the binary field where to load the data
             from.
-        :rtype: odoo.http.Stream
+        :rtype: odoo.http.stream.Stream
         """
         if record._name == 'ir.attachment' and field_name in ('raw', 'datas', 'db_datas'):
             return record._to_http_stream()
@@ -89,7 +90,7 @@ class IrBinary(models.AbstractModel):
         mimetype=None, default_mimetype='application/octet-stream',
     ):
         """
-        Create a :class:odoo.http.Stream: from a record's binary field.
+        Create a :class:odoo.http.stream.Stream: from a record's binary field.
 
         :param record: the record where to load the data from.
         :param str field_name: the binary field where to load the data
@@ -106,7 +107,7 @@ class IrBinary(models.AbstractModel):
         :param str default_mimetype: the mimetype to use when the
             mimetype couldn't be determined. By default it is
             ``application/octet-stream``.
-        :rtype: odoo.http.Stream
+        :rtype: odoo.http.stream.Stream
         """
         with replace_exceptions(ValueError, by=UserError(f'Expected singleton: {record}')):  # pylint: disable=missing-gettext
             record.ensure_one()
@@ -154,8 +155,8 @@ class IrBinary(models.AbstractModel):
         width=0, height=0, crop=False, quality=0,
     ):
         """
-        Create a :class:odoo.http.Stream: from a record's binary field,
-        equivalent of :meth:`~get_stream_from` but for images.
+        Create a :class:odoo.http.stream.Stream: from a record's binary
+        field, equivalent of :meth:`~get_stream_from` but for images.
 
         In case the record does not exist or is not accessible, the
         alternative ``placeholder`` path is used instead. If not set,

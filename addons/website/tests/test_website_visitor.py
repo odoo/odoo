@@ -1,15 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
-
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from odoo import http
+from odoo.http.router import root
+from odoo.tests import HttpCase, common, tagged
+
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
-from odoo.tests import common, tagged, HttpCase
 
 
 class MockVisitor(common.BaseCase):
@@ -197,7 +197,7 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
             'password': pwd,
             'csrf_token': res.text.partition(csrf_anchor)[2].partition('"')[0],
         })
-        self.session = http.root.session_store.get(res.cookies["session_id"])
+        self.session = root.session_store.get(res.cookies["session_id"])
 
 
 class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
@@ -249,7 +249,7 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
             '/web/session/logout',
             method='POST',
             data={
-                "csrf_token": http.Request.csrf_token(self),
+                "csrf_token": self.csrf_token(),
             },
         )
         self._authenticate_via_web(self.user_portal.login, 'portal')
@@ -280,7 +280,7 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
             '/web/session/logout',
             method='POST',
             data={
-                "csrf_token": http.Request.csrf_token(self),
+                "csrf_token": self.csrf_token(),
             },
         )
 
@@ -320,7 +320,7 @@ class WebsiteVisitorTests(WebsiteVisitorTestsCommon):
             '/web/session/logout',
             method='POST',
             data={
-                "csrf_token": http.Request.csrf_token(self),
+                "csrf_token": self.csrf_token(),
             },
         )
 

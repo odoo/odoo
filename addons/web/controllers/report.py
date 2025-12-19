@@ -6,21 +6,21 @@ import logging
 import werkzeug.exceptions
 from werkzeug.urls import url_parse
 
-from odoo import http
-from odoo.http import content_disposition, request
+from odoo.http import Controller, request, route
+from odoo.http.dispatcher import serialize_exception
+from odoo.http.stream import STATIC_CACHE_LONG, content_disposition
 from odoo.tools.misc import html_escape
 from odoo.tools.safe_eval import safe_eval, time
-
 
 _logger = logging.getLogger(__name__)
 
 
-class ReportController(http.Controller):
+class ReportController(Controller):
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Report controllers
-    #------------------------------------------------------
-    @http.route([
+    # ------------------------------------------------------
+    @route([
         '/report/<converter>/<reportname>',
         '/report/<converter>/<reportname>/<docids>',
     ], type='http', auth='user', website=True, readonly=True)
@@ -35,24 +35,24 @@ class ReportController(http.Controller):
         if data.get('context'):
             data['context'] = json.loads(data['context'])
             context.update(data['context'])
+
         if converter == 'html':
             html = report.with_context(context)._render_qweb_html(reportname, docids, data=data)[0]
             return request.make_response(html)
-        elif converter == 'pdf':
+        if converter == 'pdf':
             pdf = report.with_context(context)._render_qweb_pdf(reportname, docids, data=data)[0]
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
-        elif converter == 'text':
+        if converter == 'text':
             text = report.with_context(context)._render_qweb_text(reportname, docids, data=data)[0]
             texthttpheaders = [('Content-Type', 'text/plain'), ('Content-Length', len(text))]
             return request.make_response(text, headers=texthttpheaders)
-        else:
-            raise werkzeug.exceptions.HTTPException(description='Converter %s not implemented.' % converter)
+        raise werkzeug.exceptions.HTTPException(description=f'Converter {converter} not implemented.')
 
-    #------------------------------------------------------
+    # ------------------------------------------------------
     # Misc. route utils
-    #------------------------------------------------------
-    @http.route([
+    # ------------------------------------------------------
+    @route([
         '/report/barcode',
         '/report/barcode/<barcode_type>/<path:value>',
     ], type='http', auth='public', readonly=True)
@@ -88,7 +88,7 @@ class ReportController(http.Controller):
 
         headers = [
             ('Content-Type', 'image/png'),
-            ('Cache-Control', f'public, max-age={http.STATIC_CACHE_LONG}, immutable'),
+            ('Cache-Control', f'public, max-age={STATIC_CACHE_LONG}, immutable'),
         ]
 
         if int(kwargs.get('download', '0')):
@@ -96,7 +96,7 @@ class ReportController(http.Controller):
 
         return request.make_response(barcode, headers)
 
-    @http.route(['/report/download'], type='http', auth="user")
+    @route(['/report/download'], type='http', auth="user")
     # pylint: disable=unused-argument
     def report_download(self, data, context=None, token=None, readonly=True):
         """This function is used by 'action_manager_report.js' in order to trigger the download of
@@ -144,19 +144,17 @@ class ReportController(http.Controller):
                         filename = "%s.%s" % (report_name, extension)
                 response.headers.add('Content-Disposition', content_disposition(filename))
                 return response
-            else:
-                return
         except Exception as e:
             _logger.warning("Error while generating report %s", reportname, exc_info=True)
-            se = http.serialize_exception(e)
+            se = serialize_exception(e)
             error = {
                 'code': 0,
                 'message': "Odoo Server Error",
-                'data': se
+                'data': se,
             }
             res = request.make_response(html_escape(json.dumps(error)))
             raise werkzeug.exceptions.InternalServerError(response=res) from e
 
-    @http.route(['/report/check_wkhtmltopdf'], type='jsonrpc', auth='user', readonly=True)
+    @route(['/report/check_wkhtmltopdf'], type='jsonrpc', auth='user', readonly=True)
     def check_wkhtmltopdf(self):
         return request.env['ir.actions.report'].get_wkhtmltopdf_state()

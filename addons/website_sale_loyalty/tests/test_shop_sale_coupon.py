@@ -414,7 +414,7 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         installed_modules = set(self.env['ir.module.module'].search([
             ('state', '=', 'installed'),
         ]).mapped('name'))
-        for _ in http._generate_routing_rules(installed_modules, nodb_only=False):
+        for _ in http.routing_map._generate_routing_rules(installed_modules, nodb_only=False):
             pass
 
         with MockRequest(self.env, website=self.website, sale_order_id=order.id) as request:

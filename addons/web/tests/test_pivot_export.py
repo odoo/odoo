@@ -1,11 +1,11 @@
 import io
 import json
 from http import HTTPStatus
-from lxml import etree
 from zipfile import ZipFile
 
-from odoo import http
-from odoo.tests.common import tagged, HttpCase
+from lxml import etree
+
+from odoo.tests.common import HttpCase, tagged
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -32,7 +32,7 @@ class TestPivotExport(HttpCase):
             '/web/pivot/export_xlsx',
             data={
                 'data': json.dumps(jdata),
-                'csrf_token': http.Request.csrf_token(self),
+                'csrf_token': self.csrf_token(),
             },
         )
         response.raise_for_status()
@@ -59,7 +59,7 @@ class TestPivotExport(HttpCase):
             '/web/pivot/export_xlsx',
             data={
                 'data': json.dumps({}),
-                'csrf_token': http.Request.csrf_token(self),
+                'csrf_token': self.csrf_token(),
             },
         )
         self.assertEqual(response.status_code, HTTPStatus.UNPROCESSABLE_ENTITY)

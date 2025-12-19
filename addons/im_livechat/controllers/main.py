@@ -5,9 +5,11 @@ from zoneinfo import ZoneInfo
 
 from werkzeug.exceptions import NotFound
 
-from odoo import http, _
-from odoo.http import content_disposition, request
-from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
+from odoo import _, http
+from odoo.http import request
+from odoo.http.stream import Stream, content_disposition
+
+from odoo.addons.mail.tools.discuss import Store, add_guest_to_context
 
 
 class LivechatController(http.Controller):
@@ -46,11 +48,11 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/font-awesome', type='http', auth='none', cors="*")
     def fontawesome(self, **kwargs):
-        return http.Stream.from_path('web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2').get_response()
+        return Stream.from_path('web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2').get_response()
 
     @http.route('/im_livechat/odoo_ui_icons', type='http', auth='none', cors="*")
     def odoo_ui_icons(self, **kwargs):
-        return http.Stream.from_path('web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2').get_response()
+        return Stream.from_path('web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2').get_response()
 
     @http.route('/im_livechat/emoji_bundle', type='http', auth='public', cors='*')
     def get_emoji_bundle(self):

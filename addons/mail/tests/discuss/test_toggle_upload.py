@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command, http
+from odoo import Command
 from odoo.tests.common import HttpCase
 from odoo.tools import file_open
 
@@ -15,7 +15,7 @@ class TestToggleUpload(HttpCase):
             response = self.url_open(
                 "/mail/attachment/upload",
                 {
-                    "csrf_token": http.Request.csrf_token(self),
+                    "csrf_token": self.csrf_token(),
                     "thread_id": channel.id,
                     "thread_model": "discuss.channel",
                 },

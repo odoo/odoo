@@ -2,7 +2,7 @@
 
 from unittest.mock import Mock, patch
 
-from odoo.http import root
+from odoo.http.router import root
 from odoo.tests import HttpCase, tagged
 from odoo.tools import urls
 

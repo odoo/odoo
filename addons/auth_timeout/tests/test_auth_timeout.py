@@ -1,17 +1,16 @@
 import json
-import lxml.html
 import time
-
-import odoo.http
-
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from odoo.tests import HttpCase, new_test_user, tagged, TransactionCase
+import lxml.html
+
+from odoo.http.router import root
+from odoo.tests import HttpCase, TransactionCase, new_test_user, tagged
 from odoo.tests.common import HOST
 
-from odoo.addons.auth_totp.models.totp import TOTP
 from odoo.addons.auth_totp.controllers.home import TRUSTED_DEVICE_COOKIE
+from odoo.addons.auth_totp.models.totp import TOTP
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -242,19 +241,19 @@ class TestAuthTimeoutHttp(HttpCase):
         ).json()
 
     def set_session_create_time(self, session_id, timestamp):
-        session = odoo.http.root.session_store.get(session_id)
+        session = root.session_store.get(session_id)
         session["create_time"] = timestamp
-        odoo.http.root.session_store.save(session)
+        root.session_store.save(session)
 
     def set_session_last_check_identity(self, session_id, timestamp):
-        session = odoo.http.root.session_store.get(session_id)
+        session = root.session_store.get(session_id)
         session["identity-check-last"] = timestamp
-        odoo.http.root.session_store.save(session)
+        root.session_store.save(session)
 
     def set_session_next_check_identity(self, session_id, timestamp):
-        session = odoo.http.root.session_store.get(session_id)
+        session = root.session_store.get(session_id)
         session["identity-check-next"] = timestamp
-        odoo.http.root.session_store.save(session)
+        root.session_store.save(session)
 
     def set_auth_totp_mail(self):
         config = self.env["res.config.settings"].create({})
@@ -277,12 +276,12 @@ class TestAuthTimeoutHttp(HttpCase):
         result = self.rpc("res.users", "read", [self.user.id], ["login"])
         self.assertEqual(
             result.get("error", {}).get("data", {}).get("name"),
-            "odoo.http.CheckIdentityException",
+            "odoo.http.session.CheckIdentityException",
         )
 
     def assertSessionExpired(self):
         result = self.rpc("res.users", "read", [self.user.id], ["login"])
-        self.assertEqual(result.get("error", {}).get("data", {}).get("name"), "odoo.http.SessionExpiredException")
+        self.assertEqual(result.get("error", {}).get("data", {}).get("name"), "odoo.http.session.SessionExpiredException")
 
     def assertMustNotCheckIdentity(self):
         result = self.rpc("res.users", "read", [self.user.id], ["login"])

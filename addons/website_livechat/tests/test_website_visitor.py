@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command, fields, http
-from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTestsCommon
-from odoo.tests import new_test_user, tagged
+from odoo import Command, fields
 from odoo.exceptions import AccessError
+from odoo.tests import new_test_user, tagged
+
+from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTestsCommon
 
 
 @tagged('website_visitor')
@@ -98,7 +98,7 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTestsCommon):
             "/web/session/logout",
             method='POST',
             data={
-                "csrf_token": http.Request.csrf_token(self),
+                "csrf_token": self.csrf_token(),
             },
         )
         self.url_open(self.tracked_page.url)

@@ -1,13 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
+
 import odoo.release
-from odoo import http, _
-from odoo.http import content_disposition, request
+from odoo import _, http
 from odoo.fields import Domain
-from odoo.tools import float_round, py_to_js_locale, SQL
+from odoo.http import request
+from odoo.http.stream import content_disposition
+from odoo.tools import SQL, float_round, py_to_js_locale
 from odoo.tools.image import image_data_uri
 
-import datetime
 
 class HrAttendance(http.Controller):
     @staticmethod

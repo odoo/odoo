@@ -1,20 +1,20 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import ast
 import itertools
 import logging
 from datetime import date, timedelta
 
-from dateutil.relativedelta import relativedelta, MO
+from dateutil.relativedelta import MO, relativedelta
 from markupsafe import Markup
 
 from odoo import _, api, exceptions, fields, models
-from odoo.http import SESSION_LIFETIME
+from odoo.http.session import SESSION_LIFETIME
 
 _logger = logging.getLogger(__name__)
 
 # display top 3 in ranking, could be db variable
 MAX_VISIBILITY_RANKING = 3
+
 
 def start_end_date_for_period(period, default_start_date=False, default_end_date=False):
     """Return the start and end date for a goal period based on today

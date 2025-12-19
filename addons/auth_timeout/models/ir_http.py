@@ -1,7 +1,8 @@
 import time
 
 from odoo import api, models
-from odoo.http import request, root
+from odoo.http import request
+from odoo.http.router import root
 
 
 class IrHttp(models.AbstractModel):

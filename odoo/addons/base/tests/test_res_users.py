@@ -6,8 +6,17 @@ from unittest.mock import patch
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
-from odoo.http import _request_stack
-from odoo.tests import Form, TransactionCase, new_test_user, tagged, HttpCase, users, warmup, freeze_time
+from odoo.http.requestlib import _request_stack
+from odoo.tests import (
+    Form,
+    HttpCase,
+    TransactionCase,
+    freeze_time,
+    new_test_user,
+    tagged,
+    users,
+    warmup,
+)
 from odoo.tools import mute_logger
 
 

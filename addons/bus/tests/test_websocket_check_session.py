@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
-from odoo.http import SessionExpiredException
+from odoo.http.session import SessionExpiredException
 from odoo.tests import HttpCase, new_test_user
 
 from ..session_helpers import _get_session_token_query_params, check_session

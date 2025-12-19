@@ -1,4 +1,3 @@
-from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.tests import tagged
 
@@ -28,7 +27,7 @@ class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
             f'1-email-{email_question.id}': 'bob@test.lan',
             f'1-phone-{phone_question.id}': '8989898989',
             '1-event_ticket_id': free_ticket.id,
-            'csrf_token': http.Request.csrf_token(self),
+            'csrf_token': self.csrf_token(),
         })
         self.assertEqual(self.env['sale.order'].search([]), existing_so, "Sale order should not be created for the free tickets")
         self.assertEqual(len(self.event.registration_ids), event_registration_count + 1)
@@ -56,7 +55,7 @@ class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
             f'2-email-{email_question.id}': 'joe@test.lan',
             f'2-phone-{phone_question.id}': '8989898988',
             '2-event_ticket_id': free_ticket.id,
-            'csrf_token': http.Request.csrf_token(self),
+            'csrf_token': self.csrf_token(),
         })
 
         self.assertEqual(len(self.event.registration_ids), event_registration_count + 2)

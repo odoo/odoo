@@ -9,8 +9,9 @@ from types import MappingProxyType
 from markupsafe import Markup
 
 import odoo.exceptions
-from odoo.fields import Command, Domain, Date, Datetime
-from odoo.http import Controller, Response, dispatch_rpc, request, route
+from odoo.fields import Command, Date, Datetime, Domain
+from odoo.http import Controller, Response, request, route
+from odoo.http.router import dispatch_rpc
 from odoo.tools import lazy
 
 from . import RPC_DEPRECATION_NOTICE, _check_request

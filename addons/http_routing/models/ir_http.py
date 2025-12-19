@@ -4,21 +4,23 @@ import logging
 import re
 import traceback
 import typing
+import urllib.parse
+
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.urls
-import urllib.parse
 from werkzeug.exceptions import HTTPException, NotFound
 
-import odoo
-from odoo import api, models, exceptions, tools, http
+from odoo import api, exceptions, models, tools
+from odoo.exceptions import AccessError, MissingError
+from odoo.fields import Domain
+from odoo.http import Response, request
+from odoo.http.router import root
+
 from odoo.addons.base.models import ir_http
 from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.ir_qweb import keep_query
 from odoo.addons.base.models.res_lang import LangData
-from odoo.exceptions import AccessError, MissingError
-from odoo.fields import Domain
-from odoo.http import request, Response
 
 _logger = logging.getLogger(__name__)
 
@@ -30,7 +32,7 @@ _UNSLUG_ROUTE_PATTERN = r'(?:(?:\w{1,2}|\w[\w-]+?\w)-)?(?:-?\d+)(?=$|\/|#|\?)'
 class ModelConverter(ir_http.ModelConverter):
 
     def __init__(self, url_map, model=False, domain='[]'):
-        super(ModelConverter, self).__init__(url_map, model)
+        super().__init__(url_map, model)
         self.domain = domain
         self.regex = _UNSLUG_ROUTE_PATTERN
 
@@ -92,7 +94,7 @@ class IrHttp(models.AbstractModel):
             match Rule. This override adds the website ones.
         """
         return dict(
-            super(IrHttp, cls)._get_converters(),
+            super()._get_converters(),
             model=ModelConverter,
         )
 
@@ -145,7 +147,7 @@ class IrHttp(models.AbstractModel):
                         args[key] = val = val.with_context(lang=lang.code)
                     if prefetch_langs:
                         args[key] = val = val.with_context(prefetch_langs=True)
-            router = http.root.get_db_router(request.db).bind('')
+            router = root.get_db_router(request.db).bind('')
             path = router.build(rule.endpoint, args)
         except (NotFound, AccessError, MissingError):
             # The build method returns a quoted URL so convert in this case for consistency.
@@ -264,7 +266,7 @@ class IrHttp(models.AbstractModel):
 
     @api.model
     def get_frontend_session_info(self) -> dict:
-        session_info = super(IrHttp, self).get_frontend_session_info()
+        session_info = super().get_frontend_session_info()
 
         if request.is_frontend:
             lang = request.lang.code
@@ -593,7 +595,7 @@ class IrHttp(models.AbstractModel):
                     return response
             except werkzeug.exceptions.Forbidden:
                 # Rendering does raise a Forbidden if target is not visible.
-                pass # Use default error page handling.
+                pass  # Use default error page handling.
         elif code == 500:
             values = cls._get_values_500_error(request.env, values, exception)
         try:
@@ -614,7 +616,7 @@ class IrHttp(models.AbstractModel):
     @tools.ormcache('path', 'query_args', cache='routing.rewrites')
     def url_rewrite(self, path, query_args=None):
         new_url = False
-        router = http.root.get_db_router(request.db).bind('')
+        router = root.get_db_router(request.db).bind('')
         endpoint = False
         try:
             try:

@@ -16,8 +16,9 @@ from werkzeug.utils import send_file
 import odoo
 import odoo.modules.db
 import odoo.modules.registry
-from odoo import http, release
-from odoo.http import Response, request
+from odoo import release
+from odoo.http import Controller, Response, request, route
+from odoo.http.router import db_list
 from odoo.sql_db import db_connect
 from odoo.tools.misc import file_open, str2bool
 from odoo.tools.translate import _
@@ -98,7 +99,7 @@ def _render_template(**d):
     d['pattern'] = odoo.modules.db.DB_NAME_RE.pattern
     # databases list
     try:
-        d['databases'] = http.db_list()
+        d['databases'] = db_list()
         d['incompatible_databases'] = list_db_incompatible(d['databases'])
     except odoo.exceptions.AccessDenied:
         d['databases'] = [request.db] if request.db else []
@@ -138,20 +139,20 @@ def verify_access(master_pwd):
     odoo.modules.db.verify_admin_password(master_pwd)
 
 
-class Database(http.Controller):
-    @http.route('/web/database/selector', type='http', auth="none")
+class Database(Controller):
+    @route('/web/database/selector', type='http', auth="none")
     def selector(self, **kw):
         if request.db:
             request.env.cr.close()
         return _render_template(manage=False)
 
-    @http.route('/web/database/manager', type='http', auth="none")
+    @route('/web/database/manager', type='http', auth="none")
     def manager(self, **kw):
         if request.db:
             request.env.cr.close()
         return _render_template()
 
-    @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
+    @route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
         if not odoo.modules.db.DB_NAME_RE.fullmatch(name):
             e = _("Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden.")
@@ -180,7 +181,7 @@ class Database(http.Controller):
             e.error_response = _render_exception(e)
             raise
 
-    @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
+    @route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
     def duplicate(self, master_pwd, name, new_name, neutralize_database=False):
         if not odoo.modules.db.DB_NAME_RE.fullmatch(name):
             e = _("Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden.")
@@ -200,7 +201,7 @@ class Database(http.Controller):
             e.error_response = _render_exception(e)
             raise
 
-    @http.route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
+    @route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
     def drop(self, master_pwd, name):
         try:
             verify_access(master_pwd)
@@ -212,7 +213,7 @@ class Database(http.Controller):
             e.error_response = _render_exception(e)
             raise
 
-    @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
+    @route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
     def backup(self, master_pwd, name, backup_format='zip', filestore=True):
         dump_file = None
         try:
@@ -241,7 +242,7 @@ class Database(http.Controller):
             e.error_response = _render_exception(e)
             raise
 
-    @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False, max_content_length=None)
+    @route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False, max_content_length=None)
     def restore(self, master_pwd, backup_file, name, copy=False, neutralize_database=False):
         data_file = None
         try:
@@ -262,7 +263,7 @@ class Database(http.Controller):
             if data_file:
                 os.unlink(data_file.name)
 
-    @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
+    @route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
     def change_password(self, master_pwd, master_pwd_new):
         try:
             odoo.modules.db.verify_admin_password(master_pwd)
@@ -273,7 +274,7 @@ class Database(http.Controller):
             e.error_response = _render_exception(e)
             raise
 
-    @http.route('/web/database/list', type='jsonrpc', auth='none')
+    @route('/web/database/list', type='jsonrpc', auth='none')
     def list(self):
         """
         Used by Mobile application for listing database
@@ -281,4 +282,4 @@ class Database(http.Controller):
         :return: List of databases
         :rtype: list
         """
-        return http.db_list()
+        return db_list()

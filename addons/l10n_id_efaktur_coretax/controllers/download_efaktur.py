@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import io
-import zipfile
+from odoo import _, http
+from odoo.http import request
+from odoo.http.stream import content_disposition
 
-from odoo import http, _
-from odoo.http import request, content_disposition
 # from odoo.addons.account.controllers.download_docs import _get_headers
+
 
 def _get_headers(filename, filetype, content):
     return [
@@ -14,6 +14,7 @@ def _get_headers(filename, filetype, content):
         ('Content-Disposition', content_disposition(filename)),
         ('X-Content-Type-Options', 'nosniff'),
     ]
+
 
 class EfakturDownloadController(http.Controller):
 

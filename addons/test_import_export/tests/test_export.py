@@ -57,7 +57,7 @@ class XlsxCreatorCase(common.HttpCase):
                 '/web/export/xlsx',
                 data={
                     'data': json.dumps(dict(self.default_params, **params)),
-                    'csrf_token': http.Request.csrf_token(self),
+                    'csrf_token': self.csrf_token(),
                 },
             )
         return self.worksheet

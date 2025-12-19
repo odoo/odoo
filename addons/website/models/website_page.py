@@ -5,13 +5,14 @@ import os
 import re
 import time
 
+from odoo import api, fields, models, tools
+from odoo.exceptions import UserError
+from odoo.fields import Domain
+from odoo.http import Response
+from odoo.tools import SQL, escape_psql
+
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.website.tools import text_from_html
-from odoo import api, fields, models, tools, http
-from odoo.fields import Domain
-from odoo.tools import escape_psql, SQL
-from odoo.tools.translate import _
-from odoo.exceptions import UserError
 
 logger = logging.getLogger(__name__)
 
@@ -324,7 +325,7 @@ class WebsitePage(models.Model):
         return True
 
     @api.model
-    def _post_process_response_from_cache(self, request: http.Request, response: http.Response) -> None:
+    def _post_process_response_from_cache(self, request, response) -> None:
         """ A hook called after a response is retrieved from the cache. This
         method allows for post-processing, such as incrementing counters or
         modifying HTTP headers, without regenerating the entire page.
@@ -377,7 +378,7 @@ class WebsitePage(models.Model):
                     return notCache.result[0]
 
             if time.time() < response.time + self._CACHE_DURATION:
-                resp = http.Response(
+                resp = Response(
                     headers=response.headers.copy(),
                     mimetype=response.mimetype,
                     content_type=response.content_type,
@@ -399,7 +400,7 @@ class WebsitePage(models.Model):
         'xml' not in tools.config['dev_mode'],
         tools.ormcache('self._get_cache_key(request)', cache='templates.cached_values'),
     )
-    def _get_response_cached(self, request) -> tuple[http.Response, int, str]:
+    def _get_response_cached(self, request) -> tuple[Response, int, str]:
         """ Returns the response corresponding to the request.
         If the response exists and `_allow_cache_insertio` return True, this
         response is cached.
@@ -417,7 +418,7 @@ class WebsitePage(models.Model):
 
         return result
 
-    def _get_response_raw(self, request) -> http.Response | None:
+    def _get_response_raw(self, request) -> Response | None:
         """ Returns the raw response associated with the current request.
         This method is called by `_get_response_cached`, which handles caching
         the result. It is also called directly by `_get_response` if

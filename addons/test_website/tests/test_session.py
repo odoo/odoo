@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from lxml import html
 from unittest.mock import patch
 
-from odoo import http
-from odoo.addons.website.models.website import Website
+from lxml import html
+
 import odoo.tests
+from odoo.http.router import root
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.website.models.website import Website
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -20,7 +21,7 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         session = self.authenticate(None, None)
         self.env.ref('base.lang_fr').active = False
         session.context['lang'] = 'fr_FR'
-        odoo.http.root.session_store.save(session)
+        root.session_store.save(session)
 
         # ensure that _get_current_website_id will be able to match a website
         current_website_id = self.env["website"]._get_current_website_id(odoo.tests.HOST)
@@ -33,7 +34,7 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
         session = self.authenticate(None, None)
         self.env.ref('base.lang_fr').active = False
         session.context['lang'] = 'fr_FR'
-        odoo.http.root.session_store.save(session)
+        root.session_store.save(session)
 
         # ensure that _get_current_website_id will be able to match a website
         current_website_id = self.env["website"]._get_current_website_id(odoo.tests.HOST)
@@ -43,7 +44,7 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
             res = self.url_open('/web/login', allow_redirects=False, data={
                 'login': 'demo',
                 'password': 'demo',
-                'csrf_token': http.Request.csrf_token(self),
+                'csrf_token': self.csrf_token(),
             })
             res.raise_for_status()
         self.assertEqual(res.status_code, 303)
@@ -54,7 +55,7 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
 
         # Force a browser language that is not installed
         session.context['lang'] = 'fr_MC'
-        http.root.session_store.save(session)
+        root.session_store.save(session)
 
         # Disable cache in order to make sure that values would be fetched at any time
         get_cached_values_without_cache = Website._cached_data.__cache__.method
@@ -66,7 +67,7 @@ class TestWebsiteSession(HttpCaseWithUserDemo):
                 '/web/session/logout',
                 method='POST',
                 data={
-                    "csrf_token": http.Request.csrf_token(self),
+                    "csrf_token": self.csrf_token(),
                 },
             )
             self.assertEqual(res.status_code, 200)

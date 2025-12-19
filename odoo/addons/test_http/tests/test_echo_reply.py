@@ -4,12 +4,13 @@ import json
 import time
 from http import HTTPStatus
 
-from odoo.http import Request, root, SESSION_ROTATION_INTERVAL
+from odoo.http.router import root
+from odoo.http.session import SESSION_ROTATION_INTERVAL
 from odoo.tests import Like, new_test_user, tagged
 from odoo.tools import mute_logger
-from odoo.addons.test_http.controllers import CT_JSON
 
 from .test_common import TestHttpBase
+from odoo.addons.test_http.controllers import CT_JSON
 
 
 @tagged('post_install', '-at_install')
@@ -145,7 +146,7 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
 
     @mute_logger('odoo.http')
     def test_echohttp7_post_good_csrf(self):
-        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': Request.csrf_token(self)})
+        res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': self.csrf_token()})
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'race': 'Asgard', 'commander': 'Thor'}")
 
@@ -153,7 +154,7 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
     def test_echohttp8_post_good_csrf_with_session_rotation(self):
         # Compute a csrf token in advance,
         # to mimic a form opened in another browser tab with the CSRF token already computed
-        csrf_token = Request.csrf_token(self)
+        csrf_token = self.csrf_token()
         sid_before_rotation = self.opener.cookies['session_id']
 
         # Force a rotation by changing the create date of the session
