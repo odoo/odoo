@@ -20,6 +20,7 @@ export class EmbeddedSyntaxHighlightingComponent extends Component {
         value: { type: String },
         languageId: { type: String },
         onTextareaFocus: { type: Function },
+        convertToParagraph: { type: Function },
         host: { type: Object },
     };
 
