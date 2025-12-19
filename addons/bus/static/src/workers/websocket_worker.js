@@ -69,12 +69,24 @@ export class WebsocketWorker {
         this.messageWaitQueue = [];
         this.name = name;
         this.newestStartTs = undefined;
+        this.nextSubscribeLastId = null;
         this.state = WORKER_STATE.IDLE;
         this.websocketURL = "";
 
         this._debouncedSendToServer = debounce(this._sendToServer, 300);
-        this._debouncedUpdateChannels = debounce(this._updateChannels, 300);
-        this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300);
+        const debouncedUpdateChannels = debounce(this._updateChannels.bind(this), 300);
+        this._debouncedUpdateChannels = () => {
+            this.nextSubscribeLastId ??= this.lastNotificationId;
+            debouncedUpdateChannels();
+        };
+        const debouncedForceUpdateChannels = debounce(
+            () => this._updateChannels({ force: true }),
+            300
+        );
+        this._forceUpdateChannels = () => {
+            this.nextSubscribeLastId ??= this.lastNotificationId;
+            debouncedForceUpdateChannels();
+        };
         this._onWebsocketClose = this._onWebsocketClose.bind(this);
         this._onWebsocketError = this._onWebsocketError.bind(this);
         this._onWebsocketMessage = this._onWebsocketMessage.bind(this);
@@ -231,14 +243,6 @@ export class WebsocketWorker {
             clientChannels.splice(channelIndex, 1);
             this._debouncedUpdateChannels();
         }
-    }
-
-    /**
-     * Update the channels on the server side even if the channels on
-     * the client side are the same than the last time we subscribed.
-     */
-    _forceUpdateChannels() {
-        this._updateChannels({ force: true });
     }
 
     /**
@@ -542,10 +546,11 @@ export class WebsocketWorker {
             this.lastChannelSubscription = allTabsChannelsString;
             this._sendToServer({
                 event_name: "subscribe",
-                data: { channels: allTabsChannels, last: this.lastNotificationId },
+                data: { channels: allTabsChannels, last: this.nextSubscribeLastId },
             });
             this.firstSubscribeResolver.resolve();
         }
+        this.nextSubscribeLastId = null;
     }
     /**
      * Update the worker state and broadcast the new state to its clients.

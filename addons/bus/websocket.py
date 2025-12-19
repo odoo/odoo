@@ -208,6 +208,7 @@ _command_uid = count(0)
 class ControlCommand(IntEnum):
     CLOSE = 0
     DISPATCH = 1
+    DISPATCH_NEW_CHANNELS = 2
 
 
 DATA_OP = {Opcode.TEXT, Opcode.BINARY}
@@ -380,13 +381,19 @@ class Websocket:
 
     def subscribe(self, channels, last):
         """ Subscribe to bus channels. """
+        # New channels require a separate dispatch using the client's
+        # last id: notifications for known channels may have advanced
+        # `_last_notif_sent_id`, but earlier notifications for the new
+        # channels may be missing.
+        self._send_control_command(
+            ControlCommand.DISPATCH_NEW_CHANNELS,
+            {'channels_snapshot': self._channels, 'last': last},
+        )
         self._channels = channels
         # Only assign the last id according to the client once: the server is
         # more reliable later on, see ``MAX_NOTIFICATION_HISTORY_SEC``.
         if self._last_notif_sent_id == 0:
             self._last_notif_sent_id = last
-        # Dispatch past notifications if there are any.
-        self.trigger_notification_dispatching()
 
     def trigger_notification_dispatching(self):
         """
@@ -753,15 +760,19 @@ class Websocket:
         match command:
             case ControlCommand.DISPATCH:
                 self._assert_session_validity()
-                self._dispatch_bus_notifications()
+                self._waiting_for_dispatch = False
+                self._dispatch_bus_notifications(self._channels, self._last_notif_sent_id)
+            case ControlCommand.DISPATCH_NEW_CHANNELS:
+                if new_channels := self._channels - data['channels_snapshot']:
+                    self._assert_session_validity()
+                    self._dispatch_bus_notifications(new_channels, data['last'])
             case ControlCommand.CLOSE:
                 self._disconnect(data['code'], data.get('reason'))
 
-    def _dispatch_bus_notifications(self):
-        self._waiting_for_dispatch = False
+    def _dispatch_bus_notifications(self, channels, last):
         with acquire_cursor(self._session.db) as cr:
             notifications = fetch_bus_notifications(
-                cr, self._channels, self._last_notif_sent_id, [n[0] for n in self._notif_history]
+                cr, channels, last, [n[0] for n in self._notif_history]
             )
             if not notifications:
                 return
@@ -958,7 +969,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "19.0-2"
+    _VERSION = "saas-19.1-1"
 
     @classmethod
     def websocket_allowed(cls, request):
