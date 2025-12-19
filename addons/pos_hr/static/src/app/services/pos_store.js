@@ -146,4 +146,13 @@ patch(PosStore.prototype, {
     canEditPayment(order) {
         return super.canEditPayment(order) && (!this.config.module_pos_hr || this.employeeIsAdmin);
     },
+    async handleUrlParams() {
+        if (this.config.module_pos_hr && !this.cashier) {
+            if (this.router.state.current !== "LoginScreen") {
+                this.router.navigate("LoginScreen", {});
+            }
+            return;
+        }
+        return await super.handleUrlParams(...arguments);
+    },
 });
