@@ -1134,3 +1134,15 @@ test("can write in a highlighted code block within a nested list", async () => {
         ),
     });
 });
+
+test("restore paragraph from code block", async () => {
+    await testEditor({
+        contentBefore: "<pre>[]abc</pre>",
+        stepFunction: async () => {
+            await click(".o_code_toolbar span.fa-paragraph");
+        },
+        contentAfterEdit: '<div class="o-paragraph">[]abc</div>',
+        contentAfter: `<div>[]abc</div>`,
+        config: configWithEmbeddings,
+    });
+});
