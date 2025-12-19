@@ -1698,3 +1698,32 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
 
         self.assertEqual(leave.number_of_hours, 13.0)
+
+    def test_duration_display_with_flexible_calendar_and_public_holidays(self):
+        """
+        Ensure correct leave duration for flexible calendars with public holidays.
+        This test verifies that leave duration is correctly computed when using a
+        flexible working calendar and part of the requested leave period overlaps
+        with public holidays.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test flexi calendar',
+            'hours_per_day': 8,
+            'full_time_required_hours': 40,
+            'flexible_hours': True
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        self.env['resource.calendar.leaves'].create({
+            'date_from': '2025-12-24 00:00:00',
+            'date_to': '2025-12-28 23:59:59',
+            'calendar_id': calendar.id,
+        })
+
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Test leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': '2025-12-24',
+            'request_date_to': '2025-12-30',
+        })
+        self.assertEqual(leave.number_of_days, 0)
