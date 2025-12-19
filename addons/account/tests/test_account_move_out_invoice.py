@@ -1221,6 +1221,57 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertIn(account_receivable_copy, invoice.line_ids.account_id)
         self.assertIn(account_revenue_copy, invoice.line_ids.account_id)
 
+    def test_out_invoice_payment_term_delivery_date(self):
+        """
+        Test the payment term delay type 'days_after_delivery'.
+
+        The invoice must raise an error if delivery date is not set and
+        the payment term uses 'days_after_delivery'.
+        When a delivery date is provided, the due date is correctly
+        computed from the delivery date.
+        """
+        payment_term = self.env['account.payment.term'].create({
+            'name': '30 days after Delivery',
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': '100',
+                    'delay_type': 'days_after_delivery',
+                    'nb_days': '30',
+                })
+            ],
+        })
+        with self.assertRaises(ValidationError, msg="Invoice doesn't have delivery date."):
+            self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'invoice_date': '2019-01-01',
+                'partner_id': self.partner_a.id,
+                'invoice_payment_term_id': payment_term.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': self.product_a.id,
+                        'price_unit': 295.0,
+                        'tax_ids': [Command.set(self.product_a.taxes_id.filtered(lambda t: t.company_id == self.env.company).ids)],
+                    }),
+                ],
+            })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-01',
+            'delivery_date': '2019-01-05',
+            'partner_id': self.partner_a.id,
+            'invoice_payment_term_id': payment_term.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 295.0,
+                    'tax_ids': [Command.set(self.product_a.taxes_id.filtered(lambda t: t.company_id == self.env.company).ids)],
+                }),
+            ],
+        })
+        self.assertEqual(fields.Date.to_string(invoice.invoice_date_due), '2019-02-04')
+
     def test_out_invoice_line_onchange_analytic(self):
         self.env.user.group_ids += self.env.ref('analytic.group_analytic_accounting')
 

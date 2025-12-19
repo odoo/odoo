@@ -293,6 +293,7 @@ class AccountPaymentTermLine(models.Model):
             ('days_after_end_of_month', 'Days after end of month'),
             ('days_after_end_of_next_month', 'Days after end of next month'),
             ('days_end_of_month_on_the', 'Days end of month on the'),
+            ('days_after_delivery', 'Days after delivery date'),
         ], required=True, default='days_after')
     display_days_next_month = fields.Boolean(compute='_compute_display_days_next_month')
     days_next_month = fields.Char(

@@ -1382,8 +1382,13 @@ class AccountMove(models.Model):
                         tax_amount = invoice.amount_tax_signed
                         untaxed_amount_currency = invoice.amount_untaxed * sign
                         untaxed_amount = invoice.amount_untaxed_signed
+                    date_ref = invoice.invoice_date or invoice.date or fields.Date.context_today(invoice)
+                    if 'days_after_delivery' in invoice.invoice_payment_term_id.line_ids.mapped('delay_type'):
+                        if not invoice.delivery_date:
+                            raise ValidationError(_("Delivery Date is required for this payment term."))
+                        date_ref = invoice.delivery_date
                     invoice_payment_terms = invoice.invoice_payment_term_id._compute_terms(
-                        date_ref=invoice.invoice_date or invoice.date or fields.Date.context_today(invoice),
+                        date_ref=date_ref,
                         currency=invoice.currency_id,
                         tax_amount_currency=tax_amount_currency,
                         tax_amount=tax_amount,
