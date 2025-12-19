@@ -411,6 +411,12 @@ class PeppolRegistration(models.TransientModel):
         old_proxy_users.active = False
         _logger.debug("De-registering existing Peppol proxy user for company %s", self.company_id.display_name)
 
+        blocking_proxy_types = set(self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()) - {'peppol'}
+        blocking_user = self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type in blocking_proxy_types)
+        if blocking_user:
+            blocking_proxy_type = dict(blocking_user._fields['proxy_type']._description_selection(self.env))[blocking_user[:1].proxy_type]
+            raise UserError(self.env._("A connection to '%s' already exists.", blocking_proxy_type))
+
         if self.use_parent_connection:
             self.company_id.write({
                 'peppol_eas': self.peppol_eas,
