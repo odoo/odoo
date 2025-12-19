@@ -415,7 +415,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         // Create preparation/kitchen printers
-        for (const printerConfig of this.models["pos.printer"].getAll()) {
+        for (const printerConfig of this.config.preparation_printer_ids) {
             const printer = this.createPrinter(printerConfig);
             if (printer) {
                 printer.config = printerConfig.raw;
@@ -423,6 +423,14 @@ export class PosStore extends WithLazyGetterTrap {
             }
         }
         this.config.iface_printers = !!this.kitchenPrinters.length;
+
+        for (const printer of this.config.receipt_printer_ids) {
+            const printerDevice = this.createPrinter(printer);
+            this.printer.setFallbackPrinter(printerDevice);
+            if (printer == this.config.default_receipt_printer_id) {
+                this.printer.setPrinter(printerDevice);
+            }
+        }
 
         this.models["product.pricelist.item"].addEventListener("create", () => {
             const order = this.getOrder();
@@ -441,8 +449,8 @@ export class PosStore extends WithLazyGetterTrap {
         return makeAwaitable(this.dialog, CashMovePopup);
     }
     async openCashbox(action = undefined) {
-        if (this.config.iface_cashdrawer && this.receiptPrinter) {
-            this.receiptPrinter.openCashbox();
+        if (this.config.iface_cashdrawer && this.printer.device) {
+            this.printer.device.openCashbox();
             if (action) {
                 await this.logEmployeeMessage(action, "CASH_DRAWER_ACTION");
             }
@@ -699,11 +707,6 @@ export class PosStore extends WithLazyGetterTrap {
 
         this.markReady();
         await this.deviceSync.readDataFromServer();
-
-        if (this.config.other_devices && this.config.epson_printer_ip) {
-            this.receiptPrinter = new EpsonPrinter(this.config);
-            this.printer.setPrinter(this.receiptPrinter);
-        }
     }
 
     get productViewMode() {
@@ -1187,7 +1190,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     createPrinter(config) {
         if (config.printer_type === "epson_epos") {
-            return new EpsonPrinter(config);
+            return new EpsonPrinter({ printer: config });
         }
     }
     async _loadFonts() {

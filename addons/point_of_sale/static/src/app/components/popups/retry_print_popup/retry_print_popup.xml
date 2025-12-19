@@ -6,10 +6,22 @@
             <p t-if="props.message" t-out="props.message" class="text-prewrap"/>
             <p t-if="props.canRetry">Would you like to continue without printing or retry?</p>
             <t t-set-slot="footer">
-                <button class="btn btn-primary btn-lg" t-on-click="props.close">Continue</button>
-                <button t-if="props.canRetry" class="btn btn-lg btn-secondary" t-on-click="onClickRetry">Retry</button>
-                <button t-if="props.download" class="btn btn-lg btn-secondary" t-on-click="onClickDownload">Download</button>
+                <div class="d-flex justify-content-between gap-2 w-100">
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-primary btn-lg" t-on-click="props.close">Continue</button>
+                        <button t-if="props.canRetry" class="btn btn-lg btn-secondary" t-on-click="onClickRetry">Retry</button>
+                        <button t-if="props.download" class="btn btn-lg btn-secondary" t-on-click="onClickDownload">Download</button>
+                    </div>
+                    <button t-if="props.tryOnOtherPrinter"
+                            class="btn btn-lg btn-secondary"
+                            t-on-click="onClickTryOnOtherPrinter">
+                        Try on other printer
+                    </button>
+
+                </div>
             </t>
+
         </Dialog>
     </t>
 

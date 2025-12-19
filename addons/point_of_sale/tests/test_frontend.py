@@ -571,6 +571,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Printer',
             'printer_type': 'epson_epos',
             'epson_printer_ip': '0.0.0.0',
+            'use_type': 'receipt',
         })
 
         # Set customers
@@ -1413,12 +1414,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Printer',
             'printer_type': 'epson_epos',
             'epson_printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
         })
 
         self.main_pos_config.write({
             'use_order_printer': True,
-            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+            'preparation_printer_ids': [Command.set(self.env['pos.printer'].search([('use_type', '=', 'preparation')]).ids)],
         })
         self.main_pos_config.write({
             "limit_categories": True,
@@ -1435,11 +1437,12 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_printer_restricts_to_allowed_categories_for_combo(self):
         setup_product_combo_items(self)
         self.printer.write({
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(self.env['pos.category'].search([('name', '=', 'Category 2')]).ids)],
         })
         self.main_pos_config.write({
             'use_order_printer': True,
-            'printer_ids': [Command.set(self.printer.ids)],
+            'preparation_printer_ids': [Command.set(self.printer.ids)],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_printer_restricts_to_allowed_categories_for_combo', login="pos_user")
@@ -1453,11 +1456,12 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pos_categ_ids': [Command.set(new_category.ids)],
         })
         self.printer.write({
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(new_category.ids)],
         })
         self.main_pos_config.write({
             'use_order_printer': True,
-            'printer_ids': [Command.set(self.printer.ids)],
+            'preparation_printer_ids': [Command.set(self.printer.ids)],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_printer_not_linked_to_any_combo_category', login="pos_user")
@@ -2830,13 +2834,20 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(order2.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
 
     def test_fast_payment_validation_from_product_screen_with_automatic_receipt_printing(self):
+        pos_printer = self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'use_type': 'receipt',
+        })
         self.main_pos_config.write({
             'use_fast_payment': True,
             'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
             'iface_print_auto': True,
             'iface_print_skip_screen': True,
             'other_devices': True,
-            'epson_printer_ip': '127.0.0.1:8069/receipt_receiver',
+            'receipt_printer_ids': [Command.set(pos_printer.ids)],
+            'default_receipt_printer_id': pos_printer,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_fast_payment_validation_from_product_screen_with_automatic_receipt_printing')

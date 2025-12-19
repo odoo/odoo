@@ -54,8 +54,9 @@ class ResConfigSettings(models.TransientModel):
     pos_module_pos_restaurant = fields.Boolean(related='pos_config_id.module_pos_restaurant', readonly=False)
     pos_module_pos_appointment = fields.Boolean(related="pos_config_id.module_pos_appointment", readonly=False)
     pos_module_pos_avatax = fields.Boolean(related='pos_config_id.module_pos_avatax', readonly=False)
-    pos_use_order_printer = fields.Boolean(compute='_compute_pos_printer', store=True, readonly=False)
-    pos_printer_ids = fields.Many2many(related='pos_config_id.printer_ids', readonly=False)
+    pos_default_receipt_printer_id = fields.Many2one(related='pos_config_id.default_receipt_printer_id', readonly=False)
+    pos_receipt_printer_ids = fields.Many2many(related='pos_config_id.receipt_printer_ids', domain="[('use_type', '=', 'receipt')]", readonly=False)
+    pos_preparation_printer_ids = fields.Many2many(related='pos_config_id.preparation_printer_ids', domain="[('use_type', '=', 'preparation')]", readonly=False)
 
     pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
     pos_amount_authorized_diff = fields.Float(related='pos_config_id.amount_authorized_diff', readonly=False)
@@ -83,6 +84,7 @@ class ResConfigSettings(models.TransientModel):
     pos_manual_discount = fields.Boolean(related='pos_config_id.manual_discount', readonly=False)
     pos_only_round_cash_method = fields.Boolean(related='pos_config_id.only_round_cash_method', readonly=False)
     pos_other_devices = fields.Boolean(related='pos_config_id.other_devices', readonly=False)
+    pos_preparation_devices = fields.Boolean(related='pos_config_id.preparation_devices', readonly=False)
     pos_payment_method_ids = fields.Many2many(related='pos_config_id.payment_method_ids', readonly=False)
     pos_picking_policy = fields.Selection(related='pos_config_id.picking_policy', readonly=False)
     pos_picking_type_id = fields.Many2one(related='pos_config_id.picking_type_id', readonly=False)
@@ -114,7 +116,6 @@ class ResConfigSettings(models.TransientModel):
     pos_basic_receipt = fields.Boolean(related='pos_config_id.basic_receipt', readonly=False)
     pos_fallback_nomenclature_id = fields.Many2one(related='pos_config_id.fallback_nomenclature_id', domain="[('id', '!=', barcode_nomenclature_id)]", readonly=False)
     group_pos_preset = fields.Boolean(string="Presets", implied_group="point_of_sale.group_pos_preset", help="Hide or show the Presets menu in the Point of Sale configuration.")
-    pos_epson_printer_ip = fields.Char(related='pos_config_id.epson_printer_ip', readonly=False)
     pos_use_fast_payment = fields.Boolean(related='pos_config_id.use_fast_payment', readonly=False)
     pos_fast_payment_method_ids = fields.Many2many(related='pos_config_id.fast_payment_method_ids', readonly=False)
 
@@ -227,14 +228,7 @@ class ResConfigSettings(models.TransientModel):
 
     @api.model
     def _is_cashdrawer_displayed(self, res_config):
-        return res_config.pos_other_devices and bool(res_config.pos_epson_printer_ip)
-
-    @api.depends('pos_module_pos_restaurant', 'pos_config_id')
-    def _compute_pos_printer(self):
-        for res_config in self:
-            res_config.update({
-                'pos_use_order_printer': res_config.pos_config_id.use_order_printer,
-            })
+        return res_config.pos_other_devices and bool(res_config.pos_default_receipt_printer_id)
 
     @api.depends('pos_limit_categories', 'pos_config_id')
     def _compute_pos_iface_available_categ_ids(self):
@@ -252,7 +246,7 @@ class ResConfigSettings(models.TransientModel):
             else:
                 res_config.pos_selectable_categ_ids = self.env['pos.category'].search([])
 
-    @api.depends('pos_config_id', 'pos_epson_printer_ip', 'pos_other_devices')
+    @api.depends('pos_config_id', 'pos_default_receipt_printer_id', 'pos_other_devices')
     def _compute_pos_iface_cashdrawer(self):
         for res_config in self:
             if self._is_cashdrawer_displayed(res_config):
@@ -316,9 +310,3 @@ class ResConfigSettings(models.TransientModel):
                     old._add_trusted_config_id(config.pos_config_id)
                 if old.id in removed_trusted_configs:
                     old._remove_trusted_config_id(config.pos_config_id)
-
-    @api.onchange("pos_epson_printer_ip")
-    def _onchange_epson_printer_ip(self):
-        for rec in self:
-            if rec.pos_epson_printer_ip:
-                rec.pos_epson_printer_ip = format_epson_certified_domain(rec.pos_epson_printer_ip)
