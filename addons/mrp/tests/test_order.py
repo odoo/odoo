@@ -5379,6 +5379,21 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo1.product_qty, mo2.product_qty)
         self.assertEqual(wo1.qty_produced, wo2.qty_produced)
 
+    def test_change_bom_and_quantity_together(self):
+        """Ensure that changing the BoM and the production quantity together before saving
+        does not create duplicate work orders for the same operation.
+        """
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_2.product_id.id
+        })
+        self.assertFalse(mo.workorder_ids)
+        self.assertEqual(len(self.bom_2.operation_ids), 1)
+        mo_form = Form(mo)
+        mo_form.bom_id = self.bom_2
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+        self.assertEqual(len(mo.workorder_ids), 1)
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):
