@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website_sale.shop_page_empty_screen">
+        <div class="o_wsale_empty_screen_container d-none d-md-block bg-primary-subtle rounded mx-auto px-5 pt-4">
+            <div
+                class="o_wsale_empty_screen position-relative border-bottom-0 bg-body overflow-hidden"
+                role="img"
+                aria-label="Animation showing how to create a new product: Click 'New' in the top-right corner, then select 'Product'."
+            >
+                <div
+                    class="o_wsale_empty_screen_header d-flex align-items-stretch justify-content-end border-bottom"
+                    aria-hidden="true"
+                >
+                    <i class="fa fa-lg fa-mobile align-self-center me-3" role="img"/>
+                    <button
+                        class="o-dropdown o-dropdown-caret btn btn-light rounded-0 px-2 pe-none"
+                        tabindex="-1"
+                    >
+                        New
+                    </button>
+                    <button
+                        class="btn btn-primary rounded-0 lh-1 pe-none"
+                        tabindex="-1"
+                    >
+                        Edit
+                    </button>
+                </div>
+                <div class="o_wsale_empty_screen_content position-relative" aria-hidden="true"/>
+                <div class="o_wsale_empty_screen_modal_wrapper" aria-hidden="true">
+                    <div class="o_wsale_skeleton_modal d-grid bg-body border rounded shadow-lg">
+                        <div class="o_wsale_empty_screen_cursor position-absolute z-1 pe-none"/>
+                        <div class="o_wsale_skeleton_box position-relative w-100"/>
+                        <div class="o_wsale_app_box d-flex gap-2 m-n1 p-1 rounded">
+                            <div class="o_wsale_app_icon border rounded p-1 bg-body">
+                                <img
+                                    src="/website_sale/static/description/icon.svg"
+                                    class="img img-fluid h-100 align-top"
+                                />
+                            </div>
+                            <div class="d-flex flex-column align-items-start flex-grow-1 smaller">
+                                <div class="fw-bold">Product</div>
+                                <div class="lh-1">Sell Online</div>
+                            </div>
+                        </div>
+                        <div class="o_wsale_skeleton_box position-relative w-100"/>
+                        <div class="o_wsale_skeleton_box position-relative w-100"/>
+                        <div class="o_wsale_skeleton_box position-relative w-100"/>
+                        <div class="o_wsale_skeleton_box position-relative w-100"/>
+                        <div class="o_wsale_skeleton_box position-relative w-100"/>
+                        <div class="o_wsale_skeleton_box position-relative w-100"/>
+                        <div class="o_wsale_skeleton_box position-relative w-100"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>
