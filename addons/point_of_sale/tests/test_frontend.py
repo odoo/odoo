@@ -3985,6 +3985,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         created_order = self.env['pos.order'].search([('partner_id', '=', partner.id)], limit=1)
         self.assertNotEqual(created_order.pricelist_id, not_available_pricelist)
 
+    def test_pos_open_ui_button(self):
+        """ Test the Open Register button click behavior in the dashboard. """
+        self.start_tour("/odoo/point-of-sale", 'test_pos_open_ui_button', login="pos_user")
+
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
