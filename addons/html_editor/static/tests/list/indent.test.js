@@ -5,7 +5,7 @@ import { splitBlock, keydownTab, undo, tripleClick } from "../_helpers/user_acti
 import { getContent } from "../_helpers/selection";
 
 describe("Checklist", () => {
-    test("should indent a checklist", async () => {
+    test("should indent a checklist (1)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -21,6 +21,9 @@ describe("Checklist", () => {
                         </li>
                     </ul>`),
         });
+    });
+
+    test("should indent a checklist (2)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -38,7 +41,7 @@ describe("Checklist", () => {
         });
     });
 
-    test('should indent a checklist and previous line become the "title"', async () => {
+    test('should indent a checklist and previous line become the "title" (1)', async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -56,6 +59,9 @@ describe("Checklist", () => {
                         </li>
                     </ul>`),
         });
+    });
+
+    test('should indent a checklist and previous line become the "title" (2)', async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -73,6 +79,9 @@ describe("Checklist", () => {
                         </li>
                     </ul>`),
         });
+    });
+
+    test('should indent a checklist and previous line become the "title" (3)', async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -90,6 +99,9 @@ describe("Checklist", () => {
                         </li>
                     </ul>`),
         });
+    });
+
+    test('should indent a checklist and previous line become the "title" (4)', async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -109,7 +121,7 @@ describe("Checklist", () => {
         });
     });
 
-    test("should indent a checklist and merge it with previous siblings", async () => {
+    test("should indent a checklist and merge it with previous siblings (1)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -131,7 +143,9 @@ describe("Checklist", () => {
                         </li>
                     </ul>`),
         });
+    });
 
+    test("should indent a checklist and merge it with previous siblings (2)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -153,6 +167,9 @@ describe("Checklist", () => {
                         </li>
                     </ul>`),
         });
+    });
+
+    test("should indent a checklist and merge it with previous siblings (3)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -176,7 +193,7 @@ describe("Checklist", () => {
         });
     });
 
-    test("should indent a checklist and merge it with next siblings", async () => {
+    test("should indent a checklist and merge it with next siblings (1)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -198,6 +215,9 @@ describe("Checklist", () => {
                         </li>
                     </ul>`),
         });
+    });
+
+    test("should indent a checklist and merge it with next siblings (2)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -219,6 +239,9 @@ describe("Checklist", () => {
                         </li>
                     </ul>`),
         });
+    });
+
+    test("should indent a checklist and merge it with next siblings (3)", async () => {
         await testEditor({
             contentBefore: unformat(`
                     <ul class="o_checklist">
@@ -803,7 +826,7 @@ describe("with selection", () => {
         });
     });
 
-    test("should indent multi-level", async () => {
+    test("should indent multi-level (1)", async () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
@@ -831,6 +854,9 @@ describe("with selection", () => {
                     </li>
                 </ul>`),
         });
+    });
+
+    test("should indent multi-level (2)", async () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
@@ -866,6 +892,9 @@ describe("with selection", () => {
                     </li>
                 </ul>`),
         });
+    });
+
+    test("should indent multi-level (3)", async () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
@@ -913,7 +942,7 @@ describe("with selection", () => {
         });
     });
 
-    test("should indent two multi-levels", async () => {
+    test("should indent two multi-levels (1)", async () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
@@ -949,6 +978,9 @@ describe("with selection", () => {
                     </li>
                 </ul>`),
         });
+    });
+
+    test("should indent two multi-levels (2)", async () => {
         await testEditor({
             contentBefore: unformat(`
                 <ul>
