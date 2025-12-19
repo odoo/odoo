@@ -130,10 +130,10 @@ export class PaymentAdyen extends PaymentInterface {
             },
         };
 
-        if (config.adyen_ask_customer_for_tip) {
-            data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData =
-                "tenderOption=AskGratuity";
-        }
+        data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData =
+            config.adyen_ask_customer_for_tip
+                ? "tenderOption=AskGratuity&authorisationType=PreAuth"
+                : "authorisationType=PreAuth";
 
         return data;
     }
