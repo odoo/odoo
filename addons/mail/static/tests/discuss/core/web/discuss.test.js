@@ -181,7 +181,8 @@ test("Auto-open OdooBot chat when opening discuss for the first time", async () 
 });
 
 test("no conversation selected when opening non-existing channel in discuss", async () => {
-    await startServer();
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(200); // non-existing id
     await contains("h4:text('No conversation selected.')");

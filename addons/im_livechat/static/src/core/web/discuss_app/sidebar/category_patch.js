@@ -29,6 +29,11 @@ const DiscussSidebarCategoryPatch = {
         }
         return actions;
     },
+    get isToggleFoldDisabled() {
+        return this.category.eq(this.store.discuss.livechatLookingForHelpCategory)
+            ? false
+            : super.isToggleFoldDisabled;
+    },
 };
 
 /** @type {DiscussSidebarChannel} */
