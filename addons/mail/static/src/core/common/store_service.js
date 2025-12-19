@@ -285,11 +285,12 @@ export class Store extends BaseStore {
     }
 
     async startMeeting() {
+        /** @type {import("models").DiscussChannel} */
         const channel = await this.createGroupChat({
             default_display_mode: "video_full_screen",
             partners_to: [this.self.id],
         });
-        await this.store.chatHub.initPromise;
+        await this.chatHub.initPromise;
         channel.chatWindow?.update({ autofocus: 0 });
         await this.env.services["discuss.rtc"].toggleCall(channel, { camera: true });
         if (this.rtc.selfSession) {

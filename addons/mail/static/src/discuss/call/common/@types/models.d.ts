@@ -33,7 +33,7 @@ declare module "models" {
     export interface Thread {
         activeRtcSession: RtcSession;
         cancelRtcInvitationTimeout: number|undefined;
-        focusAvailableVideo: () => void;
+        focusAvailableVideo: () => Promise<void>;
         focusStack: RtcSession[];
         hadSelfSession: boolean;
         isCallDisplayedInChatWindow: Readonly<boolean>;

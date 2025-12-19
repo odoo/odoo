@@ -6,6 +6,8 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { compareDatetime, effectWithCleanup } from "@mail/utils/common/misc";
 
+/** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
+
 export class DiscussChannel extends Record {
     static _name = "discuss.channel";
     static _inherits = { "mail.thread": "thread" };
@@ -123,6 +125,7 @@ export class DiscussChannel extends Record {
     });
     /** @type {"chat"|"channel"|"group"|"livechat"|"whatsapp"|"ai_chat"|"ai_composer"} */
     channel_type;
+    /** ⚠️ {@link AwaitChatHubInit} */
     chatWindow = fields.One("ChatWindow", {
         inverse: "channel",
     });
@@ -241,6 +244,7 @@ export class DiscussChannel extends Record {
     }
     /** @type {Number|undefined} */
     member_count;
+    /** ⚠️ {@link AwaitChatHubInit} */
     get shouldSubscribeToBusChannel() {
         return this.chatWindow?.isOpen;
     }
