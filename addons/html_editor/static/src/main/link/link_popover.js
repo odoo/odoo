@@ -437,7 +437,7 @@ export class LinkPopover extends Component {
      */
     async updateDocumentState() {
         const url = this.state.url;
-        const urlObject = URL.parse(url, this.props.document.URL);
+        const urlObject = URL.parse(url, document.URL);
         if (
             url &&
             (url.startsWith("/web/content/") ||
@@ -538,7 +538,7 @@ export class LinkPopover extends Component {
             return;
         }
         try {
-            url = new URL(this.state.url, this.props.document.URL); // relative to absolute
+            url = new URL(this.state.url, document.URL); // relative to absolute
         } catch {
             // Invalid URL, might happen with editor unsuported protocol. eg type
             // `geo:37.786971,-122.399677`, become `http://geo:37.786971,-122.399677`
