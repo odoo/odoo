@@ -89,6 +89,7 @@ class HrWorkEntryType(models.Model):
     unit_of_measure = fields.Selection([('hour', 'Hours'), ('day', 'Days')], default="hour", string="Unit of measure", required=True,
                                        help="Define if the time off type will be allocated/accrued in hours or days")
     unpaid = fields.Boolean('Is Unpaid', default=False)
+    default_duration = fields.Float("Default Duration", default=1.0)
     include_public_holidays_in_duration = fields.Boolean('Ignore Public Holidays', default=False, help="Public holidays should be counted in the leave duration when applying for leaves")
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
@@ -185,6 +186,15 @@ class HrWorkEntryType(models.Model):
                 if leave_from_date <= public_holiday_to_date and leave_to_date >= public_holiday_from_date:
                     raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
                         time off type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
+
+    @api.constrains('default_duration', 'request_unit')
+    def _check_default_duration(self):
+        for leave in self:
+            if leave.request_unit == 'day' and leave.default_duration % 1 != 0:
+                raise ValidationError(_("Default Duration must be an integer when Duration Type is 'Full Day'."))
+
+            if leave.request_unit == 'half_day' and leave.default_duration % 0.5 != 0:
+                raise ValidationError(_("Default Duration must be in steps of 0.5 when Duration Type is 'Half-Day'."))
 
     def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
         allocation_by_work_entry_type = dict(self.env['hr.leave.allocation']._read_group(

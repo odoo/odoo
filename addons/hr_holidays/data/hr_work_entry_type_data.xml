@@ -95,20 +95,114 @@
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_paternity_legal" model="hr.work.entry.type">
-        <field name="requires_allocation">False</field>
+        <field name="requires_allocation">True</field>
         <field name="leave_validation_type">no_validation</field>
-        <field name="request_unit">half_day</field>
+        <field name="request_unit">day</field>
         <field name="unit_of_measure">day</field>
+        <field name="default_duration">20</field>
+        <field name="employee_requests">True</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
-        <field name="country_id" ref="base.be"/>
+    </record>
+    
+    <record id="hr_work_entry.l10n_be_work_entry_type_child_ceremony" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="default_duration">1</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_foster_care_obligations" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="default_duration">6</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_child_adoption" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="default_duration">30</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_marriage_employee" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="default_duration">2</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_marriage_family" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="default_duration">1</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_death_close_family" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="default_duration">10</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_death_parents" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="default_duration">4</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_death_extended_family" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="default_duration">2</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_death_one_day" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="default_duration">1</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+    </record>
+
+    <record id="hr_work_entry.l10n_be_work_entry_type_civic_duty" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="default_duration">5</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_unpredictable" model="hr.work.entry.type">
-        <field name="requires_allocation">False</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="unpaid">True</field>
         <field name="request_unit">half_day</field>
+        <field name="default_duration">10</field>
         <field name="unit_of_measure">day</field>
-        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
-        <field name="country_id" ref="base.be"/>
+        <field name="hide_on_dashboard">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave_unpaid"/>
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_training_time_off" model="hr.work.entry.type">
