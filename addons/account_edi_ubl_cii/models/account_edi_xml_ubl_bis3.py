@@ -2,7 +2,7 @@
 from markupsafe import Markup
 from typing import Literal
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.addons.account.tools import dict_to_xml
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
@@ -519,14 +519,14 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
             # [BR-IC-12]-In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
             # "Intra-community supply" the Deliver to country code (BT-80) shall not be blank.
             'cen_en16931_delivery_country_code': (
-                _("For intracommunity supply, the delivery address should be included.")
+                self.env._("For intracommunity supply, the delivery address should be included.")
             ) if intracom_delivery and dict_to_xml(vals['document_node']['cac:Delivery']['cac:DeliveryLocation'], nsmap=nsmap, tag='cac:DeliveryLocation') is None else None,
 
             # [BR-IC-11]-In an Invoice with a VAT breakdown (BG-23) where the VAT category code (BT-118) is
             # "Intra-community supply" the Actual delivery date (BT-72) or the Invoicing period (BG-14)
             # shall not be blank.
             'cen_en16931_delivery_date_invoicing_period': (
-                _("For intracommunity supply, the actual delivery date or the invoicing period should be included.")
+                self.env._("For intracommunity supply, the actual delivery date or the invoicing period should be included.")
                 if (
                     intracom_delivery
                     and dict_to_xml(vals['document_node']['cac:Delivery']['cbc:ActualDeliveryDate'], nsmap=nsmap, tag='cbc:ActualDeliveryDate') is None
@@ -542,19 +542,19 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         for line_node in line_nodes:
             if not (line_node['cac:Item']['cbc:Name'] or {}).get('_text'):
                 # [BR-25]-Each Invoice line (BG-25) shall contain the Item name (BT-153).
-                constraints.update({'cen_en16931_item_name': _("Each invoice line should have a product or a label.")})
+                constraints.update({'cen_en16931_item_name': self.env._("Each invoice line should have a product or a label.")})
                 break
 
         for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_section', 'line_subsection', 'line_note')):
             if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type not in ('fixed', 'code'))) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
-                constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
+                constraints.update({'cen_en16931_tax_line': self.env._("Each invoice line shall have one and only one tax.")})
 
         for role in ('supplier', 'customer'):
             party_node = vals['document_node']['cac:AccountingCustomerParty'] if role == 'customer' else vals['document_node']['cac:AccountingSupplierParty']
             constraints[f'cen_en16931_{role}_country'] = (
-                _("The country is required for the %s.", role)
+                self.env._("The country is required for the %s.", role)
                 if not party_node['cac:Party']['cac:PostalAddress']['cac:Country']['cbc:IdentificationCode']['_text']
                 else None
             )
@@ -567,7 +567,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 # [BR-CO-09]-The Seller VAT identifier (BT-31), the Seller tax representative VAT identifier (BT-63)
                 # and the Buyer VAT identifier (BT-48) shall have a prefix in accordance with ISO code ISO 3166-1
                 # alpha-2 by which the country of issue may be identified. Nevertheless, Greece may use the prefix 'EL'.
-                constraints.update({f'cen_en16931_{role}_vat_country_code': _(
+                constraints.update({f'cen_en16931_{role}_vat_country_code': self.env._(
                     "The VAT of the %s should be prefixed with its country code.", role)})
 
         if invoice.partner_shipping_id:
@@ -608,7 +608,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
                 # [NL-R-003] For suppliers in the Netherlands, the legal entity identifier MUST be either a
                 # KVK or OIN number (schemeID 0106 or 0190)
-                'nl_r_003': _(
+                'nl_r_003': self.env._(
                     "%s should have a KVK or OIN number set in Company ID field or as Peppol e-address (EAS code 0106 or 0190).",
                     vals['supplier'].display_name
                 ) if (
@@ -632,7 +632,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
                     # [NL-R-005] For suppliers in the Netherlands, if the customer is in the Netherlands,
                     # the customer's legal entity identifier MUST be either a KVK or OIN number (schemeID 0106 or 0190)
-                    'nl_r_005': _(
+                    'nl_r_005': self.env._(
                         "%s should have a KVK or OIN number set in Company ID field or as Peppol e-address (EAS code 0106 or 0190).",
                         vals['customer'].display_name
                     ) if (
@@ -647,7 +647,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 # NO-R-001: For Norwegian suppliers, a VAT number MUST be the country code prefix NO followed by a
                 # valid Norwegian organization number (nine numbers) followed by the letters MVA.
                 # Note: mva.is_valid("179728982MVA") is True while it lacks the NO prefix
-                'no_r_001': _(
+                'no_r_001': self.env._(
                     "The VAT number of the supplier does not seem to be valid. It should be of the form: NO179728982MVA."
                 ) if not mva.is_valid(vat) or len(vat) != 14 or vat[:2] != 'NO' or vat[-3:] != 'MVA' else "",
             })
@@ -718,6 +718,6 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         order_vals, logs = self._retrieve_order_vals(order, tree)
         if order:
             order.write(order_vals)
-            order.message_post(body=Markup("<strong>%s</strong>") % _("Format used to import the document: %s", self._description))
+            order.message_post(body=Markup("<strong>%s</strong>") % self.env._("Format used to import the document: %s", self._description))
             if logs:
                 order._create_activity_set_details(Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs))

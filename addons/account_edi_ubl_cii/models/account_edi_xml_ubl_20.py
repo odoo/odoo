@@ -1,6 +1,6 @@
 from lxml import etree
 
-from odoo import _, models, Command
+from odoo import models, Command
 from odoo.tools import html2plaintext
 from odoo.tools.float_utils import float_is_zero, float_round
 from odoo.addons.account.tools import dict_to_xml
@@ -855,7 +855,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return {
             'cbc:ChargeIndicator': {'_text': 'false' if base_amount < 0.0 else 'true'},
             'cbc:AllowanceChargeReasonCode': {'_text': '66' if base_amount < 0.0 else 'ZZZ'},
-            'cbc:AllowanceChargeReason': {'_text': _("Conditional cash/payment discount")},
+            'cbc:AllowanceChargeReason': {'_text': self.env._("Conditional cash/payment discount")},
             'cbc:Amount': {
                 '_text': self.format_float(abs(base_amount), vals['currency_dp']),
                 'currencyID': vals['currency_name']
@@ -1109,7 +1109,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         logs = []
         invoice_values = {}
         if qty_factor == -1:
-            logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
+            logs.append(self.env._("The invoice has been converted into a credit note and the quantities have been reverted."))
         role = "AccountingCustomer" if invoice.journal_id.type == 'sale' else "AccountingSupplier"
         partner, partner_logs = self._import_partner(invoice.company_id, **self._import_retrieve_partner_vals(tree, role))
         # Need to set partner before to compute bank and lines properly

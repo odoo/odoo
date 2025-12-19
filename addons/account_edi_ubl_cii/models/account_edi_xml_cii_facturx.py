@@ -1,4 +1,4 @@
-from odoo import _, models, Command
+from odoo import models, Command
 from odoo.tools import float_repr, is_html_empty, html2plaintext, cleanup_xml_node
 from lxml import etree
 
@@ -51,7 +51,7 @@ class AccountEdiXmlCii(models.AbstractModel):
                 ),
                 'seller_payment_instructions_2': self._check_required_fields(
                     vals['record']['partner_bank_id'], 'sanitized_account_number',
-                    _("The field 'Sanitized Account Number' is required on the Recipient Bank.")
+                    self.env._("The field 'Sanitized Account Number' is required on the Recipient Bank.")
                 ),
             })
         constraints.update({
@@ -93,14 +93,14 @@ class AccountEdiXmlCii(models.AbstractModel):
         for line_vals in vals['invoice_line_vals_list']:
             line = line_vals['line']
             if not vals['tax_details']['tax_details_per_record'][line]['tax_details']:
-                return _("You should include at least one tax per invoice line. [BR-CO-04]-Each Invoice line (BG-25) "
+                return self.env._("You should include at least one tax per invoice line. [BR-CO-04]-Each Invoice line (BG-25) "
                          "shall be categorized with an Invoiced item VAT category code (BT-151).")
 
     def _check_non_0_rate_tax(self, vals):
         for line_vals in vals['tax_details']['tax_details_per_record']:
             tax_rate_list = line_vals.tax_ids.flatten_taxes_hierarchy().mapped("amount")
             if not any([rate > 0 for rate in tax_rate_list]):
-                return _("When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
+                return self.env._("When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
                          "each invoice line should be greater than 0.")
 
     def _get_scheduled_delivery_time(self, invoice):
@@ -284,7 +284,7 @@ class AccountEdiXmlCii(models.AbstractModel):
         logs = []
         invoice_values = {}
         if qty_factor == -1:
-            logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
+            logs.append(self.env._("The invoice has been converted into a credit note and the quantities have been reverted."))
         role = 'SellerTradeParty' if invoice.journal_id.type == 'purchase' else 'BuyerTradeParty'
         partner, partner_logs = self._import_partner(invoice.company_id, **self._import_retrieve_partner_vals(tree, role))
         # Need to set partner before to compute bank and lines properly

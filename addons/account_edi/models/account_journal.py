@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields
 from odoo.exceptions import UserError
 
 from collections import defaultdict
@@ -35,7 +35,7 @@ class AccountJournal(models.Model):
             ])
             # If the formats we are unchecking do not need a webservice, we don't need them to be correctly sent
             if documents.filtered(lambda d: d.edi_format_id._needs_web_services()):
-                raise UserError(_('Cannot deactivate (%s) on this journal because not all documents are synchronized', ', '.join(documents.edi_format_id.mapped('display_name'))))
+                raise UserError(self.env._('Cannot deactivate (%s) on this journal because not all documents are synchronized', ', '.join(documents.edi_format_id.mapped('display_name'))))
             # remove these documents which: do not need a web service & are linked to the edi formats we are unchecking
             if documents:
                 documents.unlink()

@@ -4,7 +4,7 @@ import io
 
 from lxml import etree
 
-from odoo import _, api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import SUPPORTED_FILE_TYPES
 from odoo.tools import cleanup_xml_node
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
@@ -31,9 +31,9 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_company_partners:
                 alerts['account_edi_ubl_cii_configure_company'] = {
-                    'message': _("Please fill in your company's VAT or Peppol Address to generate a complete XML file."),
+                    'message': self.env._("Please fill in your company's VAT or Peppol Address to generate a complete XML file."),
                     'level': 'info',
-                    'action_text': _("Configure"),
+                    'action_text': self.env._("Configure"),
                     'action': not_configured_company_partners._get_records_action(),
                 }
             not_configured_partners = peppol_format_moves.partner_id.commercial_partner_id.filtered(
@@ -41,10 +41,10 @@ class AccountMoveSend(models.AbstractModel):
             )
             if not_configured_partners:
                 alerts['account_edi_ubl_cii_configure_partner'] = {
-                    'message': _("Please fill in partner's VAT or Peppol Address."),
+                    'message': self.env._("Please fill in partner's VAT or Peppol Address."),
                     'level': 'info',
-                    'action_text': _("View Partner(s)"),
-                    'action': not_configured_partners._get_records_action(name=_("Check Partner(s)"))
+                    'action_text': self.env._("View Partner(s)"),
+                    'action': not_configured_partners._get_records_action(name=self.env._("Check Partner(s)"))
                 }
 
             if any(
@@ -54,10 +54,10 @@ class AccountMoveSend(models.AbstractModel):
                 chorus_pro = self.env['ir.module.module'].sudo().search([('name', '=', 'l10n_fr_facturx_chorus_pro')], limit=1)
                 if chorus_pro and chorus_pro.state != 'installed':
                     alerts['account_edi_ubl_cii_chorus_pro_install'] = {
-                        'message': _("Please install the french Chorus pro module to have all the specific rules."),
+                        'message': self.env._("Please install the french Chorus pro module to have all the specific rules."),
                         'level': 'info',
                         'action': chorus_pro._get_records_action(),
-                        'action_text': _("Install Chorus Pro"),
+                        'action_text': self.env._("Install Chorus Pro"),
                     }
         return alerts
 
@@ -121,7 +121,7 @@ class AccountMoveSend(models.AbstractModel):
             # Failed.
             if errors:
                 invoice_data['error'] = {
-                    'error_title': _("Errors occurred while creating the EDI document (format: %s):", builder._description),
+                    'error_title': self.env._("Errors occurred while creating the EDI document (format: %s):", builder._description),
                     'errors': errors,
                 }
                 invoice_data['error_but_continue'] = True

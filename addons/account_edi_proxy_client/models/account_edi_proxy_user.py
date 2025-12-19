@@ -5,7 +5,7 @@ from typing import Literal
 
 import requests
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import LockError, UserError
 from .account_edi_proxy_auth import OdooEdiProxyAuth
 
@@ -116,12 +116,12 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 auth=OdooEdiProxyAuth(user=self, auth_type=auth_type)).json()
         except (ValueError, requests.exceptions.ConnectionError, requests.exceptions.MissingSchema, requests.exceptions.Timeout, requests.exceptions.HTTPError):
             raise AccountEdiProxyError('connection_error',
-                _('The url that this service requested returned an error. The url it tried to contact was %s', url))
+                self.env._('The url that this service requested returned an error. The url it tried to contact was %s', url))
 
         if 'error' in response:
-            message = _('The url that this service requested returned an error. The url it tried to contact was %(url)s. %(error_message)s', url=url, error_message=response['error']['message'])
+            message = self.env._('The url that this service requested returned an error. The url it tried to contact was %(url)s. %(error_message)s', url=url, error_message=response['error']['message'])
             if response['error']['code'] == 404:
-                message = _('The url that this service tried to contact does not exist. The url was “%s”', url)
+                message = self.env._('The url that this service tried to contact does not exist. The url was “%s”', url)
             raise AccountEdiProxyError('connection_error', message)
 
         proxy_error = response['result'].pop('proxy_error', False)
@@ -137,7 +137,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if error_code == 'invalid_signature':
                 raise AccountEdiProxyError(
                     error_code,
-                    _("Failed to connect to Odoo Access Point server. This might be due to another connection to Odoo Access Point "
+                    self.env._("Failed to connect to Odoo Access Point server. This might be due to another connection to Odoo Access Point "
                       "server. It can occur if you have duplicated your database. \n\n"
                       "If you are not sure how to fix this, please contact our support."),
                 )
@@ -183,7 +183,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 if response['error'] == 'A user already exists with this identification.':
                     # Note: Peppol IAP errors weren't made properly with error code that are then translated on
                     # Odoo side. We are for now forced to check the error message.
-                    raise UserError(_('A user already exists with theses credentials on our server. Please check your information.'))
+                    raise UserError(self.env._('A user already exists with theses credentials on our server. Please check your information.'))
                 raise UserError(response['error'])
 
         return self.create({

@@ -2,7 +2,7 @@
 import base64
 import logging
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.exceptions import LockError, UserError
 
 
@@ -225,7 +225,7 @@ class AccountEdiDocument(models.Model):
             except LockError:
                 _logger.debug('Another transaction already locked documents rows. Cannot process documents.')
                 if not with_commit:
-                    raise UserError(_('This document is being sent by another process already. ')) from None
+                    raise UserError(self.env._('This document is being sent by another process already. ')) from None
                 continue
             self._process_job(job)
             if with_commit and len(jobs_to_process) > 1:

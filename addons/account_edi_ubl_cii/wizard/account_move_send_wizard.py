@@ -1,4 +1,4 @@
-from odoo import _, api, models
+from odoo import api, models
 
 
 class AccountMoveSendWizard(models.TransientModel):
@@ -12,6 +12,6 @@ class AccountMoveSendWizard(models.TransientModel):
                 wizard.invoice_edi_format
             )
             wizard.attachments_not_supported = {
-                attachment.id: _("Unspported file type via %s", wizard.invoice_edi_format)
+                attachment.id: self.env._("Unspported file type via %s", wizard.invoice_edi_format)
                 for attachment in attachments_not_supported
             }
