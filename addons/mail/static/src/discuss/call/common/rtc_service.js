@@ -1,6 +1,7 @@
 import { fields, Record } from "@mail/core/common/record";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
+import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_patch";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { rpc } from "@web/core/network/rpc";
 import { assignDefined, closeStream, onChange } from "@mail/utils/common/misc";
@@ -252,6 +253,11 @@ export class Rtc extends Record {
                 this.localSession ||
                 this.store["discuss.channel.rtc.session"].get(this._remotelyHostedSessionId)
             );
+        },
+        onDelete() {
+            if (this.channel) {
+                this.channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.INACTIVE;
+            }
         },
     });
     channel = fields.One("Thread", {
