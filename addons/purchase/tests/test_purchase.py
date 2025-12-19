@@ -931,7 +931,6 @@ class TestPurchase(AccountTestInvoicingCommon):
         """
         company_partner = self.env['res.partner'].create({
             'name': 'Small Company',
-            'company_type': 'company',
         })
         self.partner_a.parent_id = company_partner
         purchase_order = self.env['purchase.order'].create({

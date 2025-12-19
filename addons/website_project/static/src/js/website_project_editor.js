@@ -26,7 +26,7 @@ registry.category("website.form_editor_actions").add("create_task", {
         },
         {
             type: "char",
-            fillWith: "commercial_company_name",
+            fillWith: "parent_name",
             name: "partner_company_name",
             string: _t("Company Name"),
         },

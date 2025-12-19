@@ -4,7 +4,6 @@ import { advanceTime, queryOne } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
-    editSelectMenu,
     fields,
     models,
     mountView,
@@ -19,22 +18,10 @@ async function editAutocomplete(el, value) {
 }
 
 class ResPartner extends mailModels.ResPartner {
-    company_type = fields.Selection({
-        string: "Company Type",
-        type: "selection",
-        selection: [
-            ["company", "Company"],
-            ["individual", "Individual"],
-        ],
-        onChange: (obj) => {
-            obj.is_company = obj.company_type === "company";
-        },
-    });
     state_id = fields.Many2one({ relation: "res.country.state" });
     _views = {
         form: `
             <form>
-                <field name="company_type"/>
                 <field name="name" widget="field_partner_autocomplete"/>
                 <field name="parent_id" widget="res_partner_many2one"/>
                 <field name="website"/>
@@ -140,67 +127,13 @@ onRpc("/v1/companies/suggest", () => clearbitSuggestions);
 
 before(() => loadJS("/partner_autocomplete/static/lib/jsvat.js"));
 
-test.tags("desktop");
-test("Partner autocomplete : Company type = Individual", async () => {
-    await mountView({
-        resModel: "res.partner",
-        type: "form",
-    });
-
-    await editSelectMenu("[name='company_type'] input", {
-        value: "Individual",
-    });
-    expect("[name='name'] input").not.toHaveClass("o-autocomplete--input", {
-        message: "The input for field 'name' should be a regular input",
-    });
-
-    await contains("[name='parent_id']:first input").click();
-    expect(
-        "[name='parent_id']:first .o-autocomplete .o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one"
-    ).toHaveCount(0, { message: "There should be no option when input is empty" });
-
-    await editAutocomplete("[name='parent_id']:first input", "od");
-    expect(
-        "[name='parent_id']:first .o-autocomplete .o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one"
-    ).toHaveCount(0, { message: "There should be no option when the length of the query is < 3" });
-
-    await editAutocomplete("[name='parent_id']:first input", "company");
-    expect(
-        "[name='parent_id']:first .o-autocomplete .o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one"
-    ).toHaveCount(3);
-
-    // Click on the first option - "First company"
-    await contains(
-        "[name='parent_id']:first .o-autocomplete ul li.partner_autocomplete_dropdown_many2one:first"
-    ).click();
-    // Check that the fields of the modal have been pre-filled
-    const expectedValues = {
-        name: "First Company",
-        vat: "BE0477472701",
-        street: "Chaussée de Namur 40",
-        city: "Ramillies",
-        zip: "1367",
-        phone: "3281813700",
-        country_id: "Belgium",
-        state_id: "Walloon Brabant",
-    };
-    for (const [fieldName, expectedValue] of Object.entries(expectedValues)) {
-        expect(`.modal-content [name=${fieldName}] input`).toHaveValue(expectedValue, {
-            message: `${fieldName} should be pre-filled`,
-        });
-    }
-});
-
-test("Partner autocomplete : Company type = Company / Name search", async () => {
+test("Partner autocomplete : Name search", async () => {
     expect.assertions(11);
     await mountView({
         resModel: "res.partner",
         type: "form",
     });
 
-    await editSelectMenu("[name='company_type'] input", {
-        value: "Company",
-    });
     await contains("[name='name'] .dropdown input").click();
     expect(
         "[name='name'] .o-autocomplete .o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one"
@@ -236,7 +169,7 @@ test("Partner autocomplete : Company type = Company / Name search", async () => 
     }
 });
 
-test("Partner autocomplete : Company type = Company / VAT search", async () => {
+test("Partner autocomplete : VAT search", async () => {
     expect.assertions(11);
 
     await mountView({
@@ -244,9 +177,6 @@ test("Partner autocomplete : Company type = Company / VAT search", async () => {
         type: "form",
     });
 
-    await editSelectMenu("[name='company_type'] input", {
-        value: "Company",
-    });
     await contains("[name='vat'] .dropdown input").click();
     expect(
         "[name='vat'] .o-autocomplete .o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one"
@@ -326,7 +256,6 @@ test("Hide auto complete suggestion for no create", async () => {
         resModel: "res.partner",
         type: "form",
         arch: `<form>
-            <field name="company_type"/>
             <field name="parent_id" widget="res_partner_many2one" options="{'no_create': True}"/>
         </form>`,
     });
@@ -344,7 +273,6 @@ test("Display auto complete suggestion for canCreate", async () => {
         resModel: "res.partner",
         type: "form",
         arch: `<form>
-            <field name="company_type"/>
             <field name="parent_id" widget="res_partner_many2one" options="{'no_create': False}"/>
         </form>`,
     });
@@ -357,10 +285,6 @@ test("Partner autocomplete : onChange should not disturb option selection", asyn
     await mountView({
         resModel: "res.partner",
         type: "form",
-    });
-
-    await editSelectMenu("[name='company_type'] input", {
-        value: "Company",
     });
     await contains("[name='name'] .dropdown input").click();
     await editAutocomplete("[name='name'] .dropdown input", "company");

@@ -40,7 +40,7 @@
                     <group>
                         <group name="l10n_tr_delivery_details" string="General Information">
                             <field name="l10n_tr_nilvera_dispatch_type"  required="country_code == 'TR'"/>
-                            <field name="l10n_tr_nilvera_carrier_id" string="Carrier" domain="[('is_company', '=', True)]"/>
+                            <field name="l10n_tr_nilvera_carrier_id" string="Carrier" domain="[('vat', 'not in', [False, 'na', 'NA', '/'])]"/>
                             <field name="l10n_tr_nilvera_delivery_printed_number" invisible="l10n_tr_nilvera_dispatch_type != 'MATBUDAN'"/>
                             <field name="l10n_tr_nilvera_delivery_date" invisible="l10n_tr_nilvera_dispatch_type != 'MATBUDAN'"/>
                         </group>
@@ -58,7 +58,7 @@
                             <field name="l10n_tr_nilvera_trailer_plate_ids" widget="many2many_tags" context="{'default_plate_number_type': 'trailer'}"/>
                         </group>
                         <group name="l10n_tr_driver_details" string="Driver Information">
-                            <field name="l10n_tr_nilvera_driver_ids" widget="many2many_tags" create="0" group_create="0" domain="[('is_company', '=', False)]"/>
+                            <field name="l10n_tr_nilvera_driver_ids" widget="many2many_tags" create="0" group_create="0" domain="[('vat', 'not in', [False, 'na', 'NA', '/'])]"/>
                         </group>
                     </group>
                 </page>

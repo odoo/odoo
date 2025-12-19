@@ -940,7 +940,7 @@ class AccountJournal(models.Model):
         if not partner:
             partner = self.env['res.partner'].create({
                 'name': 'Deco Addict',
-                'is_company': True,
+                'vat': 'BE0477472701',
             })
         default_expense_account = company.expense_account_id
         ref = 'DE%s' % invoice_date.strftime('%Y%m')

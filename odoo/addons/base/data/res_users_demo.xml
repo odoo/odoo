@@ -5,7 +5,6 @@
         <record id="partner_demo" model="res.partner">
             <field name="name">Marc Demo</field>
             <field name="company_id" ref="main_company"/>
-            <field name="company_name">YourCompany</field>
             <field name="street">3575  Buena Vista Avenue</field>
             <field name="city">Eugene</field>
             <field name="state_id"  model="res.country.state" search="[('code','=','OR')]"/>
@@ -52,7 +51,6 @@
 
         <record model="res.partner" id="base.partner_admin">
             <field name="name">Mitchell Admin</field>
-            <field name="company_name">YourCompany</field>
             <field name="street">215 Vine St</field>
             <field name="city">Scranton</field>
             <field name="zip">18503</field>
@@ -78,7 +76,6 @@
             <field model="res.country.state" name="state_id" search="[('code','ilike','NJ')]"/>
             <field name="zip">07002</field>
             <field name="country_id" ref="base.us"/>
-            <field name="company_name">YourCompany</field>
             <field name="image_1920" type="base64" file="base/static/img/partner_demo_portal.png"/>
             <field name="phone">(683)-556-5104</field>
         </record>

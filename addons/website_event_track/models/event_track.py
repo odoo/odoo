@@ -229,10 +229,10 @@ class EventTrack(models.Model):
             if track.partner_id and not track.partner_function:
                 track.partner_function = track.partner_id.function
 
-    @api.depends('partner_id', 'partner_id.company_type')
+    @api.depends('partner_id', 'partner_id.is_company')
     def _compute_partner_company_name(self):
         for track in self:
-            if track.partner_id.company_type == 'company':
+            if track.partner_id.is_company:
                 track.partner_company_name = track.partner_id.name
             elif not track.partner_company_name:
                 track.partner_company_name = track.partner_id.parent_id.name

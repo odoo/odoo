@@ -571,14 +571,14 @@ class CustomerPortal(Controller):
                 partner_sudo._onchange_phone_validation()
 
         if (
-            'company_name' in address_values
+            'parent_name' in address_values
             and partner_sudo.commercial_partner_id != partner_sudo
             and partner_sudo.commercial_partner_id.is_company
         ):
             # If partner is an individual, update existing company's name or remove one
-            company_name = address_values['company_name']
+            company_name = address_values['parent_name']
             parent_company = partner_sudo.commercial_partner_id
-            partner_sudo.company_name = False
+            partner_sudo.parent_name = False
 
             if company_name and parent_company and parent_company.name != company_name:
                 parent_company.name = company_name
@@ -714,7 +714,7 @@ class CustomerPortal(Controller):
                 # Company name shouldn't be updated anywhere but the main and company address, even
                 # if it's not in the fields returned by _commercial_fields.
                 if partner_sudo != request.env['res.partner']._get_current_partner(**kwargs):
-                    address_values.pop('company_name', None)
+                    address_values.pop('parent_name', None)
             # Prevent changing the VAT number on a commercial partner if documents have been issued.
             elif (
                 'vat' in address_values

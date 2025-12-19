@@ -48,6 +48,16 @@ class ResPartner(models.Model):
         for record in self:
             record.l10n_tr_nilvera_customer_alias_id = record.l10n_tr_nilvera_customer_alias_ids[:1]
 
+    def _compute_is_company(self):
+        l10n_tr_partners = self.filtered(lambda p: p.country_code == 'TR')
+        for partner in l10n_tr_partners:
+            partner.is_company = False
+            # A company has a 10-digit Tax ID & an individual contact has an 11-digit Tax ID
+            if not partner._is_vat_void(partner.vat) and partner.vat.isdigit() and len(partner.vat) == 10:
+                partner.is_company = True
+
+        super(ResPartner, self - l10n_tr_partners)._compute_is_company()
+
     def _send_user_notification(self, type, message, action_button=None):
         self.env.user._bus_send(
             'account_notification' if action_button else 'simple_notification',

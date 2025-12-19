@@ -34,7 +34,6 @@ class TestEGEdiCommon(AccountEdiTestCommon):
             'state_id': cls.env.ref('base.state_eg_c').id,
             'l10n_eg_building_no': '12',
             'street': '12th dec. street',
-            'is_company': True,
         })
         cls.partner_b.write({
             'vat': 'ESF35999705',
@@ -43,7 +42,6 @@ class TestEGEdiCommon(AccountEdiTestCommon):
             'state_id': cls.env.ref('base.state_us_27').id,
             'l10n_eg_building_no': '12',
             'street': '5th avenue street',
-            'is_company': True,
         })
         cls.partner_c = cls.env['res.partner'].create({
             'name': 'عميل 1',
@@ -53,7 +51,6 @@ class TestEGEdiCommon(AccountEdiTestCommon):
             'state_id': cls.env.ref('base.state_eg_c').id,
             'l10n_eg_building_no': '12',
             'street': '12th dec. street',
-            'is_company': True,
         })
 
         cls.product_a.write({'barcode': '1KGS1TEST', })
@@ -69,7 +66,6 @@ class TestEGEdiCommon(AccountEdiTestCommon):
             'state_id': cls.env.ref('base.state_eg_c').id,
             'l10n_eg_building_no': '10',
             'street': '12th dec. street',
-            'is_company': True,
         })
         cls.company_data['default_journal_sale'].write({
             'l10n_eg_branch_id': cls.company_branch.id,

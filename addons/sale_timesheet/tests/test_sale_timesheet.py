@@ -28,7 +28,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
                 4. Compute the commercial partner as the restricted user and verify it's derived from the project partner.
                 5. Set the task partner, recompute, and verify the commercial partner updates accordingly.
         """
-        commercial_partner = self.env['res.partner'].create({'name': 'Commercial Partner', 'is_company': True})
+        commercial_partner = self.env['res.partner'].create({'name': 'Commercial Partner'})
         sub_partner = self.env['res.partner'].create({'name': 'Sub Partner', 'parent_id': commercial_partner.id})
         project = self.env['project.project'].create({
             'name': 'Test Project',

@@ -67,7 +67,6 @@ class TestStructure(TransactionCase):
             "name": "World Company",
             "country_id": self.env.ref("base.be").id,
             "vat": "ATU12345675",
-            "company_type": "company",
         })
 
         # reactivate it and correct the vat number
@@ -140,7 +139,6 @@ class TestStructure(TransactionCase):
         with patch('odoo.addons.base_vat.models.res_partner.check_vies', type(self)._vies_check_func):
             partner = self.env["res.partner"].create({
                 'name': 'Dummy Partner',
-                'company_name': 'My Company',
                 'vat': 'BE0477472701',
                 'country_id': self.env.ref("base.be").id,
             })
@@ -148,7 +146,7 @@ class TestStructure(TransactionCase):
 
         with patch('odoo.addons.base_vat.models.res_partner.check_vies',
                    side_effect=Exception('should not call check_vies()')):
-            partner.create_company()
+            partner._create_parent_from_name('My Company')
             self.assertEqual(partner.vies_valid, True)
             self.assertEqual(partner.parent_id.name, 'My Company')
             self.assertEqual(partner.parent_id.vies_valid, True)

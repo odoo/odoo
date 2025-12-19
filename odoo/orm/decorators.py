@@ -248,10 +248,10 @@ def depends(*args) -> Decorator:
 
             pname = fields.Char(compute='_compute_pname')
 
-            @api.depends('partner_id.name', 'partner_id.is_company')
+            @api.depends('partner_id.name', 'partner_id.vat')
             def _compute_pname(self):
                 for record in self:
-                    if record.partner_id.is_company:
+                    if record.partner_id.vat:
                         record.pname = (record.partner_id.name or "").upper()
                     else:
                         record.pname = record.partner_id.name

@@ -21,26 +21,22 @@ class TestItEdiExport(TestItEdi):
             'street': 'Via Test PA',
             'zip': '32121',
             'city': 'PA Town',
-            'is_company': True
         })
 
         cls.italian_partner_no_address_codice = cls.env['res.partner'].create({
             'name': 'Alessi',
             'l10n_it_codice_fiscale': '00465840031',
-            'is_company': True,
         })
 
         cls.italian_partner_no_address_VAT = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': 'IT00465840031',
-            'is_company': True,
         })
 
         cls.american_partner = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': '00465840031',
             'country_id': cls.env.ref('base.us').id,
-            'is_company': True,
         })
 
     def test_vat_not_equals_codice(self):
@@ -384,7 +380,7 @@ class TestItEdiExport(TestItEdi):
             'country_id': self.env.ref('base.us').id,
             'zip': '12345',
             'street': '123 Rainbow Road',
-            'is_company': True,
+            'vat': 'OO99999999999',
         })
 
         # =============== create invoices ===============
@@ -530,7 +526,6 @@ class TestItEdiExport(TestItEdi):
             'name': 'Alessi',
             'l10n_it_codice_fiscale': 'Mrtmtt91d08f205j',
             'l10n_it_pa_index': 'N8mimm9',
-            'is_company': False,
         })
 
         invoice = self.env['account.move'].with_company(self.company).create({

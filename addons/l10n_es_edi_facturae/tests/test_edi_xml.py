@@ -39,7 +39,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             'state_id': cls.env.ref('base.state_es_m').id,
             'city': "Madrid",
             'zip': "12345",
-            'vat': 'ES59962470K',
+            'vat': 'ESF70432075',
         })
 
         cls.caixabank = cls.env['res.bank'].create({
@@ -55,7 +55,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         })
 
         # ==== Business ====
-        cls.partner_a.write({  # -> PersonTypeCode 'F'
+        cls.partner_a.write({  # -> PersonTypeCode 'J'
             'country_id': cls.env.ref('base.be').id,  # -> ResidenceTypeCode 'U'
             'vat': 'BE0477472701',
             'city': "Namur",
@@ -66,7 +66,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
 
         cls.partner_b.write({
             'name': 'Ayuntamiento de San Sebastián de los Reyes',
-            'is_company': True,
             'country_id': cls.env.ref('base.es').id,
             'vat': 'P2813400E',
             'city': 'San Sebastián de los Reyes',
@@ -94,8 +93,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.us').id,
             'state_id': cls.env['res.country.state'].search([('name', '=', 'California')]).id,
             'email': 'indigo.exterior@example.com',
-            'company_type': 'company',
-            'is_company': True,
         })
 
         cls.password = "test"
@@ -481,7 +478,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         """
 
         partner = self.env.ref('l10n_es.partner_simplified')
-        partner.vat = 'ESA12345674'
+        partner.vat = 'ES05601522X'  # Make sure VAT represents an Individual
         partner.country_id = self.env['res.country'].search([('code', '=', 'ES')])
 
         # We need to patch dates and uuid to ensure the signature's consistency

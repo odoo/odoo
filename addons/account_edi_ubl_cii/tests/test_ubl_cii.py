@@ -306,7 +306,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
 
         self.assertRecordValues(bill.partner_id, [partner_vals])
         self.assertEqual(bill.partner_id.contact_address,
-                         "ALD Automotive LU\n270 rte d'Arlon\n\n8010 Strassen \nLuxembourg")
+                         "270 rte d'Arlon\n\n8010 Strassen \nLuxembourg")
 
     def test_actual_delivery_date_in_cii_xml(self):
 

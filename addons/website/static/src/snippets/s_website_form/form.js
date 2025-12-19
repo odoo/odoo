@@ -750,7 +750,7 @@ export class Form extends Interaction {
      * @returns {string[]} List of user's field that have to be fetched.
      */
     getUserPreFillFields() {
-        return ["name", "phone", "email", "commercial_company_name"];
+        return ["name", "phone", "email", "parent_name"];
     }
 
     /**

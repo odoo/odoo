@@ -5487,8 +5487,8 @@ class BaseModel(metaclass=MetaModel):
             # only keep records whose company is the current user's
             records.filtered(lambda r: r.company_id == user.company_id)
 
-            # only keep records whose partner is a company
-            records.filtered("partner_id.is_company")
+            # only keep records whose partner has VAT
+            records.filtered("partner_id.vat")
         """
         if not func:
             # align with mapped()

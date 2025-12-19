@@ -7,7 +7,6 @@
                 - parent_id
                 - country_id
                 - state_id
-                - company_type
                 - company_id
         -->
         <!-- Partner -->
@@ -19,6 +18,7 @@
                 <list string="Contacts" sample="1" multi_edit="1">
                     <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded border object-fit-contain'}" width="30" nolabel="1"/>
                     <field name="complete_name" string="Name"/>
+                    <field name="create_date" optional="hide"/>
                     <field name="vat" optional="hide" readonly="1"/>
                     <field name="email" optional="show"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
@@ -42,19 +42,16 @@
                 <form string="Contact">
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <div class="oe_title">
-                        <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
                         <h1>
-                            <field id="company" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact' and is_company"/>
-                            <field id="individual" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact' and not is_company"/>
+                            <field id="contact" name="name" default_focus="1" placeholder="e.g. Lumber Inc or Brandon Freeman"  required="type == 'contact'"/>
                         </h1>
                         <field name="parent_id"
                             widget="res_partner_many2one"
                             placeholder="Company Name..."
-                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
-                            invisible="is_company"/>
+                            domain="[('parent_id', '=', False)]" context="{'show_vat': True, 'default_user_id': user_id}"/>
                     </div>
                     <group>
-                        <field name="function" placeholder="e.g. Sales Director" invisible="is_company"/>
+                        <field name="function" placeholder="e.g. Sales Director"/>
                         <field name="email" widget="email" required="True"/>
                         <field name="phone" widget="phone" options="{'enable_sms': false}"/>
                     </group>
@@ -134,11 +131,17 @@
                             <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [130,130], 'img_class': 'rounded border'}"/>
                             <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
                             <div class="d-flex flex-column flex-grow-1">
-                                <field name="company_type" widget="radio" options="{'horizontal': true}"/>
-                                <h1 class="mb-0 w-md-75">
-                                    <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="e.g. Lumber Inc" invisible="not is_company" required="type == 'contact'"/>
-                                    <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="e.g. Brandon Freeman" invisible="is_company" required="type == 'contact'"/>
+                                <h1 class="mb-0 w-75">
+                                    <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="Name (company or person)" required="type == 'contact'"/>
                                 </h1>
+                                <div class="d-flex align-items-baseline w-md-50">
+                                    <i class="fa fa-fw me-1 fa-building text-primary" title="Company"/>
+                                    <field name="parent_id" class="w-100"
+                                        widget="res_partner_many2one"
+                                        placeholder="Company Employer"
+                                        domain="[('parent_id', '=', False)]"
+                                        context="{'default_user_id': user_id}"/>
+                                </div>
                                 <div class="d-flex align-items-baseline w-md-50">
                                     <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
                                     <field name="email" class="w-100" widget="email" required="user_ids" placeholder="Email"/>
@@ -152,21 +155,8 @@
                     </div>
                     <group>
                         <group>
-                            <field name="parent_id"
-                                widget="res_partner_many2one"
-                                placeholder="Company Name..."
-                                string="Company"
-                                domain="[('is_company', '=', True)]"
-                                context="{'default_is_company': True, 'default_user_id': user_id, 'show_address': False}"
-                                invisible="((is_company and not parent_id) or company_name) and company_name != ''"/>
-                            <div colspan="2" class="d-flex gap-2" invisible="not company_name or company_name == '' or is_company">
-                                <label for="company_name" class="fw-bold text-nowrap"/>
-                                <field name="company_name"/>
-                                <button name="create_company" icon="fa-plus-square" string="Create" type="object" class="oe_edit_only btn-link text-nowrap"/>
-                            </div>
                             <span class="o_form_label o_td_label o_address_type" name="address_name">
-                                <field name="type_address_label" invisible="is_company" readonly="1" class="fw-bold"/>
-                                <span invisible="not is_company">Address</span>
+                                <field name="type_address_label" readonly="1" class="fw-bold"/>
                             </span>
                             <div class="o_address_format">
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
@@ -181,10 +171,10 @@
                                         options='{"no_open": True, "no_create": True}'/>
                                 </div>
                             </div>
+                            <field name="vat" placeholder="e.g. BE0477472701"/>
                         </group>
                         <group>
-                            <field name="function" placeholder="e.g. Sales Director" invisible="is_company"/>
-                            <field name="vat" placeholder="e.g. BE0477472701"/>
+                            <field name="function" placeholder="e.g. Sales Director"/>
                             <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                             <field name="lang" invisible="active_lang_count &lt;= 1"/>
                             <field name="category_id" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"
@@ -197,12 +187,11 @@
 
                     <notebook colspan="4">
                         <page string="Contacts" name="contact_addresses" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': is_company and 'contact' or 'other'}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_lang': lang, 'default_user_id': user_id, 'default_type': 'contact'}">
                                 <kanban color="color">
                                     <field name="color"/>
                                     <field name="type"/>
                                     <field name="is_company"/>
-                                    <field name="company_type"/>
                                     <field name="image_128"/>
                                     <field name="name"/>
                                     <templates>
@@ -225,7 +214,7 @@
                                                         <i class="fa fa-fw me-1 fa-phone" title="Phone"/>
                                                         <field name="phone"/>
                                                     </div>
-                                                    <div invisible="not function or is_company">
+                                                    <div invisible="not function">
                                                         <i class="fa fa-fw me-1 fa-suitcase" title="Position"/>
                                                         <field name="function"/>
                                                     </div>
@@ -245,6 +234,7 @@
                                 </kanban>
                                 <form string="Contact / Address">
                                     <sheet>
+                                        <field name="parent_id" invisible="1"/>  <!-- Used for partner_autocomplete -->
                                         <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
                                         <div class="d-flex align-items-center gap-3">
                                             <field name="image_1920" widget="contact_image" nolabel="1" options="{'preview_image': 'avatar_128', 'size': [100,100], 'img_class': 'rounded border'}"/>
@@ -261,7 +251,7 @@
                                                         <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
                                                         <field name="phone" widget="phone" class="w-100" placeholder="Phone"/>
                                                     </div>
-                                                    <div invisible="is_company or type != 'contact'" class="d-flex align-items-baseline">
+                                                    <div invisible="type != 'contact'" class="d-flex align-items-baseline">
                                                         <i class="fa fa-fw me-1 fa-suitcase text-primary" title="Position"/>
                                                         <field name="function" placeholder="Job title"/>
                                                     </div>
@@ -302,11 +292,11 @@
                                 </group>
                                 <group name="misc" string="Misc">
                                     <field name="company_registry_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
-                                    <field name="company_registry" invisible="parent_id or not is_company" options="{'placeholder_field': 'company_registry_placeholder'}"/>
+                                    <field name="company_registry" invisible="parent_id" options="{'placeholder_field': 'company_registry_placeholder'}"/>
                                     <field name="ref" string="Reference"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="parent_id" force_save="1" placeholder="Visible to all"/>
                                     <field name="company_id" invisible="1"/> <!-- need to be able to compute based on the company even without multi company groups -->
-                                    <field name="industry_id" invisible="not is_company" options="{'no_create': True}"/>
+                                    <field name="industry_id" options="{'no_create': True}"/>
                                 </group>
                             </group>
                         </page>
@@ -327,14 +317,13 @@
                 <search string="Search Partner">
                     <field name="name"
                        filter_domain="['|', '|', '|', '|', ('complete_name', 'ilike', self), ('ref', 'ilike', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self)]"/>
-                    <field name="parent_id" domain="[('is_company', '=', True)]" operator="child_of"/>
+                    <field name="parent_id" domain="[('parent_id', '=', False)]" operator="child_of"/>
                     <field name="email" filter_domain="[('email', 'ilike', self)]"/>
                     <field name="phone"/>
                     <field name="category_id" string="Tag" operator="child_of"/>
                     <field name="user_id"/>
                     <separator/>
-                    <filter string="Persons" name="type_person" domain="[('is_company', '=', False)]"/>
-                    <filter string="Companies" name="type_company" domain="[('is_company', '=', True)]"/>
+                    <filter string="Subject to VAT" name="filter_vat_set" domain="[('vat', '!=', False)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <field name="properties"/>
@@ -362,7 +351,6 @@
                     <field name="type"/>
                     <field name="name"/>
                     <field name="properties"/>
-                    <field name="company_type"/>
                     <templates>
                         <t t-name="card" class="o_res_partner_kanban_card flex-row gap-2">
                             <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" class="z-1" invisible="active"/>
@@ -449,7 +437,7 @@
             <field name="path">ecommerce-customers</field>
             <field name="view_mode">list,kanban,form</field>
             <field name="domain">[]</field>
-            <field name="context">{'res_partner_search_mode': 'customer', 'default_is_company': True}</field>
+            <field name="context">{'res_partner_search_mode': 'customer'}</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
@@ -483,7 +471,7 @@
             <field name="res_model">res.partner</field>
             <field name="domain">[]</field>
             <field name="view_mode">kanban,list,form</field>
-            <field name="context">{'res_partner_search_mode': 'supplier', 'default_is_company': True}</field>
+            <field name="context">{'res_partner_search_mode': 'supplier'}</field>
             <field name="filter" eval="True"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">

@@ -33,9 +33,9 @@ class TestCRMLead(TestCrmCommon):
             'city': 'New New York',
             'country_id': country_us_id,
             'email': 'test.company@another.email.company.com',
-            'is_company': True,
             'name': 'My company',
             'street': '57th Street',
+            'vat': 'BE0477472701',
             'zip': '12345',
         })
         cls.test_partners = cls.env['res.partner'].create([
@@ -43,7 +43,6 @@ class TestCRMLead(TestCrmCommon):
                 'city': 'New York',
                 'country_id': country_us_id,
                 'email': 'dave@another.email.company.com',
-                'is_company': False,
                 'name': 'Dave',
                 'phone': '+1 202 000 0123',
                 'parent_id': cls.test_company.id,
@@ -54,7 +53,6 @@ class TestCRMLead(TestCrmCommon):
                 'city': 'New York',
                 'country_id': country_us_id,
                 'email': 'eve@another.email.company.com',
-                'is_company': False,
                 'name': 'Eve',
                 'parent_id': cls.test_company.id,
                 'phone': '+1 202 000 3210',

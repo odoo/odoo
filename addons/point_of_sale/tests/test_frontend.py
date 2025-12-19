@@ -529,7 +529,6 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
         res_partner_18 = env['res.partner'].create({
             'name': 'Lumber Inc',
-            'is_company': True,
         })
         res_partner_18.property_product_pricelist = excluded_pricelist
 

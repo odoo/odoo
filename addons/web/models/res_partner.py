@@ -77,9 +77,9 @@ class ResPartner(models.Model):
             url = vcard.add('url')
             url.value = self.website
         # Organisation
-        if self.commercial_company_name:
+        if self.parent_name:
             org = vcard.add('org')
-            org.value = [self.commercial_company_name]
+            org.value = [self.parent_name]
         if self.function:
             function = vcard.add('title')
             function.value = self.function

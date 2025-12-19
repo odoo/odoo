@@ -72,7 +72,7 @@ class TestDoc(HttpCaseWithUserDemo):
         res_partner_fields = res_partner.pop('fields')
         res_partner_methods = res_partner.pop('methods')
         self.assertEqual(res_partner, {'name': "Contact", 'model': 'res.partner'})
-        self.assertGreater(set(res_partner_methods), {'search', 'create_company'})
+        self.assertGreater(set(res_partner_methods), {'search'})
         self.assertGreater(set(res_partner_fields), {'id', 'create_uid', 'lang', 'tz'})
 
     def test_doc_model_user(self):
@@ -119,7 +119,7 @@ class TestDoc(HttpCaseWithUserDemo):
             'string': 'ID',
             'type': 'integer',
         })
-        self.assertGreater(set(methods), {'search', 'create_company'})
+        self.assertGreater(set(methods), {'search'})
         self.assertEqual(methods['search'], {
             'model': 'core',
             'module': 'core',
