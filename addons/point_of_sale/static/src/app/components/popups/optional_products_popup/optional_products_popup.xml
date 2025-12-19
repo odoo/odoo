@@ -32,8 +32,7 @@
                         <t t-if="!optional_product.qty">
                             <button
                                 type="button"
-                                class="btn btn-primary"
-                                style="width: 80px; height: 40px;"
+                                class="btn btn-primary py-2"
                                 t-on-click="() => this.changeQuantity(optional_product, true)">
                                 + Add
                             </button>
