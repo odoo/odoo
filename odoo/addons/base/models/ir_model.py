@@ -712,11 +712,17 @@ class IrModelFields(models.Model):
         except ValidationError as e:
             return {'warning': {'title': _("Model %s does not exist", self.relation), 'message': e}}
 
-    @api.constrains('relation')
+    @api.constrains('relation', 'store')
     def _check_relation(self):
         for rec in self:
-            if rec.state == 'manual' and rec.relation and not rec.env['ir.model']._get_id(rec.relation):
-                raise ValidationError(_("Unknown model name '%s' in Related Model", rec.relation))
+            if rec.state == 'manual':
+                if rec.store and rec.model and not self._is_manual_name(rec.model):
+                    Model = self.env[rec.model]
+                    table_kind = sql.table_kind(self.env.cr, Model._table)
+                    if table_kind != sql.TableKind.Regular:
+                        raise UserError(_('The model %s doesn\'t support adding stored fields.', Model._name))
+                if rec.relation and not rec.env['ir.model']._get_id(rec.relation):
+                    raise ValidationError(_("Unknown model name '%s' in Related Model", rec.relation))
 
     @api.constrains('depends')
     def _check_depends(self):
