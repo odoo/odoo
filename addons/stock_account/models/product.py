@@ -219,6 +219,8 @@ class ProductProduct(models.Model):
             ], limit=1, order="date, id")
         if self.cost_method != 'fifo':
             return product_value.value if product_value else self.standard_price
+        if not product_value and not self.standard_price:
+            return 0
         last_in_domain = Domain([('is_in', '=', True), ('product_id', '=', self.id)])
         if date:
             last_in_domain &= Domain([('date', '<=', date)])
