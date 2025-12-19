@@ -253,7 +253,7 @@ class WebsitePublishedMixin(models.AbstractModel):
             if model_name in seen or model_name not in self.env:
                 continue
             model = self.env[model_name]
-            if {'id', 'is_published'} <= set(model._fields):
+            if {'id', 'is_published', 'publish_on'} <= set(model._fields):
                 seen.add(model_name)
                 yield model
 
