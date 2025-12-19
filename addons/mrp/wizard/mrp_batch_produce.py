@@ -108,6 +108,7 @@ class MrpBatchProduct(models.TransientModel):
         lots = lots + self.env['stock.lot'].create(raw_lots)
 
         productions_to_set = OrderedSet()
+        productions.move_raw_ids.move_line_ids.unlink()
         for production, finished_lot in zip(productions, lots):
             production.lot_producing_id = finished_lot
             self._process_components(production, components_list.pop(0))
@@ -150,8 +151,6 @@ class MrpBatchProduct(models.TransientModel):
         lots = {(l.name, l.product_id): l for  l in self.env['stock.lot'].search([('name', 'in', lot_names)])}
         mls_vals = []
         for move, mls in moves_vals.items():
-            if mls:
-                move.move_line_ids.unlink()
             for qty, lot_name in mls:
                 ml_vals = self._prepapre_move_line_vals(move, qty, lot_name, lots)
                 mls_vals.append(ml_vals)

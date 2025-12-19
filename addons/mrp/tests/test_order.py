@@ -4395,32 +4395,58 @@ class TestMrpOrder(TestMrpCommon):
         mo, bom, finished, comp_1, comp_2 = self.generate_mo(
             tracking_final="serial",
             tracking_base_1="serial",
-            qty_final=2,
+            tracking_base_2="serial",
+            qty_final=3,
             qty_base_1=1,
+            qty_base_2=1,
         )
 
-        sn_1, sn_2 = self.env["stock.lot"].create([{
+        comp_1_sn_1, comp_1_sn_2, comp_1_sn_3 = self.env["stock.lot"].create([{
             "name": "SN1",
             "product_id": comp_1.id
         }, {
             "name": "SN2",
             "product_id": comp_1.id
+        }, {
+            "name": "SN3",
+            "product_id": comp_1.id
+        }])
+        comp_2_sn_1, comp_2_sn_2, comp_2_sn_3 = self.env["stock.lot"].create([{
+            "name": "SN1",
+            "product_id": comp_2.id
+        }, {
+            "name": "SN2",
+            "product_id": comp_2.id
+        }, {
+            "name": "SN3",
+            "product_id": comp_2.id
         }])
 
         child_location = self.env.ref('stock.stock_location_stock').child_ids[0]
-        self.env["stock.quant"]._update_available_quantity(comp_1, child_location, quantity=1.0, lot_id=sn_1)
-        self.env["stock.quant"]._update_available_quantity(comp_1, child_location, quantity=1.0, lot_id=sn_2)
+
+        self.env["stock.quant"]._update_available_quantity(comp_1, child_location, quantity=1.0, lot_id=comp_1_sn_1)
+        self.env["stock.quant"]._update_available_quantity(comp_1, child_location, quantity=1.0, lot_id=comp_1_sn_2)
+        self.env["stock.quant"]._update_available_quantity(comp_1, child_location, quantity=1.0, lot_id=comp_1_sn_3)
+        self.env["stock.quant"]._update_available_quantity(comp_2, child_location, quantity=1.0, lot_id=comp_2_sn_1)
+        self.env["stock.quant"]._update_available_quantity(comp_2, child_location, quantity=1.0, lot_id=comp_2_sn_2)
+        self.env["stock.quant"]._update_available_quantity(comp_2, child_location, quantity=1.0, lot_id=comp_2_sn_3)
+
         mo.action_confirm()
-        self.assertIn(sn_1, mo.move_raw_ids.move_line_ids.lot_id)
-        self.assertIn(sn_2, mo.move_raw_ids.move_line_ids.lot_id)
+        self.assertIn(comp_1_sn_1, mo.move_raw_ids.move_line_ids.lot_id)
+        self.assertIn(comp_1_sn_2, mo.move_raw_ids.move_line_ids.lot_id)
+        self.assertIn(comp_1_sn_3, mo.move_raw_ids.move_line_ids.lot_id)
+        self.assertIn(comp_2_sn_1, mo.move_raw_ids.move_line_ids.lot_id)
+        self.assertIn(comp_2_sn_2, mo.move_raw_ids.move_line_ids.lot_id)
+        self.assertIn(comp_2_sn_3, mo.move_raw_ids.move_line_ids.lot_id)
         for ml in mo.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id == comp_1):
             self.assertEqual(child_location, ml.location_id)
 
         batch_produce_action = mo.button_mark_done()
         batch_produce = Form(self.env['mrp.batch.produce'].with_context(**batch_produce_action['context']))
         batch_produce.production_text = """
-            SN1,SN1
-            SN2,SN2
+            SN1,SN1,SN2
+            SN2,SN3,SN1
+            SN3,SN2,SN3
         """
         batch_produce = batch_produce.save()
         batch_produce.action_prepare()
@@ -4429,6 +4455,94 @@ class TestMrpOrder(TestMrpCommon):
         for prod in productions:
             for ml in prod.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id == comp_1):
                 self.assertEqual(child_location, ml.location_id)
+
+    def test_batch_production_06(self):
+        mo, bom, finished, comp_1, comp_2 = self.generate_mo(
+            tracking_final="serial",
+            tracking_base_1="serial",
+            tracking_base_2="lot",
+            qty_final=2,
+            qty_base_1=2,
+            qty_base_2=4,
+        )
+
+        child_location_1 = self.env.ref('stock.stock_location_stock').child_ids[0]
+        child_location_2 = self.env.ref('stock.stock_location_stock').child_ids[1]
+
+        comp_1_sn_1, comp_1_sn_2, comp_1_sn_3, comp_1_sn_4 = self.env["stock.lot"].create([{
+            "name": "SN1",
+            "product_id": comp_1.id
+        },{
+            "name": "SN2",
+            "product_id": comp_1.id
+        },{
+            "name": "SN3",
+            "product_id": comp_1.id
+        },{
+            "name": "SN4",
+            "product_id": comp_1.id
+        }])
+
+        self.env["stock.quant"]._update_available_quantity(comp_1, child_location_1, quantity=1.0, lot_id=comp_1_sn_1)
+        self.env["stock.quant"]._update_available_quantity(comp_1, child_location_2, quantity=1.0, lot_id=comp_1_sn_2)
+        self.env["stock.quant"]._update_available_quantity(comp_1, child_location_1, quantity=1.0, lot_id=comp_1_sn_3)
+        self.env["stock.quant"]._update_available_quantity(comp_1, child_location_2, quantity=1.0, lot_id=comp_1_sn_4)
+
+        comp_2_lot_1, comp_2_lot_2, comp_2_lot_3 = self.env["stock.lot"].create([{
+            "name": "LOT1",
+            "product_id": comp_2.id
+        }, {
+            "name": "LOT2",
+            "product_id": comp_2.id
+        }, {
+            "name": "LOT3",
+            "product_id": comp_2.id
+        }])
+
+        self.env["stock.quant"]._update_available_quantity(comp_2, child_location_1, quantity=2.0, lot_id=comp_2_lot_1)
+        self.env["stock.quant"]._update_available_quantity(comp_2, child_location_2, quantity=3.0, lot_id=comp_2_lot_2)
+        self.env["stock.quant"]._update_available_quantity(comp_2, child_location_2, quantity=4.0, lot_id=comp_2_lot_3)
+
+        mo.action_confirm()
+        # Ensure all moves are fully assigned
+        for move in mo.move_raw_ids:
+            self.assertEqual(move.state, "assigned")
+        # Ensure we assigned only 3 pieces of LOT3 (which basically means we have proper components assigned)
+        ml_comp_2_lot_3 = mo.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id == comp_2 and ml.lot_id == comp_2_lot_3)
+        self.assertEqual(len(ml_comp_2_lot_3), 1)
+        self.assertEqual(ml_comp_2_lot_3.quantity, 3.0)
+
+        batch_produce_action = mo.button_mark_done()
+        batch_produce = Form(self.env['mrp.batch.produce'].with_context(**batch_produce_action['context']))
+        batch_produce.production_text = """
+            SN1,LOT1;2|LOT2;2,SN1|SN3
+            SN2,LOT2;1|LOT3;3,SN2|SN4
+        """
+        batch_produce = batch_produce.save()
+        batch_produce.action_prepare()
+
+        productions = mo.procurement_group_id.mrp_production_ids
+
+        expected_result = [
+            (
+                {
+                    comp_1: [(comp_1_sn_1, 1.0, child_location_1), (comp_1_sn_3, 1.0, child_location_1)],
+                    comp_2: [(comp_2_lot_1, 2.0, child_location_1), (comp_2_lot_2, 2.0, child_location_2)]
+                }
+            ), (
+                {
+                    comp_1: [(comp_1_sn_2, 1.0, child_location_2), (comp_1_sn_4, 1.0, child_location_2)],
+                    comp_2: [(comp_2_lot_2, 1.0, child_location_2), (comp_2_lot_3, 3.0, child_location_2)]
+                }
+            )
+        ]
+        for prod, res in zip(productions, expected_result):
+            for component, lots_list in res.items():
+                mls = prod.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id == component)
+                for lot_tuple in lots_list:
+                    ml = mls.filtered(lambda ml: ml.lot_id == lot_tuple[0])
+                    self.assertEqual(ml.quantity, lot_tuple[1])
+                    self.assertEqual(ml.location_id, lot_tuple[2])
 
     def test_multi_edit_start_date_wo(self):
         """
