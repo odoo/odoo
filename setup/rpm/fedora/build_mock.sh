@@ -48,7 +48,7 @@ output=$(LANG=C rpmbuild -bs        \
 package=$( echo $output | grep -Po '(?<=Wrote: ).+.src.rpm' )
 
 # Build RPM
-mock -r fedora-42-x86_64         \
+mock -r fedora-43-x86_64         \
     --chain                      \
     --define "%ts ${TSTAMP}"     \
     --localrepo=$HOME/rpmbuild/  \
