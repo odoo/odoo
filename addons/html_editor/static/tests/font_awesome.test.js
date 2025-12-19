@@ -66,13 +66,16 @@ describe("parse/render", () => {
         });
     });
 
-    test("should parse a fontawesome in a <span>", async () => {
+    test("should parse a fontawesome in a <span> (1)", async () => {
         await testEditor({
             contentBefore: '<p><span class="fa fa-pastafarianism"></span></p>',
             contentBeforeEdit:
                 '<p>\ufeff<span class="fa fa-pastafarianism" contenteditable="false">\u200b</span>\ufeff</p>',
             contentAfter: '<p><span class="fa fa-pastafarianism"></span></p>',
         });
+    });
+
+    test("should parse a fontawesome in a <span> (2)", async () => {
         await testEditor({
             contentBefore: '<p><span class="oi oi-pastafarianism"></span></p>',
             contentBeforeEdit:
@@ -81,7 +84,7 @@ describe("parse/render", () => {
         });
     });
 
-    test("should parse a fontawesome in a <i>", async () => {
+    test("should parse a fontawesome in a <i> (1)", async () => {
         await testEditor({
             // @phoenix content adapted to make it valid html
             contentBefore: '<p><i class="fa fa-pastafarianism"></i></p>',
@@ -89,6 +92,9 @@ describe("parse/render", () => {
                 '<p>\ufeff<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>\ufeff</p>',
             contentAfter: '<p><i class="fa fa-pastafarianism"></i></p>',
         });
+    });
+
+    test("should parse a fontawesome in a <i> (2)", async () => {
         await testEditor({
             // @phoenix content adapted to make it valid html
             contentBefore: '<p><i class="oi oi-pastafarianism"></i></p>',
@@ -156,49 +162,57 @@ describe("parse/render", () => {
         });
     });
     /** not sure this is necessary, keep for now in case it is
-        test('should insert navigation helpers when before a fontawesome, in an editable', async () => {
+        test('should insert navigation helpers when before a fontawesome, in an editable (1)', async () => {
             await testEditor({
                 contentBefore: '<p>abc[]<i class="fa fa-pastafarianism"></i></p>',
                 contentAfter:
                     '<p>abc[]\u200B<i class="fa fa-pastafarianism" contenteditable="false"></i>\u200B</p>',
             });
+        });
+        test('should insert navigation helpers when before a fontawesome, in an editable (2)', async () => {
             await testEditor({
                 contentBefore: '<p>[]<i class="fa fa-pastafarianism"></i></p>',
                 contentAfter:
                     '<p>\u200B[]<i class="fa fa-pastafarianism" contenteditable="false"></i>\u200B</p>',
             });
         });
-        test('should insert navigation helpers when after a fontawesome, in an editable', async () => {
+        test('should insert navigation helpers when after a fontawesome, in an editable (1)', async () => {
             await testEditor({
                 contentBefore: '<p><i class="fa fa-pastafarianism"></i>[]abc</p>',
                 contentAfter:
                     '<p>\u200B<i class="fa fa-pastafarianism" contenteditable="false"></i>\u200B[]abc</p>',
             });
+        });
+        test('should insert navigation helpers when after a fontawesome, in an editable (2)', async () => {
             await testEditor({
                 contentBefore: '<p><i class="fa fa-pastafarianism"></i>[]</p>',
                 contentAfter:
                     '<p>\u200B<i class="fa fa-pastafarianism" contenteditable="false"></i>\u200B[]</p>',
             });
         });
-        test('should not insert navigation helpers when not adjacent to a fontawesome, in an editable', async () => {
+        test('should not insert navigation helpers when not adjacent to a fontawesome, in an editable (1)', async () => {
             await testEditor({
                 contentBefore: '<p>ab[]c<i class="fa fa-pastafarianism"></i></p>',
                 contentAfter:
                     '<p>ab[]c<i class="fa fa-pastafarianism" contenteditable="false"></i></p>',
             });
+        });
+        test('should not insert navigation helpers when not adjacent to a fontawesome, in an editable (2)', async () => {
             await testEditor({
                 contentBefore: '<p><i class="fa fa-pastafarianism"></i>a[]bc</p>',
                 contentAfter:
                     '<p><i class="fa fa-pastafarianism" contenteditable="false"></i>a[]bc</p>',
             });
         });
-        test('should not insert navigation helpers when adjacent to a fontawesome in contenteditable=false container', async () => {
+        test('should not insert navigation helpers when adjacent to a fontawesome in contenteditable=false container (1)', async () => {
             await testEditor({
                 contentBefore:
                     '<p contenteditable="false">abc[]<i class="fa fa-pastafarianism"></i></p>',
                 contentAfter:
                     '<p contenteditable="false">abc<i class="fa fa-pastafarianism" contenteditable="false"></i></p>',
             });
+        });
+        test('should not insert navigation helpers when adjacent to a fontawesome in contenteditable=false container (2)', async () => {
             await testEditor({
                 contentBefore:
                     '<p contenteditable="false"><i class="fa fa-pastafarianism"></i>[]abc</p>',
@@ -206,13 +220,15 @@ describe("parse/render", () => {
                     '<p contenteditable="false"><i class="fa fa-pastafarianism" contenteditable="false"></i>abc</p>',
             });
         });
-        test('should not insert navigation helpers when adjacent to a fontawesome in contenteditable=false format', async () => {
+        test('should not insert navigation helpers when adjacent to a fontawesome in contenteditable=false format (1)', async () => {
             await testEditor({
                 contentBefore:
                     '<p contenteditable="true"><b contenteditable="false">abc[]<i class="fa fa-pastafarianism"></i></b></p>',
                 contentAfter:
                     '<p contenteditable="true"><b contenteditable="false">abc<i class="fa fa-pastafarianism" contenteditable="false"></i></b></p>',
             });
+        });
+        test('should not insert navigation helpers when adjacent to a fontawesome in contenteditable=false format (2)', async () => {
             await testEditor({
                 contentBefore:
                     '<p contenteditable="true"><b contenteditable="false"><i class="fa fa-pastafarianism"></i>[]abc</b></p>',
@@ -220,13 +236,15 @@ describe("parse/render", () => {
                     '<p contenteditable="true"><b contenteditable="false"><i class="fa fa-pastafarianism" contenteditable="false"></i>abc</b></p>',
             });
         });
-        test('should not insert navigation helpers when adjacent to a fontawesome in contenteditable=false format (oe-nested)', async () => {
+        test('should not insert navigation helpers when adjacent to a fontawesome in contenteditable=false format (oe-nested) (1)', async () => {
             await testEditor({
                 contentBefore:
                     '<p contenteditable="true"><a href="#" contenteditable="true"><b contenteditable="false">abc[]<i class="fa fa-pastafarianism"></i></b></a></p>',
                 contentAfter:
                     '<p contenteditable="true"><a href="#" contenteditable="true"><b contenteditable="false">abc<i class="fa fa-pastafarianism" contenteditable="false"></i></b></a></p>',
             });
+        });
+        test('should not insert navigation helpers when adjacent to a fontawesome in contenteditable=false format (oe-nested) (2)', async () => {
             await testEditor({
                 contentBefore:
                     '<p contenteditable="true"><a href="#" contenteditable="true"><b contenteditable="false"><i class="fa fa-pastafarianism"></i>[]abc</b></a></p>',
@@ -348,7 +366,7 @@ describe("deleteForward", () => {
 describe("deleteBackward", () => {
     describe("Selection collapsed", () => {
         describe("Basic", () => {
-            test("should delete a fontawesome (deleteBackward, collapsed)", async () => {
+            test("should delete a fontawesome (deleteBackward, collapsed) (1)", async () => {
                 await testEditor({
                     contentBefore: '<p>ab<i class="fa fa-pastafarianism"></i>[]cd</p>',
                     contentBeforeEdit:
@@ -356,6 +374,9 @@ describe("deleteBackward", () => {
                     stepFunction: deleteBackward,
                     contentAfter: "<p>ab[]cd</p>",
                 });
+            });
+
+            test("should delete a fontawesome (deleteBackward, collapsed) (2)", async () => {
                 await testEditor({
                     contentBefore: '<p>ab<i class="oi oi-pastafarianism"></i>[]cd</p>',
                     contentBeforeEdit:
