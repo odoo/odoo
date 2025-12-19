@@ -73,6 +73,7 @@ export function getInnerContent({
  * @param {string} options.name - The display name of the snippet
  * @param {string} options.content - The HTML content of the snippet
  * @param {string[]} [options.keywords=[]] - Search keywords for the snippet
+ * @param {string} options.label - Search label for the snippet (tag)
  * @param {string} options.groupName - The snippet group (category) name
  * @param {string} [options.imagePreview=""] - URL to preview image
  * @param {string|number} [options.moduleId=""] - Module ID if snippet belongs to a module
@@ -83,13 +84,14 @@ export function getSnippetStructure({
     name,
     content,
     keywords = [],
+    label = "",
     groupName,
     imagePreview = "",
     moduleId = "",
     moduleDisplayName = "",
 }) {
     keywords = keywords.join(", ");
-    return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}" data-module-id="${moduleId}" data-module-display-name="${moduleDisplayName}">${content}</div>`;
+    return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-label="${label}" data-o-group="${groupName}" data-module-id="${moduleId}" data-module-display-name="${moduleDisplayName}">${content}</div>`;
 }
 
 class BuilderContainer extends Component {
@@ -445,6 +447,7 @@ export function createTestSnippets({ snippets: snippetConfigs = [], withName = f
             content,
             innerHTML,
             keywords = [],
+            label = "",
             imagePreview = "",
             moduleId,
             moduleDisplayName,
@@ -465,6 +468,7 @@ export function createTestSnippets({ snippets: snippetConfigs = [], withName = f
             groupName,
             content: finalContent,
             keywords,
+            label,
             imagePreview,
             moduleId,
             moduleDisplayName,
