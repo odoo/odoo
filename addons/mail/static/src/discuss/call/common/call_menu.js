@@ -6,6 +6,7 @@ import { useCallActions } from "@mail/discuss/call/common/call_actions";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class CallMenu extends Component {
     static props = [];
@@ -16,6 +17,7 @@ export class CallMenu extends Component {
         this.rtc = useService("discuss.rtc");
         this.callActions = useCallActions({ channel: () => this.rtc.channel });
         useSubEnv({ inCallMenu: true });
+        this.dropdownState = useDropdownState();
         this.isEnterprise = odoo.info && odoo.info.isEnterprise;
     }
 
