@@ -21,6 +21,8 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
             'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
             return_value=None if with_error else self.mock_response_post_invoice_success,
             side_effect=self.mock_request_error if with_error else None,
+        ), patch(
+            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant', return_value=None
         ):
             pos_make_payment.with_context(context_make_payment).check()
 

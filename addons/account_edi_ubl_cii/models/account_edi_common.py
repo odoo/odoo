@@ -69,7 +69,7 @@ EAS_MAPPING = {
     'EE': {'9931': 'vat'},
     'ES': {'9920': 'vat'},
     'FI': {'0216': None},
-    'FR': {'0009': 'additional_identifiers', '9957': 'vat', '0002': None},
+    'FR': {'0225': 'peppol_endpoint', '0009': 'additional_identifiers', '9957': 'vat', '0002': None},
     'SG': {'0195': 'additional_identifiers'},
     'GB': {'9932': 'vat'},
     'GR': {'9933': 'vat'},
