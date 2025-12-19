@@ -1,21 +1,17 @@
 %global __requires_exclude ^.*odoo/addons/mail/static/scripts/odoo-mailgate.py$
 
-%global forgeurl https://github.com/odoo/odoo
-%global branch 19.0.0
-
+%global forgeurl https://github.com/NorTK/odoo
+Version: 19.0.0
 %forgemeta
 
-
 Name: odoo
-Summary: Odoo Server
-Version: 19.0.0
+Summary: NorTK Odoo Server
 Release: 1%{?dist}
 URL: %{forgeurl}
 Source0: %{forgesource}
 License: LGPL-3
 Group: Development/Libraries
 BuildArch: noarch
-Vendor: Odoo S.A. <info@odoo.com>
 
 Requires: sassc
 Requires: libsass
