@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
 
+from odoo.tools import format_list
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.exceptions import get_peppol_error_message
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
@@ -24,6 +25,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
+    @api.model
+    def _get_peppol_proxy_types(self):
+        return ['peppol']
+
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
         urls['peppol'] = {
@@ -32,11 +37,21 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         }
         return urls
 
+    def _get_peppol_proxy_endpoint(self, endpoint, proxy_type=None):
+        """The `endpoint` should include the number; be like `2/participant_status`"""
+        if not proxy_type:
+            self.ensure_one()
+            proxy_type = self.proxy_type
+        return f"/api/{proxy_type}/{endpoint}"
+
     @handle_demo
     def _call_peppol_proxy(self, endpoint, params=None):
         self.ensure_one()
-        if self.proxy_type != 'peppol':
-            raise UserError(_('EDI user should be of type Peppol'))
+        peppol_proxy_types = self._get_peppol_proxy_types()
+        if self.proxy_type not in peppol_proxy_types:
+            proxy_type_map = dict(self._fields['proxy_type']._description_selection(self.env))
+            proxy_types = [proxy_type_map[proxy_type] for proxy_type in peppol_proxy_types]
+            raise UserError(self.env._('EDI user should be of one of the following types: %s', format_list(self.env, proxy_types, 'or')))
 
         token_out_of_sync_error_message = self.env._(
             "Failed to connect to Peppol Access Point. This might happen if you restored a database from a backup or copied it without neutralization. "
@@ -56,7 +71,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if (
                 e.code == 'no_such_user'
                 and not self.active
-                and not self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+                and not self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == self.proxy_type)
             ):
                 self.company_id.write({
                     'account_peppol_proxy_state': 'not_registered',
@@ -147,15 +162,15 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     # -------------------------------------------------------------------------
 
     def _cron_peppol_get_new_documents(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', '=', 'peppol')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'receiver'), ('proxy_type', 'in', self._get_peppol_proxy_types())])
         edi_users._peppol_get_new_documents(skip_no_journal=True)
 
     def _cron_peppol_get_message_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', self._get_can_send_domain()), ('proxy_type', '=', 'peppol')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', self._get_can_send_domain()), ('proxy_type', 'in', self._get_peppol_proxy_types())])
         edi_users._peppol_get_message_status()
 
     def _cron_peppol_get_participant_status(self):
-        edi_users = self.search([('proxy_type', '=', 'peppol')])
+        edi_users = self.search([('proxy_type', 'in', self._get_peppol_proxy_types())])
         edi_users._peppol_get_participant_status()
 
         # throughout the registration process, we need to check the status more frequently
@@ -259,7 +274,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             try:
                 # request all messages that haven't been acknowledged
                 messages = edi_user._call_peppol_proxy(
-                    "/api/peppol/1/get_all_documents",
+                    endpoint=edi_user._get_peppol_proxy_endpoint('1/get_all_documents'),
                     params=params,
                 )
             except AccountEdiProxyError as e:
@@ -279,7 +294,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
             # retrieve attachments for filtered messages
             all_messages = edi_user._call_peppol_proxy(
-                "/api/peppol/1/get_document",
+                endpoint=edi_user._get_peppol_proxy_endpoint('1/get_document'),
                 params={'message_uuids': message_uuids},
             )
 
@@ -289,7 +304,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 self.env.cr.commit()
             if processed_uuids:
                 edi_user._call_peppol_proxy(
-                    "/api/peppol/1/ack",
+                    endpoint=edi_user._get_peppol_proxy_endpoint('1/ack'),
                     params={'message_uuids': processed_uuids},
                 )
                 edi_user._peppol_post_process_new_messages(moves)
@@ -297,20 +312,27 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         if need_retrigger:
             self.env.ref('account_peppol.ir_cron_peppol_get_new_documents')._trigger()
 
+    def _peppol_get_filetype(self, content):
+        return "xml", "application/xml"
+
+    def _peppol_get_decoded_document(self, content):
+        enc_key = content["enc_key"]
+        document_content = content["document"]
+        return self._decrypt_data(document_content, enc_key)
+
     def _peppol_process_new_messages(self, messages):
         self.ensure_one()
         processed_uuids = []
         moves = self.env['account.move']
         for uuid, content in messages.items():
-            enc_key = content["enc_key"]
-            document_content = content["document"]
+            fileextension, mimetype = self._peppol_get_filetype(content)
             filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
-            decoded_document = self._decrypt_data(document_content, enc_key)
+            decoded_document = self._peppol_get_decoded_document(content)
             attachment = self.env["ir.attachment"].create({
-                "name": f"{filename}.xml",
+                "name": f"{filename}.{fileextension}",
                 "raw": decoded_document,
                 "type": "binary",
-                "mimetype": "application/xml",
+                "mimetype": mimetype,
             })
             try:
                 if uuid_move := self._peppol_import_invoice(attachment, content['state'], uuid):
@@ -339,7 +361,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             need_retrigger = need_retrigger or len(documents) > job_count
             uuid_to_record = {document.peppol_message_uuid: document for document in documents[:job_count]}
             messages_to_process = edi_user._call_peppol_proxy(
-                "/api/peppol/1/get_document",
+                endpoint=edi_user._get_peppol_proxy_endpoint('1/get_document'),
                 params={'message_uuids': list(uuid_to_record)},
             )
 
@@ -347,7 +369,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
             if processed_message_uuids:
                 edi_user._call_peppol_proxy(
-                    "/api/peppol/1/ack",
+                    endpoint=edi_user._get_peppol_proxy_endpoint('1/ack'),
                     params={'message_uuids': processed_message_uuids},
                 )
         if need_retrigger:
@@ -387,13 +409,32 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             processed_message_uuids.append(uuid)
         return processed_message_uuids
 
+    def _peppol_process_participant_status(self, proxy_user):
+        self.ensure_one()
+        local_state = {
+            'draft': 'not_registered',
+            'sender': 'sender',
+            'smp_registration': 'smp_registration',
+            'receiver': 'receiver',
+            'rejected': 'rejected',
+        }.get(proxy_user.get('peppol_state'))
+
+        if local_state == 'not_registered':
+            self.sudo().company_id._reset_peppol_configuration()
+            self.action_archive()
+        elif local_state:
+            self.company_id.account_peppol_proxy_state = local_state
+        else:
+            _logger.warning("Received unknown Peppol state '%s' for EDI proxy user id=%s", proxy_user.get('peppol_state'), self.id)
+
     def _peppol_get_participant_status(self):
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
-            if edi_user.proxy_type != 'peppol':
+            if edi_user.proxy_type not in self._get_peppol_proxy_types():
                 continue
             try:
-                proxy_user = edi_user._make_request(f"{edi_user._get_server_url()}/api/peppol/2/participant_status")
+                endpoint = edi_user._get_peppol_proxy_endpoint('2/participant_status')
+                proxy_user = edi_user._make_request(f"{edi_user._get_server_url()}{endpoint}")
             except AccountEdiProxyError as e:
                 if e.code == 'client_gone':
                     # reset the connection if it was archived/deleted on IAP side
@@ -410,21 +451,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 _logger.error('Error while updating Peppol participant status: %s', error_message)
                 continue
 
-            local_state = {
-                'draft': 'not_registered',
-                'sender': 'sender',
-                'smp_registration': 'smp_registration',
-                'receiver': 'receiver',
-                'rejected': 'rejected',
-            }.get(proxy_user.get('peppol_state'))
+            edi_user._peppol_process_participant_status(proxy_user)
 
-            if local_state == 'not_registered':
-                edi_user.sudo().company_id._reset_peppol_configuration()
-                edi_user.action_archive()
-            elif local_state:
-                edi_user.company_id.account_peppol_proxy_state = local_state
-            else:
-                _logger.warning("Received unknown Peppol state '%s' for EDI proxy user id=%s", proxy_user.get('peppol_state'), edi_user.id)
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -447,7 +475,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             raise UserError(error_msg)
 
         self._call_peppol_proxy(
-            endpoint='/api/peppol/1/register_sender_as_receiver',
+            endpoint=self._get_peppol_proxy_endpoint('1/register_sender_as_receiver'),
             params={
                 'migration_key': company.sudo().account_peppol_migration_key,
                 'supported_identifiers': list(company._peppol_supported_document_types())
@@ -469,7 +497,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         try:
             # call _make_request directly because _peppol_get_participant_status()
             # is cron-safe and swallows AccountEdiProxyError.
-            proxy_user = self._make_request(f"{self._get_server_url()}/api/peppol/2/participant_status")
+            endpoint = self._get_peppol_proxy_endpoint('2/participant_status')
+            proxy_user = self._make_request(f"{self._get_server_url()}{endpoint}")
             proxy_state = proxy_user.get('peppol_state')
         except AccountEdiProxyError as e:
             # If user no longer exists on IAP side, don't try to fetch docs/statuses (they will fail).
@@ -483,7 +512,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if not modules.module.current_test:
                 self.env.cr.commit()
 
-            self._call_peppol_proxy(endpoint='/api/peppol/1/cancel_peppol_registration')
+            self._call_peppol_proxy(endpoint=self._get_peppol_proxy_endpoint('1/cancel_peppol_registration'))
 
         self.company_id._reset_peppol_configuration()
         self.unlink()
@@ -499,7 +528,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if not modules.module.current_test:
                 self.env.cr.commit()
 
-        self._call_peppol_proxy(endpoint='/api/peppol/1/unregister_to_sender')
+        self._call_peppol_proxy(endpoint=self._get_peppol_proxy_endpoint('1/unregister_to_sender'))
         self.company_id.account_peppol_proxy_state = 'sender'
 
     @api.model
@@ -513,14 +542,14 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             document types are no longer supported.
         """
         receivers = self.search([
-            ('proxy_type', '=', 'peppol'),
-            ('company_id.account_peppol_proxy_state', '=', 'receiver'),
+            ('proxy_type', 'in', self._get_peppol_proxy_types()),
+            ('company_id.account_peppol_proxy_state', '=', 'receiver')
         ])
         unsupported_identifiers = list(self.env['res.company']._peppol_modules_document_types().get(module, {}))
         for receiver in receivers:
             try:
                 receiver._call_peppol_proxy(
-                    '/api/peppol/2/remove_services',
+                    receiver._get_peppol_proxy_endpoint('2/remove_services'),
                     params={'document_identifiers': unsupported_identifiers},
                 )
             except (AccountEdiProxyError, UserError) as exception:
@@ -532,7 +561,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     def _peppol_get_services(self):
         """Get information from the IAP regarding the Peppol services."""
         self.ensure_one()
-        return self._call_peppol_proxy("/api/peppol/2/get_services")
+        return self._call_peppol_proxy(self._get_peppol_proxy_endpoint('2/get_services'))
 
     @api.model
     def _generate_webhook_token(self, company):
@@ -558,4 +587,5 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _peppol_reset_webhook(self):
         for edi_user in self:
-            edi_user._call_peppol_proxy('/api/peppol/2/set_webhook', params={'webhook_url': edi_user.company_id._get_peppol_webhook_endpoint(), 'token': self._generate_webhook_token(edi_user.company_id)})
+            endpoint = edi_user._get_peppol_proxy_endpoint('2/set_webhook')
+            edi_user._call_peppol_proxy(endpoint, params={'webhook_url': edi_user.company_id._get_peppol_webhook_endpoint(), 'token': self._generate_webhook_token(edi_user.company_id)})

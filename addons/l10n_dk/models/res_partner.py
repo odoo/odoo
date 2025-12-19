@@ -139,6 +139,8 @@ class ResPartner(models.Model):
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
         nemhandel_user = self.env.company.sudo().nemhandel_edi_user
+        if not nemhandel_user:  # to avoid unnecessary requests; i.e. in tests
+            return None
         edi_mode = nemhandel_user and nemhandel_user.edi_mode or self.env['ir.config_parameter'].sudo().get_str('l10n_dk.edi.mode')
         sml_zone = 'edel.sml-demo' if edi_mode == 'test' else 'edel.sml'
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.dataudveksling.dk/{endpoint_participant}"
@@ -164,7 +166,7 @@ class ResPartner(models.Model):
         try:
             response = requests.get(endpoint, timeout=TIMEOUT)
         except requests.exceptions.RequestException as e:
-            _logger.error("failed to query nemhandel participant %s: %s", edi_identification, e)
+            _logger.debug("failed to query nemhandel participant %s: %s", edi_identification, e)
             return
 
         if not response.ok:
