@@ -148,7 +148,11 @@ class PaymentProvider(models.Model):
                 **kwargs,
             )
 
-        headers = {'Content-Type': 'application/json'}
+        headers = {
+            'Content-Type': 'application/json',
+            # PayPal requires a reference specific to Odoo to be able to track Odoo customers.
+            'PayPal-Partner-Attribution-Id': 'OdooInc_SP_EC',
+        }
         if idempotency_key:
             headers['PayPal-Request-Id'] = idempotency_key
         if not is_refresh_token_request:

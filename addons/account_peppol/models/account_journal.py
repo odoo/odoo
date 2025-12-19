@@ -20,7 +20,6 @@ class AccountJournal(models.Model):
                 or (
                     j.type == 'purchase'
                     and j.is_self_billing
-                    and j.company_id.peppol_activate_self_billing_sending
                 )
             )
         )).show_refresh_out_einvoices_status_button = True

@@ -63,6 +63,10 @@ registerWebsitePreviewTour("shop_editor_no_alternative_products_visibility_tour"
         trigger: ':iframe .oe_product_cart[aria-label="product_with_alternative"] a',
         run: "click",
     },
+    {
+        content: "Ensure product page is loaded before clicking on Edit",
+        trigger: ':iframe #product_details',
+    },
     ...clickOnEditAndWaitEditMode(),
     {
         trigger: ':iframe .s_dynamic_snippet_title h4',

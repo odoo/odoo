@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-12-05 23:39+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"PO-Revision-Date: 2025-12-12 14:15+0000\n"
+"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/base/es_419/>\n"
 "Language: es_419\n"
@@ -3966,8 +3966,8 @@ msgstr ""
 "(.pfx). En un sistema UNIX\n"
 "  puedes usar los siguientes comandos:\n"
 "\n"
-"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -"
-"clcerts\n"
+"  - PFX -> CRT: openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys "
+"-clcerts\n"
 "\n"
 "  - CRT -> CER: openssl x509 -inform pem -in my_cert.crt -outform der -out "
 "my_cert.cer\n"
@@ -16186,10 +16186,10 @@ msgid ""
 "                                    <i class=\"fa fa-fw fa-key text-"
 "primary\" title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-envelope text-primary\" title="
-"\"Inicia sesión / Correo\" invisible=\"login != email\"/>\n"
-"                                    <i class=\"fa fa-fw fa-key text-primary\""
-" title=\"Inicia sesión\" invisible=\"login == email\"/>"
+"<i class=\"fa fa-fw fa-envelope text-primary\" title=\"Inicia sesión / "
+"Correo\" invisible=\"login != email\"/>\n"
+"                                    <i class=\"fa fa-fw fa-key text-"
+"primary\" title=\"Inicia sesión\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -32274,6 +32274,17 @@ msgstr "Localizadores inválidos"
 
 #. module: base
 #. odoo-python
+#: code:addons/base/models/ir_default.py:0
+#, python-format
+msgid ""
+"Invalid value in Default Value field. Expected type '%(field_type)s' for "
+"'%(model_name)s.%(field_name)s'."
+msgstr ""
+"Valor no válido en el campo Valor predeterminado. Se espera el tipo "
+"\"%(field_type)s\" para \"%(model_name)s.%(field_name)s\"."
+
+#. module: base
+#. odoo-python
 #: code:addons/template_inheritance.py:0
 msgid "Invalid attributes %s in element <attribute>"
 msgstr "Atributos no válidos %s en el elemento <attribute>"
@@ -34476,7 +34487,8 @@ msgstr "Gestione las integraciones de los portales de empleo con Sitio web"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_mrp
 msgid "Manage Kit product inventory & availability"
-msgstr "Gestiona el inventario y la disponibilidad de los productos de tipo kit"
+msgstr ""
+"Gestiona el inventario y la disponibilidad de los productos de tipo kit"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_room

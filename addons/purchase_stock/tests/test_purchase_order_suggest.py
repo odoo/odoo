@@ -622,9 +622,12 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
         )
         self.assertEqual(test_product.monthly_demand, 24)
 
-        # Create a and mark as todo a move in 20 days (for checking suggest/forecasted)
+        # Create and mark as todo a move in  18 & 20 days (for checking forecast on records and suggestion with Forecasted mode)
         self._create_and_process_delivery_at_date(
-            [(test_product, 100)], date=today + relativedelta(days=20), to_validate=False
+            [(test_product, 50)], date=today + relativedelta(days=18), to_validate=False
+        )
+        self._create_and_process_delivery_at_date(
+            [(test_product, 50)], date=today + relativedelta(days=20), to_validate=False
         )
         # Create a move yesterday on another warehouse
         other_warehouse = self.env.ref('stock.warehouse0')

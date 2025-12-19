@@ -104,6 +104,8 @@ class WebsocketClient(Thread):
                     ws.close()
                     helpers.odoo_restart()
                 case 'webrtc_offer':
+                    if not webrtc_client:
+                        continue
                     answer = webrtc_client.offer(payload['offer'])
                     send_to_controller({
                         'iot_box_identifier': helpers.get_identifier(),
@@ -154,7 +156,7 @@ class WebsocketClient(Thread):
         self.websocket_url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
         self.db_name = helpers.get_conf('db_name') or ''
         self.session_id = ''
-        super().__init__()
+        super().__init__(daemon=True)
 
     def run(self):
         if self.db_name:
