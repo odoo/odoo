@@ -10,6 +10,8 @@ export class RetryPrintPopup extends Component {
         message: { type: String, optional: true },
         canRetry: { type: Boolean, optional: true },
         download: { type: Function, optional: true },
+        tryOnOtherPrinter: { type: Boolean, optional: true },
+        onTryOtherPrinter: { type: Function, optional: true },
         retry: Function,
         close: Function,
     };
@@ -25,6 +27,11 @@ export class RetryPrintPopup extends Component {
 
     onClickRetry() {
         this.props.retry();
+        this.props.close();
+    }
+
+    onClickTryOnOtherPrinter() {
+        this.props.onTryOtherPrinter?.();
         this.props.close();
     }
 }

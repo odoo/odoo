@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.SelectDefaultPrinterPopup" owl="1">
+        <Dialog size="'sm'" title.translate="Several printers are available">
+            <t t-esc="'Choose another printer'"/>
+            <t t-foreach="props.receipt_printers" t-as="p" t-key="p.id">
+                <div class="my-2">
+                    <label class="d-flex align-items-center">
+                        <input type="radio"
+                            name="Fallback printer"
+                            t-model="state.selectedId"
+                            t-att-value="p.id"
+                            class="me-2"/>
+                        <span>
+                            <t t-esc="p.name"/>
+                        </span>
+                    </label>
+                </div>
+            </t>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="confirmSelection" t-att-disabled="!state.selectedId">
+                    Confirm
+                </button>
+                <button class="btn btn-secondary" t-on-click="cancel">
+                    Cancel
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

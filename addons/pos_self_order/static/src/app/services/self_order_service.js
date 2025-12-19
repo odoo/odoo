@@ -22,10 +22,7 @@ import {
     changesToOrder,
     filterChangeByCategories,
 } from "@point_of_sale/app/models/utils/order_change";
-import {
-    EpsonPrinter,
-    EpsonServerDirectPrinter,
-} from "@point_of_sale/app/utils/printer/epson_printer";
+import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 
 export class SelfOrder extends Reactive {
     constructor(...args) {
@@ -154,11 +151,6 @@ export class SelfOrder extends Reactive {
             this.addToCart(productTemplate, 1, "", {}, {});
             this.router.navigate("cart");
         });
-
-        if (this.config.epson_printer_ip && this.config.other_devices) {
-            this.receiptPrinter = new EpsonPrinter(this.config);
-            this.printer.setPrinter(this.receiptPrinter);
-        }
     }
 
     get selfService() {
@@ -442,11 +434,18 @@ export class SelfOrder extends Reactive {
     }
 
     initHardware() {
-        for (const printerConfig of this.models["pos.printer"].getAll()) {
+        for (const printerConfig of this.config.preparation_printer_ids) {
             const printer = this.createPrinter(printerConfig);
             if (printer) {
                 printer.config = printerConfig;
                 this.kitchenPrinters.push(printer);
+            }
+        }
+        for (const relPrinter of this.config.receipt_printer_ids) {
+            const printerDevice = this.createPrinter(relPrinter);
+            this.printer.setFallbackPrinter(printerDevice);
+            if (relPrinter == this.config.default_receipt_printer_id) {
+                this.printer.setPrinter(printerDevice);
             }
         }
 
@@ -483,13 +482,7 @@ export class SelfOrder extends Reactive {
 
     createPrinter(printer) {
         if (printer.printer_type === "epson_epos") {
-            return new EpsonPrinter(printer);
-        } else if (printer.printer_type === "epson_server_direct_print") {
-            return new EpsonServerDirectPrinter({
-                posConfigId: this.config.id,
-                posData: this.data,
-                busService: this.env.services.bus_service,
-            });
+            return new EpsonPrinter({ printer: printer });
         }
     }
 

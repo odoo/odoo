@@ -134,17 +134,19 @@ class PrinterDriver(PrinterDriverBase):
         if not self.connected_by_usb and not data:
             return
         if self.device_subtype == "receipt_printer":
-            self.print_status_receipt()
+            self.print_status_receipt(data)
         elif self.device_subtype == "label_printer":
             self.print_status_zpl()
         else:
             title, body = self._printer_status_content()
             self.print_raw(title + b'\r\n' + body.decode().replace('\n', '\r\n').encode())
 
-    def print_status_receipt(self):
+    def print_status_receipt(self, data=None):
         """Prints the status ticket of the IoT Box on the current printer."""
         title, body = self._printer_status_content()
-
+        if data and data.get('printer_name'):
+            title = b""
+            body = b"Test print for " + data['printer_name'].encode()
         commands = self.RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         if self.escpos_device:
             if not self.check_printer_status():

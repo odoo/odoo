@@ -18,10 +18,7 @@ export async function handleSaleDetails(pos, dialog) {
             formatCurrency: pos.env.utils.formatCurrency,
         })
     );
-    if (!pos.receiptPrinter) {
-        return;
-    }
-    const { successful, message } = await pos.receiptPrinter.printReceipt(report);
+    const { successful, message } = await pos.printer.device.printReceipt(report);
     if (!successful) {
         dialog.add(AlertDialog, {
             title: message.title,

@@ -17,7 +17,11 @@ export class PrinterService extends Reactive {
     setup(env, { renderer }) {
         this.renderer = renderer;
         this.device = null;
+        this.devices = new Set();
         this.state = { isPrinting: false };
+    }
+    setFallbackPrinter(newDevice) {
+        this.devices.add(newDevice);
     }
     setPrinter(newDevice) {
         this.device = newDevice;

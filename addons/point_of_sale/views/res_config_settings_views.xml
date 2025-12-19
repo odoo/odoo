@@ -393,50 +393,29 @@
                             </block>
 
                             <block title="Connected Devices" id="pos_connected_devices_section">
-                                <setting id="pos_other_devices" string="ePos Printer" help="Connect device to your PoS without an IoT Box" documentation="/applications/sales/point_of_sale/configuration/epos_ssc.html">
-                                    <field name="pos_other_devices"/>
-                                    <div class="row" invisible="not pos_other_devices">
-                                        <div class="col-lg-6">
-                                            <field name="pos_epson_printer_ip" placeholder="Epson Receipt Printer IP Address" class="w-100 pt-1" />
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <widget name="point_of_sale_test_epos" />
-                                        </div>
-                                        <div class="col-12 mt-2">
-                                            <div class="row" invisible="pos_epson_printer_ip in [False, '']">
-                                                <label string="Link Cashdrawer" for="pos_iface_cashdrawer" class="col-lg-4 o_light_label"/>
-                                                <field name="pos_iface_cashdrawer" class="col" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </setting>
                                 <setting id="customer_display" string="Customer Display" help="Set the background image of your customer display" documentation="/applications/sales/point_of_sale/shop/customer_display.html" >
                                     <label for="pos_customer_display_bg_img" />
                                     <field name="pos_customer_display_bg_img" class="w-100" filename="pos_customer_display_bg_img_name"/>
                                 </setting>
-                            </block>
-
-                            <block title="Preparation" id="pos_preparation_section">
-                                <setting string="Preparation Printers" help="Print orders at the kitchen, at the bar, etc." id="use_order_printer">
-                                    <field name="pos_use_order_printer"/>
-                                    <div class="content-group" invisible="not pos_use_order_printer">
+                                <setting string="Receipt Printers" help="Connect device to your PoS" id="pos_other_devices">
+                                    <field name="pos_other_devices"/>
+                                    <div class="content-group" invisible="not pos_other_devices">
                                         <div class="mt16 mb-1">
-                                            <label string="Printers" for="pos_printer_ids" class="o_light_label me-2"/>
-                                            <field name="pos_printer_ids" widget="many2many_tags"/>
+                                            <label string="Printers" for="pos_receipt_printer_ids" class="o_light_label me-2"/>
+                                            <field name="pos_receipt_printer_ids" widget="many2many_tags"/>
                                         </div>
-                                        <div>
-                                            <button name="action_pos_printer_dialog"
-                                                context="{'default_pos_config_ids': [pos_config_id]}"
-                                                icon="oi-arrow-right"
-                                                type="object"
-                                                string="Add Printer"
-                                                class="btn-link"/>
+                                        <div class="mt16 mb-1">
+                                            <label string="Default" for="pos_default_receipt_printer_id" class="o_light_label me-2"/>
+                                            <field name="pos_default_receipt_printer_id"/>
                                         </div>
-                                        <div>
-                                            <button name="%(point_of_sale.action_pos_printer_form)d" icon="oi-arrow-right" type="action" string="Manage Printers" class="btn-link"/>
+                                        <div class="mt16 mb-1">
+                                            <label string="Link Cashdrawer" for="pos_iface_cashdrawer" class="o_light_label me-2"/>
+                                            <field name="pos_iface_cashdrawer"/>
                                         </div>
                                     </div>
                                 </setting>
+                            </block>
+                            <block title="Preparation" id="pos_preparation_section">
                                 <setting string="Internal Notes" help="Add internal notes on order lines for the kitchen" id="iface_orderline_notes">
                                     <div class="content-group">
                                         <div class="mt16">
@@ -445,6 +424,32 @@
                                         </div>
                                         <div>
                                             <button name="%(point_of_sale.action_pos_note_model)d" icon="oi-arrow-right" type="action" string="Notes" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </setting>
+                                <setting string="Preparation Printers" help="Connect preparation printers to your PoS">
+                                    <field name="pos_preparation_devices"/>
+                                    <div class="content-group" invisible="not pos_preparation_devices">
+                                        <div class="row mb-2">
+                                            <div class="col-lg-2 o_light_label">
+                                                <label string="Available" for="pos_preparation_printer_ids"/>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <field name="pos_preparation_printer_ids"
+                                                    class="w-100 pt-1"
+                                                    widget="many2many_tags"/>
+                                            </div>
+                                            <div>
+                                                <button name="action_pos_printer_dialog"
+                                                    context="{'default_pos_config_ids': [pos_config_id]}"
+                                                    icon="oi-arrow-right"
+                                                    type="object"
+                                                    string="Add Printer"
+                                                    class="btn-link"/>
+                                            </div>
+                                            <div>
+                                                <button name="%(point_of_sale.action_pos_printer_form)d" icon="oi-arrow-right" type="action" string="Manage Printers" class="btn-link"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </setting>

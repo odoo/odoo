@@ -24,7 +24,8 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'name': 'Preparation Printer',
             'epson_printer_ip': '127.0.0.1',
             'printer_type': 'epson_epos',
-            'product_categories_ids': [drinks_category.id]
+            'product_categories_ids': [drinks_category.id],
+            'use_type': 'preparation',
         })
 
         main_company = cls.env.company
@@ -45,7 +46,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'iface_splitbill': True,
             'iface_printbill': True,
             'use_order_printer': True,
-            'printer_ids': [(4, printer.id)],
+            'preparation_printer_ids': [(4, printer.id)],
             'iface_tipproduct': False,
             'company_id': cls.env.company.id,
             'journal_id': test_sale_journal_2.id,
@@ -353,7 +354,7 @@ class TestFrontend(TestFrontendCommon):
 
     def test_15_split_bill_screen_actions(self):
         self.pos_config.with_user(self.pos_user).open_ui()
-        self.pos_config.write({'printer_ids': False})
+        self.pos_config.write({'preparation_printer_ids': False})
         self.start_pos_tour('SplitBillScreenTour5Actions')
 
     def test_pos_restaurant_course(self):
@@ -402,12 +403,13 @@ class TestFrontend(TestFrontendCommon):
             'name': 'Printer',
             'printer_type': 'epson_epos',
             'epson_printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
         })
 
         self.main_pos_config.write({
             'use_order_printer': True,
-            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+            'preparation_printer_ids': [Command.set(self.env['pos.printer'].search([('use_type', '=', 'preparation')]).ids)],
         })
 
         self.product_test = self.env['product.product'].create({
@@ -461,12 +463,13 @@ class TestFrontend(TestFrontendCommon):
             'name': 'Printer',
             'printer_type': 'epson_epos',
             'epson_printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
         })
 
         self.main_pos_config.write({
             'use_order_printer': True,
-            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+            'preparation_printer_ids': [Command.set(self.env['pos.printer'].search([('use_type', '=', 'preparation')]).ids)],
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_course_restaurant_preparation_tour', login="pos_user")
@@ -477,11 +480,12 @@ class TestFrontend(TestFrontendCommon):
             'name': 'Printer',
             'printer_type': 'epson_epos',
             'epson_printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
         })
         self.pos_config.write({
             'use_order_printer': True,
-            'printer_ids': [Command.set(pos_printer.ids)],
+            'preparation_printer_ids': [Command.set(pos_printer.ids)],
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_combo_preparation_receipt')
@@ -499,19 +503,21 @@ class TestFrontend(TestFrontendCommon):
             'name': 'Printer 1',
             'printer_type': 'epson_epos',
             'epson_printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(pos_category_2.ids)],
         })
         printer_2 = self.env['pos.printer'].create({
             'name': 'Printer 2',
             'printer_type': 'epson_epos',
             'epson_printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(pos_category_1.ids)],
         })
 
 
         self.main_pos_config.write({
             'use_order_printer': True,
-            'printer_ids': [Command.set([printer_1.id, printer_2.id])],
+            'preparation_printer_ids': [Command.set([printer_1.id, printer_2.id])],
         })
 
         self.product_1 = self.env['product.product'].create({
@@ -526,7 +532,7 @@ class TestFrontend(TestFrontendCommon):
         self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'MultiPreparationPrinter', login="pos_user")
 
     def test_user_on_residual_order(self):
-        self.pos_config.write({'printer_ids': False})
+        self.pos_config.write({'preparation_printer_ids': False})
         self.pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour('LeaveResidualOrder', login="pos_admin")
         self.start_pos_tour('FinishResidualOrder', login="pos_user")
@@ -574,18 +580,20 @@ class TestFrontend(TestFrontendCommon):
             'name': 'Printer 1',
             'printer_type': 'epson_epos',
             'epson_printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(pos_category_2.ids)],
         })
         printer_2 = self.env['pos.printer'].create({
             'name': 'Printer 2',
             'printer_type': 'epson_epos',
             'epson_printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(pos_category_1.ids)],
         })
 
         self.main_pos_config.write({
             'use_order_printer': True,
-            'printer_ids': [Command.set([printer_1.id, printer_2.id])],
+            'preparation_printer_ids': [Command.set([printer_1.id, printer_2.id])],
         })
 
         self.product_1 = self.env['product.product'].create({
@@ -660,11 +668,12 @@ class TestFrontend(TestFrontendCommon):
             'name': 'Printer',
             'printer_type': 'epson_epos',
             'epson_printer_ip': '0.0.0.0',
+            'use_type': 'preparation',
             'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
         })
         self.pos_config.write({
             'use_order_printer': True,
-            'printer_ids': [Command.set(pos_printer.ids)],
+            'preparation_printer_ids': [Command.set(pos_printer.ids)],
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui/{self.pos_config.id}", 'test_combo_preparation_receipt_layout', login="pos_user")
@@ -701,21 +710,30 @@ class TestFrontend(TestFrontendCommon):
         self.start_pos_tour('test_open_default_register_screen_config')
 
     def test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing(self):
-        self.env['pos.printer'].create({
-                'name': 'Printer',
+        preparation_printer = self.env['pos.printer'].create({
+                'name': 'Prep Printer',
                 'printer_type': 'epson_epos',
                 'epson_printer_ip': '0.0.0.0',
+                'use_type': 'preparation',
                 'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+            })
+        receipt_printer = self.env['pos.printer'].create({
+                'name': ' Receipt Printer',
+                'printer_type': 'epson_epos',
+                'epson_printer_ip': '127.0.0.1',
+                'use_type': 'receipt',
             })
         self.main_pos_config.write({
             'use_fast_payment': True,
             'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
             'use_order_printer': True,
-            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+            'preparation_printer_ids': [Command.set([preparation_printer.id])],
+            'receipt_printer_ids': [Command.set([receipt_printer.id])],
             'iface_print_auto': True,
             'iface_print_skip_screen': True,
             'other_devices': True,
-            'epson_printer_ip': '127.0.0.1:8069/receipt_receiver',
+            'preparation_devices': True,
+            'default_receipt_printer_id': receipt_printer.id,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing')
@@ -725,19 +743,19 @@ class TestFrontend(TestFrontendCommon):
         self.assertEqual(order.payment_ids.payment_method_id, self.bank_payment_method, "The payment method used should be the bank payment method")
 
     def test_fast_payment_validation_from_restaurant_product_screen_without_automatic_receipt_printing(self):
-        self.env['pos.printer'].create({
+        pos_printer = self.env['pos.printer'].create({
                 'name': 'Printer',
                 'printer_type': 'epson_epos',
                 'epson_printer_ip': '0.0.0.0',
+                'use_type': 'preparation',
                 'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
             })
         self.main_pos_config.write({
             'use_fast_payment': True,
             'fast_payment_method_ids': [(6, 0, self.bank_payment_method.ids)],
             'use_order_printer': True,
-            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+            'preparation_printer_ids': [Command.set(pos_printer.ids)],
             'other_devices': True,
-            'epson_printer_ip': '127.0.0.1:8069/receipt_receiver',
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_without_automatic_receipt_printing')

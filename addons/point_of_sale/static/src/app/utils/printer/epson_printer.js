@@ -24,10 +24,12 @@ function ePOSPrint(children) {
  * Sends print request to ePos printer that is directly connected to the local network.
  */
 export class EpsonPrinter extends BasePrinter {
-    setup({ epson_printer_ip }) {
+    setup({ printer }) {
         super.setup(...arguments);
-        this.url = window.location.protocol + "//" + epson_printer_ip;
+        this.url = window.location.protocol + "//" + printer.epson_printer_ip;
         this.address = this.url + "/cgi-bin/epos/service.cgi?devid=local_printer";
+        this.id = printer.id;
+        this.name = printer.name;
     }
 
     /**

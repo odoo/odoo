@@ -1,9 +1,11 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
+import { SelectDefaultPrinterPopup } from "@point_of_sale/app/components/popups/select_default_printer_popup/select_default_printer_popup";
 import { PrinterService } from "@point_of_sale/app/services/printer_service";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { logPosMessage } from "../utils/pretty_console_log";
+import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 
 export const posPrinterService = {
     dependencies: ["dialog", "renderer"],
@@ -60,7 +62,31 @@ export class PosPrinterService extends PrinterService {
                 download: () => {
                     this.printWeb(...arguments);
                 },
+                tryOnOtherPrinter: this.hasOtherPrinters(),
+                onTryOtherPrinter: () => this.tryOnOtherPrinter(arguments),
             });
+        }
+    }
+    hasOtherPrinters() {
+        return (this.devices?.size || 1) > 1;
+    }
+    async tryOnOtherPrinter(args) {
+        const savedPrinter = this.device;
+        const data = await makeAwaitable(this.dialog, SelectDefaultPrinterPopup, {
+            receipt_printers: Array.from(this.devices),
+        });
+        if (!data) {
+            return;
+        }
+        const relPrinter = Array.from(this.devices).find((d) => d.id === parseInt(data));
+
+        if (relPrinter) {
+            this.setPrinter(relPrinter);
+            try {
+                await this.printHtml(...args);
+            } finally {
+                this.setPrinter(savedPrinter);
+            }
         }
     }
 }
