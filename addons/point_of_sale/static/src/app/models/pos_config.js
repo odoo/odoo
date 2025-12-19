@@ -65,16 +65,6 @@ export class PosConfig extends Base {
         return Boolean(this.raw.invoice_journal_id);
     }
 
-    get useProxy() {
-        return (
-            this.use_posbox &&
-            (this.iface_electronic_scale ||
-                this.iface_print_via_proxy ||
-                this.iface_scan_via_proxy ||
-                this.iface_customer_facing_display_via_proxy)
-        );
-    }
-
     get isShareable() {
         return this.raw.trusted_config_ids.length > 0;
     }

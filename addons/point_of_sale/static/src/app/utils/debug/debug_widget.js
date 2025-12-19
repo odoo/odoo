@@ -14,7 +14,6 @@ export class DebugWidget extends Component {
     setup() {
         this.pos = usePos();
         this.barcodeReader = useService("barcode_reader");
-        this.hardwareProxy = useService("hardware_proxy");
         this.notification = useService("notification");
         this.numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");

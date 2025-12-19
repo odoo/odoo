@@ -23,7 +23,6 @@ export class CashMovePopup extends Component {
         this.notification = useService("notification");
         this.pos = usePos();
         this.dialog = useService("dialog");
-        this.hardwareProxy = useService("hardware_proxy");
         this.printer = useService("printer");
         this.state = useState({
             /** @type {'in'|'out'} */

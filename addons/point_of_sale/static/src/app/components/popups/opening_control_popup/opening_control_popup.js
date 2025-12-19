@@ -30,7 +30,6 @@ export class OpeningControlPopup extends Component {
                 false
             ),
         });
-        this.hardwareProxy = useService("hardware_proxy");
         this.ui = useService("ui");
     }
     get orderCount() {
