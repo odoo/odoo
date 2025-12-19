@@ -1120,7 +1120,11 @@ function _process_request_for_all(store, name, params, context = {}) {
         store.resolve_data_request({ channel: mailDataHelpers.Store.one(channelId) });
     }
     if (name === "/discuss/create_group") {
-        const channelId = DiscussChannel._create_group(params.partners_to, params.name);
+        const channelId = DiscussChannel._create_group(
+            params.partners_to,
+            params.default_display_mode,
+            params.name
+        );
         store.resolve_data_request({ channel: mailDataHelpers.Store.one(channelId) });
     }
 }

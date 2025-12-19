@@ -238,11 +238,14 @@ export class ChannelInvitation extends Component {
         if (!this.props.channel) {
             return "";
         }
-        if (this.props.channel?.channel_type === "channel") {
+        if (this.props.channel.default_display_mode === "video_full_screen") {
+            return _t("Invite to Meeting");
+        }
+        if (this.props.channel.channel_type === "channel") {
             return _t("Invite");
-        } else if (this.props.channel?.channel_type === "group") {
+        } else if (this.props.channel.channel_type === "group") {
             return _t("Invite to Group Chat");
-        } else if (this.props.channel?.channel_type === "chat") {
+        } else if (this.props.channel.channel_type === "chat") {
             if (this.props.channel.correspondent?.persona.eq(this.store.self)) {
                 if (this.selectedPartners.length === 0) {
                     return _t("Invite");

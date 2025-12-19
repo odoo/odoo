@@ -378,7 +378,7 @@ test("'New Meeting' in mobile", async () => {
     await click("button:text('Chats')");
     await click("button[title='New Meeting']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Partner 2'))");
-    await click("button:not([disabled]):text('Invite to Group Chat')");
+    await click("button:not([disabled]):text('Invite to Meeting')");
     await contains(".o-discuss-Call");
     await click("[title='Exit Fullscreen']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
