@@ -3,7 +3,7 @@
 
     <t t-name="discuss.Call">
         <PttAdBanner/>
-        <div class="o-discuss-Call user-select-none d-flex position-relative shadow-sm" t-att-class="{
+        <div class="o-discuss-Call user-select-none position-relative shadow-sm" t-att-class="{
             'o-fullSize': isFullSize,
             'o-compact': props.compact and !isMobileOs,
             'o-minimized': minimized,
@@ -13,7 +13,7 @@
             'o-selfInCall': isActiveCall,
             'border-bottom': !isActiveCall,
         }" t-ref="root">
-            <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
+            <div class="o-discuss-Call-main d-flex flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
                 <BlurPerformanceWarning t-if="store.settings.blurPerformanceWarning"/>
                 <div
                     class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div t-if="state.sidebar and channel.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
-                <CallParticipantCard t-foreach="channel.visibleCards" t-as="cardData" t-key="cardData.key"
+                <CallParticipantCard t-foreach="sidebarCards" t-as="cardData" t-key="cardData.key"
                     cardData="cardData"
                     className="'o-discuss-Call-sidebarCard w-100 p-1'"
                     channel="channel"
@@ -66,7 +66,7 @@
                 />
             </div>
             <CallParticipantCard
-                t-if="channel.videoCount > 0 and state.insetCard"
+                t-if="channel.videoCount > 0 and state.insetCard and !state.sidebar"
                 cardData="state.insetCard"
                 className="'o-discuss-Call-mainCardStyle o-bg-black'"
                 channel="channel"

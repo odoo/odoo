@@ -312,6 +312,24 @@ test("Click on inset card should replace the inset and active stream together", 
     await contains("video[type='camera']:not(.o-inset)");
 });
 
+test("Inset card is hidden when sidebar is open", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("[title='Turn camera on']");
+    await click("[title='Share Screen']");
+    await contains(".o-discuss-CallParticipantCard.o-inset");
+    await hover(".o-discuss-Call-mainCards");
+    await click(".o-discuss-Call-sidebarToggler");
+    await contains(".o-discuss-Call-sidebar");
+    await contains(".o-discuss-CallParticipantCard.o-inset", { count: 0 });
+    await hover(".o-discuss-Call-mainCards");
+    await click(".o-discuss-Call-sidebarToggler");
+    await contains(".o-discuss-CallParticipantCard.o-inset");
+});
+
 test("join/leave sounds are only played on main tab", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
