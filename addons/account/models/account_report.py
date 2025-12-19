@@ -4,7 +4,7 @@ import ast
 import re
 from collections import defaultdict
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api
 from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Command, Domain
 
@@ -228,7 +228,7 @@ class AccountReport(models.Model):
     def _validate_root_report_id(self):
         for report in self:
             if report.root_report_id.root_report_id:
-                raise ValidationError(_("Only a report without a root report of its own can be selected as root report."))
+                raise ValidationError(self.env._("Only a report without a root report of its own can be selected as root report."))
 
     @api.constrains('line_ids')
     def _validate_parent_sequence(self):
@@ -236,7 +236,7 @@ class AccountReport(models.Model):
         for line in self.line_ids.sorted('sequence'):
             if line.parent_id and line.parent_id not in previous_lines:
                 raise ValidationError(
-                    _('Line "%(line)s" defines line "%(parent_line)s" as its parent, but appears before it in the report. '
+                    self.env._('Line "%(line)s" defines line "%(parent_line)s" as its parent, but appears before it in the report. '
                       'The parent must always come first.', line=line.name, parent_line=line.parent_id.name))
             previous_lines |= line
 
@@ -244,13 +244,13 @@ class AccountReport(models.Model):
     def _validate_section_report_ids(self):
         for record in self:
             if any(section.section_report_ids for section in record.section_report_ids):
-                raise ValidationError(_("The sections defined on a report cannot have sections themselves."))
+                raise ValidationError(self.env._("The sections defined on a report cannot have sections themselves."))
 
     @api.constrains('availability_condition', 'country_id')
     def _validate_availability_condition(self):
         for record in self:
             if record.availability_condition == 'country' and not record.country_id:
-                raise ValidationError(_("The Availability is set to 'Country Matches' but the field Country is not set."))
+                raise ValidationError(self.env._("The Availability is set to 'Country Matches' but the field Country is not set."))
 
     @api.onchange('availability_condition')
     def _onchange_availability_condition(self):
@@ -317,7 +317,7 @@ class AccountReport(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_variant(self):
         if self.variant_report_ids:
-            raise UserError(_("You can't delete a report that has variants."))
+            raise UserError(self.env._("You can't delete a report that has variants."))
 
     def _get_copied_name(self):
         '''Return a copied name of the account.report record by adding the suffix (copy) at the end
@@ -326,9 +326,9 @@ class AccountReport(models.Model):
         :return: an unique name for the copied account.report
         '''
         self.ensure_one()
-        name = self.name + ' ' + _('(copy)')
+        name = self.name + ' ' + self.env._('(copy)')
         while self.search_count([('name', '=', name)]) > 0:
-            name += ' ' + _('(copy)')
+            name += ' ' + self.env._('(copy)')
         return name
 
     @api.depends('name', 'country_id')
@@ -429,7 +429,7 @@ class AccountReportLine(models.Model):
     def _validate_groupby_no_child(self):
         for report_line in self:
             if report_line.parent_id.groupby or report_line.parent_id.user_groupby:
-                raise ValidationError(_("A line cannot have both children and a groupby value (line '%s').", report_line.parent_id.name))
+                raise ValidationError(self.env._("A line cannot have both children and a groupby value (line '%s').", report_line.parent_id.name))
 
     @api.constrains('groupby', 'user_groupby')
     def _validate_groupby(self):
@@ -438,7 +438,7 @@ class AccountReportLine(models.Model):
     @api.constrains('parent_id')
     def _check_parent_line(self):
         for line in self.filtered(lambda x: x.parent_id == x):
-            raise ValidationError(_('Line "%s" defines itself as its parent.', line.name))
+            raise ValidationError(self.env._('Line "%s" defines itself as its parent.', line.name))
 
     def _copy_hierarchy(self, copied_report, parent=None, code_mapping=None):
         ''' Copy the whole hierarchy from this line by copying each line children recursively and adapting the
@@ -631,14 +631,14 @@ class AccountReportExpression(models.Model):
     def _check_carryover_target(self):
         for expression in self:
             if expression.carryover_target and not expression.label.startswith('_carryover_'):
-                raise UserError(_("You cannot use the field carryover_target in an expression that does not have the label starting with _carryover_"))
+                raise UserError(self.env._("You cannot use the field carryover_target in an expression that does not have the label starting with _carryover_"))
             elif expression.carryover_target and not expression.carryover_target.split('.')[1].startswith('_applied_carryover_'):
-                raise UserError(_("When targeting an expression for carryover, the label of that expression must start with _applied_carryover_"))
+                raise UserError(self.env._("When targeting an expression for carryover, the label of that expression must start with _applied_carryover_"))
 
     @api.constrains('formula')
     def _check_formula(self):
         def raise_formula_error(expression):
-            raise ValidationError(_("Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s",
+            raise ValidationError(self.env._("Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s",
                                     label=expression.label, line=expression.report_line_name,
                                     formula=expression.formula))
 
@@ -675,7 +675,7 @@ class AccountReportExpression(models.Model):
         for expression in self:
             if expression.engine in ('aggregation', 'external') and (expression.report_line_id.groupby or expression.report_line_id.user_groupby):
                 engine_description = dict(expression._fields['engine']._description_selection(self.env))
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "Groupby feature isn't supported by '%(engine)s' engine. Please remove the groupby value on '%(report_line)s'",
                         engine=engine_description[expression.engine],
                         report_line=expression.report_line_id.display_name
@@ -803,7 +803,7 @@ class AccountReportExpression(models.Model):
                     if candidate_expr.subformula and candidate_expr.subformula.startswith('cross_report'):
                         subformula_match = CROSS_REPORT_REGEX.match(candidate_expr.subformula)
                         if not subformula_match:
-                            raise UserError(_(
+                            raise UserError(self.env._(
                                 "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
                                 "The format of the cross report expression is invalid. \n"
                                 "Expected: cross_report(<report_id>|<xml_id>[,force_date_sope])"
@@ -819,7 +819,7 @@ class AccountReportExpression(models.Model):
                             report_id = report.id if (report := self.env.ref(cross_report_value, raise_if_not_found=False)) else None
 
                         if not report_id:
-                            raise UserError(_(
+                            raise UserError(self.env._(
                                 "In report '%(report_name)s', on line '%(line_name)s', with label '%(label)s',\n"
                                 "Failed to parse the cross report id or xml_id.\n",
                                 report_name=candidate_expr.report_line_id.report_id.display_name,
@@ -827,7 +827,7 @@ class AccountReportExpression(models.Model):
                                 label=candidate_expr.label,
                             ))
                         elif report_id == candidate_expr.report_line_id.report_id.id:
-                            raise UserError(_("You cannot use cross report on itself"))
+                            raise UserError(self.env._("You cannot use cross report on itself"))
 
                         cross_report_domain = [('report_line_id.report_id', '=', report_id)]
                     else:
@@ -855,7 +855,7 @@ class AccountReportExpression(models.Model):
         totals_by_code = defaultdict(set)
         for expression in self:
             if expression.engine != 'aggregation':
-                raise UserError(_("Cannot get aggregation details from a line not using 'aggregation' engine"))
+                raise UserError(self.env._("Cannot get aggregation details from a line not using 'aggregation' engine"))
 
             expression_terms = re.split('[-+/*]', re.sub(r'[\s()]', '', expression.formula))
             for term in expression_terms:
@@ -912,7 +912,7 @@ class AccountReportExpression(models.Model):
         auto_chosen_target = self.report_line_id.expression_ids.filtered(lambda x: x.label == target_label)
 
         if not auto_chosen_target:
-            raise UserError(_("Could not determine carryover target automatically for expression %s.", self.label))
+            raise UserError(self.env._("Could not determine carryover target automatically for expression %s.", self.label))
 
         return auto_chosen_target
 

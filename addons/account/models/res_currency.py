@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _
+from odoo import api, models, fields
 from odoo.exceptions import UserError
 from odoo.tools import date_utils, SQL
 
@@ -28,7 +28,7 @@ class ResCurrency(models.Model):
             rounding_val = vals['rounding']
             for record in self:
                 if (rounding_val > record.rounding or rounding_val == 0) and record._has_accounting_entries():
-                    raise UserError(_("You cannot reduce the number of decimal places of a currency which has already been used to make accounting entries."))
+                    raise UserError(self.env._("You cannot reduce the number of decimal places of a currency which has already been used to make accounting entries."))
 
         return super(ResCurrency, self).write(vals)
 

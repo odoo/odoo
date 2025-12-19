@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -65,16 +65,16 @@ class AccountReconcileModelLine(models.Model):
     def _validate_amount(self):
         for record in self:
             if record.amount_type == 'fixed' and record.amount == 0:
-                raise UserError(_("The amount is not a number"))
+                raise UserError(self.env._("The amount is not a number"))
             if record.amount_type == 'percentage_st_line' and record.amount == 0:
-                raise UserError(_("Balance percentage can't be 0"))
+                raise UserError(self.env._("Balance percentage can't be 0"))
             if record.amount_type == 'percentage' and record.amount == 0:
-                raise UserError(_("Statement line percentage can't be 0"))
+                raise UserError(self.env._("Statement line percentage can't be 0"))
             if record.amount_type == 'regex':
                 try:
                     re.compile(record.amount_string)
                 except re.error:
-                    raise UserError(_('The regex is not valid'))
+                    raise UserError(self.env._('The regex is not valid'))
 
 
 class AccountReconcileModel(models.Model):
@@ -142,7 +142,7 @@ class AccountReconcileModel(models.Model):
                 try:
                     re.compile(record.match_label_param)
                 except re.error:
-                    raise UserError(_('The regex is not valid'))
+                    raise UserError(self.env._('The regex is not valid'))
 
     @api.depends('mapped_partner_id', 'match_label', 'match_amount', 'match_partner_ids', 'trigger')
     def _compute_can_be_proposed(self):
@@ -172,7 +172,7 @@ class AccountReconcileModel(models.Model):
         action.update({
             'context': {},
             'domain': [('id', 'in', self.env.cr.fetchone()[0])],
-            'help': """<p class="o_view_nocontent_empty_folder">{}</p>""".format(_('This reconciliation model has created no entry so far')),
+            'help': """<p class="o_view_nocontent_empty_folder">{}</p>""".format(self.env._('This reconciliation model has created no entry so far')),
         })
         return action
 
@@ -182,8 +182,8 @@ class AccountReconcileModel(models.Model):
         if default.get('name'):
             return vals_list
         for model, vals in zip(self, vals_list):
-            name = _("%s (copy)", model.name)
+            name = self.env._("%s (copy)", model.name)
             while self.env['account.reconcile.model'].search_count([('name', '=', name)], limit=1):
-                name = _("%s (copy)", name)
+                name = self.env._("%s (copy)", name)
             vals['name'] = name
         return vals_list

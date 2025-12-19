@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import date
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
 from odoo.tools import frozendict, date_utils, SQL
@@ -169,7 +169,7 @@ class SequenceMixin(models.AbstractModel):
                 and date > constraint_date
                 and not record._sequence_matches_date()
             ):
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The %(date_field)s (%(date)s) you've entered isn't aligned with the existing sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
                     "To maintain date-based sequences, select entries and use the resequence option from the actions menu, available in developer mode.",
                     date_field=record._fields[record._sequence_date_field]._description_string(self.env),
@@ -216,7 +216,7 @@ class SequenceMixin(models.AbstractModel):
                     continue
                 if all(groupdict.get(req) is not None for req in requirements):
                     return ret_val
-        raise ValidationError(_(
+        raise ValidationError(self.env._(
             'The sequence regex should at least contain the seq grouping keys. For instance:\n'
             r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
         ))
@@ -285,7 +285,7 @@ class SequenceMixin(models.AbstractModel):
         """
         self.ensure_one()
         if self._sequence_field not in self._fields or not self._fields[self._sequence_field].store:
-            raise ValidationError(_('%s is not a stored field', self._sequence_field))
+            raise ValidationError(self.env._('%s is not a stored field', self._sequence_field))
         where_string, param = self._get_last_sequence_domain(relaxed)
         if self._origin.id:
             where_string += " AND id != %(id)s "

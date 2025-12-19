@@ -1,6 +1,6 @@
 import re
 
-from odoo import _, fields, models, api
+from odoo import fields, models, api
 
 
 class AccountAnalyticApplicability(models.Model):
@@ -53,7 +53,7 @@ class AccountAnalyticApplicability(models.Model):
                 except ValueError:
                     pass
 
-            applicability.account_prefix_placeholder = _("e.g. %(prefix)s", prefix=account_prefixes)
+            applicability.account_prefix_placeholder = self.env._("e.g. %(prefix)s", prefix=account_prefixes)
 
     def _get_score(self, **kwargs):
         score = super(AccountAnalyticApplicability, self)._get_score(**kwargs)

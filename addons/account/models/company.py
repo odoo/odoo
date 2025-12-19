@@ -4,7 +4,7 @@ from collections import defaultdict
 from datetime import timedelta, datetime, date
 import calendar
 
-from odoo import fields, models, api, _, Command
+from odoo import fields, models, api, Command
 from odoo.exceptions import LockError, ValidationError, UserError, RedirectWarning
 from odoo.tools import date_utils, format_list, SQL
 from odoo.tools.mail import is_html_empty
@@ -162,7 +162,7 @@ class ResCompany(models.Model):
         readonly=True,
         copy=False,
         default=lambda self: self.env['ir.sequence'].sudo().create({
-            'name': _("Group Payments Number Sequence"),
+            'name': self.env._("Group Payments Number Sequence"),
             'implementation': 'no_gap',
             'padding': 5,
             'use_date_range': True,
@@ -327,7 +327,7 @@ class ResCompany(models.Model):
     def _check_audit_trail_restriction(self):
         companies = self.filtered(lambda c: not c.restrictive_audit_trail and c.force_restrictive_audit_trail)
         if companies:
-            raise ValidationError(_("Can't disable restricted audit trail: forced by localization."))
+            raise ValidationError(self.env._("Can't disable restricted audit trail: forced by localization."))
 
     @api.constrains("account_price_include")
     def _check_set_account_price_include(self):
@@ -349,7 +349,7 @@ class ResCompany(models.Model):
 
             max_day = calendar.monthrange(year, int(rec.fiscalyear_last_month))[1]
             if rec.fiscalyear_last_day > max_day:
-                raise ValidationError(_("Invalid fiscal year last day"))
+                raise ValidationError(self.env._("Invalid fiscal year last day"))
 
     def _compute_force_restrictive_audit_trail(self):
         for company in self:
@@ -514,7 +514,7 @@ class ResCompany(models.Model):
         """
 
         action = {
-            'name': _("Unreconciled Transactions"),
+            'name': self.env._("Unreconciled Transactions"),
             'type': 'ir.actions.act_window',
             'res_model': 'account.bank.statement.line',
             'context': {'create': False},
@@ -561,9 +561,9 @@ class ResCompany(models.Model):
                 if not company.hard_lock_date:
                     continue
                 if not hard_lock_date:
-                    raise UserError(_("The Hard Lock Date cannot be removed."))
+                    raise UserError(self.env._("The Hard Lock Date cannot be removed."))
                 if hard_lock_date < company.hard_lock_date:
-                    raise UserError(_("A new Hard Lock Date must be posterior (or equal) to the previous one."))
+                    raise UserError(self.env._("A new Hard Lock Date must be posterior (or equal) to the previous one."))
 
         if hard_lock_date:
             draft_entries = self.env['account.move'].search([
@@ -571,17 +571,17 @@ class ResCompany(models.Model):
                 ('state', '=', 'draft'),
                 ('date', '<=', hard_lock_date)])
             if draft_entries:
-                error_msg = _('There are still draft entries in the period you want to hard lock. You should either post or delete them.')
+                error_msg = self.env._('There are still draft entries in the period you want to hard lock. You should either post or delete them.')
                 action_error = {
                     'view_mode': 'list',
-                    'name': _('Draft Entries'),
+                    'name': self.env._('Draft Entries'),
                     'res_model': 'account.move',
                     'type': 'ir.actions.act_window',
                     'domain': [('id', 'in', draft_entries.ids)],
                     'search_view_id': [self.env.ref('account.view_account_move_filter').id, 'search'],
                     'views': [[self.env.ref('account.view_move_tree_multi_edit').id, 'list'], [self.env.ref('account.view_move_form').id, 'form']],
                 }
-                raise RedirectWarning(error_msg, action_error, _('Show draft entries'))
+                raise RedirectWarning(error_msg, action_error, self.env._('Show draft entries'))
 
         # Check for unreconciled bank statement lines
         if fiscal_lock_date:
@@ -589,10 +589,10 @@ class ResCompany(models.Model):
                 self._get_unreconciled_statement_lines_domain(fiscal_lock_date)
             )
             if unreconciled_statement_lines:
-                error_msg = _("There are still unreconciled bank statement lines in the period you want to lock."
+                error_msg = self.env._("There are still unreconciled bank statement lines in the period you want to lock."
                             "You should either reconcile or delete them.")
                 action_error = self._get_unreconciled_statement_lines_redirect_action(unreconciled_statement_lines)
-                raise RedirectWarning(error_msg, action_error, _('Show Unreconciled Bank Statement Line'))
+                raise RedirectWarning(error_msg, action_error, self.env._('Show Unreconciled Bank Statement Line'))
 
     def _get_user_lock_date(self, soft_lock_date_field, ignore_exceptions=False):
         """Get the lock date called `soft_lock_date_field` for this company depending on the user.
@@ -746,7 +746,7 @@ class ResCompany(models.Model):
             # forbid the change of currency_id if there are already some accounting entries existing
             if 'currency_id' in vals and vals['currency_id'] != company.currency_id.id:
                 if company.root_id._existing_accounting():
-                    raise UserError(_('You cannot change the currency of the company since some journal items already exist'))
+                    raise UserError(self.env._('You cannot change the currency of the company since some journal items already exist'))
 
         companies = super().write(vals)
 
@@ -768,7 +768,7 @@ class ResCompany(models.Model):
         context = {'dialog_size': 'medium', **self.env.context}
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Setup Bank Account'),
+            'name': self.env._('Setup Bank Account'),
             'res_model': 'account.setup.bank.manual.config',
             'target': 'new',
             'view_mode': 'form',
@@ -783,7 +783,7 @@ class ResCompany(models.Model):
         context = {'dialog_size': 'medium', **self.env.context}
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Setup Credit Card Account'),
+            'name': self.env._('Setup Credit Card Account'),
             'res_model': 'account.setup.bank.manual.config',
             'target': 'new',
             'view_mode': 'form',
@@ -807,10 +807,10 @@ class ResCompany(models.Model):
         )
 
         if not default_journal:
-            raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
+            raise UserError(self.env._("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
 
         return {
-            'ref': _('Opening Journal Entry'),
+            'ref': self.env._('Opening Journal Entry'),
             'company_id': self.id,
             'journal_id': default_journal.id,
             'date': (self.account_opening_date or fields.Date.start_of(fields.Date.today(), 'year')) - timedelta(days=1),
@@ -844,7 +844,7 @@ class ResCompany(models.Model):
                 'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
                 'values': {
                               'code': str(code),
-                              'name': _('Undistributed Profits/Losses'),
+                              'name': self.env._('Undistributed Profits/Losses'),
                               'account_type': unaffected_earnings_type,
                               'company_ids': [Command.link(self.id)],
                           },
@@ -864,7 +864,7 @@ class ResCompany(models.Model):
         # Don't allow to modify the opening move if not in draft.
         opening_move = self.account_opening_move_id
         if opening_move and opening_move.state != 'draft':
-            raise UserError(_(
+            raise UserError(self.env._(
                 'You cannot import the "openning_balance" if the opening move (%s) is already posted. \
                 If you are absolutely sure you want to modify the opening balance of your accounts, reset the move to draft.',
                 self.account_opening_move_id.name,
@@ -894,7 +894,7 @@ class ResCompany(models.Model):
                 yield from del_lines(corresponding_lines[1:])
             else:
                 yield Command.create({
-                    'name':_("Automatic Balancing Line") if balancing else _("Opening balance"),
+                    'name': self.env._("Automatic Balancing Line") if balancing else self.env._("Opening balance"),
                     'account_id': account.id,
                     'balance': balance,
                     'amount_currency': amount_currency,
@@ -954,10 +954,10 @@ class ResCompany(models.Model):
         account = self.env['account.account'].search(self.env['account.account']._check_company_domain(self), limit=1)
         if len(account) == 0:
             action = self.env.ref('account.action_account_config')
-            msg = _(
+            msg = self.env._(
                 "We cannot find a chart of accounts for this company, you should configure it. \n"
                 "Please go to Account Configuration and select or install a fiscal localization.")
-            raise RedirectWarning(msg, action.id, _("Go to the configuration panel"))
+            raise RedirectWarning(msg, action.id, self.env._("Go to the configuration panel"))
         return account
 
     def install_l10n_modules(self):
@@ -996,7 +996,7 @@ class ResCompany(models.Model):
         and raises an error with the result.
         """
         if not self.env.user.has_group('account.group_account_user'):
-            raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
+            raise UserError(self.env._('Please contact your accountant to print the Hash integrity result.'))
 
         journals = self.env['account.journal'].search(self.env['account.journal']._check_company_domain(self))
         results = []
@@ -1028,7 +1028,7 @@ class ResCompany(models.Model):
                         'journal_name': journal.name,
                         'restricted_by_hash_table': restricted_by_hash_table_flag,
                         'status': 'no_data',
-                        'msg_cover': _('There is no journal entry flagged for accounting data inalterability yet.'),
+                        'msg_cover': self.env._('There is no journal entry flagged for accounting data inalterability yet.'),
                     })
                     continue
 
@@ -1059,7 +1059,7 @@ class ResCompany(models.Model):
                         'restricted_by_hash_table': restricted_by_hash_table_flag,
                         'journal_name': f"{journal.name} ({prefix}...)",
                         'status': 'corrupted',
-                        'msg_cover': _(
+                        'msg_cover': self.env._(
                             "Corrupted data on journal entry with id %(id)s (%(name)s).",
                             id=corrupted_move.id,
                             name=corrupted_move.name,
@@ -1070,7 +1070,7 @@ class ResCompany(models.Model):
                         'restricted_by_hash_table': restricted_by_hash_table_flag,
                         'journal_name': f"{journal.name} ({prefix}...)",
                         'status': 'verified',
-                        'msg_cover': _("Entries are correctly hashed"),
+                        'msg_cover': self.env._("Entries are correctly hashed"),
                         'first_move_name': prefix_result['first_move'].name,
                         'first_hash': prefix_result['first_move'].inalterable_hash,
                         'first_move_date': format_date(self.env, prefix_result['first_move'].date),
@@ -1098,7 +1098,7 @@ class ResCompany(models.Model):
         except LockError:
             if not allow_raising:
                 return False
-            raise UserError(_("Some documents are being sent by another process already."))
+            raise UserError(self.env._("Some documents are being sent by another process already."))
         return True
 
     def compute_fiscalyear_dates(self, current_date):
@@ -1114,13 +1114,13 @@ class ResCompany(models.Model):
     @api.depends('country_id', 'account_fiscal_country_id')
     def _compute_company_vat_placeholder(self):
         for company in self:
-            placeholder = _("/ if not applicable")
+            placeholder = self.env._("/ if not applicable")
             if company.country_id or company.account_fiscal_country_id:
                 expected_vat = _ref_vat.get(
                     (company.country_id.code or company.account_fiscal_country_id.code).lower()
                 )
                 if expected_vat:
-                    placeholder = _("%s, or / if not applicable", expected_vat)
+                    placeholder = self.env._("%s, or / if not applicable", expected_vat)
 
             company.company_vat_placeholder = placeholder
 

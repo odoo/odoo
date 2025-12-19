@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models, _, Command
+from odoo import api, fields, models, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict
 
@@ -74,7 +74,7 @@ class AccountPartialReconcile(models.Model):
     def _check_required_computed_currencies(self):
         bad_partials = self.filtered(lambda partial: not partial.debit_currency_id or not partial.credit_currency_id)
         if bad_partials:
-            raise ValidationError(_("Missing foreign currencies on partials having ids: %s", bad_partials.ids))
+            raise ValidationError(self.env._("Missing foreign currencies on partials having ids: %s", bad_partials.ids))
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -248,7 +248,7 @@ class AccountPartialReconcile(models.Model):
                 journal = partial.company_id.tax_cash_basis_journal_id
 
                 if not journal:
-                    raise UserError(_("There is no tax cash basis journal defined for the '%s' company.\n"
+                    raise UserError(self.env._("There is no tax cash basis journal defined for the '%s' company.\n"
                                       "Configure it in Accounting/Configuration/Settings",
                                       partial.company_id.display_name))
 

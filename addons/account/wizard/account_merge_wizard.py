@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, api, fields, models, Command
+from odoo import api, fields, models, Command
 from odoo.exceptions import UserError
 from odoo.tools import SQL
 
@@ -31,9 +31,9 @@ class AccountMergeWizard(models.TransientModel):
             return res
 
         if self.env.context.get('active_model') != 'account.account':
-            raise UserError(_("This can only be used on accounts."))
+            raise UserError(self.env._("This can only be used on accounts."))
         if len(self.env.context.get('active_ids') or []) < 2:
-            raise UserError(_("You must select at least 2 accounts."))
+            raise UserError(self.env._("You must select at least 2 accounts."))
 
         res['account_ids'] = [Command.set(self.env.context.get('active_ids'))]
         return res
@@ -90,7 +90,7 @@ class AccountMergeWizard(models.TransientModel):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Merge Accounts"),
+            'name': self.env._("Merge Accounts"),
             'view_id': self.env.ref('account.account_merge_wizard_form').id,
             'context': self.env.context,
             'res_model': 'account.merge.wizard',
@@ -117,7 +117,7 @@ class AccountMergeWizard(models.TransientModel):
             'params': {
                 'type': 'success',
                 'sticky': False,
-                'message': _("Accounts successfully merged!"),
+                'message': self.env._("Accounts successfully merged!"),
                 'next': {'type': 'ir.actions.act_window_close'},
             }
         }
@@ -126,7 +126,7 @@ class AccountMergeWizard(models.TransientModel):
     def _check_access_rights(self, accounts):
         accounts.check_access('write')
         if forbidden_companies := (accounts.sudo().company_ids - self.env.user.company_ids):
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You do not have the right to perform this operation as you do not have access to the following companies: %s.",
                 ", ".join(c.name for c in forbidden_companies)
             ))
@@ -296,17 +296,17 @@ class AccountMergeWizardLine(models.TransientModel):
 
         account_type_label = dict(self.pool['account.account'].account_type._description_selection(self.env))[self.account_id.account_type]
         if self.account_id.account_type in ['asset_receivable', 'liability_payable']:
-            account_type_label = _("Non-trade %s", account_type_label) if self.account_id.non_trade else _("Trade %s", account_type_label)
+            account_type_label = self.env._("Non-trade %s", account_type_label) if self.account_id.non_trade else self.env._("Trade %s", account_type_label)
 
         other_name_elements = []
         if self.account_id.currency_id:
             other_name_elements.append(self.account_id.currency_id.name)
 
         if self.account_id.reconcile:
-            other_name_elements.append(_("Reconcilable"))
+            other_name_elements.append(self.env._("Reconcilable"))
 
         if not self.account_id.active:
-            other_name_elements.append(_("Deprecated"))
+            other_name_elements.append(self.env._("Deprecated"))
 
         if not self.wizard_id.is_group_by_name:
             grouping_key_name = account_type_label
@@ -330,7 +330,7 @@ class AccountMergeWizardLine(models.TransientModel):
         for wizard_line in self:
             if wizard_line.is_selected and not wizard_line.info:
                 if shared_companies := (wizard_line.company_ids & companies_seen):
-                    wizard_line.info = _(
+                    wizard_line.info = self.env._(
                         "Belongs to the same company as %s.",
                         account_belonging_to_company[shared_companies[0]].display_name
                     )
@@ -355,7 +355,7 @@ class AccountMergeWizardLine(models.TransientModel):
                 if not account_to_merge_into:
                     account_to_merge_into = wizard_line.account_id
                 else:
-                    wizard_line.info = _(
+                    wizard_line.info = self.env._(
                         "Contains hashed entries, but %s also has hashed entries.",
                         account_to_merge_into.display_name
                     )

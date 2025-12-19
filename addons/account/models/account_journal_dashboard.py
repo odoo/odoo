@@ -6,7 +6,7 @@ import base64
 import json
 import random
 
-from odoo import models, api, _, fields, tools
+from odoo import models, api, fields, tools
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.release import version
@@ -255,13 +255,13 @@ class AccountJournal(models.Model):
 
     def _graph_title_and_key(self):
         if self.type in ['sale', 'purchase']:
-            return ['', _('Residual amount')]
+            return ['', self.env._('Residual amount')]
         elif self.type == 'cash':
-            return ['', _('Cash: Balance')]
+            return ['', self.env._('Cash: Balance')]
         elif self.type == 'bank':
-            return ['', _('Bank: Balance')]
+            return ['', self.env._('Bank: Balance')]
         elif self.type == 'credit':
-            return ['', _('Credit Card: Balance')]
+            return ['', self.env._('Credit Card: Balance')]
 
     def _get_bank_cash_graph_data(self):
         """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
@@ -305,7 +305,7 @@ class AccountJournal(models.Model):
                 for i in range(30, 0, -5):
                     current_date = today + timedelta(days=-i)
                     data.append(build_graph_data(current_date, random.randint(-5, 15), currency))
-                    graph_key = _('Sample data')
+                    graph_key = self.env._('Sample data')
             else:
                 last_balance = journal.current_statement_balance
                 # Make sure the last point in the graph is at least today or a future date
@@ -367,10 +367,10 @@ class AccountJournal(models.Model):
             sign = 1 if journal.type == 'sale' else -1
             journal_data = query_results.get(journal.id)
             data = []
-            data.append({'label': _('Due'), 'type': 'past'})
+            data.append({'label': self.env._('Due'), 'type': 'past'})
             for i in range(-1, 3):
                 if i == 0:
-                    label = _('This Week')
+                    label = self.env._('This Week')
                 else:
                     start_week = first_day_of_week + timedelta(days=i*7)
                     end_week = start_week + timedelta(days=6)
@@ -379,7 +379,7 @@ class AccountJournal(models.Model):
                     else:
                         label = f"{start_week.day} {format_month(start_week)} - {end_week.day} {format_month(end_week)}"
                 data.append({'label': label, 'type': 'past' if i < 0 else 'future'})
-            data.append({'label': _('Not Due'), 'type': 'future'})
+            data.append({'label': self.env._('Not Due'), 'type': 'future'})
 
             is_sample_data = not journal_data
             if not is_sample_data:
@@ -394,7 +394,7 @@ class AccountJournal(models.Model):
                     data[index]['type'] = 'o_sample_data'
                     # we use unrealistic values for the sample data
                     data[index]['value'] = random.randint(0, 20)
-                    graph_key = _('Sample data')
+                    graph_key = self.env._('Sample data')
 
             result[journal.id] = [{'values': data, 'title': graph_title, 'key': graph_key, 'is_sample_data': is_sample_data}]
         return result
@@ -525,7 +525,7 @@ class AccountJournal(models.Model):
             nb_direct_payments, direct_payments_balance = direct_payment_balances[journal.id]
             drag_drop_settings = {
                 'image': '/account/static/src/img/bank.svg' if journal.type in ('bank', 'credit') else '/web/static/img/rfq.svg',
-                'text': _('Drop to import transactions'),
+                'text': self.env._('Drop to import transactions'),
             }
             last_statement_visible = (
                 not journal.company_id.fiscalyear_lock_date
@@ -626,22 +626,22 @@ class AccountJournal(models.Model):
             (number_to_check, sum_to_check) = self._count_results_and_sum_amounts(to_check_vals[journal.id], currency)
 
             if journal.type == 'purchase':
-                title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted bills with a sequence number since last lock date.")
+                title_has_sequence_holes = self.env._("Irregularities due to draft, cancelled or deleted bills with a sequence number since last lock date.")
                 drag_drop_settings = {
                     'image': '/account/static/src/img/bill.svg',
-                    'text': _('Drop and let the AI process your bills automatically.'),
+                    'text': self.env._('Drop and let the AI process your bills automatically.'),
                 }
             else:
-                title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted invoices with a sequence number since last lock date.")
+                title_has_sequence_holes = self.env._("Irregularities due to draft, cancelled or deleted invoices with a sequence number since last lock date.")
                 drag_drop_settings = {
                     'image': '/web/static/img/quotation.svg',
-                    'text': _('Drop to import your invoices.'),
+                    'text': self.env._('Drop to import your invoices.'),
                 }
 
             dashboard_data[journal.id].update({
                 'number_to_check': number_to_check,
                 'to_check_balance': currency.format(sum_to_check),
-                'title': _('Bills to pay') if journal.type == 'purchase' else _('Invoices owed to you'),
+                'title': self.env._('Bills to pay') if journal.type == 'purchase' else self.env._('Invoices owed to you'),
                 'number_draft': number_draft,
                 'number_waiting': number_waiting,
                 'number_late': number_late,
@@ -677,7 +677,7 @@ class AccountJournal(models.Model):
         for journal in general_journals:
             drag_drop_settings = {
                 'image': '/web/static/img/folder.svg',
-                'text': _('Drop to create journal entries with attachments.'),
+                'text': self.env._('Drop to create journal entries with attachments.'),
                 'group': 'account.group_account_user',
             }
 
@@ -910,7 +910,7 @@ class AccountJournal(models.Model):
 
     def action_create_new(self):
         return {
-            'name': _('Create invoice/bill'),
+            'name': self.env._('Create invoice/bill'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'account.move',
@@ -919,7 +919,7 @@ class AccountJournal(models.Model):
         }
 
     def _build_no_journal_error_msg(self, company_name, journal_types):
-        return _(
+        return self.env._(
                 "No journal could be found in company %(company_name)s for any of those types: %(journal_types)s",
                 company_name=company_name,
                 journal_types=', '.join(journal_types),
@@ -995,7 +995,7 @@ class AccountJournal(models.Model):
             })
             bill.message_post(attachment_ids=attachment.ids)
         return {
-            'name': _('Bills'),
+            'name': self.env._('Bills'),
             'res_id': bill.id,
             'view_mode': 'form',
             'res_model': 'account.move',
@@ -1103,7 +1103,7 @@ class AccountJournal(models.Model):
         action['context'] = ctx
         if ctx.get('use_domain', False):
             action['domain'] = isinstance(ctx['use_domain'], list) and ctx['use_domain'] or ['|', ('journal_id', '=', self.id), ('journal_id', '=', False)]
-            action['name'] = _(
+            action['name'] = self.env._(
                 "%(action)s for journal %(journal)s",
                 action=action["name"],
                 journal=self.name,
@@ -1135,7 +1135,7 @@ class AccountJournal(models.Model):
     def _show_sequence_holes(self, domain):
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Journal Entries"),
+            'name': self.env._("Journal Entries"),
             'res_model': 'account.move',
             'search_view_id': (self.env.ref('account.view_account_move_with_gaps_in_sequence_filter').id, 'search'),
             'view_mode': 'list,form',
@@ -1165,7 +1165,7 @@ class AccountJournal(models.Model):
         moves = self.env['account.move'].concat(*[chain_moves['moves'] for chain_moves in chains_to_hash])
         action = {
             'type': 'ir.actions.act_window',
-            'name': _('Journal Entries to Hash'),
+            'name': self.env._('Journal Entries to Hash'),
             'res_model': 'account.move',
             'domain': [('id', 'in', moves.ids)],
             'views': [(False, 'list'), (False, 'form')],

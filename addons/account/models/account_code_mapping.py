@@ -1,4 +1,4 @@
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 from odoo.fields import Domain
 from odoo.exceptions import UserError
 from odoo.models import Query
@@ -57,7 +57,7 @@ class AccountCodeMapping(models.Model):
 
         remaining_domain = Domain(domain).map_conditions(get_accounts)
         if not account_ids:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Account Code Mapping cannot be accessed directly. "
                 "It is designed to be used only through the Chart of Accounts."
             ))

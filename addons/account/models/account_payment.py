@@ -1,4 +1,4 @@
-from odoo import models, fields, api, _, Command
+from odoo import models, fields, api, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL
 
@@ -273,7 +273,7 @@ class AccountPayment(models.Model):
             ]
         """
         self.ensure_one()
-        label = self.payment_method_line_id.name if self.payment_method_line_id else _("No Payment Method")
+        label = self.payment_method_line_id.name if self.payment_method_line_id else self.env._("No Payment Method")
 
         if self.memo:
             return [
@@ -298,7 +298,7 @@ class AccountPayment(models.Model):
         write_off_line_vals = write_off_line_vals or []
 
         if not self.outstanding_account_id:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "You can't create a new payment without an outstanding payments/receipts account set either on the company or the %(payment_method)s payment method in the %(journal)s journal.",
                 payment_method=self.payment_method_line_id.name, journal=self.journal_id.display_name))
 
@@ -463,7 +463,7 @@ class AccountPayment(models.Model):
 
     def action_open_business_doc(self):
         return {
-            'name': _("Payment"),
+            'name': self.env._("Payment"),
             'type': 'ir.actions.act_window',
             'views': [(False, 'form')],
             'res_model': 'account.payment',
@@ -624,8 +624,8 @@ class AccountPayment(models.Model):
                         <img class="border border-dark rounded" src="{qr_code}"/>
                         <br/>
                         <strong class="text-center">{txt}</strong>
-                        '''.format(txt = _('Scan me with your banking app.'),
-                                   qr_code = qr_code)
+                        '''.format(txt=self.env._('Scan me with your banking app.'),
+                                   qr_code=qr_code)
                     continue
 
             pay.qr_code = None
@@ -727,7 +727,7 @@ class AccountPayment(models.Model):
 
     def _compute_payment_receipt_title(self):
         """ To override in order to change the title displayed on the payment receipt report """
-        self.payment_receipt_title = _('Payment Receipt')
+        self.payment_receipt_title = self.env._('Payment Receipt')
 
     @api.depends('partner_id', 'amount', 'date', 'payment_type')
     def _compute_duplicate_payment_ids(self):
@@ -824,9 +824,9 @@ class AccountPayment(models.Model):
         '''
         for pay in self:
             if not pay.payment_method_line_id:
-                raise ValidationError(_("Please define a payment method line on your payment."))
+                raise ValidationError(self.env._("Please define a payment method line on your payment."))
             elif pay.payment_method_line_id.journal_id and pay.payment_method_line_id.journal_id != pay.journal_id:
-                raise ValidationError(_("The selected payment method is not available for this payment, please select the payment method again."))
+                raise ValidationError(self.env._("The selected payment method is not available for this payment, please select the payment method again."))
 
     @api.constrains('state', 'move_id')
     def _check_move_id(self):
@@ -836,7 +836,7 @@ class AccountPayment(models.Model):
                 and not payment.move_id
                 and payment.outstanding_account_id
             ):
-                raise ValidationError(_("A payment with an outstanding account cannot be confirmed without having a journal entry."))
+                raise ValidationError(self.env._("A payment with an outstanding account cannot be confirmed without having a journal entry."))
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
@@ -898,7 +898,7 @@ class AccountPayment(models.Model):
             or self.company_id.transfer_account_id
         )
         if not outstanding_account:
-            raise UserError(_("No outstanding account could be found to make the payment"))
+            raise UserError(self.env._("No outstanding account could be found to make the payment"))
         return outstanding_account
 
     def write(self, vals):
@@ -923,7 +923,7 @@ class AccountPayment(models.Model):
     @api.depends('move_id.name')
     def _compute_display_name(self):
         for payment in self:
-            payment.display_name = payment.name or _('Draft Payment')
+            payment.display_name = payment.name or self.env._('Draft Payment')
 
     def copy_data(self, default=None):
         default = dict(default or {})
@@ -1071,7 +1071,7 @@ class AccountPayment(models.Model):
                 and not payment.partner_bank_id.allow_out_payment
                 and payment.payment_type == 'outbound'
             ):
-                raise UserError(_(
+                raise UserError(self.env._(
                     "To record payments with %(method_name)s, the recipient bank account must be manually validated. "
                     "You should go on the partner bank account of %(partner)s in order to validate it.",
                     method_name=self.payment_method_line_id.name,
@@ -1109,7 +1109,7 @@ class AccountPayment(models.Model):
         return self.reconciled_invoice_ids.with_context(
             create=False
         )._get_records_action(
-            name=_("Paid Invoices"),
+            name=self.env._("Paid Invoices"),
         )
 
     def button_open_bills(self):
@@ -1119,7 +1119,7 @@ class AccountPayment(models.Model):
         self.ensure_one()
 
         action = {
-            'name': _("Paid Bills"),
+            'name': self.env._("Paid Bills"),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'context': {'create': False},
@@ -1143,7 +1143,7 @@ class AccountPayment(models.Model):
         self.ensure_one()
 
         action = {
-            'name': _("Matched Transactions"),
+            'name': self.env._("Matched Transactions"),
             'type': 'ir.actions.act_window',
             'res_model': 'account.bank.statement.line',
             'context': {'create': False},
@@ -1166,7 +1166,7 @@ class AccountPayment(models.Model):
         '''
         self.ensure_one()
         return {
-            'name': _("Journal Entry"),
+            'name': self.env._("Journal Entry"),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'context': {'create': False},

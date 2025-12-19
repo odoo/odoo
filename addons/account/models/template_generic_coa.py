@@ -1,4 +1,4 @@
-from odoo import models, _
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -16,7 +16,7 @@ class AccountChartTemplate(models.AbstractModel):
         :rtype: dict
         """
         return {
-            'name': _("Generic (Minimal) Chart of Accounts"),
+            'name': self.env._("Generic (Minimal) Chart of Accounts"),
             'country': None,
             'property_account_receivable_id': 'receivable',
             'property_account_payable_id': 'payable',

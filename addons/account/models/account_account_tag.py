@@ -1,4 +1,4 @@
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.exceptions import UserError
@@ -33,7 +33,7 @@ class AccountAccountTag(models.Model):
         for tag in self:
             name = tag.name
             if tag.applicability == "taxes" and tag.country_id and tag.country_id != self.env.company.account_fiscal_country_id:
-                name = _("%(tag)s (%(country_code)s)", tag=tag.name, country_code=tag.country_id.code)
+                name = self.env._("%(tag)s (%(country_code)s)", tag=tag.name, country_code=tag.country_id.code)
             tag.display_name = name
 
     @api.depends('name')
@@ -116,7 +116,7 @@ class AccountAccountTag(models.Model):
         for master_xmlid in master_xmlids:
             master_tag = self.env.ref(f"account.{master_xmlid}", raise_if_not_found=False)
             if master_tag and master_tag in self:
-                raise UserError(_("You cannot delete this account tag (%s), it is used on the chart of account definition.", master_tag.name))
+                raise UserError(self.env._("You cannot delete this account tag (%s), it is used on the chart of account definition.", master_tag.name))
 
     def _translate_tax_tags(self, langs=None, tag_ids=None):
         """Translate tax tags having the same name as report lines."""
