@@ -1868,3 +1868,20 @@ describe("label is a valid URL", () => {
         expect("input.o_we_href_input_link").toHaveValue("https://odoo.com/");
     });
 });
+
+test("Should properly show the preview if fetching metadata fails", async () => {
+    const id = Math.random().toString();
+    onRpc("/html_editor/link_preview_internal", () => Promise.reject(new Error(`No data ${id}`)));
+    onRpc("/contactus", () => ({}));
+    const originalConsoleWarn = console.warn.bind(console);
+    patchWithCleanup(console, {
+        warn: (msg, error, ...args) => {
+            if (!error?.message?.includes?.(id)) {
+                originalConsoleWarn(msg, error, ...args);
+            }
+        },
+    });
+    const { el } = await setupEditor('<p><a href="/contactus">a[]b</a></p>');
+    await waitFor(".o-we-linkpopover");
+    expect(cleanLinkArtifacts(getContent(el))).toBe('<p><a href="/contactus">a[]b</a></p>');
+});
