@@ -322,8 +322,11 @@ class TestAllocations(TestHrHolidaysCommon):
         shown correctly in the dropdown menu or not
         :return:
         """
+        self.env.user.write({
+            'company_ids': [(4, self.employee.company_id.id)]
+        })
         leave_type = self.env.ref('hr_holidays.leave_type_compensatory_days')
-        allocation = self.env['hr.leave.allocation'].sudo().create({
+        allocation = self.env['hr.leave.allocation'].create({
             'name': 'Alloc',
             'employee_id': self.employee.id,
             'holiday_status_id': leave_type.id,
@@ -334,7 +337,7 @@ class TestAllocations(TestHrHolidaysCommon):
         })
         allocation.action_approve()
 
-        second_allocation = self.env['hr.leave.allocation'].sudo().create({
+        second_allocation = self.env['hr.leave.allocation'].create({
             'name': 'Alloc2',
             'employee_id': self.employee.id,
             'holiday_status_id': leave_type.id,
@@ -347,7 +350,7 @@ class TestAllocations(TestHrHolidaysCommon):
 
         # _compute_leaves depends on the context that is getting cleared
         self.env['hr.leave.type'].invalidate_model(['max_leaves', 'leaves_taken', 'virtual_remaining_leaves'])
-        result = self.env['hr.leave.type'].with_context(
+        result = self.env['hr.leave.type'].with_company(self.employee.company_id).with_context(
             employee_id=self.employee.id,
             leave_date_from='2024-08-18 06:00:00',  # for _compute_leaves
             default_date_from='2024-08-18 06:00:00',
