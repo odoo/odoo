@@ -7,22 +7,22 @@
             <field name="arch" type="xml">
                 <form string="Send a Sample Mail">
                     <group>
-                        <field name="mailing_list_id" options="{'no_create_edit': True, 'no_open': True}"/>
+                        <field name="mailing_list_id" options="{'no_create_edit': True, 'no_open': True}" placeholder="Select a list..."/>
                         <field name="contact_ids" invisible="1"/>
                     </group>
                     <footer>
-                        <button string="Add" name="action_add_contacts" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Add and Send Mailing" name="action_add_contacts_and_send_mailing" type="object" class="btn-primary" data-hotkey="w"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                        <button string="Add to List" name="action_add_contacts" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
                     </footer>
                 </form>
             </field>
     </record>
 
     <record id="mailing_contact_to_list_action" model="ir.actions.act_window">
-        <field name="name">Add Selected Contacts to a Mailing List</field>
+        <field name="name">Add Contacts to a Mailing List</field>
         <field name="res_model">mailing.contact.to.list</field>
         <field name="view_mode">form</field>
+        <field name="context">{"dialog_size": "medium"}</field>
         <field name="target">new</field>
     </record>
 

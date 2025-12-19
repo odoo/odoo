@@ -117,11 +117,8 @@
             <xpath expr="//field[@name='subject']" position="after">
                 <field class="text-break" name="sms_subject" string="Title" placeholder="e.g. Black Friday SMS coupon" invisible="mailing_type != 'sms'" readonly="state in ('sending', 'done')" required="mailing_type == 'sms'"/>
             </xpath>
-            <xpath expr="//button[@name='action_set_favorite']" position="attributes">
+            <xpath expr="//field[@name='favorite']" position="attributes">
                 <attribute name="invisible" separator=" or " add="mailing_type != 'mail'"/>
-            </xpath>
-            <xpath expr="//button[@name='action_remove_favorite']" position="attributes">
-                <attribute name="invisible">mailing_type != 'mail' or not favorite</attribute>
             </xpath>
             <xpath expr="//field[@name='preview']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail'</attribute>

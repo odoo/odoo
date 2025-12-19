@@ -1,0 +1,14 @@
+<templates>
+<t t-name="mass_mailing.ThemeSelectorIframe">
+    <div class="o_mass_mailing_theme_selector_iframe_wrapper">
+        <div class="d-flex w-100 h-100">
+            <div class="flex-grow-1 o_mass_mailing_theme_selector_iframe_container">
+                <iframe t-ref="iframe" t-att-hidden="!state.show ? '' : false"
+                    t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
+                    scrolling="no"/>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

@@ -11,6 +11,22 @@
     .o_notebook .o_notebook_headers .nav-link[name="mail_debug"] {
         display: none;
     }
+
+    .o_notebook .o_notebook_content .o_field_mass_mailing_html {
+        margin: 0 var(--Notebook-margin-x, 0);
+    }
+
+    .o_notebook > .tab-content > .tab-pane {
+        &:has(.o_field_mass_mailing_html) {
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-bottom: calc(var(--formView-sheet-padding-y, 16px) * -1);
+        }
+    }
+
+    .o_field_boolean_favorite i {
+        font-size: inherit;
+    }
 }
 
 @include media-breakpoint-up(lg) {
@@ -40,12 +56,6 @@ body.editor_has_snippets .o_field_mass_mailing_html div.d-flex:has(iframe) {
     // Align the model / domain container with subject field in large devices
     // and provide better tap area to the filter
     @include media-breakpoint-up(md) {
-        div[name="mailing_model_id_container"] {
-            width: 96%;
-        }
-        .o_mailing_filter_width {
-            max-width: 25%;
-        }
         .o_readonly_modifier.o_mailing_filter_readonly_width ,
         &.o_form_readonly .o_mailing_filter_readonly_width {
             max-width: 100%;

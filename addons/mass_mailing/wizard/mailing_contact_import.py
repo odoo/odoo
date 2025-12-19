@@ -91,12 +91,25 @@ class MailingContactImport(models.TransientModel):
 
         if ignored := len(contacts) - len(unique_contacts):
             message = _(
-                "Contacts successfully imported. Number of contacts imported: %(imported_count)s. Number of duplicates ignored: %(duplicate_count)s",
+                "%(imported_count)s contacts have been imported. %(duplicate_count)s contacts are duplicates and have been ignored.",
                 imported_count=len(unique_contacts),
                 duplicate_count=ignored,
             )
         else:
-            message = _("Contacts successfully imported. Number of contacts imported: %(imported_count)s", imported_count=len(unique_contacts))
+            message = _("%(imported_count)s contacts have been imported.", imported_count=len(unique_contacts))
+
+        if self.env.context.get('no_redirect'):
+            next_action = {'type': 'ir.actions.act_window_close'}
+        else:
+            next_action = {
+                'context': self.env.context,
+                'domain': [('id', 'in', new_contacts.ids)],
+                'name': _('New contacts imported'),
+                'res_model': 'mailing.contact',
+                'type': 'ir.actions.act_window',
+                'view_mode': 'list',
+                'views': [[False, 'list'], [False, 'form']],
+            }
 
         return {
             'type': 'ir.actions.client',
@@ -105,28 +118,9 @@ class MailingContactImport(models.TransientModel):
                 'message': message,
                 'type': 'success',
                 'sticky': False,
-                'next': {
-                    'context': self.env.context,
-                    'domain': [('id', 'in', new_contacts.ids)],
-                    'name': _('New contacts imported'),
-                    'res_model': 'mailing.contact',
-                    'type': 'ir.actions.act_window',
-                    'view_mode': 'list',
-                    'views': [[False, 'list'], [False, 'form']],
-                },
+                'next': next_action,
             }
         }
 
     def action_open_base_import(self):
-        """Open the base import wizard to import mailing list contacts with a xlsx file."""
-        self.ensure_one()
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'import',
-            'name': _('Import Mailing Contacts'),
-            'params': {
-                'context': self.env.context,
-                'active_model': 'mailing.contact',
-            }
-        }
+        return self.env['mailing.contact'].action_open_base_import()

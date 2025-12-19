@@ -2,6 +2,7 @@ import {
     Component,
     onMounted,
     onWillDestroy,
+    onWillUnmount,
     onWillUpdateProps,
     status,
     useComponent,
@@ -134,7 +135,6 @@ export class MassMailingIframe extends Component {
         };
         const sidebarResize = () => {
             const sidebar = this.sidebarRef.el;
-            const iframe = this.iframeRef.el;
             if (!sidebar) {
                 return;
             }
@@ -170,7 +170,12 @@ export class MassMailingIframe extends Component {
                     : `${stickyHeight}px`;
                 const maxHeight = this.state.isMobile
                     ? 1000
-                    : iframe.getBoundingClientRect().height;
+                    : Math.max(
+                          // height to fill remaining viewport space on an unscrolled page
+                          window.innerHeight - sidebar.parentElement.getBoundingClientRect().y - 5,
+                          // height of the parent element
+                          sidebar.parentElement.clientHeight
+                      );
                 const offsetHeight =
                     window.innerHeight -
                     stickyHeight -
@@ -219,6 +224,11 @@ export class MassMailingIframe extends Component {
             },
             () => [this.state.isMobile]
         );
+        onWillUnmount(() => {
+            if (this.htmlResizeObserver) {
+                this.htmlResizeObserver.disconnect();
+            }
+        });
     }
 
     get isBrowserSafari() {
@@ -231,7 +241,7 @@ export class MassMailingIframe extends Component {
         if (status(this) === "destroyed") {
             return;
         }
-        const htmlResizeObserver = new ResizeObserver(this.throttledResize);
+        this.htmlResizeObserver = new ResizeObserver(this.throttledResize);
         this.iframeRef.el.contentDocument.body.classList.add("o_in_iframe");
         if (this.props.withBuilder) {
             this.iframeRef.el.contentDocument.body.classList.add("o_mass_mailing_with_builder");
@@ -239,7 +249,7 @@ export class MassMailingIframe extends Component {
             this.iframeRef.el.contentDocument.body.classList.add("bg-white");
         }
         this.iframeRef.el.contentDocument.body.appendChild(this.renderBodyContent());
-        htmlResizeObserver.observe(
+        this.htmlResizeObserver.observe(
             this.iframeRef.el.contentDocument.body.querySelector(IFRAME_VALUE_SELECTOR)
         );
         if (this.props.readonly) {

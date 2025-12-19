@@ -41,13 +41,13 @@
         run: 'click',
     }, {
         isActive: ["enterprise"],
-        trigger: 'div[name="body_arch"] .o_mailing_template_preview_wrapper [data-name="newsletter"]',
+        trigger: 'div[name="body_arch"] :iframe .o_mailing_template_preview_wrapper [data-name="newsletter"]',
         content: markup(_t('Choose this <b>theme</b>.')),
         tooltipPosition: 'left',
         run: 'click',
     }, {
         isActive: ["community"],
-        trigger: 'div[name="body_arch"] .o_mailing_template_preview_wrapper [data-name="default"]',
+        trigger: 'div[name="body_arch"] :iframe .o_mailing_template_preview_wrapper [data-name="default"]',
         content: markup(_t('Choose this <b>theme</b>.')),
         tooltipPosition: 'right',
         run: 'click',
@@ -64,7 +64,7 @@
         tooltipPosition: 'top',
         run: 'click',
     }, {
-        trigger: 'button[name="action_set_favorite"]',
+        trigger: 'div.o_favorite',
         content: _t('Click on this button to add this mailing to your templates.'),
         tooltipPosition: 'bottom',
         run: 'click',

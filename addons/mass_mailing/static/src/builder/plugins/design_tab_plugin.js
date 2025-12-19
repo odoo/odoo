@@ -8,8 +8,8 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 export const OPTION_POSITIONS = {
     BODY: 10,
     SETTINGS: 20,
-    HEADINGS: 30,
-    PARAGRAPH: 40,
+    PARAGRAPH: 30,
+    HEADINGS: 40,
     BUTTON: 50,
     LINK: 60,
     SEPARATORS: 70,

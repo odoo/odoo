@@ -40,8 +40,25 @@ html:has(.o_layout, .o_basic_theme) {
         .o_mass_mailing_value ~ .o_loading_screen {
             display: none !important;
         }
+
+        .o_layout.o_basic_theme {
+            padding: 16px;
+        }
     }
 
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+:host(.o_mail_favorite_preview) {
+    .o_layout.o_basic_theme {
+        padding: 16px;
+    }
+    .o_layout .o_mail_wrapper {
+        max-width: unset;
+    }
     .container {
         padding-left: 0;
         padding-right: 0;

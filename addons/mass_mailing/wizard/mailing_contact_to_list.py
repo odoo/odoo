@@ -15,19 +15,6 @@ class MailingContactToList(models.TransientModel):
         """ Simply add contacts to the mailing list and close wizard. """
         return self._add_contacts_to_mailing_list({'type': 'ir.actions.act_window_close'})
 
-    def action_add_contacts_and_send_mailing(self):
-        """ Add contacts to the mailing list and redirect to a new mailing on
-        this list. """
-        self.ensure_one()
-
-        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_mailing_action_mail")
-        action['views'] = [[False, "form"]]
-        action['target'] = 'current'
-        action['context'] = {
-            'default_contact_list_ids': [self.mailing_list_id.id]
-        }
-        return self._add_contacts_to_mailing_list(action)
-
     def _add_contacts_to_mailing_list(self, action):
         self.ensure_one()
 
@@ -40,15 +27,17 @@ class MailingContactToList(models.TransientModel):
                 }) for contact in contacts_to_add
             ]
         })
+        already_on_list_count = len(self.contact_ids) - len(contacts_to_add)
+        message = _("%(added_contacts_count)s Mailing Contacts have been added.", added_contacts_count=len(contacts_to_add))
+        if already_on_list_count:
+            message += _("\n\n%(already_on_list_count)s Mailing Contacts were already on this list.", already_on_list_count=already_on_list_count)
 
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
                 'type': 'info',
-                'message': _("%s Mailing Contacts have been added. ",
-                             len(contacts_to_add)
-                            ),
+                'message': message,
                 'sticky': False,
                 'next': action,
             }

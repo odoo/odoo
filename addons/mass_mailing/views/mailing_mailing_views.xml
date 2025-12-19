@@ -73,16 +73,7 @@
                             data-hotkey="d" invisible="state != 'done'"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="k"/>
                         <button name="action_cancel" type="object" invisible="state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
-                        <button type="object"
-                            name="action_set_favorite"
-                            class="btn-secondary"
-                            invisible="favorite"
-                            string="Add to Templates"/>
-                        <button type="object"
-                            name="action_remove_favorite"
-                            class="btn-secondary"
-                            invisible="not favorite"
-                            string="Remove from Templates"/>
+                        <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" class="oe_highlight" string="Retry" data-hotkey="y"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,in_queue,sending,done"/>
                     </header>
                     <div class="alert alert-info o_mass_mailing_alert_message" role="alert"
@@ -211,13 +202,17 @@
                             </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <div class="position-relative">
+                            <field name="favorite" class="fs-2 position-absolute" style="right: 0; top:0; line-height:0;"
+                                widget="boolean_favorite" nolabel="1" invisible="is_body_empty"/>
+                        </div>
                         <group class="o_mass_mailing_mailing_group">
                             <field name="active" invisible="1"/>
                             <field name="create_uid" invisible="1"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}"
                                 invisible="1"
                                 readonly="state != 'draft'" force_save="1"/>
-                            <field class="text-break" name="subject"
+                            <field class="text-break w-75" name="subject"
                                 options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'mailing_model_real'}"
                                 readonly="state in ('sending', 'done')"
                                 widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
@@ -226,7 +221,7 @@
                                 <div class="row">
                                     <div class="col-md-auto">
                                         <field name="mailing_model_id" options="{'no_open': True, 'no_create': True}"
-                                            readonly="state in ('sending', 'done')"/>
+                                            readonly="state in ('sending', 'done')" placeholder="Select a Target"/>
                                     </div>
                                     <div invisible="not mailing_on_mailing_list" class="o_mass_mailing_contact_list_ids col-md-auto pt-1">
                                         <label for="contact_list_ids" string="Mailing Lists:" class="oe_edit_only pe-3"/>
@@ -237,11 +232,16 @@
                                                 readonly="state in ('sending', 'done')" options="{'color_field': 'color'}"/>
                                             <button icon="fa-user-plus" type="object" class="btn btn-secondary py-0 px-1 ms-1"
                                                 invisible="not contact_list_ids or not contact_list_ids or state in ('sending', 'done')"
-                                                name="action_view_mailing_contacts" title="Add Mailing Contacts"/>
+                                                name="action_import_mailing_contacts" title="Import Mailing Contacts"/>
                                         </div>
                                     </div>
-                                    <div invisible="mailing_on_mailing_list" class="col-md-auto o_mailing_filter_width">
-                                        <field name="mailing_filter_id" placeholder="Reload a favorite filter"
+                                    <div class="col-md-auto flex-grow-1 pt-1" invisible="mailing_on_mailing_list or not mailing_model_id">
+                                        <field name="mailing_domain" widget="domain"
+                                            options="{'model': 'mailing_model_real', 'foldable': True}"
+                                            readonly="state in ('sending', 'done')"/>
+                                    </div>
+                                    <div invisible="mailing_on_mailing_list" class="col-md-auto o_mailing_filter_width flex-shrink-1" title="Save as favorite">
+                                        <field name="mailing_filter_id" placeholder="Reload a favorite filter" nolabel="1"
                                                class="o_mailing_filter_readonly_width" widget="mailing_filter"
                                                options="{'no_create': 1, 'no_open': 1, 'domain_field': 'mailing_domain', 'model_field': 'mailing_model_id'}"
                                                readonly="state in ('sending', 'done')"/>
@@ -252,10 +252,6 @@
                                 <field name="mailing_model_name" invisible="1"/>
                                 <field name="mailing_on_mailing_list" invisible="1"/>
                                 <field name="mailing_model_real" invisible="1"/>
-                                <field name="mailing_domain" widget="domain"
-                                    options="{'model': 'mailing_model_real', 'foldable': true}"
-                                    invisible="mailing_on_mailing_list"
-                                    readonly="state in ('sending', 'done')"/>
                             </div>
                         </group>
                         <notebook>
@@ -266,6 +262,7 @@
                                             'inline_field': 'body_html',
                                             'dynamic_placeholder': true,
                                             'dynamic_placeholder_model_reference_field': 'mailing_model_real',
+                                            'filterTemplates': true,
                                         }" readonly="state in ('sending', 'done')"/>
                                     <field name="is_body_empty" invisible="1"/>
                                 </div>

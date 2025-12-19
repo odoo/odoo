@@ -580,42 +580,6 @@ class MailingMailing(models.Model):
     # ACTIONS
     # ------------------------------------------------------
 
-    def action_set_favorite(self):
-        """Add the current mailing in the favorites list."""
-        self.favorite = True
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'message': _(
-                    'Design added to the %s Templates!',
-                    ', '.join(self.mapped('mailing_model_id.name')),
-                ),
-                'next': {'type': 'ir.actions.act_window_close'},
-                'sticky': False,
-                'type': 'info',
-            }
-        }
-
-    def action_remove_favorite(self):
-        """Remove the current mailing from the favorites list."""
-        self.favorite = False
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'message': _(
-                    'Design removed from the %s Templates!',
-                    ', '.join(self.mapped('mailing_model_id.name')),
-                ),
-                'next': {'type': 'ir.actions.act_window_close'},
-                'sticky': False,
-                'type': 'info',
-            }
-        }
-
     def action_duplicate(self):
         self.ensure_one()
         if mass_mailing_copy := self.copy():
@@ -793,13 +757,14 @@ class MailingMailing(models.Model):
             ),
         return action
 
-    def action_view_mailing_contacts(self):
-        """Show the mailing contacts who are in a mailing list selected for this mailing."""
+    def action_import_mailing_contacts(self):
+        """Display the mailing contact import-by-paste wizard for this mailing's contact lists"""
         self.ensure_one()
-        action = self.env['ir.actions.actions']._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
+        action = self.env['ir.actions.actions']._for_xml_id('mass_mailing.mailing_contact_import_action')
+        action['context'] = {'no_redirect': True}
         if self.contact_list_ids:
-            action['context'] = {
-                'default_mailing_list_ids': self.contact_list_ids[0].ids,
+            action['context'] |= {
+                'default_mailing_list_ids': self.contact_list_ids.ids,
                 'default_subscription_ids': [(0, 0, {'list_id': self.contact_list_ids[0].id})],
             }
         action['domain'] = [('list_ids', 'in', self.contact_list_ids.ids)]

@@ -40,10 +40,8 @@
         <field name="arch" type="xml">
             <form string="Contact List">
                 <header>
-                    <button name="action_send_mailing" string="Send Mailing"
-                        type="object" class="btn btn-primary"/>
                     <button name="action_open_import" string="Import Contacts"
-                        type="object" class="btn btn-secondary"/>
+                        type="object" class="btn btn-primary"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -76,8 +74,9 @@
                         </h1>
                     </div>
                     <group>
+                        <field name="active" invisible="1"/>
                         <group>
-                            <field name="is_public"/>
+                            <field name="is_public" widget="boolean_toggle"/>
                         </group>
                         <group>
                             <field name="color" widget="color_picker"/>
@@ -108,8 +107,8 @@
                         <field name="color" widget="color_picker"/>
                     </group>
                 </group>
-                 <footer>
-                    <button string="Create Mailing List" class="btn-primary" special="save" data-hotkey="q"/>
+                <footer>
+                    <button string="Create Mailing List" name="action_view_contacts" type="object" class="btn-primary" data-hotkey="q"/>
                     <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>
             </form>
@@ -122,6 +121,7 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="mailing_list_view_form_simplified"/>
         <field name="target">new</field>
+        <field name="context">{'dialog_size' : 'large'}</field>
     </record>
 
     <record id="mailing_list_view_kanban" model="ir.ui.view">
@@ -129,8 +129,8 @@
         <field name="model">mailing.list</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile o_kanban_mailing_list" sample="1"
-                    on_create="mass_mailing.action_mailing_list_quick_create"
-                    highlight_color="color">
+                    on_create="mass_mailing.action_mailing_list_quick_create" highlight_color="color"
+                    action="action_view_contacts" type="object">
                 <field name="active"/>
                 <templates>
                     <t t-name="menu" t-if="!selection_mode">
@@ -202,11 +202,25 @@
                                     <span class="text-muted">Blacklist</span>
                                 </a>
                             </div>
-                            <div class="order-3 order-lg-4 py-0 my-auto me-lg-4 d-none d-md-block">
+                            <div class="order-3 order-lg-4 col-5 col-lg-2 py-0 pe-3 my-auto d-none d-md-flex flex-wrap justify-content-end gap-1">
                                 <button name="action_open_import" string="Import Contacts"
                                     type="object" class="btn btn-primary text-nowrap">
                                     Import Contacts
                                 </button>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-name="menu" t-if="!selection_mode">
+                        <div class="d-flex flex-column">
+                            <a role="menuitem" class="dropdown-item oe_kanban_action" type="open" href="#">Edit</a>
+                            <hr class="my-1"/>
+                            <a role="menuitem" class="dropdown-item oe_kanban_action" name="action_send_mailing" type="object">New Mailing</a>
+                            <hr class="my-1"/>
+                            <a role="menuitem" class="dropdown-item oe_kanban_action" name="action_archive" href="#" type="object">Archive</a>
+                            <a role="menuitem" class="dropdown-item oe_kanban_action" name="unlink" type="object" href="#">Delete</a>
+                            <hr class="my-1 mb-2"/>
+                            <div t-if="widget.editable" role="menuitem" aria-haspopup="true">
+                                <field name="color" widget="kanban_color_picker"/>
                             </div>
                         </div>
                     </t>
