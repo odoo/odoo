@@ -43,6 +43,13 @@ class HrWorkEntryType(models.Model):
         help="This field decides the behavior of the shortcut in the gantt view of the work entries. Add will always "
              "prompt a duration and will be added to the existing work entries while replace will simply replace all "
              "work entries of that day")
+    periodicity = fields.Selection(
+        [
+            ('every_month', 'Every Month'),
+            ('every_year', 'Every Year'),
+        ], string="Periodicity", required=True, default='every_month',
+    )
+    maximum_cap = fields.Integer(string="Maximum Cap", help="Define the total of the counter")
 
     @api.constrains('country_id')
     def _check_work_entry_type_country(self):
