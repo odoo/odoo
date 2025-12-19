@@ -29,6 +29,16 @@ class TestUblCiiCommonChorusPro(TestUblCiiCommon):
 class TestUblCiiFRCommonChorusPro(TestUblCiiCommonChorusPro, TestUblCiiFRCommon):
 
     @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        if cls.env['ir.module.module']._get('l10n_fr_pdp').state == 'installed':
+            # The PDP module sets a 0225 identifier (based on the siret)
+            cls.env.company.partner_id.write({
+                'peppol_eas': '0009',
+                'peppol_endpoint': '40678483500521'
+            })
+
+    @classmethod
     def _create_company(cls, **create_values):
         create_values.setdefault('siret', '40678483500521')
         return super()._create_company(**create_values)

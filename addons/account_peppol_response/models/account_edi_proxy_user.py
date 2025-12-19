@@ -30,7 +30,7 @@ class AccountEdiProxyClientUser(models.Model):
 
         try:
             response = self._call_peppol_proxy(
-                "/api/peppol/1/send_response",
+                endpoint=self._get_peppol_proxy_endpoint('1/send_response'),
                 params={
                     'reference_uuids': reference_moves.mapped('peppol_message_uuid'),
                     'status': status,
@@ -114,9 +114,7 @@ class AccountEdiProxyClientUser(models.Model):
         ]).grouped('peppol_message_uuid')
         for uuid, content in messages.items():
             if content['document_type'] == 'ApplicationResponse':
-                enc_key = content["enc_key"]
-                document_content = content["document"]
-                decoded_document = self._decrypt_data(document_content, enc_key)
+                decoded_document = self._peppol_get_decoded_document(content)
                 blr_status, rejection_message = self._peppol_extract_response_info(decoded_document)
                 move = origin_moves.get(content['origin_message_uuid'])
                 if move and blr_status in self.env['account.peppol.response']._fields['response_code']._selection:
