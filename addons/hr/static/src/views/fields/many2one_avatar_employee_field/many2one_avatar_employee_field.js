@@ -45,7 +45,6 @@ registry.category("fields").add("many2one_avatar_employee", {
     relatedFields: [{ name: "write_date", type: "datetime" }],
     additionalClasses: [
         "o_field_many2one_avatar",
-        "o_field_many2one_avatar_kanban",
         "o_field_many2one_avatar_user",
     ],
     extractProps(staticInfo, dynamicInfo) {

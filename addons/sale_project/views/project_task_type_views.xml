@@ -5,11 +5,11 @@
         <field name="model">project.task.type</field>
         <field name="inherit_id" ref="project.task_type_edit"/>
         <field name="arch" type="xml">
-            <xpath expr="//label[@for='rating_active']" position="attributes">
+            <xpath expr="//field[@name='rating_active']" position="attributes">
                 <attribute name="invisible">not show_rating_active</attribute>
             </xpath>
-            <xpath expr="//div[hasclass('o_customer_rating')]" position="attributes">
-                <attribute name="invisible">not show_rating_active</attribute>
+            <xpath expr="//field[@name='rating_status']" position="attributes">
+                <attribute name="invisible" add="not show_rating_active" separator="or"/>
             </xpath>
             <xpath expr="//field[@name='rating_status_period']" position="attributes">
                 <attribute name="invisible" add="not show_rating_active" separator="or"/>

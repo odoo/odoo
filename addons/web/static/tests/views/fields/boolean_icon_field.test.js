@@ -25,10 +25,10 @@ test("BooleanIcon field in form view", async () => {
     });
     expect(".o_field_boolean_icon button").toHaveCount(2);
     expect("[name='bar'] button").toHaveAttribute("data-tooltip", "Bar field");
-    expect("[name='bar'] button").toHaveClass("btn-primary fa-recycle");
-    expect("[name='foo'] button").toHaveClass("btn-outline-secondary fa-trash");
+    expect("[name='bar'] button.btn-primary i.fa-recycle").toHaveCount(1);
+    expect("[name='foo'] button.btn-outline-primary i.fa-trash").toHaveCount(1);
 
     await click("[name='bar'] button");
     await animationFrame();
-    expect("[name='bar'] button").toHaveClass("btn-outline-secondary fa-recycle");
+    expect("[name='bar'] button.btn-outline-primary i.fa-recycle").toHaveCount(1);
 });

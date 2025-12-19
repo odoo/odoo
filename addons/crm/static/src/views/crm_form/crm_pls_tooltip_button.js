@@ -26,9 +26,11 @@ export class CrmPlsTooltipButton extends Component {
     setup() {
         super.setup();
         this.orm = useService("orm");
+        this.ui = useService("ui");
         this.popover = usePopover(CrmPlsTooltip, {
             popoverClass: 'mt-2 me-2',
             position: "bottom-start",
+            useBottomSheet: this.ui.isSmall
         });
     }
 

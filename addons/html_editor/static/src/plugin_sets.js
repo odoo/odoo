@@ -177,4 +177,4 @@ export const EXTRA_PLUGINS = [
     QWebPlugin,
 ];
 
-export const MOBILE_OS_EXCLUDED_PLUGINS = [MoveNodePlugin];
+export const TOUCH_EXCLUDED_PLUGINS = [MoveNodePlugin];

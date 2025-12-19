@@ -193,18 +193,15 @@
                 </group>
                 <group>
                     <group>
-                        <label for="date_start" string="Start Date"/>
-                        <div class="oe_inline">
-                            <field name="is_planned" invisible="1"/>
-                            <field name="date_start" class="mr8 oe_inline" readonly="state in ['cancel', 'done']"/>
-                            <strong class="mr8 oe_inline">to</strong>
-                            <field name="date_finished" class="oe_inline" readonly="state in ['cancel', 'done']"/>
-                            <field name="show_json_popover" invisible="1"/>
-                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" invisible="not show_json_popover"/>
-                        </div>
+                        <field name="is_planned" invisible="1"/>
+                        <field name="date_start" readonly="state in ['cancel', 'done']"/>
+                        <field name="date_finished" readonly="state in ['cancel', 'done']"/>
+                        <field name="show_json_popover" invisible="1"/>
+                        <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" invisible="not show_json_popover"/>
                         <label for="duration_expected"/>
-                        <div class="o_row">
+                        <div class="o_input_box">
                             <field name="duration_expected" widget="float_time" options="{'unit': 'minutes'}" readonly="state in ['cancel', 'done']"/>
+                            <span class="o_input_box_overlay_end o_input_box_inline">minutes</span>
                         </div>
                     </group>
                     <group>

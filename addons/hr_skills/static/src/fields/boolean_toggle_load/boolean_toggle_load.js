@@ -1,7 +1,7 @@
 import { registry } from '@web/core/registry';
-import { ListBooleanToggleField, listBooleanToggleField } from "@web/views/fields/boolean_toggle/list_boolean_toggle_field";
+import { booleanToggleField, BooleanToggleField } from "@web/views/fields/boolean_toggle/boolean_toggle_field";
 
-export class ListBooleanToggleLoadField extends ListBooleanToggleField {
+export class ListBooleanToggleLoadField extends BooleanToggleField {
     async onChange(newValue) {
         this.state.value = newValue;
         // technical_is_new_default ensure to the backend which level trigger the onchange
@@ -11,7 +11,7 @@ export class ListBooleanToggleLoadField extends ListBooleanToggleField {
 }
 
 export const listBooleanToggleLoadField = {
-    ...listBooleanToggleField,
+    ...booleanToggleField,
     component: ListBooleanToggleLoadField,
 };
 

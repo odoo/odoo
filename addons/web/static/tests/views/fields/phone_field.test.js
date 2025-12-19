@@ -6,11 +6,13 @@ import {
     models,
     mountView,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, edit, pointerDown, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { animationFrame } from "@odoo/hoot-mock";
+import { browser } from "@web/core/browser/browser";
 
 class Partner extends models.Model {
     foo = fields.Char({ default: "My little Foo Value", trim: true });
@@ -20,6 +22,21 @@ class Partner extends models.Model {
 }
 
 defineModels([Partner]);
+
+async function assertUrl(target, url) {
+    await contains(target, {
+        visible: false,
+    }).click();
+    expect.verifySteps([url]);
+}
+
+beforeEach(() => {
+    patchWithCleanup(browser, {
+        open(url) {
+            expect.step(url);
+        },
+    });
+});
 
 test("PhoneField in form view on normal screens (readonly)", async () => {
     await mountView({
@@ -38,7 +55,7 @@ test("PhoneField in form view on normal screens (readonly)", async () => {
     });
     expect(".o_field_phone a").toHaveCount(1);
     expect(".o_field_phone a").toHaveText("yop");
-    expect(".o_field_phone a").toHaveAttribute("href", "tel:yop");
+    await assertUrl(`.o_field_phone a`, "tel:yop");
 });
 
 test("PhoneField in form view on normal screens (edit)", async () => {
@@ -57,9 +74,8 @@ test("PhoneField in form view on normal screens (edit)", async () => {
     });
     expect(`input[type="tel"]`).toHaveCount(1);
     expect(`input[type="tel"]`).toHaveValue("yop");
-    expect(".o_field_phone a").toHaveCount(1);
-    expect(".o_field_phone a").toHaveText("Call");
-    expect(".o_field_phone a").toHaveAttribute("href", "tel:yop");
+    expect(".o_field_phone button i.fa-phone").toHaveCount(1);
+    await assertUrl(`.o_field_widget button i.fa-phone`, "tel:yop");
 
     // change value in edit mode
     await click(`input[type="tel"]`);
@@ -170,7 +186,7 @@ test("unset and readonly PhoneField", async () => {
     expect(".o_field_widget[name='foo'] a").toHaveCount(0);
 });
 
-test("href is correctly formatted", async () => {
+test("url is correctly called in readonly", async () => {
     Partner._records[0].foo = "+12 345 67 89 00";
     await mountView({
         type: "form",
@@ -188,7 +204,7 @@ test("href is correctly formatted", async () => {
     });
 
     expect(".o_field_phone a").toHaveText("+12 345 67 89 00");
-    expect(".o_field_phone a").toHaveAttribute("href", "tel:+12345678900");
+    await assertUrl(`.o_field_phone a`, "tel:+12345678900");
 });
 
 test("New record, fill in phone field, then click on call icon and save", async () => {

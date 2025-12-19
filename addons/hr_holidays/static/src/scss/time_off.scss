@@ -29,6 +29,11 @@
         padding-right: 16px;
         padding-bottom: 0;
     }
+    @include media-breakpoint-down(md) {
+        .col-6 {
+            flex-direction: column;
+        }
+    }
     .o_hr_leave_content {
         .o_group {
             margin: 0;
@@ -41,11 +46,13 @@
                 margin-bottom: 0;
             }
         }
-        .o_hr_leave_title {
-            font-size: 1.8rem;
-        }
-        .o_hr_leave_subtitle {
-            font-size: 1.2rem;
+        @include media-breakpoint-up(sm) {
+            .o_hr_leave_title {
+                font-size: 1.8rem;
+            }
+            .o_hr_leave_subtitle {
+                font-size: 1.2rem;
+            }
         }
         .col_left {
             padding-top: 16px;

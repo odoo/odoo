@@ -1,5 +1,12 @@
 .o_form_sheet > .o_field_state_selection {
-    float: right;
+    @include media-breakpoint-down(sm) {
+        margin-left: 100%;
+        transform: translateX(-100%);
+    }
+
+    @include media-breakpoint-up(sm) {
+        float: end;
+    }
 
     .dropdown-toggle .o_status {
         height: $h3-font-size;

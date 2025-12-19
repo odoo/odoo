@@ -27,18 +27,16 @@
                     <field name="company_id" invisible="1"/>
                     <label for="fixed_amount" invisible="advance_payment_method != 'fixed'"/>
                     <label for="amount" invisible="advance_payment_method != 'percentage'"/>
-                    <div id="payment_method_details">
+                    <div id="payment_method_details" class="o_input_box">
                         <field name="currency_id" invisible="1"/>
                         <field name="fixed_amount"
                             invisible="advance_payment_method != 'fixed'"
-                            required="advance_payment_method == 'fixed'"
-                            class="oe_inline"/>
+                            required="advance_payment_method == 'fixed'"/>
                         <field name="amount"
                             invisible="advance_payment_method != 'percentage'"
-                            required="advance_payment_method == 'percentage'"
-                            class="oe_inline"/>
+                            required="advance_payment_method == 'percentage'"/>
                         <span invisible="advance_payment_method != 'percentage'"
-                            class="oe_inline">% </span>
+                            class="o_input_box_overlay_end">%</span>
                     </div>
                 </group>
                 <group invisible="not has_down_payments">

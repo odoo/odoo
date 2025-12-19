@@ -28,12 +28,12 @@
     @include print-variable(o-caret-color, $input-color);
 }
 
-.o_required_modifier {
+.o_required_modifier:not(:focus-within, :hover, :has(.o_tag)):has(:placeholder-shown) {
     @include print-variable(o-input-border-color, $o-input-border-required);
     @include print-variable(o-caret-color, $o-input-border-required);
 }
 
-.o_field_widget:focus-within {
+.o_field_widget:focus-within, .o_input_box:focus-within {
     @include print-variable(o-input-border-color, $o-action);
     @include print-variable(o-caret-color, $o-action);
 }
@@ -43,12 +43,26 @@
     @include print-variable(o-caret-color, map-get($theme-colors, 'danger'));
 }
 
+// Add padding around value to prevent overlays overlapping
+.o_field_widget:not(.o_field_widget .o_field_widget):not(:has(.o_input, textarea, select, [contenteditable])):not(.o_input_box_overlay_start, .o_input_box_overlay_end, .o_input_box_overlay_start *, .o_input_box_overlay_end *), .o_field_many2one_extra {
+    &:is(.o_input_box *), .o_input_box:not(.o_input_box .o_input_box) {
+        &:not(.o_readonly_modifier .o_field_many2one_extra) {
+            padding-left: var(--inputbox-inner-padding-start);
+            padding-right: var(--inputbox-inner-padding-end);
+        }
+        &:is(.o_touch_device *) {
+            padding-top: var(--inputbox-spacing-unit);
+            padding-bottom: var(--inputbox-spacing-unit);
+        }
+    }
+}
+
 //------------------------------------------------------------------------------
 // Generic input
 //------------------------------------------------------------------------------
 
 .o_input {
-    border:$input-border-width solid var(--o-input-border-color);
+    border: $input-border-width solid var(--o-input-border-color);
     border-width: 0 0 $input-border-width 0;
     padding: $o-input-padding-y $o-input-padding-x;
     background-color: var(--o-input-background-color, #{$input-bg});
@@ -93,7 +107,17 @@
     // Default display and alignment of widget and internal <input/>
     text-align: inherit;
     display: var(--fieldWidget-display, inline-block);
-    margin-bottom: var(--fieldWidget-margin-bottom);
+
+    &:not(.o_form_label .o_field_widget.o_readonly_modifier, h1 .o_field_widget, h2 .o_field_widget) {
+        margin-bottom: var(--fieldWidget-margin-bottom);
+    }
+
+    &.o_field_border_visible {
+        .o_input, textarea, select, [contenteditable] {
+            border-width: $input-border-width !important;
+            border-color: var(--o-input-border-color) !important;
+        }
+    }
 
     textarea.o_input,
     input.o_input {
@@ -108,7 +132,7 @@
         }
 
         .o_dropdown_button, .o_datepicker_button {
-            @include o-position-absolute($o-input-padding-y, $o-input-padding-x, $input-border-width);
+            @include o-position-absolute($o-input-padding-y, $o-input-padding-x, var($input-border-width));
             pointer-events: none;
 
             &:after {
@@ -151,31 +175,9 @@
         white-space: pre-wrap;
     }
 
-    // Monetary
-    &.o_field_monetary, &.o_field_float_percentage {
-        &.o_input {
-            align-items: baseline;
-
-            > input {
-                width: 100px;
-                flex: 1 0 auto;
-            }
-        }
-    }
-
     // Many2One
     &.o_field_many2one {
         flex-direction: column;
-    }
-
-    .o_field_many2one_selection {
-        display: flex;
-        width: 100%;
-    }
-
-    .o_external_button {
-        padding-top: 0;
-        padding-bottom: 0;
     }
 
     // Handle widget

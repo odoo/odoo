@@ -331,9 +331,10 @@
                             <field name="forecasted_issue" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                             <field name="product_description_variants" invisible="product_description_variants in (False, '')" readonly="state != 'draft'"/>
-                            <label for="product_qty" string="Quantity"/>
+                            <label for="product_qty" string="Quantity" class="d-touch-none"/>
                             <div class="o_row g-0 d-flex" name="qty">
                                 <div invisible="state == 'draft'" class="o_row flex-grow-1">
+                                    <label for="qty_producing" string="Quantity" class="d-none d-touch-block"/>
                                     <field name="qty_producing" class="text-start text-truncate" readonly="state == 'cancel' or (state == 'done' and is_locked) or product_tracking=='serial'" force_save="1"/>
                                     /
                                 </div>

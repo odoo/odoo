@@ -443,16 +443,9 @@
                     vertical-align: top;
                 }
                 .o_field_many2one_selection {
-                    .o_external_button {
-                        padding: 0;
-                        border: none;
-                        background-color: inherit;
-                        margin-left: 5px;
-                        font-size: 12px;
+                    .o_input_box_overlay_start, .o_input_box_overlay_end {
+                        top: 0;
                     }
-                }
-                &.o_field_monetary input {
-                    width: 0; // override width: 100px and let flex makes this input grow
                 }
                 &.o_field_monetary span.o_input {
                     justify-content: flex-end;
@@ -474,12 +467,13 @@
                         @include o-position-absolute(0, 0);
                     }
                 }
-                input.o_field_translate,
-                textarea.o_field_translate {
-                    padding-right: $o-field-translate-padding;
+                .form-check {
+                    width: 100%;
                 }
-                .o_field_input_buttons, .btn.o_field_translate {
-                    visibility: visible;
+                .o_input_box_overlay_end {
+                    &.btn-link, .btn-link {
+                        visibility: visible;
+                    }
                 }
             }
         }

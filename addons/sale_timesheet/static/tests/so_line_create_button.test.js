@@ -86,7 +86,7 @@ test("test so_line_create_button widget: valid SO", async () => {
 
     await contains(".o_field_x2many_list_row_add button").click();
     await focus("[name='sale_line_id'] input");
-    const create_so_button = queryOne("a[aria-label='Create Sales Order']");
+    const create_so_button = queryOne("button[aria-label='Create Sales Order']");
     expect(create_so_button).toBeVisible({
         message: "The so_line_create_button widget should appear when creating a new record.",
     });
@@ -126,7 +126,7 @@ test("test so_line_create_button widget: invalid SO", async () => {
 
     await contains(".o_field_x2many_list_row_add button").click();
     await focus("[name='sale_line_id'] input");
-    await contains("a[aria-label='Create Sales Order']").click();
+    await contains("button[aria-label='Create Sales Order']").click();
     await animationFrame();
 
     await contains(".modal-content .o_field_x2many_list_row_add button").click();
@@ -154,7 +154,7 @@ test("test so_line_create_button widget: visibility conditions", async () => {
     await click(".ui-sortable .o_data_row:nth-child(1) div[name='sale_line_id']");
     await animationFrame();
     await focus("[name='sale_line_id'] input");
-    expect("a[aria-label='Create Sales Order']").toHaveCount(0, {
+    expect("button[aria-label='Create Sales Order']").toHaveCount(0, {
         message:
             "The so_line_create_button widget should not appear as there is already a value in sale_line_id field.",
     });
@@ -162,7 +162,7 @@ test("test so_line_create_button widget: visibility conditions", async () => {
     await click(".ui-sortable .o_data_row:nth-child(1) div[name='employee_id']");
     await animationFrame();
     await focus("[name='sale_line_id'] input");
-    expect("a[aria-label='Create Sales Order']").toBeVisible({
+    expect("button[aria-label='Create Sales Order']").toBeVisible({
         message:
             "The so_line_create_button widget should appear as there is no value in sale_line_id field.",
     });

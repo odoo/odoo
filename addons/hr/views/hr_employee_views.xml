@@ -121,36 +121,33 @@
                                 </div>
                             </button>
                         </div>
-                        <div class="d-flex flex-column flex-sm-row align-items-center" name="employee_photo_and_info">
-                            <div class="o_employee_avatar ms-2 p-0">
+                        <div class="o_form_header_group" name="employee_photo_and_info">
+                            <div class="o_employee_avatar">
                                 <field name="hr_icon_display" invisible="not show_hr_icon_display or not id or not active" widget="hr_presence_status"/>
-                                <field name="image_1920" widget='image' class="m-0" options='{"size": [128,158], "zoom": true, "preview_image":"avatar_128"}'/>
+                                <field name="image_1920" widget='image' options='{"size": [128,158], "zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
-                            <div class="col-12 col-sm-6 col-md-7 col-lg-8 px-4">
-                                <div class="oe_title mw-100 ps-0 pe-sm-2">
-                                    <h1 class="d-flex flex-row align-items-center o_employee_form_header_info">
-                                        <field name="name" placeholder="Employee's Name (e.g. John Doe, ...)"
-                                            required="True" style="font-size: min(4vw, 2.6rem);"/>
-                                    </h1>
-                                    <h5 class="d-flex align-items-baseline mb-0">
-                                        <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
-                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email" class="w-100 w-sm-75"/>
-                                    </h5>
-                                    <h5 class="d-flex align-items-baseline mb-0">
-                                        <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
-                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"  class="w-100 w-sm-75"/>
-                                    </h5>
-                                    <h5 class="d-flex align-items-baseline mb-0">
-                                        <i class="fa fa-mobile fa-fw me-1 text-primary" title="Work Mobile"/>
-                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"  class="w-100 w-sm-75"/>
-                                    </h5>
-                                    <h5>
-                                        <i class="fa fa-tags fa-fw me-1 text-primary" title="Tags"/>
-                                        <field name="category_ids" widget="many2many_tags"
-                                            options="{'color_field': 'color', 'no_create_edit': True}"
-                                            placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
-                                    </h5>
+                            <div class="o_form_header_details">
+                                <h1 class="o_employee_form_header_info">
+                                    <field name="name" placeholder="Employee's Name (e.g. John Doe, ...)" required="True"/>
+                                </h1>
+                                <div class="o_input_box">
+                                    <i class="fa fa-envelope o_input_box_overlay_start" title="Work Email"/>
+                                    <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email"/>
+                                </div>
+                                <div class="o_input_box">
+                                    <i class="fa fa-phone o_input_box_overlay_start" title="Work Phone"/>
+                                    <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
+                                </div>
+                                <div class="o_input_box">
+                                    <i class="fa fa-mobile o_input_box_overlay_start" title="Work Mobile"/>
+                                    <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
+                                </div>
+                                <div class="o_input_box">
+                                    <i class="fa fa-tags o_input_box_overlay_start" title="Tags"/>
+                                    <field name="category_ids" widget="many2many_tags"
+                                        options="{'color_field': 'color', 'no_create_edit': True}"
+                                        placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
                                 </div>
                             </div>
                         </div>
@@ -268,14 +265,8 @@
                                     </group>
                                     <group string="Personal Information" name="hr_birth_group">
                                         <field name="legal_name"/>
-                                        <label for="birthday"/>
-                                        <div class="o_row" name="div_km_home_work">
-                                            <field name="birthday" class="o_hr_narrow_field"/>
-                                            <span invisible="not birthday" >
-                                                <label for="birthday_public_display" class="fw-bold text-900 form-check-label ms-3"/>
-                                                <field name="birthday_public_display" class="ms-3"/>
-                                            </span>
-                                        </div>
+                                        <field name="birthday"/>
+                                        <field name="birthday_public_display" invisible="not birthday" widget="boolean_toggle"/>
                                         <label for="place_of_birth"/>
                                         <div class="o_row" name="birth_location">
                                             <field name="place_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="City"/>
@@ -308,7 +299,7 @@
                                             <field name="work_permit_expiration_date" invisible="not permit_no"/>
                                         </div>
                                         <field name="work_permit_name" invisible="1"/>
-                                        <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name" string="Document"/>
+                                        <field name="has_work_permit" widget="binary" filename="work_permit_name" string="Document"/>
                                     </group>
                                     <group string="Emergency Contact">
                                         <field name="emergency_contact" string="Contact Name"/>
@@ -328,7 +319,7 @@
                                         </div>
                                         <label for="distance_home_work"/>
                                         <div class="o_row" name="div_km_home_work">
-                                            <field name="distance_home_work" class="o_hr_narrow_field"/>
+                                            <field name="distance_home_work"/>
                                             <span><field name="distance_home_work_unit"/></span>
                                         </div>
                                     </group>

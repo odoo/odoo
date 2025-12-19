@@ -126,30 +126,28 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                    <div class="mb8">
-                        <div class="d-flex gap-3">
-                            <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [130,130], 'img_class': 'rounded border'}"/>
-                            <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
-                            <div class="d-flex flex-column flex-grow-1">
-                                <h1 class="mb-0 w-75">
-                                    <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="Name (company or person)" required="type == 'contact'"/>
-                                </h1>
-                                <div class="d-flex align-items-baseline w-md-50">
-                                    <i class="fa fa-fw me-1 fa-building text-primary" title="Company"/>
-                                    <field name="parent_id" class="w-100"
-                                        widget="res_partner_many2one"
-                                        placeholder="Company Employer"
-                                        domain="[('parent_id', '=', False)]"
-                                        context="{'default_user_id': user_id}"/>
-                                </div>
-                                <div class="d-flex align-items-baseline w-md-50">
-                                    <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
-                                    <field name="email" class="w-100" widget="email" required="user_ids" placeholder="Email"/>
-                                </div>
-                                <div class="d-flex align-items-baseline w-md-50">
-                                    <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
-                                    <field name="phone" class="w-100" widget="phone" placeholder="Phone"/>
-                                </div>
+                    <div class="o_form_header_group">
+                        <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [130,130], 'img_class': 'rounded border'}"/>
+                        <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
+                        <div class="o_form_header_details">
+                            <h1>
+                                <field options="{'line_breaks': False}" widget="text" class="text-break d-block" name="name" default_focus="1" placeholder="Name (company or person)" required="type == 'contact'"/>
+                            </h1>
+                            <div class="o_input_box">
+                                <i class="o_input_box_overlay_start fa fa-building" title="Company"/>
+                                <field name="parent_id"
+                                    widget="res_partner_many2one"
+                                    placeholder="Company Employer"
+                                    domain="[('parent_id', '=', False)]"
+                                    context="{'default_user_id': user_id}"/>
+                            </div>
+                            <div class="o_input_box">
+                                <i class="o_input_box_overlay_start fa fa-envelope" title="Email"/>
+                                <field name="email" widget="email" required="user_ids" placeholder="Email"/>
+                            </div>
+                            <div class=" o_input_box">
+                                <i class="o_input_box_overlay_start fa fa-phone" title="Phone"/>
+                                <field name="phone" widget="phone" placeholder="Phone"/>
                             </div>
                         </div>
                     </div>
@@ -242,17 +240,17 @@
                                                 <h3>
                                                     <field name="name" class="d-block" string="Name" default_focus="1" required="type == 'contact'" placeholder="e.g. Brandon Freeman"/>
                                                 </h3>
-                                                <div class="row flex-row">
-                                                    <div class="d-flex align-items-baseline">
-                                                        <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
-                                                        <field name="email" widget="email" class="w-100" context="{'gravatar_image': True}" required="user_ids" placeholder="Email"/>
+                                                <div>
+                                                    <div class="o_input_box">
+                                                        <i class="o_input_box_overlay_start fa fa-envelope" title="Email"/>
+                                                        <field name="email" widget="email" context="{'gravatar_image': True}" required="user_ids" placeholder="Email"/>
                                                     </div>
-                                                    <div class="d-flex align-items-baseline">
-                                                        <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
-                                                        <field name="phone" widget="phone" class="w-100" placeholder="Phone"/>
+                                                    <div class="o_input_box">
+                                                        <i class="o_input_box_overlay_start fa fa-phone" title="Phone"/>
+                                                        <field name="phone" widget="phone" placeholder="Phone"/>
                                                     </div>
-                                                    <div invisible="type != 'contact'" class="d-flex align-items-baseline">
-                                                        <i class="fa fa-fw me-1 fa-suitcase text-primary" title="Position"/>
+                                                    <div invisible="type != 'contact'" class="o_input_box">
+                                                        <i class="o_input_box_overlay_start fa fa-suitcase" title="Position"/>
                                                         <field name="function" placeholder="Job title"/>
                                                     </div>
                                                 </div>
@@ -365,11 +363,11 @@
                                 </div>
                                 <div>
                                     <div t-if="record.email.raw_value" class="text-truncate">
-                                        <i class="fa fa-fw me-1 fa-envelope" title="Email"/>
+                                        <i class="fa fa-fw me-1 fa-envelope text-muted" title="Email"/>
                                         <field name="email"/>
                                     </div>
                                     <div t-if="record.phone.raw_value">
-                                        <i class="fa fa-fw me-1 fa-phone" title="Phone"/>
+                                        <i class="fa fa-fw me-1 fa-phone text-muted" title="Phone"/>
                                         <field name="phone"/>
                                     </div>
                                     <div t-if="record.city.raw_value or record.country_id.raw_value">

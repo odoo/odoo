@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="crm.PlsTooltipButton">
-        <a class="o_crm_pls_tooltip_button border-0 mx-1 p-0 mb-1 mb-md-0 btn btn-light"
-            role="button"
+        <button t-attf-class="o_crm_pls_tooltip_button btn btn-link btn-link-inline"
             title="See AI-computed chances details"
             aria-label="See AI-computed chances details"
             t-on-click.prevent.stop="this.onClickPlsTooltipButton">
             <img class="m-1" role="img" src="/crm/static/src/img/pls-tooltip-ai-icon.png" alt="AI"/>
-        </a>
+        </button>
     </t>
 
     <t t-name="crm.PlsTooltip">

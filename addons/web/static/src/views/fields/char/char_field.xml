@@ -21,14 +21,13 @@
                 t-custom-ref="input"
             />
             <div class="o_field_input_buttons">
-                <t t-if="isTranslatable">
-                    <TranslationButton
-                        fieldName="props.name"
-                        record="props.record"
-                    />
-                </t>
+                <TranslationButton
+                    t-if="isTranslatable"
+                    fieldName="props.name"
+                    record="props.record"
+                />
                 <button t-if="hasDynamicPlaceholder"
-                    class="btn m-0 py-0 px-2 fa fa-magic"
+                    class="btn btn-link fa fa-magic o_input_box_overlay_end"
                     title="Insert Field"
                     t-on-click="onDynamicPlaceholderOpen"
                 />

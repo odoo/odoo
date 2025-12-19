@@ -80,38 +80,31 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <widget name="web_ribbon" title="Template" bg_color="text-bg-info" invisible="not (is_template and active)"/>
-
                     <div class="oe_title">
-                        <h1 class="d-flex flex-row">
-                            <field name="is_favorite" nolabel="1" widget="project_is_favorite" class="me-2" options="{'autosave': False}"/>
+                        <h1 class="o_input_box">
+                            <field name="is_favorite" nolabel="1" widget="project_is_favorite" class="o_input_box_overlay_start" options="{'autosave': False}"/>
                             <field name="name" options="{'line_breaks': False}" widget="text" class="o_text_overflow" placeholder="e.g. Office Party"/>
                         </h1>
                     </div>
                     <group>
-                        <group class="d-lg-none">
-                            <div class="d-flex mb-3">
-                                <i class="fa fa-user pe-2" title="Customer" name="partner_id"/>
+                        <div>
+                            <div class="o_input_box">
+                                <i class="o_input_box_overlay_start fa fa-user" title="Customer" name="partner_id"/>
                                 <field name="partner_id" nolabel="1" widget="res_partner_many2one" placeholder="Select Customer" context="{'show_address': True}"/>
                             </div>
-                            <div class="d-flex align-items-center" invisible="not partner_phone">
-                                <i class="fa fa-phone pe-2" title="Phone"/>
+                            <div class="o_input_box" invisible="not partner_phone">
+                                <i class="o_input_box_overlay_start fa fa-phone" title="Phone"/>
                                 <field name="partner_phone" nolabel="1" widget="phone"/>
                             </div>
-                            <div class="d-flex align-items-center mb-3" invisible="not partner_email">
-                                <i class="fa fa-envelope pe-2" title="Email"/>
+                            <div class="o_input_box" invisible="not partner_email">
+                                <i class="o_input_box_overlay_start fa fa-envelope" title="Email"/>
                                 <field name="partner_email" nolabel="1" widget="email"/>
                             </div>
-                            <div class="d-flex align-items-center">
-                                <i class="fa fa-tag pe-2" title="Tags"/>
+                            <div class="o_input_box">
+                                <i class="o_input_box_overlay_start fa fa-tag" title="Tags"/>
                                 <field name="tag_ids" nolabel="1" widget="many2many_tags" placeholder="Select Tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                             </div>
-                        </group>
-                        <group class="d-none d-lg-grid">
-                            <i class="fa fa-user pe-2" title="Customer" name="partner_id"/><field name="partner_id" nolabel="1" widget="res_partner_many2one" placeholder="Select Customer" context="{'show_address': True}"/>
-                            <i class="fa fa-phone pe-2" title="Phone" invisible="not partner_phone"/><field name="partner_phone" nolabel="1" widget="phone" invisible="not partner_phone"/>
-                            <i class="fa fa-envelope pe-2" title="Email" invisible="not partner_email"/><field name="partner_email" nolabel="1" widget="email" invisible="not partner_email"/>
-                            <i class="fa fa-tag pe-2" title="Tags"/><field name="tag_ids" nolabel="1" widget="many2many_tags" placeholder="Select Tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
-                        </group>
+                        </div>
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active" domain="[('share', '=', False)]"/>
@@ -138,10 +131,13 @@
                                     <label for="alias_name" string="Project's Email" invisible="is_template"/>
                                     <field name="alias_email" widget="email" readonly="1" nolabel="1" groups="!project.group_project_manager" invisible="is_template"/>
                                     <div class="row" groups="project.group_project_manager" invisible="is_template">
-                                        <div class="d-flex col-10">
-                                            <field name="alias_name" placeholder="alias" class="o_field_highlight"/>@
-                                            <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
-                                                options="{'no_create': True, 'no_open': True}"/>
+                                        <div class="d-flex col-10 w-100">
+                                            <field name="alias_name" placeholder="alias" class="o_field_highlight"/>
+                                            <div class="o_input_box">
+                                                <span class="o_input_box_overlay_start">@</span>
+                                                <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
+                                                       options="{'no_create': True, 'no_open': True}"/>
+                                            </div>
                                         </div>
                                         <div class="col-2 p-0" invisible="not alias_email">
                                            <field name="alias_email" widget="CopyClipboardButton"
@@ -154,12 +150,12 @@
                                            invisible="not alias_email"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
-                                    <span colspan="2" class="text-muted o_row ps-1" invisible="access_instruction_message == ''">
-                                        <i class="fa fa-lightbulb-o pe-2" title="Info"/><field class="d-inline" name="access_instruction_message" nolabel="1"/>
-                                    </span>
-                                    <span colspan="2" class="text-muted o_row ps-1" invisible="privacy_visibility_warning == ''">
-                                        <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="privacy_visibility_warning" nolabel="1"/>
-                                    </span>
+                                    <div class="text-muted o_input_box" invisible="access_instruction_message == ''">
+                                        <i class="o_input_box_overlay_start fa fa-lightbulb-o" title="Info"/><field name="access_instruction_message" nolabel="1"/>
+                                    </div>
+                                    <div class="text-muted o_input_box" invisible="privacy_visibility_warning == ''">
+                                        <i class="o_input_box_overlay_start fa fa-warning" title="Warning"/><field name="privacy_visibility_warning" nolabel="1"/>
+                                    </div>
                                 </group>
                                 <div class="o_col">
                                     <group>

@@ -72,6 +72,11 @@ export const purchaseForm = {
     selectVendor(vendorName) {
         return [
             {
+                content: "Focus Vendor Field on PO",
+                trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
+                run: `click`,
+            },
+            {
                 content: "Fill Vendor Field on PO",
                 trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
                 run: `edit ${vendorName}`,

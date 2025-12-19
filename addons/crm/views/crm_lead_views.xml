@@ -27,6 +27,8 @@
                         <field name="is_rotting" invisible="1"/>
                         <field name="rotting_days" invisible="1"/>
                         <field name="lang_code" invisible="1"/>
+                        <field name="company_currency" invisible="1"/>
+                        <field name="is_automated_probability" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_schedule_meeting" type="object"
                                 class="oe_stat_button" icon="fa-calendar"
@@ -51,58 +53,96 @@
                         <widget name="web_ribbon" title="Lost" bg_color="text-bg-danger" invisible="won_status != 'lost'"/>
                         <widget name="web_ribbon" title="Won" invisible="won_status != 'won'"/>
                         <div class="oe_title mw-100">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h1 class="flex-grow-1">
+                            <div class="o_input_box">
+                                <h1>
                                     <field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Product Pricing"/>
                                 </h1>
-                                <div class="align-self-start mt-2 ms-2"
-                                    title="Convert into an Opportunity to see it in your Pipeline"
+                                <div class="o_input_box_overlay_end"
+                                    data-tooltip="Convert into an Opportunity to see it in your Pipeline"
                                     invisible="type == 'opportunity'">
                                     <field name="type" widget="badge"/>
                                 </div>
                             </div>
-                            <h2 class="row g-0 pb-3 pb-sm-4">
-                                <div class="col-auto pb-2 pb-md-0 w-100 w-sm-auto" invisible="type == 'lead'">
+                            <h2 class="d-flex pb-3 d-touch-none">
+                                <!-- in this view, we want to have a different desktop UI, so we have two different 'touch' and 'desktop' templates -->
+                                <div class="col-3 d-flex flex-column justify-content-between"  invisible="type == 'lead'">
                                     <label for="expected_revenue" class="oe_edit_only"/>
-                                    <div class="d-flex flex-wrap align-items-baseline">
+                                    <div class="d-flex align-items-baseline o_input_box">
                                         <field name="company_currency" invisible="1"/>
-                                        <field name="expected_revenue" class="o_input_13ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
-                                        <span class="opacity-50 p-2" groups="crm.group_use_recurring_revenues"> + </span>
-                                        <span class="opacity-50 p-2" groups="!crm.group_use_recurring_revenues"> at </span>
+                                        <field name="expected_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <span class="o_input_box_overlay_end" groups="crm.group_use_recurring_revenues"> + </span>
+                                        <span class="o_input_box_overlay_end" groups="!crm.group_use_recurring_revenues"> at </span>
                                         <field name="recurring_revenue" class="o_input_10ch mx-auto mx-sm-0" widget="monetary"
                                             options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
-                                        <div class="d-flex align-items-baseline" groups="crm.group_use_recurring_revenues">
+                                        <div class="d-flex align-items-baseline mb-0" groups="crm.group_use_recurring_revenues">
                                             <field name="recurring_plan" class="oe_inline o_input_13ch" placeholder='e.g. "Monthly"'
                                                 required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
-                                            <span class="opacity-50 p-2 text-nowrap d-none d-sm-block"> at </span>
+                                            <span class="o_input_box_overlay_end d-none d-sm-block"> at </span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-auto">
-                                    <label for="probability" class="d-inline-block"/>
-                                    <a class="border-0 mx-1 p-0 mb-1 mb-md-0 btn btn-light"
-                                        name="action_set_automated_probability"
-                                        role="button" type="object"
-                                        invisible="is_automated_probability or won_status == 'lost'">
-                                            <img class="m-1 o_lead_opportunity_form_AI_switch_img"
-                                                title="Switch to AI-computed probabilities"
-                                                aria-label="Switch to AI-computed probabilities"
-                                                src="/crm/static/src/img/pls-tooltip-ai-icon.png"
-                                                alt="AI"/>
-                                    </a>
-                                    <widget name="pls_tooltip_button" class="d-inline-block"
-                                        invisible="won_status != 'pending' or not is_automated_probability"/>
-                                    <small class="d-inline-block opacity-50 h6 mb-0" invisible="is_automated_probability or won_status == 'lost'">
-                                        ~<field class="mb-0" name="automated_probability" force_save="1"/> %
-                                    </small>
-                                    <div id="probability" class="d-flex align-items-baseline">
+                                <div class="col-auto d-flex flex-column">
+                                    <div>
+                                        <label for="probability" class="d-inline-block"/>
+                                        <a class="border-0 mx-1 p-0 mb-1 mb-md-0 btn btn-light"
+                                            name="action_set_automated_probability"
+                                            role="button" type="object"
+                                            invisible="is_automated_probability or won_status == 'lost'">
+                                                <img class="m-1 o_lead_opportunity_form_AI_switch_img"
+                                                    title="Switch to AI-computed probabilities"
+                                                    aria-label="Switch to AI-computed probabilities"
+                                                    src="/crm/static/src/img/pls-tooltip-ai-icon.png"
+                                                    alt="AI"/>
+                                        </a>
+                                        <widget name="pls_tooltip_button" class="d-inline-block"
+                                            invisible="won_status != 'pending' or not is_automated_probability"/>
+                                        <small class="d-inline-block opacity-50 h6 mb-0" invisible="is_automated_probability or won_status == 'lost'">
+                                            ~ <field class="w-auto" name="automated_probability" force_save="1"/> %
+                                        </small>
+                                    </div>
+                                    <div id="probability" class="o_input_box">
                                         <field name="is_automated_probability" invisible="1"/>
-                                        <field name="probability" widget="float" class="oe_inline o_input_6ch" readonly="won_status != 'pending'"/>
-                                        <span class="opacity-50 p-2"> %</span>
+                                        <field name="probability" widget="float" readonly="won_status != 'pending'"/>
+                                        <span class="o_input_box_overlay_end o_input_box_overlay_inline">%</span>
                                     </div>
                                 </div>
                             </h2>
                         </div>
+                        <group class="d-none d-touch-flex">
+                            <group>
+                                <field name="expected_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                            </group>
+                            <group groups="crm.group_use_recurring_revenues">
+                                <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}" />
+                                <field name="recurring_plan" placeholder='e.g. "Monthly"' required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
+                            </group>
+                            <group>
+                                <!-- probability -->
+                                <label for="probability"/>
+                                <div class="o_input_box">
+                                    <field name="probability" widget="float" readonly="won_status != 'pending'"/>
+                                    <span class="o_input_box_overlay_end">%</span>
+                                    <widget name="pls_tooltip_button" class="o_input_box_overlay_end" invisible="won_status != 'pending' or not is_automated_probability" />
+                                </div>
+                                <!-- IA -->
+                                <label for="automated_probability" invisible="is_automated_probability or won_status == 'lost'"/>
+                                <div class="o_input_box" invisible="is_automated_probability or won_status == 'lost'">
+                                    <span class="o_input_box_overlay_start">~</span>
+                                    <field name="automated_probability" force_save="1"/>
+                                    <span class="o_input_box_overlay_end">%</span>
+                                    <a class="o_input_box_overlay_end btn btn-link"
+                                       name="action_set_automated_probability"
+                                       role="button" type="object"
+                                       invisible="is_automated_probability or won_status == 'lost'">
+                                        <img class="o_lead_opportunity_form_AI_switch_img"
+                                             title="Switch to AI-computed probabilities"
+                                             aria-label="Switch to AI-computed probabilities"
+                                             src="/crm/static/src/img/pls-tooltip-ai-icon.png"
+                                             alt="AI"/>
+                                    </a>
+                                </div>
+                            </group>
+                        </group>
                         <group>
                             <group name="lead_partner">
                                 <!-- Preload all the partner's information -->
@@ -189,9 +229,9 @@
                                 <field name="user_id" context="{'default_sales_team_id': team_id}"
                                     widget="many2one_avatar_leader_user" teamField="team_id"/>
                                 <label for="date_deadline" invisible="type == 'lead'">Expected Closing</label>
-                                <div class="d-flex gap-3 align-items-center" invisible="type == 'lead'">
-                                    <field name="date_deadline" nolabel="1" class="oe_inline" placeholder="No closing estimate"/>
-                                    <field name="priority" widget="priority" nolabel="1" class="oe_inline align-top"/>
+                                <div class="o_input_box" invisible="type == 'lead'">
+                                    <field name="date_deadline" nolabel="1" placeholder="No closing estimate"/>
+                                    <field name="priority" widget="priority" nolabel="1" class="o_input_box_overlay_end"/>
                                 </div>
                                 <field name="priority" widget="priority" invisible="type == 'opportunity'"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"/>
@@ -352,11 +392,10 @@
             <field name="arch" type="xml">
                 <form>
                     <group class="crm_quick_create_opportunity_form_group">
-                        <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-user" title="Contact"/>
+                        <div class="o_input_box">
+                            <i class="fa fa-user o_input_box_overlay_start" title="Contact"/>
                             <field name="partner_id"
                                 nolabel="1"
-                                class="o_field_highlight w-100 mb-0"
                                 placeholder='Contact'
                                 context="{
                                 'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
@@ -369,32 +408,30 @@
                                 'show_vat': True}"
                             />
                         </div>
-                        <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-briefcase" title="Opportunity Name"/>
-                            <field name="name" nolabel="1" placeholder="Opportunity's Name" class="o_field_highlight w-100 mb-0"/>
+                        <div class="o_input_box">
+                            <i class="fa fa-briefcase o_input_box_overlay_start" title="Opportunity Name"/>
+                            <field name="name" nolabel="1" placeholder="Opportunity's Name"/>
                         </div>
-                        <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-envelope" title="Contact Email"/>
-                            <field name="email_from" string="Contact Email" placeholder='Contact Email' nolabel="1" class="o_field_highlight w-100 mb-0"/>
+                        <div class="o_input_box">
+                            <i class="fa fa-envelope o_input_box_overlay_start" title="Contact Email"/>
+                            <field name="email_from" string="Contact Email" placeholder='Contact Email' nolabel="1"/>
                         </div>
-                        <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-mobile fa-lg" title="Contact Phone"/>
-                            <field name="phone" string="Contact Phone" placeholder='Contact Phone' nolabel="1" class="o_field_highlight w-100 mb-0"/>
+                        <div class="o_input_box">
+                            <i class="fa fa-mobile fa-lg o_input_box_overlay_start" title="Contact Phone"/>
+                            <field name="phone" string="Contact Phone" placeholder='Contact Phone' nolabel="1"/>
                         </div>
-                        <div class="d-flex align-items-center" colspan="2">
-                            <i class="fa fa-money" title="Expected Revenue"/>
-                            <div class="mb-0">
-                                <field name="expected_revenue" class="oe_inline me-5 o_field_highlight mb-0" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                <field name="priority" class="oe_inline mb-0" nolabel="1" widget="priority"/>
+                        <div class="o_input_box">
+                            <i class="fa fa-money o_input_box_overlay_start" title="Expected Revenue"/>
+                            <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                            <field name="priority" class="o_input_box_overlay_end" nolabel="1" widget="priority"/>
+                        </div>
+                        <div class="o_row">
+                            <div class="o_input_box" groups="crm.group_use_recurring_revenues">
+                                <button class="o_input_box_overlay_start btn btn-link fa fa-refresh" data-tooltip="Recurring Revenue" title="Recurring Revenue"/>
+                                <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             </div>
-                        </div>
-                        <div class="d-flex align-items-center" colspan="2" groups="crm.group_use_recurring_revenues">
-                            <i class="fa fa-refresh" title="Recurring Revenue"/>
-                            <div class="o_row">
-                                <field name="recurring_revenue" class="oe_inline mb-0 o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                <field name="recurring_plan" class="oe_inline mb-0" placeholder='e.g. "Monthly"'
-                                    required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
-                            </div>
+                            <field name="recurring_plan" placeholder='e.g. "Monthly"'
+                                required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
                         </div>
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>

@@ -49,7 +49,7 @@ class ProjectTaskType(models.Model):
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True, export_string_translation=False)
-    rating_active = fields.Boolean('Send a customer rating request')
+    rating_active = fields.Boolean('Ask for Ratings')
     rating_status = fields.Selection(
         string='Customer Ratings Status',
         selection=[

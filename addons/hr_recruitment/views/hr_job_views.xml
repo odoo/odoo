@@ -304,11 +304,13 @@
                     help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"
                 />
                 <div class="row">
-                    <div class="d-flex col-10 p-0">
+                    <div class="d-flex col-10 w-100">
                         <field name="alias_name" placeholder="e.g. jobs" class="o_field_highlight"/>
-                        <span>@</span>
-                        <field name="alias_domain_id" placeholder="e.g. domain.com"
-                            options="{'no_create': True, 'no_open': True}" class="o_field_highlight"/>
+                        <div class="o_input_box">
+                            <span class="o_input_box_overlay_start">@</span>
+                            <field name="alias_domain_id" placeholder="e.g. domain.com"
+                                   options="{'no_create': True, 'no_open': True}" class="o_field_highlight"/>
+                        </div>
                     </div>
                     <div class="col-2 p-0" invisible="not alias_email">
                         <field name="alias_email" widget="CopyClipboardButton"

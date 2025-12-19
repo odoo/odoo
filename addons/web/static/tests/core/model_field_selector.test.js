@@ -1,5 +1,5 @@
 import { render } from "@web/owl2/utils";
-import { expect, getFixture, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
@@ -366,7 +366,7 @@ test("select a relational field does not follow relation", async () => {
         ".o_model_field_selector_popover_item:last-child .o_model_field_selector_popover_item_name"
     ).click();
     expect.verifySteps(["product_id"]);
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_model_field_selector_popover").toHaveCount(0);
 
     await openModelFieldSelectorPopover();
     expect(getDisplayedFieldNames()).toEqual([
@@ -388,11 +388,11 @@ test("select a relational field does not follow relation", async () => {
         "Last Modified on",
         "Product Name",
     ]);
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_model_field_selector_popover").toHaveCount(1);
 
     await contains(".o_model_field_selector_popover_item_name").click();
     expect.verifySteps(["product_id.create_date"]);
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_model_field_selector_popover").toHaveCount(0);
 });
 
 test("can follow relations", async () => {
@@ -427,7 +427,7 @@ test("can follow relations", async () => {
         "Last Modified on",
         "Product Name",
     ]);
-    expect(".o_popover").toHaveCount(1);
+    expect(".o_model_field_selector_popover").toHaveCount(1);
 });
 
 test("cannot follow relations", async () => {
@@ -454,7 +454,7 @@ test("cannot follow relations", async () => {
     ]);
     expect(".o_model_field_selector_popover_relation_icon").toHaveCount(0);
     await contains(".o_model_field_selector_popover_item_name:last").click();
-    expect(".o_popover").toHaveCount(0);
+    expect(".o_model_field_selector_popover").toHaveCount(0);
     expect(getModelFieldSelectorValues()).toEqual(["Product"]);
 });
 
@@ -928,7 +928,7 @@ test("Modify path in popover debug input and click away", async () => {
     );
     expect(getModelFieldSelectorValues()).toEqual(["Foo"]);
 
-    await contains(getFixture()).click();
+    await contains(".o_model_field_selector_popover_close").click();
     expect(getModelFieldSelectorValues()).toEqual(["foooooo"]);
     expect.verifySteps(["foooooo"]);
 });

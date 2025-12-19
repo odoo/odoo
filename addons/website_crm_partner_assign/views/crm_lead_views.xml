@@ -7,30 +7,22 @@
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[last()]" position="after">
                     <page string="Assigned Partner" name="assigned_partner" groups="sales_team.group_sale_salesman">
-                        <group>
-                            <group col="2">
-                                <label for="partner_latitude" string="Geolocation"/>
-                                <div>
-                                    <span class="opacity-50">( </span>
-                                    <field name="partner_latitude" class="oe_inline o_input_12ch px-1"/>
-                                    <span class="opacity-50" invisible="partner_latitude &lt;= 0">N </span>
-                                    <span class="opacity-50" invisible="partner_latitude &gt;= 0">S </span>
-                                    <field name="partner_longitude" class="oe_inline o_input_12ch ps-2 pe-1"/>
-                                    <span class="opacity-50" invisible="partner_longitude &lt;= 0">E </span>
-                                    <span class="opacity-50" invisible="partner_longitude &gt;= 0">W </span>
-                                    <span class="opacity-50 ps-1">) </span>
-                                </div>
-                                <field name="partner_assigned_id" domain="[('grade_id','!=',False)]" context="{'partner_set_default_grade_activation': 1}"
-                                    widget="many2one_avatar"/>
-                            </group>
                             <group>
-                                <button colspan="2" string="Automatic Assignment" name="action_assign_partner" type="object" class="btn-link pt-0 ps-0"/>
-                                <button colspan="2" string="Send Email" type="action" class="btn-link pt-0 ps-0"
-                                    invisible="not partner_assigned_id"
-                                    name="%(crm_lead_forward_to_partner_act)d"
-                                    context="{'default_composition_mode': 'forward','hide_forward_type': 1 , 'default_partner_ids': [partner_assigned_id]}"/>
+                                <group string="Geolocation">
+                                    <field string="Latitude" name="partner_latitude" />
+                                    <field string="Longitude" name="partner_longitude" />
+                                    <field name="partner_assigned_id" domain="[('grade_id','!=',False)]"
+                                           context="{'partner_set_default_grade_activation': 1}"
+                                           widget="many2one_avatar"/>
+                                </group>
+                                <group class="d-flex flex-column gap-3">
+                                    <button string="Automatic Assignment" name="action_assign_partner" type="object" class="btn btn-secondary w-100" />
+                                    <button string="Send Email" type="action" class="btn btn-secondary w-100"
+                                        invisible="not partner_assigned_id"
+                                        name="%(crm_lead_forward_to_partner_act)d"
+                                        context="{'default_composition_mode': 'forward','hide_forward_type': 1 , 'default_partner_ids': [partner_assigned_id]}"/>
+                                </group>
                             </group>
-                        </group>
                     </page>
                 </xpath>
             </field>

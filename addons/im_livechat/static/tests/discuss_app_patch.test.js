@@ -154,7 +154,7 @@ test("open visitor's partner profile if visitor has one", async () => {
     await start();
     await openDiscuss(channel);
     await click("a[title='View Contact']");
-    await contains("div.o_field_widget > input:value(Joel Willis)");
+    await contains("div.o_field_widget input:value(Joel Willis)");
 });
 
 test("Conversation description works in livechat", async () => {

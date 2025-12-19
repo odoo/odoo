@@ -3,6 +3,7 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { createElement } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 describe.current.tags("headless");
 
@@ -196,7 +197,7 @@ test("properly compile sheet", () => {
     `;
     const expected = /*xml*/ `
         <t t-translation="off">
-            <div class="o_form_renderer" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 5 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
+            <div class="o_form_renderer" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 5 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ ${hasTouch()} ? &quot;o_field_highlight&quot; : &quot;&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div t-on-scroll="__comp__.onScrollThrottled" class="o_form_sheet_bg">
                     <div t-att-class="{ 'shadow-sm': __comp__.state.isStatusbarStickyPinned }" class="o_form_statusbar d-flex justify-content-between py-2"><StatusBarButtons/></div>
                     <div>someDiv</div>
@@ -225,7 +226,7 @@ test("properly compile buttonBox invisible in sheet", () => {
         <t t-translation="off">
             <div class="o_form_renderer"
                  t-att-class="__comp__.props.class"
-                 t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 5 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}"
+                 t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 5 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ ${hasTouch()} ? &quot;o_field_highlight&quot; : &quot;&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}"
                  t-ref="compiled_view_root">
                 <div t-on-scroll="__comp__.onScrollThrottled" class="o_form_sheet_bg">
                     <div class="o_form_sheet position-relative">
@@ -374,7 +375,7 @@ test("properly compile empty ButtonBox", () => {
     `;
     const expected = /*xml*/ `
         <t t-translation="off">
-            <div class="o_form_renderer" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 5 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
+            <div class="o_form_renderer" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex d-print-block {{ __comp__.uiService.size &lt; 5 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ ${hasTouch()} ? &quot;o_field_highlight&quot; : &quot;&quot; }} {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                 <div t-on-scroll="__comp__.onScrollThrottled" class="o_form_sheet_bg">
                     <div class="o_form_sheet position-relative">
                         <div class="oe_button_box" name="button_box">

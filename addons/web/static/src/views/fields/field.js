@@ -1,10 +1,14 @@
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { utils } from "@web/core/ui/ui_service";
 import { exprToBoolean } from "@web/core/utils/strings";
+import { debounce } from "@web/core/utils/timing";
 import { getFieldContext } from "@web/model/relational_model/utils";
 import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
+import { positionInputBoxOverlay } from "@web/core/input_box/input_box";
 import { getTooltipInfo } from "./field_tooltip";
 
 import { Component, xml } from "@odoo/owl";
@@ -357,12 +361,38 @@ export class Field extends Component {
 
     setup() {
         this.offlineService = useService("offline");
+        this.fieldRef = useRef("fieldRef");
+
+        this.debouncedOverlayPositioning = debounce(() => {
+            positionInputBoxOverlay(this.fieldRef.el);
+        }, 500);
         if (this.props.fieldInfo) {
             this.field = this.props.fieldInfo.field;
         } else {
             const fieldType = this.props.record.fields[this.props.name].type;
             this.field = getFieldFromRegistry(fieldType, this.props.type);
         }
+
+        useLayoutEffect(() => {
+            this.debouncedOverlayPositioning();
+        }, () => [this.props.record.data]);
+
+        useLayoutEffect((fieldEl) => {
+            if (!fieldEl) {
+                return;
+            }
+            positionInputBoxOverlay(fieldEl);
+            if (hasTouch() && this.props.fieldInfo?.viewType === "form") {
+                const focusIn = () => this.onFieldFocus(true);
+                const focusOut = () => this.onFieldFocus(false);
+                fieldEl.addEventListener("focusin", focusIn);
+                fieldEl.addEventListener("focusout", focusOut);
+                return () => {
+                    fieldEl.removeEventListener("focusin", focusIn);
+                    fieldEl.removeEventListener("focusout", focusOut);
+                }
+            }
+        }, () => [this.fieldRef.el]);
     }
 
     get classNames() {
@@ -481,5 +511,9 @@ export class Field extends Component {
             }
         }
         return false;
+    }
+    onFieldFocus(isActive) {
+        const formLabelSelector = `.o_cell:has(+ .o_cell .o_field_widget[name=${this.props.name}]) .o_form_label`;
+        document.querySelector(`label[for=${this.fieldComponentProps.id}], ${formLabelSelector}`)?.classList.toggle("o_label_active", isActive);
     }
 }

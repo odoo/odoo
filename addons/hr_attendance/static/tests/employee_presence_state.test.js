@@ -53,7 +53,7 @@ test("Check presence status state", async function () {
         `,
     });
 
-    expect(".o_employee_availability span").toHaveAttribute("title", "Absent");
+    expect(".o_employee_availability").toHaveAttribute("title", "Absent");
 
     await MockServer.env["bus.bus"]._sendone(channel, "hr.employee/presence", {
         hr_icon_display: "presence_present",
@@ -64,5 +64,5 @@ test("Check presence status state", async function () {
     await waitNotifications([env, "hr.employee/presence"]);
     await runAllTimers();
 
-    expect(".o_employee_availability span").toHaveAttribute("title", "Present");
+    expect(".o_employee_availability").toHaveAttribute("title", "Present");
 });

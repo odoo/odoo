@@ -8,7 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 
 import { Component } from "@odoo/owl";
 
-export const MAX_FILENAME_SIZE_BYTES = 0xFF;  // filenames do not exceed 255 bytes on Linux/Windows/MacOS
+export const MAX_FILENAME_SIZE_BYTES = 0xff; // filenames do not exceed 255 bytes on Linux/Windows/MacOS
 
 export class BinaryField extends Component {
     static template = "web.BinaryField";
@@ -50,7 +50,7 @@ export class BinaryField extends Component {
         const { fileNameField, record } = this.props;
         const changes = { [this.props.name]: data || false };
         if (fileNameField in record.fields && record.data[fileNameField] !== name) {
-            changes[fileNameField] = name || '';
+            changes[fileNameField] = name || "";
         }
         return this.props.record.update(changes);
     }

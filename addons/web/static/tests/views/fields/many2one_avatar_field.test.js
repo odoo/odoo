@@ -94,11 +94,9 @@ test("basic form view flow", async () => {
     await contains('.o_field_widget[name="user_id"] input').clear({ confirm: "blur" });
 
     expect(".o_m2o_avatar > img").toHaveCount(0);
-    expect(".o_m2o_avatar > .o_m2o_avatar_empty").toHaveCount(1);
     await clickSave();
 
     expect(".o_m2o_avatar > img").toHaveCount(0);
-    expect(".o_m2o_avatar > .o_m2o_avatar_empty").toHaveCount(1);
 });
 
 test("onchange in form view flow", async () => {
@@ -359,7 +357,6 @@ test("cancelling create dialog should clear value in the field", async () => {
 
     await contains(".o_form_button_cancel").click();
     expect(".o_field_widget[name=user_id] input").toHaveValue("");
-    expect(".o_field_widget[name=user_id] span.o_m2o_avatar_empty").toHaveCount(1);
 });
 
 test.tags("desktop");

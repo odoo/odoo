@@ -29,9 +29,12 @@
                         <div class="d-flex justify-content-between">
                             <h2 class="row" dir="ltr">
                                 <div class="d-flex col-8">
-                                    <field name="alias_name" placeholder="alias" class="o_field_highlight"/>@
-                                    <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
-                                        options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="alias_name" placeholder="alias" class="o_field_highlight"/>
+                                    <div class="o_input_box">
+                                        <span class="o_input_box_overlay_start">@</span>
+                                        <field name="alias_domain_id" class="o_field_highlight" placeholder="e.g. mycompany.com"
+                                               options="{'no_create': True, 'no_open': True}"/>
+                                    </div>
                                 </div>
                                 <div class="col-2 p-0" invisible="not alias_name or not alias_domain_id">
                                     <field name="alias_full_name" widget="CopyClipboardButton"

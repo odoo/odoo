@@ -2,7 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="web.DateTimeField">
         <t t-set="showSeparator" t-value="shouldShowSeparator()" />
-        <div class="d-flex gap-2 align-items-center" t-custom-ref="root">
+        <div class="o_input_box" t-att-class="{'d-flex gap-2 align-items-center position-relative' : showSeparator}" t-custom-ref="root">
+            <i class="o_input_box_overlay_start fa fa-calendar d-none d-touch-inline-flex" />
             <!-- Start date -->
             <t t-if="props.readonly">
                 <span t-if="!isEmpty(startDateField)" class="text-truncate" t-out="window.String(getFormattedValue(0))" t-att-data-tooltip="getFormattedValue(0, true)"/>

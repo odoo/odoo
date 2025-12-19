@@ -218,22 +218,22 @@
 
                             <!-- CASE: product has no cost defined -> user input amount (in other currency if multi-currency) -->
                             <label for="total_amount_currency" string="Total" invisible="product_has_cost" readonly="not is_editable"/>
-                            <div class="o_row" invisible="product_has_cost">
+                            <div class="o_input_box" invisible="product_has_cost">
                                 <field name="total_amount_currency" widget='monetary' options="{'currency_field': 'currency_id'}"
-                                       readonly="not is_editable" class="oe_inline mw-50 me-0"/>
-                                <field name="currency_id" class="mw-25 ms-0" groups="base.group_multi_currency"
-                                       options="{'no_create': True, 'no_open': True}"
                                        readonly="not is_editable"/>
-                                <span class="d-flex" invisible="tax_amount == 0">(incl <field name="tax_amount" class="mx-1"/> tax)</span>
+                                <span class="o_input_box_overlay_end" invisible="tax_amount == 0">(incl <field name="tax_amount" class="mx-1"/> tax)</span>
                             </div>
+                            <field name="currency_id" string="Currency"
+                                options="{'no_create': True, 'no_open': True}"
+                                readonly="not is_editable" groups="base.group_multi_currency"/>
 
                             <!-- CASE: converter when currency is different than the company one -->
                             <label name="total_amount_product_cost_label" for="total_amount" string="Total" invisible="is_multiple_currency or not product_has_cost"/>
-                            <label name="total_amount_multicurrency_label" for="total_amount" string="" invisible="not is_multiple_currency"/>
-                            <div class="o_row" invisible="not is_multiple_currency and not product_has_cost">
+                            <label name="total_amount_multicurrency_label" for="total_amount" string="Total With Conversion" invisible="not is_multiple_currency"/>
+                            <div class="o_input_box" invisible="not is_multiple_currency and not product_has_cost">
                                 <field name="total_amount" widget='monetary' options="{'currency_field': 'company_currency_id'}"
-                                       force_save="1" readonly="not is_editable or product_has_cost" class="oe_inline"/>
-                                <field name="label_currency_rate" class="ps-0"/>
+                                       force_save="1" readonly="not is_editable or product_has_cost"/>
+                                <field name="label_currency_rate" class="o_input_box_overlay_end"/>
                             </div>
 
                             <label for="tax_ids"/>
@@ -258,7 +258,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="date" readonly="not is_editable" class="w-50"/>
+                            <field name="date" readonly="not is_editable"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
                             <field name="manager_id" widget="many2one_avatar_user" readonly="state != 'draft'" placeholder="Auto-validation"/>
                             <field name="department_id" invisible="1" readonly="not is_editable"

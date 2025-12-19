@@ -11,6 +11,7 @@ import { getResModel } from "@web/core/tree_editor/utils";
 import { areEquivalentTrees } from "@web/core/tree_editor/virtual_operators";
 import { useService } from "@web/core/utils/hooks";
 import { shallowEqual } from "@web/core/utils/objects";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 export class TreeEditor extends Component {
     static template = "web.TreeEditor";
@@ -43,6 +44,7 @@ export class TreeEditor extends Component {
         this.isTree = isTree;
         this.fieldService = useService("field");
         this.treeProcessor = useService("tree_processor");
+        this.hasTouch = hasTouch();
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
     }

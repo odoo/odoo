@@ -35,16 +35,13 @@
                                 <field name="mail_template_id" placeholder="No email"
                                     context="{'default_model': 'project.task'}" invisible="user_id"/>
                                 <label for="rotting_threshold_days" string="Rotting in"/>
-                                <div>
-                                    <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
-                                    <span>days</span>
+                                <div class="o_input_box">
+                                    <field name="rotting_threshold_days"/>
+                                    <span class="o_input_box_overlay_end o_input_box_inline">days</span>
                                 </div>
-                                <label for="rating_active" string="Ask for Ratings"/>
-                                <div class="o_customer_rating o_row">
-                                    <field name="rating_active"/>
-                                    <field name="rating_status" invisible="not rating_active"/>
-                                </div>
-                                <field name="rating_status_period" string="Rating Periodicity"
+                                <field name="rating_active" widget="boolean_toggle"/>
+                                <field name="rating_status" invisible="not rating_active"/>
+                                <field name="rating_status_period"
                                     invisible="not rating_active or rating_status != 'periodic'"
                                     required="rating_active and rating_status == 'periodic'"/>
                                 <field name="rating_template_id" string="Rating Email" placeholder="Default"
@@ -54,7 +51,7 @@
                             <group>
                                 <field name="project_ids" invisible="user_id" required="not user_id"
                                     widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'open_form'}"/>
-                                <field name="fold" string="Fold by Default"/>
+                                <field name="fold" string="Fold by Default" widget="boolean_toggle"/>
                                 <field name="color" widget="color_picker"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group>

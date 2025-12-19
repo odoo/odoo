@@ -28,12 +28,11 @@
                 />
             </t>
             <t t-else="">
-                <div class="d-flex align-items-center gap-1">
-                    <Many2One t-props="this.m2oProps" cssClass="'w-100'" t-on-keydown="onM2oInputKeydown"/>
+                <div class="o_input_box">
+                    <Many2One t-props="this.m2oProps" t-on-keydown="onM2oInputKeydown"/>
                     <t t-if="showLabelVisibilityToggler">
                         <button
-                            class="btn fa fa-bars text-start o_external_button px-1"
-                            type="button"
+                            class="o_input_box_overlay_end btn btn-link fa fa-bars"
                             id="labelVisibilityButtonId"
                             data-tooltip="Click or press enter to add a description"
                             t-on-click="() => this.switchLabelVisibility()"

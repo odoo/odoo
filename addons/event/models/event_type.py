@@ -37,9 +37,9 @@ class EventType(models.Model):
     event_type_ticket_ids = fields.One2many('event.type.ticket', 'event_type_id', string='Tickets')
     tag_ids = fields.Many2many('event.tag', string="Tags")
     # registration
-    has_seats_limitation = fields.Boolean('Limited Seats')
+    has_seats_limitation = fields.Boolean('Limit Registrations')
     seats_max = fields.Integer(
-        'Maximum Registrations', compute='_compute_seats_max',
+        'Maximum Seats', compute='_compute_seats_max',
         readonly=False, store=True,
         help="It will select this default maximum value when you choose this event")
     default_timezone = fields.Selection(

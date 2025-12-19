@@ -83,7 +83,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Click on Create button to create a task into your project.',
     run: "click",
 }, {
-    trigger: 'div[name="display_name"] > input',
+    trigger: 'div[name="display_name"] input',
     content: 'Select the name of the task (e.g. Onboarding)',
     run: "edit Onboarding",
 }, {
@@ -237,7 +237,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Select the first Sales Order Item in the autocomplete dropdown.',
     run: "click",
 }, {
-    trigger: 'h1 > div[name="name"] > div > textarea',
+    trigger: 'h1 > div[name="name"] > textarea',
     content: 'Set Project name',
     run: "edit Project with employee mapping",
 }, {

@@ -46,9 +46,9 @@
                         <group>
                             <field name="mail_template_id" placeholder="No email" context="{'default_model': 'project.project'}"/>
                             <label for="rotting_threshold_days" string="Rotting in"/>
-                            <div>
-                                <field name="rotting_threshold_days" class="oe_inline o_input_3ch px-1"/>
-                                <span>days</span>
+                            <div class="o_input_box">
+                                <field name="rotting_threshold_days"/>
+                                <span class="o_input_box_overlay_end o_input_box_inline">days</span>
                             </div>
                         </group>
                         <group>

@@ -46,7 +46,7 @@ class ResPartner(models.Model):
         tracking=True,
     )
     peppol_eas = fields.Selection(
-        string="Peppol e-address (EAS)",
+        string="Peppol ID",
         help="""Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.
              List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/""",
         compute="_compute_peppol_eas",

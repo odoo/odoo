@@ -1,6 +1,5 @@
 import { onRendered, useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
@@ -735,7 +734,6 @@ export class FormController extends Component {
         if (this.props.className) {
             result[this.props.className] = true;
         }
-        result["o_field_highlight"] = size < SIZES.SM || hasTouch();
         return result;
     }
 }

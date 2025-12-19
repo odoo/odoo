@@ -217,6 +217,7 @@ test("file name field is not defined", async () => {
         type: "form",
         arch: `<form><field name="document" filename="foo"/></form>`,
     });
+    queryOne(".o_select_file_button").focus();
     expect(`.o_field_binary`).toHaveText("", {
         message: "there should be no text since the name field is not in the view",
     });
@@ -232,6 +233,7 @@ test("icons are displayed exactly once", async () => {
         type: "form",
         arch: `<form><field name="document" filename="foo"/></form>`,
     });
+    queryOne(".o_select_file_button").focus();
     expect(queryOne`.o_field_binary .o_select_file_button`).toBeVisible({
         message: "only one select file icon should be visible",
     });

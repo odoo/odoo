@@ -24,14 +24,8 @@
                     </button>
                 </xpath>
                 <xpath expr="//field[@name='buyer_id']" position="before">
-                    <label for="group_rfq"/>
-                    <div name="group_rfq_container">
-                        <field name="group_rfq" class="oe_inline"/>
-                        <span name="group_on_span" invisible="group_rfq != 'week'">
-                            On
-                            <field name="group_on" class="oe_inline"/>
-                        </span>
-                    </div>
+                    <field name="group_rfq"/>
+                    <field name="group_on" invisible="group_rfq != 'week'"/>
                 </xpath>
             </field>
     </record>

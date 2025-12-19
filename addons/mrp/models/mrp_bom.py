@@ -80,8 +80,8 @@ class MrpBom(models.Model):
         string="Days to prepare Manufacturing Order", default=0,
         help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.")
     show_set_bom_button = fields.Boolean(compute="_compute_show_set_bom_button")
-    batch_size = fields.Float('Batch Size', default=1.0, digits='Product Unit', help="All automatically generated manufacturing orders for this product will be of this size.")
-    enable_batch_size = fields.Boolean(default=False)
+    batch_size = fields.Float('Batch Size Value', default=1.0, digits='Product Unit', help="All automatically generated manufacturing orders for this product will be of this size.")
+    enable_batch_size = fields.Boolean('Batch Size', default=False)
 
     note = fields.Html(string="Additional Notes", help="Add this note on the manufacturing order to share any additional information")
 

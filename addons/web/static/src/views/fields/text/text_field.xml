@@ -6,31 +6,29 @@
             <span t-out="props.record.data[props.name] or ''" />
         </t>
         <t t-else="">
-            <div t-custom-ref="div">
-                <textarea
-                    class="o_input"
-                    t-att-class="{
-                        'o_field_translate': isTranslatable,
-                        'o_field_placeholder': props.dynamicPlaceholder,
-                    }"
-                    t-att-id="props.id"
-                    t-att-placeholder="props.placeholder"
-                    t-att-rows="rowCount"
-                    t-custom-ref="textarea"
-                    t-on-blur="onBlur"
+            <textarea
+                class="o_input"
+                t-att-class="{
+                    'o_field_translate': isTranslatable,
+                    'o_field_placeholder': props.dynamicPlaceholder,
+                }"
+                t-att-id="props.id"
+                t-att-placeholder="props.placeholder"
+                t-att-rows="rowCount"
+                t-custom-ref="textarea"
+                t-on-blur="onBlur"
+            />
+            <div class="o_field_input_buttons">
+                <TranslationButton
+                    t-if="isTranslatable"
+                    fieldName="props.name"
+                    record="props.record"
                 />
-                <div class="o_field_input_buttons">
-                    <TranslationButton
-                        t-if="isTranslatable"
-                        fieldName="props.name"
-                        record="props.record"
-                    />
-                    <button t-if="props.dynamicPlaceholder"
-                        class="btn m-0 py-2 px-2 fa fa-magic position-relative"
-                        title="Insert Field"
-                        t-on-click="onDynamicPlaceholderOpen"
-                    />
-                </div>
+                <button t-if="props.dynamicPlaceholder"
+                    class="btn btn-link fa fa-magic o_input_box_overlay_end"
+                    title="Insert Field"
+                    t-on-click="onDynamicPlaceholderOpen"
+                />
             </div>
         </t>
     </t>

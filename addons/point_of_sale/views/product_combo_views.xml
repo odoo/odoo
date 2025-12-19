@@ -11,17 +11,9 @@
 
             <xpath expr="//field[@name='company_id']" position="replace">
                 <group>
-                    <span class="o_form_label oe_inline fw-bolder">Maximum</span>
-                    <div>
-                        <field name="qty_max" class="text-center" style="width:50px;"/>
-                        <label for="qty_max" string="items" class="fw-bolder ps-3" />
-                    </div>
-                    <span class="o_form_label oe_inline fw-bolder" invisible="is_upsell">Includes</span>
-                    <div invisible="is_upsell">
-                        <field name="qty_free" class="text-center" style="width:50px;"/>
-                        <label for="qty_free" string="items" class="fw-bolder ps-3" />
-                    </div>
-                    <field name="is_upsell"/>
+                    <field name="qty_max" string="Maximum items" />
+                    <field name="qty_free" string="Includes free" invisible="is_upsell"/>
+                    <field name="is_upsell" widget="boolean_toggle"/>
                 </group>
                 <group>
                     <field name="base_price" widget="monetary" options="{'field_digits': True}"/>

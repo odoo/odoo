@@ -123,7 +123,7 @@ class ResUsers(models.Model):
     legal_name = field_employee(fields.Char, 'legal_name', user_writeable=True,
         help="The employee's official name as per government-issued or legal documents.")
     birthday = field_employee(fields.Date, 'birthday', user_writeable=True)
-    birthday_public_display = field_employee(fields.Boolean, 'birthday_public_display', string="Show to all employees", user_writeable=True)
+    birthday_public_display = field_employee(fields.Boolean, 'birthday_public_display', string="Show Birthday To Employees", user_writeable=True)
     place_of_birth = field_employee(fields.Char, 'place_of_birth', user_writeable=True)
     country_of_birth = field_employee(fields.Many2one, 'country_of_birth', comodel_name='res.country', user_writeable=True)
     sex = field_employee(fields.Selection, 'sex', user_writeable=True,

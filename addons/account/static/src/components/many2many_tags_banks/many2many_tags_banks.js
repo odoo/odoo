@@ -6,6 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { _t } from "@web/core/l10n/translation";
+import { InternalLinkButton } from "@web/views/view_components/internal_link_button";
 import { Component, onMounted } from "@odoo/owl";
 
 class BankTag extends Component {
@@ -27,6 +28,7 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsField {
     static template = "account.FieldMany2ManyTagsBanks";
     static components = {
         ...super.components,
+        InternalLinkButton,
         Tag: BankTag,
     };
 
@@ -59,7 +61,7 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsField {
         };
     }
 
-    openBanksListView() {
+    openBanksListView(newWindow) {
         this.actionService.doAction({
             type: "ir.actions.act_window",
             name: _t("Banks"),
@@ -70,7 +72,7 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsField {
             ],
             domain: this.getDomain(),
             target: "current",
-        });
+        }, { newWindow });
     }
 }
 
@@ -88,6 +90,7 @@ export const fieldMany2ManyTagsBanks = {
     additionalClasses: [
         ...(many2ManyTagsField.additionalClasses || []),
         "o_field_many2many_tags",
+        "o_text_input"
     ],
     relatedFields: ({ options }) => {
         return [

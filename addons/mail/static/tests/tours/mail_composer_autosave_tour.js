@@ -5,7 +5,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_a
     steps: () => [
         {
             content: "Edit the function field",
-            trigger: ".o_field_widget[name='function'] > .o_input",
+            trigger: ".o_field_widget[name='function'] .o_input",
             run: "edit Director",
         },
         {

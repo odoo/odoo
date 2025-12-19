@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { parseXML } from "@web/core/utils/xml";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
+import { hasTouch } from "@web/core/browser/feature_detection";
 
 import {
     Component,
@@ -79,7 +80,7 @@ export class KanbanQuickCreateController extends Component {
 
         this.uiService = useService("ui");
         this.rootRef = useRef("root");
-        this.state = useState({ disabled: false });
+        this.state = useState({ disabled: false, paddingTop: "8px" });
         this.addDialog = useOwnedDialogs();
 
         const { activeFields, fields } = extractFieldsFromArchInfo(
@@ -114,6 +115,15 @@ export class KanbanQuickCreateController extends Component {
 
         onMounted(() => {
             this.uiActiveElement = this.uiService.activeElement;
+            if (hasTouch()) {
+                const label = this.rootRef.el.querySelector(".o_form_label:first-of-type");
+                if (label) {
+                    const computedStyle = getComputedStyle(label);
+                    const height = computedStyle.getPropertyValue("--fieldWidget-label-height");
+                    const width = computedStyle.getPropertyValue("--border-width");
+                    this.state.paddingTop = `calc((0.5 * ${height} - ${width}) + 8px)`;
+                }
+            }
         });
         // Close on outside click
         useExternalListener(window, "mousedown", (/** @type {MouseEvent} */ ev) => {

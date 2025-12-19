@@ -325,7 +325,7 @@ export class Builder extends Component {
 
     updateInvisibleEls(isMobile = this.props.isMobile) {
         this.invisibleElementsPanelState.invisibleEls = [
-            ...this.editor.editable.querySelectorAll(this.getInvisibleSelector(isMobile)),
+            ...this.editor.editable?.querySelectorAll(this.getInvisibleSelector(isMobile)) || [],
         ];
     }
 

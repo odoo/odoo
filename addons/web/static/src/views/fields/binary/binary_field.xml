@@ -4,7 +4,7 @@
     <t t-name="web.BinaryField">
         <t t-if="!props.readonly">
             <t t-if="props.record.data[props.name]">
-                <div class="w-100 d-inline-flex gap-1">
+                <div class="w-100 d-inline-flex gap-1 o_input_box cursor-pointer">
                     <FileUploader
                         acceptedFileExtensions="props.acceptedFileExtensions"
                         allowedMIMETypes="props.allowedMIMETypes"
@@ -12,46 +12,41 @@
                     >
                         <t name="download" t-if="props.record.resId and !props.record.dirty">
                             <button
-                                class="btn btn-link btn-sm lh-1 fa fa-download o_download_file_button"
+                                class="btn btn-link fa fa-download o_download_file_button o_input_box_overlay_end"
                                 data-tooltip="Download"
                                 aria-label="Download"
                                 t-on-click="onFileDownload"
-                            >
-                            </button>
+                            />
                         </t>
                         <t t-set-slot="toggler">
                             <span t-if="!fileName" class="btn btn-primary o_select_file_button py-0">
                                 Replace current file
                             </span>
                             <t t-else="">
-                                <input  type="text" class="o_input" t-att-value="fileName" readonly="readonly" />
-                                <button
-                                    class="btn btn-link btn-sm lh-1 fa fa-pencil o_select_file_button"
-                                    data-tooltip="Edit"
-                                    aria-label="Edit"
-                                >
-                                </button>
+                                <input type="text" class="o_input o_select_file_button" t-att-value="fileName" readonly="readonly" />
                             </t>
                         </t>
                         <button
-                            class="btn btn-link btn-sm lh-1 fa fa-trash o_clear_file_button"
+                            class="btn btn-link fa fa-trash o_clear_file_button o_input_box_overlay_end"
                             data-tooltip="Clear"
                             aria-label="Clear"
                             t-on-click="() => this.update({})"
-                        >
-                        </button>
+                        />
                     </FileUploader>
                 </div>
             </t>
             <t t-else="">
-                <label class="o_select_file_button btn btn-primary">
+                <label class="o_select_file_button w-100 o_input">
                     <FileUploader
                         acceptedFileExtensions="props.acceptedFileExtensions"
                         allowedMIMETypes="props.allowedMIMETypes"
                         onUploaded.bind="update"
                     >
                         <t t-set-slot="toggler">
-                            Upload your file
+                            <div class="o_input_box text-start">
+                                Upload your file
+                                <button class="o_input_box_overlay_end btn btn-link fa fa-upload" />
+                            </div>
                         </t>
                     </FileUploader>
                 </label>

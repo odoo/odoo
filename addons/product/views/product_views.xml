@@ -49,31 +49,30 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="id" invisible="True"/>
-                    <field
-                        name="image_1920"
-                        widget="image"
-                        class="oe_avatar"
-                        options="{'convert_to_webp': True, 'preview_image': 'image_128'}"
-                    />
-                    <div class="oe_title">
-                        <label for="name" string="Product"/>
-                        <h1>
-                            <div class="d-flex">
-                                <field name="is_favorite" widget="boolean_favorite" class="me-2" nolabel="1"/>
+                    <group class="o_form_header_group flex-md-row-reverse">
+                        <field
+                            name="image_1920"
+                            widget="image"
+                            options="{'convert_to_webp': True, 'preview_image': 'image_128'}"
+                        />
+                        <group class="o_form_header_details" col="2">
+                            <h1 class="o_input_box" colspan="2">
+                                <field name="is_favorite" widget="boolean_favorite" nolabel="1" class="o_input_box_overlay_start"/>
                                 <field class="text-break" name="name" options="{'line_breaks': False}" widget="text" placeholder="e.g. Cheese Burger"/>
+                            </h1>
+                            <div name="options">
+                               <span name="sale_option" class="d-inline-flex">
+                                    <field name="sale_ok" class="w-auto"/>
+                                    <label for="sale_ok"/>
+                                </span>
+                                <span name="purchase_option" class="d-inline-flex" invisible="type == 'combo'">
+                                    <field name="purchase_ok" class="w-auto"/>
+                                    <label for="purchase_ok"/>
+                                </span>
                             </div>
-                        </h1>
-                    </div>
-                    <div name="options">
-                        <span name="sale_option" class="d-inline-flex">
-                            <field name="sale_ok"/>
-                            <label for="sale_ok"/>
-                        </span>
-                        <span name="purchase_option" class="d-inline-flex" invisible="type == 'combo'">
-                            <field name="purchase_ok"/>
-                            <label for="purchase_ok"/>
-                        </span>
-                    </div>
+                        </group>
+                    </group>
+                    
                     <notebook>
                         <page string="General Information" name="general_information">
                             <group>
@@ -96,77 +95,58 @@
                                         string=""
                                         invisible="not product_tooltip"
                                     />
-                                    <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
                                     <field name="show_qty_update_button" invisible="1"/>
                                     <div name="tracking_and_qty_no_stock" class="o_row w-100" invisible="type != 'consu'">
+                                        <label for="is_storable" invisible="type != 'consu'"/>
                                         <field name="is_storable"/>
-                                        <div name="product_template_qty_field" class="d-flex" invisible="is_product_variant or not is_storable">
-                                            <a type="action" name="%(product_variant_edit_qty_action)d" invisible="not show_qty_update_button">
+                                        <div name="product_template_qty_field" class="o_input_box" invisible="is_product_variant or not is_storable">
+                                            <a type="action" name="%(product_variant_edit_qty_action)d" invisible="not show_qty_update_button" class="o_input_box_overlay_start">
                                                 <field name="qty_available" readonly="True"/>
                                             </a>
-                                            <field name="qty_available" invisible="show_qty_update_button" style="max-width: fit-content;"/>
-                                            <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
+                                            <field name="qty_available" invisible="show_qty_update_button"/>
+                                            <field name="uom_name" class="o_input_box_overlay_end" groups="uom.group_uom"/>
                                         </div>
-                                        <div name="product_product_qty_field" class="d-flex" invisible="not is_product_variant or not is_storable">
-                                            <field name="qty_available" style="max-width: fit-content;"/>
-                                            <field name="uom_name" class="ms-2 oe_inline" groups="uom.group_uom"/>
+                                        <div name="product_product_qty_field" class="o_input_box" invisible="not is_product_variant or not is_storable">
+                                            <field name="qty_available"/>
+                                            <field name="uom_name" class="o_input_box_overlay_end" groups="uom.group_uom"/>
                                         </div>
                                     </div>
                                 </group>
-                                <group name="group_standard_price">
-                                    <label for="list_price"/>
-                                    <div name="list_price_uom">
-                                        <field name="list_price"
-                                            class="oe_inline"
-                                            widget="monetary"
-                                            options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                        <span
-                                            name="uom_span"
-                                            groups="uom.group_uom"
-                                            invisible="type == 'combo'"
-                                        >
-                                            per
-                                            <field
-                                                name="uom_id" widget="many2one_uom"
-                                                class="oe_inline" style="max-width:136px"
-                                                options="{'no_quick_create': True}"
-                                            />
-                                        </span>
-                                    </div>
-                                    <label
-                                        for="standard_price"
-                                        invisible="type == 'combo'
-                                                    or (not is_product_variant and (
-                                                        product_variant_count &gt; 1
-                                                        or (product_variant_count == 0 and is_dynamically_created)
-                                                    ))"
-                                        id="standard_price_label"
+                                <group name="group_standard_price" col="2">
+                                    <field name="list_price"
+                                        widget="monetary"
+                                        options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                    <label for="uom_id" string="Per"/>
+                                    <field
+                                        name="uom_id" widget="many2one_uom"
+                                        options="{'no_quick_create': True}"
+                                        nolabel="1"
                                     />
-                                    <div
-                                        name="standard_price_uom"
-                                        invisible="type == 'combo'
-                                                    or (not is_product_variant and (
-                                                        product_variant_count &gt; 1
-                                                        or (product_variant_count == 0 and is_dynamically_created)
-                                                    ))"
+                                    <div colspan="2" class="o_row" name="standard_price_uom" invisible="type == 'combo'
+                                        or (not is_product_variant and (
+                                            product_variant_count &gt; 1
+                                            or (product_variant_count == 0 and is_dynamically_created)
+                                        ))"
                                     >
-                                        <field
-                                            name="standard_price"
-                                            class="oe_inline"
-                                            widget="monetary"
-                                            options="{
-                                                'currency_field': 'cost_currency_id',
-                                                'field_digits': True,
-                                            }"
-                                        />
-                                        <span groups="uom.group_uom">
-                                            per
+                                        <div class="o_cell d-flex">
+                                            <label for="standard_price" class="o_form_label"/>
+                                            <field
+                                                name="standard_price"
+                                                widget="monetary"
+                                                options="{
+                                                    'currency_field': 'cost_currency_id',
+                                                    'field_digits': True,
+                                                }"
+                                            />
+                                        </div>
+                                        <div class="o_cell  d-flex" groups="uom.group_uom">
+                                            <label for="uom_id" string="Per" class="o_form_label"/>
                                             <field
                                                 name="uom_id" widget="many2one_uom"
-                                                class="oe_inline" style="max-width:136px"
                                                 options="{'no_quick_create': True}"
+                                                nolabel="1"
                                             />
-                                        </span>
+                                        </div>
                                     </div>
                                     <field name="categ_id" string="Category"/>
                                     <field name="company_id"
@@ -271,14 +251,14 @@
                             <group name="inventory">
                                 <group name="group_lots_and_weight" string="Logistics" invisible="type != 'consu'">
                                     <label for="weight" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                                    <div class="o_row" name="weight" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                                        <field name="weight" class="oe_inline" style="max-width: 7rem;"/>
-                                        <field name="weight_uom_name"/>
+                                    <div class="o_input_box" name="weight" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                                        <field name="weight"/>
+                                        <field name="weight_uom_name" class="o_input_box_overlay_end"/>
                                     </div>
                                     <label for="volume" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                                    <div class="o_row" name="volume" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                                        <field name="volume" string="Volume" class="oe_inline" style="max-width: 7rem;"/>
-                                        <field name="volume_uom_name"/>
+                                    <div class="o_input_box" name="volume" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                                        <field name="volume" string="Volume"/>
+                                        <field name="volume_uom_name" class="o_input_box_overlay_end"/>
                                     </div>
                                 </group>
                             </group>
@@ -397,16 +377,19 @@
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
                         <field name="company_id" invisible="1"/>
-                        <field name="image_1920" widget="image" class="oe_avatar" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
-                        <div class="oe_title">
-                            <label for="name" string="Product Name"/>
-                            <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
-                            <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
-                            <p>
-                                <span>All general settings about this product are managed on</span>
-                                <button name="open_product_template" type="object" string="the product template." class="oe_link oe_link_product ps-0 ms-1 mb-1"/>
-                            </p>
-                        </div>
+                        <group class="o_form_header_group flex-md-row-reverse">
+                            <field name="image_1920" widget="image" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
+                            <group class="o_form_header_details" col="2">
+                                <h1 colspan="2">
+                                    <field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/>
+                                </h1>
+                                <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
+                                <p>
+                                    <span>All general settings about this product are managed on</span>
+                                    <button name="open_product_template" type="object" string="the product template." class="oe_link oe_link_product ps-0 ms-1 mb-1"/>
+                                </p>
+                            </group>
+                        </group>
                         <group>
                             <group name="codes" string="Codes">
                                 <field name="default_code"/>
@@ -415,17 +398,10 @@
                             </group>
                             <group name="pricing" string="Pricing">
                                 <field name="product_variant_count" invisible="1"/>
-                                <label for="lst_price" string="Sales Price"/>
-                                <div class="o_row">
-                                    <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                                </div>
-                                <label for="standard_price"/>
-                                <div class="o_row">
-                                    <field name="standard_price"
-                                        class="oe_inline"
-                                        widget="monetary"
-                                        options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
-                                </div>
+                                <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                                <field name="standard_price"
+                                    widget="monetary"
+                                    options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                 <field name="currency_id" invisible='1'/>
                                 <field name="cost_currency_id" invisible="1"/>
                             </group>
@@ -433,21 +409,19 @@
                         <group>
                             <group name="weight" string="Logistics" invisible="type != 'consu'">
                                 <label for="qty_available"  invisible="not is_storable"/>
-                                <div class="d-flex" name="no_stock_variant_qty_edit" invisible="not is_storable">
-                                    <div class="d-flex">
-                                        <field name="qty_available" class="oe_inline"/>
-                                        <field name="uom_name" groups="uom.group_uom"/>
-                                    </div>
+                                <div class="o_input_box" name="no_stock_variant_qty_edit" invisible="not is_storable">
+                                    <field name="qty_available"/>
+                                    <field name="uom_name" groups="uom.group_uom" class="o_input_box_overlay_end"/>
                                 </div>
                                 <label for="volume"/>
-                                <div class="d-flex">
-                                    <field name="volume" class="oe_inline"/>
-                                    <field name="volume_uom_name"/>
+                                <div class="o_input_box">
+                                    <field name="volume"/>
+                                    <field name="volume_uom_name" class="o_input_box_overlay_end"/>
                                 </div>
                                 <label for="weight"/>
-                                <div class="d-flex">
-                                    <field name="weight" class="oe_inline"/>
-                                    <field name="weight_uom_name"/>
+                                <div class="o_input_box">
+                                    <field name="weight"/>
+                                    <field name="weight_uom_name" class="o_input_box_overlay_end"/>
                                 </div>
                             </group>
                             <group name="sales" string="Sales">
@@ -583,16 +557,13 @@
                    <attribute name="invisible">1</attribute>
                    <attribute name="readonly">product_variant_count &gt; 1</attribute>
                 </field>
-                <label for="list_price" position="replace">
-                    <label for="lst_price"/>
-                </label>
                 <field name="list_price" position="after">
-                   <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                   <field name="lst_price" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                 </field>
                 <field name="name" position="after">
-                    <field name="product_tmpl_id" class="oe_inline" readonly="1" invisible="1" required="id"/>
+                    <field name="product_tmpl_id" readonly="1" invisible="1" required="id"/>
                 </field>
-                <xpath expr="//div[hasclass('oe_title')]" position="inside">
+                <xpath expr="//group[hasclass('o_form_header_details')]//h1" position="after">
                     <field name="product_template_variant_value_ids" widget="many2many_tags" readonly="1" invisible="not product_template_variant_value_ids" groups="product.group_product_variant"/>
                 </xpath>
                 <field name="product_tag_ids" position="attributes">
@@ -618,18 +589,22 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
-                        <group name="name">
+                        <group class="o_form_header_group flex-md-row-reverse">
+                            <field name="image_1920" widget="image" nolabel="1" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
+                            <group name="name" class="o_form_header_details" col="2">
                                 <field name="company_id" invisible="1"/>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="cost_currency_id" invisible="1"/>
-                                <field name="name" class="oe_inline" placeholder="e.g. Cheese Burger" string="Product Name"/>
-                                <field name="barcode" class="oe_inline" placeholder="e.g. 1234567890"/>
-                                <field name="list_price" class="oe_inline" widget="monetary"
+                                <h1 colspan="2">
+                                    <field name="name" placeholder="e.g. Cheese Burger"/>
+                                </h1>
+                                <field name="barcode" placeholder="e.g. 1234567890"/>
+                                <field name="list_price" widget="monetary"
                                         options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                 <field name="description" invisible="1"/>  <!-- Hide the description field for set data in product barcodelookup -->
                                 <field name="weight" invisible="1"/>       <!-- Hide the weight field for set data in product barcodelookup -->
                                 <field name="categ_id" invisible="1"/>     <!-- Hide the categ_id field set data in product barcodelookup -->
+                            </group>
                         </group>
                     </sheet>
                 </form>

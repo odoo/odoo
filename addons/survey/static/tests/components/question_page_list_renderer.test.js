@@ -81,7 +81,7 @@ test("normal list view", async () => {
     expect(SELECTORS.section).toHaveProperty("colSpan", 2);
 
     await contains(SELECTORS.section).click();
-    expect(SELECTORS.section + " div.input-group").toHaveCount(1);
+    expect(SELECTORS.section + " div.o_input_box").toHaveCount(1);
 });
 
 test("list view with random count", async () => {
@@ -110,7 +110,7 @@ test("list view with random count", async () => {
 
     // We can edit the section title
     await contains(SELECTORS.section).click();
-    expect(SELECTORS.section + " div.input-group").toHaveCount(1);
+    expect(SELECTORS.section + " div.o_input_box").toHaveCount(1);
 
     // We can edit the number of random questions selected
     await contains(SELECTORS.numberQuestions).click();
@@ -142,7 +142,7 @@ test("list view with random but with question_type at the left of the title", as
     expect(SELECTORS.section).toHaveProperty("colSpan", 1);
 
     await contains(SELECTORS.section).click();
-    expect(SELECTORS.section + " div.input-group").toHaveCount(1);
+    expect(SELECTORS.section + " div.o_input_box").toHaveCount(1);
 
     await contains(SELECTORS.numberQuestions).click();
     expect(SELECTORS.numberQuestions + " div").toHaveCount(1);
@@ -172,7 +172,7 @@ test("list view with random and question_type at the beginning of row", async ()
     expect(SELECTORS.section).toHaveProperty("colSpan", 1);
 
     await contains(SELECTORS.section).click();
-    expect(SELECTORS.section + " div.input-group").toHaveCount(1);
+    expect(SELECTORS.section + " div.o_input_box").toHaveCount(1);
 
     await contains(SELECTORS.numberQuestions).click();
     expect(SELECTORS.numberQuestions + " div").toHaveCount(1);

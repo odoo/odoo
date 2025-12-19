@@ -31,7 +31,6 @@ export class TextField extends Component {
     };
 
     setup() {
-        this.divRef = useRef("div");
         this.textareaRef = useRef("textarea");
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder(this.textareaRef);
@@ -107,6 +106,7 @@ export class TextField extends Component {
 }
 
 export const textField = {
+    additionalClasses: ["o_input_box"],
     component: TextField,
     displayName: _t("Multiline Text"),
     supportedOptions: [

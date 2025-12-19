@@ -2,16 +2,16 @@
 <templates xml:space="preserve">
     <t t-name="web.CardPropertiesField">
         <div t-custom-ref="properties" class="w-100 fw-normal text-muted">
-            <div class="o_card_property_field d-inline-flex flex-column justify-content-center align-items-start w-100 mb-1"
+            <div class="o_card_property_field o_input_box"
                 t-foreach="propertiesList"
                 t-as="propertyConfiguration"
                 t-key="propertyConfiguration.name"
                 t-if="propertyConfiguration.value and propertyConfiguration.view_in_cards">
+                <label t-if="['integer', 'float', 'date', 'datetime', 'boolean'].includes(propertyConfiguration.type)" class="o_input_box_overlay_start"
+                    t-att-class="{'fw-bold' : propertyConfiguration.type !== 'boolean'}" t-out="propertyConfiguration.string"/>
                 <!-- We purposefully hide 'Falsy' values such as a False boolean or a 0 value integer field. -->
-                <div class="mw-100 text-truncate text-900 d-flex gap-2"
+                <div class="text-truncate"
                     t-att-class="{'border rounded-3 ps-2' : propertyConfiguration.type === 'boolean'}">
-                    <label t-if="['integer', 'float', 'date', 'datetime', 'boolean'].includes(propertyConfiguration.type)"
-                        t-att-class="{'fw-bold' : propertyConfiguration.type !== 'boolean'}" t-out="propertyConfiguration.string"/>
                     <PropertyValue
                         id="generateUniqueDomID()"
                         canChangeDefinition="state.canChangeDefinition"
@@ -28,8 +28,8 @@
                         onTagsChange.bind="() => {}"
                         record="props.record"
                     />
-                    <span class="o_property_field_value_suffix" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>
                 </div>
+                <span class="o_input_box_overlay_end" t-if="propertyConfiguration.suffix" t-out="propertyConfiguration.suffix"/>
             </div>
         </div>
     </t>

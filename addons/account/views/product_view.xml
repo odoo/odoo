@@ -79,13 +79,12 @@
                         <group name="accounting" groups="account.group_account_readonly,account.group_account_invoice"/>
                     </page>
                 </page>
-                <div name="list_price_uom" position="after">
+                <field name="uom_id" position="after">
                     <label for="taxes_id" invisible="type == 'combo'"/>
-                    <div name="taxes_div" class="o_row" invisible="type == 'combo'">
+                    <div name="taxes_div" class="o_input_box" invisible="type == 'combo'">
                         <field
                             name="taxes_id"
                             widget="many2many_tax_tags"
-                            class="oe_inline"
                             context="{
                                 'default_type_tax_use': 'sale',
                                 'search_default_sale': 1,
@@ -95,9 +94,9 @@
                                 'append_fields': ['company_id'],
                             }"
                         />
-                        <field name="tax_string" class="oe_inline"/>
+                        <field name="tax_string" class="o_input_box_overlay_end o_input_box_inline"/>
                     </div>
-                </div>
+                </field>
                 <div name="standard_price_uom" position="after">
                     <field name="supplier_taxes_id"
                         invisible="not purchase_ok or type == 'combo'"

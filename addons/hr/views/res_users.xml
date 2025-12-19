@@ -50,26 +50,26 @@
                     <attribute name="required">1</attribute>
                 </xpath>
                 <!-- Must be replaced by work_email when the user has an employee_id. -->
-                <xpath expr="//h5[@name='h5_email']" position="attributes">
+                <xpath expr="//div[hasclass('o_input_box')][@name='email']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <!-- Must be replaced by work_phone when the user has an employee_id. -->
-                <xpath expr="//h5[@name='h5_phone']" position="attributes">
+                <xpath expr="//div[hasclass('o_input_box')][@name='phone']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="//div[hasclass('oe_title')]" position="inside">
-                    <h5 class="d-flex align-items-baseline mb-0">
-                        <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
-                        <field name="work_email" widget="email" placeholder="Work Email" string="Work Email" class="w-75"/>
-                    </h5>
-                    <h5 class="d-flex align-items-baseline mb-0">
-                        <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
-                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone" class="w-75"/>
-                    </h5>
-                    <h5 class="d-flex align-items-baseline mb-0">
-                        <i class="fa fa-mobile fa-fw me-1 text-primary" title="Work Mobile"/>
-                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile" class="w-75"/>
-                    </h5>
+                <xpath expr="//div[hasclass('o_form_header_details')]" position="inside">
+                    <div class="o_input_box">
+                        <i class="o_input_box_overlay_start fa fa-envelope" title="Work Email"/>
+                        <field name="work_email" widget="email" placeholder="Work Email" string="Work Email"/>
+                    </div>
+                    <div class="o_input_box">
+                        <i class="o_input_box_overlay_start fa fa-phone" title="Work Phone"/>
+                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
+                    </div>
+                    <div class="o_input_box">
+                        <i class="o_input_box_overlay_start fa fa-mobile" title="Work Mobile"/>
+                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
+                    </div>
                 </xpath>
                 <xpath expr="//group[@name='other_preferences']" position="inside">
                     <field name="pin" string="Attendance PIN"/>
@@ -113,15 +113,8 @@
                             </group>
                             <group string="Personal Information" name="hr_personal_information">
                                 <field name="legal_name"/>
-                                <label for="birthday"/>
-                                <div class="o_row" name="div_birthday">
-                                    <field name="birthday" class="o_hr_narrow_field"/>
-                                    <span invisible="not birthday">
-                                        <label for="birthday_public_display"
-                                               class="fw-bold text-900 form-check-label ms-3"/>
-                                        <field name="birthday_public_display" class="ms-3"/>
-                                    </span>
-                                </div>
+                                <field name="birthday"/>
+                                <field name="birthday_public_display" invisible="not birthday" widget="boolean_toggle"/>
                                 <label for="place_of_birth"/>
                                 <div class="o_row" name="birth_location">
                                     <field name="place_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="City"/>
@@ -228,33 +221,33 @@
                         widget="contact_image" options="{'preview_image': 'avatar_128', 'img_class': 'rounded-4'}"/>
                 </field>
                 <!-- Must be replaced by work_email when the user has an employee_id. -->
-                <xpath expr="//h5[@name='h5_email']" position="attributes">
+                <xpath expr="//div[hasclass('o_input_box')][@name='email']" position="attributes">
                     <attribute name="invisible">employee_id or login == email</attribute>
                 </xpath>
                 <!-- Must be replaced by work_phone when the user has an employee_id. -->
-                <xpath expr="//h5[@name='h5_phone']" position="attributes">
+                <xpath expr="//div[hasclass('o_input_box')][@name='phone']" position="attributes">
                     <attribute name="invisible">employee_id</attribute>
                 </xpath>
-                <xpath expr="//h5[@name='h5_login']/i[hasclass('fa-envelope')]" position="attributes">
+                <xpath expr="//div[hasclass('o_input_box')][@name='login']/i[hasclass('fa-envelope')]" position="attributes">
                     <attribute name="invisible">(not employee_id and login != email) or (employee_id and login != work_email)</attribute>
                 </xpath>
-                <xpath expr="//h5[@name='h5_login']/i[hasclass('fa-key')]" position="attributes">
+                <xpath expr="//div[hasclass('o_input_box')][@name='login']/i[hasclass('fa-key')]" position="attributes">
                     <attribute name="invisible">(not employee_id and login == email) or (employee_id and login == work_email)</attribute>
                 </xpath>
-                <xpath expr="//div[hasclass('oe_title')]" position="inside">
-                    <h5 class="d-flex align-items-baseline mb-0" invisible="not employee_id or login == work_email">
-                        <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
+                <xpath expr="//div[hasclass('o_form_header_details')]" position="inside">
+                    <div class="o_input_box" invisible="not employee_id or login == work_email">
+                        <i class="fa fa-envelope fa-fw o_input_box_overlay_start" title="Work Email"/>
                         <field name="email_domain_placeholder" invisible="1" />
-                        <field name="work_email" widget="email" string="Work Email" class="w-75" options="{'placeholder_field': 'email_domain_placeholder'}"/>
-                    </h5>
-                    <h5 class="d-flex align-items-baseline mb-0" invisible="not employee_id">
-                        <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
-                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone" class="w-75"/>
-                    </h5>
-                    <h5 class="d-flex align-items-baseline mb-0" invisible="not employee_id">
-                        <i class="fa fa-mobile fa-fw me-1 text-primary" title="Work Mobile"/>
-                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile" class="w-75"/>
-                    </h5>
+                        <field name="work_email" widget="email" string="Work Email" options="{'placeholder_field': 'email_domain_placeholder'}"/>
+                    </div>
+                    <div class="o_input_box" invisible="not employee_id">
+                        <i class="fa fa-phone fa-fw o_input_box_overlay_start" title="Work Phone"/>
+                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
+                    </div>
+                    <div class="o_input_box" invisible="not employee_id">
+                        <i class="fa fa-mobile fa-fw o_input_box_overlay_start" title="Work Mobile"/>
+                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
+                    </div>
                 </xpath>
                 <xpath expr="//group[@name='other_preferences']" position="inside">
                     <field name="pin" string="Attendance PIN" invisible="not employee_id"/>

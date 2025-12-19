@@ -169,8 +169,10 @@
                             </div>
                             <label for="percent_price" string="Discount" invisible="compute_price != 'percentage'"/>
                             <div class="o_row gap-3" invisible="compute_price != 'percentage'">
-                                <field name="percent_price"/>
-                                <span>%</span>
+                                <div class="o_input_box">
+                                    <field name="percent_price"/>
+                                    <span class="o_input_box_overlay_end">%</span>
+                                </div>
                                 <t groups="product.group_product_pricelist">
                                     <span>on</span>
                                     <field name="base_pricelist_id" placeholder="sales price" domain="[('id', '!=', pricelist_id)]"/>

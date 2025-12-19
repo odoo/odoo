@@ -17,7 +17,7 @@
     </t>
 
     <t t-name="web.Many2One">
-        <div class="o_many2one" t-att-class="props.cssClass">
+        <div class="o_many2one o_input_box" t-att-class="props.cssClass">
             <t t-if="props.readonly">
                 <t t-if="props.value">
                     <t t-if="props.canOpen">
@@ -31,19 +31,15 @@
             <t t-else="">
                 <div class="o_field_many2one_selection" t-custom-ref="root">
                     <Many2XAutocomplete t-props="many2XAutocompleteProps"/>
-                    <t t-if="hasLinkButton">
-                        <button class="o_external_button btn btn-link text-action px-1" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : env.inDialog ? 'dialog' : 'action')">
-                            <i class="oi" t-att-class="env.inDialog ? 'oi-launch' : 'oi-arrow-right'"/>
-                        </button>
-                    </t>
+                    <InternalLinkButton t-if="this.hasLinkButton" onClick.bind="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : env.inDialog ? 'dialog' : 'action')" />
                     <t t-if="hasBarcodeButton">
-                        <button class="btn ms-3 o_barcode" draggable="false" tabindex="-1" type="button" aria-label="Scan barcode" data-tooltip="Scan barcode" t-on-click="() => this.openBarcodeScanner()"/>
+                        <button class="o_barcode o_input_box_overlay_end btn btn-secondary" draggable="false" tabindex="-1" type="button" aria-label="Scan barcode" data-tooltip="Scan barcode" t-on-click="() => this.openBarcodeScanner()"/>
                     </t>
                 </div>
             </t>
             <t t-set="lines" t-value="extraLines"/>
             <t t-if="lines.length">
-                <div class="o_field_many2one_extra">
+                <div class="o_field_many2one_extra" t-on-click="this.onExtraLinesClick">
                     <t t-foreach="lines" t-as="line" t-key="line_index">
                         <div t-out="line" t-att-title="line"  class="text-truncate"/>
                     </t>

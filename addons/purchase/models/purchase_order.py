@@ -177,7 +177,7 @@ class PurchaseOrder(models.Model):
         ('partial', 'Partially Received'),
         ('full', 'Fully Received'),
     ], string='Receipt Status', compute='_compute_receipt_status', store=True)
-    receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email', store=True, readonly=False)
+    receipt_reminder_email = fields.Boolean('Receipt Reminder', compute='_compute_receipt_reminder_email', store=True, readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
 
     is_late = fields.Boolean('Is Late', store=False, search='_search_is_late')

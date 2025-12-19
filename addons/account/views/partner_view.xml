@@ -56,14 +56,16 @@
                                 options="{'no_open': True, 'no_create': True}"/>
                             <field name="state_ids" widget="many2many_tags" domain="[('country_id', '=', country_id)]"
                                 invisible="(not auto_apply and not foreign_vat) or not country_id or states_count == 0"/>
-                            <label for="zip_from" string="Zip Range"
-                                invisible="not auto_apply or not country_id"/>
-                            <div invisible="not auto_apply or not country_id">
-                                <span> From </span>
-                                <field name="zip_from" class="oe_inline"/>
-                                <div class="oe_edit_only"/>
-                                <span> To </span>
-                                <field name="zip_to" class="oe_inline"/>
+                            <label for="zip_from" string="Zip Range"/>
+                            <div class="o_row" invisible="not auto_apply or not country_id">
+                                <div class="o_cell o_input_box">
+                                    <span class="o_input_box_overlay_start">From</span>
+                                    <field name="zip_from" />
+                                </div>
+                                <div class="o_cell o_input_box">
+                                    <span class="o_input_box_overlay_start">To</span>
+                                    <field name="zip_to" />
+                                </div>
                             </div>
                         </group>
                     </group>

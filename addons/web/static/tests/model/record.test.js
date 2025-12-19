@@ -56,7 +56,7 @@ test(`display a simple field`, async () => {
     expect(queryFirst`.root`).toHaveOuterHTML(`
         <div class="root">
             <span>hello</span>
-            <div name="foo" class="o_field_widget o_field_char">
+            <div name="foo" class="o_field_widget o_field_char o_input_box">
                 <span>yop</span>
             </div>
         </div>

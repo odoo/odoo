@@ -69,19 +69,19 @@
                                     <h1 class="d-flex align-items-baseline w-100">
                                         <field name="name" class="w-100" placeholder="e.g. John Doe" required="1"/>
                                     </h1>
-                                    <div class="d-flex align-items-baseline w-100">
+                                    <div class="o_input_box">
                                         <field name="email" invisible="1"/> <!-- needed to update partner's email from on_change_login() -->
-                                        <i class="fa fa-fw me-1 fa-envelope text-primary" title="Email"/>
+                                        <i class="o_input_box_overlay_start fa fa-envelope" title="Email"/>
                                         <field name="email_domain_placeholder" invisible="1" /> <!-- needed to compute the placeholder whenever the dialog opens -->
-                                        <field name="login" class="w-100" options="{'placeholder_field': 'email_domain_placeholder'}"/>
+                                        <field name="login" options="{'placeholder_field': 'email_domain_placeholder'}"/>
                                     </div>
-                                    <div class="d-flex align-items-baseline w-100">
-                                        <i class="fa fa-fw me-1 fa-phone text-primary" title="Phone"/>
-                                        <field name="phone" class="w-100" widget="phone" placeholder="Phone"/>
+                                    <div class="o_input_box">
+                                        <i class="o_input_box_overlay_start fa fa-phone" title="Phone"/>
+                                        <field name="phone" widget="phone" placeholder="Phone"/>
                                     </div>
-                                    <div class="d-flex align-items-baseline w-100" groups="base.group_multi_company">
-                                        <i class="fa fa-fw me-1 fa-building text-primary" title="Company"/>
-                                        <field name="company_id" class="w-100" context="{'user_preference': 0}" placeholder="Company"/>
+                                    <div class="o_input_box" groups="base.group_multi_company">
+                                        <i class="o_input_box_overlay_start fa fa-building" title="Company"/>
+                                        <field name="company_id" context="{'user_preference': 0}" placeholder="Company"/>
                                     </div>
                                 </div>
                             </div>
@@ -128,26 +128,26 @@
                             <field name="partner_id" required="0" readonly="1"/>
                           </div>
                         </div>
-                        <div class="d-flex gap-3">
+                        <div class="o_form_header_group">
                             <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128', 'img_class': 'rounded-4'}"/>
                             <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
-                            <div class="oe_title d-flex flex-column flex-grow-1">
-                                <h1 class="mb-0 w-sm-75">
+                            <div class="o_form_header_details">
+                                <h1>
                                     <field name="name" placeholder="e.g. John Doe" required="1"/>
                                 </h1>
-                                <h5 name="h5_login" class="d-flex align-items-baseline mb-0">
-                                    <i class="fa fa-fw fa-envelope me-1 text-primary" title="Login / Email" invisible="login != email"/>
-                                    <i class="fa fa-fw fa-key me-1 text-primary" title="Login" invisible="login == email"/>
-                                    <field name="login" placeholder="Login" class="w-75"/>
-                                </h5>
-                                <h5 name="h5_email" class="d-flex align-items-baseline mb-0" invisible="login == email">
-                                    <i class="fa fa-fw fa-envelope me-1 text-primary" title="Email"/>
-                                    <field name="email" placeholder="Email" class="w-75"/>
-                                </h5>
-                                <h5 name="h5_phone" class="d-flex align-items-baseline mb-0">
-                                    <i class="fa fa-fw fa-phone me-1 text-primary" title="Phone"/>
-                                    <field name="phone" placeholder="Phone" class="w-75"/>
-                                </h5>
+                                <div name="login" class="o_input_box">
+                                    <i class="fa fa-envelope o_input_box_overlay_start" title="Login / Email" invisible="login != email"/>
+                                    <i class="fa fa-key o_input_box_overlay_start" title="Login" invisible="login == email"/>
+                                    <field name="login" placeholder="Login"/>
+                                </div>
+                                <div name="email" class="o_input_box" invisible="login == email">
+                                    <i class="fa fa-envelope o_input_box_overlay_start" title="Email"/>
+                                    <field name="email" placeholder="Email"/>
+                                </div>
+                                <div name="phone" class="o_input_box">
+                                    <i class="fa fa-phone o_input_box_overlay_start" title="Phone"/>
+                                    <field name="phone" placeholder="Phone"/>
+                                </div>
                             </div>
                         </div>
                         <group>
@@ -170,17 +170,17 @@
                                 <group>
                                     <group>
                                         <label for="lang" />
-                                        <div class="o_row">
+                                        <div class="o_input_box">
                                             <field name="lang" required="1"/>
                                             <button
                                                 type="action"
                                                 name="%(base.action_view_base_language_install)d"
-                                                class="oe_edit_only btn-sm btn-link mb4 fa fa-globe"
+                                                class="btn btn-link fa fa-globe o_input_box_overlay_end"
                                                 groups="base.group_system"
                                                 aria-label="Add a language"
                                                 title="Add a language"/>
                                         </div>
-                                        <field name="signature" options="{'codeview': true, 'height': 112, 'resizable': true}" class="border border-secondary"/>
+                                        <field name="signature" options="{'codeview': true, 'height': 112, 'resizable': true}" class="o_field_border_visible"/>
                                     </group>
                                     <!-- This group is meant to be used in overrides -->
                                     <group name="other_preferences"/>
@@ -410,23 +410,23 @@
                 <form string="Users" edit="1">
                     <sheet>
                         <widget name="notification_alert"/>
-                        <div class="d-flex align-items-center">
+                        <div class="o_form_header_group">
                             <div>
                                 <field name="image_1920" widget="contact_image" options="{'preview_image': 'avatar_128'}"/>
                                 <field name="avatar_128" invisible="1"/> <!-- Needed in contact_image widget -->
                             </div>
-                            <div class="oe_title flex-fill ms-2">
-                                <h1 class="d-flex align-items-center">
+                            <div class="o_form_header_details">
+                                <h1>
                                     <field name="name"/>
                                 </h1>
-                                <h5 name="h5_email" class="d-flex align-items-baseline mb-0">
-                                    <i class="fa fa-fw fa-envelope text-primary" title="Email"/>
-                                    <field name="email" placeholder="Email" class="w-75"/>
-                                </h5>
-                                <h5 name="h5_phone" class="d-flex align-items-baseline mb-0">
-                                    <i class="fa fa-fw fa-phone text-primary" title="Phone"/>
-                                    <field name="phone" placeholder="Phone" class="w-75"/>
-                                </h5>
+                                <div name="email" class="o_input_box">
+                                    <i class="fa fa-fw fa-envelope o_input_box_overlay_start" title="Email"/>
+                                    <field name="email" placeholder="Email"/>
+                                </div>
+                                <div name="phone" class="o_input_box">
+                                    <i class="fa fa-fw fa-phone o_input_box_overlay_start" title="Phone"/>
+                                    <field name="phone" placeholder="Phone"/>
+                                </div>
                             </div>
                         </div>
                         <notebook>
@@ -434,18 +434,18 @@
                                 <group>
                                     <group>
                                         <label for="lang"/>
-                                        <div class="o_row">
+                                        <div class="o_input_box">
                                             <field name="lang" required="1" readonly="0"/>
                                             <button
                                                 type="action"
                                                 name="%(base.action_view_base_language_install)d"
-                                                class="oe_edit_only btn-sm btn-link mb4 fa fa-globe"
+                                                class="btn btn-link fa fa-globe o_input_box_overlay_end"
                                                 aria-label="Add a language"
                                                 groups="base.group_system"
                                                 title="Add a language"
                                             />
                                         </div>
-                                        <field name="signature" readonly="0" options="{'codeview': true, 'height': 112, 'resizable': true}" class="border border-secondary" />
+                                        <field name="signature" readonly="0" options="{'codeview': true, 'height': 112, 'resizable': true}" class="o_field_border_visible" />
                                     </group>
                                     <!-- This group is meant to be used in overrides -->
                                     <group name="other_preferences"/>

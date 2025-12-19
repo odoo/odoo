@@ -5,7 +5,7 @@
                 config="getReadonlyConfig()"
                 migrateHTML="false"/>
         </t>
-        <div t-else="" class="h-100" t-att-class="{'o_show_codeview': state.showCodeView, 'o_field_translate': isTranslatable}">
+        <div t-else="" class="h-100" t-att-class="{'o_show_codeview': state.showCodeView, 'o_field_translate o_input_box': isTranslatable}">
             <t t-if="state.showCodeView">
                 <textarea t-custom-ref="codeView" class="o_codeview" t-att-value="this.value" t-on-change="onChange"/>
             </t>

@@ -7,6 +7,7 @@ class ButtonWithNotification extends Component {
     static template = "purchase.ButtonWithNotification";
     static props = {
         ...standardWidgetProps,
+        additionalClasses: String,
         method: String,
         title: String,
     };
@@ -26,11 +27,10 @@ class ButtonWithNotification extends Component {
 
 export const buttonWithNotification = {
     component: ButtonWithNotification,
-    extractProps: ({ attrs }) => {
-        return {
-            method: attrs.button_name,
-            title: attrs.title,
-        };
-    },
+    extractProps: ({ attrs }) => ({
+        additionalClasses: attrs.additionalClasses,
+        method: attrs.button_name,
+        title: attrs.title,
+    }),
 };
 registry.category("view_widgets").add("toaster_button", buttonWithNotification);

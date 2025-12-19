@@ -17,11 +17,6 @@
 
     .o_field_many2many_selection {
         flex: 1 0 50px;
-
-        .o_input {
-            height: 100%;
-            border: none;
-        }
     }
 
     .badge {
@@ -47,12 +42,6 @@
     }
 }
 
-.o_field_widget.o_field_many2many_tags, .o_field_widget.o_field_many2many_tags_avatar {
-    .o_field_many2many_selection .o_input {
-        --o-input-background-color: transparent;
-    }
-}
-
 .o_list_view .o_field_widget.o_field_many2many_tags {
     .o_tags_input {
         border: 0;
@@ -70,22 +59,18 @@
             width: 100%;
         }
     }
-
-    &:not(.o_field_highlight) {
-        .o_field_many2many_selection {
-            .o_dropdown_button {
-                visibility: hidden;
-            }
-
-            &:hover, &:focus-within {
-                .o_dropdown_button {
-                    visibility: visible;
-                }
-            }
-        }
-    }
 }
 
 .o_form_statusbar .o_field_tags {
     align-self: center;
+}
+
+.o_touch_device .o_form_view .o_field_widget:has(.o_tag):has(.o_field_many2many_selection) {
+    input{
+        position: absolute;
+        inset: 0;
+    }
+    .o_tag {
+        z-index: 1;
+    }
 }

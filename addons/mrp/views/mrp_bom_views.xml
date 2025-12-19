@@ -172,21 +172,22 @@
                                 <group>
                                     <field name="picking_type_id" invisible="type == 'phantom'" groups="stock.group_adv_location"/>
                                     <label for="produce_delay" string="Manuf. Lead Time"/>
-                                    <div>
-                                        <field name="produce_delay" class="oe_inline"/> days
+                                    <div class="o_input_box">
+                                        <field name="produce_delay"/>
+                                        <span class="o_input_box_overlay_end o_input_box_inline">days</span>
                                     </div>
                                     <label for="days_to_prepare_mo"/>
-                                    <div>
-                                        <field name="days_to_prepare_mo" class="oe_inline"/> days
-                                        <button name="action_compute_bom_days" string="Compute" type="object"
+                                    <div class="o_input_box">
+                                        <field name="days_to_prepare_mo"/>
+                                        <span class="o_input_box_overlay_end o_input_box_inline">days</span>
+                                        <button name="action_compute_bom_days" type="object"
                                                 help="Compute the days required to resupply all components from BoM, by either buying or manufacturing the components and/or subassemblies."
-                                                class="oe_link pt-0"/>
+                                                class="btn btn-link o_input_box_overlay_end fa fa-calculator"/>
                                     </div>
-                                    <label for="batch_size" invisible="type != 'normal'"/>
-                                    <div class="o_row" invisible="type != 'normal'">
-                                        <field name="enable_batch_size"/>
-                                        <field name="batch_size" class="w-50" invisible="not enable_batch_size" decoration-danger="batch_size &lt;= 0.0"/>
-                                        <field name="uom_id" groups="uom.group_uom" readonly="1" invisible="not enable_batch_size"/>
+                                    <field name="enable_batch_size" widget="boolean_toggle"/>
+                                    <div class="o_input_box" invisible="type != 'normal'">
+                                        <field name="batch_size" invisible="not enable_batch_size" decoration-danger="batch_size &lt;= 0.0"/>
+                                        <field name="uom_id" groups="uom.group_uom" readonly="1" invisible="not enable_batch_size" class="o_input_box_overlay_end o_input_box_inline"/>
                                     </div>
                                 </group>
                                 <group>

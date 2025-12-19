@@ -1,10 +1,24 @@
-import { click, contains, editInput, startServer } from "@mail/../tests/mail_test_helpers";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { editInput, startServer } from "@mail/../tests/mail_test_helpers";
+import { beforeEach, expect, test } from "@odoo/hoot";
+import { click, queryFirst } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { defineSMSModels } from "@sms/../tests/sms_test_helpers";
-import { MockServer, mockService, mountView } from "@web/../tests/web_test_helpers";
+import { contains, MockServer, mockService, mountView } from "@web/../tests/web_test_helpers";
 
-describe.current.tags("desktop");
 defineSMSModels();
+
+async function checkSmsButton(count, isReadonly) {
+    const hasDropdown = hasTouch() && !isReadonly
+    if (hasDropdown) {
+        await contains(".o_field_phone .o_input").click();
+        await contains(".o_field_phone .o_input_box_overlay_end.dropdown-toggle").click();
+    }
+    if (count !== undefined) {
+        expect("i.fa-mobile").toHaveCount(count);
+    }
+    return queryFirst(hasDropdown ? ".o_bottom_sheet .dropdown-item:contains(SMS)" : ".o_field_phone button[data-tooltip='SMS']");
+}
 
 beforeEach(async () => {
     const pyEnv = await startServer();
@@ -29,8 +43,8 @@ test("Sms button in form view", async () => {
                 </sheet>
             </form>`,
     });
-    await contains(".o_field_phone");
-    await contains(".o_field_phone a.o_field_phone_sms", { count: 1 });
+    expect(".o_field_phone").toHaveCount(1);
+    await checkSmsButton(1, true);
 });
 
 test("Sms button with option enable_sms set as False", async () => {
@@ -47,8 +61,8 @@ test("Sms button with option enable_sms set as False", async () => {
                 </sheet>
             </form>`,
     });
-    await contains(".o_field_phone");
-    await contains(".o_field_phone a.o_field_phone_sms", { count: 0 });
+    expect(".o_field_phone").toHaveCount(1);
+    await checkSmsButton(0, true);
 });
 
 test("click on the sms button while creating a new record in a FormView", async () => {
@@ -75,7 +89,8 @@ test("click on the sms button while creating a new record in a FormView", async 
     });
     await editInput(document.body, "[name='foo'] input", "John");
     await editInput(document.body, "[name='mobile'] input", "+32494444411");
-    await click(".o_field_phone_sms");
+    const smsButton = await checkSmsButton(1);
+    await click(smsButton);
     expect("[name='foo'] input:first").toHaveValue("John");
     expect("[name='mobile'] input:first").toHaveValue("+32494444411");
     await expect.waitForSteps(["do_action"]);
@@ -116,11 +131,11 @@ test("click on the sms button in a FormViewDialog has no effect on the main form
     await editInput(document.body, "[name='foo'] input", "John");
     await editInput(document.body, "[name='mobile'] input", "+32494444411");
     await click(".o-kanban-button-new");
-    await contains(".modal");
-
+    await animationFrame();
     await editInput(document.body, ".modal .o_field_char[name='foo'] input", "Max");
     await editInput(document.body, ".modal .o_field_phone[name='mobile'] input", "+324955555");
-    await click(":nth-child(1 of .modal) .o_field_phone_sms");
+    const smsButton = await checkSmsButton();
+    await click(smsButton);
     expect(".modal [name='foo'] input:first").toHaveValue("Max");
     expect(".modal [name='mobile'] input:first").toHaveValue("+324955555");
 

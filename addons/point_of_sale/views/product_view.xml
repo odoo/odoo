@@ -78,7 +78,7 @@
                     <group>
                         <group name="pos" string="Point of Sale">
                             <field name="color" invisible="True"/>
-                            <field name="to_weight" invisible="type=='service'"/>
+                            <field name="to_weight" invisible="type=='service'" widget="boolean_toggle"/>
                             <field name="pos_categ_ids"
                                    widget="many2many_tags"
                                    groups="point_of_sale.group_pos_user"
@@ -104,12 +104,12 @@
                     </group>
                 </page>
             </page>
-            <span name="purchase_option" position="after">
-                <span class="d-inline-block">
-                    <field name="available_in_pos"/>
+            <div name="options" position="inside">
+                <span class="d-inline-flex">
+                    <field name="available_in_pos" class="w-auto"/>
                     <label for="available_in_pos" string="Point of Sale"/>
                 </span>
-            </span>
+            </div>
         </field>
     </record>
 
@@ -205,27 +205,28 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <field name="image_1920" widget="image" class="oe_avatar" nolabel="1" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
-                    <group name="name">
-                            <field name="name" class="oe_inline" placeholder="e.g. Cheese Burger" string="Product Name"/>
-                            <field name="barcode" class="oe_inline" placeholder="e.g. 1234567890"/>
-                            <label for="is_storable" class="oe_inline" invisible="type != 'consu'"/>
-                            <div class="o_row w-100" invisible="type != 'consu'">
-                                <field name="is_storable"/>
-                                <field name="tracking" invisible="not is_storable" groups="stock.group_production_lot"/>
-                            </div>
-                            <field name="list_price" class="oe_inline" widget="monetary"
+                    <group class="o_form_header_group flex-md-row-reverse">
+                        <field name="image_1920" widget="image" nolabel="1" options="{'convert_to_webp': True,'preview_image': 'image_128'}"/>
+                        <group name="name" class="o_form_header_details">
+                            <h1 colspan="2">
+                                <field name="name" placeholder="e.g. Cheese Burger"/>
+                            </h1>
+                            <field name="barcode" placeholder="e.g. 1234567890"/>
+                            <field name="is_storable" invisible="type != 'consu'" widget="boolean_toggle"/>
+                            <field name="tracking" invisible="type != 'consu' or not is_storable" groups="stock.group_production_lot"/>
+                            <field name="list_price" widget="monetary"
                                     options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             <label for="taxes_id"/>
-                            <div name="tax_info" class="o_row">
+                            <div name="tax_info" class="o_input_box">
                                 <field name="taxes_id" widget="many2many_tags"
                                     readonly="context.get('taxes_readonly', False)"
                                     context="{'search_default_sale': 1}"
                                     create="False"/>
-                                <field name="tax_string"/>
+                                <field name="tax_string" class="o_input_box_overlay_end"/>
                             </div>
-                            <field name="pos_categ_ids" string="POS Category" class="oe_inline" widget="many2many_tags"/>
+                            <field name="pos_categ_ids" string="POS Category" widget="many2many_tags"/>
                             <field name="color" widget="color_picker" string="Color" />
+                        </group>
                     </group>
                 </sheet>
             </form>

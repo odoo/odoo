@@ -35,11 +35,11 @@ test("Office Location (online)", async () => {
                 <field name="hr_icon_display" widget="hr_presence_status"/>
             </form>`,
     });
-    expect("small.fa-building").toHaveCount(1);
-    expect("small.fa-home").toHaveCount(0);
-    expect("small.fa-map-marker").toHaveCount(0);
-    expect("small").toHaveClass(["text-success", "fa-building"]);; // color == text-success
-    expect("small.fa-building[title='Office 1']").toHaveCount(1);
+    expect(".o_employee_availability.fa-building").toHaveCount(1);
+    expect(".o_employee_availability.fa-home").toHaveCount(0);
+    expect(".o_employee_availability.fa-map-marker").toHaveCount(0);
+    expect(".o_employee_availability").toHaveClass(["text-success", "fa-building"]);; // color == text-success
+    expect(".o_employee_availability.fa-building[title='Office 1']").toHaveCount(1);
 });
 
 test("Home Location (away)", async () => {
@@ -64,9 +64,9 @@ test("Home Location (away)", async () => {
                 <field name="hr_icon_display" widget="hr_presence_status"/>
             </form>`,
     });
-    expect("small.fa-home").toHaveCount(1);
-    expect("small.fa-building").toHaveCount(0);
-    expect("small.fa-map-marker").toHaveCount(0);
-    expect("small").toHaveClass(["o_icon_employee_absent", "fa-home"]); // color == text-warning
-    expect("small.fa-home[title='Home']").toHaveCount(1);
+    expect(".o_employee_availability.fa-home").toHaveCount(1);
+    expect(".o_employee_availability.fa-building").toHaveCount(0);
+    expect(".o_employee_availability.fa-map-marker").toHaveCount(0);
+    expect(".o_employee_availability").toHaveClass(["o_icon_employee_absent", "fa-home"]); // color == text-warning
+    expect(".o_employee_availability.fa-home[title='Home']").toHaveCount(1);
 });

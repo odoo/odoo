@@ -100,6 +100,7 @@ export class CharField extends Component {
 }
 
 export const charField = {
+    additionalClasses: ["o_input_box"],
     component: CharField,
     displayName: _t("Text"),
     supportedTypes: ["char", "text"],

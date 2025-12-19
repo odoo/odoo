@@ -2,11 +2,11 @@
 <templates>
 
 <t t-name="website.PageUrlField" t-inherit="web.UrlField" t-inherit-mode="primary">
-    <xpath expr="//input" position="before">
+    <xpath expr="//InputBox" position="before">
         <t t-set="slicingLength" t-value="env.isSmall ? 30 : 45"/>
         <div
-            class="input-group-text rounded-start text-lowercase border-0"
-            t-out="serverUrl.length > slicingLength ? serverUrl.slice(0, (slicingLength / 2) - 1) + '..' + serverUrl.slice((-slicingLength / 2) + 1) : serverUrl"
+            class="o_input_box_overlay_start inline"
+            t-esc="serverUrl.length > slicingLength ? serverUrl.slice(0, (slicingLength / 2) - 1) + '..' + serverUrl.slice((-slicingLength / 2) + 1) : serverUrl"
         />
     </xpath>
 </t>

@@ -12,8 +12,8 @@ from odoo.fields import Domain
 class CrmLead(models.Model):
     _inherit = "crm.lead"
 
-    partner_latitude = fields.Float('Geo Latitude', digits=(10, 7))
-    partner_longitude = fields.Float('Geo Longitude', digits=(10, 7))
+    partner_latitude = fields.Float('Latitude', digits=(10, 7))
+    partner_longitude = fields.Float('Longitude', digits=(10, 7))
     partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index='btree_not_null')
     partner_declined_ids = fields.Many2many(
         'res.partner',

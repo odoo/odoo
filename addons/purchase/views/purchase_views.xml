@@ -196,10 +196,10 @@
                         Locked
                     </div>
                     <div class="oe_title">
-                        <span class="o_form_label" invisible="state not in ('draft', 'sent')">Request for Quotation </span>
-                        <span class="o_form_label" invisible="state in ('draft', 'sent')">Purchase Order </span>
-                        <h1 class="d-flex">
-                            <field name="priority" widget="priority" class="me-3"/>
+                        <span class="o_form_label" invisible="state not in ('draft', 'sent')">Request for Quotation</span>
+                        <span class="o_form_label" invisible="state in ('draft', 'sent')">Purchase Order</span>
+                        <h1 class="o_input_box">
+                            <field name="priority" widget="priority" class="o_input_box_overlay_start"/>
                             <field name="name" readonly="1"/>
                         </h1>
                     </div>
@@ -222,14 +222,15 @@
                             <div name="date_planned_div">
                                 <field name="date_planned" readonly="state not in ('draft', 'sent', 'to approve', 'purchase')"/>
                             </div>
-                            <label for="receipt_reminder_email" class="d-none" groups="purchase.group_send_reminder"/>
-                            <div name="reminder" class="o_row" groups='purchase.group_send_reminder' title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
-                                <field name="receipt_reminder_email"/>
-                                <span>Ask confirmation</span>
-                                <div class="o_row oe_inline" invisible="not receipt_reminder_email">
-                                    <field name="reminder_date_before_receipt" style="max-width: 30px;"/>
-                                    day(s) before
-                                    <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself." invisible="not id"/>
+                            <field name="receipt_reminder_email" string="Ask confirmation" widget="boolean_toggle" groups="purchase.group_send_reminder" />
+                            <label for="reminder_date_before_receipt" string="Days before confirmation" invisible="not receipt_reminder_email" groups="purchase.group_send_reminder"/>
+                            <div name="reminder" groups="purchase.group_send_reminder"
+                                 title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
+                                <div class="o_input_box" invisible="not receipt_reminder_email">
+                                    <field name="reminder_date_before_receipt" />
+                                    <widget name="toaster_button" button_name="send_reminder_preview"
+                                            additionalClasses="o_external_button o_input_box_overlay_end"
+                                            title="Preview the reminder email by sending it to yourself." invisible="not id"/>
                                 </div>
                             </div>
                             <label for="receipt_status" invisible="state !='purchase'"/>

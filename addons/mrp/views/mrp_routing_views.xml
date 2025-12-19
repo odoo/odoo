@@ -110,8 +110,9 @@
                                 <field name="cycle_number" class="oe_inline" invisible="cycle_number &lt; 2"/>
                                 <field name="show_time_total" invisible="1"/>
                                 <label for="time_total" string="Total Duration" invisible="not show_time_total"/>
-                                <div invisible="not show_time_total">
-                                    <field name="time_total" widget="float_time" options="{'unit': 'minutes'}" class="oe_inline"/>
+                                <div class="o_input_box" invisible="not show_time_total">
+                                    <field name="time_total" widget="float_time" options="{'unit': 'minutes'}"/>
+                                    <span class="o_input_box_overlay_end o_input_box_inline">minutes</span>
                                 </div>
                                 <field name="company_id" groups="base.group_multi_company" />
                             </group>

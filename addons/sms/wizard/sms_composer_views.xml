@@ -38,14 +38,10 @@
                         <field name="numbers" invisible="1"/>
                         <field name="sanitized_numbers" invisible="1"/>
                         <field name="template_id" invisible="1"/>
-
-                        <label for="recipient_single_description" string="To"
-                            class="fw-bold"
-                            invisible="not comment_single_recipient"/>
-                        <div invisible="not comment_single_recipient">
-                            <field name="recipient_single_description" class="w-auto text-muted me-2" invisible="not recipient_single_description"/>
-                            <field name="recipient_single_number_itf" class="oe_inline border-bottom" nolabel="1" onchange_on_keydown="True" placeholder="e.g. +1 415 555 0100"/>
+                        <div name="recipient_single_description" class="o_form_label d-flex align-items-center" invisible="not comment_single_recipient">
+                            To <field name="recipient_single_description" class="ps-1" invisible="not recipient_single_description"/>
                         </div>
+                        <field invisible="not comment_single_recipient" name="recipient_single_number_itf" nolabel="1" onchange_on_keydown="True" placeholder="e.g. +1 415 555 0100"/>
                     </group>
                         <field name="body" widget="sms_widget" invisible="comment_single_recipient or recipient_single_valid"
                             options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'res_model'}"

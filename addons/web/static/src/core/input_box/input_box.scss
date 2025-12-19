@@ -1,0 +1,97 @@
+:root {
+    --inputbox-spacing-unit: 8px;
+}
+
+.o_input_box:not(.o_input_box .o_input_box) {
+    // OVERLAY VARIABLES
+    --inputbox-overlay-size: calc(3 * var(--inputbox-spacing-unit));
+    --inputbox-overlay-padding-x: 0px;
+    --inputbox-overlay-padding-y: 0px;
+    --inputbox-overlay-padding-toggler: 0px;
+    --inputbox-overlay-padding-prefix: 0px;
+    --inputbox-overlay-padding-suffix: 0px;
+    // STORE THE COMPUTED VALUE IN REUSABLE VARIABLES
+    --inputbox-inner-padding-start: calc((1.5 * var(--inputbox-overlay-padding-x)) + var(--inputbox-overlay-padding-prefix));
+    --inputbox-inner-padding-end: calc(var(--inputbox-overlay-padding-x) + var(--inputbox-overlay-padding-suffix)) + var(--inputbox-overlay-padding-toggler);
+
+    &:is(.o_touch_device .o_input_box) {
+        --inputbox-overlay-padding-x: var(--inputbox-spacing-unit);
+        --inputbox-overlay-padding-y: calc(var(--border-width) + 2.25 * var(--inputbox-spacing-unit) - var(--inputbox-overlay-size) / 2);
+    }
+
+    &:has(.o_dropdown_button) {
+        --inputbox-overlay-padding-toggler: calc(var(--inputbox-overlay-padding-x) + (2 * var(--inputbox-spacing-unit)));
+
+        .o_dropdown_button {
+            inset-inline-end: var(--inputbox-overlay-padding-suffix);
+        }
+    }
+
+    .o_input:not(.o_input .o_input) {
+        padding-inline-start: var(--inputbox-inner-padding-start) !important;
+        padding-inline-end: var(--inputbox-inner-padding-end) !important;
+    }
+
+    &:has(.o_input_box_overlay_start, .o_input_box_overlay_end) {
+        position: relative;
+    }
+
+    &:is(.o_touch_device *) :is(.o_input_box_overlay_start, .o_input_box_overlay_end) {
+        &.fa, &:has(> .fa), &.oi, &:has(> .oi) {
+            font-size: calc(1.75 * var(--inputbox-spacing-unit));
+        }
+    }
+
+    &:not(.o_touch_device *):not(:focus-within, :hover):has(.o_input, textarea, select, [contenteditable]) {
+        :is(.o_input_box_overlay_start, .o_input_box_overlay_end):not(.o_field_widget, :has(.o_field_widget)) {
+            &.btn-link, .btn-link {
+                visibility: hidden;
+            }
+        }
+    }
+
+    .o_input_box_overlay_start, .o_input_box_overlay_end {
+        position: absolute;
+        top: var(--inputbox-overlay-padding-y);
+        height: var(--inputbox-overlay-size) !important;
+        min-width: var(--inputbox-overlay-size);
+        padding: 0 !important;
+        z-index: 1;
+        pointer-events: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        &:not(.btn-link, .btn-secondary) {
+            color: #{$o-gray-400};
+        }
+        &.btn, .btn, button {
+            border-radius: calc(1.5 * var(--inputbox-spacing-unit));
+            line-height: 0;
+            pointer-events: auto;
+            padding: 0 !important;
+        }
+        .btn {
+            display: block;
+            width: inherit;
+            height: inherit;
+        }
+        // prefix and suffix have a default value, but it can change when positionInputBoxOverlay is called since an InputBox can have multiple prefix/suffixes
+        &.o_input_box_overlay_start {
+            inset-inline-start: calc(1.5 * var(--inputbox-overlay-padding-x));
+        }
+        &.o_input_box_overlay_end {
+            inset-inline-end: calc(var(--inputbox-overlay-padding-x));
+        }
+    }
+}
+
+.o_input_box:has(.o_input_box_overlay_inline) {
+    .o_input_box_overlay_end.o_input_box_overlay_inline {
+        width: auto !important;
+        transition: right .4s;
+        &:not(.o_touch_device .o_input_box_overlay_end):not(.o_input_box:focus-within .o_input_box_overlay_end) {
+            inset-inline-end: var(--inputbox-overlay-inline-position) !important;
+        }
+    }
+}

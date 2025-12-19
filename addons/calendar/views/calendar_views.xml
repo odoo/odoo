@@ -136,39 +136,30 @@
                             <field name="stop_date" required="allday" invisible="1"/>
                             <field name="stop" required="not allday" invisible="1" />
                             <field name="unavailable_partner_ids" invisible="1" /> <!-- this field will be used in many2many_attendees widget -->
+                            <field name="allday" widget="boolean_toggle" force_save="1" options="{'autosave': False}" readonly="not user_can_edit"/>
                             <label for="duration" class="fw-bold text-900 opacity-100"/>
-                            <div class="d-flex gap-2">
-                                <div class="d-flex align-items-start" invisible="allday">
-                                    <field name="duration" widget="float_time" string="Duration" class="oe_inline pe-2" readonly="(id and recurrency) or not user_can_edit"/>
-                                    <span> hours</span>
-                                </div>
-                                <span invisible="allday" style="white-space: pre;"> or </span>
-                                <div class="d-flex gap-2">
-                                    <label for="allday" class=""/>
-                                    <field name="allday" class="oe_inline" widget="boolean_toggle" force_save="1" options="{'autosave': False}" readonly="not user_can_edit"/>
-                                </div>
+                            <div class="o_input_box" invisible="allday">
+                                <field name="duration" widget="float_time" string="Duration" readonly="(id and recurrency) or not user_can_edit"/>
+                                <span class="o_input_box_overlay_end o_input_box_inline">hours</span>
                             </div>
-
                             <field name="location" placeholder="Online Meeting" readonly="not user_can_edit"/>
                             <label for="videocall_location" class="opacity-100"/>
                             <div name="videocall_location_div">
-                                <div class="d-flex">
+                                <div class="o_input_box">
                                     <field name="videocall_location" string="Video Link" widget="CopyClipboardChar"
-                                        force_save="1" class="mb-0" readonly="videocall_source == 'discuss' or not user_can_edit"/>
-                                    <div class="d-flex flex-nowrap">
-                                        <button name="clear_videocall_location" type="object" class="btn btn-link btn-lg ms-1 px-1 py-0"
-                                            invisible="not videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
-                                            <span title="Clear meeting" class="fa fa-times"></span>
-                                        </button>
-                                        <button name="action_join_video_call" class="btn btn-link btn-lg px-1 py-0" help="Join Video Call" type="object"
-                                            invisible="not videocall_location or not user_can_edit">
-                                            <span title="Join video call" class="fa fa-sign-in"></span>
-                                        </button>
-                                        <button name="set_discuss_videocall_location" type="object" class="btn btn-link btn-sm px-0 text-nowrap"
-                                            invisible="videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
-                                            <span class="fa fa-plus"></span><span> Odoo meeting</span>
-                                        </button>
-                                    </div>
+                                        force_save="1" readonly="videocall_source == 'discuss' or not user_can_edit"/>
+                                    <button name="clear_videocall_location" type="object" class="btn btn-link o_input_box_overlay_end"
+                                        invisible="not videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
+                                        <i title="Clear meeting" data-tooltip="Clear meeting" class="fa fa-times"/>
+                                    </button>
+                                    <button name="action_join_video_call" class="btn btn-link o_input_box_overlay_end" type="object"
+                                        invisible="not videocall_location or not user_can_edit">
+                                        <i title="Join Video Call" data-tooltip="Join video call" class="fa fa-sign-in"/>
+                                    </button>
+                                    <button name="set_discuss_videocall_location" type="object" class="btn btn-link o_input_box_overlay_end"
+                                        invisible="videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
+                                        <span class="mx-1"><i class="fa fa-plus me-1"/>Odoo meeting</span>
+                                    </button>
                                 </div>
                             </div>
                             <field name="res_id" string="Linked to" invisible="not res_id" readonly="1" />
@@ -187,13 +178,12 @@
                                     help="Set whether you're available for other simultaneous events and the privacy of this event to others. Manage your default privacy in your user preferences."/>
                             </div>
                             <field name="should_show_status" invisible="1"/>
-                            <div class="d-flex mb-2" colspan="2">
-                                <div>
-                                    <span class="fw-medium o_form_label">
-                                        <field name="attendees_count" class="w-auto oe_inline" nolabel="1"/><span> guests</span>
-                                    </span>
-                                    <div invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count"
-                                        class="text-muted fw-normal">
+                            <div class="o_form_label">
+                                <field name="attendees_count" class="w-auto oe_inline" nolabel="1"/><span> guests</span>
+                            </div>
+                            <div class="o_input_box w-100 p-2">
+                                <div class="d-flex text-muted fw-normal w-100 p-3">
+                                    <span invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count">
                                         <span invisible="not accepted_count" class="me-1">
                                             <field name="accepted_count" class="w-auto oe_inline" nolabel="1"/> Yes
                                         </span>
@@ -206,13 +196,12 @@
                                         <span invisible="not awaiting_count" class="me-1">
                                             <field name="awaiting_count" class="w-auto oe_inline" nolabel="1"/> Awaiting
                                         </span>
+                                    </span>
+                                    <div name="send_buttons" class="d-flex gap-2 mb-auto ms-4" invisible="not attendees_count">
+                                        <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope" invisible="not user_can_edit"/>
                                     </div>
                                 </div>
-                                <div name="send_buttons" class="d-flex gap-2 mb-auto ms-4">
-                                    <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope" invisible="not user_can_edit"/>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-baseline" colspan="2">
+                                <label for="partner_ids" class="d-none d-touch-block" invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count"/>
                                 <field name="partner_ids" widget="many2manyattendee"
                                     placeholder="Select attendees..."
                                     options="{'no_quick_create': True}"
@@ -247,12 +236,8 @@
                                     <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True, 'on_tag_click': 'open_form'}" readonly="not user_can_edit"/>
                                     <field name="recurrence_id" invisible="1" />
                                     <field name="rrule_type" invisible="1" />
-                                    <label for="recurrency" string="Recurrent"/>
-                                    <div class="d-flex align-items-baseline gap-1">
-                                        <field name="recurrency" widget="boolean_toggle" options="{'autosave': False}" class="w-auto" readonly="not user_can_edit"/>
-                                        <span invisible="not recurrency" class="mx-1">Repeat:</span>
-                                        <field name="rrule_type_ui" class="w-auto o_input" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
-                                    </div>
+                                    <field name="recurrency" widget="boolean_toggle" options="{'autosave': False}" readonly="not user_can_edit"/>
+                                    <field name="rrule_type_ui" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
                                     <label for="interval" class="fw-bold text-900" invisible="not recurrency or rrule_type_ui != 'custom'"/>
                                     <div class="d-flex gap-1" invisible="not recurrency or rrule_type_ui != 'custom'">
                                         <field name="interval" string="Repeat every" class="oe_inline w-auto o_input_5ch" />

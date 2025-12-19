@@ -8818,7 +8818,8 @@ test(`inner group with invisible cells`, async () => {
     expect(`.cell2`).toHaveCount(1);
 });
 
-test(`form group with newline tag inside`, async () => {
+test.tags("desktop");
+test(`form group with newline tag inside on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -8858,9 +8859,9 @@ test(`form group with newline tag inside`, async () => {
     expect(`.main_inner_group .o_cell`).toHaveCount(6);
     expect(`.main_inner_group > .o_cell.o_wrap_label:first-child`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(2)`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3)`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_label`).toHaveCount(1);
-    expect(`.main_inner_group > .o_wrap_field_boolean:nth-child(3) > .o_wrap_input`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3)`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3) > .o_wrap_label`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3) > .o_wrap_input`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_label:nth-child(4)`).toHaveCount(1);
     expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(5)`).toHaveCount(1);
 
@@ -8869,6 +8870,61 @@ test(`form group with newline tag inside`, async () => {
     const topGroupRect = queryFirst(`.top_group`).getBoundingClientRect();
     expect(bottomGroupRect.top - topGroupRect.top).toBeGreaterThan(200, {
         message: "outergroup children should not be on the same line",
+    });
+});
+
+test.tags("mobile");
+test(`form group with newline tag inside on mobile`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <group col="5" class="main_inner_group">
+                        <!-- col=5 otherwise the test is ok even without the
+                        newline code as this will render a <newline/> DOM
+                        element in the third column, leaving no place for
+                        the next field and its label on the same line. -->
+                        <field name="foo"/>
+                        <newline/>
+                        <field name="bar"/>
+                        <field name="float_field"/>
+                    </group>
+                    <group col="3">
+                        <!-- col=3 otherwise the test is ok even without the
+                        newline code as this will render a <newline/> DOM
+                        element with the g-col-2 class, leaving no
+                        place for the next group on the same line. -->
+                        <group class="top_group">
+                            <div style="height: 200px;"/>
+                        </group>
+                        <newline/>
+                        <group class="bottom_group">
+                            <div/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    // Inner group
+    expect(`.main_inner_group .o_cell`).toHaveCount(6);
+    expect(`.main_inner_group > .o_cell.o_wrap_label:first-child`).toHaveCount(1);
+    expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(2)`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3)`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3) > .o_wrap_label`).toHaveCount(1);
+    expect(`.main_inner_group > .o_wrap_field_inline:nth-child(3) > .o_wrap_input`).toHaveCount(1);
+    expect(`.main_inner_group > .o_cell.o_wrap_label:nth-child(4)`).toHaveCount(1);
+    expect(`.main_inner_group > .o_cell.o_wrap_input:nth-child(5)`).toHaveCount(1);
+
+    // Outer group
+    const bottomGroupRect = queryFirst(`.bottom_group`).getBoundingClientRect();
+    const topGroupRect = queryFirst(`.top_group`).getBoundingClientRect();
+    expect(bottomGroupRect.top - topGroupRect.top).toEqual(200, {
+        message: "no space is present between multiple groups, they should be joint",
     });
 });
 
@@ -8937,7 +8993,7 @@ test(`translation dialog with right context and domain`, async () => {
         resId: 1,
     });
     await contains(".o_field_translate").click();
-    await contains(`.o_field_translate.btn-link`).click();
+    await contains(`button.o_field_translate`).click();
     expect.verifySteps([
         `translate args [[1],"name"]`,
         `translate context {"lang":"en","tz":"taht","uid":7,"allowed_company_ids":[1]}`,
@@ -8970,7 +9026,7 @@ test(`save new record before opening translate dialog`, async () => {
     expect(`.o_form_editable`).toHaveCount(1);
 
     await contains(`.o_field_translate`).click();
-    await contains(`.o_field_translate.btn-link`).click();
+    await contains(`button.o_field_translate`).click();
     expect.verifySteps(["web_save", "get_field_translations"]);
     expect(`.modal`).toHaveCount(1);
     expect(`.modal-title`).toHaveText("Translate: name");

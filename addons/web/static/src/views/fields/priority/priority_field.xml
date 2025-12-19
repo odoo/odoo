@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PriorityField">
-        <div class="o_priority opacity-trigger-hover" role="radiogroup" name="priority" aria-label="Priority">
+        <div class="o_priority opacity-trigger-hover d-flex" role="radiogroup" name="priority" aria-label="Priority">
             <t t-foreach="options" t-as="value" t-key="value">
                 <t t-if="!value_first">
                     <t t-if="props.readonly">
@@ -18,7 +18,7 @@
                     </t>
                     <t t-else="">
                         <button
-                            class="o_priority_star btn btn-link btn-link-inline fa"
+                            class="o_priority_star btn btn-link btn-link-inline fa p-0"
                             role="radio"
                             t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o opacity-25 opacity-100-hover'"
                             tabindex="0"

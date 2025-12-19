@@ -8,23 +8,10 @@ export class HrPresenceStatus extends Component {
     static template = "hr.HrPresenceStatus";
     static props = {
         ...standardFieldProps,
-        tag: { type: String, optional: true },
-    };
-    static defaultProps = {
-        tag: "small",
     };
 
     get classNames() {
-        const classNames = ["fa"];
-        classNames.push(
-            this.icon,
-            "fa-fw",
-            "o_button_icon",
-            "hr_presence",
-            "align-middle",
-            this.color,
-        )
-        return classNames.join(" ");
+        return `o_employee_availability fa ${this.icon} fa-fw o_button_icon hr_presence align-middle ${this.color}`;
     }
 
     get color() {
@@ -87,6 +74,7 @@ export class HrPresenceStatus extends Component {
 }
 
 export const hrPresenceStatus = {
+    additionalClasses: ["position-absolute", "d-flex", "align-items-center", "justify-content-center", "bg-light", "rounded-circle","top-0", "end-0"],
     component: HrPresenceStatus,
     fieldDependencies: [
         { name: "hr_presence_state", type: "selection" },
@@ -94,11 +82,6 @@ export const hrPresenceStatus = {
         { name: "work_location_name", type: "char" },
     ],
     displayName: _t("HR Presence Status"),
-    extractProps({ viewType }, dynamicInfo) {
-        return {
-            tag: viewType === "kanban" ? "span" : "small",
-        };
-    },
 };
 
 registry.category("fields").add("hr_presence_status", hrPresenceStatus)

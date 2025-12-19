@@ -184,7 +184,7 @@ class CalendarEvent(models.Model):
         compute='_compute_stop', readonly=False, store=True,
         help="Stop date of an event, without time for full days events")
     display_time = fields.Char('Event Time', compute='_compute_display_time')
-    allday = fields.Boolean('All Day', default=False)
+    allday = fields.Boolean('All Day Duration', default=False)
     start_date = fields.Date(
         'Start Date', store=True, tracking=True,
         compute='_compute_dates', inverse='_inverse_dates')

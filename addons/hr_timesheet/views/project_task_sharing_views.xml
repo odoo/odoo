@@ -32,13 +32,13 @@
                 <field name="encode_uom_in_days" invisible="1"/>
                 <field name="subtask_count" invisible="1"/>
                 <label for="allocated_hours" invisible="not allow_timesheets"/>
-                <div id="allocated_hours_container" class="text-nowrap" invisible="not allow_timesheets">
-                    <field name="allocated_hours" class="oe_inline" widget="float_time" readonly="1"/>
-                    <span invisible="subtask_count == 0">
-                        (incl. <field name="subtask_allocated_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
-                        <span class="fw-bold text-dark"> Sub-tasks</span>)
+                <div id="allocated_hours_container" class="o_input_box" invisible="not allow_timesheets">
+                    <field name="allocated_hours" widget="float_time" readonly="1"/>
+                    <span invisible="subtask_count == 0" class="o_input_box_overlay_end">
+                        incl. <field name="subtask_allocated_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
+                        <span class="fw-bold text-dark"> Sub-tasks</span>
                     </span>
-                    (<field name="progress" invisible="not project_id" class="oe_inline" nolabel="1" decoration-danger="progress > 1.005" digits="[1, 0]" widget="percentage"/>)
+                    <field name="progress" invisible="not project_id" class="o_input_box_overlay_end" nolabel="1" decoration-danger="progress > 1.005" digits="[1, 0]" widget="percentage"/>
                 </div>
             </xpath>
             <xpath expr="//notebook/page[@name='description_page']" position="after">

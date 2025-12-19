@@ -39,9 +39,6 @@
             <xpath expr="//field[@name='order_line']/list/field[@name='date_planned']" position="after">
                 <field name="date_promised" optional="hide" column_invisible="parent.state not in ('purchase', 'cancel')"/>
             </xpath>
-            <xpath expr="//label[@for='receipt_reminder_email']" position="attributes">
-                <attribute name="invisible">effective_date</attribute>
-            </xpath>
             <xpath expr="//div[@name='reminder']" position="attributes">
                 <attribute name="invisible">effective_date</attribute>
             </xpath>

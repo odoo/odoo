@@ -169,14 +169,14 @@
                                     </group>
                                     <group name="content" string="Content">
                                         <label for="max_weight"/>
-                                        <div name="max_weight_row" class="o_row">
-                                            <field name="max_weight" class="oe_inline"/>
-                                            <field name="weight_uom_name"/>
+                                        <div name="max_weight_row" class="o_input_box">
+                                            <field name="max_weight"/>
+                                            <field class="o_input_box_overlay_end o_input_box_inline" name="weight_uom_name"/>
                                         </div>
                                         <label for="max_volume"/>
-                                        <div name="max_volume_row" class="o_row">
-                                            <field name="max_volume" class="oe_inline"/>
-                                            <field name="volume_uom_name"/>
+                                        <div name="max_volume_row" class="o_input_box">
+                                            <field name="max_volume"/>
+                                            <field class="o_input_box_overlay_end o_input_box_inline" name="volume_uom_name"/>
                                         </div>
                                         <field name="must_have_tag_ids"
                                                 widget="many2many_tags"

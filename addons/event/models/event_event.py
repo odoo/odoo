@@ -109,11 +109,11 @@ class EventEvent(models.Model):
         group_expand='_read_group_expand_full', tracking=True, copy=False)
     # Seats and computation
     seats_max = fields.Integer(
-        string='Maximum Attendees',
+        string='Maximum Seats',
         compute='_compute_seats_max', readonly=False, store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this number the registrations are not accepted. "
         "If the event has multiple slots, this maximum number is applied per slot.")
-    seats_limited = fields.Boolean('Limit Attendees', required=True, compute='_compute_seats_limited',
+    seats_limited = fields.Boolean('Limit Registrations', required=True, compute='_compute_seats_limited',
                                    precompute=True, readonly=False, store=True)
     seats_reserved = fields.Integer(
         string='Number of Registrations',
