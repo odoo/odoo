@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
 
@@ -107,7 +107,7 @@ class AccountTax(models.Model):
         try:
             formula_context = json.loads(json.dumps(formula_context))
         except TypeError:
-            raise ValidationError(_("Only primitive types are allowed in python tax formula context."))
+            raise ValidationError(self.env._("Only primitive types are allowed in python tax formula context."))
         try:
             return safe_eval(normalized_formula, formula_context)
         except ZeroDivisionError:
