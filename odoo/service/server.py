@@ -1574,15 +1574,16 @@ def start(preload=None, stop=False):
     global server  # noqa: PLW0603
 
     load_server_wide_modules()
-    import odoo.http  # noqa: PLC0415
+    import odoo  # noqa: PLC0415
+    from odoo.http.router import root  # noqa: PLC0415
 
     if odoo.evented:
-        server = GeventServer(odoo.http.root)
+        server = GeventServer(root)
     elif config['workers']:
         if config['test_enable']:
             _logger.warning("Unit testing in workers mode could fail; use --workers 0.")
 
-        server = PreforkServer(odoo.http.root)
+        server = PreforkServer(root)
     else:
         if platform.system() == "Linux" and sys.maxsize > 2**32 and "MALLOC_ARENA_MAX" not in os.environ:
             # glibc's malloc() uses arenas [1] in order to efficiently handle memory allocation of multi-threaded
@@ -1606,7 +1607,7 @@ def start(preload=None, stop=False):
                 assert libc.mallopt(ctypes.c_int(M_ARENA_MAX), ctypes.c_int(2))
             except Exception:  # noqa: BLE001
                 _logger.warning("Could not set ARENA_MAX through mallopt()", exc_info=True)
-        server = ThreadedServer(odoo.http.root)
+        server = ThreadedServer(root)
 
     watcher = None
     if 'reload' in config['dev_mode'] and not odoo.evented:

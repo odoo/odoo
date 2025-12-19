@@ -3,19 +3,21 @@
 import base64
 from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
-from os.path import basename, join as opj
+from os.path import basename
+from os.path import join as opj
 from unittest.mock import patch
 from urllib.parse import urlsplit
 
 from freezegun import freeze_time
 
-from odoo import api, http
-from odoo.tests import new_test_user, tagged, RecordCapturer
+from odoo import api
+from odoo.http.router import root
+from odoo.tests import RecordCapturer, new_test_user, tagged
 from odoo.tools import config, file_open
 from odoo.tools.image import image_process
 from odoo.tools.misc import submap
 
-from .test_common import TestHttpBase, HTTP_DATETIME_FORMAT
+from .test_common import HTTP_DATETIME_FORMAT, TestHttpBase
 
 
 class TestHttpStaticCommon(TestHttpBase):
@@ -257,7 +259,6 @@ class TestHttpStatic(TestHttpStaticCommon):
             # The file is outside of the filestore, X-Sendfile disabled
             self.assertDownloadPlaceholder(f'/web/image/{att.id}')
 
-
     def test_static14_download_not_found(self):
         res = self.url_open('/web/image/idontexist?download=True')
         self.assertEqual(res.status_code, 404)
@@ -432,7 +433,7 @@ class TestHttpStatic(TestHttpStaticCommon):
         session = self.authenticate(None, None)
         for debug in ('', 'assets'):
             session.debug = debug
-            http.root.session_store.save(self.session)
+            root.session_store.save(self.session)
             with self.subTest(debug=debug):
                 res = self.db_url_open('/test_http/static/src/img/gizeh.png', headers={
                     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
@@ -451,6 +452,7 @@ class TestHttpStatic(TestHttpStaticCommon):
                     e = "wkhtmltopdf only works if it is allowed to cache everything"
                     raise AssertionError(e) from exc
                 self.assertEqual(res.content, self.gizeh_data)
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
@@ -672,7 +674,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
                 f'{self.base_url()}/web/binary/upload_attachment',
                 files={'ufile': file},
                 data={
-                    'csrf_token': http.Request.csrf_token(self),
+                    'csrf_token': self.csrf_token(),
                     'model': 'test_http.stargate',
                     'id': self.env.ref('test_http.earth').id,
                 },
@@ -716,7 +718,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
                 f'{self.base_url()}/web/binary/upload_attachment',
                 files={'ufile': file},
                 data={
-                    'csrf_token': http.Request.csrf_token(self),
+                    'csrf_token': self.csrf_token(),
                     'model': 'test_http.stargate',
                     'id': self.env.ref('test_http.earth').id,
                     'callback': 'callmemaybe',

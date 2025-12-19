@@ -3,7 +3,7 @@ import hmac
 import time
 
 from odoo.api import Environment
-from odoo.http import SessionExpiredException
+from odoo.http.session import SessionExpiredException
 from odoo.modules.registry import Registry
 from odoo.sql_db import SQL
 from odoo.tools.lru import LRU

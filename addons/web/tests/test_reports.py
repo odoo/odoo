@@ -2,14 +2,13 @@ import os
 from unittest.mock import Mock, patch
 
 import odoo.tests
+from odoo.exceptions import UserError
+from odoo.http.router import root
+from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.files import PNG_B64, PNG_RAW
 from odoo.addons.http_routing.tests.common import MockRequest
-from odoo.exceptions import UserError
-from odoo.http import root
-from odoo.tests import tagged
-
-from odoo.tools import mute_logger
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

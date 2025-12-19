@@ -34,7 +34,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                 res = self.url_open(
                     url="/mail/attachment/upload",
                     data={
-                        "csrf_token": odoo.http.Request.csrf_token(self),
+                        "csrf_token": self.csrf_token(),
                         "is_pending": True,
                         "thread_id": thread.id,
                         "thread_model": thread._name,

@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from ast import literal_eval
 from unittest.mock import patch
 
-from odoo import http
 from odoo.tools import hash_sign
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
@@ -185,7 +182,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
         self.authenticate(self.env.user.login, self.env.user.login)
         res = self.url_open(
             f'/my/journal/{journal.id}/unsubscribe',
-            data={'csrf_token': http.Request.csrf_token(self)},
+            data={'csrf_token': self.csrf_token()},
             method='POST',
         )
         res.raise_for_status()
@@ -206,7 +203,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
 
         res = self.url_open(
             f'/my/journal/{journal.id}/unsubscribe?token={token}',
-            data={'csrf_token': http.Request.csrf_token(self)},
+            data={'csrf_token': self.csrf_token()},
             method='POST',
         )
         res.raise_for_status()
@@ -229,7 +226,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
         def _unsubscribe(token, journal_id=journal.id):
             return self.url_open(
                 f'/my/journal/{journal_id}/unsubscribe?token={token}',
-                data={'csrf_token': http.Request.csrf_token(self)},
+                data={'csrf_token': self.csrf_token()},
                 method='POST',
             )
 

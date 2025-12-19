@@ -3,24 +3,31 @@ import re
 import uuid
 from base64 import b64decode, b64encode
 from datetime import datetime
-import werkzeug.exceptions
-import werkzeug.urls
-import requests
 from os.path import join as opj
 from urllib.parse import urlparse, urljoin
 
-from odoo import _, http, tools, SUPERUSER_ID
-from odoo.addons.html_editor.tools import get_video_url_data
-from odoo.exceptions import UserError, MissingError, AccessError
-from odoo.http import request
-from odoo.tools.image import image_process, image_data_uri, binary_to_image, get_webp_size
+import requests
+import werkzeug.exceptions
+import werkzeug.urls
+from lxml import etree, html
+
+from odoo import SUPERUSER_ID, _, tools
+from odoo.exceptions import AccessError, MissingError, UserError
+from odoo.http import Controller, request, route
+from odoo.http.stream import STATIC_CACHE_LONG
+from odoo.tools.image import (
+    binary_to_image,
+    get_webp_size,
+    image_data_uri,
+    image_process,
+)
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.misc import file_open
-from odoo.addons.iap.tools import iap_tools
-from odoo.addons.mail.tools import link_preview
-from lxml import html, etree
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
+from odoo.addons.html_editor.tools import get_video_url_data
+from odoo.addons.iap.tools import iap_tools
+from odoo.addons.mail.tools import link_preview
 
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
@@ -79,7 +86,7 @@ def get_existing_attachment(IrAttachment, vals):
     return IrAttachment.search(domain, limit=1) or None
 
 
-class HTML_Editor(http.Controller):
+class HTML_Editor(Controller):
 
     def _get_shape_svg(self, module, *segments):
         shape_path = opj(module, 'static', *segments)
@@ -212,7 +219,7 @@ class HTML_Editor(http.Controller):
             svg = re.sub(regex, subst, svg, flags=re.MULTILINE)
         return svg
 
-    @http.route('/html_editor/attachment/remove', type='jsonrpc', auth='user', website=True)
+    @route('/html_editor/attachment/remove', type='jsonrpc', auth='user', website=True)
     def remove(self, ids, **kwargs):
         """ Removes a web-based image attachment if it is used by no view (template)
 
@@ -313,7 +320,7 @@ class HTML_Editor(http.Controller):
 
         return attachment
 
-    @http.route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='jsonrpc', auth='user', website=True)
+    @route(['/web_editor/get_image_info', '/html_editor/get_image_info'], type='jsonrpc', auth='user', website=True)
     def get_image_info(self, src='', href_base=''):
         """This route is used to determine the information of an attachment so that
         it can be used as a base to modify it again (crop/optimization/filters).
@@ -397,7 +404,7 @@ class HTML_Editor(http.Controller):
             'original': False,
         }
 
-    @http.route(['/web_editor/video_url/data', '/html_editor/video_url/data'], type='jsonrpc', auth='user', website=True)
+    @route(['/web_editor/video_url/data', '/html_editor/video_url/data'], type='jsonrpc', auth='user', website=True)
     def video_url_data(self, video_url, autoplay=False, loop=False,
                        hide_controls=False, hide_fullscreen=False,
                        hide_dm_logo=False, hide_dm_share=False,
@@ -409,7 +416,7 @@ class HTML_Editor(http.Controller):
             start_from=start_from
         )
 
-    @http.route(['/web_editor/attachment/add_data', '/html_editor/attachment/add_data'], type='jsonrpc', auth='user', methods=['POST'], website=True)
+    @route(['/web_editor/attachment/add_data', '/html_editor/attachment/add_data'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def add_data(self, name, data, is_image, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
         data = b64decode(data)
         if is_image:
@@ -434,13 +441,13 @@ class HTML_Editor(http.Controller):
         attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
-    @http.route(['/web_editor/attachment/add_url', '/html_editor/attachment/add_url'], type='jsonrpc', auth='user', methods=['POST'], website=True)
+    @route(['/web_editor/attachment/add_url', '/html_editor/attachment/add_url'], type='jsonrpc', auth='user', methods=['POST'], website=True)
     def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
         self._clean_context()
         attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
-    @http.route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="jsonrpc", auth="user", website=True)
+    @route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="jsonrpc", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None, alt_data=None):
         """
         Creates a modified copy of an attachment and returns its image_src to be
@@ -531,7 +538,7 @@ class HTML_Editor(http.Controller):
         attachment.generate_access_token()
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
 
-    @http.route(['/web_editor/save_library_media', '/html_editor/save_library_media'], type='jsonrpc', auth='user', methods=['POST'])
+    @route(['/web_editor/save_library_media', '/html_editor/save_library_media'], type='jsonrpc', auth='user', methods=['POST'])
     def save_library_media(self, media):
         """
         Saves images from the media library as new attachments, making them
@@ -582,7 +589,7 @@ class HTML_Editor(http.Controller):
 
         return attachments
 
-    @http.route(['/web_editor/shape/<module>/<path:filename>', '/html_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True)
+    @route(['/web_editor/shape/<module>/<path:filename>', '/html_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True)
     def shape(self, module, filename, **kwargs):
         """
         Returns a color-customized svg (background shape or illustration).
@@ -628,10 +635,10 @@ class HTML_Editor(http.Controller):
             )
         return request.make_response(svg, [
             ('Content-type', 'image/svg+xml'),
-            ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
+            ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
         ])
 
-    @http.route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>', '/html_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
+    @route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>', '/html_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
     def image_shape(self, module, filename, img_key, **kwargs):
         # Used for compatibility
         if module == 'web_editor':
@@ -668,10 +675,10 @@ class HTML_Editor(http.Controller):
 
         return request.make_response(svg, [
             ('Content-type', 'image/svg+xml'),
-            ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
+            ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
         ])
 
-    @http.route(["/web_editor/generate_text", "/html_editor/generate_text"], type="jsonrpc", auth="user")
+    @route(["/web_editor/generate_text", "/html_editor/generate_text"], type="jsonrpc", auth="user")
     def generate_text(self, prompt, conversation_history):
         try:
             IrConfigParameter = request.env['ir.config_parameter'].sudo()
@@ -693,11 +700,11 @@ class HTML_Editor(http.Controller):
         except AccessError:
             raise AccessError(_("Oops, it looks like our AI is unreachable!"))
 
-    @http.route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='jsonrpc', auth="user")
+    @route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='jsonrpc', auth="user")
     def get_ice_servers(self):
         return request.env['mail.ice.server']._get_ice_servers()
 
-    @http.route(["/web_editor/bus_broadcast", "/html_editor/bus_broadcast"], type="jsonrpc", auth="user")
+    @route(["/web_editor/bus_broadcast", "/html_editor/bus_broadcast"], type="jsonrpc", auth="user")
     def bus_broadcast(self, model_name, field_name, res_id, bus_data):
         document = request.env[model_name].browse([res_id])
 
@@ -711,14 +718,14 @@ class HTML_Editor(http.Controller):
         bus_data.update({'model_name': model_name, 'field_name': field_name, 'res_id': res_id})
         request.env['bus.bus']._sendone(channel, 'editor_collaboration', bus_data)
 
-    @http.route('/html_editor/link_preview_external', type="jsonrpc", auth="public", methods=['POST'])
+    @route('/html_editor/link_preview_external', type="jsonrpc", auth="public", methods=['POST'])
     def link_preview_metadata(self, preview_url):
         link_preview_data = link_preview.get_link_preview_from_url(preview_url)
         if link_preview_data and link_preview_data.get('og_description'):
             link_preview_data['og_description'] = html.fromstring(link_preview_data['og_description']).text_content()
         return link_preview_data
 
-    @http.route('/html_editor/link_preview_internal', type="jsonrpc", auth="user", methods=['POST'])
+    @route('/html_editor/link_preview_internal', type="jsonrpc", auth="user", methods=['POST'])
     def link_preview_metadata_internal(self, preview_url):
         try:
             Actions = request.env['ir.actions.actions']
@@ -777,7 +784,7 @@ class HTML_Editor(http.Controller):
         except Exception as e:  # noqa: BLE001
             return {'other_error_msg': str(e)}
 
-    @http.route(['/html_editor/media_library_search'], type='jsonrpc', auth="user", website=True)
+    @route(['/html_editor/media_library_search'], type='jsonrpc', auth="user", website=True)
     def media_library_search(self, **params):
         ICP = request.env['ir.config_parameter'].sudo()
         endpoint = ICP.get_str('html_editor.media_library_endpoint') or DEFAULT_LIBRARY_ENDPOINT

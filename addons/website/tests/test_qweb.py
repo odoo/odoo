@@ -3,10 +3,11 @@
 import re
 from contextlib import contextmanager
 
-from odoo import http
+from odoo.http.router import root
+from odoo.tests.common import TransactionCase, tagged
+
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.http_routing.tests.common import MockRequest
-from odoo.tests.common import TransactionCase, tagged
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -376,7 +377,7 @@ class TestQwebProcessAtt(TransactionCase):
 
     def test_process_att_url_crap(self):
         with MockRequest(self.env, website=self.website):
-            match = http.root.get_db_router.return_value.bind.return_value.match
+            match = root.get_db_router.return_value.bind.return_value.match
             # #{fragment} is stripped from URL when testing route
             self._test_att('/x#y?z', {'href': '/x#y?z'})
             match.assert_called_with('/x', method='POST', query_args=None)

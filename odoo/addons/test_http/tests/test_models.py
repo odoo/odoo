@@ -2,7 +2,6 @@
 import logging
 from http import HTTPStatus
 
-import odoo.http
 from odoo.tests import tagged, get_db_name
 from odoo.tests.common import new_test_user, Like
 from odoo.tools import mute_logger
@@ -75,12 +74,10 @@ class TestHttpModels(TestHttpBase):
 
     def test_models4_stargate_setname(self):
         milky_way = self.env.ref('test_http.milky_way')
-
-
         milky_way.invalidate_recordset()
         res = self.url_open(f'/test_http/{milky_way.id}/setname?readonly=0', {
             'name': "Wilky May",
-            'csrf_token': odoo.http.Request.csrf_token(self),
+            'csrf_token': self.csrf_token(),
         })
         res.raise_for_status()
 
@@ -96,7 +93,7 @@ class TestHttpModels(TestHttpBase):
              self.assertLogs('odoo.sql_db', 'WARNING') as capture_sql_db:
             res = self.url_open(f'/test_http/{milky_way.id}/setname?readonly=1', {
                 'name': "Wilky May",
-                'csrf_token': odoo.http.Request.csrf_token(self),
+                'csrf_token': self.csrf_token(),
             })
             res.raise_for_status()
 

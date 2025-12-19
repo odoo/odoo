@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from html.parser import HTMLParser
+
 import geoip2.errors
 import geoip2.models
-from html.parser import HTMLParser
-from odoo.http import SessionStore
 
+from odoo.http.session import SessionStore
 
 TEST_IP = '192.0.2.42'  # 192.0.2.0/24 are reserved for documentation,
                         # they are like example.com for ip addresses

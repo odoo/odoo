@@ -2,21 +2,36 @@
 
 import json
 import logging
-import netifaces
 import subprocess
 import threading
 import time
-
 from itertools import groupby
 from pathlib import Path
 
-from odoo import http
-from odoo.addons.iot_drivers.tools import certificate, helpers, route, system, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI, IOT_IDENTIFIER, IOT_SYSTEM, ODOO_START_TIME, SYSTEM_START_TIME
-from odoo.addons.iot_drivers.main import iot_devices, unsupported_devices
-from odoo.addons.iot_drivers.connection_manager import connection_manager
+import netifaces
+
+from odoo.http import Controller
+from odoo.http.stream import Stream
 from odoo.tools.misc import file_path
+
+from odoo.addons.iot_drivers.connection_manager import connection_manager
+from odoo.addons.iot_drivers.main import iot_devices, unsupported_devices
 from odoo.addons.iot_drivers.server_logger import server_logger
+from odoo.addons.iot_drivers.tools import (
+    certificate,
+    helpers,
+    route,
+    system,
+    upgrade,
+    wifi,
+)
+from odoo.addons.iot_drivers.tools.system import (
+    IOT_IDENTIFIER,
+    IOT_SYSTEM,
+    IS_RPI,
+    ODOO_START_TIME,
+    SYSTEM_START_TIME,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -36,22 +51,22 @@ CONTENT_SECURITY_POLICY = (
 )
 
 
-class IotBoxOwlHomePage(http.Controller):
+class IotBoxOwlHomePage(Controller):
     def __init__(self):
         super().__init__()
         self.updating = threading.Lock()
 
     @route.iot_route('/', type='http')
     def index(self):
-        return http.Stream.from_path("iot_drivers/views/index.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
+        return Stream.from_path("iot_drivers/views/index.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
 
     @route.iot_route('/logs', type='http')
     def logs_page(self):
-        return http.Stream.from_path("iot_drivers/views/logs.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
+        return Stream.from_path("iot_drivers/views/logs.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
 
     @route.iot_route('/status', type='http')
     def status_page(self):
-        return http.Stream.from_path("iot_drivers/views/status_display.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
+        return Stream.from_path("iot_drivers/views/status_display.html").get_response(content_security_policy=CONTENT_SECURITY_POLICY)
 
     # ---------------------------------------------------------- #
     # GET methods                                                #

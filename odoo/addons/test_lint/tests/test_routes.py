@@ -4,8 +4,11 @@ import logging
 from pprint import pformat
 from unittest.mock import patch
 
-from odoo import http
-from odoo.tests import tagged, TransactionCase
+from odoo.http.routing_map import (
+    _check_and_complete_route_definition,
+    _generate_routing_rules,
+)
+from odoo.tests import TransactionCase, tagged
 
 _logger = logging.getLogger(__name__)
 
@@ -19,7 +22,6 @@ class RoutesLinter(TransactionCase):
         Makes it easier to know what an inherited route really modifies and
         investigate unexpected behavior.
         """
-        _check_and_complete_route_definition = http._check_and_complete_route_definition
 
         def extended_check(controller_cls, submethod, merged_routing):
             if 'type' in merged_routing:
@@ -43,6 +45,6 @@ class RoutesLinter(TransactionCase):
         installed_modules = set(self.env['ir.module.module'].search([
             ('state', '=', 'installed'),
         ]).mapped('name'))
-        with patch('odoo.http._check_and_complete_route_definition', extended_check):
-            for _ in http._generate_routing_rules(installed_modules, nodb_only=False):
+        with patch('odoo.http.routing_map._check_and_complete_route_definition', extended_check):
+            for _ in _generate_routing_rules(installed_modules, nodb_only=False):
                 pass

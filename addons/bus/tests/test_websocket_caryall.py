@@ -5,16 +5,17 @@ import json
 import os
 from collections import defaultdict
 from datetime import timedelta
-from freezegun import freeze_time
 from threading import Event
 from unittest.mock import patch
 from weakref import WeakSet
 
-from odoo import http
+from freezegun import freeze_time
+
 from odoo.api import Environment
+from odoo.http.router import root
 from odoo.tests import common, new_test_user
 from odoo.tools import mute_logger
-from .common import WebsocketCase
+
 from .. import websocket as websocket_module
 from ..models.bus import dispatch
 from ..models.ir_websocket import IrWebsocket
@@ -26,6 +27,8 @@ from ..websocket import (
     Websocket,
     WebsocketConnectionHandler,
 )
+from .common import WebsocketCase
+
 
 @common.tagged('post_install', '-at_install')
 class TestWebsocketCaryall(WebsocketCase):
@@ -133,7 +136,7 @@ class TestWebsocketCaryall(WebsocketCase):
             '/web/session/logout',
             method='POST',
             data={
-                "csrf_token": http.Request.csrf_token(self),
+                "csrf_token": self.csrf_token(),
             },
         )
         # The session with whom the websocket connected has been
@@ -151,7 +154,7 @@ class TestWebsocketCaryall(WebsocketCase):
             '/web/session/logout',
             method='POST',
             data={
-                "csrf_token": http.Request.csrf_token(self),
+                "csrf_token": self.csrf_token(),
             },
         )
         # Simulate postgres notify. The session with whom the websocket
@@ -206,7 +209,7 @@ class TestWebsocketCaryall(WebsocketCase):
         # specific) or a known language that is uninstalled; in all cases this
         # should not crash the notif. dispatching.
         self.session.context['lang'] = 'fr_LU'
-        http.root.session_store.save(self.session)
+        root.session_store.save(self.session)
         self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
         self.env['bus.bus']._sendone('my_channel', 'notif_type', 'message')
         self.trigger_notification_dispatching(["my_channel"])

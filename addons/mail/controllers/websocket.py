@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.http import request, route
+from odoo.http.session import SessionExpiredException
+
 from odoo.addons.bus.controllers.websocket import WebsocketController
-from odoo.http import request, route, SessionExpiredException
 
 
 class WebsocketControllerPresence(WebsocketController):

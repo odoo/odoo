@@ -4,12 +4,11 @@ import datetime
 import time
 
 import odoo
-import odoo.tools
 from odoo.exceptions import AccessDenied, AccessError
-from odoo.http import _request_stack
+from odoo.http.requestlib import _request_stack
 from odoo.service import common as auth
 from odoo.service import model
-from odoo.tests import tagged, common
+from odoo.tests import common, tagged
 from odoo.tools import DotDict, mute_logger
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo

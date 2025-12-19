@@ -5,6 +5,7 @@ import logging
 import odoo.tools
 from odoo import http, release
 from odoo.http import request
+from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.modules import Manifest
 from odoo.tools.misc import file_path
 
@@ -82,7 +83,7 @@ class WebClient(http.Controller):
 
         # The type of the route is set to HTTP, but the rpc is made with a get and expects JSON
         return request.make_json_response(body, [
-            ('Cache-Control', f'public, max-age={http.STATIC_CACHE_LONG}'),
+            ('Cache-Control', f'public, max-age={STATIC_CACHE_LONG}'),
         ])
 
     @http.route('/web/webclient/version_info', type='jsonrpc', auth="none")

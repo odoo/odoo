@@ -2,7 +2,6 @@
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 
-from odoo import http
 from odoo.tests.common import tagged
 
 
@@ -31,7 +30,7 @@ class TestAuthSignupFlowWith2faEnforced(HttpCaseWithUserPortal, HttpCaseWithUser
 
         # Get csrf_token
         self.authenticate(None, None)
-        csrf_token = http.Request.csrf_token(self)
+        csrf_token = self.csrf_token()
 
         # Values from login form
         name = 'toto'

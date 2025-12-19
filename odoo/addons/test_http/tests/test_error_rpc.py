@@ -87,7 +87,7 @@ class TestError(common.HttpCase):
     def test_04_multi_db(self):
         def db_list(**kwargs):
             return [self.env.cr.dbname, self.env.cr.dbname + '_another_db']
-        self.patch(http, 'db_list', db_list)  # this is just to ensure that the request won't have a db, breaking monodb behaviour
+        self.patch(http.router, 'db_list', db_list)  # this is just to ensure that the request won't have a db, breaking monodb behaviour
 
         self.rpc("test_rpc.model_b", "create", {"name": "B1"})
 

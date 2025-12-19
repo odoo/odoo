@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.tests.common import tagged, HttpCase
 from unittest.mock import patch
-from odoo.http import Request
+
+from odoo.http.requestlib import Request
+from odoo.tests.common import HttpCase, tagged
 
 
 @tagged('post_install', '-at_install', 'hr_attendance_overtime')

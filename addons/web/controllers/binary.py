@@ -1,28 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import functools
-import io
 import json
 import logging
 import os
 import unicodedata
-
 from contextlib import nullcontext
-try:
-    from werkzeug.utils import send_file
-except ImportError:
-    from odoo.tools._vendor.send_file import send_file
 
 import odoo
-import odoo.modules.registry
-from odoo import SUPERUSER_ID, _, http, api
-from odoo.addons.base.models.assetsbundle import ANY_UNIQUE
+from odoo import SUPERUSER_ID, _, api
 from odoo.exceptions import AccessError, UserError
-from odoo.http import request, Response
+from odoo.http import Controller, request, route
+from odoo.http.stream import STATIC_CACHE_LONG, Stream
 from odoo.tools import file_open, file_path, replace_exceptions, str2bool
 from odoo.tools.image import image_guess_size_from_field_name
-from odoo.tools.mimetypes import guess_mimetype
+
+from odoo.addons.base.models.assetsbundle import ANY_UNIQUE
 
 _logger = logging.getLogger(__name__)
 
@@ -48,18 +41,18 @@ def clean(name):
     return name.replace('\x3c', '')
 
 
-class Binary(http.Controller):
+class Binary(Controller):
 
-    @http.route('/web/filestore/<path:_path>', type='http', auth='none')
+    @route('/web/filestore/<path:_path>', type='http', auth='none')
     def content_filestore(self, _path):
         if odoo.tools.config['x_sendfile']:
             # pylint: disable=logging-format-interpolation
             _logger.error(BAD_X_SENDFILE_ERROR.format(
-                data_dir=odoo.tools.config['data_dir']
+                data_dir=odoo.tools.config['data_dir'],
             ))
-        raise http.request.not_found()
+        raise request.not_found()
 
-    @http.route([
+    @route([
         '/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
@@ -81,13 +74,13 @@ class Binary(http.Controller):
         send_file_kwargs = {'as_attachment': str2bool(download)}
         if unique:
             send_file_kwargs['immutable'] = True
-            send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
+            send_file_kwargs['max_age'] = STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
 
         return stream.get_response(**send_file_kwargs)
 
-    @http.route([
+    @route([
         '/web/assets/<string:unique>/<string:filename>'], type='http', auth="public", readonly=True)
     def content_assets(self, filename=None, unique=ANY_UNIQUE, nocache=False, assets_params=None):
         env = request.env  # readonly
@@ -157,13 +150,13 @@ class Binary(http.Controller):
         send_file_kwargs = {'as_attachment': False, 'content_security_policy': None}
         if unique and unique != 'debug':
             send_file_kwargs['immutable'] = True
-            send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
+            send_file_kwargs['max_age'] = STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
 
         return stream.get_response(**send_file_kwargs)
 
-    @http.route([
+    @route([
         '/web/image',
         '/web/image/<string:xmlid>',
         '/web/image/<string:xmlid>/<string:filename>',
@@ -210,13 +203,13 @@ class Binary(http.Controller):
         send_file_kwargs = {'as_attachment': str2bool(download)}
         if unique:
             send_file_kwargs['immutable'] = True
-            send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
+            send_file_kwargs['max_age'] = STATIC_CACHE_LONG
         if nocache:
             send_file_kwargs['max_age'] = None
 
         return stream.get_response(**send_file_kwargs)
 
-    @http.route('/web/binary/upload_attachment', type='http', auth="user")
+    @route('/web/binary/upload_attachment', type='http', auth="user")
     def upload_attachment(self, model, id, ufile, callback=None):
         files = request.httprequest.files.getlist('ufile')
         Model = request.env['ir.attachment']
@@ -255,7 +248,7 @@ class Binary(http.Controller):
                 })
         return out % (json.dumps(clean(callback)), json.dumps(args)) if callback else json.dumps(args)
 
-    @http.route([
+    @route([
         '/web/binary/company_logo',
         '/logo',
         '/logo.png',
@@ -266,7 +259,7 @@ class Binary(http.Controller):
         dbname = request.db
 
         if not dbname:
-            response = http.Stream.from_path(file_path('web/static/img/logo.png')).get_response()
+            response = Stream.from_path(file_path('web/static/img/logo.png')).get_response()
         else:
             try:
                 attachment = request.env(user=request.session.uid or odoo.api.SUPERUSER_ID, su=True)['ir.attachment']
@@ -287,14 +280,14 @@ class Binary(http.Controller):
                     stream.public = True
                     response = stream.get_response()
                 else:
-                    response = http.Stream.from_path(file_path('web/static/img/nologo.png')).get_response()
-            except Exception:
+                    response = Stream.from_path(file_path('web/static/img/nologo.png')).get_response()
+            except Exception:  # noqa: BLE001
                 _logger.warning("While retrieving the company logo, using the Odoo logo instead", exc_info=True)
-                response = http.Stream.from_path(file_path(f'web/static/img/{imgname}{imgext}')).get_response()
+                response = Stream.from_path(file_path(f'web/static/img/{imgname}{imgext}')).get_response()
 
         return response
 
-    @http.route([
+    @route([
         '/web/sign/get_fonts',
         '/web/sign/get_fonts/<string:fontname>',
     ], type='jsonrpc', auth='none')

@@ -1,14 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 from contextlib import nullcontext
 from datetime import datetime, timedelta
-import logging
 
 from odoo import api, fields, models, tools
-from odoo.http import get_session_max_inactivity, request, root, STORED_SESSION_BYTES
+from odoo.http import request
+from odoo.http.router import root
+from odoo.http.session import STORED_SESSION_BYTES, get_session_max_inactivity
 from odoo.tools import SQL
-from odoo.tools.translate import _
 from odoo.tools._vendor.useragents import UserAgent
+from odoo.tools.translate import _
+
 from .res_users import check_identity
 
 _logger = logging.getLogger(__name__)

@@ -7,15 +7,15 @@ import itertools
 import json
 import logging
 import operator
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict, defaultdict
 
 from werkzeug.exceptions import InternalServerError
 
-from odoo import http
 from odoo.exceptions import UserError
-from odoo.http import content_disposition, request
+from odoo.http import Controller, request, route
+from odoo.http.dispatcher import serialize_exception
+from odoo.http.stream import content_disposition
 from odoo.tools import osutil
-
 
 _logger = logging.getLogger(__name__)
 
@@ -82,7 +82,7 @@ class GroupsTreeNode:
         aggregate_func = OPERATOR_MAPPING.get(aggregator)
         if not aggregate_func:
             _logger.warning("Unsupported export of aggregator '%s' for field %s on model %s", aggregator, field_name, self._model._name)
-            return
+            return None
 
         if self.data:
             return aggregate_func(data)
@@ -119,7 +119,7 @@ class GroupsTreeNode:
         # Transpose the data matrix to group all values of each field in one iterable
         field_values = zip(*self.data)
         for field_name in self._export_field_names:
-            field_data = self.data and next(field_values) or []
+            field_data = (self.data and next(field_values)) or []
 
             if field_name in self._get_aggregated_field_names():
                 field = self._model._fields[field_name]
@@ -149,7 +149,7 @@ class GroupsTreeNode:
 
         # Follow the path from the top level group to the deepest
         # group which actually contains the records' data.
-        node = self # root
+        node = self  # root
         node.count += count
         for node_key in leaf_path:
             # Go down to the next node or create one if it does not exist yet.
@@ -268,7 +268,7 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
         label = '%s%s (%s)' % ('    ' * group_depth, label, group.count)
         self.write(row, column, label, self.header_bold_style)
-        for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
+        for field in self.fields[1:]:  # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
             header_style = self.header_bold_style
@@ -282,9 +282,9 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
         return row + 1, 0
 
 
-class Export(http.Controller):
+class Export(Controller):
 
-    @http.route('/web/export/formats', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/export/formats', type='jsonrpc', auth='user', readonly=True)
     def formats(self):
         """ Returns all valid export formats
 
@@ -357,7 +357,7 @@ class Export(http.Controller):
 
         return property_fields
 
-    @http.route('/web/export/get_fields', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/export/get_fields', type='jsonrpc', auth='user', readonly=True)
     def get_fields(self, model, domain, prefix='', parent_name='',
                    import_compat=True, parent_field_type=None,
                    parent_field=None, exclude=None):
@@ -408,7 +408,7 @@ class Export(http.Controller):
             if field_name == 'name' and import_compat and parent_field_type in ['many2one', 'many2many']:
                 # Add name field when expand m2o and m2m fields in import-compatible mode
                 val = prefix
-            name = parent_name + (parent_name and '/' or '') + field['string']
+            name = parent_name + ('/' if parent_name else '') + field['string']
             field_dict = {
                 'id': ident,
                 'string': name,
@@ -417,7 +417,7 @@ class Export(http.Controller):
                 'field_type': field.get('type'),
                 'required': field.get('required'),
                 'relation_field': field.get('relation_field'),
-                'default_export': import_compat and field.get('default_export_compatible')
+                'default_export': import_compat and field.get('default_export_compatible'),
             }
             if len(ident.split('/')) < 3 and 'relation' in field:
                 field_dict['value'] += '/id'
@@ -433,7 +433,7 @@ class Export(http.Controller):
 
         return result
 
-    @http.route('/web/export/namelist', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/export/namelist', type='jsonrpc', auth='user', readonly=True)
     def namelist(self, model, export_id):
         export = request.env['ir.exports'].browse([export_id])
         return self.fields_info(model, export.export_fields.mapped('name'))
@@ -512,7 +512,7 @@ class Export(http.Controller):
         )
 
 
-class ExportFormat(object):
+class ExportFormat:
 
     @property
     def content_type(self):
@@ -626,9 +626,10 @@ class ExportFormat(object):
                      ('Content-Type', self.content_type)],
         )
 
-class CSVExport(ExportFormat, http.Controller):
 
-    @http.route('/web/export/csv', type='http', auth='user')
+class CSVExport(ExportFormat, Controller):
+
+    @route('/web/export/csv', type='http', auth='user')
     def web_export_csv(self, data):
         try:
             return self.base(data)
@@ -637,7 +638,7 @@ class CSVExport(ExportFormat, http.Controller):
             payload = json.dumps({
                 'code': 0,
                 'message': "Odoo Server Error",
-                'data': http.serialize_exception(exc)
+                'data': serialize_exception(exc)
             })
             raise InternalServerError(payload) from exc
 
@@ -674,9 +675,10 @@ class CSVExport(ExportFormat, http.Controller):
 
         return fp.getvalue()
 
-class ExcelExport(ExportFormat, http.Controller):
 
-    @http.route('/web/export/xlsx', type='http', auth='user')
+class ExcelExport(ExportFormat, Controller):
+
+    @route('/web/export/xlsx', type='http', auth='user')
     def web_export_xlsx(self, data):
         try:
             return self.base(data)
@@ -685,7 +687,7 @@ class ExcelExport(ExportFormat, http.Controller):
             payload = json.dumps({
                 'code': 0,
                 'message': "Odoo Server Error",
-                'data': http.serialize_exception(exc)
+                'data': serialize_exception(exc),
             })
             raise InternalServerError(payload) from exc
 

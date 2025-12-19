@@ -1,5 +1,7 @@
 from odoo import models
-from odoo.http import request, root
+from odoo.http import request
+from odoo.http.router import root
+
 from odoo.addons.bus.websocket import wsrequest
 
 

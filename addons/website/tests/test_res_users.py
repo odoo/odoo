@@ -6,7 +6,7 @@ import psycopg2
 
 from odoo import Command
 from odoo.exceptions import ValidationError
-from odoo.http import retrying
+from odoo.http.retrying import retrying
 from odoo.tests.common import TransactionCase, new_test_user, tagged
 from odoo.tools import mute_logger
 

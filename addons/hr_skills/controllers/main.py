@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
 
 from odoo import _
-
-from odoo.http import request, route, Controller, content_disposition
+from odoo.http import Controller, request, route
+from odoo.http.stream import content_disposition
 
 
 class HrEmployeeCV(Controller):
@@ -44,7 +43,7 @@ class HrEmployeeCV(Controller):
         pdfhttpheaders = [
             ('Content-Type', 'application/pdf'),
             ('Content-Length', len(pdf_content)),
-            ('Content-Disposition', content_disposition(report_name + '.pdf'))
+            ('Content-Disposition', content_disposition(report_name + '.pdf')),
         ]
 
         return request.make_response(pdf_content, headers=pdfhttpheaders)

@@ -1,21 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
-from freezegun import freeze_time
 from unittest.mock import patch
 
-import odoo
+from freezegun import freeze_time
 
 from odoo import Command
+from odoo.http.router import root
+from odoo.tests import tagged
+from odoo.tools import config
+
+from .test_common import TestHttpBase
 from odoo.addons.test_http.utils import (
     TEST_IP,
     USER_AGENT_android_chrome,
     USER_AGENT_linux_chrome,
-    USER_AGENT_linux_firefox
+    USER_AGENT_linux_firefox,
 )
-from odoo.tests import tagged
-
-from .test_common import TestHttpBase
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -50,7 +51,7 @@ class TestDevice(TestHttpBase):
                 'X-Forwarded-Proto': 'https'
             }
         with freeze_time(time), \
-            patch.dict(odoo.tools.config.options, {'proxy_mode': bool(ip)}):
+            patch.dict(config.options, {'proxy_mode': bool(ip)}):
             return self.url_open(url=endpoint, headers=headers)
 
     def info_device(self, device):
@@ -302,7 +303,7 @@ class TestDevice(TestHttpBase):
     def test_detection_no_trace_mechanism(self):
         session = self.authenticate(self.user_admin.login, self.user_admin.login)
         session['_trace_disable'] = True
-        odoo.http.root.session_store.save(session)
+        root.session_store.save(session)
         res = self.hit('2024-01-01 08:00:00', '/test_http/greeting-public?readonly=0')
         self.assertEqual(res.status_code, 200)
 
@@ -388,7 +389,7 @@ class TestDevice(TestHttpBase):
     def _create_device_log_for_user(self, session, count):
         for _ in range(count):
             self.DeviceLog.create({
-                'session_identifier': odoo.http.root.session_store.generate_key(),
+                'session_identifier': root.session_store.generate_key(),
                 'user_id': session.uid,
                 'revoked': False,
                 'ip_address': TEST_IP,
@@ -409,7 +410,7 @@ class TestDevice(TestHttpBase):
         self.assertEqual(len(self.user_admin.session_ids), 10)
         self.assertEqual(len(self.user_internal.session_ids), 10)
 
-        odoo.http.root.session_store.store.clear()
+        root.session_store.store.clear()
 
         # Update all device logs
         with freeze_time('2025-02-01 08:00:00'), patch.object(self.cr, 'commit', lambda: ...):

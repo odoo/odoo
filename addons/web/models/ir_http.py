@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, release
-from odoo.http import DEFAULT_MAX_CONTENT_LENGTH, request
+from odoo.http import request
+from odoo.http.requestlib import DEFAULT_MAX_CONTENT_LENGTH
 from odoo.tools import config
 from odoo.tools.misc import hmac, str2bool
 

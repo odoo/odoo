@@ -8,25 +8,26 @@ from werkzeug.urls import url_encode
 
 import odoo
 import odoo.modules.registry
-from odoo import http
 from odoo.exceptions import AccessError
-from odoo.http import request
+from odoo.http import Controller, request, route
+from odoo.http.router import db_filter
 
 _logger = logging.getLogger(__name__)
 
 
-class Session(http.Controller):
+class Session(Controller):
 
-    @http.route('/web/session/get_session_info', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/session/get_session_info', type='jsonrpc', auth='user', readonly=True)
     def get_session_info(self):
         # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
         request.session.touch()
         return request.env['ir.http'].session_info()
 
-    @http.route('/web/session/authenticate', type='jsonrpc', auth="none", readonly=False)
+    @route('/web/session/authenticate', type='jsonrpc', auth="none", readonly=False)
     def authenticate(self, db, login, password, base_location=None):
-        if not http.db_filter([db]):
-            raise AccessError("Database not found.")  # pylint: disable=missing-gettext
+        if not db_filter([db]):
+            e = "Database not found."
+            raise AccessError(e)  # pylint: disable=missing-gettext
 
         with ExitStack() as stack:
             if not request.db or request.db != db:
@@ -49,16 +50,16 @@ class Session(http.Controller):
 
             return env['ir.http'].with_user(request.session.uid).session_info()
 
-    @http.route('/web/session/modules', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/session/modules', type='jsonrpc', auth='user', readonly=True)
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
         return list(request.env.registry._init_modules)
 
-    @http.route('/web/session/check', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/session/check', type='jsonrpc', auth='user', readonly=True)
     def check(self):
         return  # ir.http@_authenticate does the job
 
-    @http.route('/web/session/account', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/session/account', type='jsonrpc', auth='user', readonly=True)
     def account(self):
         ICP = request.env['ir.config_parameter'].sudo()
         params = {
@@ -69,23 +70,23 @@ class Session(http.Controller):
         }
         return 'https://accounts.odoo.com/oauth2/auth?' + url_encode(params)
 
-    @http.route('/web/session/destroy', type='jsonrpc', auth='user', readonly=True)
+    @route('/web/session/destroy', type='jsonrpc', auth='user', readonly=True)
     def destroy(self):
         request.session.logout()
 
-    @http.route('/web/session/logout', type='http', auth='none', methods=['POST'], readonly=True)
+    @route('/web/session/logout', type='http', auth='none', methods=['POST'], readonly=True)
     def logout(self, redirect='/odoo'):
         request.session.logout(keep_db=True)
         return request.redirect(redirect, 303)
 
-    @http.route('/web/session/identity', type='http', auth='user', methods=['GET'], sitemap=False, check_identity=False)
+    @route('/web/session/identity', type='http', auth='user', methods=['GET'], sitemap=False, check_identity=False)
     def session_identity(self, redirect=None):
         """ Display the authentication form in a page. Used when an HTTP call raises a `CheckIdentityException`. """
         return request.render('web.check_identity', {'redirect': redirect})
 
     # Cannot be readonly because checking the identity can lead to some data being written
     # (e.g. totp rate limit during a totp by mail)
-    @http.route('/web/session/identity/check', type='jsonrpc', auth='user', methods=['POST'], check_identity=False)
+    @route('/web/session/identity/check', type='jsonrpc', auth='user', methods=['POST'], check_identity=False)
     def session_identity_check(self, **kwargs):
         """ JSON route used to receive the authentication form sent by the user. """
         return request.env['ir.http']._check_identity(kwargs)

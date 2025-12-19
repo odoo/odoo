@@ -1,6 +1,5 @@
 import json
 
-from odoo import http
 from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -158,7 +157,7 @@ class TestMessageController(MailControllerThreadCommon):
         response = self.url_open(
             "/mail/attachment/upload",
             {
-                "csrf_token": http.Request.csrf_token(self),
+                "csrf_token": self.csrf_token(),
                 "thread_id": archived_partner.id,
                 "thread_model": "res.partner",
             },

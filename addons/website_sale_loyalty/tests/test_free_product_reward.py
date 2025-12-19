@@ -59,7 +59,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
         })
 
         installed_modules = cls.env['ir.module.module'].search([('state', '=', 'installed')])
-        for _ in http._generate_routing_rules(installed_modules.mapped('name'), nodb_only=False):
+        for _ in http.routing_map._generate_routing_rules(installed_modules.mapped('name'), nodb_only=False):
             pass
 
     def test_add_product_to_cart_when_it_exist_as_free_product(self):

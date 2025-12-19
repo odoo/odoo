@@ -5,16 +5,16 @@ import json
 import operator
 from ast import literal_eval
 from collections import defaultdict
-from datetime import timedelta, UTC
+from datetime import UTC, timedelta
 from zoneinfo import ZoneInfo
 
-import babel
 import babel.dates
 from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import http, fields, tools, _
+from odoo import _, fields, http, tools
 from odoo.fields import Domain
-from odoo.http import content_disposition, request
+from odoo.http import request
+from odoo.http.stream import content_disposition
 from odoo.tools import is_html_empty, plaintext2html
 from odoo.tools.misc import babel_locale_parse
 

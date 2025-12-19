@@ -37,5 +37,5 @@ class TestHttpEndPoint(HttpCase):
         self.assertURLEqual(res.headers.get('Location'), '/test_http/greeting')
 
     def test_404(self):
-        # the main purpose of this test is to cover the http._serve_db handle_error
+        # the main purpose of this test is to cover the _serve_db handle_error
         self.url_open('/not_found')

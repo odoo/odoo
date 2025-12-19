@@ -44,7 +44,7 @@ class TestEventRegisterUTM(HttpCase, TestEventOnlineCommon):
             f'1-name-{name_question.id}': 'Bob',
             f'1-email-{email_question.id}': 'bob@test.lan',
             '1-event_ticket_id': self.event_0.event_ticket_ids[0].id,
-            'csrf_token': http.Request.csrf_token(self),
+            'csrf_token': self.csrf_token(),
         })
         new_registration = self.event_0.registration_ids
         self.assertEqual(len(new_registration), 1)

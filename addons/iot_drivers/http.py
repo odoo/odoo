@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import collections
-import odoo.http
 
-from odoo.http import JsonRPCDispatcher, serialize_exception
-from odoo.addons.iot_drivers.tools.system import IS_TEST
 from werkzeug.exceptions import Forbidden
+
+import odoo.http.router
+from odoo.http.dispatcher import JsonRPCDispatcher, serialize_exception
+
+from odoo.addons.iot_drivers.tools.system import IS_TEST
 
 
 class JsonRPCDispatcherPatch(JsonRPCDispatcher):
@@ -38,4 +40,4 @@ if not IS_TEST:
     def db_list(force=False, host=None):
         return []
 
-    odoo.http.db_list = db_list
+    odoo.http.router.db_list = db_list

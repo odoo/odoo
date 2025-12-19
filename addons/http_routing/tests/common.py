@@ -1,6 +1,7 @@
 import contextlib
 from unittest.mock import MagicMock, Mock, patch
 
+import geoip2.models
 from werkzeug.exceptions import NotFound
 from werkzeug.test import EnvironBuilder
 
@@ -34,7 +35,7 @@ def MockRequest(
         httprequest=Mock(
             host='localhost',
             path=path,
-            app=odoo.http.root,
+            app=odoo.http.router.root,
             environ=dict(
                 EnvironBuilder(
                     path=path,
@@ -50,15 +51,15 @@ def MockRequest(
             args=[],
         ),
         type='http',
-        future_response=odoo.http.FutureResponse(),
+        future_response=odoo.http.response.FutureResponse(),
         params={},
         redirect=env['ir.http']._redirect,
         session=DotDict(
-            odoo.http.get_default_session(),
+            odoo.http.session.get_default_session(),
             context={'lang': ''},
             force_website_id=website and website.id,
         ),
-        geoip=odoo.http.GeoIP('127.0.0.1'),
+        geoip=odoo.http.geoip.GeoIP('127.0.0.1'),
         db=env.registry.db_name,
         env=env,
         registry=env.registry,
@@ -73,15 +74,15 @@ def MockRequest(
         request.website_routing = website.id
     if country_code or city_name:
         try:
-            request.geoip._city_record = odoo.http.geoip2.models.City(['en'], country=(country_code and {'iso_code': country_code}) or {}, city=(city_name and {'names': {'en': city_name}}) or {})
+            request.geoip._city_record = geoip2.models.City(['en'], country=(country_code and {'iso_code': country_code}) or {}, city=(city_name and {'names': {'en': city_name}}) or {})
         except TypeError:
-            request.geoip._city_record = odoo.http.geoip2.models.City({'country': (country_code and {'iso_code': country_code}) or {}, 'city': (city_name and {'names': {'en': city_name}}) or {}})
+            request.geoip._city_record = geoip2.models.City({'country': (country_code and {'iso_code': country_code}) or {}, 'city': (city_name and {'names': {'en': city_name}}) or {}})
 
     # The following code mocks match() to return a fake rule with a fake
     # 'routing' attribute (routing=True) or to raise a NotFound
     # exception (routing=False).
     #
-    #   router = odoo.http.root.get_db_router()
+    #   router = odoo.http.router.root.get_db_router()
     #   rule, args = router.bind(...).match(path)
     #   # arg routing is True => rule.endpoint.routing == {...}
     #   # arg routing is False => NotFound exception
@@ -102,8 +103,8 @@ def MockRequest(
     request.update_context = update_context
 
     with contextlib.ExitStack() as s:
-        odoo.http._request_stack.push(request)
-        s.callback(odoo.http._request_stack.pop)
-        s.enter_context(patch('odoo.http.root.get_db_router', router))
+        odoo.http.requestlib._request_stack.push(request)
+        s.callback(odoo.http.requestlib._request_stack.pop)
+        s.enter_context(patch('odoo.http.router.root.get_db_router', router))
 
         yield request

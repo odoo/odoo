@@ -5,7 +5,6 @@ from odoo.tests.common import tagged
 
 import json
 
-from odoo import http
 from odoo.tools import file_open, mute_logger
 
 
@@ -42,7 +41,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             res = self.url_open(
                 url=f"{self.invoice_base_url}/mail/attachment/upload",
                 data={
-                    "csrf_token": http.Request.csrf_token(self),
+                    "csrf_token": self.csrf_token(),
                     "thread_id": self.out_invoice.id,
                     "thread_model": self.out_invoice._name,
                 },
@@ -56,7 +55,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             res = self.url_open(
                 url=f"{self.invoice_base_url}/mail/attachment/upload",
                 data={
-                    "csrf_token": http.Request.csrf_token(self),
+                    "csrf_token": self.csrf_token(),
                     "thread_id": self.out_invoice.id,
                     "thread_model": self.out_invoice._name,
                     "token": self.out_invoice._portal_ensure_token(),
@@ -85,7 +84,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         res = self.url_open(
             url=f"{self.invoice_base_url}/mail/attachment/upload",
             data={
-                "csrf_token": http.Request.csrf_token(self),
+                "csrf_token": self.csrf_token(),
                 "is_pending": True,
                 "thread_id": self.out_invoice.id,
                 "thread_model": self.out_invoice._name,
@@ -284,7 +283,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         res = self.url_open(
             url=f"{self.invoice_base_url}/mail/attachment/upload",
             data={
-                "csrf_token": http.Request.csrf_token(self),
+                "csrf_token": self.csrf_token(),
                 "is_pending": True,
                 "thread_id": self.out_invoice.id,
                 "thread_model": self.out_invoice._name,

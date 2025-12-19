@@ -33,10 +33,11 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
             'points_granted': 1,
         }).generate_coupons()
         cls.coupon = cls.coupon_program.coupon_ids[0]
+
         installed_modules = set(cls.env['ir.module.module'].search([
             ('state', '=', 'installed'),
         ]).mapped('name'))
-        for _ in http._generate_routing_rules(installed_modules, nodb_only=False):
+        for _ in http.routing_map._generate_routing_rules(installed_modules, nodb_only=False):
             pass
 
     def setUp(self):

@@ -1,7 +1,7 @@
 import argparse
-import contextlib
 import re
 import sys
+import traceback
 from inspect import cleandoc
 from pathlib import Path
 
@@ -9,7 +9,6 @@ import odoo.init  # import first for core setup
 import odoo.cli
 from odoo.modules import initialize_sys_path, load_script
 from odoo.tools import config
-
 
 COMMAND_NAME_RE = re.compile(r'^[a-z][a-z0-9_]*$', re.I)
 PROG_NAME = Path(sys.argv[0]).name
@@ -34,7 +33,7 @@ class Command:
             raise ValueError(
                 f"Command name {cls.name!r} "
                 f"must match Module name {module!r}")
-        commands[cls.name] = cls 
+        commands[cls.name] = cls
 
     @property
     def prog(self):
@@ -82,11 +81,14 @@ def load_addons_commands(command=None):
             if (found_command := fullpath.stem) and Command.is_valid_name(found_command):
                 # loading as odoo.cli and not odoo.addons.{module}.cli
                 # so it doesn't load odoo.addons.{module}.__init__
-                mapping[f'odoo.cli.{found_command}'] = fullpath 
+                mapping[f'odoo.cli.{found_command}'] = fullpath
 
     for fq_name, fullpath in mapping.items():
-        with contextlib.suppress(ImportError):
+        try:
             load_script(fullpath, fq_name)
+        except ImportError:
+            print("Couldn't load", fullpath, file=sys.stderr)  # noqa: T201
+            traceback.print_exc()
 
 
 def find_command(name: str) -> Command | None:
@@ -97,8 +99,12 @@ def find_command(name: str) -> Command | None:
         return command
 
     # import from odoo.cli
-    with contextlib.suppress(ImportError):
+    try:
         __import__(f'odoo.cli.{name}')
+    except ModuleNotFoundError as exc:
+        if f"'odoo.cli.{name}'" not in exc.args[0]:
+            raise
+    else:
         return commands[name]
 
     # import from odoo.addons.*.cli

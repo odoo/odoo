@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import http
 from odoo.tests.common import HttpCase
 from odoo.tools import mute_logger, file_open
 
@@ -27,7 +26,7 @@ class TestUploadAttachment(HttpCase):
             response = self.url_open(
                 "/mail/attachment/upload",
                 {
-                    "csrf_token": http.Request.csrf_token(self),
+                    "csrf_token": self.csrf_token(),
                     "thread_id": data["channel_id"],
                     "thread_model": "discuss.channel",
                 },

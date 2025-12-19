@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 import binascii
-import contextlib
 import collections
+import contextlib
 import datetime
 import hmac
 import ipaddress
@@ -16,19 +16,26 @@ from hashlib import sha256
 from itertools import chain
 from zoneinfo import ZoneInfo
 
-from lxml import etree
 from markupsafe import Markup
 from passlib.context import CryptContext as _CryptContext
 
-from odoo import api, fields, models, tools, _
+from odoo import _, api, fields, models, tools
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.http import request, DEFAULT_LANG
-from odoo.tools import email_domain_extract, is_html_empty, frozendict, reset_cached_properties, SQL
+from odoo.http import request
+from odoo.http.session import DEFAULT_LANG
+from odoo.tools import (
+    SQL,
+    email_domain_extract,
+    frozendict,
+    is_html_empty,
+    reset_cached_properties,
+)
 from odoo.tools.date_utils import all_timezones
 
 _logger = logging.getLogger(__name__)
+
 
 class CryptContext:
     def __init__(self, *args, **kwargs):
