@@ -16,7 +16,18 @@ export class Many2ManyBinaryField extends Component {
     }
 
     get files() {
-        return this.props.value.records.map((record) => record.data);
+        const attachments = this.props.value.records.map((record) => record.data);
+        const attachmentsNotSupported = this.props.record.data[this.props.attachmentsNotSupportedField]
+
+        if (this.props.record.resModel == 'account.invoice.send' && attachmentsNotSupported) {
+            for (const attachment of attachments) {
+                if (attachment.id && attachment.id in attachmentsNotSupported) {
+                    attachment.tooltip = attachmentsNotSupported[attachment.id];
+                }
+            }
+        }
+
+        return attachments;
     }
 
     getUrl(id) {
@@ -52,6 +63,7 @@ Many2ManyBinaryField.components = {
 Many2ManyBinaryField.props = {
     ...standardFieldProps,
     acceptedFileExtensions: { type: String, optional: true },
+    attachmentsNotSupportedField: { type: String, optional: true },
     className: { type: String, optional: true },
     uploadText: { type: String, optional: true },
 };
@@ -65,6 +77,7 @@ Many2ManyBinaryField.isEmpty = () => false;
 Many2ManyBinaryField.extractProps = ({ attrs, field }) => {
     return {
         acceptedFileExtensions: attrs.options.accepted_file_extensions,
+        attachmentsNotSupportedField: attrs.options.attachments_not_supported_field,
         className: attrs.class,
         uploadText: field.string,
     };

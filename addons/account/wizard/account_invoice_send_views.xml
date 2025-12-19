@@ -18,6 +18,8 @@
                     <field name="invoice_ids" invisible="1"/>
                     <field name="email_from" invisible="1" />
                     <field name="mail_server_id" invisible="1"/>
+                    <field name="display_attachment_fields" invisible="1"/>
+                    <field name="attachments_not_supported" invisible="1"/>
                     <div name="option_print">
                         <field name="is_print" />
                         <b><label for="is_print"/></b>
@@ -53,15 +55,22 @@
                             <field name="body" class="oe-bordered-editor" options="{'style-inline': true}"/>
                         </div>
                         <group>
-                            <group attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
-                                <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}"/>
-                            </group>
                             <group>
                                 <field name="template_id" options="{'no_create': True, 'no_edit': True}"
                                     context="{'default_model': 'account.move'}"/>
                             </group>
                         </group>
                     </div>
+
+                    <group attrs="{'invisible': [('display_attachment_fields', '=', False)]}">
+                        <field name="attachment_ids"
+                               widget="many2many_binary"
+                               string="Attach a file"
+                               nolabel="1"
+                               colspan="2"
+                               attrs="{'invisible': [('display_attachment_fields', '=', False)]}"
+                               options="{'attachments_not_supported_field': 'attachments_not_supported' }"/>
+                    </group>
 
                     <footer>
                         <button string="Send &amp; Print"

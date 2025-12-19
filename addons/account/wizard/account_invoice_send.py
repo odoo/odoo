@@ -30,6 +30,11 @@ class AccountInvoiceSend(models.TransientModel):
         compute='_compute_move_types',
         readonly=True)
 
+    # Technical field to display or not the attachment button
+    display_attachment_fields = fields.Boolean(compute='_compute_display_attachment_fields')
+    # Technical field to display or not a warning icon besides attachments not supported
+    attachments_not_supported = fields.Json(compute='_compute_attachments_not_supported')
+
     @api.model
     def default_get(self, fields):
         res = super(AccountInvoiceSend, self).default_get(fields)
@@ -111,6 +116,16 @@ class AccountInvoiceSend(models.TransientModel):
                     wizard.invoice_without_email = False
             else:
                 wizard.invoice_without_email = False
+
+    @api.depends('is_email', 'composition_mode')
+    def _compute_display_attachment_fields(self):
+        for wizard in self:
+            wizard.display_attachment_fields = wizard.is_email and wizard.composition_mode != 'mass_mail'
+
+    @api.depends('display_attachment_fields', 'attachment_ids')
+    def _compute_attachments_not_supported(self):
+        for wizard in self:
+            wizard.attachments_not_supported = {}
 
     def _send_email(self):
         if self.is_email:
