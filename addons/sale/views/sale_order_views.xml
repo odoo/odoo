@@ -188,10 +188,22 @@
         <field name="mode">primary</field>
         <field name="priority">2</field>
         <field name="arch" type="xml">
-            <!-- Dummy view content since empty views are not supported atm -->
-            <list position="attributes">
-                <attribute name="string">Sales Orders</attribute>
-            </list>
+            <xpath expr="//header/button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="before">
+                <button
+                    string="Deliver"
+                    name="deliver_sold_quantity"
+                    type="object"
+                    class="btn-secondary"/>
+            </xpath>
+            <field name="invoice_status" position="before">
+                <field
+                    name="delivery_status"
+                    decoration-success="delivery_status == 'full'"
+                    decoration-warning="delivery_status == 'partial'"
+                    decoration-info="delivery_status in ['pending', 'started']"
+                    widget="badge"
+                    optional="hide"/>
+            </field>
         </field>
     </record>
 
@@ -311,6 +323,13 @@
                     context="{'default_advance_payment_method': 'percentage'}"
                     data-hotkey="q"
                     invisible="invoice_status != 'no' or state != 'sale'"/>
+                <button
+                    string="Deliver"
+                    id="deliver_quantities"
+                    name="deliver_sold_quantity"
+                    type="object"
+                    invisible="not show_deliver_button"
+                    data-hotkey="d"/>
                 <button
                     string="Send"
                     id="quotation_send_primary"
@@ -578,6 +597,7 @@
                                                 widget="many2one_uom"
                                                 readonly="product_uom_readonly"
                                                 required="not display_type and not is_downpayment"/>
+                                            <widget name="simple_qty_at_date_widget"/>
                                         </div>
                                         <label for="qty_delivered" string="Delivered" invisible="parent.state != 'sale'"/>
                                         <div name="delivered_qty" invisible="parent.state != 'sale'">
@@ -722,6 +742,7 @@
                                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
                                     readonly="is_downpayment"/>
+                                <widget name="simple_qty_at_date_widget" width="20px"/>
                                 <field
                                     name="qty_delivered"
                                     string="Delivered"
@@ -939,6 +960,7 @@
                                 <div name="commitment_date_div" class="o_row">
                                     <field name="commitment_date" readonly="state == 'cancel' or locked"/>
                                 </div>
+                                <field name="delivery_status" invisible="state != 'sale'"/>
                             </group>
                             <group name="sale_reporting" string="Tracking">
                                 <field name="origin"/>

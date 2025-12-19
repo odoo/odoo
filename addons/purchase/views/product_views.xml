@@ -105,14 +105,34 @@
             <field name="arch" type="xml">
                 <button name="action_open_documents" position="after">
                     <button class="oe_stat_button" name="action_view_po"
-                        groups="purchase.group_purchase_user"
-                        type="object" icon="fa-credit-card" invisible="not purchase_ok" help="Purchased in the last 365 days">
-                        <div class="o_field_widget o_stat_info">
+                            groups="purchase.group_purchase_user"
+                            type="object" icon="fa-credit-card" invisible="not purchase_ok"
+                            help="Purchased in the last 365 days. Incoming represents confirmed purchase orders not received or partially received">
+                        <div class="o_field_widget o_stat_info" invisible="is_storable == True">
                             <span class="o_stat_value d-flex gap-1">
                                 <field name="purchased_product_qty" widget="statinfo" nolabel="1" class="oe_inline" options="{'hide_trailing_zeros': true}"/>
-                                <field name="uom_name"  class="oe_inline" groups="uom.group_uom"/>
+                                <field name="uom_name" class="oe_inline" groups="uom.group_uom"/>
                             </span>
                             <span class="o_stat_text">Purchased</span>
+                        </div>
+                        <div class="d-flex flex-row gap-1 ms-1" invisible="is_storable == False">
+                            <div class="o_field_widget o_stat_info flex-column align-items-end gap-1">
+                                <span class="o_stat_value d-flex gap-1">
+                                    <field name="purchased_product_qty" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
+                                </span>
+                                <span class="o_stat_value text-info d-flex gap-1">
+                                    <field name="incoming_qty" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
+                                </span>
+                            </div>
+                            <div class="o_field_widget o_stat_info flex-column align-items-start gap-1">
+                                <span class="o_stat_value">
+                                    <field name="uom_name" widget="statinfo" nolabel="1" groups="uom.group_uom"/>
+                                    <span groups="!uom.group_uom">Purchased</span>
+                                </span>
+                                <span class="o_stat_value text-muted">
+                                    Incoming
+                                </span>
+                            </div>
                         </div>
                     </button>
                 </button>
@@ -126,14 +146,34 @@
             <field name="arch" type="xml">
                 <div name="button_box" position="inside">
                     <button class="oe_stat_button" name="action_view_po"
-                        groups="purchase.group_purchase_user"
-                        type="object" icon="fa-credit-card" invisible="not purchase_ok" help="Purchased in the last 365 days">
-                        <div class="o_field_widget o_stat_info">
+                            groups="purchase.group_purchase_user"
+                            type="object" icon="fa-credit-card" invisible="not purchase_ok"
+                            help="Purchased in the last 365 days. Incoming represents confirmed sales order not received, or partially received">
+                        <div class="o_field_widget o_stat_info" invisible="is_storable == True">
                             <span class="o_stat_value d-flex gap-1">
                                 <field name="purchased_product_qty" widget="statinfo" nolabel="1" class="oe_inline" options="{'hide_trailing_zeros': true}"/>
-                                <field name="uom_name"  class="oe_inline" groups="uom.group_uom"/>
+                                <field name="uom_name" class="oe_inline" groups="uom.group_uom"/>
                             </span>
                             <span class="o_stat_text">Purchased</span>
+                        </div>
+                        <div class="d-flex flex-row gap-1 ms-1" invisible="is_storable == False">
+                            <div class="o_field_widget o_stat_info flex-column align-items-end gap-1">
+                                <span class="o_stat_value d-flex gap-1">
+                                    <field name="purchased_product_qty" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
+                                </span>
+                                <span class="o_stat_value d-flex gap-1">
+                                    <field name="incoming_qty" widget="statinfo" nolabel="1" options="{'hide_trailing_zeros': true}"/>
+                                </span>
+                            </div>
+                            <div class="o_field_widget o_stat_info flex-column align-items-start gap-1">
+                                <span class="o_stat_value">
+                                    <field name="uom_name" widget="statinfo" nolabel="1" groups="uom.group_uom"/>
+                                    <span groups="!uom.group_uom">Purchased</span>
+                                </span>
+                                <span class="o_stat_value text-muted">
+                                    Incoming
+                                </span>
+                            </div>
                         </div>
                     </button>
                 </div>

@@ -136,6 +136,7 @@
                     <button name="button_approve" type="object" invisible="state != 'to approve'" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" data-hotkey="z"/>
                     <button name="action_rfq_send" invisible="state != 'sent'" string="Send RFQ" type="object" context="{'send_rfq':True}" data-hotkey="g"/>
                     <button name="button_confirm" type="object" invisible="state != 'draft'" context="{'validate_analytic': True}" string="Confirm Order" id="draft_confirm" data-hotkey="q"/>
+                    <button name="action_receive" class="btn-primary" type="object" string="Receive" data-hotkey="e" invisible="not show_receive_button"/>
                     <widget name="purchase_file_uploader" invisible="state != 'purchase'"/>
                     <button name="action_rfq_send" invisible="state != 'purchase'" string="Send PO" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
                     <button name="action_acknowledge" string="Acknowledge" type="object" invisible="acknowledged or state != 'purchase'"/>
@@ -231,6 +232,16 @@
                                     <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself." invisible="not id"/>
                                 </div>
                             </div>
+                            <label for="receipt_status" invisible="state !='purchase'"/>
+                                <div class="d-flex align-items-center" invisible="state !='purchase'">
+                                    <div name="receipt_status_on_form" class="me-3">
+                                        <field name="receipt_status" widget="badge" invisible="state != 'purchase'"
+                                            decoration-success="receipt_status == 'full'"
+                                            decoration-info="receipt_status == 'partial'"
+                                            decoration-danger="receipt_status == 'pending' and date_planned and date_planned &lt; context_today().strftime('%Y-%m-%d')"
+                                            decoration-muted="receipt_status == 'pending' and date_planned and date_planned &gt;= context_today().strftime('%Y-%m-%d')"/>
+                                    </div>
+                                </div>
                         </group>
                     </group>
                     <notebook>
@@ -403,6 +414,7 @@
                                 </group>
                                 <group name="tracking_info" string="tracking">
                                     <field name="origin"/>
+                                    <field name="receipt_status" invisible="state != 'purchase'"/>
                                 </group>
                             </group>
                         </page>
@@ -592,7 +604,7 @@
                 multi_edit="1"
                 class="o_purchase_order" js_class="purchase_dashboard_list" sample="1">
                     <header>
-                        <button name="button_cancel" type="object" string="Cancel"
+                        <button name="button_cancel" type="object" string="Cancel" data-hotkey="x"
                             confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
@@ -635,7 +647,8 @@
                     sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
-                        <button name="button_cancel" type="object" string="Cancel"
+                        <button name="action_receive" type="object" string="Receive" data-hotkey="e"/>
+                        <button name="button_cancel" type="object" string="Cancel" data-hotkey="x"
                             confirm="Are you sure you want to cancel the selected RFQs/Orders?"/>
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
@@ -655,6 +668,11 @@
                     <field name="state" column_invisible="True"/>
                     <field name="amount_total_cc" sum="Total amount" widget="monetary" optional="hide"/>
                     <field name="company_currency_id" column_invisible="True"/>
+                    <field name="receipt_status" optional="hide" widget="badge"
+                        decoration-success="receipt_status=='full'"
+                        decoration-info="receipt_status == 'partial'"
+                        decoration-danger="receipt_status == 'pending' and date_planned and date_planned &lt; context_today().strftime('%Y-%m-%d')"
+                        decoration-muted="receipt_status == 'pending' and date_planned and date_planned &gt;= context_today().strftime('%Y-%m-%d')"/>
                     <field name="invoice_status" widget="badge" decoration-success="invoice_status == 'invoiced'" decoration-info="invoice_status == 'to invoice'" optional="show"/>
                     <field name="date_planned" column_invisible="context.get('quotation_only', False)" optional="show" readonly="1"/>
                 </list>

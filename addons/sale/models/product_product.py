@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tools import float_round
 
 
@@ -40,6 +41,26 @@ class ProductProduct(models.Model):
                 continue
             product.sales_count = product.uom_id.round(r.get(product.id, 0))
         return r
+
+    @api.depends_context("to_date")
+    def _compute_forecasted_without_stock(self):
+        """ Substract sales lines not delivered from forecasted tally """
+        res = super()._compute_forecasted_without_stock()
+        domain = Domain.AND([
+            Domain('order_id.state', '=', 'sale'),
+            Domain('product_id', 'in', self.ids),
+        ])
+        if self.env.context.get("to_date"):
+            domain = Domain.AND([
+                domain,
+                [('order_id.commitment_date', '<=', self.env.context.get("to_date").date())]
+            ])
+        order_lines = self.env['sale.order.line']._read_group(domain, ['product_id', 'product_uom_id'], ['product_uom_qty:sum', 'qty_delivered:sum'])
+        for product, line_uom, qty_sold, qty_delivered in order_lines:
+            to_deliver = (qty_sold - qty_delivered) * line_uom.factor / product.uom_id.factor
+            res[product.id]['outgoing_qty'] += to_deliver
+            res[product.id]['virtual_available'] -= to_deliver
+        return res
 
     @api.onchange('type')
     def _onchange_type(self):
@@ -113,7 +134,7 @@ class ProductProduct(models.Model):
             so_lines.product_uom_id = to_uom_id
         return super()._update_uom(to_uom_id)
 
-    def _trigger_uom_warning(self):        
+    def _trigger_uom_warning(self):
         res = super()._trigger_uom_warning()
         if res:
             return res

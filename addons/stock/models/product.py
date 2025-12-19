@@ -50,7 +50,7 @@ class ProductProduct(models.Model):
     stock_move_ids = fields.One2many('stock.move', 'product_id') # used to compute quantities
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
-        inverse='_inverse_qty_available', digits='Product Unit', compute_sudo=False,
+        inverse='_inverse_qty_available', digits='Product Unit', compute_sudo=False, store=False,
         help="Current quantity of products.\n"
              "In a context with a single Stock Location, this includes "
              "goods stored at this Location, or any of its children.\n"
@@ -62,8 +62,6 @@ class ProductProduct(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     virtual_available = fields.Float(
-        'Forecasted Quantity', compute='_compute_quantities', search='_search_virtual_available',
-        digits='Product Unit', compute_sudo=False,
         help="Forecast quantity (computed as Quantity On Hand "
              "- Outgoing + Incoming)\n"
              "In a context with a single Stock Location, this includes "
@@ -86,8 +84,6 @@ class ProductProduct(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     incoming_qty = fields.Float(
-        'Incoming', compute='_compute_quantities', search='_search_incoming_qty',
-        digits='Product Unit', compute_sudo=False,
         help="Quantity of planned incoming products.\n"
              "In a context with a single Stock Location, this includes "
              "goods arriving to this Location, or any of its children.\n"
@@ -97,8 +93,6 @@ class ProductProduct(models.Model):
              "Otherwise, this includes goods arriving to any Stock "
              "Location with 'internal' type.")
     outgoing_qty = fields.Float(
-        'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
-        digits='Product Unit', compute_sudo=False,
         help="Quantity of planned outgoing products.\n"
              "In a context with a single Stock Location, this includes "
              "goods leaving this Location, or any of its children.\n"
@@ -428,26 +422,8 @@ class ProductProduct(models.Model):
             return [('id', 'in', product_ids)]
         return self._search_product_quantity(operator, value, 'qty_available')
 
-    def _search_virtual_available(self, operator, value):
-        # TDE FIXME: should probably clean the search methods
-        return self._search_product_quantity(operator, value, 'virtual_available')
-
-    def _search_incoming_qty(self, operator, value):
-        # TDE FIXME: should probably clean the search methods
-        return self._search_product_quantity(operator, value, 'incoming_qty')
-
-    def _search_outgoing_qty(self, operator, value):
-        # TDE FIXME: should probably clean the search methods
-        return self._search_product_quantity(operator, value, 'outgoing_qty')
-
     def _search_free_qty(self, operator, value):
         return self._search_product_quantity(operator, value, 'free_qty')
-
-    def _search_product_quantity(self, operator, value, field):
-        # Order the search on `id` to prevent the default order on the product name which slows
-        # down the search.
-        ids = self.with_context(prefetch_fields=False).search_fetch([], [field], order='id').filtered_domain([(field, operator, value)]).ids
-        return [('id', 'in', ids)]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
@@ -776,9 +752,6 @@ class ProductTemplate(models.Model):
         # Return the current user unless it's OdooBot
         return not self.env.user._is_superuser() and self.env.uid
 
-    is_storable = fields.Boolean(
-        'Track Inventory', store=True, compute='compute_is_storable', readonly=False,
-        default=False, precompute=True, tracking=True, help='A storable product is a product for which you manage stock.')
     responsible_id = fields.Many2one(
         'res.users', string='Responsible', default=lambda self: self._default_responsible_id(), company_dependent=True, check_company=True,
         help="This user will be responsible of the next activities related to logistic operations for this product.")
@@ -812,16 +785,7 @@ class ProductTemplate(models.Model):
     description_pickingin = fields.Text('Description on Receptions', translate=True)
     qty_available = fields.Float(
         'Quantity On Hand', compute='_compute_quantities', search='_search_qty_available',
-        inverse='_inverse_qty_available',compute_sudo=False, digits='Product Unit')
-    virtual_available = fields.Float(
-        'Forecasted Quantity', compute='_compute_quantities', search='_search_virtual_available',
-        compute_sudo=False, digits='Product Unit')
-    incoming_qty = fields.Float(
-        'Incoming', compute='_compute_quantities', search='_search_incoming_qty',
-        compute_sudo=False, digits='Product Unit')
-    outgoing_qty = fields.Float(
-        'Outgoing', compute='_compute_quantities', search='_search_outgoing_qty',
-        compute_sudo=False, digits='Product Unit')
+        inverse='_inverse_qty_available', compute_sudo=False, digits='Product Unit')
     # The goal of these fields is to be able to put some keys in context from search view in order
     # to influence computed field.
     location_id = fields.Many2one('stock.location', 'Location', store=False)
@@ -846,11 +810,6 @@ class ProductTemplate(models.Model):
         string="Category Routes", related='categ_id.total_route_ids', related_sudo=False)
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
-    show_qty_update_button = fields.Boolean(compute='_compute_show_qty_update_button')
-
-    @api.depends('type')
-    def compute_is_storable(self):
-        self.filtered(lambda t: t.type != 'consu' and t.is_storable).is_storable = False
 
     @api.depends('lot_sequence_id', 'lot_sequence_id.prefix')
     def _compute_serial_prefix_format(self):
@@ -916,35 +875,7 @@ class ProductTemplate(models.Model):
     )
     @api.depends_context('warehouse_id')
     def _compute_quantities(self):
-        res = self._compute_quantities_dict()
-        for template in self.with_context(skip_qty_available_update=True):
-            template.qty_available = res[template.id]['qty_available']
-            template.virtual_available = res[template.id]['virtual_available']
-            template.incoming_qty = res[template.id]['incoming_qty']
-            template.outgoing_qty = res[template.id]['outgoing_qty']
-
-    def _compute_quantities_dict(self):
-        variants_available = {
-            p['id']: p for p in self.product_variant_ids._origin.read(['qty_available', 'virtual_available', 'incoming_qty', 'outgoing_qty'])
-        }
-        prod_available = {}
-        for template in self:
-            qty_available = 0
-            virtual_available = 0
-            incoming_qty = 0
-            outgoing_qty = 0
-            for p in template.product_variant_ids._origin:
-                qty_available += variants_available[p.id]["qty_available"]
-                virtual_available += variants_available[p.id]["virtual_available"]
-                incoming_qty += variants_available[p.id]["incoming_qty"]
-                outgoing_qty += variants_available[p.id]["outgoing_qty"]
-            prod_available[template.id] = {
-                "qty_available": qty_available,
-                "virtual_available": virtual_available,
-                "incoming_qty": incoming_qty,
-                "outgoing_qty": outgoing_qty,
-            }
-        return prod_available
+        return super()._compute_quantities()
 
     def _compute_nbr_moves(self):
         res = defaultdict(lambda: {'moves_in': 0, 'moves_out': 0})

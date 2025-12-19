@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
 
-from odoo import Command
+from odoo import fields, Command
 from odoo.exceptions import UserError, AccessError
 from odoo.tests import tagged
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
@@ -407,3 +408,87 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(so.order_line.tax_ids, self.company_data['default_tax_sale'])
         so.action_confirm()
         self.assertEqual(so.order_line.purchase_line_ids.tax_ids, self.company_data['default_tax_purchase'])
+
+    def test_sale_purchase_forecasted_stock_without_stock(self):
+        """ Test available and forecasted qty in SO line widget """
+        if self.env['ir.module.module']._get('stock').state == 'installed':
+            self.skipTest("Stock is installed, can't test stock without stock flow.")  # Will still run in single app build
+
+        # Setup: Create a product with qty on hand and SO line with that product
+        self.product.qty_available = 25  # consu product
+        self.product.is_storable = True
+        self.assertEqual(self.product.virtual_available, 25)  # Makes sure no PO or SO impacting forecasted
+        sale_order_1, sale_order_2 = self.env['sale.order'].create([{
+            'partner_id': self.partner_a.id,
+            'commitment_date': fields.Datetime.now() + timedelta(days=2),
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 10,
+                })
+            ]}, {
+            'partner_id': self.partner_a.id,
+                'commitment_date': fields.Datetime.now() + timedelta(days=12),  # After PO below
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product.id,
+                        'product_uom_qty': 20,
+                    })
+                ]
+        }])
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.product_a.name,
+                'product_id': self.product.id,
+                'product_qty': 50,
+                'date_planned': fields.Datetime.now() + timedelta(days=10)
+            })],
+        })
+
+        self.assertEqual(sale_order_1.order_line[0].qty_delivered, 0.0)
+        self.assertEqual(sale_order_1.order_line[0].qty_available_today, 25.0)
+        self.assertEqual(self.product.outgoing_qty, 0.0)
+
+        # confirming order 1 should show up on incoming qty ANd forecasted at_date
+        sale_order_1.action_confirm()
+        self.env.invalidate_all()
+        self.assertEqual(self.product.outgoing_qty, 10.0)
+        self.assertEqual(sale_order_1.order_line[0].virtual_available_at_date, 15.0)
+        self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 15.0)
+
+        # Valildating purchase should show up on incoming qty ANd forecasted at_date ONLY on SOs with date > day + 10
+        po.button_confirm()
+        self.env.invalidate_all()
+        self.assertEqual(self.product.incoming_qty, 50.0)
+        self.assertEqual(sale_order_1.order_line[0].virtual_available_at_date, 15.0)
+        self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 65.0)
+
+        # confirming order 2 should show up on incoming qty ANd forecasted at_date ONLY on SOs with date > day + 12
+        sale_order_2.action_confirm()
+        self.env.invalidate_all()
+        self.assertEqual(self.product.outgoing_qty, 30.0)
+        self.assertEqual(sale_order_1.order_line[0].virtual_available_at_date, 15.0)
+        self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 45.0)
+
+        sale_order_1.deliver_sold_quantity()
+        self.env.invalidate_all()
+        self.assertEqual(self.product.qty_available, 15.0)  # 25 on_hand - 10 sold
+        self.assertEqual(self.product.outgoing_qty, 20.0)  # 30 outgoing - 10 sold
+        self.assertEqual(sale_order_2.order_line[0].qty_available_today, 15.0)
+        self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 45.0)
+
+        po.action_receive()
+        self.env.invalidate_all()
+        self.assertEqual(self.product.qty_available, 65.0)  # 15 on_hand + 50 received
+        self.assertEqual(self.product.incoming_qty, 0)
+        self.assertEqual(sale_order_2.order_line[0].qty_available_today, 65.0)
+        self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 45.0)
+
+        sale_order_2.deliver_sold_quantity()
+        self.env.invalidate_all()
+        self.assertEqual(self.product.qty_available, 45.0)  # 65 on_hand - 20 sold
+        self.assertEqual(self.product.outgoing_qty, 0.0)
+
+        self.product.is_storable = False  # revert to original state

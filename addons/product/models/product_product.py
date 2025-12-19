@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-
 from collections import defaultdict
 
 from odoo import _, api, fields, models, tools
@@ -72,7 +71,16 @@ class ProductProduct(models.Model):
         Used to compute margins on sale orders.""")
     volume = fields.Float('Volume', digits='Volume')
     weight = fields.Float('Weight', digits='Stock Weight')
-
+    qty_available = fields.Float('Quantity On Hand', company_dependent=True, digits='Product Unit')
+    virtual_available = fields.Float(
+        'Forecasted Quantity', compute='_compute_quantities', compute_sudo=False, search='_search_virtual_available',
+        digits='Product Unit', help="Forecasted quantity if all confirmed sales and purchase orders were delivered.")
+    incoming_qty = fields.Float(
+        'Incoming', compute='_compute_quantities', compute_sudo=False, search='_search_incoming_qty', digits='Product Unit',
+        help="Quantity of planned incoming quantities from all confirmed purchase orders not received.")
+    outgoing_qty = fields.Float(
+        'Outgoing', compute='_compute_quantities', compute_sudo=False, search='_search_outgoing_qty', digits='Product Unit',
+        help="Quantity of planned outgoing quantities from all confirmed sale orders not delivered.")
     pricelist_rule_ids = fields.One2many(
         string="Pricelist Rules",
         comodel_name='product.pricelist.item',
@@ -363,6 +371,46 @@ class ProductProduct(models.Model):
                     break
             else:
                 product.partner_ref = product.display_name
+
+    @api.depends_context('to_date')
+    def _compute_quantities(self):
+        """ Simple per company compute overriden by Stock._compute_quantities """
+        self.virtual_available = 0
+        self.incoming_qty = 0
+        self.outgoing_qty = 0
+
+        products = self.filtered(lambda p: p.type != 'service' and p.is_storable)
+        forecasted = products._compute_forecasted_without_stock()
+        for product in products:
+            vals = forecasted.get(product.id)
+            if not vals:
+                continue
+            product.virtual_available = vals['virtual_available']
+            product.incoming_qty = vals['incoming_qty']
+            product.outgoing_qty = vals['outgoing_qty']
+
+    def _compute_forecasted_without_stock(self):
+        """ Forecast = qty_available + qty purchased not received - qty sold not delivered"""
+        forecast = defaultdict(dict)
+        for product in self:
+            forecast[product.id]['virtual_available'] = product.qty_available
+            forecast[product.id]['incoming_qty'] = 0
+            forecast[product.id]['outgoing_qty'] = 0
+        return forecast
+
+    def _search_virtual_available(self, operator, value):
+        return self._search_product_quantity(operator, value, 'virtual_available')
+
+    def _search_incoming_qty(self, operator, value):
+        return self._search_product_quantity(operator, value, 'incoming_qty')
+
+    def _search_outgoing_qty(self, operator, value):
+        return self._search_product_quantity(operator, value, 'outgoing_qty')
+
+    def _search_product_quantity(self, operator, value, field):
+        # Order the search on `id` to prevent the default order on the product name which slows down the search.
+        ids = self.with_context(prefetch_fields=False).search_fetch([], [field], order='id').filtered_domain([(field, operator, value)]).ids
+        return [('id', 'in', ids)]
 
     def _compute_product_document_count(self):
         for product in self:

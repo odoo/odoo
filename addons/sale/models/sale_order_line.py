@@ -136,6 +136,11 @@ class SaleOrderLine(models.Model):
         domain='[("id", "in", allowed_uom_ids)]',
         store=True, readonly=False, precompute=True, ondelete='restrict')
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
+    qty_available_today = fields.Float(compute='_compute_qty_at_date')
+    virtual_available_at_date = fields.Float(compute='_compute_qty_at_date', digits='Product Unit')
+    display_qty_widget = fields.Boolean(compute='_compute_display_qty_widget')
+    is_storable = fields.Boolean(related='product_id.is_storable')
+    scheduled_date = fields.Datetime(string='Delivery Date', compute='_compute_qty_at_date')
     linked_line_id = fields.Many2one(
         string="Linked Order Line",
         comodel_name='sale.order.line',
@@ -622,6 +627,30 @@ class SaleOrderLine(models.Model):
                 line.technical_price_unit = 0.0
             else:
                 line._reset_price_unit()
+
+    @api.depends('is_storable', 'product_uom_qty', 'qty_delivered', 'state', 'product_uom_id')
+    def _compute_display_qty_widget(self):
+        """Compute the visibility of the inventory widget."""
+        for line in self:
+            qty_to_deliver = line.product_uom_qty - line.qty_delivered
+            if line.state in ('draft', 'sent', 'sale') and line.is_storable and qty_to_deliver > 0:
+                line.display_qty_widget = True
+            else:
+                line.display_qty_widget = False
+
+    @api.depends('product_id', 'order_id.commitment_date', 'display_qty_widget')
+    def _compute_qty_at_date(self):
+        """ Compute the quantity forecasted of product at delivery date"""
+        self.scheduled_date = fields.Date.today()
+        self.virtual_available_at_date = 0
+        self.qty_available_today = 0
+        for line in self:
+            if not line.display_qty_widget:
+                continue
+            schedule_date = line.order_id.commitment_date or line._expected_date()
+            line.scheduled_date = schedule_date
+            line.virtual_available_at_date = line.product_id.with_context(to_date=schedule_date).virtual_available
+            line.qty_available_today = line.product_id.qty_available
 
     def _reset_price_unit(self):
         self.ensure_one()
@@ -1318,6 +1347,9 @@ class SaleOrderLine(models.Model):
             return lines
 
         for line in lines:
+            if line.qty_delivered_method == 'manual' and line.is_storable:
+                qty_delivered = line.product_uom_id._compute_quantity(line.qty_delivered, line.product_id.uom_id)
+                line.product_id.with_context(skip_qty_available_update=True).qty_available -= qty_delivered
             if line.product_id and line.state == 'sale':
                 msg = _("Extra line with %s", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
@@ -1356,6 +1388,14 @@ class SaleOrderLine(models.Model):
             # the field is not sent by the client and expected to be recomputed, but isn't
             # because technical_price_unit is set.
             values.pop('technical_price_unit')
+
+        if 'qty_delivered' in values:
+            for line in self:
+                if line.qty_delivered_method != 'manual' or not line.is_storable:
+                    continue
+                delta_qty_delivered = values['qty_delivered'] - line.qty_delivered
+                delta_qty_delivered = line.product_uom_id._compute_quantity(delta_qty_delivered, line.product_id.uom_id)
+                line.product_id.with_context(skip_qty_available_update=True).qty_available -= delta_qty_delivered
 
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
