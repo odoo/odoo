@@ -8,11 +8,11 @@ class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     @api.model
-    def _get_monthly_demand_moves_location_domain(self):
+    def _get_monthly_demand_moves_location_domain(self, warehouse_id=False):
         subcontracting_location_ids = self.env.companies.subcontracting_location_id.child_internal_location_ids.ids
         domain = Domain.AND([
             Domain.OR([
-                super()._get_monthly_demand_moves_location_domain(),
+                super()._get_monthly_demand_moves_location_domain(warehouse_id),
                 [('location_dest_id', 'in', subcontracting_location_ids)],
             ]),
             [('location_id', 'not in', subcontracting_location_ids)],
