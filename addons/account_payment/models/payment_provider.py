@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -140,6 +140,6 @@ class PaymentProvider(models.Model):
         payment_method = self._get_provider_payment_method(code)
         # If the payment method is used by any payments, we block the uninstallation of the module.
         if self._check_existing_payment(payment_method):
-            raise UserError(_("You cannot uninstall this module as payments using this payment method already exist."))
+            raise UserError(self.env._("You cannot uninstall this module as payments using this payment method already exist."))
         super()._remove_provider(code, **kwargs)
         payment_method.unlink()

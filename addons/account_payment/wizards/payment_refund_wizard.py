@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -39,7 +39,7 @@ class PaymentRefundWizard(models.TransientModel):
     def _check_amount_to_refund_within_boundaries(self):
         for wizard in self:
             if not 0 < wizard.amount_to_refund <= wizard.amount_available_for_refund:
-                raise ValidationError(_(
+                raise ValidationError(self.env._(
                     "The amount to be refunded must be positive and cannot be superior to %s.",
                     wizard.amount_available_for_refund
                 ))

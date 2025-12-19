@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request, route
@@ -28,7 +27,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError as error:
             raise error
         except AccessError:
-            raise ValidationError(_("The access token is invalid."))
+            raise ValidationError(self.env._("The access token is invalid."))
 
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else invoice_sudo.partner_id
@@ -47,12 +46,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         logged_in = not request.env.user._is_public()
         if not logged_in:
-            raise ValidationError(_("Please log in to pay your overdue invoices"))
+            raise ValidationError(self.env._("Please log in to pay your overdue invoices"))
         partner = request.env.user.partner_id
         overdue_invoices = request.env['account.move'].search(self._get_overdue_invoices_domain())
         currencies = overdue_invoices.mapped('currency_id')
         if not all(currency == currencies[0] for currency in currencies):
-            raise ValidationError(_("Impossible to pay all the overdue invoices if they don't share the same currency."))
+            raise ValidationError(self.env._("Impossible to pay all the overdue invoices if they don't share the same currency."))
         self._validate_transaction_kwargs(kwargs)
         return self._process_transaction(partner.id, currencies[0].id, overdue_invoices.ids, payment_reference, **kwargs)
 
@@ -90,14 +89,14 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if invoice_id:
             invoice_sudo = request.env['account.move'].sudo().browse(invoice_id).exists()
             if not invoice_sudo:
-                raise ValidationError(_("The provided parameters are invalid."))
+                raise ValidationError(self.env._("The provided parameters are invalid."))
 
             # Check the access token against the invoice values. Done after fetching the invoice
             # as we need the invoice fields to check the access token.
             if not payment_utils.check_access_token(
                 access_token, invoice_sudo.partner_id.id, amount, invoice_sudo.currency_id.id
             ):
-                raise ValidationError(_("The provided parameters are invalid."))
+                raise ValidationError(self.env._("The provided parameters are invalid."))
 
             kwargs.update({
                 # To display on the payment form; will be later overwritten when creating the tx.

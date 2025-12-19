@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, http
+from odoo import fields, http
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.http import request
 
@@ -74,11 +74,11 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         currency = first_invoice.currency_id
 
         if any(invoice.partner_id != partner for invoice in overdue_invoices):
-            raise ValidationError(_("Overdue invoices should share the same partner."))
+            raise ValidationError(self.env._("Overdue invoices should share the same partner."))
         if any(invoice.company_id != company for invoice in overdue_invoices):
-            raise ValidationError(_("Overdue invoices should share the same company."))
+            raise ValidationError(self.env._("Overdue invoices should share the same company."))
         if any(invoice.currency_id != currency for invoice in overdue_invoices):
-            raise ValidationError(_("Overdue invoices should share the same currency."))
+            raise ValidationError(self.env._("Overdue invoices should share the same currency."))
 
         total_amount = sum(overdue_invoices.mapped('amount_total'))
         amount_residual = sum(overdue_invoices.mapped('amount_residual'))

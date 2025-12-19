@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class AccountMove(models.Model):
@@ -27,7 +27,7 @@ class AccountMove(models.Model):
                     or line.display_type != 'product':
                 continue
             val = line._prepare_fleet_log_service()
-            log = _('Service Vendor Bill: %s', line.move_id._get_html_link())
+            log = self.env._('Service Vendor Bill: %s', line.move_id._get_html_link())
             val_list.append(val)
             log_list.append(log)
         log_service_ids = self.env['fleet.vehicle.log.services'].create(val_list)
@@ -39,7 +39,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'name': _("Services"),
+            'name': self.env._("Services"),
             'res_model': 'fleet.vehicle.log.services',
             'domain': [
                 ('account_move_line_id', 'in', self.line_ids.ids),

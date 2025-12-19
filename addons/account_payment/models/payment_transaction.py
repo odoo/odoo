@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, api, fields, models
 
 
 class PaymentTransaction(models.Model):
@@ -47,7 +47,7 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
 
         action = {
-            'name': _("Invoices"),
+            'name': self.env._("Invoices"),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'target': 'current',
@@ -121,7 +121,7 @@ class PaymentTransaction(models.Model):
                 tx.with_company(tx.company_id)._create_payment()
 
             if tx.payment_id:
-                message = _(
+                message = self.env._(
                     "The payment related to transaction %(ref)s has been posted: %(link)s",
                     ref=tx._get_html_link(),
                     link=tx.payment_id._get_html_link(),

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command, _, api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -24,7 +24,7 @@ class FleetVehicleLogServices(models.Model):
 
     def _inverse_amount(self):
         if any(service.account_move_line_id for service in self):
-            raise UserError(_("You cannot modify amount of services linked to an account move line. Do it on the related accounting entry instead."))
+            raise UserError(self.env._("You cannot modify amount of services linked to an account move line. Do it on the related accounting entry instead."))
 
     @api.depends('account_move_line_id.price_subtotal')
     def _compute_amount(self):
@@ -38,7 +38,7 @@ class FleetVehicleLogServices(models.Model):
             'view_mode': 'form',
             'res_model': 'account.move',
             'target': 'current',
-            'name': _('Bill'),
+            'name': self.env._('Bill'),
             'res_id': self.account_move_line_id.move_id.id,
         }
 
@@ -76,4 +76,4 @@ class FleetVehicleLogServices(models.Model):
         if self.env.context.get('ignore_linked_bill_constraint'):
             return
         if any(log_service.account_move_line_id for log_service in self):
-            raise UserError(_("You cannot delete log services records because one or more of them were bill created."))
+            raise UserError(self.env._("You cannot delete log services records because one or more of them were bill created."))
