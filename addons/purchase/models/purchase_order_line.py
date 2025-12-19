@@ -139,6 +139,7 @@ class PurchaseOrderLine(models.Model):
             partner_id=self.order_id.partner_id,
             currency_id=self.order_id.currency_id or company.currency_id,
             rate=self.order_id.currency_rate,
+            name=self.name,
         )
 
     def _compute_tax_id(self):

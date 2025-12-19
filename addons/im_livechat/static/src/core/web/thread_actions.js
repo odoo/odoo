@@ -5,8 +5,10 @@ import { LivechatChannelInfoList } from "@im_livechat/core/web/livechat_channel_
 
 registerThreadAction("livechat-info", {
     actionPanelComponent: LivechatChannelInfoList,
-    condition: ({ owner, thread }) =>
-        thread?.channel_type === "livechat" && !owner.isDiscussSidebarChannelActions,
+    condition: ({ owner, store, thread }) =>
+        thread?.channel_type === "livechat" &&
+        store.self_partner?.main_user_id?.share === false &&
+        !owner.isDiscussSidebarChannelActions,
     panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
     icon: "fa fa-fw fa-info",
     name: _t("Information"),
@@ -16,8 +18,11 @@ registerThreadAction("livechat-info", {
 });
 registerThreadAction("livechat-status", {
     actionPanelComponent: LivechatChannelInfoList,
-    condition: ({ owner, thread }) =>
-        thread?.channel_type === "livechat" && !thread.livechat_end_dt && !owner.isDiscussContent,
+    condition: ({ owner, store, thread }) =>
+        thread?.channel_type === "livechat" &&
+        store.has_access_livechat &&
+        !thread.livechat_end_dt &&
+        !owner.isDiscussContent,
     dropdown: true,
     dropdownMenuClass: "p-0",
     dropdownTemplate: "im_livechat.LivechatStatusSelection",

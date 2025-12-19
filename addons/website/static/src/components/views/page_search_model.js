@@ -38,13 +38,18 @@ export class PageSearchModel extends SearchModel {
             return;
         }
 
+        const websiteFilters = await this.fetchWebsiteFilters();
+        this._createGroupOfSearchItems(websiteFilters);
+    }
+
+    async fetchWebsiteFilters() {
         let websitePageIds = {};
         if (this.resModel === "website.page") {
             const websiteIds = this.website.websites.map((website) => website.id);
             websitePageIds = await this.orm.call("website", "get_website_page_ids", [websiteIds]);
         }
 
-        const websiteFilters = this.website.websites.map((website) => {
+        return this.website.websites.map((website) => {
             const websiteDomain =
                 this.resModel === "website.page"
                     ? [["id", "in", websitePageIds[website.id] || []]]
@@ -57,8 +62,6 @@ export class PageSearchModel extends SearchModel {
                 type: "filter",
             };
         });
-
-        this._createGroupOfSearchItems(websiteFilters);
     }
 
     /**
@@ -96,5 +99,19 @@ export class PageSearchModel extends SearchModel {
             return this.website.websites.find((w) => w.id === currentWebsite[0]);
         }
         return this.website.websites[0];
+    }
+
+    async refreshFilterForAllWebsites() {
+        const websiteFilters = await this.fetchWebsiteFilters();
+
+        for (const websiteFilter of websiteFilters) {
+            Object.values(this.searchItems).forEach((searchItem) => {
+                if (searchItem.type === "filter" && searchItem.name === websiteFilter.name) {
+                    searchItem.domain = websiteFilter.domain;
+                }
+            });
+        }
+
+        await this._notify();
     }
 }

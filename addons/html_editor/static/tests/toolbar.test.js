@@ -1232,6 +1232,13 @@ test("toolbar should open with image namespace the selection spans an image and 
     expect(queryAll(".o-we-toolbar .btn-group[name='decoration']").length).toBe(0);
 });
 
+test.tags("desktop");
+test("toolbar should not be visible for collapsed selection after image", async () => {
+    await setupEditor(`<p><img class="img-fluid" src="/web/static/img/logo.png">[]</p>`);
+    await animationFrame();
+    await expectElementCount(".o-we-toolbar", 0);
+});
+
 test("plugins can create buttons with text in toolbar", async () => {
     class TestPlugin extends Plugin {
         static id = "TestPlugin";

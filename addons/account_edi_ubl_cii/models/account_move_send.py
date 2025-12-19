@@ -93,6 +93,8 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _get_ubl_available_attachments(self, mail_attachments_widget, invoice_edi_format):
+        if not invoice_edi_format or not mail_attachments_widget:
+            return self.env['ir.attachment'], self.env['ir.attachment']
         attachment_ids = [values['id'] for values in mail_attachments_widget if values.get('manual')]
         attachments = self.env['ir.attachment'].browse(attachment_ids)
 
@@ -256,7 +258,7 @@ class AccountMoveSend(models.AbstractModel):
             additional_document_reference_node = {
                 '_tag': 'cac:AdditionalDocumentReference',
                 'cbc:ID': {'_text': attachment_values['filename']},
-                'cbc:DocumentTypeCode': attachment_values.get('document_type_node', ''),
+                'cbc:DocumentTypeCode': attachment_values.get('document_type_node'),
                 'cac:Attachment': {
                     'cbc:EmbeddedDocumentBinaryObject': {
                         '_text': base64.b64encode(attachment_values['raw']).decode(),

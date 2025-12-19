@@ -141,6 +141,16 @@ describe("Selection collapsed", () => {
                 contentAfter: "<p>abc<br><br>[]<br></p>",
             });
         });
+        test("should insert two line breaks (2 <br>) before contenteditable false element", async () => {
+            await testEditor({
+                contentBefore: `<p>a[]<span contenteditable="false">b</span></p>`,
+                stepFunction: async (editor) => {
+                    await insertLineBreak(editor);
+                    await insertLineBreak(editor);
+                },
+                contentAfter: `<p>a<br><br>[]<span contenteditable="false">b</span></p>`,
+            });
+        });
     });
 
     describe("Format", () => {
