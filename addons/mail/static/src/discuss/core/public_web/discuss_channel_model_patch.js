@@ -208,12 +208,12 @@ const discussChannelPatch = {
         }
     },
     /** @override */
-    openChannel() {
+    _openChannel() {
         if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
             this.setAsDiscussThread();
             return true;
         }
-        return super.openChannel();
+        return super._openChannel();
     },
     get shouldSubscribeToBusChannel() {
         return super.shouldSubscribeToBusChannel || this.isLocallyPinned;

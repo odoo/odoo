@@ -53,6 +53,7 @@ export class ChannelMember extends Record {
      */
     channel_role;
     channelAsSelf = fields.One("discuss.channel", {
+        /** @this {import("models").ChannelMember} */
         compute() {
             if (this.store.self?.eq(this.persona)) {
                 return this.channel_id;

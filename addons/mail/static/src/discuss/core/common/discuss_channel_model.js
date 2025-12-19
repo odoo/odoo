@@ -144,6 +144,12 @@ export class DiscussChannel extends Record {
     /** ⚠️ {@link AwaitChatHubInit} */
     chatWindow = fields.One("ChatWindow", {
         inverse: "channel",
+        onAdd() {
+            if (this.self_member_id && !this.self_member_id.is_pinned) {
+                this.self_member_id.is_pinned = true;
+                this.pinRpc({ pinned: true });
+            }
+        },
         onDelete() {
             this._onDeleteChatWindow();
         },
@@ -561,10 +567,16 @@ export class DiscussChannel extends Record {
 
     onPinStateUpdated() {}
 
-    /**
-     * @returns {boolean} true if the channel was opened, false otherwise
-     */
+    /** @returns {boolean} true if the channel was opened, false otherwise */
     openChannel() {
+        if (this.self_member_id && !this.self_member_id.is_pinned) {
+            this.self_member_id.is_pinned = true;
+            this.pinRpc({ pinned: true });
+        }
+        return this._openChannel();
+    }
+
+    _openChannel() {
         return false;
     }
 
@@ -612,6 +624,7 @@ export class DiscussChannel extends Record {
      */
     async unpinChannel({ notify = true, undos = new Map() } = {}) {
         undos.set(this, []);
+        this.store.has_unpinned_channels = true;
         // Unpin sub-channels first to prevent onPinStateUpdated of parent from removing
         // isLocallyPinned from them before their values are saved for undo.
         for (const subThread of this.sub_channel_ids) {
