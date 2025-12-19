@@ -132,7 +132,6 @@ class TestCrmMailActivity(TestCrmCommon):
             'res_id': self.lead_1.id,
             'res_model_id': self.env.ref('crm.model_crm_lead').id,
         })
-        activity._onchange_activity_type_id()
         self.assertEqual(self.lead_1.activity_type_id, self.activity_type_1)
         self.assertEqual(self.lead_1.activity_summary, self.activity_type_1.summary)
         # self.assertEqual(self.lead.activity_date_deadline, self.activity_type_1.summary)
@@ -157,23 +156,18 @@ class TestCrmMailActivity(TestCrmCommon):
             'res_id': test_lead.id,
             'res_model_id': lead_model_id,
         })
-        activity._onchange_activity_type_id()
 
         # Check the next activity is correct
         self.assertEqual(test_lead.activity_summary, activity.summary)
         self.assertEqual(test_lead.activity_type_id, activity.activity_type_id)
-        # self.assertEqual(fields.Datetime.from_string(self.lead.activity_date_deadline), datetime.now() + timedelta(days=activity.activity_type_id.days))
 
         activity.write({
             'activity_type_id': self.activity_type_2.id,
-            'summary': '',
             'note': 'Content of the activity to log',
         })
-        activity._onchange_activity_type_id()
 
         self.assertEqual(test_lead.activity_summary, activity.activity_type_id.summary)
         self.assertEqual(test_lead.activity_type_id, activity.activity_type_id)
-        # self.assertEqual(fields.Datetime.from_string(self.lead.activity_date_deadline), datetime.now() + timedelta(days=activity.activity_type_id.days))
 
         self.assertEqual(test_lead.activity_ids, activity)
         activity.action_done()

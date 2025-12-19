@@ -186,7 +186,7 @@ class TestCalendarActivity(ActivityScheduleCase):
                 'res_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
                 'summary': 'Meeting with partner',
             })
-        self.assertEqual(activity.date_deadline, date(2025, 6, 19))
+        self.assertEqual(activity.date_deadline, date(2025, 6, 19) + timedelta(days=4))
 
         with freeze_time(datetime(2025, 6, 19, 12, 44, 00)):
             calendar_event = self.env['calendar.event'].create({
@@ -224,7 +224,7 @@ class TestCalendarActivity(ActivityScheduleCase):
                 'res_model_id': self.env['ir.model']._get_id('res.partner'),
                 'summary': 'Meeting with partner',
             })
-        self.assertEqual(activity.date_deadline, date(2025, 6, 19))
+        self.assertEqual(activity.date_deadline, date(2025, 6, 19) + timedelta(days=4))
 
         with freeze_time(datetime(2025, 6, 19, 12, 44, 00)):
             calendar_event = self.env['calendar.event'].create({
