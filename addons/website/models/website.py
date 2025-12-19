@@ -346,10 +346,15 @@ class Website(models.CachedModel):
         for website in websites:
             website._bootstrap_homepage()
 
-        if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
+        if self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
             groups = self.env['res.groups'].concat(*(self.env.ref(it) for it in all_user_groups.split(',')))
-            groups.write({'implied_ids': [(4, self.env.ref('website.group_multi_website').id)]})
+            multi_website_group = self.env.ref('website.group_multi_website')
+
+            # Only add if not already implied
+            groups_to_update = groups.filtered(lambda g: multi_website_group not in g.implied_ids)
+            if groups_to_update:
+                groups_to_update.write({'implied_ids': [(4, multi_website_group.id)]})
 
         return websites
 
