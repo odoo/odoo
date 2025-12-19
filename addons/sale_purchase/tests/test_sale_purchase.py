@@ -2,7 +2,7 @@
 
 from odoo import Command
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
 
 
@@ -437,3 +437,30 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         so.order_line.product_uom_qty = 2
         po_2 = so._get_purchase_orders() - po_1
         self.assertEqual(po_2.order_line.product_qty, 12, "The quantity on the SO line should be converted to the purchase UoM.")
+
+    def test_sol_description_with_same_vendor_customer(self):
+        """
+        Ensure SOL description is computed before saving and that vendor
+        information does not override the product name when the partner
+        is both customer and vendor.
+        """
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_vendor_service.id,
+                'product_code': 'P123',
+                'product_name': 'Name1',
+            })]
+        })
+        with Form(self.env['sale.order']) as order:
+            order.partner_id = self.partner_vendor_service
+            with order.order_line.new() as line:
+                line.product_id = test_product
+                # Product display_name should NOT be overridden
+                product_name = line.product_id.with_context(
+                    partner_id=self.partner_vendor_service.id
+                ).display_name
+                self.assertEqual(product_name, "Test Product")
+                self.assertEqual(line.name, "[P123] Name1")
+        order = order.save()
+        self.assertEqual(order.order_line.name, "[P123] Name1")
