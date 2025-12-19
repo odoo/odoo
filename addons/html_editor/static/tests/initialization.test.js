@@ -60,15 +60,21 @@ describe("No orphan inline elements compatibility mode", () => {
         });
     });
 
-    test("should not transform <br> inside <p>", async () => {
+    test("should not transform <br> inside <p> (1)", async () => {
         await testEditor({
             contentBefore: "<p>ab<br>c</p>",
             contentAfter: "<p>ab<br>c</p>",
         });
+    });
+
+    test("should not transform <br> inside <p> (2)", async () => {
         await testEditor({
             contentBefore: "<p>ab<br>c</p><p>d<br></p>",
             contentAfter: "<p>ab<br>c</p><p>d<br></p>",
         });
+    });
+
+    test("should not transform <br> inside <p> (3)", async () => {
         await testEditor({
             contentBefore: "xx<p>ab<br>c</p>d<br>yy",
             contentAfter: "<div>xx</div><p>ab<br>c</p><div>d</div><div>yy</div>",
@@ -301,14 +307,16 @@ describe("color normalization", () => {
 });
 
 describe("formatting normalization", () => {
-    test("should unwrap nested identical bold tags", async () => {
-        for (const tag of BOLD_TAGS) {
+    let count = 1;
+    for (const tag of BOLD_TAGS) {
+        test(`should unwrap nested identical bold tags (${count})`, async () => {
             await testEditor({
                 contentBefore: `<p>a${tag(`b${tag(`c${tag(`d`)}`)}e`)}f</p>`,
                 contentAfter: `<p>a${tag("bcde")}f</p>`,
             });
-        }
-    });
+        });
+        count++;
+    }
 
     test("should merge nested strong inside formatting tags", async () => {
         await testEditor({
@@ -350,12 +358,12 @@ describe("formatting normalization", () => {
         });
     });
 
-    test("merges adjacent formattable tags", async () => {
-        for (const tagName of FORMATTABLE_TAGS.map((tag) => tag.toLowerCase())) {
+    for (const tagName of FORMATTABLE_TAGS.map((tag) => tag.toLowerCase())) {
+        test(`merges adjacent formattable ${tagName}`, async () => {
             await testEditor({
                 contentBefore: `<p><${tagName}>A</${tagName}><${tagName}>B</${tagName}></p>`,
                 contentAfter: `<p><${tagName}>AB</${tagName}></p>`,
             });
-        }
-    });
+        });
+    }
 });

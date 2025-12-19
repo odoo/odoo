@@ -5,7 +5,7 @@ import { toggleOrderedList, toggleUnorderedList, toggleCheckList } from "../_hel
 import { expandToolbar } from "../_helpers/toolbar";
 
 describe("Mixed", () => {
-    test("should turn an ordered list into an unordered list", async () => {
+    test("should turn an ordered list into an unordered list (1)", async () => {
         await testEditor({
             contentBefore: "<ol><li>a[b]c</li></ol>",
             stepFunction: toggleUnorderedList,
@@ -13,11 +13,27 @@ describe("Mixed", () => {
         });
     });
 
-    test("should turn an unordered list into an ordered list", async () => {
+    test("should turn an ordered list into an unordered list (2)", async () => {
+        await testEditor({
+            contentBefore: '<ol><li><a href="http://test.com">[test]</a></li></ol>',
+            stepFunction: toggleUnorderedList,
+            contentAfter: '<ul><li><a href="http://test.com">[test]</a></li></ul>',
+        });
+    });
+
+    test("should turn an unordered list into an ordered list (1)", async () => {
         await testEditor({
             contentBefore: "<ul><li>a[b]c</li></ul>",
             stepFunction: toggleOrderedList,
             contentAfter: "<ol><li>a[b]c</li></ol>",
+        });
+    });
+
+    test("should turn an unordered list into an ordered list (2)", async () => {
+        await testEditor({
+            contentBefore: '<ul><li><a href="http://test.com">[test]</a></li></ul>',
+            stepFunction: toggleOrderedList,
+            contentAfter: '<ol><li><a href="http://test.com">[test]</a></li></ol>',
         });
     });
 
@@ -373,11 +389,20 @@ describe("Mixed", () => {
         });
     });
 
-    test("should turn an unordered list into a checklist", async () => {
+    test("should turn an unordered list into a checklist (1)", async () => {
         await testEditor({
             contentBefore: "<ul><li>a[b]c</li></ul>",
             stepFunction: toggleCheckList,
             contentAfter: '<ul class="o_checklist"><li>a[b]c</li></ul>',
+        });
+    });
+
+    test("should turn an unordered list into a checklist (2)", async () => {
+        await testEditor({
+            contentBefore: '<ul><li><a href="http://test.com">[test]</a></li></ul>',
+            stepFunction: toggleCheckList,
+            contentAfter:
+                '<ul class="o_checklist"><li><a href="http://test.com">[test]</a></li></ul>',
         });
     });
 
