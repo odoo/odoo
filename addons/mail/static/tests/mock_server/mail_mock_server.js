@@ -1078,6 +1078,16 @@ function _process_request_for_all(store, name, params, context = {}) {
             ),
             ["is_favorite"]
         );
+        store.add({
+            has_unpinned_channels:
+                DiscussChannelMember.search_count(
+                    [
+                        ["is_self", "=", true],
+                        ["is_pinned", "=", false],
+                    ],
+                    makeKwArgs({ limit: 1 })
+                ) > 0,
+        });
     }
     if (name === "mail.thread") {
         store.add(
@@ -1110,6 +1120,16 @@ function _process_request_for_all(store, name, params, context = {}) {
             ["is_self", "=", true],
         ]);
         DiscussChannelMember._channel_pin(memberIds, params.pinned);
+        store.add({
+            has_unpinned_channels:
+                DiscussChannelMember.search_count(
+                    [
+                        ["is_self", "=", true],
+                        ["is_pinned", "=", false],
+                    ],
+                    makeKwArgs({ limit: 1 })
+                ) > 0,
+        });
     }
     if (name === "/discuss/get_or_create_chat") {
         const channelId = DiscussChannel._get_or_create_chat(params.partners_to);

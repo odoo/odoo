@@ -245,7 +245,7 @@ registerThreadAction("hide", {
         (channel?.canHide ||
             channel?.sub_channel_ids.some((subThread) => subThread.channel.canHide)) &&
         !owner.isDiscussContent,
-    icon: "fa fa-fw fa-times-circle",
+    icon: "fa fa-fw fa-eye-slash",
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel} param0.channel
@@ -257,9 +257,8 @@ registerThreadAction("hide", {
      * @param {import("models").DiscussChannel} param0.channel
      */
     onSelected: ({ channel }) => channel.unpinChannel(),
-    partition: ({ owner }) => owner.env.inChatWindow,
     sequence: 10,
-    sequenceGroup: 40,
+    sequenceGroup: 35,
 });
 registerThreadAction("leave", {
     /**
@@ -280,7 +279,6 @@ registerThreadAction("leave", {
      * @param {import("models").DiscussChannel} param0.channel
      */
     onSelected: ({ channel }) => channel.leaveChannel(),
-    partition: ({ owner }) => owner.env.inChatWindow,
     sequence: 20,
     sequenceGroup: 40,
     tags: ACTION_TAGS.DANGER,
