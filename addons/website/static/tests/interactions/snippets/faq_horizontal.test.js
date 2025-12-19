@@ -28,7 +28,7 @@ const getTemplate = function (headerType) {
                         <hgroup class="col-lg-4" role="heading" aria-level="3">
                             <div class="s_faq_horizontal_entry_title position-lg-sticky pb-lg-3 transition-base overflow-auto" style="top: 79.9773px; max-height: calc(-119.977px + 100vh);">
                                 <h3 class="h5-fs">Getting Started</h3>
-                                <p class="o_small text-muted">Getting started with our product is a breeze, thanks to our well-structured and comprehensive onboarding process.</p>
+                                <p class="o_small-fs text-muted">Getting started with our product is a breeze, thanks to our well-structured and comprehensive onboarding process.</p>
                             </div>
                         </hgroup>
                         <span class="col-lg-7 offset-lg-1 d-block">
@@ -45,7 +45,7 @@ const getTemplate = function (headerType) {
                         <hgroup class="col-lg-4" role="heading" aria-level="3">
                             <div class="s_faq_horizontal_entry_title position-lg-sticky pb-lg-3 transition-base overflow-auto" style="top: 79.9773px; max-height: calc(-119.977px + 100vh);">
                                 <h3 class="h5-fs">Updates and Improvements</h3>
-                                <p class="o_small text-muted">We are committed to continuous improvement, regularly releasing updates and new features based on user feedback and technological advancements.</p>
+                                <p class="o_small-fs text-muted">We are committed to continuous improvement, regularly releasing updates and new features based on user feedback and technological advancements.</p>
                             </div>
                         </hgroup>
                         <span class="col-lg-7 offset-lg-1 d-block">
@@ -63,7 +63,7 @@ const getTemplate = function (headerType) {
                         <hgroup class="col-lg-4" role="heading" aria-level="3">
                             <div class="s_faq_horizontal_entry_title position-lg-sticky pb-lg-3 transition-base overflow-auto" style="top: 79.9773px; max-height: calc(-119.977px + 100vh);">
                                 <h3 class="h5-fs">Support and Resources</h3>
-                                <p class="o_small text-muted">We are committed to providing exceptional support and resources to help you succeed with our platform.</p>
+                                <p class="o_small-fs text-muted">We are committed to providing exceptional support and resources to help you succeed with our platform.</p>
                             </div>
                         </hgroup>
                         <span class="col-lg-7 offset-lg-1 d-block">
