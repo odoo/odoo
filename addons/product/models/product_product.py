@@ -811,7 +811,7 @@ class ProductProduct(models.Model):
         def get_display_name(name, code):
             if self.env.context.get('display_default_code', True) and code:
                 if self.env.context.get('formatted_display_name'):
-                    return f'{name}\t--{code}--'
+                    return f'{name}\v--{code}--'
                 return f'[{code}] {name}'
             return name
 
