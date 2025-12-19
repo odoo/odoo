@@ -1,10 +1,8 @@
-FROM fedora:43
+FROM fedora:42
 MAINTAINER NorTK <contacto@nortk.com>
 
-# Dependencies and postgres
 COPY odoo.rpm /tmp/odoo.rpm
-
 RUN dnf -y install /tmp/odoo.rpm && \
-		dnf clean --all
+		dnf clean all
 
 USER odoo
