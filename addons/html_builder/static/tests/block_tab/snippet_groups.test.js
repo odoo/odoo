@@ -328,6 +328,72 @@ test("search snippet by class", async () => {
     ).toEqual(snippetsDescriptionProcessed[1].content);
 });
 
+test("search snippet by label", async () => {
+    const snippets = [
+        {
+            name: "foo_bar",
+            groupName: "a",
+            innerHTML: "content 1",
+            label: "",
+        },
+        {
+            name: "foo",
+            groupName: "a",
+            innerHTML: "content 2",
+            label: "Hello World",
+        },
+        {
+            name: "bar",
+            groupName: "a",
+            innerHTML: "content 3",
+            label: "Goodbye World",
+        },
+    ];
+
+    const snippetsForSetup = createTestSnippets({ snippets, withName: false });
+    const snippetsDescriptionProcessed = createTestSnippets({ snippets, withName: true });
+
+    await setupHTMLBuilder("<div><p>Text</p></div>", {
+        snippets: {
+            snippet_groups: [
+                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: snippetsForSetup.map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
+            ),
+        },
+    });
+    await click(".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area");
+    await waitForSnippetDialog();
+
+    // Search "hello" -> 1 result
+    await contains(".o_add_snippet_dialog aside input[type='search']").edit("hello");
+    expect(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div"
+    ).toHaveCount(1);
+    expect(
+        queryFirst(
+            ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div"
+        ).innerHTML
+    ).toEqual(snippetsDescriptionProcessed[1].content);
+
+    // Search "world" -> 2 results
+    await contains(".o_add_snippet_dialog aside input[type='search']").edit("world");
+    expect(
+        ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap > div"
+    ).toHaveCount(2);
+    expect(
+        queryFirst(
+            ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap:first > div"
+        ).innerHTML
+    ).toEqual(snippetsDescriptionProcessed[1].content);
+    expect(
+        queryFirst(
+            ".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap:last > div"
+        ).innerHTML
+    ).toEqual(snippetsDescriptionProcessed[2].content);
+});
+
 test("add snippet dialog with imagePreview", async () => {
     const snippets = [
         { name: "gravy", groupName: "a", innerHTML: "content 1" },

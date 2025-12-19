@@ -114,6 +114,7 @@ export class SnippetViewer extends Component {
             return fuzzyLookup(this.props.state.search, snippetStructures, (snippet) => [
                 snippet.title || "",
                 snippet.name || "",
+                snippet.label || "",
                 ...(snippet.keyWords?.split(",") || ""),
                 ...getClasses(snippet),
             ]);
