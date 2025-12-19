@@ -35,6 +35,7 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  *  onClose?: () => any;
  *  pickerProps?: DateTimePickerProps;
  *  showSeconds?: boolean;
+ *  showTime?: boolean;
  *  target: HTMLElement | (() => HTMLElement | null) | { el?: HTMLElement };
  *  showResetButton?: boolean;
  * }} DateTimePickerServiceParams
@@ -298,7 +299,10 @@ export const datetimePickerService = {
                  * @returns {[T extends "format" ? string : DateTime, null] | [null, Error]}
                  */
                 function safeConvert(operation, value) {
-                    const { type } = pickerProps;
+                    let { type } = pickerProps;
+                    if (type === "datetime" && params.showTime === false) {
+                        type = "date";
+                    }
                     const convertFn = (operation === "format" ? formatters : parsers)[type];
                     const options = { tz: pickerProps.tz, format: params.format };
                     if (operation === "format") {

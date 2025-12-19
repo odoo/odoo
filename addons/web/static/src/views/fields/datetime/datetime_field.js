@@ -128,6 +128,7 @@ export class DateTimeField extends Component {
             target: this.rootRef,
             inputRefs: [this.startDateRef, this.endDateRef],
             showSeconds: this.props.showSeconds,
+            showTime: this.props.showTime,
             get pickerProps() {
                 return getPickerProps();
             },
