@@ -560,11 +560,13 @@ export class DiscussChannel extends models.ServerModel {
 
     /**
      * @param {number[]} partners_to
+     * @param {boolean} default_display_mode
      * @param {string} name
      * */
-    _create_group(partners_to, name) {
-        const kwargs = getKwArgs(arguments, "partners_to", "name");
+    _create_group(partners_to, default_display_mode, name) {
+        const kwargs = getKwArgs(arguments, "partners_to", "default_display_mode", "name");
         partners_to = kwargs.partners_to || [];
+        default_display_mode = kwargs.default_display_mode || false;
         name = kwargs.name || "";
 
         /** @type {import("mock_models").DiscussChannel} */
@@ -578,6 +580,7 @@ export class DiscussChannel extends models.ServerModel {
             channel_member_ids: partners.map((partner) =>
                 Command.create({ partner_id: partner.id })
             ),
+            default_display_mode,
             name,
         });
         this._broadcast(
