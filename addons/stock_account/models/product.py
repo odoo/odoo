@@ -230,7 +230,10 @@ class ProductProduct(models.Model):
         valued_qty = last_in._get_valued_qty()
         if not valued_qty:
             return self.standard_price
-        return last_in._get_value(at_date=date) / valued_qty
+        # Pass current standard_price as fallback to prevent infinite recursion.
+        # Without this, _get_value_from_std_price would call _get_standard_price_at_date
+        # again, creating an infinite loop when no other valuation source is available.
+        return last_in._get_value(at_date=date, forced_std_price=self.standard_price) / valued_qty
 
     def _get_value_from_lots(self):
         lots = self.env['stock.lot'].search([
