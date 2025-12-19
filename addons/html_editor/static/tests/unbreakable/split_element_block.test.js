@@ -64,22 +64,28 @@ test("should not split a div (if it isn't eligible for baseContainer)", async ()
         config: { baseContainers: ["P"] },
     });
 });
-test("should keep the last line break in the old paragraph", async () => {
+test("should keep the last line break in the old paragraph (1)", async () => {
     await testEditor({
         contentBefore: "<div><p>abc<br>[]<br></p></div>",
         stepFunction: splitBlock,
         contentAfter: "<div><p>abc<br><br></p><p>[]<br></p></div>",
     });
+});
+test("should keep the last line break in the old paragraph (2)", async () => {
     await testEditor({
         contentBefore: "<div><p>abc<br>[]<br>def</p></div>",
         stepFunction: splitBlock,
         contentAfter: "<div><p>abc<br><br></p><p>[]<br>def</p></div>",
     });
+});
+test("should keep the last line break in the old paragraph (3)", async () => {
     await testEditor({
         contentBefore: "<div><p>abc<br>[]<br><br></p></div>",
         stepFunction: splitBlock,
         contentAfter: "<div><p>abc<br><br></p><p>[]<br><br></p></div>",
     });
+});
+test("should keep the last line break in the old paragraph (4)", async () => {
     await testEditor({
         contentBefore: "<div><p><br>[]<br></p></div>",
         stepFunction: splitBlock,
