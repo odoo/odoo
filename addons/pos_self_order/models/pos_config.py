@@ -97,6 +97,7 @@ class PosConfig(models.Model):
         help="Name of the image to display on the self order screen",
     )
     has_paper = fields.Boolean("Has paper", default=True)
+    self_ordering_primary_color = fields.Char(string="Color", default=lambda self: self.env.company.email_secondary_color)
 
     def _update_access_token(self):
         self.access_token = uuid.uuid4().hex[:16]
@@ -290,10 +291,6 @@ class PosConfig(models.Model):
         record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.ids
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids
         record['_pos_special_products_ids'] = config._get_special_products().ids
-        record['_self_ordering_style'] = {
-            'primaryBgColor': self.env.company.email_secondary_color,
-            'primaryTextColor': self.env.company.email_primary_color,
-        }
         record['_self_order_pos'] = True
         return read_records
 

@@ -49,11 +49,7 @@ export class selfOrderIndex extends Component {
             document.documentElement.classList.add("kiosk");
         }
 
-        const styleConfig = this.selfOrder.config._self_ordering_style;
-        if (styleConfig) {
-            const { primaryBgColor, primaryTextColor } = styleConfig;
-            insertKioskStyle(primaryBgColor, primaryTextColor);
-        }
+        insertKioskStyle(this.selfOrder.config.self_ordering_primary_color);
 
         if (this.env.debug) {
             initDebugFormatters();
