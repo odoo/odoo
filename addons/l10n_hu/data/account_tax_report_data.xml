@@ -46,8 +46,45 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_alap_fiz_eu_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">
+                                            BASE_PAY_INTRA.a60g +
+                                            BASE_PAY_INTRA.a60b +
+                                            BASE_PAY_INTRA.a60k +
+                                            BASE_PAY_INTRA.a60r +
+                                            BASE_PAY_INTRA.a60c +
+                                            BASE_PAY_INTRA.a60v
+                                        </field>
+                                    </record>
+                                    <record id="a60g_balance" model="account.report.expression">
+                                        <field name="label">a60g</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">-base_pay_intra</field>
+                                    </record>
+                                    <record id="a60b_balance" model="account.report.expression">
+                                        <field name="label">a60b</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-A60B</field>
+                                    </record>
+                                    <record id="a60k_balance" model="account.report.expression">
+                                        <field name="label">a60k</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-A60K</field>
+                                    </record>
+                                    <record id="a60r_balance" model="account.report.expression">
+                                        <field name="label">a60r</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-A60R</field>
+                                    </record>
+                                    <record id="a60c_balance" model="account.report.expression">
+                                        <field name="label">a60c</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-A60C</field>
+                                    </record>
+                                    <record id="a60v_balance" model="account.report.expression">
+                                        <field name="label">a60v</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-A60V</field>
                                     </record>
                                 </field>
                             </record>
@@ -150,8 +187,45 @@
                                 <field name="expression_ids">
                                     <record id="tax_report_alap_viss_tag" model="account.report.expression">
                                         <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">
+                                            BASE_REC_INTRA.a60g +
+                                            BASE_REC_INTRA.a60b +
+                                            BASE_REC_INTRA.a60k +
+                                            BASE_REC_INTRA.a60r +
+                                            BASE_REC_INTRA.a60c +
+                                            BASE_REC_INTRA.a60v
+                                        </field>
+                                    </record>
+                                    <record id="a60g_rec_balance" model="account.report.expression">
+                                        <field name="label">a60g</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">base_rec_intra</field>
+                                    </record>
+                                    <record id="a60b_rec_balance" model="account.report.expression">
+                                        <field name="label">a60b</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">A60B_P</field>
+                                    </record>
+                                    <record id="a60k_rec_balance" model="account.report.expression">
+                                        <field name="label">a60k</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">A60K_P</field>
+                                    </record>
+                                    <record id="a60r_rec_balance" model="account.report.expression">
+                                        <field name="label">a60r</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">A60R_P</field>
+                                    </record>
+                                    <record id="a60c_rec_balance" model="account.report.expression">
+                                        <field name="label">a60c</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">A60C_P</field>
+                                    </record>
+                                    <record id="a60v_rec_balance" model="account.report.expression">
+                                        <field name="label">a60v</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">A60V_P</field>
                                     </record>
                                 </field>
                             </record>
