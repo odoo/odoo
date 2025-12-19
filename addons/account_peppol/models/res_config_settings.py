@@ -54,6 +54,10 @@ class ResConfigSettings(models.TransientModel):
         registration_action = registration_wizard._action_open_peppol_form(reopen=False)
         return registration_action
 
+    def _get_peppol_proxy_type(self):
+        self.ensure_one()
+        return self.account_peppol_edi_user.proxy_type
+
     @handle_demo
     def button_update_peppol_user_data(self):
         """
@@ -62,18 +66,18 @@ class ResConfigSettings(models.TransientModel):
         """
         self.ensure_one()
 
-        if not self.account_peppol_contact_email or not self.account_peppol_phone_number:
-            raise ValidationError(_("Contact email and mobile number are required."))
+        if not self.account_peppol_contact_email:
+            raise ValidationError(self.env._("A contact email is required."))
 
         params = {
             'update_data': {
-                'peppol_phone_number': self.account_peppol_phone_number,
+                **({'peppol_phone_number': self.account_peppol_phone_number} if self.account_peppol_phone_number else {}),
                 'peppol_contact_email': self.account_peppol_contact_email,
             }
         }
 
         self.account_peppol_edi_user._call_peppol_proxy(
-            endpoint='/api/peppol/1/update_user',
+            endpoint=self.account_peppol_edi_user._get_peppol_proxy_endpoint('1/update_user'),
             params=params,
         )
         return True
