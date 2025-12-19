@@ -51,10 +51,14 @@
                             <button name="%(base.action_view_base_language_install)d" icon="oi-arrow-right" type="action" string="Add Languages" class="btn-link"/>
                         </div>
                     </setting>
-                    <setting string="Background" help="Personalize the Kiosk background" invisible="pos_self_ordering_mode == 'nothing'">
+                    <setting string="Background" help="Personalize the Interface" invisible="pos_self_ordering_mode == 'nothing'">
                         <field name="pos_self_ordering_image_background_ids"
                                class="w-100" widget="many2many_binary"
                                options="{'accepted_file_extensions': 'image/*', 'number_of_files': 1}" />
+                        <div class="py-2 d-flex align-items-center">
+                            <label for="pos_self_ordering_primary_color" class="mx-2" string="Color"/>
+                            <field name="pos_self_ordering_primary_color" widget="color"/>
+                        </div>
                     </setting>
                 </block>
             </block>
