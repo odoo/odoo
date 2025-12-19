@@ -98,7 +98,7 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should split list item containing image", async () => {
+            test("should split list item containing image (1)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <ol>
@@ -111,6 +111,9 @@ describe("Selection collapsed", () => {
                             <li>[]<br></li>
                         </ol>`),
                 });
+            });
+
+            test("should split list item containing image (2)", async () => {
                 await testEditor({
                     contentBefore: unformat(`
                         <ol>
@@ -125,7 +128,7 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should add an empty nested list item after a nested list item", async () => {
+            test("should add an empty nested list item after a nested list item (1)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li><p>a</p></li><li class="oe-nested"><p>b[]</p></li></ol>',
@@ -133,6 +136,9 @@ describe("Selection collapsed", () => {
                     contentAfter:
                         '<ol><li><p>a</p></li><li class="oe-nested"><p>b</p></li><li class="oe-nested"><p>[]<br></p></li></ol>',
                 });
+            });
+
+            test("should add an empty nested list item after a nested list item (2)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li><p>a</p></li><li class="oe-nested"><p>b[]</p><ol><li><p>c</p></li></ol></li></ol>',
@@ -167,12 +173,15 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should remove a list with p", async () => {
+            test("should remove a list with p (1)", async () => {
                 await testEditor({
                     contentBefore: "<ol><li><p>[]<br></p></li></ol>",
                     stepFunction: splitBlock,
                     contentAfter: "<p>[]<br></p>",
                 });
+            });
+
+            test("should remove a list with p (2)", async () => {
                 await testEditor({
                     contentBefore: "<ol><li>ab</li><li><p>[]<br></p><ol><li>cd</li></ol></li></ol>",
                     stepFunction: splitBlock,
@@ -189,7 +198,7 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should add an empty nested list item after a nested list item, then remove it", async () => {
+            test("should add an empty nested list item after a nested list item, then remove it (1)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li><p>a</p></li><li class="oe-nested"><p class="o-we-hint" o-we-hint-text="List">b[]<br></p></li></ol>',
@@ -200,6 +209,9 @@ describe("Selection collapsed", () => {
                     contentAfter:
                         '<ol><li><p>a</p></li><li class="oe-nested"><p>b</p></li></ol><p>[]<br></p>',
                 });
+            });
+
+            test("should add an empty nested list item after a nested list item, then remove it (2)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li><p>a</p></li><li class="oe-nested"><p>b[]</p><ol><li><p>c</p></li></ol></li></ol>',
@@ -238,7 +250,7 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should create list items after one with a block in it", async () => {
+            test("should create list items after one with a block in it (1)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li class="a"><custom-block style="display: block;">abc[]</custom-block></li></ol>',
@@ -252,6 +264,9 @@ describe("Selection collapsed", () => {
                         '<li class="a"><custom-block style="display: block;">b</custom-block></li>' +
                         '<li class="a"><custom-block style="display: block;">[]<br></custom-block></li></ol>',
                 });
+            });
+
+            test("should create list items after one with a block in it (2)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ol><li><custom-block class="a" style="display: block;">abc[]</custom-block></li></ol>',
@@ -343,7 +358,7 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should add an empty nested list item after a nested list item", async () => {
+            test("should add an empty nested list item after a nested list item (1)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li><p>a</p></li><li class="oe-nested"><p>b[]</p></li></ul>',
@@ -351,6 +366,9 @@ describe("Selection collapsed", () => {
                     contentAfter:
                         '<ul><li><p>a</p></li><li class="oe-nested"><p>b</p></li><li class="oe-nested"><p>[]<br></p></li></ul>',
                 });
+            });
+
+            test("should add an empty nested list item after a nested list item (2)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li><p>a</p></li><li class="oe-nested"><p>b[]</p><ul><li><p>c</p></li></ul></li></ul>',
@@ -385,12 +403,14 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should remove a list", async () => {
+            test("should remove a list (1)", async () => {
                 await testEditor({
                     contentBefore: "<ul><li><p>[]<br></p></li></ul>",
                     stepFunction: splitBlock,
                     contentAfter: "<p>[]<br></p>",
                 });
+            });
+            test("should remove a list (2)", async () => {
                 await testEditor({
                     contentBefore: "<ul><li>ab</li><li><p>[]<br></p><ul><li>cd</li></ul></li></ul>",
                     stepFunction: splitBlock,
@@ -407,7 +427,7 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should add an empty nested list item after a nested list item, then remove it", async () => {
+            test("should add an empty nested list item after a nested list item, then remove it (1)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li><p>a</p></li><li class="oe-nested"><p class="o-we-hint" o-we-hint-text="List">b[]<br></p></li></ul>',
@@ -418,6 +438,9 @@ describe("Selection collapsed", () => {
                     contentAfter:
                         '<ul><li><p>a</p></li><li class="oe-nested"><p>b</p></li></ul><p>[]<br></p>',
                 });
+            });
+
+            test("should add an empty nested list item after a nested list item, then remove it (2)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li><p>a</p></li><li class="oe-nested"><p>b[]</p><ul><li><p>c</p></li></ul></li></ul>',
@@ -456,7 +479,7 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should create list items after one with a block in it", async () => {
+            test("should create list items after one with a block in it (1)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li class="a"><custom-block style="display: block;">abc[]</custom-block></li></ul>',
@@ -470,6 +493,9 @@ describe("Selection collapsed", () => {
                         '<li class="a"><custom-block style="display: block;">b</custom-block></li>' +
                         '<li class="a"><custom-block style="display: block;">[]<br></custom-block></li></ul>',
                 });
+            });
+
+            test("should create list items after one with a block in it (2)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul><li><custom-block class="a" style="display: block;">abc[]</custom-block></li></ul>',
@@ -594,7 +620,7 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should add an empty nested list item after a nested list item", async () => {
+            test("should add an empty nested list item after a nested list item (1)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li><p>a</p></li><li class="oe-nested"><p>b[]</p></li></ul>',
@@ -602,6 +628,9 @@ describe("Selection collapsed", () => {
                     contentAfter:
                         '<ul class="o_checklist"><li><p>a</p></li><li class="oe-nested"><p>b</p></li><li class="oe-nested"><p>[]<br></p></li></ul>',
                 });
+            });
+
+            test("should add an empty nested list item after a nested list item (2)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li><p>a</p></li><li class="oe-nested"><p>b[]</p><ul class="o_checklist"><li><p>c</p></li></ul></li></ul>',
@@ -650,13 +679,16 @@ describe("Selection collapsed", () => {
                 });
             });
 
-            test("should remove a checklist", async () => {
+            test("should remove a checklist (1)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li class="o_checked"><p>[]<br></p></li></ul>',
                     stepFunction: splitBlock,
                     contentAfter: "<p>[]<br></p>",
                 });
+            });
+
+            test("should remove a checklist (2)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li>ab</li><li><p>[]<br></p><ul class="o_checklist"><li>cd</li></ul></li></ul>',
@@ -674,7 +706,7 @@ describe("Selection collapsed", () => {
                     contentAfter: "<p><b>[]<br></b></p>",
                 });
             });
-            test("should add an empty nested list item after a nested list item, then remove it", async () => {
+            test("should add an empty nested list item after a nested list item, then remove it (1)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li><p>a</p></li><li class="oe-nested"><p class="o-we-hint" o-we-hint-text="List">b[]<br></p></li></ul>',
@@ -685,6 +717,8 @@ describe("Selection collapsed", () => {
                     contentAfter:
                         '<ul class="o_checklist"><li><p>a</p></li><li class="oe-nested"><p>b</p></li></ul><p>[]<br></p>',
                 });
+            });
+            test("should add an empty nested list item after a nested list item, then remove it (2)", async () => {
                 await testEditor({
                     contentBefore:
                         '<ul class="o_checklist"><li><p>a</p></li><li class="oe-nested"><p>b[]</p><ul class="o_checklist"><li><p>c</p></li></ul></li></ul>',
@@ -725,7 +759,7 @@ describe("Selection collapsed", () => {
                     });
                 });
 
-                test("should create list items after one with a block in it", async () => {
+                test("should create list items after one with a block in it (1)", async () => {
                     await testEditor({
                         contentBefore:
                             '<ul class="o_checklist"><li class="a"><custom-block style="display: block;">abc[]</custom-block></li></ul>',
@@ -739,6 +773,9 @@ describe("Selection collapsed", () => {
                             '<li class="a"><custom-block style="display: block;">d</custom-block></li>' +
                             '<li class="a"><custom-block style="display: block;">[]<br></custom-block></li></ul>',
                     });
+                });
+
+                test("should create list items after one with a block in it (2)", async () => {
                     await testEditor({
                         contentBefore:
                             '<ul class="o_checklist"><li><custom-block class="a" style="display: block;">abc[]</custom-block></li></ul>',
