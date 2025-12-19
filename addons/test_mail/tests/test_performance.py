@@ -344,7 +344,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(admin=10, employee=9):  # tm: 7 / 7
+        with self.assertQueryCount(admin=11, employee=10):  # tm: 8 / 8
             activity.action_feedback(feedback='Zizisse Done !')
 
     @warmup

@@ -255,7 +255,7 @@ class MailActivitySchedule(models.TransientModel):
     @api.depends('activity_type_id')
     def _compute_date_deadline(self):
         for scheduler in self:
-            if scheduler.activity_type_id:
+            if scheduler.activity_type_id.delay_count:
                 scheduler.date_deadline = scheduler.activity_type_id._get_date_deadline()
             elif not scheduler.date_deadline:
                 scheduler.date_deadline = fields.Date.context_today(scheduler)
@@ -263,19 +263,22 @@ class MailActivitySchedule(models.TransientModel):
     @api.depends('activity_type_id')
     def _compute_summary(self):
         for scheduler in self:
-            scheduler.summary = scheduler.activity_type_id.summary
+            if scheduler.activity_type_id.summary:
+                scheduler.summary = scheduler.activity_type_id.summary
+            elif not scheduler.summary:
+                scheduler.summary = scheduler.activity_type_id.name
 
     @api.depends('activity_type_id')
     def _compute_note(self):
-        for scheduler in self:
+        for scheduler in self.filtered(lambda s: s.activity_type_id.default_note):
             scheduler.note = scheduler.activity_type_id.default_note
 
-    @api.depends('activity_type_id', 'res_model')
+    @api.depends('activity_type_id')
     def _compute_activity_user_id(self):
         for scheduler in self:
             if scheduler.activity_type_id.default_user_id:
                 scheduler.activity_user_id = scheduler.activity_type_id.default_user_id
-            else:
+            elif not scheduler.activity_user_id:
                 scheduler.activity_user_id = self.env.user
 
     # Any writable fields that can change error computed field
