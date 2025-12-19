@@ -58,7 +58,7 @@ class PeppolConfigWizard(models.TransientModel):
     def _compute_account_peppol_edi_user(self):
         for wizard in self:
             wizard.account_peppol_edi_user = wizard.company_id.account_edi_proxy_client_ids.filtered(
-                lambda u: u.proxy_type == 'peppol')
+                lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types())
 
     @api.depends('account_peppol_edi_user', 'account_peppol_proxy_state')
     def _compute_service_json(self):
@@ -130,7 +130,7 @@ class PeppolConfigWizard(models.TransientModel):
             }
         }
         self.account_peppol_edi_user._call_peppol_proxy(
-            endpoint='/api/peppol/1/update_user',
+            endpoint=self.account_peppol_edi_user._get_peppol_proxy_endpoint('1/update_user'),
             params=params,
         )
 

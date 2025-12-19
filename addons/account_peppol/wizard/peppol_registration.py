@@ -268,6 +268,12 @@ class PeppolRegistration(models.TransientModel):
             raise UserError(
                 _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
 
+        blocking_proxy_types = set(self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()) - {'peppol'}
+        blocking_user = self.company_id.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type in blocking_proxy_types)
+        if blocking_user:
+            blocking_proxy_type = dict(blocking_user._fields['proxy_type']._description_selection(self.env))[blocking_user[:1].proxy_type]
+            raise UserError(self.env._("A connection to '%s' already exists.", blocking_proxy_type))
+
         edi_user = self.edi_user_id or self.env['account_edi_proxy_client.user']._register_proxy_user(self.company_id, 'peppol', self.edi_mode)
 
         # if there is an error when activating the participant below,
