@@ -591,7 +591,9 @@ class MrpProduction(models.Model):
             if not production.bom_id and not production._origin.product_id:
                 production.workorder_ids = workorders_list
             # if the product has changed or if in a second onchange with bom resets the relations
-            if production.product_id != production._origin.product_id or (production._origin.bom_id != production.bom_id and production._origin.bom_id.operation_ids and not production.workorder_ids.filtered(lambda wo: wo.ids and wo.operation_id)):
+            if production.product_id != production._origin.product_id \
+                or (not production._origin.bom_id and production.bom_id) \
+                or (production._origin.bom_id != production.bom_id and production._origin.bom_id.operation_ids and not production.workorder_ids.filtered(lambda wo: wo.ids and wo.operation_id)):
                 production.workorder_ids = [Command.clear()]
             if production.bom_id and production.product_id and production.product_qty > 0:
                 # keep manual entries
