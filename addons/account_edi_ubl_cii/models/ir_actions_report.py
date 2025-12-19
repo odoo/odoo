@@ -29,39 +29,70 @@ class IrActionsReport(models.Model):
         format_codes = self._get_edi_document_format_codes_for_pdf_embedding()
         edi_attachments = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code in format_codes).sudo().attachment_id
         for edi_attachment in edi_attachments:
-            old_xml = base64.b64decode(edi_attachment.with_context(bin_size=False).datas, validate=True)
-            tree = etree.fromstring(old_xml)
-            anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
-            additional_document_elements = tree.xpath("//*[local-name()='AdditionalDocumentReference']")
-            # with this clause, we ensure the xml are only postprocessed once (even when the invoice is reset to
-            # draft then validated again)
-            if anchor_elements and not additional_document_elements:
-                pdf_stream = stream_data['stream']
-                pdf_content_b64 = base64.b64encode(pdf_stream.getvalue()).decode()
-                pdf_name = '%s.pdf' % invoice.name.replace('/', '_')
-                to_inject = '''
-                    <cac:AdditionalDocumentReference
-                        xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
-                        xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
-                        xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
-                        <cbc:ID>%s</cbc:ID>
-                        <cac:Attachment>
-                            <cbc:EmbeddedDocumentBinaryObject mimeCode="application/pdf" filename=%s>
-                                %s
-                            </cbc:EmbeddedDocumentBinaryObject>
-                        </cac:Attachment>
-                    </cac:AdditionalDocumentReference>
-                ''' % (escape(pdf_name), quoteattr(pdf_name), pdf_content_b64)
+            self._add_attachments_into_invoice_xml(
+                invoice,
+                edi_attachment,
+                [{
+                    'name': '%s.pdf' % invoice.name.replace('/', '_'),
+                    'raw_b64': base64.b64encode(stream_data['stream'].getvalue()).decode(),
+                    'mimetype': 'application/pdf',
+                }],
+                is_main_pdf=True,
+                check_for_additionnal_document_elements=True,
+            )
 
-                anchor_index = tree.index(anchor_elements[0])
-                tree.insert(anchor_index, etree.fromstring(to_inject))
-                new_xml = etree.tostring(cleanup_xml_node(tree), xml_declaration=True, encoding='UTF-8')
-                edi_attachment.sudo().write({
-                    'res_model': 'account.move',
-                    'res_id': invoice.id,
-                    'datas': base64.b64encode(new_xml),
-                    'mimetype': 'application/xml',
-                })
+    @api.model
+    def _add_attachments_into_invoice_xml(self, invoice, xml_attachment, extra_attachments, is_main_pdf=False, check_for_additionnal_document_elements=False):
+        """
+        Helper to embed the extra attachments into the xml file
+        :param invoice: The invoice it is all about
+        :param xml_attachment: The xml file that will contain embedded attachments
+        :param extra_attachments: A list of dicts like `[{'name': 'filename', 'raw_b64': 'b64 encoded file content', 'mimetype': 'file mimetype'}, ]`
+        :param is_main_pdf: Is the extra attachments list containing ONLY the Invoice PDF
+        :param check_for_additionnal_document_elements: flag to not embed extra attachments if any document is already embedded into the xml
+        """
+        # [{'name': '', 'raw_b64': '', 'mimetype': ''}, {'name': '', 'raw_b64': '', 'mimetype': ''}]
+        old_xml = base64.b64decode(xml_attachment.with_context(bin_size=False).datas, validate=True)
+        tree = etree.fromstring(old_xml)
+        anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
+        additional_document_elements = tree.xpath("//*[local-name()='AdditionalDocumentReference']")
+        if check_for_additionnal_document_elements and anchor_elements and additional_document_elements:
+            return
+        anchor_index = tree.index(anchor_elements[0])
+        is_main_pdf = is_main_pdf and len(extra_attachments) == 1
+        xmlns_invoice = 'xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"' if is_main_pdf else ''
+        for attachment in extra_attachments:
+            to_inject = '''
+                <cac:AdditionalDocumentReference
+                    %s
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
+                    <cbc:ID>%s</cbc:ID>
+                    <cac:Attachment>
+                        <cbc:EmbeddedDocumentBinaryObject mimeCode=%s filename=%s>
+                            %s
+                        </cbc:EmbeddedDocumentBinaryObject>
+                    </cac:Attachment>
+                </cac:AdditionalDocumentReference>
+            ''' % (
+                xmlns_invoice,
+                escape(attachment['name']),
+                quoteattr(attachment['mimetype']),
+                quoteattr(attachment['name']),
+                attachment['raw_b64'],
+            )
+
+            tree.insert(anchor_index, etree.fromstring(to_inject))
+
+        new_xml = etree.tostring(cleanup_xml_node(tree), xml_declaration=True, encoding='UTF-8')
+        fields_values = {
+            'datas': base64.b64encode(new_xml),
+            'mimetype': 'application/xml',
+        }
+        if is_main_pdf:
+            fields_values['res_model'] = 'account.move'
+            fields_values['res_id'] = invoice.id
+        xml_attachment.sudo().write(fields_values)
 
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         # EXTENDS base

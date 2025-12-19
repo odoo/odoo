@@ -26,7 +26,7 @@
 
 <t t-name="Many2ManyBinaryField.attachment_preview" owl="1">
     <t t-set="editable" t-value="!props.readonly"/>
-    <div t-attf-class="o_attachment o_attachment_many2many #{ editable ? 'o_attachment_editable' : '' } #{upload ? 'o_attachment_uploading' : ''}" t-att-title="file.name">
+    <div t-attf-class="o_attachment o_attachment_many2many d-flex flex-row align-items-center gap-1 #{ editable ? 'o_attachment_editable' : '' } #{upload ? 'o_attachment_uploading' : ''}" t-att-title="file.name">
         <div class="o_attachment_wrap">
             <t t-set="ext" t-value="getExtension(file)"/>
             <div class="o_image_box float-start" t-att-data-tooltip="'Download ' + file.name">
@@ -48,6 +48,7 @@
             <div class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
             <div t-if="editable" class="o_attachment_delete" t-on-click.stop="() => this.onFileRemove(file.id)"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>
         </div>
+        <i class="fa fa-fw o_button_icon fa-warning" t-if="file.tooltip" t-att-data-tooltip="file.tooltip"></i>
     </div>
 </t>
 

@@ -8,6 +8,16 @@ from odoo.exceptions import UserError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 
+SUPPORTED_FILE_TYPES = {
+    'application/pdf': '.pdf',
+    'application/vnd.oasis.opendocument.spreadsheet': '.ods',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': '.xlsx',
+    'image/jpeg': '.jpeg',
+    'image/png': '.png',
+    'text/csv': '.csv',
+}
+
+
 class AccountInvoiceSend(models.TransientModel):
     _inherit = 'account.invoice.send'
 
@@ -99,6 +109,29 @@ class AccountInvoiceSend(models.TransientModel):
 
             wizard.peppol_warning = "\n".join(warnings) if warnings else False
 
+    @api.depends('enable_peppol', 'checkbox_send_peppol')
+    def _compute_display_attachment_fields(self):
+        # EXTENDS 'account'
+        super()._compute_display_attachment_fields()
+        for wizard in self:
+            if not wizard.display_attachment_fields:
+                wizard.display_attachment_fields = wizard.enable_peppol and wizard.checkbox_send_peppol and wizard.composition_mode != 'mass_mail'
+
+    def _compute_attachments_not_supported(self):
+        # EXTENDS 'account'
+        super()._compute_attachments_not_supported()
+        for wizard in self:
+            if wizard.display_attachment_fields and wizard.checkbox_send_peppol:
+                xml_attachment_name = wizard.peppol_invoice_ids._get_peppol_document().attachment_id.name
+                _attachments_to_embed, attachments_not_supported = wizard._get_peppol_available_attachments(
+                    wizard.peppol_invoice_ids,
+                    wizard.attachment_ids.filtered(lambda attachment: attachment.name != xml_attachment_name),
+                )
+                wizard.attachments_not_supported = {
+                    attachment.id if isinstance(attachment.id, int) else attachment.id.origin: _("Unsupported file type via peppol")
+                    for attachment in attachments_not_supported
+                }
+
     def send_and_print_action(self):
         if self.enable_peppol and self.checkbox_send_peppol:
             self._send_peppol_documents()
@@ -133,6 +166,11 @@ class AccountInvoiceSend(models.TransientModel):
                 invoice_data['error'] = _('Please check that a Peppol document has been generated.')
                 continue
 
+            self._embed_extra_attachments(invoice, attachment, self.attachment_ids)
+            if len(attachment) > 64000000:
+                invoice_data['error'] = _("Invoice %s is too big to send via peppol (64MB limit)", invoice.name)
+                continue
+
             documents.append({
                 'filename': attachment.name,
                 'receiver': f"{partner.peppol_eas}:{partner.peppol_endpoint}",
@@ -160,10 +198,53 @@ class AccountInvoiceSend(models.TransientModel):
                     # so we have to rely on the order to connect peppol messages to account.move
                     invoices = self.env['account.move'].browse([invoice.id for invoice in invoices_data])
                     for message, invoice in zip(response['messages'], invoices):
+                        attachments_linked_message = _("The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:")
+                        attachments_not_linked_message = _("Some attachments could not be sent with the XML:")
+
                         invoice.peppol_message_uuid = message['message_uuid']
                         invoice.peppol_move_state = 'processing'
-                    log_message = _('The document has been sent to the Peppol Access Point for processing')
-                    invoices._message_log_batch(bodies={invoice.id: log_message for invoice in invoices})
+
+                        xml_attachment_name = invoice._get_peppol_document().attachment_id.name
+                        attachments_linked, attachments_not_linked = self._get_peppol_available_attachments(
+                            invoice,
+                            self.attachment_ids.filtered(lambda attachment: attachment.name != xml_attachment_name),
+                        )
+                        if attachments_not_linked:
+                            invoice.with_context(no_new_invoice=True).message_post(
+                                body=attachments_not_linked_message,
+                                attachments=[(attachment.name, attachment.raw) for attachment in attachments_not_linked],
+                            )
+
+                        if attachments_linked:
+                            invoice.with_context(no_new_invoice=True).message_post(
+                                body=attachments_linked_message,
+                                attachments=[(attachment.name, attachment.raw) for attachment in attachments_linked],
+                            )
 
         if not tools.config['test_enable'] and not modules.module.current_test:
             self._cr.commit()
+
+    def _embed_extra_attachments(self, invoice, xml_attachment, extra_attachments):
+        pdf_name = f'{invoice.name.replace("/", "_")}.pdf'
+        attachments_to_embed, _not_supported_attachments = self._get_peppol_available_attachments(
+            invoice,
+            extra_attachments.filtered(
+                lambda attachment: attachment.name not in (xml_attachment.name, pdf_name, f'Invoice_{pdf_name}')
+            ),
+        )
+        self.env['ir.actions.report']._add_attachments_into_invoice_xml(
+            invoice,
+            xml_attachment,
+            [{
+                'name': attachment.name,
+                'raw_b64': attachment.datas,
+                'mimetype': attachment.mimetype,
+            } for attachment in attachments_to_embed],
+        )
+
+    @api.model
+    def _get_peppol_available_attachments(self, invoice, attachments):
+        if not attachments or not invoice.edi_document_ids.filtered(lambda doc: doc.edi_format_id.code == 'peppol'):
+            return self.env['ir.attachment'], attachments or self.env['ir.attachment']
+        accepted_attachments = attachments.filtered(lambda attachment: attachment.mimetype in SUPPORTED_FILE_TYPES)
+        return accepted_attachments, attachments - accepted_attachments
