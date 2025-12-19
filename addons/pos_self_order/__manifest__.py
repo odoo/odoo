@@ -12,7 +12,6 @@
         "views/qr_code.xml",
         "views/pos_category_views.xml",
         "views/pos_config_view.xml",
-        "views/pos_session_view.xml",
         "views/custom_link_views.xml",
         "views/pos_restaurant_views.xml",
         "views/product_views.xml",
@@ -30,6 +29,9 @@
         'web.assets_unit_tests_setup': [
             ('include', 'pos_self_order.assets'),
             ('remove', 'pos_self_order/static/src/app/root.js'),
+
+            # Remove the backend button to avoid test conflicts
+            ('remove', 'pos_self_order/static/src/backend/pos_open_ui_button/pos_open_ui_button.js'),
 
             # Remove the conflicting "printer" service to avoid duplicate registration during tests
             ('remove', 'pos_self_order/static/src/app/services/printer_service.js'),
@@ -53,6 +55,7 @@
         'web.assets_backend': [
             "pos_self_order/static/src/upgrade_selection_field.js",
             'pos_self_order/static/src/backend/qr_order_button/*',
+            'pos_self_order/static/src/backend/pos_open_ui_button/pos_open_ui_button.js',
         ],
         "pos_self_order.assets": [
             "pos_self_order/static/src/app/primary_variables.scss",
