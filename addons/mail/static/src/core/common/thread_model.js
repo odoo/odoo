@@ -6,6 +6,8 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
 
+/** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
+
 /**
  * @typedef SuggestedRecipient
  * @property {string} email
@@ -122,6 +124,7 @@ export class Thread extends Record {
         }
         return this.message_needaction_counter;
     }
+    /** ⚠️ {@link AwaitChatHubInit} */
     isDisplayed = fields.Attr(false, {
         compute() {
             return this.computeIsDisplayed();

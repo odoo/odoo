@@ -6,6 +6,13 @@ import { Deferred, Mutex } from "@web/core/utils/concurrency";
 export const CHAT_HUB_KEY = "mail.ChatHub";
 const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
 
+/**
+ * @typedef AwaitChatHubInit
+ * ⚠️ Always wait for `store.chatHub.initPromise` before reading or writing this field inside methods
+ * to avoid race conditions with ChatHub initialization. Using it directly inside a template (or
+ * other reactive callback) is fine as reactivity will re-render (or re-compute) when needed.
+ */
+
 export class ChatHub extends Record {
     BUBBLE = 56; // same value as $o-mail-ChatHub-bubblesWidth
     BUBBLE_START = 15; // same value as $o-mail-ChatHub-bubblesStart

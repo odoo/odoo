@@ -3,6 +3,8 @@ import { Thread } from "@mail/core/common/thread_model";
 
 import { patch } from "@web/core/utils/patch";
 
+/** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
+
 export const CALL_PROMOTE_FULLSCREEN = Object.freeze({
     INACTIVE: "INACTIVE",
     ACTIVE: "ACTIVE",
@@ -156,13 +158,15 @@ const ThreadPatch = {
             },
         });
     },
+    /** ⚠️ {@link AwaitChatHubInit} */
     get isCallDisplayedInChatWindow() {
         return this.channel.chatWindow?.isOpen && !this.store.meetingViewOpened;
     },
     get showCallView() {
         return !this.store.rtc.isFullscreen && this.rtc_session_ids.length > 0;
     },
-    focusAvailableVideo() {
+    async focusAvailableVideo() {
+        await this.store.chatHub.initPromise;
         if (
             !this.store.settings.useCallAutoFocus ||
             !(

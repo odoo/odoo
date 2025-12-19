@@ -48,7 +48,8 @@ export class LivechatChannelInfoList extends Component {
         });
     }
 
-    openVisitorProfile() {
+    async openVisitorProfile() {
+        await this.store.chatHub.initPromise;
         if (this.ui.isSmall) {
             this.props.thread.channel.chatWindow?.fold();
         } else {
