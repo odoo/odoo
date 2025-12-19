@@ -27,11 +27,11 @@ registry.category("web_tour.tours").add("time_off_allocation_warning_tour", {
         },
         {
             content: "Click to select a leave type",
-            trigger: ".o_field_widget[name='holiday_status_id'] .o-autocomplete--input",
+            trigger: ".o_field_widget[name='holiday_status_id'] input",
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:nth-child(1) > a",
+            trigger: ".o-autocomplete--dropdown-menu > li > a[id=holiday_status_id_0_0_0]",
             run: "click",
         },
         {
