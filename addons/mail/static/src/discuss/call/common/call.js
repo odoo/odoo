@@ -131,6 +131,20 @@ export class Call extends Component {
         ];
     }
 
+    get sidebarCards() {
+        const selfCards = [];
+        const otherVisibleCards = [];
+        const cards = this.channel.visibleCards;
+        for (let i = 0; i < cards.length; i++) {
+            if (cards[i].session?.eq(this.rtc.selfSession)) {
+                selfCards.push(cards[i]);
+            } else {
+                otherVisibleCards.push(cards[i]);
+            }
+        }
+        return selfCards.concat(otherVisibleCards);
+    }
+
     /**
      * @param {import("models").RtcSession} session
      * @param {import("@mail/discuss/call/common/rtc_service").VideoType} [videoType]

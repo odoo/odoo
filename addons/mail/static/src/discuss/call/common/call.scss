@@ -6,12 +6,22 @@
     height: 50%; // ensures that the view returns to the right height when resized
     min-height: 50%;
     background-color: inherit;
+    display: grid;
+    grid-template-columns: 1fr;
 
     &.o-selfInCall {
         background-color: var(--o-discuss-Call-bgColor, #{$dark});
 
         .o-discuss-Call-main {
             background-color: rgba(0, 0, 0, 0.5);
+        }
+    }
+
+    &:has(.o-discuss-Call-sidebar) {
+        grid-template-columns: 1fr 230px;
+
+        @include media-breakpoint-down(sm) {
+            grid-template-columns: 1fr 160px;
         }
     }
 
@@ -42,8 +52,6 @@
 }
 
 .o-discuss-Call-sidebar {
-    width: 120px;
-    min-width: 120px;
     overflow-y: auto;
     overflow-x: hidden;
 
