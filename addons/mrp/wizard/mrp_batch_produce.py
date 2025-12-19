@@ -108,7 +108,7 @@ class MrpBatchProduct(models.TransientModel):
         lots = lots + self.env['stock.lot'].create(raw_lots)
 
         productions_to_set = OrderedSet()
-        productions.move_raw_ids.move_line_ids.unlink()
+        productions.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id.tracking != "none").unlink()
         for production, finished_lot in zip(productions, lots):
             production.lot_producing_id = finished_lot
             self._process_components(production, components_list.pop(0))
