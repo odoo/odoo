@@ -2,7 +2,7 @@
 <templates>
     <div t-name="spreadsheet.SpreadsheetComponent" class="o_spreadsheet_container o_field_highlight">
         <Spreadsheet t-if="model" model="model" colorScheme="colorScheme"/>
-        <div t-else="" class="d-flex justify-content-center align-items-center h-100" style="animation: 1s delayedFadeIn">
+        <div t-else="" class="d-flex justify-content-center align-items-center h-100 loading">
               <span class="fs-2">Loading...</span>
         </div>
     </div>

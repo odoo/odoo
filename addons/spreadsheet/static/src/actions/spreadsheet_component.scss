@@ -2,17 +2,27 @@
     flex: 1 1 auto;
     overflow: auto;
     height: 100%;
+
+    .loading {
+        // this animation only takes effect if the animation
+        // has a chance to start before the model is loading and
+        // is blocking the main thread.
+        // In this case, the "Loading..." indicator isn't displayed
+        // but it's better than nothing.
+        animation: 0.5s delayedFadeIn;
+    }
 }
 
 @keyframes delayedFadeIn {
     0% {
-        opacity: 0;
+        visibility: hidden;
     }
-    50% {
-        opacity: 0;
+
+    99% {
+        visibility: hidden;
     }
+
     100% {
         visibility: visible;
-        opacity: 1;
     }
 }
