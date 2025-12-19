@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_pdp_get_new_regulatory_documents" model="ir.cron">
+        <field name="name">PDP: retrieve new regulatory documents</field>
+        <field name="interval_number">4</field>
+        <field name="interval_type">hours</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="code">model._cron_pdp_get_new_regulatory_documents()</field>
+        <field name="state">code</field>
+    </record>
+</odoo>

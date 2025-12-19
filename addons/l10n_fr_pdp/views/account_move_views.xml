@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_fr_pdp_view_out_invoice_tree" model="ir.ui.view">
+        <field name="name">account.move.tree.l10n.fr.pdp.status</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_peppol.account_peppol_view_out_invoice_tree_inherit"/>
+        <field name="arch" type="xml">
+            <field name="peppol_move_state" position="after">
+                <field name="pdp_ppf_move_state"
+                       widget="badge"
+                       optional="hide"
+                       decoration-danger="pdp_ppf_move_state == 'error'"
+                       decoration-success="pdp_ppf_move_state == 'done'"
+                       decoration-info="pdp_ppf_move_state in ('in_progress', 'sent')"
+                       invisible="not pdp_ppf_move_state"/>
+            </field>
+        </field>
+    </record>
+    <record id="l10n_fr_pdp_view_out_credit_note_tree" model="ir.ui.view">
+        <field name="name">account.move.refund.tree.l10n.fr.pdp.status</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_peppol.account_peppol_view_out_credit_note_tree_inherit"/>
+        <field name="arch" type="xml">
+            <field name="peppol_move_state" position="after">
+                <field name="pdp_ppf_move_state"
+                       widget="badge"
+                       optional="hide"
+                       decoration-danger="pdp_ppf_move_state == 'error'"
+                       decoration-success="pdp_ppf_move_state == 'done'"
+                       decoration-info="pdp_ppf_move_state in ('in_progress', 'sent')"
+                       invisible="not pdp_ppf_move_state"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_fr_pdp_view_move_form" model="ir.ui.view">
+        <field name="name">l10n.fr.pdp.view.move.form</field>
+        <field name="model">account.move</field>
+        <field name="priority">30</field>
+        <field name="inherit_id" ref="account_peppol.account_peppol_view_move_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_pdp_open_response_wizard"
+                        type="object"
+                        class="btn btn-secondary"
+                        string="Send Response"
+                        invisible="not pdp_can_send_response"/>
+            </header>
+            <!-- We do not show the "Reset to draft" but stil need to be able to cancel-->
+            <button name="button_cancel" position="after">
+                <button name="button_cancel" type="object" groups="account.group_account_invoice" data-hotkey="x"
+                        string="Cancel" confirm="Do you really want to cancel this journal entry?"
+                        invisible="state != 'posted' or show_reset_to_draft_button or not pdp_is_sent"
+                        />
+            </button>
+            <label for="peppol_move_state" position="attributes">
+                <attribute name="string">E-Invoicing Status</attribute>
+            </label>
+            <xpath expr="//div[@name='peppol_div']" position="after">
+                <field name="pdp_ppf_move_state" invisible="not pdp_ppf_move_state"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="l10n_fr_pdp_view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account.invoice.select.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account_peppol.account_peppol_view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <filter name="peppol_ready" position="attributes">
+                <attribute name="string">E-Invoicing Ready</attribute>
+            </filter>
+            <filter name="peppol_move_state" position="attributes">
+                <attribute name="string">E-Invoicing Status</attribute>
+            </filter>
+        </field>
+    </record>
+
+</odoo>
