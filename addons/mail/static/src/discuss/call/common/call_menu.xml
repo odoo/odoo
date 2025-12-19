@@ -3,20 +3,22 @@
 
     <t t-name="discuss.CallMenu">
         <div class="dropdown" t-attf-class="{{ className }}" t-ref="root">
-            <button t-if="rtc.channel" class="user-select-none dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="buttonTitle" role="button" t-on-click="rtc.channel.open">
-                <div class="o-discuss-CallMenu-buttonContent d-flex btn-group rounded-2 opacity-75 opacity-100-hover" t-att-class="{ 'o-is-talking': rtc.selfSession?.isActuallyTalking, 'o-isOdooCommunity': !isEnterprise }">
-                    <div class="o-discuss-CallMenu-channelInfo text-truncate btn btn-group-item border-0 m-0 p-0 d-flex align-items-center o-gap-0_5 ps-1" role="button">
-                        <span class="position-relative small bg-transparent">
-                            <i class="me-2 fa fa-fw" t-att-class="icon" />
-                            <small class="d-flex position-absolute top-0 end-0 smaller bg-inherit">
-                                <i class="o-discuss-CallMenu-animation fa fa-volume-up o-discuss-inCallIconColor bg-inherit" t-att-class="{ 'o-isOdooCommunity': !isEnterprise }"/>
-                            </small>
+            <button t-if="rtc.channel" class="user-select-none dropdown-toggle o-no-caret o-dropdown--narrow px-0 rounded-2" t-att-title="buttonTitle" role="button" t-on-click="rtc.channel.open">
+                <div class="o-discuss-CallMenu-buttonContent d-flex align-items-center btn-group rounded-2" t-att-class="{ 'o-is-talking': rtc.selfSession?.isActuallyTalking, 'o-isOdooCommunity': !isEnterprise }">
+                    <small class="o-discuss-CallMenu-animation d-flex position-absolute smaller bg-inherit o-p-0_5 rounded-circle m-n2 z-2">
+                        <i class="fa fa-volume-up o-discuss-inCallIconColor bg-inherit rounded-circle" t-att-class="{ 'o-isOdooCommunity': !isEnterprise }"/>
+                    </small>
+                    <div class="o-discuss-CallMenu-channelInfo text-truncate btn btn-group-item border-0 m-0 p-0 d-flex align-items-center gap-1 o-ps-1_5 pe-1 rounded-2 rounded-end-0 align-self-stretch bg-inherit opacity-75 opacity-100-hover" role="button" title="Open Conversation">
+                        <span class="position-relative small bg-inherit">
+                            <img class="rounded-2 object-fit-cover" t-att-src="rtc.channel.avatarUrl" alt="Thread Image" style="width: 20px; height: 20px"/>
                         </span>
-                        <span class="text-truncate fw-bold pe-1" t-esc="rtc.channel.displayName"/>
+                        <span class="text-truncate small pe-1" t-esc="rtc.channel.displayName"/>
                     </div>
-                    <Dropdown>
-                        <button class="o-discuss-CallMenu-dropdownMore btn btn-group-item m-0 pe-1 o-ps-0_5">
-                            <i class="oi oi-chevron-down o-xsmaller"/>
+                    <span class="o-rounded-bubble h-100 py-2 border-end border-dark border-opacity-25"/>
+                    <Dropdown state="dropdownState">
+                        <button class="o-discuss-CallMenu-dropdownMore btn btn-group-item border-0 m-0 pe-1 o-ps-0_5 rounded-2 rounded-start-0 opacity-100-hover text-body" t-att-class="{ 'opacity-75 bg-transparent': !dropdownState.isOpen, 'opacity-100': dropdownState.isOpen }" title="Select Actions">
+                            <i class="fa fa-fw o-fs-small" t-att-class="icon"/>
+                            <i class="oi oi-chevron-down o-xxsmaller opacity-75"/>
                         </button>
                         <t t-set-slot="content">
                             <ActionList actions="callActions.actions" dropdown="true"/>
