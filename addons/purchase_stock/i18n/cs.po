@@ -13,22 +13,23 @@
 # Jakub Smolka, 2024
 # Tereza Mokrá, 2024
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 12:31+0000\n"
-"PO-Revision-Date: 2025-11-18 13:55+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-12-20 08:39+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/"
 "purchase_stock/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : "
+"(n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -93,7 +94,8 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Podle konfigurace výrobku lze automaticky vypočítat přijaté množství pomocí mechanismu:\n"
+"Podle konfigurace výrobku lze automaticky vypočítat přijaté množství pomocí "
+"mechanismu:\n"
 "- Ručně: množství se nastavuje ručně na řádku\n"
 "- Skladové pohyby: množství pochází z potvrzených vyskladnění\n"
 
@@ -152,12 +154,12 @@ msgstr "Kontakt"
 #: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid "Corresponding receipt not found."
-msgstr ""
+msgstr "Odpovídající účtenka nebyla nalezena."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
 msgid "Created Purchase Order Lines"
-msgstr ""
+msgstr "Vytvořené řádky nákupní objednávky"
 
 #. module: purchase_stock
 #. odoo-python
@@ -175,7 +177,7 @@ msgstr "Vlastní popis"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Days needed to confirm a PO"
-msgstr ""
+msgstr "Počet dní potřebných k potvrzení objednávky"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_res_company__days_to_purchase
@@ -302,7 +304,7 @@ msgstr "ID"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoming_picking_count
 msgid "Incoming Shipment count"
-msgstr ""
+msgstr "Počet příchozích zásilek"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -443,11 +445,14 @@ msgid ""
 " number of ordered products.x is either the System Parameter "
 "purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
+"Za posledních x dní; počet produktů doručených včas dělený počtem "
+"objednaných produktů.x je buď systémový parametr "
+"purchase_stock.on_time_delivery_days, nebo výchozí hodnota 365."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
 msgid "PO Lines"
-msgstr ""
+msgstr "Položky nákupní objednávky"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__partial
@@ -570,7 +575,7 @@ msgstr "Příjemka"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
 msgid "Receipt Status"
-msgstr "Receipt Status"
+msgstr "Status přímu"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -630,17 +635,17 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
 msgid "Set as Supplier"
-msgstr ""
+msgstr "Nastavit jako dodavatele"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__show_set_supplier_button
 msgid "Show Set Supplier Button"
-msgstr ""
+msgstr "Zobrazit tlačítko Dodavatel sady"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__show_vendor
 msgid "Show Vendor"
-msgstr ""
+msgstr "Zobrazit prodejce"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__show_supplier
@@ -696,7 +701,7 @@ msgstr "Dodavatelský ceník"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_replenishment_info__supplierinfo_ids
 msgid "Supplierinfo"
-msgstr ""
+msgstr "Informace o dodavateli"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -718,8 +723,8 @@ msgid ""
 "The quantities on your purchase order indicate less than billed. You should "
 "ask for a refund."
 msgstr ""
-"Množství na vaší objednávce označují méně, než kolik je účtováno. Měli byste"
-" požádat o vrácení peněz."
+"Množství na vaší objednávce označují méně, než kolik je účtováno. Měli byste "
+"požádat o vrácení peněz."
 
 #. module: purchase_stock
 #. odoo-python
@@ -730,8 +735,8 @@ msgid ""
 " %s (no vendor defined, minimum quantity not reached, dates not valid, ...)."
 " Go on the product form and complete the list of vendors."
 msgstr ""
-"Neexistuje žádná odpovídající cena dodavatele, která by vygenerovala nákupní"
-" objednávku produktu%s(není definován žádný dodavatel, minimální množství "
+"Neexistuje žádná odpovídající cena dodavatele, která by vygenerovala nákupní "
+"objednávku produktu%s(není definován žádný dodavatel, minimální množství "
 "nebylo dosaženo, data nejsou platná, ...). Přejděte do produktového "
 "formuláře a vyplňte seznam prodejců."
 
@@ -784,13 +789,15 @@ msgid ""
 "Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated."
 msgstr ""
+"Tyto daty nebylo možné odpovídajícím způsobem upravit na již ověřené účtence "
+"%s."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order.py:0
 #, python-format
 msgid "Those dates have been updated accordingly on the receipt %s."
-msgstr ""
+msgstr "Tyto daty byly odpovídajícím způsobem aktualizovány na účtence %s."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
@@ -874,6 +881,9 @@ msgid ""
 "created to fulfill the need.<br/>Note: This rule will be used in combination"
 " with the rules<br/>of the reception route(s)"
 msgstr ""
+"Pokud jsou produkty potřebné v <b>%s</b> , <br/>, je vytvořena žádost o "
+"cenovou nabídku, aby byla potřeba splněna.<br/>Poznámka: Toto pravidlo bude "
+"použito v kombinaci s pravidly<br/>přijímací trasy (tras)."
 
 #. module: purchase_stock
 #. odoo-python
@@ -901,7 +911,7 @@ msgstr "dny"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "of"
-msgstr "z "
+msgstr "z"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po

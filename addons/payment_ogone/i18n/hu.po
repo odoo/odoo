@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* payment_ogone
-# 
+#
 # Translators:
 # krnkris, 2023
 # Martin Trigaux, 2023
 # sixsix six, 2023
 # gezza <geza.nagy@oregional.hu>, 2024
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-12-18 18:38+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_ogone
@@ -71,6 +71,11 @@ msgstr "PSPID"
 #: model:ir.model,name:payment_ogone.model_payment_provider
 msgid "Payment Provider"
 msgstr "Fizetési szolgáltató"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr ""
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
@@ -156,7 +161,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
 msgid ""
 "This provider is deprecated.\n"
-"                    Consider disabling it and moving to <strong>Stripe</strong>."
+"                    Please install"
 msgstr ""
 
 #. module: payment_ogone
@@ -179,3 +184,16 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been successfully processed."
 msgstr "A fizetés sikeresen feldolgozásra került."
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"as a drop-in replacement. Your data and payment tokens will be "
+"automatically\n"
+"                    migrated from Ogone to Worldline."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid "the Worldline provider"
+msgstr ""

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:05+0000\n"
-"PO-Revision-Date: 2025-11-20 16:19+0000\n"
+"POT-Creation-Date: 2025-12-18 18:38+0000\n"
+"PO-Revision-Date: 2025-12-20 10:51+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-17/"
 "payment_ogone/mn/>\n"
@@ -20,50 +20,57 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_userid
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
 msgid "API User ID"
 msgstr "API Хэрэглэгчийн ID"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_password
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_password
 msgid "API User Password"
 msgstr "API Хэрэглэгчийн Нууц үг"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__code
+msgid "Code"
+msgstr "Дансны код"
+
+#. module: payment_ogone
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
 msgstr ""
 
 #. module: payment_ogone
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_hash_function
+msgid "Hash function"
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
 msgstr ""
 
 #. module: payment_ogone
-#: model:account.payment.method,name:payment_ogone.payment_method_ogone
-#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_acquirer__provider__ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__code__ogone
+#: model:payment.provider,name:payment_ogone.payment_provider_ogone
 msgid "Ogone"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_pspid
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_pspid
 msgid "PSPID"
 msgstr "PSPID"
 
 #. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_payment_acquirer
-msgid "Payment Acquirer"
-msgstr "Төлбөрийн хэрэгсэл"
-
-#. module: payment_ogone
-#: model:ir.model,name:payment_ogone.model_account_payment_method
-msgid "Payment Methods"
-msgstr "Төлбөрийн аргууд"
+#: model:ir.model,name:payment_ogone.model_payment_provider
+msgid "Payment Provider"
+msgstr "Төлбөр дамжуулагч"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_token
@@ -76,67 +83,126 @@ msgid "Payment Transaction"
 msgstr "Төлбөрийн гүйлгээ"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__provider
-msgid "Provider"
-msgstr "Үйлчилгээ үзүүлэгч"
-
-#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_in
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_in
 msgid "SHA Key IN"
 msgstr "SHA Түлхүүр ОРОХ"
 
 #. module: payment_ogone
-#: model:ir.model.fields,field_description:payment_ogone.field_payment_acquirer__ogone_shakey_out
+#: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_shakey_out
 msgid "SHA Key OUT"
 msgstr "SHA Түлхүүр ГАРАХ"
 
 #. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_token.py:0
-#, python-format
-msgid "Saved payment methods cannot be restored once they have been archived."
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha1
+msgid "SHA1"
 msgstr ""
 
 #. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha256
+msgid "SHA256"
+msgstr ""
+
+#. module: payment_ogone
+#: model:ir.model.fields.selection,name:payment_ogone.selection__payment_provider__ogone_hash_function__sha512
+msgid "SHA512"
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
 msgstr ""
 
 #. module: payment_ogone
-#: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
-msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
-
-#. module: payment_ogone
-#: code:addons/payment_ogone/models/payment_acquirer.py:0
+#. odoo-python
+#: code:addons/payment_ogone/models/payment_provider.py:0
 #, python-format
 msgid "The communication with the API failed."
 msgstr ""
 
 #. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The payment has been declined: %s"
 msgstr ""
 
 #. module: payment_ogone
+#: model:ir.model.fields,help:payment_ogone.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_ogone
+#. odoo-python
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
 msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"This provider is deprecated.\n"
+"                    Please install"
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:payment.provider,auth_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been authorized."
+msgstr "Таны захиалгыг зөвшөөрсөн."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,cancel_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been cancelled."
+msgstr "Таны төлбөр цуцлагдлаа."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,pending_msg:payment_ogone.payment_provider_ogone
+msgid ""
+"Your payment has been successfully processed but is waiting for approval."
+msgstr "Таны төлбөр амжилттай хийгдсэн бөгөөд хяналтын шатанд хүлээгдлээ."
+
+#. module: payment_ogone
+#: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
+msgid "Your payment has been successfully processed."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"as a drop-in replacement. Your data and payment tokens will be "
+"automatically\n"
+"                    migrated from Ogone to Worldline."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid "the Worldline provider"
+msgstr ""
+
+#~ msgid "Payment Acquirer"
+#~ msgstr "Төлбөрийн хэрэгсэл"
+
+#~ msgid "Payment Methods"
+#~ msgstr "Төлбөрийн аргууд"
+
+#~ msgid "Provider"
+#~ msgstr "Үйлчилгээ үзүүлэгч"
