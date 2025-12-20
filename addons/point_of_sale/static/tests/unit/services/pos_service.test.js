@@ -256,9 +256,11 @@ describe("pos_store.js", () => {
     test("deleteOrders", async () => {
         const store = await setupPosEnv();
         const order1 = await getFilledOrder(store);
+        const line1 = order1.lines[0];
         await store.syncAllOrders();
         await store.deleteOrders([order1]);
         expect(store.models["pos.order"].getBy("uuid", order1.uuid)).toBeEmpty();
+        expect(store.models["pos.order.line"].getBy("uuid", line1.uuid)).toBeEmpty();
     });
 
     test("deleteOrders multiple orders", async () => {

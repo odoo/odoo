@@ -268,7 +268,7 @@ describe("restaurant pos_store.js", () => {
                 await createOrderForTable();
                 expect(table.getOrders()).toHaveLength(1);
                 expect(table.getOrder().id).toBeOfType("number");
-                expect(table.getOrder().lines).toHaveLength(4 + i * 2);
+                expect(table.getOrder().lines).toHaveLength(2);
             }
 
             expect(store.models["pos.order"].length).toEqual(1);
