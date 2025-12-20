@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
+"POT-Creation-Date: 2025-12-18 18:38+0000\n"
 "PO-Revision-Date: 2025-11-20 16:18+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-17/"
@@ -68,6 +68,11 @@ msgstr ""
 #: model:ir.model,name:payment_ogone.model_payment_provider
 msgid "Payment Provider"
 msgstr "पेमेंट प्रोवाइडर"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr ""
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
@@ -153,7 +158,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
 msgid ""
 "This provider is deprecated.\n"
-"                    Consider disabling it and moving to <strong>Stripe</strong>."
+"                    Please install"
 msgstr ""
 
 #. module: payment_ogone
@@ -175,4 +180,17 @@ msgstr "आपके पेमेंट को प्रोसेस किय�
 #. module: payment_ogone
 #: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been successfully processed."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"as a drop-in replacement. Your data and payment tokens will be "
+"automatically\n"
+"                    migrated from Ogone to Worldline."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid "the Worldline provider"
 msgstr ""

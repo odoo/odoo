@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-04 18:36+0000\n"
-"PO-Revision-Date: 2025-11-22 21:22+0000\n"
+"POT-Creation-Date: 2025-12-18 18:36+0000\n"
+"PO-Revision-Date: 2025-12-20 10:52+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-17/account/"
 "sk/>\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
 ">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account
 #. odoo-python
@@ -2009,6 +2009,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Dohadná položka vytvorená %(date)s: %(accrual_entry)s.                A jej "
+"storno záznam: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -2872,6 +2874,11 @@ msgid "Attachments"
 msgstr "Prílohy"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send__attachments_not_supported
+msgid "Attachments Not Supported"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
 msgid "Auditable"
 msgstr ""
@@ -3568,7 +3575,7 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Cannot create an accrual entry with orders in different currencies."
-msgstr ""
+msgstr "Nie je možné vytvoriť dohadné položky s objednávkami v rôznych menách."
 
 #. module: account
 #. odoo-python
@@ -4918,7 +4925,7 @@ msgstr "Aktuálny majetok"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
 msgid "Current Balance"
-msgstr ""
+msgstr "Aktuálny zostatok"
 
 #. module: account
 #: model:account.account,name:account.1_current_liabilities
@@ -5661,7 +5668,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Discount Date"
-msgstr ""
+msgstr "Dátum zľavy"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__discount_days
@@ -5701,6 +5708,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
 msgid "Display Amount"
 msgstr "Zobrazená suma"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_send__display_attachments_widget
+msgid "Display Attachments Widget"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -5933,7 +5945,7 @@ msgstr "Návrh dobropisu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
 msgid "Draft Entries"
-msgstr ""
+msgstr "Záznamy v stave Návrh"
 
 #. module: account
 #. odoo-python
@@ -6929,12 +6941,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Payable accounts"
-msgstr ""
+msgstr "Z účtov záväzkov z obchodného styku"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Receivable accounts"
-msgstr ""
+msgstr "Z účtov pohľadávok z obchodného styku"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
@@ -9204,7 +9216,7 @@ msgstr "Hlavná mena vašej spoločnosti."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Make Accrual Entries"
-msgstr ""
+msgstr "Vytvoriť dohadné položky"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -13093,6 +13105,8 @@ msgid ""
 "Specify an arbitrary value that will be accrued on a         default account "
 "for the entire order, regardless of the products on the different lines."
 msgstr ""
+"Určite ľubovoľnú hodnotu, ktorá bude pripočítaná na predvolený účet za celú "
+"objednávku, bez ohľadu na produkty v jednotlivých riadkoch."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -14856,6 +14870,8 @@ msgid ""
 "There doesn't appear to be anything to invoice for the selected order. "
 "However, you can use the amount field to force an accrual entry."
 msgstr ""
+"Zdá sa, že pre vybranú objednávku nie je čo fakturovať. Môžete však použiť "
+"pole sumy, aby ste vynútili záznam dohadnej položky."
 
 #. module: account
 #. odoo-python

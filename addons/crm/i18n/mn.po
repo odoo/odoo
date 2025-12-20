@@ -26,7 +26,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-03 02:34+0000\n"
-"PO-Revision-Date: 2025-11-19 13:26+0000\n"
+"PO-Revision-Date: 2025-12-20 08:40+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-17/crm/mn/"
 ">\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -566,12 +566,12 @@ msgstr "Алиас нэр"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Хуурмаг нэрны төлөв"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Хуурмаг нэрний төлөв нь сүүлд хүлээн авсан мэдэгдлээс тогтоогдоно."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -731,12 +731,12 @@ msgstr "Хар жагсаалт"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Хар жагсаалтын дугаар нь гар утасных эсэх"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Хар жагсаалтын дугаар нь суурин утасных эсэх"
 
 #. module: crm
 #. odoo-python
@@ -912,7 +912,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Completion Date"
-msgstr ""
+msgstr "Дууссан огноо"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_config_settings
@@ -1172,7 +1172,7 @@ msgstr "Валют"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Буцаагдсан имэйл зурвас"
 
 #. module: crm
 #. odoo-python
@@ -1377,7 +1377,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Имэй домэйн ж.ш 'example.com' цаашлаад 'odoo@example.com' гэх мэт"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1503,6 +1503,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"Утасны дугаарыг хэлбэршүүлэн хадгалах зорилготой талбар. Утасны дугаараар "
+"хайлт шүүлт хийхэд тусална."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
@@ -1701,6 +1703,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Үүнийг сонговол, бүртгэлгүй хэрэглэгчид рүү default мэдэгдлийн оронд энэхүү "
+"агуулга бүхий мэдэгдэл автоматаар илгээгдэнэ."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1718,6 +1722,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive "
 "mass mailing sms anymore, from any list"
 msgstr ""
+"Хэрэв хэлбэршүүлсэн утасны дугаар нь хар жагсаалтанд орсон байвал, энэ "
+"харилцах хаягт ямар нэг автомат имэйл, SMS хүлээн авахгүй"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1754,6 +1760,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Хар жагсаалтанд орсон дугаар нь гар утасны дугаар эсэхийг илтгэнэ. Улмаар "
+"гар утас болон суурин утасны дугаар аль аль нь "
+"бүртгэгдсэн                             тохиолдолд аль дугаар нь хар "
+"жагсаалтанд орсон эсэхийг ялгаж харахад тусална."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -1762,6 +1772,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Хар жагсаалтанд орсон дугаар нь суурин утасны дугаар эсэхийг илтгэнэ. Улмаар "
+"гар утас болон суурин утасны дугаар аль аль нь "
+"бүртгэгдсэн                              тохиолдолд аль дугаар нь хар "
+"жагсаалтанд орсон эсэхийг ялгаж харахад тусална."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1862,7 +1876,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Last Meeting"
-msgstr ""
+msgstr "Сүүлийн уулзалт"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_last_stage_update
@@ -2166,7 +2180,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "Local-part дээр үндэслэн ирж буй имэйлийг таних"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -2313,12 +2327,12 @@ msgstr "Дундаж"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Medium:"
-msgstr ""
+msgstr "Хэрэгсэл"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_date
 msgid "Meeting Display Date"
-msgstr ""
+msgstr "Уулзалтын огноо харагдац"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_label
@@ -2496,7 +2510,7 @@ msgstr "Дараагийн ажилбарын төрөл"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Next Meeting"
-msgstr ""
+msgstr "Дараагийн уулзалт"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2525,7 +2539,7 @@ msgstr "Үгүй"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "No Meeting"
-msgstr ""
+msgstr "Уулзалт алга"
 
 #. module: crm
 #. odoo-python
@@ -2616,7 +2630,7 @@ msgstr "Борлуулалтын ажилтан үгүй"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Хэлбэршүүлсэн имэйл хаяг"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
@@ -2914,7 +2928,7 @@ msgstr "Утас"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Утасны дугаар хар жагсаалтанд орсон"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_state
@@ -2924,7 +2938,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr ""
+msgstr "Утас/Гар утас"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3260,7 +3274,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Хэлбэршүүлсэн дугаар"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
@@ -3287,7 +3301,7 @@ msgstr "Сэжимүүд/Боломжуудыг Сонгох"
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Send email"
-msgstr ""
+msgstr "Имэйл илгээх"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__sequence
@@ -3465,7 +3479,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "Төлвийн цаг"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -3520,7 +3534,7 @@ msgstr "Пайз"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Tags:"
-msgstr ""
+msgstr "Пайз:"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
@@ -3636,6 +3650,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can "
 "contain more than strictly an email address."
 msgstr ""
+"Энэ талбар нь имэйл хаягаар хайхад ашиглагдана. Учир нь үндсэн имэйл талбар "
+"нь заримдаа зөвхөн имэйл хаяг бус, нэмэлт текст агуулсан байдаг."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__lang_code
@@ -3767,7 +3783,7 @@ msgstr ""
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try sending an email"
-msgstr ""
+msgstr "Имэйл илгээж үзэх"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -4124,7 +4140,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "e.g. domain.com"
-msgstr ""
+msgstr "ж.ш domain.com"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form

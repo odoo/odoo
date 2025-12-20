@@ -1,27 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_ogone
-# 
+# * payment_ogone
+#
 # Translators:
 # Mads Søndergaard, 2023
 # lhmflexerp <lhm@flexerp.dk>, 2023
 # Martin Trigaux, 2023
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Kira Petersen, 2025
-# 
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Kira Petersen, 2025\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"POT-Creation-Date: 2025-12-18 18:38+0000\n"
+"PO-Revision-Date: 2025-12-20 10:50+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-17/"
+"payment_ogone/da/>\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: da\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
@@ -72,6 +74,11 @@ msgstr "PSPID"
 #: model:ir.model,name:payment_ogone.model_payment_provider
 msgid "Payment Provider"
 msgstr "Betalingsudbyder"
+
+#. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr "Betalingstoken"
 
 #. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
@@ -157,7 +164,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
 msgid ""
 "This provider is deprecated.\n"
-"                    Consider disabling it and moving to <strong>Stripe</strong>."
+"                    Please install"
 msgstr ""
 
 #. module: payment_ogone
@@ -180,3 +187,16 @@ msgstr "Din betaling er behandlet, men venter på godkendelse."
 #: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been successfully processed."
 msgstr "Din betaling er blevet behandlet."
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"as a drop-in replacement. Your data and payment tokens will be "
+"automatically\n"
+"                    migrated from Ogone to Worldline."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid "the Worldline provider"
+msgstr ""

@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2025-11-20 16:09+0000\n"
+"POT-Creation-Date: 2025-12-18 18:38+0000\n"
+"PO-Revision-Date: 2025-12-20 10:51+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-17/"
 "payment_ogone/tr/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: payment_ogone
 #: model:ir.model.fields,field_description:payment_ogone.field_payment_provider__ogone_userid
@@ -79,6 +79,11 @@ msgid "Payment Provider"
 msgstr "Ödeme Sağlayıcı"
 
 #. module: payment_ogone
+#: model:ir.model,name:payment_ogone.model_payment_token
+msgid "Payment Token"
+msgstr "Ödeme Belirteci"
+
+#. module: payment_ogone
 #: model:ir.model,name:payment_ogone.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
@@ -125,8 +130,7 @@ msgstr "Ödeme ayrıntılarınızın saklanması ileride kullanmak için gerekli
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
-msgstr ""
-"Yalnızca API kullanıcısını Ogone ile tanımlamak için kullanılan kimlik"
+msgstr "Yalnızca API kullanıcısını Ogone ile tanımlamak için kullanılan kimlik"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_provider__ogone_pspid
@@ -163,7 +167,7 @@ msgstr "İşlem bir belirteçle bağlantılı değildir."
 #: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
 msgid ""
 "This provider is deprecated.\n"
-"                    Consider disabling it and moving to <strong>Stripe</strong>."
+"                    Please install"
 msgstr ""
 
 #. module: payment_ogone
@@ -186,3 +190,16 @@ msgstr "Ödemeniz başarıyla işleme koyuldu, ancak onay bekliyor."
 #: model_terms:payment.provider,done_msg:payment_ogone.payment_provider_ogone
 msgid "Your payment has been successfully processed."
 msgstr "Ödemeniz Başarıyla Alındı"
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid ""
+"as a drop-in replacement. Your data and payment tokens will be "
+"automatically\n"
+"                    migrated from Ogone to Worldline."
+msgstr ""
+
+#. module: payment_ogone
+#: model_terms:ir.ui.view,arch_db:payment_ogone.payment_provider_form
+msgid "the Worldline provider"
+msgstr ""

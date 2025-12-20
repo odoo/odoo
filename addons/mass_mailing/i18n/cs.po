@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-11 18:37+0000\n"
-"PO-Revision-Date: 2025-12-13 17:00+0000\n"
+"PO-Revision-Date: 2025-12-20 08:38+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/"
 "mass_mailing/cs/>\n"
@@ -570,7 +570,7 @@ msgstr "<span name=\"sent\">e-maily byly odeslány.</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.digest_mail_main
 msgid "<span style=\"color: #878d97;\">Turn off Mailing Reports</span>"
-msgstr ""
+msgstr "<span style=\"color: #878d97;\">Vypnout zasílání zpráv</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_alert
@@ -656,7 +656,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
 msgid "<span>There wasn't enough recipients left for this mailing</span>"
-msgstr ""
+msgstr "<span>Pro tuto zásilku nezbylo dostatek příjemců.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -678,18 +678,24 @@ msgid ""
 "enough recipients given to this mailing. </span>\n"
 "                            </strong>"
 msgstr ""
+"<strong class=\"d-block\" invisible=\"mailing_type == 'mail' or not "
+"ab_testing_enabled or state != 'done' or sent != 0 or failed != 0 or "
+"canceled != 0\">\n"
+"                                <span name=\"ab_test_text\">Tento e-mail "
+"nebyl zaslán dostatečnému počtu příjemců. </span>\n"
+"                            </strong>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<u>Refresh <i class=\"fa fa-refresh ms-1\"/></u>"
-msgstr ""
+msgstr "<u>Obnovit <i class=\"fa fa-refresh ms-1\"/></u>"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "A campaign should be set when A/B test is enabled"
-msgstr ""
+msgstr "Kampaň by měla být nastavena, když je povoleno A/B testování."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_color_blocks_2
@@ -740,7 +746,7 @@ msgstr "Jedinečná hodnota"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__ab_testing_winner_mailing_id
 msgid "A/B Campaign Winner Mailing"
-msgstr ""
+msgstr "E-mail s vítězem kampaně A/B"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
@@ -818,7 +824,7 @@ msgstr "Aktivní"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_mail_server__active_mailing_ids
 msgid "Active mailing using this mail server"
-msgstr ""
+msgstr "Aktivní zasílání pošty pomocí tohoto poštovního serveru"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_ids
@@ -981,7 +987,7 @@ msgstr "Povolit A / B testování "
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_subscription_optout__is_feedback
 msgid "Allow Feedback"
-msgstr ""
+msgstr "Povolit zpětnou vazbu"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
@@ -1005,6 +1011,11 @@ msgid ""
 "is hidden on the unsubscription page. The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"Umožněte příjemci, aby si sám spravoval svůj stav v černé listině "
+"prostřednictvím stránky pro odhlášení. Pokud je tato možnost aktivní, "
+"tlačítko „Přidat mě do černé listiny“ je na stránce pro odhlášení skryté. "
+"Tlačítko „Vrátit se“ bude vždy viditelné, aby se potenciální zákazníci a "
+"partneři mohli znovu přihlásit."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -1036,7 +1047,7 @@ msgstr "Úžasné stránky"
 #: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml:0
 #, python-format
 msgid "An error occurred. Please retry later or contact us."
-msgstr ""
+msgstr "Došlo k chybě. Zkuste to prosím později nebo nás kontaktujte."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1044,7 +1055,7 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
 #, python-format
 msgid "An error occurred. Please retry later."
-msgstr ""
+msgstr "Došlo k chybě. Zkuste to prosím znovu později."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_alternation_image_text_template
@@ -1097,7 +1108,7 @@ msgstr "Archivováno"
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Are you sure you want to unsubscribe from our mailing list?"
-msgstr ""
+msgstr "Opravdu se chcete odhlásit z našeho seznamu mailingového?"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1346,6 +1357,9 @@ msgid ""
 "Bounce happens when a mailing cannot be delivered (fake address, server "
 "issues, ...). Check each record to see what went wrong."
 msgstr ""
+"K odrazu dochází, když nelze doručit poštu "
+"(nesprávná adresa, problémy se serverem atd.). Zkontrolujte každý záznam a "
+"zjistěte, co se pokazilo."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced
@@ -2558,6 +2572,8 @@ msgid ""
 "If set, a mass mailing will be created so that you can track its results in "
 "the Email Marketing app."
 msgstr ""
+"Pokud je tato možnost nastavena, bude vytvořena hromadná e-mailová zpráva, "
+"abyste mohli sledovat její výsledky v aplikaci E-mailový marketing."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__is_blacklisted
@@ -2832,6 +2848,8 @@ msgid ""
 "Link Trackers will measure how many times each link is clicked as well as "
 "the proportion of %s who clicked at least once in your mailing."
 msgstr ""
+"Link Trackers změří, kolikrát bylo na každý odkaz kliknuto, a také podíl %s, "
+"kteří ve vaší poště klikli alespoň jednou."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
@@ -3039,6 +3057,8 @@ msgid ""
 "                                If needed, they can be turned back on from "
 "the"
 msgstr ""
+"Zprávy o odeslání byly pro všechny uživatele deaktivovány. <br/>\n"
+"V případě potřeby je lze znovu aktivovat z"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_trace
@@ -4654,6 +4674,8 @@ msgid ""
 "Technical field used to know if the user has activated the outgoing mail "
 "server option in the settings"
 msgstr ""
+"Technické pole sloužící k zjištění, zda uživatel aktivoval v nastaveních "
+"možnost odchozího poštovního serveru."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
@@ -4763,6 +4785,8 @@ msgid ""
 "The mailing list can be accessible by recipients in the subscription "
 "management page to allow them to update their preferences."
 msgstr ""
+"Seznam adresátů je přístupný příjemcům na stránce správy předplatného, kde "
+"mohou aktualizovat své preference."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_block
@@ -4798,6 +4822,8 @@ msgid ""
 "The winner has already been sent. Use <b>Compare Version</b> to get an "
 "overview of this A/B testing campaign."
 msgstr ""
+"Vítěz již byl odeslán. Použijte <b>Porovnejte verzi</b>, abyste získali "
+"přehled o této kampani A/B testování."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -4829,6 +4855,8 @@ msgid ""
 "This email from can not be used with this mail server.\n"
 "Your emails might be marked as spam on the mail clients."
 msgstr ""
+"Tento e-mail od nelze použít s tímto poštovním serverem.\n"
+"Vaše e-maily mohou být v poštovních klientech označeny jako spam."
 
 #. module: mass_mailing
 #. odoo-python
@@ -4931,6 +4959,8 @@ msgid ""
 "To track how many replies this mailing gets, make sure its reply-to address "
 "belongs to this database."
 msgstr ""
+"Chcete-li sledovat, kolik odpovědí tento e-mail obdrží, ujistěte se, že "
+"adresa pro odpověď patří do této databáze."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
@@ -5131,6 +5161,8 @@ msgid ""
 "Wait until your mailing has been sent to check how many recipients you "
 "managed to reach."
 msgstr ""
+"Počkejte, až bude vaše zásilka odeslána, a poté zkontrolujte, kolik příjemců "
+"se vám podařilo oslovit."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -5209,6 +5241,11 @@ msgid ""
 "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></i> "
 "icon next to \"Recipients\"."
 msgstr ""
+"Při navrhování mailingu můžete definovat pravidla pro filtrování příjemců.\n"
+"                Chcete-li uložit stejná kritéria pro budoucí použití, můžete "
+"je přidat do seznamu oblíbených položek\n"
+"                kliknutím na ikonu <i class=\"fa fa-floppy-o text-warning\""
+"></i> vedle položky „Příjemci“."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options
@@ -5255,6 +5292,8 @@ msgid ""
 "Write or paste email addresses in the field below.\n"
 "                    Each line will be imported as a mailing list contact."
 msgstr ""
+"Do pole níže napište nebo vložte e-mailové adresy.\n"
+"Každý řádek bude importován jako kontakt v seznamu adresátů."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
@@ -5315,6 +5354,9 @@ msgid ""
 "mailings in Mass Mailing:\n"
 "%(mailing_names)s"
 msgstr ""
+"Tyto UTM média nelze smazat, protože jsou propojeny s následujícími "
+"hromadnými e-maily:\n"
+"%(mailing_names)s"
 
 #. module: mass_mailing
 #. odoo-python
@@ -5325,6 +5367,9 @@ msgid ""
 "mailings in Mass Mailing:\n"
 "%(mailing_names)s"
 msgstr ""
+"Tyto zdroje UTM nelze odstranit, protože jsou propojeny s následujícími "
+"hromadnými e-maily:\n"
+"%(mailing_names)s"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
@@ -5460,6 +5505,10 @@ msgid ""
 "not be sent</b>, as only 1 email will be sent for each unique recipient in "
 "this campaign."
 msgstr ""
+"všem potenciálním příjemcům.<br/>\n"
+"                        <b class=\"text-danger\">Některé e-maily nebudou "
+"odeslány</b>, protože v rámci této kampaně bude každému jedinečnému příjemci "
+"odeslán pouze 1 e-mail."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
