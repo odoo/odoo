@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
 "PO-Revision-Date: 2025-11-12 19:22+0000\n"
 "Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -767,6 +767,12 @@ msgstr "Todavía no hay información"
 
 #. module: hr_timesheet
 #. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "None"
 msgstr "Ninguno"
@@ -975,6 +981,14 @@ msgid ""
 msgstr ""
 "Algunas de las tareas que quiere borrar tienen registros de horas. Para "
 "poder eliminar las tareas, primero borra esos registros."
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1331,13 +1345,6 @@ msgid "Timesheets cannot be created on a private task."
 msgstr "No se pueden crear hojas de horas en una tarea privada."
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-msgid "Timesheets could not be created for any of the selected days"
-msgstr ""
-"No fue posible crear hojas de horas para ninguno de los días seleccionados"
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
@@ -1363,8 +1370,8 @@ msgid "Timesheets of %(name)s"
 msgstr "Hojas de horas de %(name)s"
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
 msgstr "Hojas de horas creadas con éxito"
 
@@ -1586,6 +1593,10 @@ msgid ""
 msgstr ""
 "en\n"
 "                        <span class=\"fw-bold text-dark\"> subtareas</span>)"
+
+#~ msgid "Timesheets could not be created for any of the selected days"
+#~ msgstr ""
+#~ "No fue posible crear hojas de horas para ninguno de los días seleccionados"
 
 #~ msgid ""
 #~ "Click on a day or select a range of days to generate timesheets for the "

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
 "PO-Revision-Date: 2025-10-04 22:43+0000\n"
 "Last-Translator: Nagy Géza <geza.nagy@oregional.hu>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
@@ -774,6 +774,12 @@ msgstr "Nincs még adat!"
 
 #. module: hr_timesheet
 #. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "None"
 msgstr "Nincs"
@@ -982,6 +988,14 @@ msgid ""
 msgstr ""
 "Időkimutatás kapcsolódik ezekhez a feladatokhoz! Távolítsa el ezeket a "
 "feladatok törlése előtt!"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1337,12 +1351,6 @@ msgid "Timesheets cannot be created on a private task."
 msgstr "Privát feladatra nem rögzíthető időkimutatás."
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-msgid "Timesheets could not be created for any of the selected days"
-msgstr "Nem lehet létrehozni időkimutatásokat egyik kiválasztott napra sem"
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
@@ -1366,8 +1374,8 @@ msgid "Timesheets of %(name)s"
 msgstr "Időkimutatások: %(name)s"
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
 msgstr "Az időkimutatások sikeresen létrehozásra kerültek"
 
@@ -1588,6 +1596,9 @@ msgstr ""
 "itt:\n"
 "                        <span class=\"fw-bold text-dark\"> Alfeladatok</"
 "span>)"
+
+#~ msgid "Timesheets could not be created for any of the selected days"
+#~ msgstr "Nem lehet létrehozni időkimutatásokat egyik kiválasztott napra sem"
 
 #~ msgid "<i class=\"fa fa-download\"/> Download"
 #~ msgstr "<i class=\"fa fa-download\"/> Letöltés"
