@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-12-10 03:26+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
+"PO-Revision-Date: 2025-12-20 09:52+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/id/>\n"
@@ -793,6 +793,11 @@ msgstr "Demo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "Buang"
 
@@ -882,6 +887,11 @@ msgstr "Identifikasi Edi"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "Email"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Enable reception"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -979,7 +989,7 @@ msgstr "Jurnal Faktur yang Akan Masuk"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s is too big to send via peppol (64MB limit)"
-msgstr ""
+msgstr "Faktur %s terlalub esar untuk dikirim melalui peppol (batas 64MB)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1473,7 +1483,7 @@ msgstr "Didaftarkan untuk menerima dokumen melalui Peppol (demo)."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Didaftarkan untuk menerima dokumen melalui Peppol."
 
@@ -1554,7 +1564,7 @@ msgstr "Sebuah pertanyaan tidak bisa terjawab dan melewatkan"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "Beberapa lampiran tidak dapat dikirim dengan XML:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1573,13 +1583,9 @@ msgstr ""
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
 "migration key below.\n"
-"                        If not, you should de-register from your current "
+"                            If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
-"Beberapa layanan mendukung migration keys. Bila ini betul untuk Anda Anda "
-"dapat memasukkan migration key di bawah.\n"
-"                        Bila tidak, Anda harus membatalkan pendaftaran dari "
-"provider layanan Anda saat ini dan mendaftar dengan Odoo setelahnya."
 
 #. module: account_peppol
 #. odoo-python
@@ -1821,6 +1827,8 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"Faktur telah dikirim ke Access Point Peppol. Lampiran berikut dikirim dengan "
+"XML:"
 
 #. module: account_peppol
 #. odoo-python
@@ -2100,6 +2108,8 @@ msgid ""
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
 msgstr ""
+"Anda akan mendaftar nomor PPN Anda. Pastikan Anda mendaftar dengan Company "
+"Registry Anda (BCE/KBO) agar mematuhi peraturan baru."
 
 #. module: account_peppol
 #. odoo-python
@@ -2252,7 +2262,7 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
@@ -2302,6 +2312,17 @@ msgstr "untuk mengirim faktur, tapi yang ini"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "user-user"
+
+#~ msgid ""
+#~ "Some service support migration keys. If this is your case you can enter "
+#~ "your migration key below.\n"
+#~ "                        If not, you should de-register from your current "
+#~ "service provider and register with Odoo afterward."
+#~ msgstr ""
+#~ "Beberapa layanan mendukung migration keys. Bila ini betul untuk Anda Anda "
+#~ "dapat memasukkan migration key di bawah.\n"
+#~ "                        Bila tidak, Anda harus membatalkan pendaftaran "
+#~ "dari provider layanan Anda saat ini dan mendaftar dengan Odoo setelahnya."
 
 #~ msgid "The document has been sent to Peppol for processing"
 #~ msgstr "Dokumen telah dikirim ke Peppol untuk diproses"

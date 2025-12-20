@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
 "PO-Revision-Date: 2025-12-11 06:44+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
@@ -763,6 +763,12 @@ msgstr "まだデータはありません！"
 
 #. module: hr_timesheet
 #. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "None"
 msgstr "なし"
@@ -971,6 +977,14 @@ msgid ""
 msgstr ""
 "これらのタスクに紐づいているタイムシートの記録があります!それらを削除すると、"
 "タスクを削除できます。"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1325,12 +1339,6 @@ msgid "Timesheets cannot be created on a private task."
 msgstr "タイムシートは非公開タスクに作成できません。"
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-msgid "Timesheets could not be created for any of the selected days"
-msgstr "選択されたいずれの日についてもタイムシートを作成できませんでした"
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
@@ -1355,8 +1363,8 @@ msgid "Timesheets of %(name)s"
 msgstr "%(name)sのタイムシート"
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
 msgstr "タイムシートの作成に成功しました"
 
@@ -1455,8 +1463,8 @@ msgstr ""
 "        !! 優先度：高\n"
 "        !!! 優先度：緊急\n"
 "\n"
-"        タイトルは以下の順番で記述してください 例：設定画面を改善する 5h #"
-"feature #v16@Mitchell !"
+"        タイトルは以下の順番で記述してください 例：設定画面を改善する 5h "
+"#feature #v16@Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
@@ -1569,6 +1577,9 @@ msgid ""
 "on\n"
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr "<span class=\"fw-bold text-dark\"> サブタスク</span>)上"
+
+#~ msgid "Timesheets could not be created for any of the selected days"
+#~ msgstr "選択されたいずれの日についてもタイムシートを作成できませんでした"
 
 #~ msgid "%s Spent"
 #~ msgstr "消費%s "

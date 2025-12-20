@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-12-02 16:32+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
+"PO-Revision-Date: 2025-12-20 09:37+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "purchase_stock/fr/>\n"
@@ -79,18 +79,26 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
+msgid ""
+"<span class=\"text-info fw-bold fs-5 me-1\" groups=\"!uom.group_uom\">Units</"
+"span>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-info fw-bold fs-5 me-1\">Suggest</span>"
 msgstr "<span class=\"text-info fw-bold fs-5 me-1\">Suggérer</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid "<span class=\"text-info fw-bold fs-5 me-1\">units</span>"
-msgstr "<span class=\"text-info fw-bold fs-5 me-1\">unités</span>"
+msgid "<span class=\"text-muted small me-1\">Monthly Demand:</span>"
+msgstr "<span class=\"text-muted small me-1\">Demande mensuelle :</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
-msgid "<span class=\"text-muted small me-1\">Monthly Demand:</span>"
-msgstr "<span class=\"text-muted small me-1\">Demande mensuelle :</span>"
+msgid ""
+"<span class=\"text-muted small ms-1\" groups=\"!uom.group_uom\">Units</span>"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
@@ -162,7 +170,7 @@ msgstr "Tout ajouter"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "After next month last year"
-msgstr ""
+msgstr "Après le mois suivant l’année dernière"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -434,7 +442,7 @@ msgstr "Rapport de prévision"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Forecasted"
-msgstr ""
+msgstr "Prévu"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
@@ -569,25 +577,25 @@ msgstr "Écriture comptable"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 12 months"
-msgstr ""
+msgstr "12 derniers mois"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 3 months"
-msgstr ""
+msgstr "3 derniers mois"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 30 days"
-msgstr ""
+msgstr "30 derniers jours"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 7 days"
-msgstr ""
+msgstr "7 derniers jours"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
@@ -598,7 +606,7 @@ msgstr "Dernier achat"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last year quarter"
-msgstr ""
+msgstr "Dernier trimestre de l’année dernière"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
@@ -639,7 +647,7 @@ msgstr "Demande mensuelle"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Next month last year"
-msgstr ""
+msgstr "Mois suivant l’année dernière"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -924,7 +932,7 @@ msgstr "Transfert de retour"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Same month last year"
-msgstr ""
+msgstr "Même mois l’année dernière"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__6
@@ -1321,6 +1329,9 @@ msgstr "commandés au lieu de"
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "this product should be manually replenished."
 msgstr "Ce produit doit être réapprovisionné manuellement."
+
+#~ msgid "<span class=\"text-info fw-bold fs-5 me-1\">units</span>"
+#~ msgstr "<span class=\"text-info fw-bold fs-5 me-1\">unités</span>"
 
 #~ msgid "<span class=\"text-muted small\"> Forecasted</span>"
 #~ msgstr "<span class=\"text-muted small\">Prévu</span>"
