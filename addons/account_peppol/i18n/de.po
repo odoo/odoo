@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-12-09 14:08+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
+"PO-Revision-Date: 2025-12-20 09:52+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/de/>\n"
@@ -815,6 +815,11 @@ msgstr "Demo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "Verwerfen"
 
@@ -904,6 +909,11 @@ msgstr "EDI-Identifikation"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "E-Mail"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Enable reception"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -1011,6 +1021,8 @@ msgstr "Journal für Eingangsrechnungen"
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s is too big to send via peppol (64MB limit)"
 msgstr ""
+"Die Rechnung %s ist zu groß, um sie über Peppol zu versenden (Limit von 64 "
+"MB)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1512,7 +1524,7 @@ msgstr "Registriert für den Empfang von Dokumenten über Peppol (Demo)."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Registriert für den Empfang von Dokumenten über Peppol."
 
@@ -1594,7 +1606,7 @@ msgstr "Übersprungen"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "Einige Anhänge konnten nicht mit der XML-Datei gesendet werden:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1613,13 +1625,9 @@ msgstr ""
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
 "migration key below.\n"
-"                        If not, you should de-register from your current "
+"                            If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
-"Einige Dienste unterstützen Migrationsschlüssel. Wenn dies bei Ihnen der "
-"Fall ist, können Sie Ihren Migrationsschlüssel unten eingeben.\n"
-"                        Wenn nicht, sollten Sie sich bei Ihrem aktuellen "
-"Dienstanbieter abmelden und sich anschließend bei Odoo anmelden."
 
 #. module: account_peppol
 #. odoo-python
@@ -1865,6 +1873,8 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"Die Rechnung wurde an den Peppol-Zugangspunkt gesendet. Die folgenden "
+"Anhänge wurden mit der XML-Datei versandt:"
 
 #. module: account_peppol
 #. odoo-python
@@ -2160,6 +2170,9 @@ msgid ""
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
 msgstr ""
+"Sie sind im Begriff, sich mit Ihrer USt-IdNr. zu registrieren. Stellen Sie "
+"sicher, dass Sie sich zunächst bei Ihrem Handelsregister (BCE/KBO) "
+"registrieren, um die neuen Vorschriften zu erfüllen."
 
 #. module: account_peppol
 #. odoo-python
@@ -2321,7 +2334,7 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
@@ -2371,6 +2384,17 @@ msgstr ", um Rechnungen zu verwenden, aber diese"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "verwendet"
+
+#~ msgid ""
+#~ "Some service support migration keys. If this is your case you can enter "
+#~ "your migration key below.\n"
+#~ "                        If not, you should de-register from your current "
+#~ "service provider and register with Odoo afterward."
+#~ msgstr ""
+#~ "Einige Dienste unterstützen Migrationsschlüssel. Wenn dies bei Ihnen der "
+#~ "Fall ist, können Sie Ihren Migrationsschlüssel unten eingeben.\n"
+#~ "                        Wenn nicht, sollten Sie sich bei Ihrem aktuellen "
+#~ "Dienstanbieter abmelden und sich anschließend bei Odoo anmelden."
 
 #~ msgid "The document has been sent to Peppol for processing"
 #~ msgstr "Das Dokument wurde zur Verarbeitung an Peppol gesendet"
