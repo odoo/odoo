@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-04 13:34+0000\n"
+"POT-Creation-Date: 2025-12-19 19:11+0000\n"
 "PO-Revision-Date: 2025-11-15 14:58+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-2-l10n/"
@@ -34,8 +34,8 @@ msgstr ""
 "\n"
 "        कस्टमर इनवॉइस जर्नल के लिए 'सेल' को चुनें.\n"
 "        वेंडर बिल जर्नल के लिए 'परचेज़' को चुनें.\n"
-"        उन जर्नल के लिए 'कैश', 'बैंक' या 'क्रेडिट कार्ड' चुनें जिनका इस्तेमाल ग्राहकों या वें"
-"डर को भुगतान करने के लिए किया जाता है.\n"
+"        उन जर्नल के लिए 'कैश', 'बैंक' या 'क्रेडिट कार्ड' चुनें जिनका इस्तेमाल ग्राहकों या "
+"वेंडर को भुगतान करने के लिए किया जाता है.\n"
 "        अन्य छोटे-मोटे या सामान्य लेनदेन के लिए 'जनरल' चुनें.\n"
 "        "
 
@@ -183,14 +183,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_in/models/account_invoice.py:0
 msgid "As the Partner's PAN missing/invalid apply TCS at the higher rate."
-msgstr ""
-
-#. module: l10n_in
-#. odoo-python
-#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
-msgid ""
-"As the Partner's PAN missing/invalid, it's advisable to apply TDS at the "
-"higher rate."
 msgstr ""
 
 #. module: l10n_in
@@ -1356,6 +1348,14 @@ msgstr ""
 
 #. module: l10n_in
 #. odoo-python
+#: code:addons/l10n_in/wizard/l10n_in_withhold_wizard.py:0
+msgid ""
+"Please deduct TDS at higher rate if PAN is missing. Ignore if already "
+"applied."
+msgstr ""
+
+#. module: l10n_in
+#. odoo-python
 #: code:addons/l10n_in/models/res_config_settings.py:0
 msgid ""
 "Please ensure that at least one Indian service and production environment is "
@@ -1574,8 +1574,7 @@ msgstr "सेल"
 #. module: l10n_in
 #: model_terms:ir.ui.view,arch_db:l10n_in.res_config_settings_view_form_inherit_l10n_in
 msgid "Save this page and come back here to set up the feature."
-msgstr ""
-"इस पेज को सेव करें और फिर इस सुविधा को सेट करने के लिए बाद में यहीं लौटकर आएं।"
+msgstr "इस पेज को सेव करें और फिर इस सुविधा को सेट करने के लिए बाद में यहीं लौटकर आएं।"
 
 #. module: l10n_in
 #. odoo-javascript
