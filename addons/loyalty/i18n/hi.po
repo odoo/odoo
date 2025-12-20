@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-12 18:38+0000\n"
-"PO-Revision-Date: 2025-08-07 04:46+0000\n"
+"PO-Revision-Date: 2025-12-20 11:44+0000\n"
 "Last-Translator: \"Ujjawal Pathak (pauj)\" <pauj@odoo.com>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s18-3/loyalty/"
 "hi/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__trigger
@@ -48,94 +48,102 @@ msgid ""
 "         and used by reward.\n"
 "        "
 msgstr ""
+"\n"
+"        वेब पोर्टल, पीओएस कस्टमर टिकट, ई-कॉमर्स चेकआउट में रिवॉर्ड के लिए उपलब्ध और\n"
+"          इस्तेमाल किए गए पॉइंट दिखाएं.\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid " (Max %s)"
-msgstr ""
+msgstr " (अधिकतम %s)"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid "$100"
-msgstr ""
+msgstr "$100"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "%g%% on "
-msgstr ""
+msgstr "%g%% "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "%s on "
-msgstr ""
+msgstr "%s "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "%s per point"
-msgstr ""
+msgstr "%s प्रति पॉइंट"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "%s per point on "
-msgstr ""
+msgstr "%s प्रति पॉइंट "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "( Max"
-msgstr ""
+msgstr "( अधिकतम"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "(if at least"
-msgstr ""
+msgstr "(अगर कम से कम"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "(tax excluded)"
-msgstr ""
+msgstr "(टैक्स को छोड़कर)"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "-> View History"
-msgstr ""
+msgstr "-> इतिहास देखें"
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
 msgid "10% Discount Coupons"
-msgstr ""
+msgstr "10% डिस्काउंट कूपन"
 
 #. module: loyalty
 #: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
 #: model:loyalty.reward,description:loyalty.10_percent_with_code_reward
 msgid "10% on your order"
-msgstr ""
+msgstr "आपके ऑर्डर पर 10%"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
+#, fuzzy
 msgid "1000"
-msgstr ""
+msgstr "1000"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "2+1 Free"
-msgstr ""
+msgstr "2+1 मुफ़्त"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid "2023-08-20"
-msgstr ""
+msgstr "2023-08-20"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
+#, fuzzy
 msgid "2023-12-31"
-msgstr ""
+msgstr "2023-12-31"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_gift_card
@@ -194,41 +202,101 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"background: #ffffff\">\n"
+"                <div style=\"margin:0px; font-size:24px; font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; "
+"text-align: center\">\n"
+"                    यह रहा आपका गिफ़्ट कार्ड!\n"
+"                </div>\n"
+"                <div style=\"padding-top:20px; padding-bottom:20px\">\n"
+"                    <img src=\"/loyalty/static/img/gift_card.png\" style="
+"\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\""
+" width=\"300\"/>\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; "
+"padding-bottom:35px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:48px; font-family:"
+"arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-"
+"style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
+"                        <strong t-out="
+"\"format_amount(object.points, object.currency_id) or ''\">$ "
+"150.00</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; "
+"padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
+"                    <p style=\"margin:0px; font-size:14px;font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
+"                        <strong>गिफ़्ट कार्ड कोड</strong>\n"
+"                    </p>\n"
+"                    <p style=\"margin:0px; font-size:25px;font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" "
+"t-out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
+"                </div>\n"
+"                <div t-if=\"object.expiration_date\" style=\"padding:0; "
+"margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:17px; font-family:"
+"arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-"
+"style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">कार्ड इस "
+"तारीख को बंद हो जाएगा: <t t-out=\"format_date(object.expiration_date) or ''\">05/05/"
+"2021</t></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;\">"
+"\n"
+"                    <span style=\"background-color:#999999; display:inline-"
+"block; width:auto; border-radius:5px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" "
+"target=\"_blank\" t-attf-style=\"text-decoration:none; font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; font-size:22px; color: {{"
+"object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
+"border-width:20px 30px; display:inline-block; background-color: {{"
+"object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
+"font-weight:bold; font-style:normal; line-height:26px; width:auto; text-"
+"align:center\">इसे अभी इस्तेमाल करें!</a>\n"
+"                    </span>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
+#, fuzzy
 msgid "<i class=\"fa fa-cube fa-fw\" title=\"Product Domain\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-cube fa-fw\" title=\"Product Domain\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+#, fuzzy
 msgid "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid ""
 "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/><span>All Products</span>"
 msgstr ""
+"<i class=\"fa fa-cube fa-fw\" title=\"Products\"/><span>सभी प्रॉडक्ट</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+#, fuzzy
 msgid "<i class=\"fa fa-cubes fa-fw\" title=\"Product Categories\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-cubes fa-fw\" title=\"Product Categories\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+#, fuzzy
 msgid "<i class=\"fa fa-search fa-fw\" title=\"Product Domain\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-search fa-fw\" title=\"Product Domain\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+#, fuzzy
 msgid "<i class=\"fa fa-tags fa-fw\" title=\"Product Tags\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-tags fa-fw\" title=\"Product Tags\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -247,6 +315,18 @@ msgid ""
 "                                <span class=\"o_stat_text\" "
 "invisible=\"program_type != 'ewallet'\">eWallets</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible="
+"\"program_type not in ('coupons', 'next_order_coupons')\">कूपन</span>\n"
+"                                <span class=\"o_stat_text\" invisible="
+"\"program_type != 'loyalty'\">लॉयल्टी कार्ड</span>\n"
+"                                <span class=\"o_stat_text\" invisible="
+"\"program_type not in ('promotion', 'buy_x_get_y')\">प्रोमो</span>\n"
+"                                <span class=\"o_stat_text\" invisible="
+"\"program_type != 'promo_code'\">डिस्काउंट</span>\n"
+"                                <span class=\"o_stat_text\" invisible="
+"\"program_type != 'gift_card'\">गिफ़्ट कार्ड</span>\n"
+"                                <span class=\"o_stat_text\" invisible="
+"\"program_type != 'ewallet'\">ई-वॉलेट</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -254,6 +334,8 @@ msgid ""
 "<span class=\"text-center\">OR</span>\n"
 "                                        <br/>"
 msgstr ""
+"<span class=\"text-center\">या</span>\n"
+"                                        <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
@@ -261,11 +343,13 @@ msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount "
 "of coupon points defined as the coupon value</span>"
 msgstr ""
+"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">कूपन मूल्य के बराबर कू"
+"पन पॉइंट की राशि दें</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "<span invisible=\"not clear_wallet\"> (or more)</span>"
-msgstr ""
+msgstr "<span invisible=\"not clear_wallet\"> (या ज़्यादा)</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -277,36 +361,42 @@ msgid ""
 "                            Generate \n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"not will_send_mail\">\n"
+"                            जनरेट करें और भेजें \n"
+"                        </span>\n"
+"                        <span invisible=\"will_send_mail\">\n"
+"                            जनरेट करें \n"
+"                        </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.portal_loyalty_history_breadcrumbs
 msgid "<span>History</span>"
-msgstr ""
+msgstr "<span>इतिहास</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>Minimum purchase of</span>"
-msgstr ""
+msgstr "<span>न्यूनतम खरीदारी राशि</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>Valid for purchase above</span>"
-msgstr ""
+msgstr "<span>इससे ज़्यादा की खरीदारी पर मान्य</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "<span>on</span>"
-msgstr ""
+msgstr "<span>पर</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "<span>products</span>"
-msgstr ""
+msgstr "<span>प्रॉडक्ट</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "<strong>Gift Card Code</strong>"
-msgstr ""
+msgstr "<strong>गिफ़्ट कार्ड कोड</strong>"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_loyalty_card
@@ -374,46 +464,109 @@ msgid ""
 "</tbody></table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style="
+"\"width:100%; margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
+"<tr>\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        <t t-if=\"object._mail_get_customer().name\">\n"
+"            बधाई हो <t t-out=\"object._mail_get_customer().name or ''\""
+">Brandon Freeman</t>,<br/>\n"
+"        </t>\n"
+"\n"
+"        यह इनाम आपको <t t-out=\"object.program_id.company_id.name or ''\""
+">YourCompany</t> की ओर से मिला है.<br/>\n"
+"\n"
+"        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
+"            <t t-if=\"reward.required_points &lt;= object.points\">\n"
+"                <span t-attf-style=\"font-size: 50px; color: {{"
+"object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-"
+"weight: bold;\" t-esc=\"reward.description\">इनाम का विवरण</span>\n"
+"                <br/>\n"
+"            </t>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"<tr style=\"margin-top: 16px\">\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        इस प्रोमो कोड का इस्तेमाल\n"
+"        <t t-if=\"object.expiration_date\">\n"
+"             <t t-out=\"format_date(object.expiration_date) or ''\""
+">2021-06-16</t> से पहले करें\n"
+"        </t>\n"
+"        <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; "
+"background-color: #F1F1F1;\" t-out=\"object.code or ''\""
+">15637502648479132902</strong>\n"
+"        </p>\n"
+"        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
+"            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                    कम से कम <t t-out=\"rule.minimum_qty or ''\">10</t> प्रॉडक्ट "
+"की खरीदारी\n"
+"                </span><br/>\n"
+"            </t>\n"
+"            <t t-if=\"rule.minimum_amount != 0.00\">\n"
+"                <span style=\"font-size: 14px;\">\n"
+"                     <t t-out=\"rule.company_id.currency_id.symbol or ''\""
+">$</t><t t-out=\"'%0.2f' % float(rule.minimum_amount) or ''\">10.00</t> से ज़्यादा"
+" की खरीदारी पर मान्य\n"
+"                </span><br/>\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/>\n"
+"        धन्यवाद,\n"
+"        <t t-if=\"object._get_signature()\" data-o-mail-quote-container=\"1\""
+">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t "
+"t-out=\"object._get_signature() or ''\" data-o-mail-quote=\"1\">Mitchell "
+"Admin</t></div>\n"
+"        </t>\n"
+"    </td>\n"
+"</tr>\n"
+"</tbody></table>\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "A coupon with the same code was found."
-msgstr ""
+msgstr "एक ही कोड वाला कूपन पहले से मौजूद है।"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
 msgid "A coupon/loyalty card must have a unique code."
-msgstr ""
+msgstr "कूपन/लॉयल्टी कार्ड का कोड यूनीक होना चाहिए।"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "A program must have at least one reward."
-msgstr ""
+msgstr "एक प्रोग्राम में कम से कम एक इनाम होना चाहिए।"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_buttons
 msgid "A reward is waiting for you"
-msgstr ""
+msgstr "एक इनाम आपका इंतज़ार कर रहा है"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "A reward product can't be of type \"combo\"."
-msgstr ""
+msgstr "रिवॉर्ड प्रॉडक्ट \"कॉम्बो\" टाइप का नहीं हो सकता।"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 msgid "A trigger with the same code as one of your coupon already exists."
-msgstr ""
+msgstr "आपके कूपन कोड जैसा ट्रिगर कोड पहले से मौजूद है।"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid "ABCDE12345"
-msgstr ""
+msgstr "ABCDE12345"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction
@@ -428,65 +581,65 @@ msgstr "कार्रवाई की ज़रूरत है"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__active
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_search
 msgid "Active"
-msgstr "सक्रिय"
+msgstr "ऐक्टिव"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
 #: model:ir.model.fields,field_description:loyalty.field_res_users__loyalty_card_count
 msgid "Active loyalty cards"
-msgstr ""
+msgstr "ऐक्टिव लॉयल्टी कार्ड"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 msgid "Add"
-msgstr "जोड़ना"
+msgstr "जोड़ें"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a reward"
-msgstr ""
+msgstr "इनाम जोड़ें"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a rule"
-msgstr ""
+msgstr "नियम जोड़ें"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__all_discount_product_ids
 msgid "All Discount Product"
-msgstr ""
+msgstr "सभी डिस्काउंट प्रॉडक्ट"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Among"
-msgstr ""
+msgstr "मिलकर"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "Among:"
-msgstr ""
+msgstr "मिलकर:"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
 msgid "Anonymous Customers"
-msgstr ""
+msgstr "अनाम ग्राहक"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__mode
 msgid "Application"
-msgstr ""
+msgstr "ऐप्लिकेशन"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "Applied to:"
-msgstr ""
+msgstr "आवेदन किया गया:"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__applies_on
 msgid "Applies On"
-msgstr ""
+msgstr "आवेदन किया गया"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -497,12 +650,12 @@ msgstr "संग्रहीत किया गया"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__create
 msgid "At Creation"
-msgstr ""
+msgstr "बनाने के समय"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_attachment_count
 msgid "Attachment Count"
-msgstr "अटैचमेंट काउंट"
+msgstr "अटैचमेंट की संख्या"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__trigger__auto
@@ -514,13 +667,13 @@ msgstr "ऑटोमैटिक"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Automatic promo: 10% off on orders higher than $50"
-msgstr ""
+msgstr "ऑटोमैटिक प्रोमो: $50 से ज़्यादा के ऑर्डर पर 10% की छूट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Available On"
-msgstr ""
+msgstr "उपलब्ध है"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
@@ -531,43 +684,43 @@ msgstr "बैलेंस"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "Barcode"
-msgstr ""
+msgstr "बारकोड"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Buy 10 products to get 10$ off on the 11th one"
-msgstr ""
+msgstr "10 प्रॉडक्ट खरीदकर 11वें प्रॉडक्ट पर 10$ की छूट पाएं"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Buy 2 products and get a third one for free"
-msgstr ""
+msgstr "2 प्रॉडक्ट खरीदें और तीसरा मुफ़्त पाएं"
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.3_cabinets_plus_1_free
 msgid "Buy 3 large cabinets, get one for free"
-msgstr ""
+msgstr "3 बड़े कैबिनेट खरीदें, एक मुफ़्त पाएं"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
 msgid "Buy X Get Y"
-msgstr ""
+msgstr "X खरीदें Y पाएं"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 msgid "Can not generate coupon, no program is set."
-msgstr ""
+msgstr "कूपन जनरेट नहीं किया जा सकता, कोई प्रोग्राम सेट नहीं है।"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Cancel"
-msgstr "रद्द"
+msgstr "रद्द करें"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__card_id
@@ -578,27 +731,27 @@ msgstr "कार्ड"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "Card expires"
-msgstr ""
+msgstr "कार्ड की समय सीमा समाप्त हो रही है"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_category_id
 msgid "Categories"
-msgstr ""
+msgstr "कैटगरी"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__cheapest
 msgid "Cheapest Product"
-msgstr ""
+msgstr "सबसे सस्ता प्रॉडक्ट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__clear_wallet
 msgid "Clear Wallet"
-msgstr ""
+msgstr "वॉलेट खाली करें"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Clear all promo point(s)"
-msgstr ""
+msgstr "सभी प्रोमो पॉइंट खाली करें"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__code
@@ -608,17 +761,17 @@ msgstr "कोड"
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_with_code
 msgid "Code for 10% on orders"
-msgstr ""
+msgstr "ऑर्डर पर 10% की छूट के लिए कोड"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__communication_plan_ids
 msgid "Communication Plan"
-msgstr ""
+msgstr "कम्यूनिकेशन प्लान"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Communications"
-msgstr ""
+msgstr "कम्यूनिकेशन"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__company_id
@@ -627,18 +780,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__company_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__company_id
 msgid "Company"
-msgstr "संस्था"
+msgstr "कंपनी"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 msgid "Compose Email"
-msgstr ""
+msgstr "ईमेल लिखें"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__rule_ids
 msgid "Conditional rules"
-msgstr ""
+msgstr "शर्त पर आधारित नियम"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
@@ -653,12 +806,12 @@ msgstr "पुष्टि करें"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__confirmation_message
 msgid "Confirmation Message"
-msgstr ""
+msgstr "पुष्टि करने वाला मैसेज"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "Congratulations"
-msgstr ""
+msgstr "बधाई हो"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_res_partner
@@ -669,45 +822,45 @@ msgstr "संपर्क"
 #. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 msgid "Control panel buttons"
-msgstr ""
+msgstr "कंट्रोल पैनल बटन"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_ids
 msgid "Coupon"
-msgstr ""
+msgstr "कूपन"
 
 #. module: loyalty
 #: model:ir.actions.report,name:loyalty.report_loyalty_card
 msgid "Coupon Code"
-msgstr ""
+msgstr "कूपन कोड"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_count
 msgid "Coupon Count"
-msgstr ""
+msgstr "कूपन की संख्या"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Coupon point(s)"
-msgstr ""
+msgstr "कूपन पॉइंट"
 
 #. module: loyalty
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_coupon
 msgid "Coupon points"
-msgstr ""
+msgstr "कूपन पॉइंट"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Coupon value"
-msgstr ""
+msgstr "कूपन वैल्यू"
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_loyalty_card
 msgid "Coupon: Coupon Information"
-msgstr ""
+msgstr "कूपन: कूपन की जानकारी"
 
 #. module: loyalty
 #. odoo-python
@@ -716,7 +869,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__coupons
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
 msgid "Coupons"
-msgstr ""
+msgstr "कूपन"
 
 #. module: loyalty
 #: model:ir.model,website_form_label:loyalty.model_res_partner
@@ -727,17 +880,19 @@ msgstr "ग्राहक बनाएं"
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "Create a new one from scratch, or use one of the templates below."
 msgstr ""
+"शुरुआत से एक नया बनाएं, या नीचे दिए गए टेम्पलेट में से किसी एक का इस्तेमाल करें।"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "Create one from scratch, or use a templates below:"
 msgstr ""
+"शुरुआत से एक नया बनाएं, या नीचे दिए गए टेम्पलेट में से किसी एक का इस्तेमाल करें:"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 msgid "Create record"
-msgstr ""
+msgstr "रिकॉर्ड बनाएं"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__create_uid
@@ -749,7 +904,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__create_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__create_uid
 msgid "Created by"
-msgstr "द्वारा निर्मित"
+msgstr "इन्होंने बनाया"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__create_date
@@ -768,7 +923,7 @@ msgstr "इस तारीख को बनाया गया"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:loyalty.program,portal_point_name:loyalty.3_cabinets_plus_1_free
 msgid "Credit(s)"
-msgstr ""
+msgstr "क्रेडिट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__currency_id
@@ -781,37 +936,39 @@ msgstr "करेंसी"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__currency_symbol
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "मुद्रा का चिह्न, जिसका इस्तेमाल राशि प्रिंट करते समय किया जाता है।"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__both
 msgid "Current & Future orders"
-msgstr ""
+msgstr "मौजूदा और आने वाले ऑर्डर"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__current
 msgid "Current order"
-msgstr ""
+msgstr "मौजूदा ऑर्डर"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__customer_tag_ids
 msgid "Customer Tags"
-msgstr ""
+msgstr "ग्राहक टैग"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__customer_ids
 msgid "Customers"
-msgstr "साथी"
+msgstr "ग्राहक"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid "DEMO_CODE"
-msgstr ""
+msgstr "DEMO_CODE"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid "DEMO_TEXT"
-msgstr ""
+msgstr "DEMO_TEXT"
 
 #. module: loyalty
 #. odoo-python
@@ -819,7 +976,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
 msgid "Date"
-msgstr "तिथि"
+msgstr "तारीख"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -827,6 +984,7 @@ msgid ""
 "Define Discount codes on conditional rules then share it with your customers "
 "for rewards."
 msgstr ""
+"शर्त-आधारित नियमों पर डिस्काउंट कोड तय करें, फिर उन्हें इनाम के तौर पर अपने ग्राहकों के साथ साझा करें।"
 
 #. module: loyalty
 #. odoo-python
@@ -843,7 +1001,7 @@ msgstr "विवरण"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Description on order"
-msgstr ""
+msgstr "ऑर्डर पर विवरण"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount
@@ -856,12 +1014,12 @@ msgstr "छूट"
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Discount & Loyalty"
-msgstr ""
+msgstr "डिस्काउंट और लॉयल्टी"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
 msgid "Discount Applicability"
-msgstr ""
+msgstr "छूट लागू होना"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
@@ -871,22 +1029,22 @@ msgstr "डिस्काउंट कोड"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_line_product_id
 msgid "Discount Line Product"
-msgstr ""
+msgstr "डिस्काउंट लाइन प्रॉडक्ट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_mode
 msgid "Discount Mode"
-msgstr ""
+msgstr "डिस्काउंट मोड"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__payment_program_discount_product_id
 msgid "Discount Product"
-msgstr ""
+msgstr "डिस्काउंट प्रॉडक्ट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
-msgstr ""
+msgstr "डिस्काउंट प्रॉडक्ट डोमेन"
 
 #. module: loyalty
 #. odoo-python
@@ -894,40 +1052,40 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__code
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "Discount code"
-msgstr ""
+msgstr "डिस्काउंट कोड"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_with_code
 msgid "Discount point(s)"
-msgstr ""
+msgstr "डिस्काउंट पॉइंट"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Discount product"
-msgstr ""
+msgstr "डिस्काउंट प्रॉडक्ट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
 msgid "Discounted Prod. Categories"
-msgstr ""
+msgstr "छूट वाली प्रॉडक्ट कैटगरी"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_tag_id
 msgid "Discounted Prod. Tag"
-msgstr ""
+msgstr "छूट वाले प्रॉडक्ट टैग"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_ids
 msgid "Discounted Products"
-msgstr ""
+msgstr "छूट वाले प्रॉडक्ट"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Discounts"
-msgstr ""
+msgstr "डिस्काउंट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_base_partner_merge_automatic_wizard__display_name
@@ -949,7 +1107,7 @@ msgstr "डिस्प्ले नाम"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Displayed as"
-msgstr ""
+msgstr "इस रूप में दिखेगा"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -957,6 +1115,7 @@ msgid ""
 "Drive repeat purchases by sending a unique, single-use coupon code for the "
 "next purchase when a customer buys something in your store."
 msgstr ""
+"खरीदारी करने पर, अगली बार के लिए एक खास डिस्काउंट कोड देकर ग्राहकों को दोबारा खरीदें के लिए प्रेरित करें।"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -964,6 +1123,7 @@ msgid ""
 "Each rule can grant points to the customer he will be able to exchange "
 "against rewards"
 msgstr ""
+"नियमों के तहत ग्राहक को पॉइंट मिलेंगे, जिनका उपयोग वह इनाम पाने के लिए कर सकता है"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
@@ -978,42 +1138,42 @@ msgstr "ईमेल टेंप्लेट"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_to
 msgid "End date"
-msgstr "समाप्ति तिथि"
+msgstr "खत्म होने की तारीख"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Example: Gift for customer"
-msgstr ""
+msgstr "उदाहरण: ग्राहक के लिए गिफ़्ट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__expiration_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "खत्म होने की तारीख"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 msgid "Expiration date cannot be set on a loyalty card."
-msgstr ""
+msgstr "लॉयल्टी कार्ड की खत्म होने की कोई तारीख सेट नहीं हो सकती।"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Fidelity Card"
-msgstr ""
+msgstr "फिडेलिटी कार्ड"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Fidelity Cards"
-msgstr ""
+msgstr "फिडेलिटी कार्ड"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Fill in your eWallet, to pay future orders"
-msgstr ""
+msgstr "भविष्य के ऑर्डर का भुगतान करने के लिए अपना ई-वॉलेट भरें"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1028,46 +1188,46 @@ msgstr "फ़ॉलोवर (पार्टनर)"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__mode
 msgid "For"
-msgstr ""
+msgstr "के लिए"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "For all customers"
-msgstr ""
+msgstr "सभी ग्राहकों के लिए"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__reward_type__product
 msgid "Free Product"
-msgstr ""
+msgstr "मुफ़्त प्रॉडक्ट"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "Free Product - %s"
-msgstr ""
+msgstr "मुफ़्त प्रॉडक्ट - %s"
 
 #. module: loyalty
 #: model:loyalty.reward,description:loyalty.3_cabinets_plus_1_free_reward
 msgid "Free Product - Large Cabinet"
-msgstr ""
+msgstr "मुफ़्त प्रॉडक्ट - बड़ा कैबिनेट"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "Free Product - [%s]"
-msgstr ""
+msgstr "मुफ़्त प्रॉडक्ट - [%s]"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "Free product"
-msgstr ""
+msgstr "मुफ़्त प्रॉडक्ट"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__future
 msgid "Future orders"
-msgstr ""
+msgstr "फ़्यूचर ऑर्डर"
 
 #. module: loyalty
 #. odoo-javascript
@@ -1084,39 +1244,41 @@ msgid ""
 "Point of Sale or regular orders to claim the Reward. You can define "
 "constraints on its usage through conditional rule."
 msgstr ""
+"कूपन कोड मैन्युअल रूप से जनरेट और शेयर करें. इनाम पाने के लिए इसे ई-कॉमर्स, पॉइंट ऑफ़ सेल या सामान्य ऑर्"
+"डर में इस्तेमाल किया जा सकता है. इसके इस्तेमाल पर शर्तें, शर्त-आधारित नियमों से तय की जा सकती हैं।"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_generate_wizard
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate Coupons"
-msgstr ""
+msgstr "कूपन जनरेट करें"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate Gift Cards"
-msgstr ""
+msgstr "गिफ़्ट कार्ड जनरेट करें"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Generate and share unique coupons with your customers"
-msgstr ""
+msgstr "अपने ग्राहकों के लिए खास कूपन जनरेट और शेयर करें"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate eWallet"
-msgstr ""
+msgstr "ई-वॉलेट जनरेट करें"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Get 10% off on some products, with a code"
-msgstr ""
+msgstr "एक कोड का इस्तेमाल करके, कुछ प्रॉडक्ट पर 10% की छूट पाएं"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
 msgid "Gift &amp; Ewallet"
-msgstr ""
+msgstr "गिफ़्ट &amp; ई-वॉलेट"
 
 #. module: loyalty
 #. odoo-python
@@ -1127,29 +1289,29 @@ msgstr ""
 #: model:loyalty.reward,description:loyalty.gift_card_program_reward
 #: model:product.template,name:loyalty.gift_card_product_50_product_template
 msgid "Gift Card"
-msgstr "गिफ्ट कार्ड"
+msgstr "गिफ़्ट कार्ड"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Gift Card Products"
-msgstr ""
+msgstr "गिफ़्ट कार्ड प्रॉडक्ट"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Gift Card value"
-msgstr ""
+msgstr "गिफ़्ट कार्ड वैल्यू"
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_gift_card
 msgid "Gift Card: Gift Card Information"
-msgstr ""
+msgstr "गिफ़्ट कार्ड: गिफ़्ट कार्ड की जानकारी"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:loyalty.program,name:loyalty.gift_card_program
 msgid "Gift Cards"
-msgstr ""
+msgstr "गिफ़्ट कार्ड"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1160,30 +1322,35 @@ msgid ""
 "                                    Then, Gift Cards can be used to pay "
 "orders."
 msgstr ""
+"गिफ़्ट कार्ड, मैन्युअल रूप से बनाए जाते हैं या जब ग्राहक गिफ़्ट कार्ड प्रॉडक्ट ऑर्डर करता है, तो उसे अपने-आप "
+"ईमेल से भेजे जाते हैं.\n"
+"                                    <br/>\n"
+"                                    इसके बाद, गिफ़्ट कार्ड का इस्तेमाल ऑर्डर का पेमेंट करने के "
+"लिए किया जा सकता है।"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 msgid "Gift For Customer"
-msgstr ""
+msgstr "ग्राहक के लिए गिफ़्ट"
 
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
 msgid "Gift cards & eWallet"
-msgstr ""
+msgstr "गिफ़्ट कार्ड और ई-वॉलेट"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_card_update_balance.py:0
 msgid "Gift for customer"
-msgstr ""
+msgstr "ग्राहक के लिए गिफ़्ट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__points_granted
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "Grant"
-msgstr ""
+msgstr "अनुमति दें"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1191,6 +1358,7 @@ msgid ""
 "Grant 1 credit for each item bought then reward the customer with Y items in "
 "exchange of X credits."
 msgstr ""
+"खरीदे गए हर आइटम के लिए 1 क्रेडिट दें. फिर, ग्राहक को X क्रेडिट के बदले Y आइटम का इनाम दें।"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__has_message
@@ -1200,12 +1368,12 @@ msgstr "मैसेज है"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
 msgid "Here is your gift card!"
-msgstr ""
+msgstr "यह रहा आपका गिफ़्ट कार्ड!"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "Here is your reward from"
-msgstr ""
+msgstr "यह आपका इनाम है"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__history_ids
@@ -1215,12 +1383,12 @@ msgstr "इतिहास"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
 msgid "History Lines"
-msgstr ""
+msgstr "इतिहास की लाइन"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_history
 msgid "History for Loyalty cards and Ewallets"
-msgstr ""
+msgstr "लॉयल्टी कार्ड और ई-वॉलेट का इतिहास"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_base_partner_merge_automatic_wizard__id
@@ -1242,35 +1410,35 @@ msgstr "आईडी"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "अगर यह बॉक्स चेक है, तो नए मैसेज देखने ज़रूरी हैं."
+msgstr "अगर यह बॉक्स चेक है, तो नए मैसेज देखने ज़रूरी हैं।"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "अगर बॉक्स पर टिक है, तो कुछ मैसेज भेजने में गलती हुई है."
+msgstr "अगर बॉक्स पर टिक है, तो कुछ मैसेज भेजने में गलती हुई है।"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "If minimum"
-msgstr ""
+msgstr "अगर कम से कम"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "In exchange of"
-msgstr ""
+msgstr "के बदले में"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_search
 msgid "Inactive"
-msgstr "निष्क्रि"
+msgstr "बंद है"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 msgid "Invalid quantity."
-msgstr ""
+msgstr "अमान्य मात्रा।"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_is_follower
@@ -1280,17 +1448,17 @@ msgstr "फ़ॉलोवर है"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__is_global_discount
 msgid "Is Global Discount"
-msgstr ""
+msgstr "ग्लोबल डिस्काउंट है"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__is_nominative
 msgid "Is Nominative"
-msgstr ""
+msgstr "यह नॉमिनेटिव है"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__is_payment_program
 msgid "Is Payment Program"
-msgstr ""
+msgstr "पेमेंट प्रोग्राम है"
 
 #. module: loyalty
 #. odoo-python
@@ -1298,24 +1466,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__issued
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 msgid "Issued"
-msgstr ""
+msgstr "जारी किया गया"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_count_display
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_tree
 msgid "Items"
-msgstr "आइटम "
+msgstr "आइटम"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "John Doe"
-msgstr ""
+msgstr "जॉन डोई"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "Last Transactions"
-msgstr ""
+msgstr "आखिरी ट्रांज़ैक्शन"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__write_uid
@@ -1344,12 +1512,12 @@ msgstr "आखिरी बार अपडेट हुआ"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_mail_view_tree
 msgid "Limit"
-msgstr ""
+msgstr "लिमिट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__limit_usage
 msgid "Limit Usage"
-msgstr ""
+msgstr "इस्तेमाल की सीमा"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1360,7 +1528,7 @@ msgstr "लोगो"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Loyalty Card"
-msgstr ""
+msgstr "लॉयल्टी कार्ड"
 
 #. module: loyalty
 #. odoo-python
@@ -1368,63 +1536,64 @@ msgstr ""
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.res_partner_form
 msgid "Loyalty Cards"
-msgstr ""
+msgstr "लॉयल्टी कार्ड"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
 msgid "Loyalty Communication"
-msgstr ""
+msgstr "लॉयल्टी कम्यूनिकेशन"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr ""
+msgstr "लॉयल्टी कूपन"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_program
 msgid "Loyalty Program"
-msgstr ""
+msgstr "लॉयल्टी प्रोग्राम"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_reward
 msgid "Loyalty Reward"
-msgstr ""
+msgstr "लॉयल्टी रिवॉर्ड"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_rule
 msgid "Loyalty Rule"
-msgstr ""
+msgstr "लॉयल्टी से जुड़ा नियम"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 msgid "Loyalty Transaction"
-msgstr ""
+msgstr "लॉयल्टी ट्रांज़ैक्शन"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Loyalty point(s)"
-msgstr ""
+msgstr "लॉयल्टी पॉइंट"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__available_on
 msgid "Manage where your program should be available for use."
-msgstr ""
+msgstr "तय करें कि आपका प्रोग्राम इस्तेमाल के लिए कहां उपलब्ध होना चाहिए।"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
 msgid "Max Discount"
-msgstr ""
+msgstr "अधिकतम छूट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__max_usage
 msgid "Max Usage"
-msgstr ""
+msgstr "अधिकतम इस्तेमाल"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_program_check_max_usage
 msgid "Max usage must be strictly positive if a limit is used."
 msgstr ""
+"अगर कोई सीमा इस्तेमाल की जाती है, तो ज़्यादा से ज़्यादा उपयोग की संख्या ज़ीरो से ज़्यादा होनी चाहिए।"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_base_partner_merge_automatic_wizard
@@ -1439,66 +1608,67 @@ msgstr "मैसेज डिलीवरी में गड़बड़ी"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_ids
 msgid "Messages"
-msgstr "संदेश"
+msgstr "मैसेज"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount_tax_mode
 msgid "Minimum Amount Tax Mode"
-msgstr ""
+msgstr "न्यूनतम राशि टैक्स मोड"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount
 msgid "Minimum Purchase"
-msgstr ""
+msgstr "कम से कम खरीदारी"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_qty
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "कम से कम मात्रा"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__multi_product
 msgid "Multi Product"
-msgstr ""
+msgstr "मल्टी प्रॉडक्ट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__new_balance
 msgid "New Balance"
-msgstr ""
+msgstr "नया बैलेंस"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_card_update_balance.py:0
 msgid "New Balance should be positive and different then old balance."
 msgstr ""
+"नया बैलेंस ज़ीरो से ज़्यादा होना चाहिए और पुराने बैलेंस से अलग होना चाहिए।"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Next Order Coupon"
-msgstr ""
+msgstr "अगला ऑर्डर कूपन"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__next_order_coupons
 msgid "Next Order Coupons"
-msgstr ""
+msgstr "अगला ऑर्डर कूपन"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
 msgid "No Coupons Found."
-msgstr ""
+msgstr "कोई कूपन नहीं मिला।"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "No loyalty program found."
-msgstr ""
+msgstr "कोई लॉयल्टी प्रोग्राम नहीं मिला।"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "No program found."
-msgstr ""
+msgstr "कोई प्रोग्राम नहीं मिला।"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction_counter
@@ -1530,22 +1700,22 @@ msgstr "Odoo"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__order
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 msgid "Order"
-msgstr ""
+msgstr "ऑर्डर"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__order_model
 msgid "Order Model"
-msgstr ""
+msgstr "ऑर्डर मॉडल"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__partner_id
 msgid "Partner"
-msgstr "साथी"
+msgstr "पार्टनर"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Point(s)"
-msgstr ""
+msgstr "पॉइंट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points
@@ -1558,17 +1728,17 @@ msgstr "पॉइंट"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points_display
 msgid "Points Display"
-msgstr ""
+msgstr "पॉइंट डिस्प्ले"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Points Unit"
-msgstr ""
+msgstr "पॉइंट यूनिट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__required_points
 msgid "Points needed"
-msgstr ""
+msgstr "पॉइंट की ज़रूरत है"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__point_name
@@ -1577,12 +1747,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__point_name
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_name
 msgid "Portal Point Name"
-msgstr ""
+msgstr "पोर्टल पॉइंट का नाम"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__portal_visible
 msgid "Portal Visible"
-msgstr ""
+msgstr "पोर्टल विज़िबल"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_pricelist
@@ -1594,28 +1764,29 @@ msgstr "मूल्य सूची"
 #: model:ir.model,name:loyalty.model_product_template
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_id
 msgid "Product"
-msgstr "उत्पाद"
+msgstr "प्रॉडक्ट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_domain
 msgid "Product Domain"
-msgstr ""
+msgstr "प्रॉडक्ट डोमेन"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_tag_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_tag_id
 msgid "Product Tag"
-msgstr ""
+msgstr "प्रॉडक्ट टैग"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_product
+#, fuzzy
 msgid "Product Variant"
-msgstr "उत्पाद प्रकार"
+msgstr "प्रॉडक्ट वैरिएंट"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__payment_program_discount_product_id
 msgid "Product used in the sales order to apply the discount."
-msgstr ""
+msgstr "छूट देने के लिए सेल्स ऑर्डर में इस्तेमाल प्रॉडक्ट।"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_line_product_id
@@ -1623,6 +1794,7 @@ msgid ""
 "Product used in the sales order to apply the discount. Each reward has its "
 "own product for reporting purpose"
 msgstr ""
+"छूट लागू करने के लिए सेल्स ऑर्डर में इस्तेमाल हुआ प्रॉडक्ट. रिपोर्टिंग के लिए, हर इनाम का अपना प्रॉडक्ट होता है"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger_product_ids
@@ -1637,13 +1809,13 @@ msgstr "प्रॉडक्ट"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__program_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__program_id
 msgid "Program"
-msgstr ""
+msgstr "प्रोग्राम"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__name
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Program Name"
-msgstr ""
+msgstr "प्रोग्राम का नाम"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__program_type
@@ -1652,41 +1824,41 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__program_type
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__program_type
 msgid "Program Type"
-msgstr ""
+msgstr "प्रोग्राम टाइप"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Program trigger"
-msgstr ""
+msgstr "प्रोग्राम ट्रिगर"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Promo Code"
-msgstr ""
+msgstr "प्रोमो कोड"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Promo point(s)"
-msgstr ""
+msgstr "प्रोमो पॉइंट"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Promos"
-msgstr ""
+msgstr "प्रोमो"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Promotional Program"
-msgstr ""
+msgstr "प्रमोशनल प्रोग्राम"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promotion
 msgid "Promotions"
-msgstr ""
+msgstr "प्रमोशन"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__coupon_qty
@@ -1696,12 +1868,12 @@ msgstr "मात्रा"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Quantity rewarded"
-msgstr ""
+msgstr "इनाम में मिले आइटम की संख्या"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Quantity to generate"
-msgstr ""
+msgstr "जनरेट करने की मात्रा"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__rating_ids
@@ -1712,53 +1884,53 @@ msgstr "रेटिंग"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_amount
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Reward"
-msgstr ""
+msgstr "इनाम"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_mode
 msgid "Reward Point Mode"
-msgstr ""
+msgstr "रिवॉर्ड पॉइंट मोड"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_domain
 msgid "Reward Product Domain"
-msgstr ""
+msgstr "रिवॉर्ड प्रॉडक्ट डोमेन"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
 msgid "Reward Product Qty"
-msgstr ""
+msgstr "रिवॉर्ड प्रॉडक्ट क्वांटिटी"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id
 msgid "Reward Product Uom"
-msgstr ""
+msgstr "रिवॉर्ड प्रॉडक्ट यूओएम"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_ids
 msgid "Reward Products"
-msgstr ""
+msgstr "रिवॉर्ड प्रॉडक्ट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_type
 msgid "Reward Type"
-msgstr ""
+msgstr "रिवॉर्ड टाइप"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
-msgstr ""
+msgstr "रिवॉर्ड"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_rule_reward_point_amount_positive
 msgid "Rule points reward must be strictly positive."
-msgstr ""
+msgstr "नियम में दिए गए पॉइंट का इनाम ज़ीरो से ज़्यादा होना चाहिए।"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rules & Rewards"
-msgstr ""
+msgstr "नियम और इनाम"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_sms_error
@@ -1768,13 +1940,14 @@ msgstr "एसएमएस डिलीवरी में गड़बड़ी
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__selected
 msgid "Selected Customers"
-msgstr ""
+msgstr "चुने गए ग्राहक"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Sell Gift Cards, that allows to purchase products"
 msgstr ""
+"गिफ़्ट कार्ड बेचें, जिनका इस्तेमाल प्रॉडक्ट खरीदने के लिए किया जा सकता है"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
@@ -1785,75 +1958,76 @@ msgstr "भेजें"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Send a coupon after an order, valid for next purchase"
-msgstr ""
+msgstr "ऑर्डर के बाद एक कूपन भेजें, जो अगली खरीदारी के लिए मान्य हो"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_gift_card
 msgid "Sent to customer who purchased a gift card"
-msgstr ""
+msgstr "उस ग्राहक को भेजा गया जिसने गिफ़्ट कार्ड खरीदा है"
 
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_loyalty_card
 msgid "Sent to customer with coupon information"
-msgstr ""
+msgstr "कूपन की जानकारी के साथ ग्राहक को भेजें"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__sequence
 msgid "Sequence"
-msgstr "अनुक्रम"
+msgstr "सीक्वेंस"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
-msgstr ""
+msgstr "ऑर्डर पर शर्तें सेट करें, जिनसे ग्राहकों को इनाम पाने की सुविधा मिलेगी"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Show points Unit"
-msgstr ""
+msgstr "पॉइंट यूनिट दिखाएं"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__specific
 msgid "Specific Products"
-msgstr ""
+msgstr "खास प्रॉडक्ट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_split
 msgid "Split per unit"
-msgstr ""
+msgstr "हर यूनिट के हिसाब से बांटें"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "Split per unit is not allowed for Loyalty and eWallet programs."
 msgstr ""
+"लॉयल्टी और ई-वॉलेट प्रोग्राम के लिए, प्रति यूनिट के हिसाब से बांटने की अनुमति नहीं है।"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_from
 msgid "Start Date"
-msgstr "प्रारंभ दिनांक"
+msgstr "शुरू होने की तारीख"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__currency_symbol
 msgid "Symbol"
-msgstr ""
+msgstr "सिंबल"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "Thank you,"
-msgstr ""
+msgstr "धन्यवाद,"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_discount_positive
 msgid "The discount must be strictly positive."
-msgstr ""
+msgstr "छूट ज़ीरो से ज़्यादा होनी चाहिए।"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_to
 msgid "The end date is included in the validity period of this program"
-msgstr ""
+msgstr "समाप्ति की तारीख इस प्रोग्राम की वैधता अवधि में शामिल है"
 
 #. module: loyalty
 #. odoo-python
@@ -1861,27 +2035,28 @@ msgstr ""
 msgid ""
 "The loyalty program's currency must be the same as all it's pricelists ones."
 msgstr ""
+"लॉयल्टी प्रोग्राम की करेंसी (मुद्रा) वही होनी चाहिए जो उसकी सभी प्राइसलिस्ट की है।"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "The promo code must be unique."
-msgstr ""
+msgstr "प्रोमो कोड खास होना चाहिए।"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
-msgstr ""
+msgstr "इनाम के लिए ज़रूरी पॉइंट ज़ीरो से ज़्यादा होना चाहिए।"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
 msgid "The reward product quantity must be strictly positive."
-msgstr ""
+msgstr "इनाम में दिए जा रहे प्रॉडक्ट की मात्रा ज़ीरो से ज़्यादा होनी चाहिए।"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_from
 msgid "The start date is included in the validity period of this program"
-msgstr ""
+msgstr "शुरू होने की तारीख इस प्रोग्राम की वैधता अवधि में शामिल है"
 
 #. module: loyalty
 #. odoo-python
@@ -1889,29 +2064,31 @@ msgstr ""
 msgid ""
 "The validity period's start date must be anterior or equal to its end date."
 msgstr ""
+"शुरू होने की तारीख, खत्म होने की तारीख से पहले या उसके बराबर होनी चाहिए।"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 msgid "There are currently no transaction lines for this card."
-msgstr ""
+msgstr "फ़िलहाल इस कार्ड के लिए कोई ट्रांज़ैक्शन लाइन नहीं है।"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
 msgid "There haven't been any coupons generated yet."
-msgstr ""
+msgstr "अभी तक कोई कूपन जनरेट नहीं किया गया है।"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__reward_product_ids
 msgid "These are the products that can be claimed with this rule."
-msgstr ""
+msgstr "ये वे प्रॉडक्ट हैं जिन्हें इस नियम के तहत क्लेम (दावा) किया जा सकता है।"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_max_amount
 msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
 msgstr ""
+"यह वह अधिकतम राशि है जिस पर यह इनाम छूट दे सकता है. अगर कोई सीमा नहीं रखनी है, तो 0 छोड़ दें।"
 
 #. module: loyalty
 #. odoo-python
@@ -1920,6 +2097,7 @@ msgid ""
 "This pricelist may not be archived. It is being used for active promotion "
 "programs: %s"
 msgstr ""
+"इस प्राइसलिस्ट को अभी नहीं हटाया जा सकता, क्योंकि यह सक्रिय प्रमोशन प्रोग्राम में इस्तेमाल हो रही है: %s"
 
 #. module: loyalty
 #. odoo-python
@@ -1928,58 +2106,59 @@ msgid ""
 "This product may not be archived. It is being used for an active promotion "
 "program."
 msgstr ""
+"यह प्रॉडक्ट सक्रिय प्रमोशन प्रोग्राम में इस्तेमाल हो रहा है, इसलिए इसे हटाया नहीं जा सकता।"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__pricelist_ids
 msgid "This program is specific to this pricelist set."
-msgstr ""
+msgstr "यह प्रोग्राम केवल इसी प्राइसलिस्ट पर लागू होगा।"
 
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
 msgid "Top-up eWallet"
-msgstr ""
+msgstr "टॉप-अप ई-वॉलेट"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
 msgid "Total Order Count"
-msgstr ""
+msgstr "कुल ऑर्डर की संख्या"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
 msgid "Trigger"
-msgstr "ट्रिगर"
+msgstr "ट्रिगर करें"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 msgid "Update Balance"
-msgstr ""
+msgstr "बैलेंस अपडेट करें"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card_update_balance
 msgid "Update Loyalty Card Points"
-msgstr ""
+msgstr "लॉयल्टी कार्ड पॉइंट अपडेट करें"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__use_count
 msgid "Use Count"
-msgstr ""
+msgstr "काउंट इस्तेमाल करें"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__trigger__with_code
 msgid "Use a code"
-msgstr ""
+msgstr "कोड इस्तेमाल करें"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Use points on"
-msgstr ""
+msgstr "पर पॉइंट इस्तेमाल करें"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "Use this promo code before"
-msgstr ""
+msgstr "के पहले इस प्रोमो कोड का इस्तेमाल करें"
 
 #. module: loyalty
 #. odoo-python
@@ -1993,18 +2172,18 @@ msgstr "इस्तेमाल किया गया"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__user_has_debug
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__user_has_debug
 msgid "User Has Debug"
-msgstr ""
+msgstr "उपयोगकर्ता के पास डीबग है"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__valid_until
 msgid "Valid Until"
-msgstr ""
+msgstr "तक मान्य है"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "Valid until"
-msgstr ""
+msgstr "तक मान्य है"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2024,12 +2203,12 @@ msgstr "वेबसाइट कम्यूनिकेशन हिस्ट�
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__trigger
 msgid "When"
-msgstr ""
+msgstr "कब"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__points_reach
 msgid "When Reaching"
-msgstr ""
+msgstr "जब पहुंच जाए"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2037,6 +2216,8 @@ msgid ""
 "When customers make an order, they accumulate points they can exchange for "
 "rewards on the current order or on a future one."
 msgstr ""
+"जब ग्राहक कोई ऑर्डर करते हैं, तो वे पॉइंट जमा करते हैं, जिन्हें वे वर्तमान ऑर्डर पर या भविष्य के ऑर्डर "
+"पर इनाम के लिए एक्सचेंज कर सकते हैं।"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2044,6 +2225,7 @@ msgid ""
 "When generating coupon, you can define a specific points value that can be "
 "exchanged for rewards."
 msgstr ""
+"कूपन बनाते समय, आप यह बता सकते हैं कि यह कितने पॉइंट्स के बराबर होगा, जिसे इनामों के लिए बदला जा सके।"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
@@ -2051,33 +2233,35 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid..."
 msgstr ""
+"यह नियम तय करता है कि क्या ग्राहक को एक ही ऑर्डर के लिए एक से ज़्यादा कूपन मिलेंगे या नहीं. यह सिर्फ अगले "
+"ऑर्डर पर लागू होने वाले प्रोग्राम और खर्च/यूनिट आधारित ट्रिगर्स के लिए है..।"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
 msgid "Will Send Mail"
-msgstr ""
+msgstr "मेल भेजा जाएगा"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "Win points with each purchase, and claim gifts"
-msgstr ""
+msgstr "हर खरीद पर पॉइंट कमाएं और उनसे गिफ़्ट पाएं"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code
 msgid "With a promotion code"
-msgstr ""
+msgstr "प्रमोशन कोड के साथ"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 msgid "You are about to change the balance of the card"
-msgstr ""
+msgstr "आप कार्ड का बैलेंस बदलने वाले हैं"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "You can not delete a program in an active state"
-msgstr ""
+msgstr "सक्रिय प्रोग्राम को हटाया नहीं जा सकता"
 
 #. module: loyalty
 #. odoo-python
@@ -2087,6 +2271,8 @@ msgid ""
 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
 "archive it instead."
 msgstr ""
+"आप %(name)s को नहीं हटा सकते क्योंकि यह कूपन और लॉयल्टी प्रोग्राम में इस्तेमाल हो रहा है. इसके बजाय, इसे "
+"संग्रहीत कर दें।"
 
 #. module: loyalty
 #. odoo-python
@@ -2095,16 +2281,18 @@ msgid ""
 "You're about to generate %(program_type)s with a value of %(value)s for %"
 "(customer_number)i customers"
 msgstr ""
+"आप %(customer_number)i ग्राहकों के लिए %(value)s के मूल्य वाले %(program_type)s जनरेट करने"
+" वाले हैं"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
 msgid "Your Gift Card at {{ object.company_id.name }}"
-msgstr ""
+msgstr "{{ object.company_id.name }} पर आपका गिफ़्ट कार्ड"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr ""
+msgstr "{{ object.program_id.company_id.name }} से मिला आपका रिवॉर्ड कूपन "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2114,12 +2302,12 @@ msgstr "सभी"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "discount"
-msgstr ""
+msgstr "डिस्काउंट"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "e.g. 10% discount on laptops"
-msgstr ""
+msgstr "उदाहरण के लिए, लैपटॉप पर 10% छूट"
 
 #. module: loyalty
 #. odoo-python
@@ -2127,23 +2315,23 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__ewallet
 msgid "eWallet"
-msgstr ""
+msgstr "ई-वॉलेट"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "eWallet Products"
-msgstr ""
+msgstr "ई-वॉलेट प्रॉडक्ट"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "eWallet value"
-msgstr ""
+msgstr "ई-वॉलेट वैल्यू"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 msgid "eWallets"
-msgstr ""
+msgstr "ई-वॉलेट"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2154,111 +2342,116 @@ msgid ""
 "                                    Then, eWallets are proposed during the "
 "checkout, to pay orders."
 msgstr ""
+"ई-वॉलेट ग्राहक द्वारा ई-वॉलेट उत्पाद खरीदने पर खुद बन जाता है या उसे मैन्युअल रूप से बनाया जाता है.\n"
+"                                    <br/>\n"
+"                                    फिर, ऑर्डर का भुगतान करते समय चेकआउट पर ई-वॉलेट से "
+"भुगतान का विकल्प दिया जाता है।"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "item(s) bought"
-msgstr ""
+msgstr "खरीदे गए आइटम"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "loyalty Reward"
-msgstr ""
+msgstr "लॉयल्टी रिवॉर्ड"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#, fuzzy
 msgid "mail.template"
-msgstr ""
+msgstr "mail.template"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "money"
-msgstr ""
+msgstr "पैसा"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "on the cheapest product"
-msgstr ""
+msgstr "सबसे कम कीमत वाले प्रॉडक्ट पर"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
 msgid "on your next order"
-msgstr ""
+msgstr "आपके अगले ऑर्डर पर"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "on your order"
-msgstr ""
+msgstr "आपके ऑर्डर पर"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "per %s spent"
-msgstr ""
+msgstr "हर %s खर्च करने पर"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "per order"
-msgstr ""
+msgstr "हर ऑर्डर"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
 msgid "per unit paid"
-msgstr ""
+msgstr "हर यूनिट के हिसाब से चुकाया गया"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "specific products"
-msgstr ""
+msgstr "खास प्रॉडक्ट"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "spent"
-msgstr ""
+msgstr "खर्च किया गया"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__excl
 msgid "tax excluded"
-msgstr ""
+msgstr "टैक्स शामिल नहीं है"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__incl
 msgid "tax included"
-msgstr ""
+msgstr "टैक्स के साथ"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "the cheapest product"
-msgstr ""
+msgstr "सबसे सस्ता प्रॉडक्ट"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "the value of the coupon"
-msgstr ""
+msgstr "कूपन की वैल्यू"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "to"
-msgstr " "
+msgstr "से"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "usages"
-msgstr ""
+msgstr "इस्तेमाल"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "used)"
-msgstr ""
+msgstr "इस्तेमाल किया गया)"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "your order"
-msgstr ""
+msgstr "आपका ऑर्डर"
