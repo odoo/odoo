@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* portal
-# 
+# * portal
+#
 # Translators:
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2024
 # Anzelika Adejanova, 2024
@@ -11,20 +11,22 @@
 # JanisJanis <jbojars@gmail.com>, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
 # Will Sensors, 2025
-# 
+# Aleksejs Ivanovs <ai@myacc.pro>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-23 18:40+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Will Sensors, 2025\n"
-"Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"PO-Revision-Date: 2025-12-18 10:48+0000\n"
+"Last-Translator: Aleksejs Ivanovs <ai@myacc.pro>\n"
+"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-18/portal/"
+"lv/>\n"
+"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lv\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -57,6 +59,9 @@ msgid ""
 "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary text-primary-"
 "emphasis\"/> My Account"
 msgstr ""
+"<i class="
+"\"fa fa-fw fa-id-card-o me-1 small text-primary text-primary-emphasis\"/> "
+"Mans konts"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -64,6 +69,9 @@ msgid ""
 "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary text-primary-"
 "emphasis\"/> Logout"
 msgstr ""
+"<i class="
+"\"fa fa-fw fa-sign-out me-1 small text-primary text-primary-emphasis\"/> "
+"Iziet"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
@@ -71,6 +79,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-th me-1 small text-primary text-primary-emphasis\"/> "
 "Apps"
 msgstr ""
+"<i class=\"fa fa-fw fa-th me-1 small text-primary text-primary-emphasis\"/> "
+"Lietotnes"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -244,6 +254,129 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<t t-set=\"user_name\" t-value="
+"\"object.user_id.name or object.partner_id.name or ''\"/>\n"
+"            <t t-set=\"company_name\" t-value="
+"\"object.user_id.company_id.name or object.partner_id.company_id.name or ''\""
+"/>\n"
+"            <t t-set=\"signup_url\" t-value=\"object.user_id.partner_id and "
+"object.user_id.partner_id._get_signup_url() or object.partner_id and "
+"object.partner_id._get_signup_url()\"/>\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\""
+"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style="
+"\"padding: 16px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Jūsu konts</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;"
+"\" t-out=\"user_name\">Marc Demo</span>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if="
+"\"not object.user_id.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src="
+"\"/logo.png?company={{ object.user_id.company_id.id }}\" style="
+"\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt="
+"\"object.user_id.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px "
+"0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Cienījamais/-ā<t t-out=\"user_name\">Marc Demo</t>,<"
+"br/> <br/>\n"
+"                        Laipni lūdzam <t t-out=\"company_name\">YourCompany</"
+"t>'s portālā!<br/><br/>\n"
+"                        Jums ir izveidots lietotāja konts ar šādu "
+"pieteikšanās vārdu: <t t-out=\"object.user_id.login\">demo</t><br/><br/>\n"
+"                        Lūdzu, noklikšķiniet uz pogas zemāk, lai iestatītu "
+"paroli un aktivizētu savu kontu.\n"
+"                        <div style="
+"\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"                            <a t-att-href=\"signup_url\" style=\"display: "
+"inline-block; padding: 10px; text-decoration: none; font-size: 12px; "
+"background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
+"                                <strong>Aktivizēt kontu</strong>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <t t-out=\"object.wizard_id.welcome_message or ''\""
+">Laipni lūdzam mūsu uzņēmuma portālā.</t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
+"\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"company_name\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style="
+"\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.user_id.company_id.phone or ''\">+1 "
+"650-123-4567</t>\n"
+"                    <t t-if=\"object.user_id.company_id.email\">\n"
+"                        | <a t-attf-href="
+"\"'mailto:%s' % {{ object.user_id.company_id.email }}\" style=\"text-"
+"decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.email "
+"or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.user_id.company_id.website\">\n"
+"                        | <a t-attf-href="
+"\"'%s' % {{ object.user_id.company_id.website }}\" style=\"text-"
+"decoration:none; color: #454748;\" t-out=\"object.user_id.company_id.website "
+"or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding:"
+" 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Nodrošina  <a target=\"_blank\" href="
+"\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style="
+"\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_users_apikeys_description
@@ -360,7 +493,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal_security.js:0
 msgid "Check failed"
-msgstr ""
+msgstr "Pārbaude neizdevās"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -514,6 +647,12 @@ msgid ""
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
+"Atspējot savu kontu, liedzot turpmāku pieteikšanos.<br/>\n"
+"                                        <b>\n"
+"                                            <i class="
+"\"fa fa-exclamation-triangle text-danger\"/>\n"
+"                                            Šo darbību nevar atsaukt.\n"
+"                                        </b>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -576,7 +715,7 @@ msgstr "Aizmirsāt paroli?"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Give a duration for the key's validity"
-msgstr ""
+msgstr "Norādiet atslēgas derīguma termiņu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -657,7 +796,7 @@ msgstr "Nederīgs e-pasts. Lūdzu, ievadiet derīgu e-pasta adresi."
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "Nederīgs pārskata veids: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -667,7 +806,7 @@ msgstr "Ielūguma ziņojums"
 #. module: portal
 #: model:mail.template,description:portal.mail_template_data_portal_welcome
 msgid "Invitation email to contacts to create a user account"
-msgstr ""
+msgstr "Ielūguma e-pasts kontaktiem lietotāja konta izveidei"
 
 #. module: portal
 #. odoo-python
@@ -692,6 +831,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Ir ļoti svarīgi, lai šis apraksts būtu skaidrs\n"
+"                un pilnīgs,"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -740,12 +881,14 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"Modelis %(model_name)s neatbalsta tokena parakstu, jo tam nav lauka %"
+"(field_name)s."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "Multi company reports are not supported."
-msgstr ""
+msgstr "Vairāku uzņēmumu pārskati netiek atbalstīti."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -851,12 +994,12 @@ msgstr "Portāla pieejas URL"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "Portal Mixin"
-msgstr ""
+msgstr "Portāla miksins"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "Portāla koplietošana"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -885,11 +1028,13 @@ msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted "
 "again"
 msgstr ""
+"Pievienojiet manu e-pastu un tālruņa numuru melnajam sarakstam, lai mani "
+"vairs netraucētu"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -919,12 +1064,12 @@ msgstr "Saistītā dokumenta modelis"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Atsaukt piekļuvi"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Revoke All Sessions"
-msgstr ""
+msgstr "Atcelt visas sesijas"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -964,6 +1109,11 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
+"Izvēlieties, kuri kontakti jāpievieno portālam, no zemāk esošā saraksta.\n"
+"                        Katra izvēlētā kontakta e-pasta adresei jābūt "
+"derīgai un unikālai.\n"
+"                        Ja nepieciešams, varat labot kontakta e-pasta adresi "
+"tieši sarakstā."
 
 #. module: portal
 #. odoo-javascript
@@ -981,7 +1131,7 @@ msgstr "Sūtīt ziņojumu"
 #: model:ir.actions.act_window,name:portal.portal_share_action
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Share Document"
-msgstr ""
+msgstr "Kopīgot dokumentu"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
@@ -996,7 +1146,7 @@ msgstr "Piereģistrēties"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Skip to Content"
-msgstr ""
+msgstr "Pāriet pie satura"
 
 #. module: portal
 #. odoo-javascript
@@ -1032,7 +1182,7 @@ msgstr "Iela"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "Street 2"
-msgstr ""
+msgstr "Iela 2"
 
 #. module: portal
 #. odoo-javascript
@@ -1052,7 +1202,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
-msgstr ""
+msgstr "Pielikumu %s nevar dzēst, jo tas nav gaidīšanas stāvoklī."
 
 #. module: portal
 #. odoo-python
@@ -1071,19 +1221,19 @@ msgstr "Kontaktam \"%s\" nav derīga e-pasta adrese."
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The contact \"%s\" has the same email as an existing user"
-msgstr ""
+msgstr "Kontaktam “%s” ir tāda pati e-pasta adrese kā esošam lietotājam"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "Atslēgu vēlāk nevarēs atjaunot, un tā nodrošina"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key will be deleted once this period has elapsed."
-msgstr ""
+msgstr "Atslēga tiks dzēsta, tiklīdz šis periods būs beidzies."
 
 #. module: portal
 #. odoo-python
@@ -1102,13 +1252,13 @@ msgstr "Jūsu norādītā vecā parole ir nederīga, Jūsu parole netika nomain�
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "Partnerim “%s” jau ir portāla piekļuve."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "Partnerim “%s” nav portāla piekļuves vai tas ir iekšējais lietotājs."
 
 #. module: portal
 #. odoo-python
@@ -1117,6 +1267,8 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"Veidne “Portāls: jauns lietotājs” netika atrasta e-pasta nosūtīšanai portāla "
+"lietotājam."
 
 #. module: portal
 #. odoo-python
@@ -1135,22 +1287,28 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Šis partneris ir saistīts ar iekšējo lietotāju un tam jau ir piekļuve "
+"portālam."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
 msgstr ""
+"Šis teksts tiek iekļauts e-pasta ziņojuma beigās, kas tiek nosūtīts "
+"jaunajiem portāla lietotājiem."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
+"Šis teksts tiek iekļauts e-pasta ziņojumā, kas tiek nosūtīts jaunajiem "
+"portāla lietotājiem."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
-msgstr ""
+msgstr "Pārslēgt filtrus"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1276,13 +1434,13 @@ msgstr "Rakstīt ziņojumu..."
 #. odoo-javascript
 #: code:addons/portal/static/src/chatter/core/composer_patch.js:0
 msgid "Write a message…"
-msgstr "Rakstīt ziņu..."
+msgstr "Rakstīt ziņu…"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Write down your key"
-msgstr ""
+msgstr "Pierakstiet savu atslēgu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1310,7 +1468,7 @@ msgstr "Jums ir jāievada \""
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Vispirms jums jāpiešķir portāla piekļuve partnerim “%s”."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -1318,6 +1476,8 @@ msgid ""
 "Your account at {{ object.user_id.company_id.name or "
 "object.partner_id.company_id.name }}"
 msgstr ""
+"Jūsu konts uzņēmumā {{ object.user_id.company_id.name or "
+"object.partner_id.company_id.name }}"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1347,6 +1507,8 @@ msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"tā būs vienīgā iespēja\n"
+"                identificēt atslēgu pēc tās izveidošanas"
 
 #. module: portal
 #. odoo-javascript

@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-08 18:37+0000\n"
-"PO-Revision-Date: 2025-12-13 16:37+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-12-16 13:08+0000\n"
+"Last-Translator: Vojtěch Olšan <vojtech.olsan@systee.cz>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-18/hr_expense/"
 "cs/>\n"
 "Language: cs\n"
@@ -286,7 +286,7 @@ msgstr "Výdaj se stejnou kategorií, částkou a datumem již existuje."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense_sheet.py:0
 msgid "An expense report must contain only lines from the same company."
-msgstr "Výkaz výdavkov musí obsahovať iba riadky od tej istej spoločnosti."
+msgstr "Výkaz výdajů musí obsahovat pouze řádky od stejné společnosti."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_account
@@ -332,7 +332,7 @@ msgstr "Schválit"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Approve Report"
-msgstr "Schváliť správu"
+msgstr "Schválit výkaz"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__approved
@@ -515,13 +515,13 @@ msgstr "Náklady:"
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Create Report"
-msgstr "Vytvořit zprávu"
+msgstr "Vytvořit výkaz"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
 msgid "Create a new expense report"
-msgstr "Vytvořit nový přehled výdajů"
+msgstr "Vytvořit nový výkaz výdajů"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -814,7 +814,7 @@ msgstr "Výkaz výdajů"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__accounting_date
 msgid "Expense Report Date"
-msgstr ""
+msgstr "Datum výkazu výdajů"
 
 #. module: hr_expense
 #: model:ir.actions.report,name:hr_expense.action_report_expense_sheet_img
@@ -842,7 +842,7 @@ msgstr "Analýza výkazů výdajů"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr "Zprávy o výdajích ke schválení"
+msgstr "Výkazy výdajů ke schválení"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__expense_sheet_id
@@ -895,17 +895,17 @@ msgstr ""
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr "Zpráva o výdajích zaplacena"
+msgstr "Výkaz výdajů zaplacen"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "Zpráva o výdajích byla odmítnuta"
+msgstr "Výkaz výdajů byl odmítnut"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense report reset to Draft"
-msgstr ""
+msgstr "Výkaz výdajů byl nastaven do návrhu"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -952,7 +952,7 @@ msgstr "Analýza výdajů"
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr "Zpráva o výdajích"
+msgstr "Výkaz výdajů"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
@@ -1281,7 +1281,7 @@ msgid ""
 "Managers can approve the report here, then an accountant can post the "
 "accounting entries."
 msgstr ""
-"Manažeři zde mohou zprávu schválit, poté může účetní zaúčtovat účetní zápisy."
+"Manažeři zde mohou výkaz schválit, poté může účetní zaúčtovat účetní zápisy."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1592,7 +1592,7 @@ msgstr "Platební metody"
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
-msgstr " Dostupné způsoby platby za výdaje hrazené společností"
+msgstr "Dostupné způsoby platby za výdaje hrazené společností"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
@@ -1623,7 +1623,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Post Entries"
-msgstr "Příspěvky"
+msgstr "Zaúčtovat záznamy"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1736,7 +1736,7 @@ msgstr "Odmítnout"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_refuse_wizard_action
 msgid "Refuse Expense"
-msgstr "Důvod odmítnutí výdajů"
+msgstr "Odmítnout výdaj"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__refused
@@ -2141,7 +2141,7 @@ msgstr "Předložit"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "To be Reimbursed"
-msgstr ""
+msgstr "K proplacení"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -2275,7 +2275,7 @@ msgstr "Zobrazit výdaje"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "View Report"
-msgstr "Zobrazit hlášení"
+msgstr "Zobrazit výkaz"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__website_message_ids
@@ -2521,7 +2521,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense Report"
-msgstr ""
+msgstr "V8š výkaz výdajů"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2561,12 +2561,12 @@ msgstr "např. \"mycompany.com\""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "expense"
-msgstr ""
+msgstr "výdaj"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr "bylo odmítnuto"
+msgstr "byl odmítnut"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
