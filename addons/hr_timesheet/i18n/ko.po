@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:36+0000\n"
+"POT-Creation-Date: 2025-12-19 18:36+0000\n"
 "PO-Revision-Date: 2025-08-25 07:12+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-4/"
@@ -780,6 +780,12 @@ msgstr "데이터가 아직 없습니다."
 
 #. module: hr_timesheet
 #. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "None"
 msgstr "없음"
@@ -980,6 +986,14 @@ msgid ""
 msgstr ""
 "일부 근무 시간표 항목 때문에 이 작업이 지연될 수 있습니다! 먼저 해당 항목을 "
 "제거해야 작업을 삭제할 수 있습니다!"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1451,8 +1465,8 @@ msgstr ""
 "        !! 작업 우선순위를 높음으로 설정\n"
 "        !!! 작업의 우선순위를 긴급으로 설정\n"
 "\n"
-"        형식과 순서가 알맞게 지정되어 있는지 확인하세요 예: 환경설정 화면 "
-"개선 5h #feature #v16 @Mitchell !"
+"        형식과 순서가 알맞게 지정되어 있는지 확인하세요 예: 환경설정 화면 개"
+"선 5h #feature #v16 @Mitchell !"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__user_id
