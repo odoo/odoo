@@ -85,6 +85,12 @@ registry.category("web_tour.tours").add("GS1BarcodeScanningTour", {
             ProductScreen.selectedOrderlineHas("Product 3"),
             scan_barcode("3760171283370"),
             ProductScreen.selectedOrderlineHas("Product 3", 2),
+
+            // Add product packaging with GS1 barcode
+            scan_barcode("0108431673020132"),
+            ProductScreen.selectedOrderlineHas("Product 1", 17 + 10),
+            scan_barcode("0108431673020132305"),
+            ProductScreen.selectedOrderlineHas("Product 1", 27 + 5 * 10),
             Chrome.endTour(),
         ].flat(),
 });

@@ -137,6 +137,9 @@ def check_git_branch():
     checkout to match it if needed.
     """
     server = get_odoo_server_url()
+    if not server or platform.system() == 'Windows':
+        _logger.debug('Ignoring git branch check')
+        return
     urllib3.disable_warnings()
     http = urllib3.PoolManager(cert_reqs='CERT_NONE')
     try:

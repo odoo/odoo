@@ -5,7 +5,6 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
-import { BOLD_TAGS, notStrong, span, strong, em } from "../_helpers/tags";
 import {
     bold,
     insertText,
@@ -22,15 +21,15 @@ test("should make a few characters bold", async () => {
     await testEditor({
         contentBefore: "<p>ab[cde]fg</p>",
         stepFunction: bold,
-        contentAfter: `<p>ab${strong(`[cde]`)}fg</p>`,
+        contentAfter: `<p>ab<strong>[cde]</strong>fg</p>`,
     });
 });
 
 test("should make a few characters not bold", async () => {
     await testEditor({
-        contentBefore: `<p>${strong(`ab[cde]fg`)}</p>`,
+        contentBefore: `<p><strong>ab[cde]fg</strong></p>`,
         stepFunction: bold,
-        contentAfter: `<p>${strong(`ab`)}[cde]${strong(`fg`)}</p>`,
+        contentAfter: `<p><strong>ab</strong>[cde]<strong>fg</strong></p>`,
     });
 });
 
@@ -38,24 +37,27 @@ test("should make two paragraphs bold", async () => {
     await testEditor({
         contentBefore: "<p>[abc</p><p>def]</p>",
         stepFunction: bold,
-        contentAfter: `<p>${strong(`[abc`)}</p><p>${strong(`def]`)}</p>`,
+        contentAfter: `<p><strong>[abc</strong></p><p><strong>def]</strong></p>`,
     });
 });
 
 test("should make two paragraphs not bold", async () => {
     await testEditor({
-        contentBefore: `<p>${strong(`[abc`)}</p><p>${strong(`def]`)}</p>`,
+        contentBefore: `<p><strong>[abc</strong></p><p><strong>def]</strong></p>`,
         stepFunction: bold,
         contentAfter: `<p>[abc</p><p>def]</p>`,
     });
 });
 
-test("should make qweb tag bold", async () => {
+test("should make qweb tag bold (1)", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: bold,
         contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="font-weight: bolder;">Test</p>]</div>`,
     });
+});
+
+test("should make qweb tag bold (2)", async () => {
     await testEditor({
         contentBefore: `<div><p t-field="record.name" contenteditable="false">[Test]</p></div>`,
         stepFunction: bold,
@@ -84,7 +86,7 @@ test("should make qweb tag bold and create a step even with partial selection in
 test("should make a whole heading bold after a triple click", async () => {
     await testEditor({
         styleContent: styleH1Bold,
-        contentBefore: `<h1>${notStrong(`[ab`)}</h1><p>]cd</p>`,
+        contentBefore: `<h1><span style="font-weight: normal;">[ab</span></h1><p>]cd</p>`,
         stepFunction: async (editor) => {
             await tripleClick(editor.editable.querySelector("h1"));
             bold(editor);
@@ -99,31 +101,31 @@ test("should make a whole heading not bold after a triple click (heading is cons
     });
     await tripleClick(el.querySelector("h1"));
     bold(editor);
-    expect(getContent(el)).toBe(`<h1>${notStrong(`[ab]`)}</h1><p>cd</p>`);
+    expect(getContent(el)).toBe(`<h1><span style="font-weight: normal;">[ab]</span></h1><p>cd</p>`);
 });
 
 test("should make a selection starting with bold text fully bold", async () => {
     await testEditor({
-        contentBefore: `<p>${strong(`[ab`)}</p><p>c]d</p>`,
+        contentBefore: `<p><strong>[ab</strong></p><p>c]d</p>`,
         stepFunction: bold,
-        contentAfter: `<p>${strong(`[ab`)}</p><p>${strong(`c]`)}d</p>`,
+        contentAfter: `<p><strong>[ab</strong></p><p><strong>c]</strong>d</p>`,
     });
 });
 
 test("should make a selection with bold text in the middle fully bold", async () => {
     await testEditor({
-        contentBefore: `<p>[a${strong(`b`)}</p><p>${strong(`c`)}d]e</p>`,
+        contentBefore: `<p>[a<strong>b</strong></p><p><strong>c</strong>d]e</p>`,
         stepFunction: bold,
-        contentAfter: `<p>${strong(`[ab`)}</p><p>${strong(`cd]`)}e</p>`,
+        contentAfter: `<p><strong>[ab</strong></p><p><strong>cd]</strong>e</p>`,
     });
 });
 
 test("should make a selection ending with bold text fully bold", async () => {
     await testEditor({
         styleContent: styleH1Bold,
-        contentBefore: `<h1>${notStrong(`[ab`)}</h1><p>${strong(`c]d`)}</p>`,
+        contentBefore: `<h1><span style="font-weight: normal;">[ab</span></h1><p><strong>c]d</strong></p>`,
         stepFunction: bold,
-        contentAfter: `<h1>[ab</h1><p>${strong(`c]d`)}</p>`,
+        contentAfter: `<h1>[ab</h1><p><strong>c]d</strong></p>`,
     });
 });
 
@@ -131,28 +133,44 @@ test("should get ready to type in bold", async () => {
     await testEditor({
         contentBefore: "<p>ab[]cd</p>",
         stepFunction: bold,
-        contentAfterEdit: `<p>ab${strong(`[]\u200B`, "first")}cd</p>`,
+        contentAfterEdit: `<p>ab<strong data-oe-zws-empty-inline="">[]\u200B</strong>cd</p>`,
         contentAfter: `<p>ab[]cd</p>`,
     });
 });
 
 test("should get ready to type in not bold", async () => {
     await testEditor({
-        contentBefore: `<p>${strong(`ab[]cd`)}</p>`,
+        contentBefore: `<p><strong>ab[]cd</strong></p>`,
         stepFunction: bold,
-        contentAfterEdit: `<p>${strong(`ab`)}${span(`[]\u200B`, "first")}${strong(`cd`)}</p>`,
-        contentAfter: `<p>${strong(`ab[]cd`)}</p>`,
+        contentAfterEdit: `<p><strong>ab</strong><span data-oe-zws-empty-inline="">[]\u200B</span><strong>cd</strong></p>`,
+        contentAfter: `<p><strong>ab[]cd</strong></p>`,
     });
 });
 
-test("should remove a bold tag that was redondant while performing the command", async () => {
-    for (const tag of BOLD_TAGS) {
+describe("Redundant bold tags", () => {
+    test(`should remove a strong tag that was redundant while performing the command.`, async () => {
         await testEditor({
-            contentBefore: `<p>a${tag(`b[c]d`)}e</p>`,
+            contentBefore: `<p>a<strong>b[c]d</strong>e</p>`,
             stepFunction: bold,
-            contentAfter: `<p>a${tag("b")}[c]${tag("d")}e</p>`,
+            contentAfter: `<p>a<strong>b</strong>[c]<strong>d</strong>e</p>`,
         });
-    }
+    });
+
+    test(`should remove a span tag with bold style that was redundant while performing the command.`, async () => {
+        await testEditor({
+            contentBefore: `<p>a<span style="font-weight: bolder;">b[c]d</span>e</p>`,
+            stepFunction: bold,
+            contentAfter: `<p>a<span style="font-weight: bolder;">b</span>[c]<span style="font-weight: bolder;">d</span>e</p>`,
+        });
+    });
+
+    test(`should remove a b tag that was redundant while performing the command.`, async () => {
+        await testEditor({
+            contentBefore: `<p>a<b>b[c]d</b>e</p>`,
+            stepFunction: bold,
+            contentAfter: `<p>a<b>b</b>[c]<b>d</b>e</p>`,
+        });
+    });
 });
 
 test("should remove bold format when having newline character nodes in selection", async () => {
@@ -190,9 +208,7 @@ test("should not format non-editable text (bold)", async () => {
     await testEditor({
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
         stepFunction: bold,
-        contentAfter: `<p>${strong("[a")}</p><p contenteditable="false">b</p><p>${strong(
-            "c]"
-        )}</p>`,
+        contentAfter: `<p><strong>[a</strong></p><p contenteditable="false">b</p><p><strong>c]</strong></p>`,
     });
 });
 
@@ -223,9 +239,9 @@ test("should make a few characters bold inside table (bold)", async () => {
             <table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="o_selected_td"><p>${strong(`[abc`)}</p></td>
-                        <td class="o_selected_td"><p>${strong(`def`)}</p></td>
-                        <td class="o_selected_td"><p>${strong(`]<br>`)}</p></td>
+                        <td class="o_selected_td"><p><strong>[abc</strong></p></td>
+                        <td class="o_selected_td"><p><strong>def</strong></p></td>
+                        <td class="o_selected_td"><p><strong>]<br></strong></p></td>
                     </tr>
                     <tr>
                         <td><p><br></p></td>
@@ -252,10 +268,7 @@ test("should insert a span zws when toggling a formatting command twice", () =>
         // todo: It would be better to remove the zws entirely so that
         // the P could have the "/" hint but that behavior might be
         // complex with the current implementation.
-        contentAfterEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">${span(
-            `[]\u200B`,
-            "first"
-        )}</p>`,
+        contentAfterEdit: `<p placeholder='Type "/" for commands' class="o-we-hint"><span data-oe-zws-empty-inline="">[]\u200B</span></p>`,
     }));
 
 // This test uses execCommand to reproduce as closely as possible the browser's
@@ -280,41 +293,43 @@ test("should type in bold", async () => {
 
     // Toggle bold on.
     bold(editor);
-    expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab<strong data-oe-zws-empty-inline="">[]\u200B</strong>cd</p>`);
 
     // Simulate text insertion as done by the contenteditable.
     await typeChar(editor, "x");
     // Check that character was inserted inside the strong tag.
-    expect(getContent(el)).toBe(`<p>ab${strong("x[]")}cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab<strong>x[]</strong>cd</p>`);
 
     // Keep typing.
     await typeChar(editor, "y");
-    expect(getContent(el)).toBe(`<p>ab${strong("xy[]")}cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab<strong>xy[]</strong>cd</p>`);
 
     // Toggle bold off and type more.
     bold(editor);
-    expect(getContent(el)).toBe(`<p>ab${strong("xy")}${span("[]\u200B", "first")}cd</p>`);
+    expect(getContent(el)).toBe(
+        `<p>ab<strong>xy</strong><span data-oe-zws-empty-inline="">[]\u200B</span>cd</p>`
+    );
     await typeChar(editor, "z");
-    expect(getContent(el)).toBe(`<p>ab${strong("xy")}z[]cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab<strong>xy</strong>z[]cd</p>`);
 });
 
 test.tags("desktop");
 test("create bold with shortcut + selected with arrow", async () => {
     const { editor, el } = await setupEditor("<p>ab[]cd</p>");
     await press(["control", "b"]);
-    expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab<strong data-oe-zws-empty-inline="">[]\u200B</strong>cd</p>`);
 
     await simulateArrowKeyPress(editor, ["Shift", "ArrowRight"]);
     await tick(); // await selectionchange
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 1);
-    expect(getContent(el)).toBe(`<p>ab${strong("[\u200B", "first")}c]d</p>`);
+    expect(getContent(el)).toBe(`<p>ab<strong data-oe-zws-empty-inline="">[\u200B</strong>c]d</p>`);
 
     await simulateArrowKeyPress(editor, ["Shift", "ArrowLeft"]);
     await tick(); // await selectionchange
     await animationFrame();
     await expectElementCount(".o-we-toolbar", 0);
-    expect(getContent(el)).toBe(`<p>ab${strong("[\u200B]", "first")}cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab<strong data-oe-zws-empty-inline="">[\u200B]</strong>cd</p>`);
 });
 
 const styleContentBold = `.boldClass { font-weight: bold; }`;
@@ -337,15 +352,31 @@ describe("inside container or inline with class already bold", () => {
         });
     });
 
-    test("should force the font-weight to normal while removing redundant tag", async () => {
-        for (const tag of BOLD_TAGS) {
-            await testEditor({
-                styleContent: styleContentBold,
-                contentBefore: `<p class="boldClass">a${tag("[b]")}c</p>`,
-                stepFunction: bold,
-                contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
-            });
-        }
+    test("should force the font-weight to normal while removing redundant tag. (1)", async () => {
+        await testEditor({
+            styleContent: styleContentBold,
+            contentBefore: `<p class="boldClass">a<strong>[b]</strong>c</p>`,
+            stepFunction: bold,
+            contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
+        });
+    });
+
+    test("should force the font-weight to normal while removing redundant tag. (2)", async () => {
+        await testEditor({
+            styleContent: styleContentBold,
+            contentBefore: `<p class="boldClass">a<span style="font-weight: bolder;">[b]</span>c</p>`,
+            stepFunction: bold,
+            contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
+        });
+    });
+
+    test("should force the font-weight to normal while removing redundant tag. (3)", async () => {
+        await testEditor({
+            styleContent: styleContentBold,
+            contentBefore: `<p class="boldClass">a<b>[b]</b>c</p>`,
+            stepFunction: bold,
+            contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">[b]</span>c</p>`,
+        });
     });
 });
 
@@ -353,7 +384,7 @@ describe("inside container font-weight: 500 and strong being strong-weight: 500"
     test("should remove the redundant strong style and add span with a bolder font-weight", async () => {
         await testEditor({
             styleContent: `h1, strong {font-weight: 500;}`,
-            contentBefore: `<h1>a${strong(`[b]`)}c</h1>`,
+            contentBefore: `<h1>a<strong>[b]</strong>c</h1>`,
             stepFunction: bold,
             contentAfter: `<h1>a<span style="font-weight: bolder;">[b]</span>c</h1>`,
         });
@@ -365,7 +396,7 @@ test("should remove empty bold tag when changing selection", async () => {
 
     bold(editor);
     await tick();
-    expect(getContent(el)).toBe(`<p>ab${strong("[]\u200B", "first")}cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab<strong data-oe-zws-empty-inline="">[]\u200B</strong>cd</p>`);
 
     await simulateArrowKeyPress(editor, "ArrowLeft");
     await tick(); // await selectionchange
@@ -378,7 +409,9 @@ test("should remove multiple formatted empty bold tag when changing selection", 
     bold(editor);
     italic(editor);
     await tick();
-    expect(getContent(el)).toBe(`<p>ab${strong(em("[]\u200B", "first"), "first")}cd</p>`);
+    expect(getContent(el)).toBe(
+        `<p>ab<strong data-oe-zws-empty-inline=""><em data-oe-zws-empty-inline="">[]\u200B</em></strong>cd</p>`
+    );
 
     await simulateArrowKeyPress(editor, "ArrowLeft");
     await tick(); // await selectionchange
@@ -391,15 +424,14 @@ test("should not remove empty bold tag in an empty block when changing selection
     bold(editor);
     await tick();
     expect(getContent(el)).toBe(
-        `<p>abcd</p><p placeholder='Type "/" for commands' class="o-we-hint">${strong(
-            "[]\u200B",
-            "first"
-        )}</p>`
+        `<p>abcd</p><p placeholder='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`
     );
 
     await simulateArrowKeyPress(editor, "ArrowUp");
     await tick(); // await selectionchange
-    expect(getContent(el)).toBe(`<p>[]abcd</p><p>${strong("\u200B", "first")}</p>`);
+    expect(getContent(el)).toBe(
+        `<p>[]abcd</p><p><strong data-oe-zws-empty-inline="">\u200B</strong></p>`
+    );
 });
 
 test("should not add history step for bold on collapsed selection", async () => {
@@ -411,10 +443,10 @@ test("should not add history step for bold on collapsed selection", async () => 
     // step. The empty inline tag is temporary: auto-cleaned if unused. We want
     // to avoid having a phantom step in the history.
     await press(["ctrl", "b"]);
-    expect(getContent(el)).toBe(`<p>abcd${strong("[]\u200B", "first")}</p>`);
+    expect(getContent(el)).toBe(`<p>abcd<strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`);
 
     await insertText(editor, "A");
-    expect(getContent(el)).toBe(`<p>abcd${strong("A[]")}</p>`);
+    expect(getContent(el)).toBe(`<p>abcd<strong>A[]</strong></p>`);
 
     undo(editor);
     expect(getContent(el)).toBe(`<p>abcd[]</p>`);

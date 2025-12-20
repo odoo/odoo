@@ -3180,3 +3180,30 @@ class TestUi(TestPointOfSaleHttpCommon):
         with patch.object(pos_order, "confirm_coupon_programs", confirm_coupon_programs_patch):
             self.start_pos_tour("test_confirm_coupon_programs_one_by_one", login="pos_user")
             self.assertEqual(sync_counter['count'], 6)
+
+    def test_race_conditions_update_program(self):
+        """This test ensures that the loyalty program update are correctly applied, even if a lot of programs applies on one order."""
+        product_test = self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        self.env['loyalty.program'].search([]).write({'active': False})
+        for _ in range(10):
+            self.env['loyalty.program'].create({
+                'name': 'Combo Product Promotion',
+                'program_type': 'promotion',
+                'trigger': 'auto',
+                'rule_ids': [(0, 0, {
+                    'minimum_qty': 1,
+                })],
+                'reward_ids': [(0, 0, {
+                    'reward_type': 'discount',
+                    'discount': 10,
+                    'discount_mode': 'percent',
+                    'discount_applicability': 'specific',
+                    'discount_product_ids': product_test.ids,
+                })]
+            })
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_race_conditions_update_program', login="pos_user")

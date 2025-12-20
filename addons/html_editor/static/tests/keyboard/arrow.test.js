@@ -13,12 +13,15 @@ const keyPress = (keys) => async (editor) => {
 };
 
 describe("Around ZWS", () => {
-    test("should move past a zws (collapsed - ArrowRight)", async () => {
+    test("should move past a zws (collapsed - ArrowRight) (1)", async () => {
         await testEditor({
             contentBefore: '<p>ab[]<span class="a">\u200B</span>cd</p>',
             stepFunction: keyPress("ArrowRight"),
             contentAfter: '<p>ab<span class="a">\u200B</span>c[]d</p>',
         });
+    });
+
+    test("should move past a zws (collapsed - ArrowRight) (2)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">[]\u200B</span>cd</p>',
             stepFunction: keyPress("ArrowRight"),
@@ -27,17 +30,25 @@ describe("Around ZWS", () => {
     });
 
     test.tags("focus required");
-    test("should move past a zws (collapsed - ArrowLeft)", async () => {
+    test("should move past a zws (collapsed - ArrowLeft) (1)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B[]</span>cd</p>',
             stepFunction: keyPress("ArrowLeft"),
             contentAfter: '<p>a[]b<span class="a">\u200B</span>cd</p>',
         });
+    });
+
+    test.tags("focus required");
+    test("should move past a zws (collapsed - ArrowLeft) (2)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B</span>[]cd</p>',
             stepFunction: keyPress("ArrowLeft"),
             contentAfter: '<p>a[]b<span class="a">\u200B</span>cd</p>',
         });
+    });
+
+    test.tags("focus required");
+    test("should move past a zws (collapsed - ArrowLeft) (3)", async () => {
         await testEditor({
             contentBefore:
                 '<p><span class="a">\u200B</span></p><p><span class="b">[]\u200B</span>ab</p>',
@@ -45,6 +56,10 @@ describe("Around ZWS", () => {
             contentAfter:
                 '<p><span class="a">\u200B[]</span></p><p><span class="b">\u200B</span>ab</p>',
         });
+    });
+
+    test.tags("focus required");
+    test("should move past a zws (collapsed - ArrowLeft) (4)", async () => {
         await testEditor({
             contentBefore:
                 '<p><span class="a">\u200B</span></p><p><span class="b">\u200B[]</span></p>',
@@ -54,17 +69,23 @@ describe("Around ZWS", () => {
         });
     });
 
-    test("should move past a zws (collapsed at the end of a block)", async () => {
+    test("should move past a zws (collapsed at the end of a block) (1)", async () => {
         await testEditor({
             contentBefore: '<p>ab[]<span class="a">\u200B</span></p><p>cd</p>',
             stepFunction: keyPress("ArrowRight"),
             contentAfter: '<p>ab<span class="a">\u200B</span></p><p>[]cd</p>',
         });
+    });
+
+    test("should move past a zws (collapsed at the end of a block) (2)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">[]\u200B</span></p><p>cd</p>',
             stepFunction: keyPress("ArrowRight"),
             contentAfter: '<p>ab<span class="a">\u200B</span></p><p>[]cd</p>',
         });
+    });
+
+    test("should move past a zws (collapsed at the end of a block) (3)", async () => {
         await testEditor({
             contentBefore:
                 '<p>ab<span class="a">\u200B[]</span></p><p><span class="b">\u200B</span></p>',
@@ -72,6 +93,9 @@ describe("Around ZWS", () => {
             contentAfter:
                 '<p>ab<span class="a">\u200B</span></p><p><span class="b">[]\u200B</span></p>',
         });
+    });
+
+    test("should move past a zws (collapsed at the end of a block) (4)", async () => {
         await testEditor({
             contentBefore:
                 '<p>ab<span class="a">[]\u200B</span></p><p><span class="b">\u200B</span></p>',
@@ -81,14 +105,9 @@ describe("Around ZWS", () => {
         });
     });
 
-    test("should select a zws", async () => {
+    test("should select a zws (1)", async () => {
         await testEditor({
             contentBefore: '<p>[ab]<span class="a">\u200B</span>cd</p>',
-            stepFunction: keyPress(["Shift", "ArrowRight"]),
-            contentAfter: '<p>[ab<span class="a">\u200B</span>c]d</p>',
-        });
-        await testEditor({
-            contentBefore: '<p>[ab<span class="a">]\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>[ab<span class="a">\u200B</span>c]d</p>',
         });
@@ -96,15 +115,29 @@ describe("Around ZWS", () => {
 
     test("should select a zws (2)", async () => {
         await testEditor({
+            contentBefore: '<p>[ab<span class="a">]\u200B</span>cd</p>',
+            stepFunction: keyPress(["Shift", "ArrowRight"]),
+            contentAfter: '<p>[ab<span class="a">\u200B</span>c]d</p>',
+        });
+    });
+
+    test("should select a zws (3)", async () => {
+        await testEditor({
             contentBefore: '<p>a[b]<span class="a">\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>a[b<span class="a">\u200B</span>c]d</p>',
         });
+    });
+
+    test("should select a zws (4)", async () => {
         await testEditor({
             contentBefore: '<p>a[b<span class="a">]\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>a[b<span class="a">\u200B</span>c]d</p>',
         });
+    });
+
+    test("should select a zws (5)", async () => {
         await testEditor({
             contentBefore:
                 '<p>a[b]<span class="a">\u200B</span></p><p><span class="b">\u200B</span></p>',
@@ -114,12 +147,15 @@ describe("Around ZWS", () => {
         });
     });
 
-    test("should select a zws (3)", async () => {
+    test("should select a zws (6)", async () => {
         await testEditor({
             contentBefore: '<p>ab[]<span class="a">\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">[\u200B</span>c]d</p>',
         });
+    });
+
+    test("should select a zws (7)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">[]\u200B</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
@@ -127,12 +163,15 @@ describe("Around ZWS", () => {
         });
     });
 
-    test("should select a zws backwards (ArrowLeft)", async () => {
+    test("should select a zws backwards (ArrowLeft) (1)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B[]</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b<span class="a">\u200B[</span>cd</p>',
         });
+    });
+
+    test("should select a zws backwards (ArrowLeft) (2)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B</span>[]cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
@@ -140,12 +179,15 @@ describe("Around ZWS", () => {
         });
     });
 
-    test("should select a zws backwards (ArrowLeft - 2)", async () => {
+    test("should select a zws backwards (ArrowLeft) (3)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B</span>]cd[</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b<span class="a">\u200B</span>cd[</p>',
         });
+    });
+
+    test("should select a zws backwards (ArrowLeft) (4)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B]</span>cd[</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
@@ -153,12 +195,15 @@ describe("Around ZWS", () => {
         });
     });
 
-    test("should select a zws backwards (ArrowLeft - 3)", async () => {
+    test("should select a zws backwards (ArrowLeft) (5)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B</span>]c[d</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b<span class="a">\u200B</span>c[d</p>',
         });
+    });
+
+    test("should select a zws backwards (ArrowLeft) (6)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">\u200B]</span>c[d</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
@@ -166,22 +211,31 @@ describe("Around ZWS", () => {
         });
     });
 
-    test("should select a zws backwards (ArrowRight)", async () => {
+    test("should select a zws backwards (ArrowRight) (1)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">]\u200B[</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">\u200B</span>[c]d</p>',
         });
+    });
+
+    test("should select a zws backwards (ArrowRight) (2)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">]\u200B</span>[cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">\u200B</span>[c]d</p>',
         });
+    });
+
+    test("should select a zws backwards (ArrowRight) (3)", async () => {
         await testEditor({
             contentBefore: '<p>ab]<span class="a">\u200B</span>[cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">\u200B</span>[c]d</p>',
         });
+    });
+
+    test("should select a zws backwards (ArrowRight) (4)", async () => {
         await testEditor({
             contentBefore: '<p>ab]<span class="a">\u200B[</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
@@ -189,12 +243,15 @@ describe("Around ZWS", () => {
         });
     });
 
-    test("should select a zws backwards (ArrowRight - 2)", async () => {
+    test("should select a zws backwards (ArrowRight) (5)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">]\u200B</span>c[d</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
             contentAfter: '<p>ab<span class="a">\u200B</span>c[]d</p>',
         });
+    });
+
+    test("should select a zws backwards (ArrowRight) (6)", async () => {
         await testEditor({
             contentBefore: '<p>ab]<span class="a">\u200B</span>c[d</p>',
             stepFunction: keyPress(["Shift", "ArrowRight"]),
@@ -202,24 +259,9 @@ describe("Around ZWS", () => {
         });
     });
 
-    test("should deselect a zws", async () => {
+    test("should deselect a zws (1)", async () => {
         await testEditor({
             contentBefore: '<p>ab<span class="a">[\u200B]</span>cd</p>',
-            stepFunction: keyPress(["Shift", "ArrowLeft"]),
-            contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
-        });
-        await testEditor({
-            contentBefore: '<p>ab<span class="a">[\u200B</span>]cd</p>',
-            stepFunction: keyPress(["Shift", "ArrowLeft"]),
-            contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
-        });
-        await testEditor({
-            contentBefore: '<p>ab[<span class="a">\u200B]</span>cd</p>',
-            stepFunction: keyPress(["Shift", "ArrowLeft"]),
-            contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
-        });
-        await testEditor({
-            contentBefore: '<p>ab[<span class="a">\u200B</span>]cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
         });
@@ -227,10 +269,37 @@ describe("Around ZWS", () => {
 
     test("should deselect a zws (2)", async () => {
         await testEditor({
+            contentBefore: '<p>ab<span class="a">[\u200B</span>]cd</p>',
+            stepFunction: keyPress(["Shift", "ArrowLeft"]),
+            contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
+        });
+    });
+
+    test("should deselect a zws (3)", async () => {
+        await testEditor({
+            contentBefore: '<p>ab[<span class="a">\u200B]</span>cd</p>',
+            stepFunction: keyPress(["Shift", "ArrowLeft"]),
+            contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
+        });
+    });
+
+    test("should deselect a zws (4)", async () => {
+        await testEditor({
+            contentBefore: '<p>ab[<span class="a">\u200B</span>]cd</p>',
+            stepFunction: keyPress(["Shift", "ArrowLeft"]),
+            contentAfter: '<p>a]b[<span class="a">\u200B</span>cd</p>', // Normalized by the browser
+        });
+    });
+
+    test("should deselect a zws (5)", async () => {
+        await testEditor({
             contentBefore: '<p>a[b<span class="a">\u200B]</span>cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
             contentAfter: '<p>a[]b<span class="a">\u200B</span>cd</p>',
         });
+    });
+
+    test("should deselect a zws (6)", async () => {
         await testEditor({
             contentBefore: '<p>a[b<span class="a">\u200B</span>]cd</p>',
             stepFunction: keyPress(["Shift", "ArrowLeft"]),
@@ -354,7 +423,7 @@ describe("Around links", () => {
 });
 
 describe("Around icons", () => {
-    test("should correctly move cursor over icons (ArrowRight)", async () => {
+    test("should correctly move cursor over icons (ArrowRight) (1)", async () => {
         await testEditor({
             contentBefore: `<p>abc[]<span class="fa fa-music"></span>def</p>`,
             contentBeforeEdit: `<p>abc[]\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeffdef</p>`,
@@ -362,6 +431,9 @@ describe("Around icons", () => {
             contentAfterEdit: `<p>abc\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>[]\ufeffdef</p>`,
             contentAfter: `<p>abc<span class="fa fa-music"></span>[]def</p>`,
         });
+    });
+
+    test("should correctly move cursor over icons (ArrowRight) (2)", async () => {
         await testEditor({
             contentBefore: `<p><span class="fa fa-music"></span>[]<span class="fa fa-music"></span></p><p><br></p>`,
             contentBeforeEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff[]<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
@@ -369,6 +441,9 @@ describe("Around icons", () => {
             contentAfterEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>[]\ufeff</p><p><br></p>`,
             contentAfter: `<p><span class="fa fa-music"></span><span class="fa fa-music"></span>[]</p><p><br></p>`,
         });
+    });
+
+    test("should correctly move cursor over icons (ArrowRight) (3)", async () => {
         await testEditor({
             contentBefore: `<p><span class="fa fa-music"></span>[]<br><span class="fa fa-music"></span></p><p><br></p>`,
             contentBeforeEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff[]<br>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
@@ -377,7 +452,7 @@ describe("Around icons", () => {
             contentAfter: `<p><span class="fa fa-music"></span><br>[]<span class="fa fa-music"></span></p><p><br></p>`,
         });
     });
-    test("should correctly move cursor over icons (ArrowLeft)", async () => {
+    test("should correctly move cursor over icons (ArrowLeft) (1)", async () => {
         await testEditor({
             contentBefore: `<p>abc<span class="fa fa-music"></span>[]def</p>`,
             contentBeforeEdit: `<p>abc\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff[]def</p>`,
@@ -385,6 +460,9 @@ describe("Around icons", () => {
             contentAfterEdit: `<p>abc\ufeff[]<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeffdef</p>`,
             contentAfter: `<p>abc[]<span class="fa fa-music"></span>def</p>`,
         });
+    });
+
+    test("should correctly move cursor over icons (ArrowLeft) (2)", async () => {
         await testEditor({
             contentBefore: `<p><span class="fa fa-music"></span><br><span class="fa fa-music"></span>[]</p>`,
             contentBeforeEdit: `<p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<br>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff[]</p>`,
@@ -393,7 +471,7 @@ describe("Around icons", () => {
             contentAfter: `<p><span class="fa fa-music"></span><br>[]<span class="fa fa-music"></span></p>`,
         });
     });
-    test("should correctly move cursor over icons (ArrowUp)", async () => {
+    test("should correctly move cursor over icons (ArrowUp) (1)", async () => {
         await testEditor({
             contentBefore: `<p><br></p><p><span class="fa fa-music"></span></p><p>[]<br></p>`,
             contentBeforeEdit: `<p><br></p><p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p>`,
@@ -401,6 +479,9 @@ describe("Around icons", () => {
             contentAfterEdit: `<p><br></p><p>[]\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
             contentAfter: `<p><br></p><p>[]<span class="fa fa-music"></span></p><p><br></p>`,
         });
+    });
+
+    test("should correctly move cursor over icons (ArrowUp) (2)", async () => {
         await testEditor({
             contentBefore: `<p><br></p><p><span class="fa fa-music"></span><br>[]<span class="fa fa-music"></span></p>`,
             contentBeforeEdit: `<p><br></p><p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<br>\ufeff[]<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p>`,
@@ -409,7 +490,7 @@ describe("Around icons", () => {
             contentAfter: `<p><br></p><p><span class="fa fa-music"></span><br><span class="fa fa-music"></span>[]</p>`,
         });
     });
-    test("should correctly move cursor over icons (ArrowDown)", async () => {
+    test("should correctly move cursor over icons (ArrowDown) (1)", async () => {
         await testEditor({
             contentBefore: `<p>[]<br></p><p><span class="fa fa-music"></span></p><p><br></p>`,
             contentBeforeEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">[]<br></p><p>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
@@ -417,6 +498,9 @@ describe("Around icons", () => {
             contentAfterEdit: `<p><br></p><p>[]\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
             contentAfter: `<p><br></p><p>[]<span class="fa fa-music"></span></p><p><br></p>`,
         });
+    });
+
+    test("should correctly move cursor over icons (ArrowDown) (2)", async () => {
         await testEditor({
             contentBefore: `<p>[]<span class="fa fa-music"></span><br><span class="fa fa-music"></span></p><p><br></p>`,
             contentBeforeEdit: `<p>\ufeff[]<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff<br>\ufeff<span class="fa fa-music" contenteditable="false">\u200b</span>\ufeff</p><p><br></p>`,
