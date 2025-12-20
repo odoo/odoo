@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-10 13:56+0000\n"
+"PO-Revision-Date: 2025-12-20 09:49+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "account_edi_proxy_client/es/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_edi_proxy_client
 #. odoo-python
@@ -117,6 +117,12 @@ msgid ""
 "\n"
 "If you are not sure how to fix this, please contact our support."
 msgstr ""
+"No se ha podido conectar al servidor Odoo Access Point. Esto puede deberse a "
+"que exista otra conexión activa en el servidor Odoo Access Point. Esta "
+"situación puede producirse si has duplicado tu base de datos.\n"
+"\n"
+"Si no estás seguro de cómo solucionarlo, ponte en contacto con nuestro "
+"servicio de asistencia."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__id
@@ -216,6 +222,9 @@ msgid ""
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
+"Este campo se utiliza para indicar que el token de usuario EDI no está "
+"sincronizado con el servidor proxy. Se establece en «True» cuando es "
+"necesario actualizar o renovar el token."
 
 #. module: account_edi_proxy_client
 #: model:ir.model.constraint,message:account_edi_proxy_client.constraint_account_edi_proxy_client_user_unique_id_client
