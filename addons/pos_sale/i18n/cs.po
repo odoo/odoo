@@ -10,34 +10,35 @@
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # SlavekB <slavek.banko@axis.cz>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 10:05+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"PO-Revision-Date: 2025-12-20 09:36+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/pos_sale/"
 "cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
-"<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : "
+"(n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "%(line_description)s (Cancelled)"
-msgstr ""
+msgstr "%(line_description)s (Zrušeno)"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/account_move.py:0
 msgid "%(old_name)s (Cancelled)"
-msgstr ""
+msgstr "%(old_name)s (Zrušeno)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -59,24 +60,26 @@ msgstr "Nová objednávka byla vytvořena."
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "Částka k zaplacení v PoS"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
+"Částka zbývající k zaplacení v POS, aby se zabránilo dvojímu zaplacení nebo "
+"dvojímu fakturování."
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (fixed amount)"
-msgstr ""
+msgstr "Zaplatit zálohu (fixní částkou)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Apply a down payment (percentage)"
-msgstr ""
+msgstr "Zaplatit zálohu (v procentech)"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
@@ -86,12 +89,12 @@ msgstr "Konfigurační nastavení"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: pos_sale
 #: model:ir.model,website_form_label:pos_sale.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Vytvořit zákazníka"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -106,7 +109,7 @@ msgstr "Doručeno z"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Množství dodání"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -123,7 +126,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Zobrazovací název"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -161,6 +164,8 @@ msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"Záloha (ref. č.: %(order_reference)s dne \n"
+" %(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -188,7 +193,7 @@ msgstr "Od"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
@@ -202,11 +207,13 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Zdá se, že jste ve svém prodejním místě nenastavili produkt pro zálohu. "
+"Můžete přejít do nastavení prodejního místa a vybrat si jeden."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Účetní záznam"
 
 #. module: pos_sale
 #. odoo-python
@@ -250,7 +257,7 @@ msgstr "Položky objednávky přesunuté do prodejního místa"
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
 msgid "POS Order"
-msgstr ""
+msgstr "Objednávka POS"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -295,7 +302,7 @@ msgstr "Schváleno"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -394,7 +401,7 @@ msgstr "Kurz měny k měně sazby použitelné ke dni objednávky"
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
 msgstr ""
-"Toto prodejní místo bude přímo souviset s tímto obchodním týmem prodavačů"
+"Toto prodejní místo bude přímo souviset s tímto obchodním týmem prodavačů."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -410,7 +417,7 @@ msgstr "Tento produkt bude použit jako záloha na prodejní objednávku."
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Převod"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -418,6 +425,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Převedeno<br/>\n"
+"                                z Prodeje"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -425,12 +434,14 @@ msgid ""
 "Transferred<br/>\n"
 "                            to POS"
 msgstr ""
+"Převedeno<br/>\n"
+"                            do POS"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "Warning for %s"
-msgstr ""
+msgstr "Upozornění na %s"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -443,7 +454,7 @@ msgstr "Co chcete udělat?"
 #: code:addons/pos_sale/models/pos_order.py:0
 #: code:addons/pos_sale/models/sale_order.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #~ msgid "Back"
 #~ msgstr "Zpět"

@@ -957,6 +957,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.env['purchase.order.line'].flush_model()
         result = vendor_bill.action_purchase_matching()
         matching_records = self.env['purchase.bill.line.match'].search(result['domain'])
+        result_bill_matching = purchase_order.action_bill_matching()
+        matching_records_from_po = self.env['purchase.bill.line.match'].search(result_bill_matching['domain'])
 
         # Ensure that calling `action_add_to_po()` on multiple records
         # does not raise a singleton ValueError when the vendor is an individual
@@ -966,6 +968,9 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(len(matching_records), 2)
         self.assertEqual(matching_records.account_move_id, vendor_bill)
         self.assertEqual(matching_records.purchase_order_id, purchase_order)
+        self.assertEqual(len(matching_records_from_po), 2)
+        self.assertEqual(matching_records_from_po.account_move_id, vendor_bill)
+        self.assertEqual(matching_records_from_po.purchase_order_id, purchase_order)
 
     def test_purchase_suggest_qty(self):
         """

@@ -127,6 +127,11 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 'cac:Address': self._get_address_node({'partner': shipping_partner})
             },
         }
+        # TODO master: clean that code a bit hacky, when the module account_add_gln is merged with account
+        if gln := 'global_location_number' in shipping_partner._fields and shipping_partner.global_location_number:
+            document_node['cac:Delivery']['cac:DeliveryLocation'].update({
+                'cbc:ID': {'schemeID': '0088', '_text': gln},
+            })
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         super()._add_invoice_payment_means_nodes(document_node, vals)
@@ -237,6 +242,14 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
     # -------------------------------------------------------------------------
     # EXPORT: Gathering data
     # -------------------------------------------------------------------------
+
+    def _ubl_default_tax_subtotal_tax_category_grouping_key(self, tax_grouping_key, vals):
+        # EXTENDS
+        return {
+            **super()._ubl_default_tax_subtotal_tax_category_grouping_key(tax_grouping_key, vals),
+            # Temporary solution to have withholding taxes merged with others until we know how to manage them.
+            'is_withholding': False,
+        }
 
     def _setup_base_lines(self, vals):
         # OVERRIDE

@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import {
     defineWebsiteModels,
+    setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -73,6 +74,32 @@ test("remove/add cover image", async () => {
     // Add cover image back again
     await click("[data-action-id='addCoverImage']");
     expect(":iframe .s_card .o_card_img_wrapper").toHaveCount(1);
+});
+
+const nestedCardsWithOneCover = `
+    <div class="s_card card outer_card o_draggable" data-snippet="s_card" data-name="Card">
+        <div class="card-body">
+            <div class="s_card o_card_img_top card inner_card" data-snippet="s_card" data-name="Card">
+                <figure class="o_card_img_wrapper mb-0 ratio ratio-16x9">
+                    <img class="o_card_img card-img-top" src="/web/image/website.s_card_default_image_1" alt="" loading="lazy" data-mimetype="image/jpeg">
+                </figure>
+                <div class="card-body"/>
+            </div>
+        </div>
+    </div>
+`;
+
+test("cover image options only appear on the right card when two of them are nested", async () => {
+    await setupWebsiteBuilder(nestedCardsWithOneCover);
+    await contains(":iframe .outer_card").click();
+    // No cover image options are displayed for the outer card
+    expect("[data-action-id='setCoverImagePosition']").toHaveCount(0);
+    expect("[data-action-id='removeCoverImage']").toHaveCount(0);
+
+    await contains(":iframe .inner_card").click();
+    // Cover image options are displayed for the inner card
+    expect("[data-action-id='setCoverImagePosition']").toHaveCount(3);
+    expect("[data-action-id='removeCoverImage']").toHaveCount(1);
 });
 
 test("set cover image position", async () => {
@@ -206,4 +233,34 @@ test("cover image set to wide aspect ratio can be vertically aligned", async () 
     await animationFrame();
     expect(":iframe .s_card .o_card_img_wrapper").toHaveClass("o_card_img_adjust_v");
     expect(":iframe .s_card").toHaveStyle({ "--card-img-ratio-align": "50%" });
+});
+
+const nestedCardsWithTwoCovers = `
+    <div class="s_card o_card_img_top card outer_card o_draggable" data-snippet="s_card" data-name="Card">
+        <figure class="o_card_img_wrapper mb-0 ratio ratio-16x9">
+            <img class="o_card_img card-img-top" src="/web/image/website.s_card_default_image_1" alt="" loading="lazy" data-mimetype="image/jpeg">
+        </figure>
+        <div class="card-body">
+            <div class="s_card o_card_img_top card inner_card" data-snippet="s_card" data-name="Card">
+                <figure class="o_card_img_wrapper mb-0 ratio ratio-16x9">
+                    <img class="o_card_img card-img-top" src="/web/image/website.s_card_default_image_1" alt="" loading="lazy" data-mimetype="image/jpeg">
+                </figure>
+                <div class="card-body"/>
+            </div>
+        </div>
+    </div>
+`;
+
+test("cover image ratio option only act on the right card when two of them are nested", async () => {
+    await setupWebsiteBuilder(nestedCardsWithTwoCovers);
+    expect(":iframe figure.o_card_img_ratio_custom").toHaveCount(0);
+
+    // Set custom ratio on the outer card cover, and check that only that cover
+    // receives the o_card_img_ratio_custom class.
+    await contains(":iframe .outer_card").click();
+    await waitFor("[data-label='Ratio'] ");
+    await openRatioDropdownMenu();
+    await click(".dropdown-menu [data-class-action='ratio o_card_img_ratio_custom']");
+    await waitFor("[data-label='Custom Ratio'] input[type='range']");
+    expect(":iframe figure.o_card_img_ratio_custom").toHaveCount(1);
 });

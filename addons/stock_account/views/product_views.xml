@@ -64,6 +64,7 @@
                         options="{
                             'currency_field': 'company_currency_id',
                             'action_name': 'stock_account.stock_avco_report_action',
+                            'disabled': 'cost_method == \'fifo\'',
                         }" context="{
                             'active_id': id,
                             'cost_method': cost_method,
@@ -76,6 +77,7 @@
                         }" context=" {
                             'search_default_product_id': id,
                             'search_default_incoming': 1,
+                            'search_default_remaining': 1,
                             'cost_method': cost_method,
                             'tracking': tracking,
                         }"

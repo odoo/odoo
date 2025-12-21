@@ -9,7 +9,7 @@ import { TranslateSetupEditorPlugin } from "./plugins/translate_setup_editor_plu
 import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -45,6 +45,7 @@ import { CustomizeTranslationTab } from "@website/builder/plugins/translation_ta
 import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { revertPreview } from "@html_builder/core/utils";
+import { rpc } from "@web/core/network/rpc";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -100,6 +101,11 @@ export class WebsiteBuilder extends Component {
         useSetupAction({
             beforeUnload: (ev) => this.onBeforeUnload(ev),
             beforeLeave: () => this.onBeforeLeave(),
+        });
+        onWillStart(async () => {
+            this.translatedElements = this.props.translation
+                ? await rpc("/website/get_translated_elements")
+                : [];
         });
     }
 
@@ -224,6 +230,7 @@ export class WebsiteBuilder extends Component {
                 type: editableEl.dataset["oeType"],
             };
         };
+        builderProps.config.translatedElements = this.translatedElements;
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
         builderProps.getCustomizeTranslationTab = () => CustomizeTranslationTab;
         const installSnippetModule = builderProps.installSnippetModule;

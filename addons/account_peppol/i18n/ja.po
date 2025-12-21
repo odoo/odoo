@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
-"PO-Revision-Date: 2025-12-11 06:45+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
+"PO-Revision-Date: 2025-12-20 09:52+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/ja/>\n"
@@ -790,6 +790,11 @@ msgstr "デモ"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "破棄"
 
@@ -879,6 +884,11 @@ msgstr "Edi識別確認"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "Eメール"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Enable reception"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -982,7 +992,7 @@ msgstr "受入請求仕訳帳"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s is too big to send via peppol (64MB limit)"
-msgstr ""
+msgstr "請求書%s は、Peppol経由で送信するには大きすぎます(サイズ制限64MB)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1476,7 +1486,7 @@ msgstr "Peppol経由でドキュメントを受信する登録済 (demo)。"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Peppol経由でドキュメントを受信する登録済。"
 
@@ -1525,7 +1535,6 @@ msgstr "送信"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-#, fuzzy
 msgid "Send electronic invoices, and receive bills automatically via Peppol."
 msgstr "電子請求書を送信し、Peppol経由で仕入先請求書を自動的に受信します。"
 
@@ -1558,7 +1567,7 @@ msgstr "無効回答"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "一部の添付ファイルはXMLで送信できませんでした："
 
 #. module: account_peppol
 #. odoo-python
@@ -1576,13 +1585,9 @@ msgstr ""
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
 "migration key below.\n"
-"                        If not, you should de-register from your current "
+"                            If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
-"一部のサービスサポートでは、移行キーが必要です。この条件に該当する場合は、以"
-"下に移行キーを入力してください:\n"
-"                        該当しない場合は、現在のサービスプロバイダーから登録"
-"を解除し、その後Odooに登録して下さい。"
 
 #. module: account_peppol
 #. odoo-python
@@ -1823,6 +1828,8 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"請求書はPeppolアクセスポイントに送信されました。以下の添付ファイルがXMLと共に"
+"送信されました："
 
 #. module: account_peppol
 #. odoo-python
@@ -2101,6 +2108,8 @@ msgid ""
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
 msgstr ""
+"これから VAT番号で登録しようとしています。新しい規制に準拠するため、先に企業"
+"登録番号(BCE/KBO)で会社登録を済ませていることを確認してください。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2252,7 +2261,7 @@ msgstr "登録は拒否されました。サポートまでお問い合わせ下
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
@@ -2302,6 +2311,17 @@ msgstr "請求書を送信するには、しかし、この請求書は"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "ユーザー"
+
+#~ msgid ""
+#~ "Some service support migration keys. If this is your case you can enter "
+#~ "your migration key below.\n"
+#~ "                        If not, you should de-register from your current "
+#~ "service provider and register with Odoo afterward."
+#~ msgstr ""
+#~ "一部のサービスサポートでは、移行キーが必要です。この条件に該当する場合は、"
+#~ "以下に移行キーを入力してください:\n"
+#~ "                        該当しない場合は、現在のサービスプロバイダーから登"
+#~ "録を解除し、その後Odooに登録して下さい。"
 
 #~ msgid "The document has been sent to Peppol for processing"
 #~ msgstr "このドキュメントは処理のために Peppol に送信されました"

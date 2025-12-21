@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
 "PO-Revision-Date: 2025-11-18 13:49+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
@@ -773,6 +773,12 @@ msgstr "Pas encore de données !"
 
 #. module: hr_timesheet
 #. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "None"
 msgstr "Aucun"
@@ -981,6 +987,14 @@ msgid ""
 msgstr ""
 "Certaines entrées de feuille de temps empêchent la suppression de ces "
 "tâches. Veuillez les supprimer en premier lieu !"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1340,12 +1354,6 @@ msgid "Timesheets cannot be created on a private task."
 msgstr "Il est impossible de créer des feuilles de temps sur une tâche privée."
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-msgid "Timesheets could not be created for any of the selected days"
-msgstr "Aucune feuille de temps n’a pu être créée pour les jours sélectionnés"
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
@@ -1371,8 +1379,8 @@ msgid "Timesheets of %(name)s"
 msgstr "Feuilles de temps de %(name)s"
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
 msgstr "Feuilles de temps créées avec succès"
 
@@ -1599,6 +1607,10 @@ msgstr ""
 "sur\n"
 "                        <span class=\"fw-bold text-dark\"> des sous-tâches</"
 "span>)"
+
+#~ msgid "Timesheets could not be created for any of the selected days"
+#~ msgstr ""
+#~ "Aucune feuille de temps n’a pu être créée pour les jours sélectionnés"
 
 #~ msgid "%s Spent"
 #~ msgstr "%s passé"

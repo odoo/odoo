@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-07 18:35+0000\n"
-"PO-Revision-Date: 2025-12-05 07:58+0000\n"
+"PO-Revision-Date: 2025-12-20 09:38+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/project/"
 "ja/>\n"
@@ -1432,6 +1432,12 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"タスクが特定のステージに入った際に評価依頼を送信し、顧客からフィードバックを"
+"収集します。これを行うには、ステージに評価メールテンプレートを定義します。\n"
+"ステージ変更時の評価：タスクがステージに到達すると自動的にメールが送信されま"
+"す。\n"
+"定期方式の評価：タスクがステージに留まっている間、一定間隔で自動的にメールが"
+"送信されます。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -1649,7 +1655,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by email:"
-msgstr ""
+msgstr "メールでタスクを作成:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
@@ -1842,12 +1848,15 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"このステージのタスクが期限切れになるまでの日数。無効化するには0を設定してくだ"
+"さい。         このパラメータを変更しても、変更前に最終更新されたリソースの期"
+"限切れステータス/日付には影響しません。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
 #: model:ir.model.fields,help:project.field_project_task__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "このリソースが最後に更新されてからの経過日数"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1860,7 +1869,7 @@ msgstr "日"
 #: model:ir.model.fields,field_description:project.field_project_project__rotting_days
 #: model:ir.model.fields,field_description:project.field_project_task__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "停滞日数"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -1870,7 +1879,7 @@ msgstr "期日までの日数"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "停滞までの日数"
 
 #. module: project
 #. odoo-python

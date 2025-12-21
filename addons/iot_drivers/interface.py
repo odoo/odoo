@@ -13,10 +13,9 @@ class Interface(Thread):
     _loop_delay = 3  # Delay (in seconds) between calls to get_devices or 0 if it should be called only once
     connection_type = ''
     allow_unsupported = False
-    daemon = True
 
     def __init__(self):
-        super().__init__()
+        super().__init__(daemon=True)
         self._detected_devices = set()
         self.drivers = sorted([d for d in drivers if d.connection_type == self.connection_type], key=lambda d: d.priority, reverse=True)
 

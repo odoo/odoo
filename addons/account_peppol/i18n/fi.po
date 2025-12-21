@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-12 18:35+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
 "PO-Revision-Date: 2025-12-11 13:02+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
@@ -801,6 +801,11 @@ msgstr "Demo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Disable the reception."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Discard"
 msgstr "Hylkää"
 
@@ -890,6 +895,11 @@ msgstr "EDI-tunniste"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Email"
 msgstr "Sähköposti"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+msgid "Enable reception"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -1493,7 +1503,7 @@ msgstr "Rekisteröitynyt vastaanottamaan asiakirjoja Peppolin kautta (demo)."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid "Registered to receive documents via Peppol."
 msgstr "Rekisteröitynyt vastaanottamaan asiakirjoja Peppolin kautta."
 
@@ -1594,13 +1604,9 @@ msgstr ""
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
 "migration key below.\n"
-"                        If not, you should de-register from your current "
+"                            If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
-"Jotkut palvelut tukevat siirtoavaimia. Jos näin on sinun kohdallasi, voit "
-"syöttää siirtoavaimesi alle.\n"
-"               Jos ei, sinun tulee ensin poistaa nykyisen palveluntarjoajasi "
-"rekisteröityminen ja sen jälkeen rekisteröityä Odoossa."
 
 #. module: account_peppol
 #. odoo-python
@@ -2275,7 +2281,7 @@ msgstr "Rekisteröintisi on hylätty. Ota yhteyttä tukeen saadaksesi lisäapua.
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
+#: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
@@ -2325,6 +2331,17 @@ msgstr "lähettää laskuja, mutta tämä"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "käyttää"
+
+#~ msgid ""
+#~ "Some service support migration keys. If this is your case you can enter "
+#~ "your migration key below.\n"
+#~ "                        If not, you should de-register from your current "
+#~ "service provider and register with Odoo afterward."
+#~ msgstr ""
+#~ "Jotkut palvelut tukevat siirtoavaimia. Jos näin on sinun kohdallasi, voit "
+#~ "syöttää siirtoavaimesi alle.\n"
+#~ "               Jos ei, sinun tulee ensin poistaa nykyisen "
+#~ "palveluntarjoajasi rekisteröityminen ja sen jälkeen rekisteröityä Odoossa."
 
 #~ msgid "The document has been sent to Peppol for processing"
 #~ msgstr "Asiakirja on lähetetty Peppoliin käsiteltäväksi"

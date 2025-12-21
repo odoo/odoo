@@ -47,13 +47,13 @@
 
     // Options
     &.o_card_img_top {
-        .o_card_img_ratio_custom {
+        >.o_card_img_ratio_custom {
             --aspect-ratio: var(--card-img-aspect-ratio);
         }
     }
 
     &.o_card_img_horizontal {
-        .o_card_img_wrapper {
+        >.o_card_img_wrapper {
             flex-shrink: 0;
 
             @include media-breakpoint-up(lg) {

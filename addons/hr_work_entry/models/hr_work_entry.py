@@ -166,6 +166,7 @@ class HrWorkEntry(models.Model):
                 FROM hr_work_entry
                 WHERE active = TRUE
                   AND date BETWEEN %(start)s AND %(stop)s
+                  AND employee_id IN %(employee_ids)s
                 GROUP BY employee_id, date
                 HAVING 0 >= SUM(duration) OR SUM(duration) > 24
             )
@@ -179,6 +180,7 @@ class HrWorkEntry(models.Model):
         self.env.cr.execute(query, {
             "start": start,
             "stop": stop,
+            'employee_ids': tuple(self.employee_id.ids),
         })
         conflict_ids = [row[0] for row in self.env.cr.fetchall()]
         self.browse(conflict_ids).write({'state': 'conflict'})

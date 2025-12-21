@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-09 12:16+0000\n"
-"PO-Revision-Date: 2025-12-12 06:42+0000\n"
+"PO-Revision-Date: 2025-12-20 09:39+0000\n"
 "Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/base/"
 "id/>\n"
@@ -2731,6 +2731,72 @@ msgid ""
 "validate VAT numbers for each country that have or not have the possibility "
 "to manage multiple identification types.\n"
 msgstr ""
+"\n"
+"Tambahkan model baru bernama \"Tipe Identifikasi\" yang memperluas "
+"fungsionalitas field PPN dan memungkinkan user untuk mengidentifikasi "
+"(dan ujung-ujungnya memfaktur) ke kontak tidak hanya dengan ID pajak fiskal "
+"(PPN) mereka tapi tipe-tipe lain identifikasi seperti dokumen nasional, "
+"paspor, ID asing, dsb. Dengan menginstal modul ini Anda dapat melihat di "
+"tampilan form partner dua field:\n"
+"\n"
+"* Tipe identifikasi\n"
+"* Nomor identifikasi\n"
+"\n"
+"Perilaku ini adalah persyaratan umum untuk beberapa negara latam seperti "
+"Argentina dan Chili. Bila lokalisasi Anda memiliki persyaratan ini Anda "
+"harus menggunakan modul ini dan mendefinisikan di modul lokalisasi Anda tipe "
+"identifikasi yang digunakan di negara Anda. Biasanya tipe-tipe identifikasi "
+"ini didefinisikan oleh lembaga pemerintahan yang meregulasi operasi fiskal. "
+"Sebagai contoh:\n"
+"\n"
+"* ARCA di Argentina mendefinisikan DNI, CUIT (PPN untuk entitas hukum), CUIL "
+"(PPN untuk orang), dan 80 tipe identifikasi valid lainnya.\n"
+"\n"
+"Setiap identifikasi memiliki informasi ini:\n"
+"\n"
+"* nama: nama singkat identifikasi\n"
+"* keterangan: dapat sama dengan nama singkata atau nama panjang\n"
+"* country_id: negara asal identifikasi\n"
+"* is_vat: identifikasi rekaman ini sebagai PPN yang sesuai untuk negara "
+"tertentu.\n"
+"* sequence: memungkinkan kami menyortir tipe identifikasi tergantung pada "
+"yang paling sering digunakan.\n"
+"* active: kami dapat mengaktifkan/menonaktifkan identifikasi untuk membuat "
+"semuanya lebih mudah untuk pelanggan kami\n"
+"\n"
+"Untuk dapat membuat modul ini lebih kopmatibel dalam environment multi-"
+"company di mana perusahaan yang tidak membutuhkan/mendukung persyaratan ini, "
+"kami telah menambahkan tipe identifikasi dan peraturan umum untuk mengelola "
+"informasi kontak dan membuatnya transparan untuk user hanya saat PPN yang "
+"sebelumnya digunakan.\n"
+"\n"
+"Identifikasi umum:\n"
+"\n"
+"* VAT: Identifikasi Pajak Fiskal atau nomor PPN secara default dipilih "
+"sebagai tipe identifikasi sehingga user hanya memerlukan nomor PPN terkait.\n"
+"* Passport\n"
+"* Foreign ID (Dokumen Nasional Negara Asing)\n"
+"\n"
+"Peraturan saat membuat partner baru: Kami hanya akan melihat tipe-tipe "
+"identifikasi yang berguna, memperhitungkan peraturan-peraturan berikut:\n"
+"\n"
+"* Bila partner tidak memiliki alamat negara: Akan menunjukkan tipe "
+"identifikasi umum di tambah yang didefinisikan di negara perusahaan partner "
+"terkait (bila partner tidak menentukan perusahaan maka akan menunjukkan tipe "
+"identifikasi terkait ke perusahaan user saat ini)\n"
+"\n"
+"* Bila partner memiliki alamat negara: akan menunjukkan tipe identifikasi "
+"umum ditambah yang didefinisikan untuk negara partner.\n"
+"\n"
+"Saat membuat perusahaan baru, akan selalu memberikan tipe identifikasi "
+"is_vat negara yang sesuai ke partner terkait.\n"
+"\n"
+"Semua tipe identifikasi yang didefinisikan dapat ditinjau dan diaktifkan/"
+"dinonaktifkan di menu \"Kontak / Konfigurasi / Tipe Identifikasi\".\n"
+"\n"
+"Modul ini kompatibel dengan modul base_vat agar dapat memvalidasi nomor PPN "
+"untuk setiap negara yang memiliki atau tidak memiliki kemampuan untuk "
+"mengelola lebih dari satu tipe identifikasi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_website_sale
@@ -22910,7 +22976,7 @@ msgstr "Kode"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__code_diff
 msgid "Code Diff"
-msgstr ""
+msgstr "Perbedaan Kode"
 
 #. module: base
 #. odoo-python
@@ -26313,7 +26379,7 @@ msgstr "Email"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__email_domain_placeholder
 msgid "Email Domain Placeholder"
-msgstr ""
+msgstr "Placeholder Domain Email"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing
@@ -32638,7 +32704,7 @@ msgstr "Update terakhir:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login_date
 msgid "Latest Login"
-msgstr ""
+msgstr "Login Terkini"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__installed_version
@@ -38250,7 +38316,7 @@ msgstr "Buka satu Jendela"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__config_url
 msgid "Open profiles config"
-msgstr ""
+msgstr "Buka konfigurasi profil"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_5
@@ -41104,12 +41170,12 @@ msgstr "Mixin Definisi Dasar Properti"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_properties_base_definition__properties_definition
 msgid "Properties Definition"
-msgstr ""
+msgstr "Definisi Properti"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_properties_base_definition__properties_field_id
 msgid "Properties Field"
-msgstr ""
+msgstr "Field Properti"
 
 #. module: base
 #. odoo-python
@@ -43903,7 +43969,7 @@ msgstr "Tunjukkan Semua"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__show_code_history
 #: model:ir.model.fields,field_description:base.field_ir_cron__show_code_history
 msgid "Show Code History"
-msgstr ""
+msgstr "Tunjukkan Riwayat Kode"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_view_currency_rates
@@ -51164,7 +51230,7 @@ msgstr "one2many"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__others
 msgid "others"
-msgstr ""
+msgstr "lainnya"
 
 #. module: base
 #. odoo-python

@@ -26,6 +26,9 @@ Features include:
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'auto_install': ['l10n_tr_nilvera_einvoice'],
     'installable': True,
     'post_init_hook': '_l10n_tr_nilvera_einvoice_extended_post_init',

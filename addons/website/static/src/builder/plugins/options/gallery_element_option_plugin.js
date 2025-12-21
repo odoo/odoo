@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { SNIPPET_SPECIFIC } from "@html_builder/utils/option_sequence";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 /**
  * @typedef {((
@@ -21,6 +21,28 @@ export class GalleryElementOption extends BaseOptionComponent {
     static template = "website.GalleryElementOption";
     static selector =
         ".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item";
+    setup() {
+        this.state = useDomState((editingElement) => {
+            const isImageWall = editingElement.closest('[data-snippet="s_images_wall"]');
+            if (isImageWall) {
+                // Prevented disable reordering buttons for image wall.
+                return {
+                    hasMultiItems: true,
+                    isFirstItem: false,
+                    isLastItem: false,
+                };
+            }
+            const carouselEl = editingElement.closest(".carousel");
+            const carouselItemEls = carouselEl.querySelectorAll(".carousel-item");
+            const carouselItemCount = carouselItemEls.length;
+            const currentItemEl = editingElement.closest(".carousel-item");
+            return {
+                hasMultiItems: carouselItemCount > 1,
+                isFirstItem: currentItemEl === carouselItemEls[0],
+                isLastItem: currentItemEl === carouselItemEls[carouselItemCount - 1],
+            };
+        });
+    }
 }
 
 export class GalleryElementOptionPlugin extends Plugin {

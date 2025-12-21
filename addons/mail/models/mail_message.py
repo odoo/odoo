@@ -669,6 +669,10 @@ class MailMessage(models.Model):
     def create(self, vals_list):
         tracking_values_list = []
         for values in vals_list:
+            if not (self.env.user.has_group('base.group_user') or self.env.su):
+                values.pop('author_id', None)
+                values.pop('email_from', None)
+                self = self.with_context({k: v for k, v in self.env.context.items() if k not in ['default_author_id', 'default_email_from']})  # noqa: PLW0642
             if 'email_from' not in values:  # needed to compute reply_to
                 _author_id, email_from = self.env['mail.thread']._message_compute_author(values.get('author_id'), email_from=None)
                 values['email_from'] = email_from
@@ -779,6 +783,9 @@ class MailMessage(models.Model):
         return super().fetch(field_names)
 
     def write(self, vals):
+        if not (self.env.user.has_group('base.group_user') or self.env.su):
+            vals.pop('author_id', None)
+            vals.pop('email_from', None)
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed and not self.env.is_system():
             raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))

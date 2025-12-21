@@ -37,6 +37,7 @@ class PeppolConfigWizard(models.TransientModel):
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
     account_peppol_contact_email = fields.Char(default=lambda self: self.env.company.account_peppol_contact_email, required=True)
     account_peppol_migration_key = fields.Char(related='company_id.account_peppol_migration_key', readonly=False)
+    # Deprecated
     peppol_activate_self_billing = fields.Boolean(
         string="Activate self-billing",
         help="If activated, you will be able to send and receive self-billed invoices via Peppol."
@@ -44,6 +45,7 @@ class PeppolConfigWizard(models.TransientModel):
         compute='_compute_peppol_activate_self_billing',
         inverse='_inverse_peppol_activate_self_billing',
     )
+    # Deprecated
     peppol_self_billing_reception_journal_id = fields.Many2one(related='company_id.peppol_self_billing_reception_journal_id', readonly=False)
 
     service_json = fields.Json(
@@ -163,4 +165,30 @@ class PeppolConfigWizard(models.TransientModel):
 
         if self.account_peppol_edi_user:
             self.account_peppol_edi_user._peppol_deregister_participant()
+        return True
+
+    def button_peppol_reset_to_sender(self):
+        """Reset the participant back to sender and unregister it from the SMP"""
+        self.ensure_one()
+        if self.account_peppol_edi_user:
+            self.account_peppol_edi_user._peppol_deregister_participant_to_sender()
+        return True
+
+    def button_peppol_register_sender_as_receiver(self):
+        """Reset the participant back to sender and unregister it from the SMP"""
+        self.ensure_one()
+        if self.account_peppol_edi_user:
+            self.account_peppol_edi_user._peppol_register_sender_as_receiver()
+            self.account_peppol_edi_user._peppol_get_participant_status()
+            if self.account_peppol_proxy_state == 'smp_registration':
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'display_notification',
+                    'params': {
+                        'title': _("Registered to receive documents via Peppol."),
+                        'type': 'success',
+                        'message': _("Your registration on Peppol network should be activated within a day. The updated status will be visible in Settings."),
+                        'next': {'type': 'ir.actions.act_window_close'},
+                    }
+                }
         return True

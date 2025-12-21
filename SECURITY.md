@@ -4,6 +4,7 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
+| 19.0    | :white_check_mark: |
 | 18.0    | :white_check_mark: |
 | 17.0    | :white_check_mark: |
 | 16.0    | :white_check_mark: |

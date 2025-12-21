@@ -491,7 +491,7 @@ test("Can delete an image", async () => {
 test("Deleting an image that is alone inside `p` should set selection at start of `p`", async () => {
     const { el } = await setupEditor(`<p><img>[]</p>`);
     await click("img");
-    await waitFor(".o-we-toolbar");
+    await waitFor('.o-we-toolbar[data-namespace="image"');
     expect("button[name='image_delete']").toHaveCount(1);
     await click("button[name='image_delete']");
     await animationFrame();
@@ -504,7 +504,7 @@ test("Deleting an image that is alone inside `p` should set selection at start o
 test("Deleting an image that is the only content inside a <p> tag should place the selection at the start of the <p>", async () => {
     const { el } = await setupEditor(`<p>abc<img>[]</p>`);
     await click("img");
-    await waitFor(".o-we-toolbar");
+    await waitFor('.o-we-toolbar[data-namespace="image"');
     expect("button[name='image_delete']").toHaveCount(1);
     await click("button[name='image_delete']");
     await animationFrame();

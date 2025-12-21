@@ -2,14 +2,17 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
-import { Component, useState, useEffect, onWillStart, useRef, onMounted } from "@odoo/owl";
+import { Component, useState, useEffect, onWillStart, useRef } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from "@web/core/utils/strings";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
+import { useDebounced } from "@web/core/utils/timing";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { effect } from "@web/core/utils/reactive";
 
-const isPageNotFound = (url, allPages) => {
+function urlToCheck(url) {
     let relativeUrl = false;
 
     // Do not check if the page exists if the input is empty, an anchor, an
@@ -36,25 +39,23 @@ const isPageNotFound = (url, allPages) => {
     // Remove trailing slash if it's not the root "/".
     relativeUrl =
         relativeUrl.endsWith("/") && relativeUrl !== "/" ? relativeUrl.slice(0, -1) : relativeUrl;
-    // Check if the page exists.
-    return !allPages.includes(relativeUrl);
-};
+    return relativeUrl;
+}
+
+async function checkUrlExists(link) {
+    const normLink = urlToCheck(link);
+    if (normLink === false) {
+        return true;
+    } else {
+        return await rpc("/website/check_existing_link", { link: normLink });
+    }
+}
 
 const toRelativeIfSameDomain = (url) => {
     // Remove domain from url to keep only the relative path if same domain.
     const urlObj = new URL(url);
     const isSameDomain = isAbsoluteURLInCurrentDomain(url, this.env);
     return isSameDomain ? url.replace(urlObj.origin, "") : url;
-};
-
-const getAllPages = async () => {
-    const res = await rpc("/website/get_suggested_links", {
-        needle: "/",
-        limit: "no_limit",
-    });
-    const allPages = res.matching_pages.map((page) => page.value);
-    allPages.push(...res.others.flatMap((o) => o.values?.map((v) => v.value) || []));
-    return allPages;
 };
 
 export class MenuDialog extends Component {
@@ -64,7 +65,6 @@ export class MenuDialog extends Component {
         name: { type: String, optional: true },
         url: { type: String, optional: true },
         isMegaMenu: { type: Boolean, optional: true },
-        allPages: { type: Array, optional: true },
         save: Function,
         close: Function,
     };
@@ -85,11 +85,11 @@ export class MenuDialog extends Component {
             invalidUrl: false,
         });
 
-        onWillStart(async () => {
-            if (!this.props.isMegaMenu) {
-                this.allPages = this.props.allPages || (await getAllPages());
-            }
-        });
+        const keepLast = new KeepLast();
+        const updatePageNotFound = (url) =>
+            keepLast.add(checkUrlExists(url)).then((exists) => (this.state.pageNotFound = !exists));
+        const debouncedUpdatePageNotFound = useDebounced(updatePageNotFound, 500);
+        effect(({ url }) => debouncedUpdatePageNotFound(url), [this.state]);
 
         useEffect(
             (input) => {
@@ -116,19 +116,6 @@ export class MenuDialog extends Component {
             },
             () => [this.urlInputRef.el]
         );
-
-        useEffect(
-            () => {
-                this.state.pageNotFound = isPageNotFound(this.state.url, this.allPages);
-            },
-            () => [this.state.url]
-        );
-
-        onMounted(() => {
-            if (!this.props.isMegaMenu) {
-                this.state.pageNotFound = isPageNotFound(this.urlInputRef.el.value, this.allPages);
-            }
-        });
     }
 
     onClickOk() {
@@ -210,14 +197,13 @@ export class EditMenuDialog extends Component {
         this.state = useState({ rootMenu: {} });
 
         onWillStart(async () => {
-            this.allPages = await getAllPages();
             const menu = await this.orm.call(
                 "website.menu",
                 "get_tree",
                 [this.website.currentWebsite.id, this.props.rootID],
                 { context: { lang: this.website.currentWebsite.metadata.lang } }
             );
-            this.markPageNotFound(menu);
+            await this.markPageNotFound(menu);
             this.state.rootMenu = menu;
             this.map = new Map();
             this.populate(this.map, this.state.rootMenu);
@@ -255,13 +241,17 @@ export class EditMenuDialog extends Component {
         }
     }
 
-    markPageNotFound(menu) {
-        for (const menuItem of menu.children) {
-            menuItem.page_not_found = isPageNotFound(menuItem.fields["url"], this.allPages);
-            if (menuItem.children) {
-                this.markPageNotFound(menuItem);
-            }
+    async markPageNotFound(menu) {
+        function menuFlattened(menu) {
+            return [menu, ...(menu.children ? menu.children.flatMap(menuFlattened) : [])];
         }
+        await Promise.all(
+            menuFlattened(menu)
+                .slice(1) // exclude root menu
+                .map(async (menu) => {
+                    menu.page_not_found = !(await checkUrlExists(menu.fields["url"]));
+                })
+        );
     }
 
     _isAllowedMove(current, elementSelector) {
@@ -312,7 +302,6 @@ export class EditMenuDialog extends Component {
     addMenu(isMegaMenu) {
         this.dialogs.add(MenuDialog, {
             isMegaMenu,
-            allPages: this.allPages,
             url: "",
             save: (name, url, pageNotFound, isNewWindow) => {
                 const newMenu = {
@@ -341,7 +330,6 @@ export class EditMenuDialog extends Component {
             name: menuToEdit.fields["name"],
             url: menuToEdit.fields["url"],
             isMegaMenu: menuToEdit.fields["is_mega_menu"],
-            allPages: this.allPages,
             save: (name, url, pageNotFound) => {
                 menuToEdit.fields["name"] = name;
                 menuToEdit.fields["url"] = url || "#";

@@ -17,9 +17,10 @@ export class BasePrinter {
      * Add the receipt to the queue of receipts to be printed and process it.
      * We clear the print queue if printing is not successful.
      * @param {String} receipt: The receipt to be printed, in HTML
+     * @param {String} receiptId: uuid uniquely identifying a receipt to be printed
      * @returns {{ successful: boolean; message?: { title: string; body?: string }}}
      */
-    async printReceipt(receipt) {
+    async printReceipt(receipt, receiptId) {
         if (receipt) {
             this.receiptQueue.push(receipt);
         }
@@ -30,7 +31,7 @@ export class BasePrinter {
                 await htmlToCanvas(receipt, { addClass: "pos-receipt-print" })
             );
             try {
-                printResult = await this.sendPrintingJob(image);
+                printResult = await this.sendPrintingJob(image, receiptId);
             } catch (error) {
                 // Error in communicating to the IoT box.
                 this.receiptQueue.length = 0;

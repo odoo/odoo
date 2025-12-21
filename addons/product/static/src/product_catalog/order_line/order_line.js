@@ -10,6 +10,7 @@ export class ProductCatalogOrderLine extends Component {
         price: Number,
         productType: String,
         uomDisplayName: String,
+        uomFactor: { type: Number, optional: true },
         code: { type: String, optional: true},
         readOnly: { type: Boolean, optional: true },
         warning: { type: String, optional: true},
@@ -17,7 +18,7 @@ export class ProductCatalogOrderLine extends Component {
 
     /**
      * Focus input text when clicked
-     * @param {Event} ev 
+     * @param {Event} ev
      */
     _onFocus(ev) {
         ev.target.select();

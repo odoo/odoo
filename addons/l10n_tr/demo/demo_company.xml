@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="base.partner_demo_company_tr" model="res.partner" forcecreate="1">
+    <record id="base.partner_demo_company_tr" model="res.partner" context="{'no_vat_validation': True}" forcecreate="1">
         <field name="name">TR Company</field>
-        <field name="vat">3297552117</field>
+        <field name="vat">1234567801</field>
         <field name="street">3281. Cadde</field>
+        <field name="street2">Mavişehir Sokak, 5. Kat</field>
         <field name="city">İç Anadolu Bölgesi</field>
         <field name="country_id" ref="base.tr"/>
         <field name="state_id" ref="base.state_tr_81"/>
@@ -12,6 +13,51 @@
         <field name="email">info@company.trexample.com</field>
         <field name="website">www.trexample.com</field>
         <field name="is_company" eval="True"/>
+        <field name="ref">Düzce Vergi Dairesi Müdürlüğü</field>
+    </record>
+
+    <record id="l10n_tr_res_partner_1" model="res.partner" context="{'no_vat_validation': True}">
+        <field name="name">Başhisar Elektronik ve Hizmetler A.Ş.</field>
+        <field name="is_company">1</field>
+        <field name="vat">1234567802</field>
+        <field name="street">Üçhisar Mahallesi</field>
+        <field name="street2">Kaya Sokak No: 15</field>
+        <field name="city">Ürgüp</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="state_id" ref="base.state_tr_50"/>
+        <field name="zip">50240</field>
+        <field name="phone">+90 509 987 12 34</field>
+        <field name="email">demo.elektronik@company.trexample.com</field>
+        <field name="website">http://www.demo-elektronik-example.com</field>
+        <field name="ref">Nevşehir Vergi Dairesi Müdürlüğü</field>
+    </record>
+
+    <record id="l10n_tr_res_partner_2" model="res.partner">
+        <field name="name">T.C. Sağlık Bakanlığı – Konak Belediyesi Başkanlığı</field>
+        <field name="vat">42451934800</field>
+        <field name="street">Atatürk Caddesi</field>
+        <field name="street2">Konak Sokak, No: 45</field>
+        <field name="city">Konak Belediyesi</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="state_id" ref="base.state_tr_35"/>
+        <field name="zip">35100</field>
+        <field name="phone">+90 500 987 56 00</field>
+        <field name="email">kamu@gmail.trexample.com</field>
+        <field name="website">http://www.kamu-example.com</field>
+        <field name="ref">İzmir Vergi Dairesi Başkanlığı</field>
+    </record>
+
+    <record id="l10n_tr_res_partner_3" model="res.partner" context="{'no_vat_validation': True}">
+        <field name="name">Ayşe Yılmaz</field>
+        <field name="vat">02098712345</field>
+        <field name="street">İstiklal Caddesi No: 50</field>
+        <field name="street2">Daire: 7, Kat: 3</field>
+        <field name="city">Beyoğlu</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="state_id" ref="base.state_tr_34"/>
+        <field name="zip">34000</field>
+        <field name="phone">+90 599 987 56 00</field>
+        <field name="email">ayseyilmaz@trexample.com</field>
     </record>
 
     <record id="base.demo_company_tr" model="res.company" forcecreate="1">
