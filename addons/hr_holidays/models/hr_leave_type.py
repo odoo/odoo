@@ -489,6 +489,10 @@ class HolidaysType(models.Model):
                         if allocation.date_from > target_date:
                             continue
                         if allocation.date_to and allocation.date_to < target_date:
+                            if leave_type.allows_negative and lt_info[1]['virtual_remaining_leaves'] < 0:
+                                amt_to_compensate = min(data['virtual_remaining_leaves'], -lt_info[1]['virtual_remaining_leaves'])
+                                if amt_to_compensate > 0:
+                                    lt_info[1]['virtual_remaining_leaves'] += amt_to_compensate
                             continue
                     lt_info[1]['remaining_leaves'] += data['remaining_leaves']
                     lt_info[1]['virtual_remaining_leaves'] += data['virtual_remaining_leaves']
