@@ -1,5 +1,12 @@
 import { before, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, drag, queryOne, setInputFiles, waitFor } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    drag,
+    queryOne,
+    runAllTimers,
+    setInputFiles,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { useEffect } from "@odoo/owl";
 import {
     contains,
@@ -731,7 +738,7 @@ describe("Import view", () => {
             },
         });
 
-        redirect("/odoo/action-2")
+        redirect("/odoo/action-2");
         await mountWebClient();
         onRpc("base_import.import", "parse_preview", ({ route }) => {
             expect.step(route);
@@ -1470,7 +1477,7 @@ describe("Import view", () => {
 
     test("date format should be converted to strftime", async () => {
         let parseCount = 0;
-        redirect("/odoo/action-2")
+        redirect("/odoo/action-2");
         await mountWebClient();
         onRpc("base_import.import", "parse_preview", async ({ args }) => {
             parseCount++;
@@ -1509,6 +1516,105 @@ describe("Import view", () => {
         }
         expect.verifySteps(["parse_preview", "parse_preview", "execute_import"]);
         await waitFor(".o_list_view");
+    });
+
+    test("active_model in params is the main model", async () => {
+        class Team extends models.Model {
+            name = fields.Char();
+            _records = [];
+        }
+        defineModels([Team]);
+
+        const templateURL = "/myTemplateURL.xlsx";
+        onRpc("team", "get_import_templates", ({ route }) => {
+            expect.step(route);
+            return [{ label: "Some Import Template", template: templateURL }];
+        });
+        onRpc("base_import.import", "create", ({ route }) => expect.step(route));
+
+        await mountWebClient();
+        await getService("action").doAction({
+            name: "Import Teams",
+            tag: "import",
+            type: "ir.actions.client",
+            params: {
+                active_model: "team",
+            },
+        });
+
+        expect(".o_import_action").toHaveCount(1);
+        expect(".o_nocontent_help .btn-outline-primary").toHaveText("Some Import Template");
+        expect(".o_nocontent_help .btn-outline-primary").toHaveProperty(
+            "href",
+            "https://www.hoot.test" + templateURL
+        );
+        expect(".o_control_panel button:visible").toHaveCount(2);
+        expect.verifySteps([
+            "/web/dataset/call_kw/team/get_import_templates",
+            "/web/dataset/call_kw/base_import.import/create",
+        ]);
+
+        await runAllTimers(); // wait for router pushState
+        expect(browser.location.href).toBe("https://www.hoot.test/odoo/import?active_model=team");
+    });
+
+    test.tags("desktop");
+    test("batched import doesn't exit when a failure occurs", async () => {
+        defineActions([
+            {
+                id: 2,
+                name: "Partner List",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                domain: "[]",
+                views: [[false, "list"]],
+            },
+        ]);
+        Partner._views = {
+            list: `<list><field name="name"/></list>`,
+        };
+        patchWithCleanup(ImportAction.prototype, {
+            get isBatched() {
+                // make sure the UI displays the batched import options
+                return true;
+            },
+        });
+        mockService("notification", {
+            add: (message) => {
+                expect.step(message);
+                return () => {};
+            },
+        });
+
+        const steps = [
+            (args) => executeImport(args, true),
+            (args) => executeFailingImport(args[1][0]),
+        ];
+
+        onRpc("base_import.import", "execute_import", ({ args }) => steps.shift()(args));
+
+        onRpc("/web/action/load", async (request) => {
+            const { params } = await request.json();
+            expect.step(`/web/action/load id=${params.action_id}`);
+        });
+
+        await mountWebClient();
+        await getService("action").doAction(2);
+        await getService("action").doAction(1);
+
+        expect.verifySteps(["/web/action/load id=2", "/web/action/load id=1"]);
+
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await contains("input#o_import_batch_limit").edit(1);
+
+        await contains(".o_control_panel_main_buttons button:contains('Import')").click();
+        await animationFrame();
+
+        expect(".alert-danger:eq(0)").toHaveText("The file contains blocking errors (see below)");
+        expect(".o_import_report.alert-danger").toHaveText("Incorrect value");
+        expect.verifySteps([]);
     });
 });
 

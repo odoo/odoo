@@ -17,18 +17,39 @@ export class ProductsDesignPanelPlugin extends Plugin {
         builder_components: {
             ProductsDesignPanel,
         },
+        handleNewRecords: this.handleMutations.bind(this),
         save_handlers: this.onSave.bind(this),
         change_current_options_containers_listeners: () => {
-            this.panels.forEach(panel => {
+            this.panels.forEach((panel) => {
                 if (panel.state.overlayVisible) {
                     panel.closeDesignOverlay();
                 }
             });
         },
+
+        product_design_list_to_save: {
+            selector: "#o_wsale_products_grid",
+            getData(el) {
+                const productOptClasses = Array.from(el.classList).filter((className) =>
+                    className.startsWith("o_wsale_products_opt_")
+                );
+                const updateData = {
+                    shop_opt_products_design_classes: productOptClasses.join(" "),
+                };
+
+                const gapToSave = el.style.getPropertyValue("--o-wsale-products-grid-gap");
+                if (gapToSave !== undefined) {
+                    updateData.shop_gap = gapToSave;
+                }
+                return updateData;
+            },
+        },
     };
 
     setup() {
         this.panels = new Set();
+        this.productDesignListToSave = this.getResource("product_design_list_to_save");
+        this.savableSelector = this.productDesignListToSave.map((item) => item.selector).join(",");
     }
 
     registerPanel(panel) {
@@ -39,36 +60,57 @@ export class ProductsDesignPanelPlugin extends Plugin {
         this.panels.delete(panel);
     }
 
-    async onSave() {
-        const persistentPanels = Array.from(this.panels).filter(panel => panel.needsDbPersistence);
-
-        for (const panel of persistentPanels) {
-            const pageEl = panel.env.getEditingElement();
-            const updateData = {};
-
-            // Save gap
-            if (pageEl.dataset.gapToSave !== undefined) {
-                updateData.shop_gap = pageEl.dataset.gapToSave;
-            }
-
-            // Scan DOM for all classes with o_wsale_products_opt_ prefix
-            const currentClasses = Array.from(pageEl.classList);
-            const productOptClasses = currentClasses.filter(className =>
-                className.startsWith('o_wsale_products_opt_')
-            );
-
-            // Always save the classes field (empty string if no classes found)
-            updateData[panel.props.recordName] = productOptClasses.join(' ');
-
-            // Early return only if no classes and no gap to save
-            if (productOptClasses.length === 0 && pageEl.dataset.gapToSave === undefined) {
+    /**
+     * Handles the flag of the closest product savable element
+     * @param {Object} records - The observed mutations
+     * @param {String} currentOperation - The name of the current operation
+     */
+    handleMutations(records, currentOperation) {
+        if (currentOperation === "undo" || currentOperation === "redo") {
+            // Do nothing as `o_dirty_product_design_list` has already been handled by the history
+            // plugin.
+            return;
+        }
+        for (const record of records) {
+            if (record.attributeName === "contenteditable") {
                 continue;
+            }
+            let targetEl = record.target;
+            if (!targetEl.isConnected) {
+                continue;
+            }
+            if (targetEl.nodeType !== Node.ELEMENT_NODE) {
+                targetEl = targetEl.parentElement;
+            }
+            if (!targetEl) {
+                continue;
+            }
+            const isSavable = targetEl.matches(this.savableSelector);
+            if (!isSavable || targetEl.classList.contains("o_dirty_product_design_list")) {
+                continue;
+            }
+            targetEl.classList.add("o_dirty_product_design_list");
+        }
+    }
+
+    async onSave() {
+        const dirtyProductDesignListEls = Array.from(
+            this.editable.querySelectorAll(".o_dirty_product_design_list")
+        );
+        for (const el of dirtyProductDesignListEls) {
+            const updateData = {};
+            for (const { selector, getData } of this.productDesignListToSave) {
+                if (!el.matches(selector)) {
+                    continue;
+                }
+                Object.assign(updateData, getData(el));
             }
 
             // Save data
             if (Object.keys(updateData).length > 0) {
                 await rpc("/shop/config/website", updateData);
             }
+            el.classList.remove("o_dirty_product_design_list");
         }
     }
 }

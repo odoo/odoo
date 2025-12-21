@@ -53,7 +53,7 @@ class IoTRestart(Thread):
     Thread to restart odoo server in IoT Box when we must return a answer before
     """
     def __init__(self, delay):
-        Thread.__init__(self)
+        super().__init__(daemon=True)
         self.delay = delay
 
     def run(self):
@@ -651,7 +651,10 @@ def check_network(host=None):
     if not host:
         return None
 
-    host = socket.gethostbyname(host)
+    try:
+        host = socket.gethostbyname(host)
+    except socket.gaierror:
+        return "unreachable"
     packet_loss, avg_latency = mtr(host)
     thresholds = {"fast": 5, "normal": 20} if ip_address(host).is_private else {"fast": 50, "normal": 150}
 

@@ -6,6 +6,7 @@ from urllib import parse
 
 from requests import PreparedRequest, Response, Session
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests.common import tagged, freeze_time
 from odoo.tools.misc import file_open
@@ -581,7 +582,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         wizard = self.create_send_and_print(move_1 + move_2)
         with patch(
-            'odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20.AccountEdiXmlUbl_20._export_invoice_constraints',
+            'odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20.AccountEdiXmlUBL20._export_invoice_constraints',
             mocked_export_invoice_constraints
         ), self.enter_registry_test_mode():
             wizard.action_send_and_print()
@@ -717,8 +718,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
     def test_self_billing_sending_constraints(self):
         """Test that self-billing sending constraints are properly handled."""
-        # Test that vendor bills can be sent when self-billing is activated
-        self.env.company.peppol_activate_self_billing_sending = True
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
 
         self_billing_journal = self.env['account.journal'].create({
@@ -752,10 +751,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         wizard = self.create_send_and_print(vendor_bill, default=True)
         self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)
 
-        # Test that vendor bills cannot be sent when self-billing is not activated
-        self.env.company.peppol_activate_self_billing_sending = False
-        with self.assertRaisesRegex(UserError, "You can only generate sales documents."):
-            self.create_send_and_print(vendor_bill, default=True)
+        # Test that vendor bills can be sent as soon as the format allows (bis3) and the journal is in self-billing
+        self.create_send_and_print(vendor_bill, default=True)
 
     def test_receive_self_billed_invoice_from_peppol(self):
         """Test receiving a self-billed invoice from Peppol.
@@ -817,3 +814,52 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'currency_id': self.env.ref('base.EUR').id,
             },
         ])
+
+    def test_automatic_invoicing_auto_update_partner_peppol_status(self):
+        self.ensure_installed('sale')
+        tax = self.percent_tax(21.0)
+        product = self._create_product(lst_price=100.0, taxes_id=tax)
+        partner = self.env['res.partner'].create({
+            'name': 'partner_be',
+            'street': "Rue des Bourlottes 9",
+            'zip': "1367",
+            'city': "Ramillies",
+            'vat': 'BE0477472701',
+            'company_registry': '0477472701',
+            'invoice_sending_method': 'peppol',
+            'invoice_edi_format': 'ubl_bis3',
+            'company_id': self.env.company.id,
+            'country_id': self.env.ref('base.be').id,
+        })
+        self.env.user.group_ids |= self.env.ref('sales_team.group_sale_salesman')
+
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', True)
+        so = self._create_sale_order_one_line(product_id=product, partner_id=partner)
+
+        payment_method = self.env.ref('payment.payment_method_unknown')
+
+        dummy_provider = self.env['payment.provider'].create({
+            'name': "Dummy Provider",
+            'code': 'none',
+            'state': 'test',
+            'is_published': True,
+            'payment_method_ids': [Command.set(payment_method.ids)],
+            'allow_tokenization': True,
+        })
+        self._create_dummy_payment_method_for_provider(
+            provider=dummy_provider,
+            journal=self.company_data['default_journal_bank'],
+        )
+        transaction = self.env['payment.transaction'].create({
+            'payment_method_id': payment_method.id,
+            'amount': so.amount_total,
+            'state': 'done',
+            'provider_id': dummy_provider.id,
+            'currency_id': so.currency_id.id,
+            'reference': so.name,
+            'partner_id': partner.id,
+            'sale_order_ids': [Command.set(so.ids)],
+        })
+        transaction.sudo()._post_process()
+
+        self.assertRecordValues(partner, [{'peppol_verification_state': 'valid'}])

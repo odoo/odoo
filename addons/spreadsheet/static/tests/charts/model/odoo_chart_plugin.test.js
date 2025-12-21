@@ -627,7 +627,11 @@ test("Duplicating a sheet correctly duplicates Odoo chart", async () => {
     const sheetId = model.getters.getActiveSheetId();
     const secondSheetId = "secondSheetId";
     const chartId = model.getters.getChartIds(sheetId)[0];
-    model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
+    model.dispatch("DUPLICATE_SHEET", {
+        sheetId,
+        sheetIdTo: secondSheetId,
+        sheetNameTo: "Next name",
+    });
     const chartIds = model.getters.getChartIds(secondSheetId);
     expect(chartIds.length).toBe(1);
     expect(model.getters.getChart(chartIds[0]) instanceof OdooChart).toBe(true);

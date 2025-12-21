@@ -187,7 +187,7 @@ export class PosOrder extends PosOrderAccounting {
             preset.fiscal_position_id || this.config.default_fiscal_position_id;
         this.preset_id = preset;
         if (preset.is_return) {
-            this.lines.forEach((l) => l.setQuantity(-Math.abs(l.getQuantity())));
+            this.lines.forEach((l) => l.setQuantity(-Math.abs(l.getQuantity()), true));
         }
     }
 

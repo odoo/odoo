@@ -51,7 +51,7 @@ class ResCompany(models.Model):
         if at_date and isinstance(at_date, str):
             at_date = fields.Date.from_string(at_date)
         last_closing_date = self._get_last_closing_date()
-        if at_date and last_closing_date and at_date < last_closing_date:
+        if at_date and last_closing_date and at_date < fields.Date.to_date(last_closing_date):
             raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
         aml_vals_list = self._action_close_stock_valuation(at_date=at_date)
 
@@ -179,39 +179,41 @@ class ResCompany(models.Model):
             moves_base_domain &= Domain([('date', '<=', at_date)])
         moves_in_domain = Domain([
             ('is_out', '=', True),
+            ('company_id', '=', self.id),
             ('location_dest_id', 'in', valued_location.ids),
         ]) & moves_base_domain
         moves_in_by_location = self.env['stock.move']._read_group(
             moves_in_domain,
-            ['location_dest_id'],
+            ['location_dest_id', 'product_category_id'],
             ['value:sum'],
         )
         moves_out_domain = Domain([
             ('is_in', '=', True),
+            ('company_id', '=', self.id),
             ('location_id', 'in', valued_location.ids),
         ]) & moves_base_domain
         moves_out_by_location = self.env['stock.move']._read_group(
             moves_out_domain,
-            ['location_id'],
+            ['location_id', 'product_category_id'],
             ['value:sum'],
         )
         account_balance = defaultdict(float)
-        incoming_value_by_location = dict(moves_in_by_location)
-        outgoing_value_by_location = dict(moves_out_by_location)
-        locations = incoming_value_by_location.keys() | outgoing_value_by_location.keys()
-        for location in locations:
-            # TODO: It would be better to replay the period to get the exact correct value.
-            inventory_value = incoming_value_by_location.get(location, 0.0) - outgoing_value_by_location.get(location, 0.0)
-            account_balance[location.valuation_account_id] += inventory_value
+        for location, category, value in moves_in_by_location:
+            stock_valuation_acc = category.property_stock_valuation_account_id or self.account_stock_valuation_id
+            account_balance[location.valuation_account_id, stock_valuation_acc] += value
 
-        for account, balance in account_balance.items():
+        for location, category, value in moves_out_by_location:
+            stock_valuation_acc = category.property_stock_valuation_account_id or self.account_stock_valuation_id
+            account_balance[location.valuation_account_id, stock_valuation_acc] -= value
+
+        for (location_account, stock_account), balance in account_balance.items():
             if balance == 0:
                 continue
             amls_vals = self._prepare_inventory_aml_vals(
-                account,
-                self.account_stock_valuation_id,
+                location_account,
+                stock_account,
                 balance,
-                _('Closing: Location Reclassification - [%(account)s]', account=account.display_name),
+                _('Closing: Location Reclassification - [%(account)s]', account=location_account.display_name),
             )
             amls_vals_list += amls_vals
         return amls_vals_list
@@ -228,14 +230,7 @@ class ResCompany(models.Model):
 
         accounts = inventory_data.keys() | accounting_data.keys()
         for account in accounts:
-            account_variation = False
-            # Continental accounting
-            if account.account_stock_variation_id and account.account_stock_expense_id:
-                account_variation = account.account_stock_expense_id
-            if account.account_stock_variation_id:
-                account_variation = account.account_stock_variation_id
-            if not account_variation and account.account_stock_expense_id:
-                account_variation = account.account_stock_expense_id
+            account_variation = account.account_stock_variation_id
             if not account_variation:
                 account_variation = self.env.company.expense_account_id
             if not account_variation:
@@ -334,7 +329,11 @@ class ResCompany(models.Model):
             closing_id = closing_ids.pop(-1)
             closing_id = int(closing_id)
             closing = self.env['account.move'].browse(closing_id).exists().filtered(lambda am: am.state == 'posted')
-        return closing.date if closing else False
+        if not closing:
+            return False
+        am_state_field = self.env['ir.model.fields'].search([('model', '=', 'account.move'), ('name', '=', 'state')], limit=1)
+        state_tracking = closing.message_ids.tracking_value_ids.filtered(lambda t: t.field_id == am_state_field).sorted('id')
+        return state_tracking[-1:].create_date or fields.Datetime.to_datetime(closing.date)
 
     def _save_closing_id(self, move_id):
         self.ensure_one()

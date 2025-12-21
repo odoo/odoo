@@ -11,13 +11,14 @@
 # Martin Trigaux, 2022
 # Onii Onii <onii0223@yahoo.com>, 2022
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Bayarkhuu Bataa <bbayarkhuu@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-11-11 17:16+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2025-12-20 09:39+0000\n"
+"Last-Translator: Bayarkhuu Bataa <bbayarkhuu@gmail.com>\n"
 "Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-19/uom/mn/"
 ">\n"
 "Language: mn\n"
@@ -25,12 +26,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 msgid "Absolute Quantity"
-msgstr ""
+msgstr "Абсолют тоо хэмжээ"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -88,6 +89,8 @@ msgid ""
 "How much bigger or smaller this unit is compared to the reference UoM for "
 "this unit"
 msgstr ""
+"Суурь хэмжих нэгжийг энэ хэмжих нэгжтэй харьцуулахад хэр том эсвэл жижиг "
+"болох"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
@@ -112,7 +115,7 @@ msgstr "Олон хэмжих нэгжийг удирдах"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_pack_6
 msgid "Pack of 6"
-msgstr ""
+msgstr "6-тай багц"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__parent_path
@@ -124,7 +127,7 @@ msgstr "Эцэг зам"
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 #: code:addons/uom/static/src/components/many2x_uom_tags/many2x_uom_tags.js:0
 msgid "Product Field Name"
-msgstr ""
+msgstr "Барааны талбарын нэр"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
@@ -141,24 +144,24 @@ msgstr "Тоо хэмжээ"
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 #: code:addons/uom/static/src/components/many2x_uom_tags/many2x_uom_tags.js:0
 msgid "Quantity Field Name"
-msgstr ""
+msgstr "Тоо хэмжээний талбарын нэр"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_uom_id
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Reference Unit"
-msgstr ""
+msgstr "Суурь хэмжих нэгж"
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "Reference unit of measure is missing."
-msgstr ""
+msgstr "Суурь хэмжих нэгж алга байна."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__related_uom_ids
 msgid "Related UoMs"
-msgstr ""
+msgstr "Холбоотой хэмжих нэгжүүд"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -168,7 +171,7 @@ msgstr "Нарийвчлалын орон"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Search UOM"
-msgstr ""
+msgstr "Хэмжих нэгжээс хайх"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__sequence
@@ -187,6 +190,13 @@ msgid ""
 "Therefore, changing core units of measure in a running database is not "
 "recommended."
 msgstr ""
+"%s дээр зарим чухал талбарууд өөрчлөгдсөн.\n"
+"Энэ өөрчлөлтөөр одоогийн өгөгдөл ӨӨРЧЛӨГДӨХГҮЙ.\n"
+"\n"
+"Хэмжих нэгжийг өөрчлөх нь бүхэл системд нөлөөлдөг тул энэ нь ноцтой асуудал "
+"үүсгэж болно.\n"
+"Тиймээс үндсэн хэмжих нэгжийг ажиллаж байгаа өгөгдлийн санд өөрчлөхийг "
+"зөвлөхгүй."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -201,11 +211,13 @@ msgid ""
 "%s\n"
 "You can archive them instead."
 msgstr ""
+"Дараах хэмжих нэгжүүд системд ашиглагдсан байгаа тул устгаж болохгүй: %s\n"
+"Оронд нь та архивлаж болно."
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_ton
 msgid "Ton"
-msgstr ""
+msgstr "тонн"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -219,7 +231,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit Name"
-msgstr ""
+msgstr "Хэмжих нэгжийн нэр"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
@@ -230,7 +242,7 @@ msgstr "Нэгж"
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Хэмжих нэгж болон багц"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -257,27 +269,27 @@ msgstr "см"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
 msgid "fl oz (US)"
-msgstr ""
+msgstr "шингэн унц (АНУ)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
 msgid "ft"
-msgstr ""
+msgstr "фут"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_square_foot
 msgid "ft²"
-msgstr ""
+msgstr "фут кв"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_foot
 msgid "ft³"
-msgstr ""
+msgstr "фут куб"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
-msgstr ""
+msgstr "галлон (АНУ)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
@@ -287,7 +299,7 @@ msgstr "байрлал"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch
 msgid "in³"
-msgstr ""
+msgstr "инч куб"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -302,7 +314,7 @@ msgstr "км"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
 msgid "lb"
-msgstr ""
+msgstr "фунт"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
@@ -312,37 +324,37 @@ msgstr "бээр"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_milliliter
 msgid "ml"
-msgstr ""
+msgstr "мл"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter
 msgid "mm"
-msgstr ""
+msgstr "мм"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_square_meter
 msgid "m²"
-msgstr ""
+msgstr "м кв"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_meter
 msgid "m³"
-msgstr ""
+msgstr "м куб"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz"
-msgstr ""
+msgstr "унц"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt (US)"
-msgstr ""
+msgstr "кварт (АНУ)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard
 msgid "yd"
-msgstr ""
+msgstr "ярд"
 
 #~ msgid "Add a new unit of measure category"
 #~ msgstr "Шинэ хэмжих нэгжийн ангилал нэмэх"
