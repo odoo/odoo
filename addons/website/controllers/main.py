@@ -35,6 +35,7 @@ from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
 from odoo.addons.website.tools import get_base_domain
 from odoo.tools.json import scriptsafe as json
+from odoo.tools.translate import TRANSLATED_ELEMENTS
 
 _lt = LazyTranslate(__name__)
 logger = logging.getLogger(__name__)
@@ -210,6 +211,10 @@ class Website(Home):
     @http.route('/website/get_languages', type='jsonrpc', auth="user", website=True, readonly=True)
     def website_languages(self, **kwargs):
         return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in request.website.language_ids]
+
+    @http.route('/website/get_translated_elements', type='jsonrpc', auth="user", readonly=True)
+    def translated_elements(self, **kwargs):
+        return list(TRANSLATED_ELEMENTS)
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
@@ -407,6 +412,10 @@ class Website(Home):
                 dict(title=_('Apps url'), values=suggested_controllers),
             ]
         }
+
+    @http.route('/website/check_existing_link', type='jsonrpc', auth="user", website=True, readonly=True)
+    def check_existing_link(self, link):
+        return request.website.check_existing_page(link)
 
     @http.route('/website/save_session_layout_mode', type='jsonrpc', auth='public', website=True, readonly=True)
     def save_session_layout_mode(self, layout_mode, view_id):

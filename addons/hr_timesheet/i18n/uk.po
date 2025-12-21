@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
 "PO-Revision-Date: 2025-11-14 15:22+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
@@ -19,10 +19,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
-"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
-"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
-"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: hr_timesheet
@@ -567,7 +567,8 @@ msgstr "Додатковий час"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Generate timesheets for validated time off requests and public holidays"
-msgstr "Створіть табелі для затвердження запитів на відпустки та офіційні свята"
+msgstr ""
+"Створіть табелі для затвердження запитів на відпустки та офіційні свята"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_ir_http
@@ -747,6 +748,12 @@ msgstr "Не знайдено жодної дії. Почніть її!"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No data yet!"
 msgstr "Ще немає даних!"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
 
 #. module: hr_timesheet
 #. odoo-python
@@ -955,6 +962,14 @@ msgstr "Налаштування"
 msgid ""
 "Some timesheet entries are weighing down these tasks! Remove them first, "
 "then you’ll be able to delete the tasks!"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
 msgstr ""
 
 #. module: hr_timesheet
@@ -1306,12 +1321,6 @@ msgid "Timesheets cannot be created on a private task."
 msgstr "Табелі неможливо створити на приватному завданні."
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-msgid "Timesheets could not be created for any of the selected days"
-msgstr ""
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
@@ -1333,8 +1342,8 @@ msgid "Timesheets of %(name)s"
 msgstr "Табелі %(name)s"
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
 msgstr ""
 
@@ -1522,8 +1531,8 @@ msgid ""
 "span>)"
 msgstr ""
 "на\n"
-"                            <span class=\"fw-bold text-dark\"> "
-"Підзавданнях</span>)"
+"                            <span class=\"fw-bold text-dark\"> Підзавданнях</"
+"span>)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1532,8 +1541,8 @@ msgid ""
 "                        <span class=\"fw-bold text-dark\"> Sub-tasks</span>)"
 msgstr ""
 "на\n"
-"                        <span class=\"fw-bold text-dark\"> "
-"Підзавданнях</span>)"
+"                        <span class=\"fw-bold text-dark\"> Підзавданнях</"
+"span>)"
 
 #~ msgid "%s Spent"
 #~ msgstr "%s витрачено"

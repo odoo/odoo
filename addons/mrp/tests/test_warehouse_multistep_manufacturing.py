@@ -3,7 +3,6 @@
 
 from odoo.tests import Form, tagged
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -24,6 +23,8 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         warehouse_form.name = 'Test Warehouse'
         warehouse_form.code = 'TWH'
         cls.warehouse = warehouse_form.save()
+        # Enable MTO
+        cls.warehouse.mto_pull_id.route_id.active = True
 
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
 
@@ -33,7 +34,6 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         product_form.uom_id = cls.uom_unit
         product_form.is_storable = True
         product_form.route_ids.clear()
-        product_form.route_ids.add(cls.warehouse.manufacture_pull_id.route_id)
         product_form.route_ids.add(cls.warehouse.mto_pull_id.route_id)
         cls.finished_product = product_form.save()
 
@@ -370,7 +370,6 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         finished_product = self.env['product.product'].create({
             'name': 'Super Product',
-            'route_ids': [Command.link(self.route_manufacture.id)],
             'is_storable': True,
         })
         secondary_product = self.env['product.product'].create({
@@ -433,10 +432,6 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
     def test_manufacturing_3_steps_trigger_reordering_rules(self):
         with Form(self.warehouse) as warehouse:
             warehouse.manufacture_steps = 'pbm_sam'
-
-        with Form(self.raw_product) as p:
-            p.route_ids.clear()
-            p.route_ids.add(self.warehouse.manufacture_pull_id.route_id)
 
         # Create an additional BoM for component
         product_form = Form(self.env['product.product'])
@@ -760,7 +755,6 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
         demo = self.env['product.product'].create({
             'name': 'DEMO',
-            'route_ids': [Command.link(self.route_manufacture.id)],
             'is_storable': True,
         })
         comp1 = self.env['product.product'].create({

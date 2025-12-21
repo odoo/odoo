@@ -30,6 +30,31 @@ describe("pos_store.js", () => {
         expect(json2str).toBe("json");
     });
 
+    test("connectNewData canceled order", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = await getFilledOrder(store);
+        const serializedOrder = { ...order.raw };
+
+        await store.deleteOrders([order]);
+        serializedOrder.state = "cancel";
+        let isListenerCalled = false;
+        const listenerCleanup = models["pos.order"].addEventListener("update", (data) => {
+            if (data.id === order.id) {
+                const orderToRecompute = models["pos.order"].get(data.id);
+                orderToRecompute.triggerRecomputeAllPrices();
+                isListenerCalled = true;
+            }
+        });
+        models.connectNewData({
+            "pos.order": [serializedOrder],
+        });
+        const updatedOrder = models["pos.order"].get(order.id);
+        expect(updatedOrder.state).toBe("cancel");
+        expect(isListenerCalled).toBe(true);
+        listenerCleanup();
+    });
+
     describe("syncAllOrders", () => {
         test("simple sync", async () => {
             const store = await setupPosEnv();

@@ -69,12 +69,14 @@
     <button class="btn btn-primary ms-0 py-0 px-1 me-1"
             title="Move Backward"
             aria-label="Move Backward"
+            t-att-class="{ disabled: !state.hasMultiItems }"
             t-on-click="() => this.slide('prev')">
         <span class="fa fa-fw fa-angle-left"/>
     </button>
     <button class="btn btn-primary py-0 px-1 me-2"
             title="Move Forward"
             aria-label="Move Forward"
+            t-att-class="{ disabled: !state.hasMultiItems }"
             t-on-click="() => this.slide('next')">
         <span class="fa fa-fw fa-angle-right"/>
     </button>
@@ -85,8 +87,7 @@
         <span class="oi fa-fw oi-plus"/>
     </button>
     <button class="btn btn-danger py-0 px-1"
-            t-att-class="{ disabled: state.disableRemove }"
-            t-att-disabled="state.disableRemove"
+            t-att-class="{ disabled: !state.hasMultiItems }"
             title="Remove Slide"
             aria-label="Remove Slide"
             t-on-click="removeSlide">

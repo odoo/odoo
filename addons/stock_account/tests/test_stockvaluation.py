@@ -2280,7 +2280,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         warehouse_3 = self.env['stock.warehouse'].create({'code': 'WH-neg'})
         self._make_out_move(product=product, quantity=20.0, location_id=warehouse_3.lot_stock_id.id)
-        self.assertRecordValues(product, [{'avg_cost': 20.0, 'total_value': 0.0, 'qty_available': 0.0}])
+        self.assertRecordValues(product, [{'avg_cost': 0.0, 'total_value': 0.0, 'qty_available': 0.0}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_1.id), [{'avg_cost': 20.0, 'total_value': 300, 'qty_available': 15}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_2.id), [{'avg_cost': 20.0, 'total_value': 100, 'qty_available': 5}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_3.id), [{'avg_cost': 20.0, 'total_value': -400, 'qty_available': -20}])
@@ -2303,7 +2303,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         warehouse_3 = self.env['stock.warehouse'].create({'code': 'WH-neg'})
         self._make_out_move(product=product, quantity=20.0, location_id=warehouse_3.lot_stock_id.id)
-        self.assertRecordValues(product, [{'avg_cost': 30.0, 'total_value': 0.0, 'qty_available': 0.0}])
+        self.assertRecordValues(product, [{'avg_cost': 0.0, 'total_value': 0.0, 'qty_available': 0.0}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_1.id), [{'avg_cost': 30.0, 'total_value': 450, 'qty_available': 15}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_2.id), [{'avg_cost': 30.0, 'total_value': 150, 'qty_available': 5}])
         self.assertRecordValues(product.with_context(warehouse_id=warehouse_3.id), [{'avg_cost': 30.0, 'total_value': -600, 'qty_available': -20}])
@@ -2370,6 +2370,7 @@ class TestStockValuation(TestStockValuationCommon):
         This test check that the value of this SVL is correct and does result in new_std_price * quantity.
         To do so, we create 2 In moves, which result in a standard price rounded at $5.29, the non-rounded value ≃ 5.2857.
         Then we update the standard price to $7
+        We will then do one more In move to ensure that the most recent value information is used when both sources are present.
         """
         product = self.product_avco
         self._make_in_move(product, 5, unit_cost=5)
@@ -2388,6 +2389,13 @@ class TestStockValuation(TestStockValuationCommon):
         with freeze_time(Datetime.now() + timedelta(minutes=1)):
             product.standard_price = 7
         self.assertEqual(product.total_value, 49)
+
+        with freeze_time(Datetime.now() + timedelta(minutes=2)):
+            move = self._make_in_move(product, 5, unit_cost=5)
+            # We force the sequence here to simulate moves that are not ordered by date
+            move.sequence = -1
+
+        self.assertEqual(product.total_value, 74)  # 49 + (5 * 5) = 74
 
     def test_average_manual_revaluation(self):
         product = self.product_avco
@@ -2935,3 +2943,16 @@ class TestStockValuation(TestStockValuationCommon):
         move.picked = True
         move.with_user(self.inventory_user)._action_done()
         self.assertEqual(move.state, 'done')
+
+    def test_product_value_details_computation_with_move_zero_quantity(self):
+        """Test that the current value details computation is skipped when the move quantity is zero."""
+        move = self._make_in_move(self.product_avco, 0.0)
+        self.assertEqual(move.quantity, 0.0)
+
+        product_value = self.env['product.value'].create({
+            'move_id': move.id,
+            'value': move.value_manual,
+        })
+        product_value_form = Form(product_value)
+
+        self.assertFalse(product_value_form.current_value_details)

@@ -13,19 +13,16 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _get_default_sending_methods(self, move) -> set:
         """ By default, we use the sending method set on the partner or email and peppol. """
-        # OVERRIDE 'account'
-        if invoice_sending_method := move.commercial_partner_id.with_company(move.company_id).invoice_sending_method:
-            return {invoice_sending_method}
-
-        if self._is_applicable_to_company('peppol', move.company_id):
-            return {'email', 'peppol'}
-
-        return {'email'}
+        # EXTENDS 'account'
+        default_sending_methods = super()._get_default_sending_methods(move)
+        if self._is_applicable_to_move('peppol', move):
+            default_sending_methods.add('peppol')
+        return default_sending_methods
 
     @api.model
     def _get_move_constraints(self, move):
         constraints = super()._get_move_constraints(move)
-        if move.company_id.peppol_activate_self_billing_sending and move._is_exportable_as_self_invoice():
+        if move._is_exportable_as_self_invoice():
             constraints.pop('not_sale_document', None)
         return constraints
 

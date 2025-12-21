@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"POT-Creation-Date: 2025-12-19 18:37+0000\n"
 "PO-Revision-Date: 2025-11-24 12:08+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
@@ -766,6 +766,12 @@ msgstr "Nog geen gegevens!"
 
 #. module: hr_timesheet
 #. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid "No timesheets created: employees aren’t working on the selected days"
+msgstr ""
+
+#. module: hr_timesheet
+#. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 msgid "None"
 msgstr "Geen"
@@ -974,6 +980,14 @@ msgid ""
 msgstr ""
 "Sommige werkboekingen blokkeren deze taken. Verwijder ze eerst om de taken "
 "te kunnen verwijderen!"
+
+#. module: hr_timesheet
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
+msgid ""
+"Some timesheets were not created: employees aren’t working on the selected "
+"days"
+msgstr ""
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_report_subtask
@@ -1329,12 +1343,6 @@ msgid "Timesheets cannot be created on a private task."
 msgstr "Urenstaten kunnen niet aangemaakt worden op een privé taak."
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
-msgid "Timesheets could not be created for any of the selected days"
-msgstr "Urenstaten konden niet worden aangemaakt voor de geselecteerde dagen"
-
-#. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid ""
@@ -1360,8 +1368,8 @@ msgid "Timesheets of %(name)s"
 msgstr "Urenstaten van %(name)s"
 
 #. module: hr_timesheet
-#. odoo-javascript
-#: code:addons/hr_timesheet/static/src/views/timesheet_calendar/timesheet_calendar_model.js:0
+#. odoo-python
+#: code:addons/hr_timesheet/models/hr_timesheet.py:0
 msgid "Timesheets successfully created"
 msgstr "Urenstaten succesvol aangemaakt"
 
@@ -1582,6 +1590,10 @@ msgid ""
 msgstr ""
 "op\n"
 "                        <span class=\"fw-bold text-dark\"> Subtaken</span>)"
+
+#~ msgid "Timesheets could not be created for any of the selected days"
+#~ msgstr ""
+#~ "Urenstaten konden niet worden aangemaakt voor de geselecteerde dagen"
 
 #~ msgid "%s Spent"
 #~ msgstr "%s Besteed"

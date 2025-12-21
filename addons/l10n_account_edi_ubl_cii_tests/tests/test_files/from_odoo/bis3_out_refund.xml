@@ -7,6 +7,7 @@
   <cbc:CreditNoteTypeCode>381</cbc:CreditNoteTypeCode>
   <cbc:Note>test narration</cbc:Note>
   <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
+  <cbc:TaxCurrencyCode>EUR</cbc:TaxCurrencyCode>
   <cbc:BuyerReference>ref_partner_2</cbc:BuyerReference>
   <cac:OrderReference>
     <cbc:ID>ref_move</cbc:ID>
@@ -133,6 +134,9 @@
       </cac:TaxCategory>
     </cac:TaxSubtotal>
   </cac:TaxTotal>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="EUR">241.11</cbc:TaxAmount>
+  </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
     <cbc:LineExtensionAmount currencyID="USD">2682.00</cbc:LineExtensionAmount>
     <cbc:TaxExclusiveAmount currencyID="USD">2682.00</cbc:TaxExclusiveAmount>
@@ -147,7 +151,10 @@
     <cac:AllowanceCharge>
       <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
       <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
+      <cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
+      <cbc:MultiplierFactorNumeric>10.0</cbc:MultiplierFactorNumeric>
       <cbc:Amount currencyID="USD">198.00</cbc:Amount>
+      <cbc:BaseAmount currencyID="USD">1980.00</cbc:BaseAmount>
     </cac:AllowanceCharge>
     <cac:Item>
       <cbc:Description>product_a</cbc:Description>

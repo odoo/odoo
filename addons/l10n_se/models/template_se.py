@@ -31,6 +31,6 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_sale_tax_id': 'sale_tax_25_goods',
                 'account_purchase_tax_id': 'purchase_tax_25_goods',
                 'expense_account_id': 'a4000',
-                'income_account_id': 'a3001',
+                'income_account_id': 'a30011',
             },
         }
