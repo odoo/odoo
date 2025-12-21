@@ -15,7 +15,7 @@
                     <field name="company_currency_id" column_invisible="True"/>
                     <!-- <field name="suitable_journal_ids" column_invisible="True"/> -->
                     <field name="available_payment_method_line_ids" column_invisible="True"/>
-                    <field name="date" readonly="state in ['cancel', 'in_process']"/>
+                    <field name="date" readonly="state in ['canceled', 'in_process']"/>
                     <field name="name"/>
                     <field name="journal_id"/>
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
@@ -146,7 +146,7 @@
                         <button name="action_reject" string="Reject" type="object"
                                 invisible="state != 'in_process' or not is_sent" data-hotkey="q"/>
                         <button name="action_draft" string="Reset to Draft" type="object" class="btn btn-secondary"
-                                invisible="state in ('draft')"
+                                invisible="state == 'draft'"
                                 groups="account.group_account_invoice" data-hotkey="w"/>
                         <button string="Request Cancel"
                                 name="button_request_cancel"
@@ -238,7 +238,7 @@
 
                         <widget name="web_ribbon" text="Invoicing App Legacy"
                                 bg_color="text-bg-info"
-                                invisible="state != 'invoicing_legacy'"
+                                invisible="move_id.payment_state != 'invoicing_legacy'"
                                 tooltip="This payment has been generated through the Invoicing app, before installing Accounting. It has been disabled by the 'Invoicing Switch Threshold Date' setting so that it does not impact your accounting."/>
 
                         <div class="oe_title">
