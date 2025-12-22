@@ -65,6 +65,9 @@ const ThreadPatch = {
             },
         });
     },
+    get isSelfInCall() {
+        return this.store.rtc.selfSession && this.eq(this.store.rtc.channel);
+    },
     get videoCount() {
         return Object.values(this.store["discuss.channel.rtc.session"].records).filter(
             (session) => session.hasVideo
