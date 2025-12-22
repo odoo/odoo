@@ -147,6 +147,8 @@ export class CalendarCommonRenderer extends Component {
             dayHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
                 : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
+            dayHeaderDidMount: this.onDayHeaderDidMount,
+            dayHeaderWillUnmount: this.onDayHeaderWillUnmount,
             dateClick: this.handleDateClick,
             dayCellClassNames: this.getDayCellClassNames,
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
@@ -206,6 +208,39 @@ export class CalendarCommonRenderer extends Component {
         return record.end.toFormat(this.timeFormat);
     }
 
+    // Create all day events when the day header is clicked in week/day view
+    onDayHeaderDidMount(info) {
+        if (this.props.model.scale === "week" || this.props.model.scale === "day") {
+            const date = DateTime.fromJSDate(info.date);
+            const handler = (event) => {
+                // Only create events if the date area was clicked
+                const dayNumberEl = event.target.closest(".o_cw_day_number");
+                if (dayNumberEl) {
+                    this.onDateClick({
+                        date: info.date,
+                        dateStr: date.toISODate(),
+                        allDay: true,
+                        jsEvent: event,
+                    });
+                }
+            };
+            this.customListeners = {
+                ...this.customListeners,
+                [date]: handler,
+            };
+            info.el.addEventListener("click", handler);
+        }
+    }
+    onDayHeaderWillUnmount(info) {
+        if (this.props.model.scale === "week" || this.props.model.scale === "day") {
+            const date = DateTime.fromJSDate(info.date);
+            const customListener = { ...this.customListeners }[date];
+            if (customListener) {
+                info.el.removeEventListener("click", customListener);
+                delete this.customListeners[date];
+            }
+        }
+    }
     computeEventSelector(event) {
         return `[data-event-id="${event.id}"]`;
     }
