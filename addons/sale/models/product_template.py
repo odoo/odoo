@@ -173,7 +173,7 @@ class ProductTemplate(models.Model):
             if self.env.user.has_group('product.group_product_pricelist'):
                 return [{
                     'label': _("Import Template for Products"),
-                    'template': '/product/static/xls/product_template.xls'
+                    'template': '/product/static/xls/products_import_template.xlsx'
                 }]
         return res
 
