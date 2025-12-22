@@ -37,7 +37,11 @@ test("Show looking for help in the sidebar while active or still seeking help", 
         channel_member_ids: [],
         livechat_status: "need_help",
     });
-    pyEnv["discuss.channel.member"].create({ channel_id: bobChannelId, partner_id: bobPartnerId });
+    pyEnv["discuss.channel.member"].create({
+        channel_id: bobChannelId,
+        partner_id: bobPartnerId,
+        livechat_member_type: "visitor",
+    });
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-livechatNeedHelp .oi-chevron-down");
