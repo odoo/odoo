@@ -2037,12 +2037,15 @@ class AccountMove(models.Model):
         for move in self:
             move.quick_encoding_vals = move._get_quick_edit_suggestions()
 
-    @api.depends('ref', 'move_type', 'partner_id', 'invoice_date', 'tax_totals')
+    @api.depends(lambda self: self._duplicated_ref_ids_depends())
     def _compute_duplicated_ref_ids(self):
         move_to_duplicate_move = self._fetch_duplicate_reference()
         for move in self:
             # Uses move._origin.id to handle records in edition/existing records and 0 for new records
             move.duplicated_ref_ids = move_to_duplicate_move.get(move._origin, self.env['account.move'])
+
+    def _duplicated_ref_ids_depends(self):
+        return ["ref", "move_type", "partner_id", "invoice_date", "tax_totals"]
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'posted')):
         moves = self.filtered(lambda m: m.is_sale_document() or m.is_purchase_document())
@@ -2050,7 +2053,7 @@ class AccountMove(models.Model):
         if not moves:
             return {}
 
-        used_fields = ("company_id", "partner_id", "commercial_partner_id", "ref", "move_type", "invoice_date", "state", "amount_total")
+        used_fields = [f for f in self._duplicated_ref_ids_depends() if self._fields[f].store] + ["commercial_partner_id", "company_id", "amount_total", "state"]
 
         self.env["account.move"].flush_model(used_fields)
 
@@ -2073,9 +2076,37 @@ class AccountMove(models.Model):
                     for field_name, value in values.items()
                 )
                 all_values.append(SQL("(%s)", casted_values))
-            column_names = SQL(', ').join(SQL.identifier(field_name) for field_name in used_fields + ("id",))
+            column_names = SQL(', ').join(SQL.identifier(field_name) for field_name in used_fields + ["id"])
             move_table_and_alias = SQL("(VALUES %s) AS move(%s)", SQL(', ').join(all_values), column_names)
 
+        to_query = self._get_duplicate_ref_sql_conditions(moves, move_table_and_alias)
+
+        result = []
+        for moves, move_type_sql_condition in to_query:
+            result.extend(self.env.execute_query(SQL("""
+                SELECT move.id AS move_id,
+                       array_agg(duplicate_move.id) AS duplicate_ids
+                  FROM %(move_table_and_alias)s
+                  JOIN account_move AS duplicate_move
+                    ON move.company_id = duplicate_move.company_id
+                   AND move.id != duplicate_move.id
+                   AND duplicate_move.state IN %(matching_states)s
+                   AND move.move_type = duplicate_move.move_type
+                   AND (%(move_type_sql_condition)s)
+                 WHERE move.id IN %(moves)s
+                 GROUP BY move.id
+                """,
+                matching_states=tuple(matching_states),
+                moves=tuple(moves.ids or [0]),
+                move_table_and_alias=move_table_and_alias,
+                move_type_sql_condition=move_type_sql_condition,
+            )))
+        return {
+            self.env['account.move'].browse(move_id): self.env['account.move'].browse(duplicate_ids)
+            for move_id, duplicate_ids in result
+        }
+
+    def _get_duplicate_ref_sql_conditions(self, moves, move_table_and_alias):
         to_query = []
         out_moves = moves.filtered(lambda m: m.move_type in ('out_invoice', 'out_refund'))
         if out_moves:
@@ -2084,6 +2115,10 @@ class AccountMove(models.Model):
                 AND (
                    move.amount_total = duplicate_move.amount_total
                    AND move.invoice_date = duplicate_move.invoice_date
+                   AND (
+                      move.commercial_partner_id = duplicate_move.commercial_partner_id
+                      OR (move.commercial_partner_id IS NULL AND duplicate_move.state = 'draft')
+                   )
                 )
             """)
             to_query.append((out_moves, out_moves_sql_condition))
@@ -2104,6 +2139,10 @@ class AccountMove(models.Model):
                              OR
                              date_part('year', move.invoice_date) = date_part('year', duplicate_move.invoice_date)
                          )
+                         AND (
+                             move.commercial_partner_id = duplicate_move.commercial_partner_id
+                             OR (move.commercial_partner_id IS NULL AND duplicate_move.state = 'draft')
+                         )
                      )
                      -- case 2: different refs, same partner, amount and date
                      OR (
@@ -2115,35 +2154,7 @@ class AccountMove(models.Model):
                 )
             """)
             to_query.append((in_moves, in_moves_sql_condition))
-
-        result = []
-        for moves, move_type_sql_condition in to_query:
-            result.extend(self.env.execute_query(SQL("""
-                SELECT move.id AS move_id,
-                       array_agg(duplicate_move.id) AS duplicate_ids
-                  FROM %(move_table_and_alias)s
-                  JOIN account_move AS duplicate_move
-                    ON move.company_id = duplicate_move.company_id
-                   AND move.id != duplicate_move.id
-                   AND duplicate_move.state IN %(matching_states)s
-                   AND move.move_type = duplicate_move.move_type
-                   AND (
-                           move.commercial_partner_id = duplicate_move.commercial_partner_id
-                           OR (move.commercial_partner_id IS NULL AND duplicate_move.state = 'draft')
-                       )
-                   AND (%(move_type_sql_condition)s)
-                 WHERE move.id IN %(moves)s
-                 GROUP BY move.id
-                """,
-                matching_states=tuple(matching_states),
-                moves=tuple(moves.ids or [0]),
-                move_table_and_alias=move_table_and_alias,
-                move_type_sql_condition=move_type_sql_condition,
-            )))
-        return {
-            self.env['account.move'].browse(move_id): self.env['account.move'].browse(duplicate_ids)
-            for move_id, duplicate_ids in result
-        }
+        return to_query
 
     @api.depends('duplicated_ref_ids')
     def _compute_is_draft_duplicated_ref_ids(self):
