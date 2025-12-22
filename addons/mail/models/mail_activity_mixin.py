@@ -285,6 +285,12 @@ class MailActivityMixin(models.AbstractModel):
         my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
         my_next_activity.action_reschedule_nextweek()
 
+    # Reschedules next my activity to specified date.
+    def action_reschedule_my_next_customdate(self, date_deadline):
+        self.ensure_one()
+        my_next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        my_next_activity.action_reschedule_customdate(date_deadline)
+
     def activity_send_mail(self, template_id):
         """ Automatically send an email based on the given mail.template, given
         its ID. """

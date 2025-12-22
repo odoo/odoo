@@ -80,6 +80,7 @@ class ResUsers(models.Model):
     employee_public_ids = fields.One2many('hr.employee.public', 'user_id', string='Related employee (public)', domain=_employee_ids_domain, readonly=True)
     employee_id = fields.Many2one('hr.employee', string="Company employee",
         compute='_compute_company_employee', search='_search_company_employee', readonly=True)
+    department_name = fields.Char('Department', related='employee_id.department_id.name')
 
     job_title = field_employee(fields.Char, 'job_title', user_writeable=True)
     work_phone = field_employee(fields.Char, 'work_phone', user_writeable=True)
