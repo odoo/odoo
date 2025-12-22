@@ -34,6 +34,11 @@
     }
 }
 
+// Disable scroll anchoring when chatter is not in aside mode to prevent unwanted layout shifts
+.o_content:has(.o-mail-Form-chatter:not(.o-aside)) {
+    overflow-anchor: none;
+}
+
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
