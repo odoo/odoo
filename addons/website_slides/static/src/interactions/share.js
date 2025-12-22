@@ -32,9 +32,20 @@ export class Share extends Interaction {
      */
     onClick(ev, currentTargetEl) {
         const slide = this.isFullscreen() ? this.slide : currentTargetEl.dataset;
+        const isDocumentSlide = slide.category === "document";
+        const embedUrl = isDocumentSlide && slide.embedCode ? 
+            this.isFullscreen() ? slide.embedUrl : slide.embedCode.slice(
+                slide.embedCode.indexOf('src="') + 5,
+                slide.embedCode.indexOf('"', slide.embedCode.indexOf('src="') + 5)
+            )
+            : undefined;
         this.services.dialog.add(SlideShareDialog, {
             category: slide.category,
-            documentMaxPage: slide.category == 'document' && this.getDocumentMaxPage(),
+            documentMaxPage:
+                isDocumentSlide &&
+                embedUrl &&
+                new URL(embedUrl, window.location.href).origin === window.location.origin &&
+                this.getDocumentMaxPage(),
             emailSharing: slide.emailSharing || slide.emailSharing === 'True',
             embedCode: slide.embedCode || "",
             id: parseInt(slide.id),
