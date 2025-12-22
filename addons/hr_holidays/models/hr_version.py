@@ -38,15 +38,18 @@ class HrVersion(models.Model):
             leaves = self._get_leaves_from_vals(vals)
             is_created = False
             for leave in leaves:
-                leaves_state = self._refuse_leave(leave, leaves_state)
+                leaves_state = self._update_leave_state(leave, leaves_state, leave.request_date_from < vals['contract_date_start'])
                 if not is_created:
                     created_versions |= super().create([vals])
                     is_created = True
                 overlapping_contracts = self._check_overlapping_contract(leave)
                 if not overlapping_contracts:
+                    # When the leave is set to draft
+                    leave._compute_date_from_to()
                     continue
+                new_version = overlapping_contracts[-1]
                 all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
-                    all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
+                    all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state, new_version)
             # TODO FIXME
             # to keep creation order, not ideal but ok for now.
             if not is_created:
@@ -81,11 +84,12 @@ class HrVersion(models.Model):
                         overlapping_contracts = self._check_overlapping_contract(leave)
                         if not overlapping_contracts:
                             continue
-                        leaves_state = self._refuse_leave(leave, leaves_state)
+                        last_version = overlapping_contracts[-1]
+                        leaves_state = self._update_leave_state(leave, leaves_state, True)
                         super(HrVersion, contract).write(vals)
                         specific_contracts += contract
                         all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
-                            all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
+                            all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state, last_version)
                 if all_new_leave_vals:
                     self._create_all_new_leave(all_new_leave_origin, all_new_leave_vals)
             except ValidationError:
@@ -131,21 +135,24 @@ class HrVersion(models.Model):
             return False
         return overlapping_contracts
 
-    def _refuse_leave(self, leave, leaves_state):
+    def _update_leave_state(self, leave, leaves_state, refuse_leave=False):
         if leave.id not in leaves_state:
             leaves_state[leave.id] = leave.state
-        if leave.state != 'refuse':
-            leave.action_refuse()
+        if leave.state not in ['refuse', 'confirm']:
+            if refuse_leave:
+                leave.action_refuse()
+            else:
+                leave.action_back_to_approval()
         return leaves_state
 
-    def _populate_all_new_leave_vals_from_split_leave(self, all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state):
+    def _populate_all_new_leave_vals_from_split_leave(self, all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state, new_version):
         for overlapping_contract in overlapping_contracts:
             new_request_date_from = max(leave.request_date_from, overlapping_contract.contract_date_start)
             new_request_date_to = min(leave.request_date_to, overlapping_contract.contract_date_end or date.max)
             new_leave_vals = leave.copy_data({
                 'request_date_from': new_request_date_from,
                 'request_date_to': new_request_date_to,
-                'state': leaves_state[leave.id],
+                'state': leaves_state[leave.id] if overlapping_contract.id != new_version.id else 'confirm',
             })[0]
             new_leave = self.env['hr.leave'].new(new_leave_vals)
             new_leave._compute_date_from_to()
