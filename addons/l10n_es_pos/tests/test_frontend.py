@@ -3,18 +3,20 @@
 
 import odoo.tests
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import Command
 
 
 @odoo.tests.tagged('post_install_l10n', 'post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
+
     @classmethod
-    def _get_main_company(cls):
-        cls.company_data["company"].country_id = cls.env.ref("base.es").id
+    @AccountTestInvoicingCommon.setup_country('es')
+    def setUpClass(cls):
+        super().setUpClass()
         cls.company_data["company"].currency_id = cls.env.ref("base.EUR").id
         cls.company_data["company"].vat = "ESA12345674"
         cls.company_data["company"].state_id = cls.env.ref("base.state_es_ba").id
-        return cls.company_data["company"]
 
     def test_spanish_pos(self):
         split_payment_method = self.env['pos.payment.method'].create({

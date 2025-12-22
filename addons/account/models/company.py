@@ -222,6 +222,8 @@ class ResCompany(models.Model):
         readonly=False,
         help="The country to use the tax reports from for this company")
     account_fiscal_country_group_codes = fields.Json(compute="_compute_account_fiscal_country_group_codes")
+    # OVERRIDE country_code
+    country_code = fields.Char(related='account_fiscal_country_id.code', depends=['account_fiscal_country_id'])
 
     account_enabled_tax_country_ids = fields.Many2many(
         string="l10n-used countries",
