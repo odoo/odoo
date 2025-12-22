@@ -502,7 +502,7 @@ export class KanbanRenderer extends Component {
     }
 
     toggleSelection(record, isRange = false) {
-        if (isRange) {
+        if (isRange && this.lastCheckedRecord) {
             this.toggleRangeSelection(record);
         } else {
             record.toggleSelection();
