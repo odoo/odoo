@@ -7,8 +7,8 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def action_view_in_store_delivery_methods(self):
-        """ Return an action to browse pickup delivery methods in list view, or in form view if
-        there is only one. """
+        """Return an action to browse pickup delivery methods in list view, or in form view if
+        there is only one."""
         in_store_dms = self.env['delivery.carrier'].search([('delivery_type', '=', 'in_store')])
         if len(in_store_dms) == 1:
             return {

@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
 
     def _get_additionnal_combination_info(self, product_or_template, quantity, uom, date, website):
         """Override of `website_sale` to add information on whether Click & Collect is enabled and
-        on the stock of the product. """
+        on the stock of the product."""
         res = super()._get_additionnal_combination_info(
             product_or_template, quantity, uom, date, website
         )
@@ -28,8 +28,11 @@ class ProductTemplate(models.Model):
             res['uom_id'] = uom.id
 
             # Prepare the delivery stock data.
-            available_delivery_methods_sudo = self.env['delivery.carrier'].sudo().search([
-                '|', ('website_id', '=', website.id), ('website_id', '=', False),
+            DeliveryCarrier = self.env['delivery.carrier'].sudo()
+            available_delivery_methods_sudo = DeliveryCarrier.search([
+                '|',
+                ('website_id', '=', website.id),
+                ('website_id', '=', False),
                 ('website_published', '=', True),
                 ('delivery_type', '!=', 'in_store'),
             ])

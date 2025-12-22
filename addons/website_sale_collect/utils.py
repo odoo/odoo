@@ -20,9 +20,9 @@ def format_product_stock_values(product, wh_id=None, uom=None, free_qty=None, ca
             free_qty = product.with_context(warehouse_id=wh_id).free_qty
         if cart_qty is not None:
             free_qty -= cart_qty or 0
-        free_qty_in_uom = max(int(product.uom_id._compute_quantity(
-            free_qty, to_unit=uom, rounding_method='DOWN'
-        )), 0)
+        free_qty_in_uom = max(
+            int(product.uom_id._compute_quantity(free_qty, to_unit=uom, rounding_method='DOWN')), 0
+        )
 
         in_stock = free_qty_in_uom > 0
         show_quantity = (
@@ -52,9 +52,7 @@ def calculate_partner_distance(partner1, partner2):
     lat2, long2 = partner2.partner_latitude, partner2.partner_longitude
     dlat = math.radians(lat2 - lat1)
     dlong = math.radians(long2 - long1)
-    arcsin = (
-        math.sin(dlat / 2) * math.sin(dlat / 2)
-        + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2))
-        * (math.sin(dlong / 2) * math.sin(dlong / 2))
-    )
+    arcsin = math.sin(dlat / 2) * math.sin(dlat / 2) + math.cos(math.radians(lat1)) * math.cos(
+        math.radians(lat2)
+    ) * (math.sin(dlong / 2) * math.sin(dlong / 2))
     return 2 * R * math.atan2(math.sqrt(arcsin), math.sqrt(1 - arcsin))

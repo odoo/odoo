@@ -3,7 +3,6 @@
 from odoo import api, fields, models
 from odoo.tools import format_amount
 
-
 VARIABLE_SELECTION = [
     ('weight', "Weight"),
     ('volume', "Volume"),
@@ -18,7 +17,15 @@ class DeliveryPriceRule(models.Model):
     _description = "Delivery Price Rules"
     _order = 'sequence, list_price, id'
 
-    @api.depends('variable', 'operator', 'max_value', 'list_base_price', 'list_price', 'variable_factor', 'currency_id')
+    @api.depends(
+        'variable',
+        'operator',
+        'max_value',
+        'list_base_price',
+        'list_price',
+        'variable_factor',
+        'currency_id',
+    )
     def _compute_name(self):
         for rule in self:
             name = 'if %s %s %.02f then' % (rule.variable, rule.operator, rule.max_value)
@@ -34,20 +41,33 @@ class DeliveryPriceRule(models.Model):
                 name = '%s %s times %s' % (name, price, rule.variable_factor)
             else:
                 name = '%s fixed price %s plus %s times %s' % (
-                    name, base_price, price, rule.variable_factor
+                    name,
+                    base_price,
+                    price,
+                    rule.variable_factor,
                 )
             rule.name = name
 
     name = fields.Char(compute='_compute_name')
     sequence = fields.Integer(required=True, default=10)
-    carrier_id = fields.Many2one('delivery.carrier', 'Carrier', required=True, index=True, ondelete='cascade')
+    carrier_id = fields.Many2one(
+        comodel_name='delivery.carrier', ondelete='cascade', required=True, index=True
+    )
     currency_id = fields.Many2one(related='carrier_id.currency_id')
 
-    variable = fields.Selection(selection=VARIABLE_SELECTION, required=True, default='quantity')
-    operator = fields.Selection([('==', '='), ('<=', '<='), ('<', '<'), ('>=', '>='), ('>', '>')], required=True, default='<=')
-    max_value = fields.Float('Maximum Value', required=True)
-    list_base_price = fields.Float(string='Sale Base Price', min_display_digits='Product Price', required=True, default=0.0)
-    list_price = fields.Float('Sale Price', min_display_digits='Product Price', required=True, default=0.0)
+    variable = fields.Selection(selection=VARIABLE_SELECTION, default='quantity', required=True)
+    operator = fields.Selection(
+        selection=[('==', '='), ('<=', '<='), ('<', '<'), ('>=', '>='), ('>', '>')],
+        default='<=',
+        required=True,
+    )
+    max_value = fields.Float(string="Maximum Value", required=True)
+    list_base_price = fields.Float(
+        string="Sale Base Price", min_display_digits='Product Price', default=0.0, required=True
+    )
+    list_price = fields.Float(
+        string="Sale Price", min_display_digits='Product Price', default=0.0, required=True
+    )
     variable_factor = fields.Selection(
-        selection=VARIABLE_SELECTION, string="Variable Factor", required=True, default='weight'
+        selection=VARIABLE_SELECTION, default='weight', required=True
     )

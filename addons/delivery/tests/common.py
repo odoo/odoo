@@ -4,7 +4,6 @@ from odoo.addons.sale.tests.common import SaleCommon
 
 
 class DeliveryCommon(SaleCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

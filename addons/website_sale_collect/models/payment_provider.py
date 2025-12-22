@@ -14,7 +14,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.custom_mode != 'on_site':
             return super()._get_default_payment_method_codes()
@@ -26,7 +26,7 @@ class PaymentProvider(models.Model):
     def _get_compatible_providers(
         self, company_id, *args, sale_order_id=None, website_id=None, report=None, **kwargs
     ):
-        """ Override of payment to exclude on-site payment providers if the delivery method is not
+        """Override of payment to exclude on-site payment providers if the delivery method is not
         pick up in store.
 
         :param int company_id: The company to which providers must belong, as a `res.company` id

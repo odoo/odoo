@@ -18,11 +18,13 @@ class DeliveryCarrier(models.Model):
 
     @api.constrains('delivery_type', 'is_published', 'warehouse_ids')
     def _check_in_store_dm_has_warehouses_when_published(self):
-        if any(self.filtered(
-            lambda dm: dm.delivery_type == 'in_store'
-            and dm.is_published
-            and not dm.warehouse_ids
-        )):
+        if any(
+            self.filtered(
+                lambda dm: (
+                    dm.delivery_type == 'in_store' and dm.is_published and not dm.warehouse_ids
+                )
+            )
+        ):
             raise ValidationError(
                 _("The delivery method must have at least one warehouse to be published.")
             )
@@ -30,8 +32,10 @@ class DeliveryCarrier(models.Model):
     @api.constrains('delivery_type', 'company_id', 'warehouse_ids')
     def _check_warehouses_have_same_company(self):
         for dm in self:
-            if dm.delivery_type == 'in_store' and dm.company_id and any(
-                wh.company_id and dm.company_id != wh.company_id for wh in dm.warehouse_ids
+            if (
+                dm.delivery_type == 'in_store'
+                and dm.company_id
+                and any(wh.company_id and dm.company_id != wh.company_id for wh in dm.warehouse_ids)
             ):
                 raise ValidationError(
                     _("The delivery method and a warehouse must share the same company")
@@ -52,9 +56,7 @@ class DeliveryCarrier(models.Model):
                         self.env['product.product'].browse(vals.get('product_id')).company_id.id
                         or self.env.company.id
                     )
-                warehouses = self.env['stock.warehouse'].search(
-                    [('company_id', 'in', company_id)]
-                )
+                warehouses = self.env['stock.warehouse'].search([('company_id', 'in', company_id)])
                 vals.update({
                     'warehouse_ids': [Command.set(warehouses.ids)],
                     'is_published': bool(warehouses),
@@ -115,17 +117,22 @@ class DeliveryCarrier(models.Model):
             pickup_locations.append(pickup_location_values)
 
         # Prepare the country data for the location selector's selection menu.
-        country_values = [{
-            'label': country.name,
-            'value': {
-                'name': country.name,
-                'code': country.code,
-                'image_url': country.image_url,
-        }} for country in location_countries if country]
+        country_values = [
+            {
+                'label': country.name,
+                'value': {
+                    'name': country.name,
+                    'code': country.code,
+                    'image_url': country.image_url,
+                },
+            }
+            for country in location_countries
+            if country
+        ]
 
         return {
             'country_data': country_values,
-            'pickup_location_data': sorted(pickup_locations, key=lambda k: k['distance'])
+            'pickup_location_data': sorted(pickup_locations, key=lambda k: k['distance']),
         }
 
     def in_store_rate_shipment(self, *_args):
