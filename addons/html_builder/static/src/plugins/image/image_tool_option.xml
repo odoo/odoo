@@ -6,14 +6,14 @@
         <t t-if="!state.isDynamicSVG">
             <ImageShapeOption />
         </t>
-        <BuilderRow label.translate="Description"
+        <BuilderRow label.translate="Description" t-if="!state.isImageBinaryField"
             tooltip.translate="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
             <BuilderTextInput
                 action="'alt'"
                 placeholder.translate="Alt tag"
                 />
         </BuilderRow>
-        <BuilderRow label.translate="Tooltip"
+        <BuilderRow label.translate="Tooltip" t-if="!state.isImageBinaryField"
             tooltip.translate="'Title tag' is shown as a tooltip when you hover the picture.">
             <BuilderTextInput
                 attributeAction="'title'"
@@ -25,10 +25,10 @@
             <BuilderButton title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
             <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.isActiveItem('cropImage')" icon="'oi-close'" className="'btn-danger-color-hover rounded-start-0 m-0 py-0 flex-grow-0'" />
         </div>
-        <ImageTransformOption t-if="!state.isImageAnimated and !state.isSocialMediaImg" />
+        <ImageTransformOption t-if="!state.isImageAnimated and !state.isSocialMediaImg and !state.isImageBinaryField" />
     </BuilderRow>
     <ImageFilterOption />
-    <t t-if="!state.isGridMode and !state.isSocialMediaImg">
+    <t t-if="!state.isGridMode and !state.isSocialMediaImg and !state.isImageBinaryField">
         <MediaSizeOption/>
     </t>
     <ImageFormatOption />
