@@ -576,6 +576,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
             'partner_id': self.partner_a.id,
             'move_type': 'out_invoice',
             'fiscal_position_id': fiscal_position.id,
+            'invoice_date': fields.Date.from_string('2025-12-22'),
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'tax_ids': [Command.set(tax.ids)],
@@ -584,6 +585,7 @@ class TestAccountEdiUblCii(TestUblCiiCommon):
         local_invoice = self.env['account.move'].create({
             'partner_id': self.partner_b.id,
             'move_type': 'out_invoice',
+            'invoice_date': fields.Date.from_string('2025-12-22'),
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
             })],
