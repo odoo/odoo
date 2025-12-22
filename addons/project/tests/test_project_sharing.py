@@ -735,8 +735,8 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertEqual(wizard.res_id, self.task.id, "res_id should be set from context")
         self.assertEqual(wizard.res_model, "project.task", "res_model should be set from context")
         self.assertEqual(
-            wizard.task_id.id, self.task.id,
-            "task_id default must match active_id"
+            wizard.resource_ref.id, self.task.id,
+            "resource_ref must match the active task",
         )
 
     def test_portal_user_with_edit_rights_can_close_recurring_task(self):
