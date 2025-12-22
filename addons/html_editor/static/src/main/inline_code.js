@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { splitTextNode } from "@html_editor/utils/dom";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
@@ -8,6 +8,7 @@ export class InlineCodePlugin extends Plugin {
     static dependencies = ["selection", "history", "input"];
     resources = {
         input_handlers: this.onInput.bind(this),
+        normalize_handlers: this.normalize.bind(this),
     };
 
     onInput(ev) {
@@ -97,5 +98,11 @@ export class InlineCodePlugin extends Plugin {
             }
         }
         this.dependencies.history.addStep();
+    }
+
+    normalize(rootEl) {
+        for (const el of selectElements(rootEl, "code.o_inline_code[data-oe-zws-empty-inline]")) {
+            el.remove();
+        }
     }
 }
