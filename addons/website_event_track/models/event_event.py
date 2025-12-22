@@ -67,12 +67,6 @@ class EventEvent(models.Model):
     # WEBSITE MENU MANAGEMENT
     # ------------------------------------------------------------
 
-    def toggle_website_track(self, val):
-        self.website_track = val
-
-    def toggle_website_track_proposal(self, val):
-        self.website_track_proposal = val
-
     def copy_event_menus(self, old_events):
         super().copy_event_menus(old_events)
         for new_event in self:
