@@ -13750,6 +13750,35 @@ test("selection can be enabled by pressing 'space' key", async () => {
 });
 
 test.tags("desktop");
+test("selection can be enabled by pressing 'shift + space' key", async () => {
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    await press("ArrowDown");
+    await keyDown("Shift");
+    await press("Space");
+    await animationFrame();
+    expect(".o_record_selected").toHaveCount(1);
+    await keyUp("Shift");
+    await press("ArrowDown");
+    await press("ArrowDown");
+    await keyDown("Shift");
+    await press("Space");
+    await animationFrame();
+    expect(".o_record_selected").toHaveCount(3);
+});
+
+test.tags("desktop");
 test("drag and drop records and quickly open a record", async () => {
     Partner._views.kanban = /* xml */ `
         <kanban>
