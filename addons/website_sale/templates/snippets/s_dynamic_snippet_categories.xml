@@ -1,24 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <template
-        id="website_sale.s_dynamic_snippet_category_template"
-        inherit_id="website.s_dynamic_snippet_template"
-        primary="True"
-    >
-        <xpath expr="//section[contains(@t-attf-class, 's_dynamic_snippet_title')]/*" position="replace">
-            <div>
-                <h2 class="h3">Crafting Beautiful Spaces</h2>
-                <p class="lead">Designing elegant, inviting environments that inspire and delight.</p>
-            </div>
-        </xpath>
-    </template>
 
     <template id="website_sale.s_dynamic_snippet_category_list" name="Category List">
-        <t t-call="website_sale.s_dynamic_snippet_category_template"
+        <t t-call="website.s_dynamic_snippet_template"
             snippet_name.f="s_dynamic_snippet_category_list"
             snippet_classes.f="oe_website_sale s_dynamic_category_clickable_items
                           s_dynamic_snippet_category s_dynamic_category_no_arrows"
-            main_page_url.f="/shop">
+            main_page_url.f="/shop"
+            snippet_title.f="Crafting Beautiful Spaces"
+            snippet_description.f="Designing elegant, inviting environments that inspire and delight.">
             <t t-call="website_sale.s_dynamic_snippet_category_preview_data"/>
         </t>
     </template>
