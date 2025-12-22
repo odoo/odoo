@@ -9,7 +9,7 @@
         <replace_media_option
             t-att-selector="replaceMediaOptionSelector"
             t-attf-exclude="{{replaceMediaOptionExclude}}"/>
-        <image_tool_option selector="img" exclude="[data-oe-type='image'] > img"/>
+        <image_tool_option selector="img" exclude="[data-oe-type='image'] > img:not([data-attachment-id])"/>
         <image_and_fa_option
             template="html_builder.ImageAndFaOption"
             selector="span.fa, i.fa, img"

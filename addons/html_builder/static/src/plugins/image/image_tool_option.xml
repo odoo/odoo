@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageToolOption">
-    <t t-if="!this.state.isGridMode and !this.state.isSocialMediaImg">
+    <t t-if="!this.state.isGridMode and !this.state.isSocialMediaImg and !this.state.isImageBinaryField">
         <MediaSizeOption level="1"/>
     </t>
     <BuilderRow label.translate="Transform" level="1" preview="false">
@@ -10,7 +10,7 @@
             <BuilderButton t-if="this.state.showCropTool" title.translate="Crop image" action="'cropImage'" icon="'fa-crop'" id="'cropImage'" />
             <BuilderButton title.translate="Reset crop" action="'resetCrop'" t-if="this.state.showCropTool and this.isActiveItem('cropImage')" icon="'oi-close'" className="'btn-danger-color-hover border-start-0 rounded-start-0 m-0 py-0 flex-grow-0'" />
         </div>
-        <ImageTransformOption t-if="!this.state.isImageAnimated and !this.state.isSocialMediaImg" />
+        <ImageTransformOption t-if="!this.state.isImageAnimated and !this.state.isSocialMediaImg and !this.state.isImageBinaryField" />
     </BuilderRow>
     <ImageFilterOption level="1"/>
     <ImageFormatOption level="1"/>
@@ -18,14 +18,14 @@
         <t t-if="!this.state.isDynamicSVG">
             <ImageShapeOption />
         </t>
-        <BuilderRow label.translate="Description"
+        <BuilderRow label.translate="Description" t-if="!this.state.isImageBinaryField"
             tooltip.translate="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
             <BuilderTextInput
                 action="'alt'"
                 placeholder.translate="Alt tag"
                 />
         </BuilderRow>
-        <BuilderRow label.translate="Tooltip"
+        <BuilderRow label.translate="Tooltip" t-if="!this.state.isImageBinaryField"
             tooltip.translate="'Title tag' is shown as a tooltip when you hover the picture.">
             <BuilderTextInput
                 attributeAction="'title'"

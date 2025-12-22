@@ -30,6 +30,7 @@ export class ImageToolOption extends BaseOptionComponent {
                 isGridMode: editingElement.closest(".o_grid_mode, .o_grid"),
                 isSocialMediaImg: editingElement.classList.contains("social_media_img"),
                 isDynamicSVG: editingElement.matches(dynamicSVGSelector),
+                isImageBinaryField: editingElement.parentElement.matches("[data-oe-type=image]"),
                 showCropTool,
             };
         });
