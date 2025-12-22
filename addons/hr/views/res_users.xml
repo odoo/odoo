@@ -276,5 +276,17 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="res_users_view_list" model="ir.ui.view">
+            <field name="name">res.users.view.list.inherit.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='role']" position="after">
+                    <field name="job_title" optional="hide"/>
+                    <field name="department_id" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </odoo>
