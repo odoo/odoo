@@ -14,6 +14,7 @@ export class InlineCodePlugin extends Plugin {
     resources = {
         input_handlers: this.onInput.bind(this),
         selectionchange_handlers: this.handleSelectionChange.bind(this),
+        normalize_handlers: this.normalize.bind(this),
         feff_providers: (root, cursors) =>
             selectElements(root, ".o_inline_code").flatMap((code) =>
                 this.dependencies.feff.surroundWithFeffs(code, cursors)
@@ -197,6 +198,18 @@ export class InlineCodePlugin extends Plugin {
                     anchorNode: codeElement.firstChild,
                     anchorOffset: 0,
                 });
+            }
+        }
+    }
+
+    normalize(rootEl) {
+        for (const el of selectElements(rootEl, "code.o_inline_code")) {
+            if (
+                [...el.childNodes].every(
+                    (node) => node.nodeType === Node.TEXT_NODE && /^\uFEFF*$/.test(node.nodeValue)
+                )
+            ) {
+                el.remove();
             }
         }
     }
