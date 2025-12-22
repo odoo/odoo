@@ -336,20 +336,21 @@ class AccountAnalyticLine(models.Model):
             if line.project_id:  # applied only for timesheet
                 line._timesheet_postprocess(values)
 
-        if skipped_vals:
-            type = "danger"
-            if valid_vals:
-                message = self.env._("Some timesheets were not created: employees aren’t working on the selected days")
+        if self.env.context.get('timesheet_calendar'):
+            if skipped_vals:
+                type = "danger"
+                if valid_vals:
+                    message = self.env._("Some timesheets were not created: employees aren’t working on the selected days")
+                else:
+                    message = self.env._("No timesheets created: employees aren’t working on the selected days")
             else:
-                message = self.env._("No timesheets created: employees aren’t working on the selected days")
-        else:
-            type = "success"
-            message = self.env._("Timesheets successfully created")
+                type = "success"
+                message = self.env._("Timesheets successfully created")
 
-        self.env.user._bus_send('simple_notification', {
-            "type": type,
-            "message": message,
-        })
+            self.env.user._bus_send('simple_notification', {
+                "type": type,
+                "message": message,
+            })
 
         return lines
 
