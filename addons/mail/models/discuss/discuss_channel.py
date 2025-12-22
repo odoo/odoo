@@ -88,6 +88,7 @@ class DiscussChannel(models.Model):
         compute='_compute_channel_partner_ids', inverse='_inverse_channel_partner_ids',
         search='_search_channel_partner_ids')
     channel_member_ids = fields.One2many('discuss.channel.member', 'channel_id', string='Members')
+    member_indices = fields.Char()
     parent_channel_id = fields.Many2one("discuss.channel", help="Parent channel", ondelete="cascade", index=True, bypass_search_access=True, readonly=True)
     sub_channel_ids = fields.One2many("discuss.channel", "parent_channel_id", string="Sub Channels", readonly=True)
     from_message_id = fields.Many2one("mail.message", help="The message the channel was created from.", readonly=True)
@@ -125,6 +126,18 @@ class DiscussChannel(models.Model):
     _from_message_id_unique = models.Constraint(
         'UNIQUE(from_message_id)',
         'Messages can only be linked to one sub-channel',
+    )
+    _member_indices_unique = models.UniqueIndex(
+        "(member_indices) WHERE channel_type = 'chat'",
+        "A chat should have unique member combination.",
+    )
+    _member_indices_channel_check = models.Constraint(
+        """CHECK(channel_type = 'chat' OR member_indices IS NULL)""",
+        "Only chat should have member indices.",
+    )
+    _member_indices_chat_check = models.Constraint(
+        "CHECK(channel_type != 'chat' OR member_indices IS NOT NULL AND trim(member_indices) <> '')",
+        "A chat must have member indices.",
     )
     _uuid_unique = models.Constraint(
         'UNIQUE(uuid)',
@@ -295,6 +308,11 @@ class DiscussChannel(models.Model):
     def _search_channel_partner_ids(self, operator, operand):
         return [('channel_member_ids', 'any', [('partner_id', operator, operand)])]
 
+    def _member_indices(self, partners, guests):
+        return ",".join(
+            [f"p{pid}" for pid in sorted(partners.ids)] + [f"g{gid}" for gid in sorted(guests.ids)],
+        )
+
     @api.depends_context('uid', 'guest')
     @api.depends('channel_member_ids')
     def _compute_is_member(self):
@@ -444,7 +462,19 @@ class DiscussChannel(models.Model):
                 )
                 for pid in partner_ids_to_add if pid not in membership_pids
             ]
-
+            if vals.get("channel_type") == "chat":
+                vals["member_indices"] = self._member_indices(
+                    self.env["res.partner"].browse(
+                        member[2]["partner_id"]
+                        for member in vals["channel_member_ids"]
+                        if member[2].get("partner_id")
+                    ),
+                    self.env["mail.guest"].browse(
+                        member[2]["guest_id"]
+                        for member in vals["channel_member_ids"]
+                        if member[2].get("guest_id")
+                    ),
+                )
             # clean vals
             vals.pop('channel_partner_ids', False)
 
@@ -474,6 +504,14 @@ class DiscussChannel(models.Model):
             failing_channels = self.filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
                 raise UserError(_('Cannot change the channel type of: %(channel_names)s', channel_names=', '.join(failing_channels.mapped('name'))))
+        if "member_indices" in vals:
+            if channels := self.filtered(lambda c: c.member_indices != vals.get("member_indices")):
+                raise UserError(
+                    _(
+                        "Cannot change the member_indices of: %(channel_names)s",
+                        channel_names=", ".join(channels.mapped("display_name")),
+                    ),
+                )
         if {"from_message_id", "parent_channel_id"} & set(vals):
             raise UserError(
                 _(
@@ -1264,8 +1302,6 @@ class DiscussChannel(models.Model):
     @api.model
     def _get_or_create_chat(self, partners_to):
         """ Get the canonical private channel between some partners, create it if needed.
-            To reuse an old channel (conversation), this one must be private, and contains
-            only the given partners.
             :param partners_to : list of res.partner ids to add to the conversation
             :param pin : True if getting the channel should pin it for the current user
             :returns: channel_info of the created or existing channel
@@ -1278,62 +1314,49 @@ class DiscussChannel(models.Model):
         ) | self.env.user.partner_id
         if len(partners) > 2:
             raise UserError(_("A chat should not be created with more than 2 persons. Create a group instead."))
-        # determine type according to the number of partner in the channel
-        self.flush_model()
-        self.env['discuss.channel.member'].flush_model()
-        self.env.cr.execute(
-            SQL(
-                """
-            SELECT M.channel_id
-            FROM discuss_channel C, discuss_channel_member M
-            WHERE M.channel_id = C.id
-                AND M.partner_id IN %(partner_ids)s
-                AND C.channel_type LIKE 'chat'
-                AND NOT EXISTS (
-                    SELECT 1
-                    FROM discuss_channel_member M2
-                    WHERE M2.channel_id = C.id
-                        AND M2.partner_id NOT IN %(partner_ids)s
-                )
-            GROUP BY M.channel_id
-            HAVING ARRAY_AGG(DISTINCT M.partner_id ORDER BY M.partner_id) = %(sorted_partner_ids)s
-            LIMIT 1
-                """,
-                partner_ids=tuple(partners.ids),
-                sorted_partner_ids=sorted(partners.ids),
-            )
+        other_partner = partners - self.env.user.partner_id
+        # sudo: discuss.channel - searching for existing chat is acceptable
+        channel = self.env["discuss.channel"].sudo().search_fetch(
+            Domain("member_indices", "=", self._member_indices(partners, self.env["mail.guest"]))
+            & Domain("channel_type", "=", "chat"),
         )
-        result = self.env.cr.dictfetchall()
         # use the same "now" in the whole function to ensure unpin_dt > last_interest_dt
         now = fields.Datetime.now()
         last_interest_dt = now - timedelta(seconds=1)
-        if result:
-            # get the existing channel between the given partners
-            channel = self.browse(result[0].get('channel_id'))
-            # pin or open the channel for the current partner
-            channel.self_member_id.write({"last_interest_dt": last_interest_dt, "unpin_dt": False})
-            channel._broadcast(self.env.user.partner_id.ids)
+        self_data = {
+            "last_interest_dt": last_interest_dt,
+            "partner_id": self.env.user.partner_id.id,
+            "unpin_dt": False,
+        }
+        # unpin so the chat does not show up for the correspondent until a message has been sent
+        other_data = {
+            "last_interest_dt": last_interest_dt,
+            "partner_id": other_partner.id,
+            "unpin_dt": now,
+        }
+        create_members = []
+        # pin the channel for the current partner, create missing members (if any)
+        if channel.self_member_id:
+            channel.self_member_id.write(self_data)
         else:
-            # create a new one
+            create_members.append(self_data)
+        if other_partner and (
+            not channel or not (channel.channel_member_ids - channel.self_member_id)
+        ):
+            create_members.append(other_data)
+        if channel and create_members:
+            # sudo: discuss.channel - adding missing members to a chat is acceptable
+            channel.sudo().channel_member_ids = [Command.create(data) for data in create_members]
+        elif not channel:
             channel = self.create(
                 {
-                    "channel_member_ids": [
-                        Command.create(
-                            {
-                                "last_interest_dt": last_interest_dt,
-                                "partner_id": partner.id,
-                                # only pin for the current user, so the chat does not show up for the correspondent until a message has been sent
-                                "unpin_dt": False if partner == self.env.user.partner_id else now,
-                            }
-                        )
-                        for partner in partners
-                    ],
+                    "channel_member_ids": [Command.create(data) for data in create_members],
                     "channel_type": "chat",
                     "last_interest_dt": last_interest_dt,
                     "name": ", ".join(partners.mapped("name")),
-                }
+                },
             )
-            channel._broadcast(partners.ids)
+        channel._broadcast(data["partner_id"] for data in create_members)
         return channel
 
     def _allow_invite_by_email(self):
