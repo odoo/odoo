@@ -17,6 +17,8 @@ import {
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
+import { useActiveElement } from "@web/core/ui/ui_service";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 export const cropperAspectRatios = {
     "0/0": { label: _t("Flexible"), value: 0 },
@@ -44,7 +46,9 @@ export class ImageCrop extends Component {
         this.elRef = useRef("el");
         this.cropperWrapper = useRef("cropperWrapper");
         this.imageRef = useRef("imageRef");
+        this.discardButtonRef = useRef("discardButton");
         this.isCropperActive = false;
+        useActiveElement("cropperWrapper");
 
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
@@ -52,9 +56,11 @@ export class ImageCrop extends Component {
         useExternalListener(this.document, "mousedown", this.onDocumentMousedown, {
             capture: true,
         });
-        useExternalListener(this.document, "keydown", this.onDocumentKeydown, {
-            capture: true,
-        });
+
+        useHotkey("Enter", ({ target }) => this.onEnterKeyPress(target));
+        useHotkey("Backspace", () => this.closeCropper());
+        useHotkey("Escape", () => this.closeCropper());
+
         useExternalListener(
             this.document,
             "selectionchange",
@@ -301,20 +307,15 @@ export class ImageCrop extends Component {
             return this.closeCropper();
         }
     }
-    /**
-     * Save crop if user hits enter,
-     * discard crop on escape.
-     *
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    onDocumentKeydown(ev) {
-        if (ev.key === "Enter") {
-            return this.save();
-        } else if (ev.key === "Escape") {
-            ev.stopImmediatePropagation();
+
+    onEnterKeyPress(target) {
+        if (!this.isCropperActive) {
+            return;
+        }
+        if (target === this.discardButtonRef.el) {
             return this.closeCropper();
         }
+        return this.save();
     }
     /**
      * @param {Cropper} cropper

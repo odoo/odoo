@@ -2,6 +2,7 @@
     <t t-name="html_editor.ImageCrop">
         <div
              class="o_we_crop_widget"
+             tabindex="-1"
              contenteditable="false"
              t-ref="el"
              t-on-zoom="this.onCropZoom"
@@ -34,7 +35,7 @@
                     </div>
                     <div class="btn-group" role="group">
                         <button type="button" t-on-click="this.save" class="btn btn-primary"><i class="fa fa-check" role="presentation"/> Apply</button>
-                        <button type="button" t-on-click="this.closeCropper" class="btn btn-danger"><i class="oi oi-close" role="presentation"/> Discard</button>
+                        <button type="button" t-ref="discardButton" t-on-click="this.closeCropper" class="btn btn-danger"><i class="oi oi-close" role="presentation"/> Discard</button>
                     </div>
                 </div>
             </div>
