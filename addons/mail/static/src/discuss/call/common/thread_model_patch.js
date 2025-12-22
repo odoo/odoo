@@ -162,6 +162,9 @@ const ThreadPatch = {
     get isCallDisplayedInChatWindow() {
         return this.channel.chatWindow?.isOpen && !this.store.meetingViewOpened;
     },
+    get isSelfInCall() {
+        return this.store.rtc.selfSession && this.channel.eq(this.store.rtc.channel);
+    },
     get showCallView() {
         return !this.store.rtc.isFullscreen && this.rtc_session_ids.length > 0;
     },
