@@ -30,9 +30,6 @@ class EventEvent(models.Model):
     # WEBSITE MENU MANAGEMENT
     # ------------------------------------------------------------
 
-    def toggle_booth_menu(self, val):
-        self.booth_menu = val
-
     def copy_event_menus(self, old_events):
         super().copy_event_menus(old_events)
         for new_event in self:
