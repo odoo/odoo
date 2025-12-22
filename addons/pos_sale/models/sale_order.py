@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import groupby
 
 
 class SaleOrder(models.Model):
@@ -83,13 +84,16 @@ class SaleOrderLine(models.Model):
         return ['discount', 'display_name', 'price_total', 'price_unit', 'product_id', 'product_uom_qty', 'qty_delivered',
             'qty_invoiced', 'qty_to_invoice', 'display_type', 'name', 'tax_id', 'is_downpayment', 'write_date']
 
-    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state')
+    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state', 'pos_order_line_ids.refund_orderline_ids.order_id.picking_ids.state')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
         for sale_line in self:
-            pos_lines = sale_line.pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
-            if all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids):
-                sale_line.qty_delivered += sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines if sale_line.product_id.type != 'service'), 0)
+            pos_lines = (sale_line.pos_order_line_ids | sale_line.pos_order_line_ids.refund_orderline_ids).filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+            # Group lines by procurement_id
+            for key, lines in groupby(pos_lines, lambda l: l.order_id.picking_ids.group_id):
+                pickings = [line.order_id.picking_ids for line in lines]
+                if all(picking.state == 'done' for picking in pickings):
+                    sale_line.qty_delivered += sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in lines if sale_line.product_id.type != 'service'), 0)
 
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.state')
     def _compute_qty_invoiced(self):
