@@ -70,51 +70,26 @@ patch(Thread.prototype, {
         if (this.channel?.channel_type !== "livechat" || this.self_member_id?.custom_channel_name) {
             return super.displayName;
         }
-        const memberType = this.self_member_id?.livechat_member_type;
-        if (memberType === "visitor") {
-            const agents = this.correspondents.filter((c) => c.livechat_member_type === "agent");
-            if (agents.length) {
-                return formatList(
-                    agents.map((agent) => agent.name),
-                    { style: "standard-narrow" }
-                );
-            }
-            if (this.channel?.livechat_agent_history_ids.length) {
-                return formatList(
-                    this.channel.livechat_agent_history_ids.map((h) =>
-                        this.getPersonaName(h.partner_id)
-                    ),
-                    { style: "standard-narrow" }
-                );
-            }
-        }
-        if (memberType === "agent") {
-            const visitors = this.correspondents.filter(
-                (c) => c.livechat_member_type === "visitor"
-            );
-            if (visitors.length) {
-                return formatList(
-                    visitors.map((visitor) => visitor.name),
-                    { style: "standard-narrow" }
-                );
-            }
-            if (this.channel?.livechat_customer_history_ids.length) {
-                return formatList(
-                    this.channel?.livechat_customer_history_ids.map((h) =>
-                        this.getPersonaName(h.partner_id || h.guest_id)
-                    ),
-                    { style: "standard-narrow" }
-                );
-            }
-        }
-        if (!memberType) {
-            const allNamesFromHistory = this.channel?.livechat_channel_member_history_ids
+        const selfMemberType = this.self_member_id?.livechat_member_type;
+        let memberNames = this.correspondents
+            .filter((m) => {
+                if (selfMemberType === "visitor") {
+                    return m.livechat_member_type === "agent";
+                }
+                return m.livechat_member_type === "visitor";
+            })
+            .map((m) => m.name);
+        if (!memberNames.length) {
+            const histories =
+                selfMemberType === "visitor"
+                    ? this.channel.livechat_agent_history_ids
+                    : this.channel.livechat_customer_history_ids;
+            memberNames = histories
                 .map((h) => this.getPersonaName(h.partner_id || h.guest_id))
                 .filter(Boolean);
-            if (allNamesFromHistory.length) {
-                return formatList(allNamesFromHistory, { style: "standard-narrow" });
-            }
         }
-        return super.displayName;
+        return memberNames.length
+            ? formatList(memberNames, { style: "standard-narrow" })
+            : super.displayName;
     },
 });
