@@ -313,8 +313,9 @@ class TestQwebProcessAtt(TransactionCase):
         self.website.cdn_filters = "\n".join(["^(/[a-z]{2}_[A-Z]{2})?/a$", "^(/[a-z]{2})?/a$", "^/b$"])
 
     def _test_att(self, url, expect, tag='a', attribute='href'):
+        env = http.request.env if http.request else self.env
         self.assertEqual(
-            self.env['ir.qweb']._post_processing_att(tag, {attribute: url}),
+            env['ir.qweb']._post_processing_att(tag, {attribute: url}),
             expect
         )
 
