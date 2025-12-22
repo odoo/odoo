@@ -32,8 +32,6 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
                 }
             },
             dayCellDidMount: this.onDayCellDidMount,
-            dayHeaderDidMount: this.onDayHeaderDidMount,
-            dayHeaderWillUnmount: this.onDayHeaderWillUnmount,
         };
     },
     handleWorkLocationClick(target, date) {
@@ -53,31 +51,6 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
             }
         }
         return this.props.openWorkLocationWizard(date);
-    },
-    onDayHeaderDidMount(info) {
-        if (this.props.model.scale === 'week' || this.props.model.scale === 'day') {
-            const date = DateTime.fromJSDate(info.date);
-            const handler = (event) => {
-                if (event.target.closest(".o_worklocation_btn")) {
-                    this.handleWorkLocationClick(event.target, date);
-                }
-            };
-            this.customListeners = {
-                ...this.customListeners,
-                [date]: handler,
-            };
-            info.el.addEventListener("click", handler);
-        }
-    },
-    onDayHeaderWillUnmount(info) {
-        if (this.props.model.scale === 'week' || this.props.model.scale === 'day') {
-            const date = DateTime.fromJSDate(info.date);
-            const customListener = {...this.customListeners}[date];
-            if (customListener) {
-                info.el.removeEventListener("click", customListener);
-                delete this.customListeners[date];
-            }
-        }
     },
     onDayCellDidMount(info){
         if (this.props.model.scale === 'month'){
@@ -142,6 +115,5 @@ AttendeeCalendarCommonRenderer.props = {
     openWorkLocationWizard: { type: Function, optional: true }
 };
 
-AttendeeCalendarCommonRenderer.WorklocationTemplate = "hr_homeworking_calendar.CalendarCommonRenderer.worklocation";
 AttendeeCalendarCommonRenderer.ButtonWorklocationTemplate = "hr_homeworking_calendar.CalendarCommonRenderer.buttonWorklocation";
 AttendeeCalendarCommonRenderer.headerTemplate = "hr_homeworking_calendar.CalendarCommonRendererHeader";
