@@ -199,6 +199,9 @@ test("Manage expertises from channel info list", async () => {
 
 test("Can download transcript from channel info panel", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: [serverState.groupLivechatManagerId, serverState.groupLivechatId],
+    });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [

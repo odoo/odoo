@@ -125,6 +125,7 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
 
     def test_update_history_on_second_join(self):
         john = self._create_operator("fr_FR")
+        jane = self._create_operator("fr_FR")
         livechat_channel = self.env["im_livechat.channel"].create(
             {"name": "Livechat Channel", "user_ids": [john.id]},
         )
@@ -139,7 +140,9 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
         john_member = channel.channel_member_ids.filtered(lambda m: m.partner_id == john.partner_id)
         self.assertEqual(og_history.livechat_member_type, "agent")
         self.assertEqual(og_history.member_id, john_member)
+        channel._add_members(users=jane)
         channel.with_user(john).action_unfollow()
+        self.assertFalse(channel.livechat_end_dt)
         john_history = channel.channel_member_ids.livechat_member_history_ids.filtered(
             lambda m: m.partner_id == john.partner_id
         )
@@ -153,3 +156,20 @@ class TestLivechatMemberHistory(TestGetOperatorCommon, chatbot_common.ChatbotCas
         )
         self.assertEqual(og_history, john_history)
         self.assertEqual(john_member, john_history.member_id)
+
+    def test_do_not_update_history_of_closed_live_chat(self):
+        john = self._create_operator("fr_FR")
+        livechat_channel = self.env["im_livechat.channel"].create(
+            {"name": "Livechat Channel", "user_ids": [john.id]},
+        )
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"channel_id": livechat_channel.id},
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        self.assertEqual(len(channel.livechat_channel_member_history_ids), 2)
+        self.assertEqual(len(channel.channel_member_ids), 2)
+        channel._close_livechat_session()
+        channel._add_members(users=self._create_operator("fr_FR"))
+        self.assertEqual(len(channel.channel_member_ids), 3)
+        self.assertEqual(len(channel.livechat_channel_member_history_ids), 2)

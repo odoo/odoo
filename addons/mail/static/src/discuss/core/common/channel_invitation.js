@@ -45,12 +45,12 @@ export class ChannelInvitation extends Component {
             250
         );
         onWillStart(() => {
-            if (this.store.self_user) {
+            if (this.hasSearch) {
                 this.fetchPartnersToInvite();
             }
         });
         onMounted(() => {
-            if (this.store.self_user && this.props.channel) {
+            if (this.hasSearch) {
                 this.inputRef.el.focus();
             }
         });
@@ -62,6 +62,17 @@ export class ChannelInvitation extends Component {
             },
             () => [this.props.autofocus]
         );
+    }
+
+    get hasSearch() {
+        return (
+            this.store.self_user &&
+            (!this.props.channel || this.props.channel.hasChannelInviteSearch)
+        );
+    }
+
+    get title() {
+        return this.hasSearch ? _t("Invite People") : _t("Share Conversation");
     }
 
     get selectablePartners() {

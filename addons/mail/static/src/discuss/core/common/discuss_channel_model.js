@@ -376,6 +376,10 @@ export class DiscussChannel extends Record {
         }
     }
 
+    get hasChannelInviteSearch() {
+        return true;
+    }
+
     async markAsFetched() {
         await this.store.env.services.orm.silent.call("discuss.channel", "channel_fetched", [
             [this.id],

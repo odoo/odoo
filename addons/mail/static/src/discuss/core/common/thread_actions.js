@@ -182,7 +182,10 @@ registerThreadAction("invite-people", {
     condition: ({ channel, owner }) =>
         channel && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
     icon: "oi oi-fw oi-user-plus",
-    name: _t("Invite People"),
+    name: ({ channel, store }) =>
+        store.self_user && channel.hasChannelInviteSearch
+            ? _t("Invite People")
+            : _t("Share Conversation"),
     sequence: ({ owner }) => (owner.isDiscussSidebarChannelActions ? 20 : 10),
     sequenceGroup: 20,
     setup({ owner }) {

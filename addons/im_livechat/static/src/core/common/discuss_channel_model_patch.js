@@ -35,6 +35,9 @@ const discussChannelPatch = {
         }
         return super._computeCanHide(...arguments);
     },
+    get hasChannelInviteSearch() {
+        return super.hasChannelInviteSearch && !this.livechat_end_dt;
+    },
     get isHideUntilNewMessageSupported() {
         if (this.livechat_end_dt) {
             return false;

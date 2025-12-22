@@ -10,6 +10,9 @@ defineLivechatModels();
 
 test("agent can send conversation after livechat ends", async () => {
     const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: [serverState.groupLivechatManagerId, serverState.groupLivechatId],
+    });
     const demoPartnerId = pyEnv["res.partner"].create({
         name: "Awesome partner",
         email: "awesome@example.com",

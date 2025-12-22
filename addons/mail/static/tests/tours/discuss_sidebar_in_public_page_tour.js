@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add("sidebar_in_public_page_tour", {
             run: "hover && click [title='Channel Actions']",
         },
         {
-            trigger: ".o-dropdown-item:contains('Invite People')",
+            trigger: ".o-dropdown-item:contains('Share Conversation')",
             run: "click",
         },
     ],
