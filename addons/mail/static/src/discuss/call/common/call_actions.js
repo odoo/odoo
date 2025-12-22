@@ -33,7 +33,7 @@ export function registerCallAction(id, definition) {
 export const muteAction = {
     badge: ({ owner, store }) => store.rtc.microphonePermission !== "granted",
     badgeIcon: "fa fa-exclamation",
-    condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
+    condition: ({ channel }) => channel?.isSelfInCall,
     name: ({ store }) => (store.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) => store.rtc.selfSession?.isMute,
     isTracked: true,
@@ -60,8 +60,7 @@ export const muteAction = {
 };
 registerCallAction("mute", muteAction);
 export const quickActionSettings = {
-    condition: ({ owner, channel, store }) =>
-        !owner.env.inCallMenu && channel?.eq(store.rtc?.channel),
+    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: "p-2",
@@ -73,7 +72,7 @@ export const quickActionSettings = {
 };
 registerCallAction("quick-voice-settings", quickActionSettings);
 registerCallAction("deafen", {
-    condition: ({ owner }) => owner.env.inCallMenu,
+    condition: ({ owner, channel }) => owner.env.inCallMenu && channel?.isSelfInCall,
     name: ({ store }) => (store.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     isTracked: true,
@@ -87,7 +86,7 @@ registerCallAction("deafen", {
 export const cameraOnAction = {
     badge: ({ owner, store }) => !owner.env.inCallMenu && store.rtc.cameraPermission !== "granted",
     badgeIcon: "fa fa-exclamation",
-    condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
+    condition: ({ channel }) => channel?.isSelfInCall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isRemote
@@ -114,8 +113,7 @@ export const cameraOnAction = {
 };
 registerCallAction("camera-on", cameraOnAction);
 export const quickVideoSettings = {
-    condition: ({ owner, channel, store }) =>
-        !owner.env.inCallMenu && channel?.eq(store.rtc?.channel),
+    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVideoSettings,
     dropdownMenuClass: "p-2",
@@ -128,7 +126,7 @@ export const quickVideoSettings = {
 registerCallAction("quick-video-settings", quickVideoSettings);
 export const switchCameraAction = {
     condition: ({ channel, store }) =>
-        channel?.eq(store.rtc?.channel) && isMobileOS() && store.rtc.selfSession?.is_camera_on,
+        channel?.isSelfInCall && isMobileOS() && store.rtc.selfSession?.is_camera_on,
     name: _t("Switch Camera"),
     isActive: false,
     icon: "fa fa-refresh",
@@ -138,7 +136,7 @@ export const switchCameraAction = {
 };
 registerCallAction("switch-camera", switchCameraAction);
 registerCallAction("raise-hand", {
-    condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
+    condition: ({ channel }) => channel?.isSelfInCall,
     name: ({ store }) => (store.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
     isActive: ({ store }) => store.rtc.selfSession?.raisingHand,
     isTracked: true,
@@ -148,7 +146,7 @@ registerCallAction("raise-hand", {
     sequenceGroup: 200,
 });
 registerCallAction("share-screen", {
-    condition: ({ channel, store }) => channel?.eq(store.rtc?.channel) && !isMobileOS(),
+    condition: ({ channel }) => channel?.isSelfInCall && !isMobileOS(),
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isRemote
@@ -171,7 +169,7 @@ registerCallAction("fullscreen", {
                 !owner.env.pipWindow && channel.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
             ),
         }),
-    condition: ({ channel, store }) => channel?.eq(store.rtc?.channel),
+    condition: ({ channel }) => channel?.isSelfInCall,
     name: ({ store }) => (store.rtc.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
     isActive: ({ store }) => store.rtc.isFullscreen,
     icon: ({ action }) => (action.isActive ? "fa fa-compress" : "fa fa-expand"),
@@ -189,7 +187,7 @@ registerCallAction("fullscreen", {
 registerCallAction("picture-in-picture", {
     condition: ({ owner, channel, store }) =>
         !owner.env.inCallMenu &&
-        channel?.eq(store.rtc?.channel) &&
+        channel?.isSelfInCall &&
         store.env.services["discuss.pip_service"] &&
         !store.env?.isSmall,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
@@ -227,8 +225,8 @@ registerCallAction("join-back", {
             "text-nowrap pe-2 rounded-pill": true,
             "mx-1": !owner.env.inCallInvitation,
         }),
-    condition: ({ channel, store }) =>
-        !channel?.eq(store.rtc?.channel) && typeof channel?.useCameraByDefault === "boolean",
+    condition: ({ channel }) =>
+        !channel?.isSelfInCall && typeof channel?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: ({ channel }) => (channel.useCameraByDefault ? "fa fa-video-camera" : "fa fa-phone"),
     inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
@@ -241,8 +239,8 @@ registerCallAction("join-back", {
 });
 registerCallAction("join-with-camera", {
     btnClass: "text-nowrap",
-    condition: ({ channel, store }) =>
-        !channel?.eq(store.rtc?.channel) &&
+    condition: ({ channel }) =>
+        !channel?.isSelfInCall &&
         !channel?.self_member_id?.rtc_inviting_session_id &&
         typeof channel?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
@@ -254,8 +252,8 @@ registerCallAction("join-with-camera", {
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 });
 export const joinAction = {
-    condition: ({ channel, store }) =>
-        !channel?.eq(store.rtc?.channel) && typeof channel?.useCameraByDefault !== "boolean",
+    condition: ({ channel }) =>
+        !channel?.isSelfInCall && typeof channel?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Join Call"),
     icon: "fa fa-phone",
@@ -291,8 +289,8 @@ export const rejectAction = {
 };
 registerCallAction("reject", rejectAction);
 registerCallAction("disconnect", {
-    condition: ({ channel, store }) =>
-        channel?.eq(store.rtc?.channel) && !channel?.self_member_id?.rtc_inviting_session_id,
+    condition: ({ channel }) =>
+        channel?.isSelfInCall && !channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     name: _t("Disconnect"),
     icon: "fa fa-phone",

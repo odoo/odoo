@@ -157,6 +157,9 @@ const DiscussChannelPatch = {
     get isCallDisplayedInChatWindow() {
         return this.chatWindow?.isOpen && !this.store.meetingViewOpened;
     },
+    get isSelfInCall() {
+        return this.store.rtc.selfSession && this.eq(this.store.rtc.channel);
+    },
     get showCallView() {
         return !this.store.rtc.isFullscreen && this.hasRtcSessionActive;
     },
