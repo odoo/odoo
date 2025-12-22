@@ -60,7 +60,8 @@ const storeServicePatch = {
      * @returns {number[]}
      */
     getRecentChatPartnerIds() {
-        return Object.values(this["discuss.channel"].records)
+        return this["discuss.channel"]
+            .all()
             .filter(
                 (channel) => channel?.channel_type === "chat" && channel.correspondent?.partner_id
             )

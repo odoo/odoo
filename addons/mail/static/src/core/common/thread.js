@@ -683,9 +683,9 @@ export class Thread extends Component {
 
     get startMessageSubtitle() {
         if (this.props.thread.channel?.parent_channel_id) {
-            const authorName = Object.values(this.store["res.partner"].records).find((partner) =>
-                partner.main_user_id?.eq(this.props.thread.create_uid)
-            )?.name;
+            const authorName = this.store["res.partner"]
+                .all()
+                .find((partner) => partner.main_user_id?.eq(this.props.thread.create_uid))?.name;
             if (authorName) {
                 return _t("Started by %(authorName)s", { authorName });
             }

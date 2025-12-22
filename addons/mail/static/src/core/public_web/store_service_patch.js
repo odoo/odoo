@@ -16,13 +16,15 @@ patch(Store.prototype, {
             compute() {
                 /** @type {import("models").Thread[]} */
                 const searchTerm = cleanTerm(this.discuss.searchTerm);
-                let threads = Object.values(this["mail.thread"].records).filter(
-                    (thread) =>
-                        (thread.channel?.self_member_id?.is_pinned ||
-                            (thread.needactionMessages.length > 0 &&
-                                thread.model !== "mail.box")) &&
-                        cleanTerm(thread.displayName).includes(searchTerm)
-                );
+                let threads = this["mail.thread"]
+                    .all()
+                    .filter(
+                        (thread) =>
+                            (thread.channel?.self_member_id?.is_pinned ||
+                                (thread.needactionMessages.length > 0 &&
+                                    thread.model !== "mail.box")) &&
+                            cleanTerm(thread.displayName).includes(searchTerm)
+                    );
                 const tab = this.discuss.activeTab;
                 if (tab === "inbox") {
                     threads = threads.filter((thread) =>

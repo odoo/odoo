@@ -158,7 +158,7 @@ export class StoreInternal extends RecordInternal {
                 /** @type {import("./record").Record} */
                 const [record] = params;
                 record._proxy[IS_DELETED_SYM] = true;
-                delete record.Model.records[record.localId];
+                record.Model.records.delete(record.localId);
                 if (!this.RHD_QUEUE.has(record)) {
                     this.RHD_QUEUE.set(record, true);
                 }

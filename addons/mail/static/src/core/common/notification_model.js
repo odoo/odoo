@@ -26,7 +26,7 @@ export class Notification extends Record {
             if (!this.mail_message_id?.isSelfAuthored) {
                 return;
             }
-            const failure = Object.values(this.store.Failure.records).find(
+            const failure = this.store.Failure.all().find(
                 (f) =>
                     f.resModel === thread?.model &&
                     f.type === this.notification_type &&

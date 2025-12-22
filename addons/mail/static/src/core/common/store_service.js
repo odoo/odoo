@@ -450,10 +450,9 @@ export class Store extends BaseStore {
 
     /** @returns {number} */
     getLastMessageId() {
-        return Object.values(this["mail.message"].records).reduce(
-            (lastMessageId, message) => Math.max(lastMessageId, message.id),
-            0
-        );
+        return this["mail.message"]
+            .all()
+            .reduce((lastMessageId, message) => Math.max(lastMessageId, message.id), 0);
     }
 
     handleValidChannelMention(channelLinks) {

@@ -68,9 +68,10 @@ declare module "models" {
     export interface Volume extends VolumeClass {}
 
     type StaticMailRecord<ClassInterface, JSClassType> = Omit<JSClassType, "get" | "insert" | "records"> & {
+        all: (data: any) => ClassInterface[];
         get: (data: any) => ClassInterface;
         insert: <D extends object | object[]>(data: D, options?: object) => D extends object[] ? ClassInterface[] : ClassInterface;
-        records: { [localId: string]: ClassInterface };
+        records: Map<string, ClassInterface>;
     };
 
     export interface Store {

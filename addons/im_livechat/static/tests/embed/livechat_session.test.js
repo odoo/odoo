@@ -75,9 +75,8 @@ test("Seen message is saved on the server", async () => {
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello, I need help!" });
     await waitUntilSubscribe();
-    const initialSeenMessageId = Object.values(getService("mail.store")["mail.thread"].records).at(
-        -1
-    ).self_member_id.seen_message_id?.id;
+    const initialSeenMessageId = getService("mail.store")["mail.thread"].all().at(-1).self_member_id
+        .seen_message_id?.id;
     queryFirst(".o-mail-Composer-input").blur();
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -86,7 +85,7 @@ test("Seen message is saved on the server", async () => {
                 message_type: "comment",
                 subtype_xmlid: "mail.mt_comment",
             },
-            thread_id: Object.values(getService("mail.store")["mail.thread"].records).at(-1).id,
+            thread_id: getService("mail.store")["mail.thread"].all().at(-1).id,
             thread_model: "discuss.channel",
         })
     );
@@ -97,15 +96,10 @@ test("Seen message is saved on the server", async () => {
     const guestId = pyEnv.cookie.get("dgid");
     const [member] = pyEnv["discuss.channel.member"].search_read([
         ["guest_id", "=", guestId],
-        [
-            "channel_id",
-            "=",
-            Object.values(getService("mail.store")["mail.thread"].records).at(-1).id,
-        ],
+        ["channel_id", "=", getService("mail.store")["mail.thread"].all().at(-1).id],
     ]);
     expect(initialSeenMessageId).not.toBe(member.seen_message_id[0]);
     expect(
-        Object.values(getService("mail.store")["mail.thread"].records).at(-1).self_member_id
-            .seen_message_id.id
+        getService("mail.store")["mail.thread"].all().at(-1).self_member_id.seen_message_id.id
     ).toBe(member.seen_message_id[0]);
 });

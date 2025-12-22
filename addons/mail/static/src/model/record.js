@@ -34,20 +34,21 @@ export class Record {
     static env;
     /** @type {import("@web/env").OdooEnv} */
     env;
-    /** @type {Object<string, Record>} */
-    static records;
     /** @type {import("models").Store} */
     static store;
     /** @param {() => any} fn */
     static MAKE_UPDATE(fn) {
         return this.store.MAKE_UPDATE(...arguments);
     }
+    static all() {
+        return [...this.records.values()];
+    }
     static onChange(record, name, cb) {
         return this.store.onChange(...arguments);
     }
     static get(data) {
         const Model = toRaw(this);
-        return this.records[Model.localId(data)];
+        return this.records.get(Model.localId(data));
     }
     static getName() {
         return this._name || this.name;
@@ -196,7 +197,7 @@ export class Record {
                 record._.prepareField(record, name, recordProxy);
             }
             Object.assign(recordProxy, { ...ids });
-            Model.records[record.localId] = recordProxy;
+            Model.records.set(record.localId, recordProxy);
             if (record.Model.getName() === "Store") {
                 Object.assign(record, {
                     env: Model._rawStore.env,

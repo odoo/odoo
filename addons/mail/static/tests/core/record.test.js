@@ -949,7 +949,7 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     expect(p.team.name).toBe("Discuss");
     expect(p.signature.toString()).toBe("<p>-- John</p>");
     expect(p.signature).toBeInstanceOf(Markup);
-    expect(toRaw(store.Person.records[p.localId])).toBe(toRaw(p));
+    expect(toRaw(store.Person.records.get(p.localId))).toBe(toRaw(p));
     expect(serializeDateTime(p.due_datetime)).toBe("2024-08-28 10:19:44");
     // export data, delete, then insert back
     const data = JSON.parse(JSON.stringify(p.toData()));
@@ -957,14 +957,14 @@ test("record.toData() is JSON stringified and can be reinserted as record", asyn
     store.Message.get("1").delete();
     store.Message.get("2").delete();
     store.Team.get("Discuss").delete();
-    expect(toRaw(store.Person.records[p.localId])).toBe(undefined);
+    expect(toRaw(store.Person.records.get(p.localId))).toBe(undefined);
     store.insert(data);
     const p2 = store.Person.get(1);
     // Same assertions as before
     expect(p2.names).toEqual(["John", "Marc"]);
     expect(p2.messages.map((msg) => msg.body)).toEqual(["1", "2"]);
     expect(p2.team.name).toBe("Discuss");
-    expect(toRaw(store.Person.records[p2.localId])).toBe(toRaw(p2));
+    expect(toRaw(store.Person.records.get(p2.localId))).toBe(toRaw(p2));
     expect(serializeDateTime(p2.due_datetime)).toBe("2024-08-28 10:19:44");
     expect(p2.signature.toString()).toBe("<p>-- John</p>");
     expect(p.signature).toBeInstanceOf(Markup);
@@ -1250,7 +1250,7 @@ test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", as
         if (msg) {
             expect(toRaw(msg).exists()).toBe(true);
         }
-        for (const msg of Object.values(store.Message.records)) {
+        for (const msg of store.Message.records.values()) {
             expect(toRaw(msg).exists()).toBe(true);
         }
     }
@@ -1278,11 +1278,9 @@ test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", as
                     expect.step("allMessagesInStore:compute");
                     expect(this._lastAllMessagesInStore.some((m) => m.exists())).toBe(false);
                 }
-                expect(this.thread.hasMessages).toBe(
-                    Boolean(Object.values(store.Message.records).length > 0)
-                );
+                expect(this.thread.hasMessages).toBe(Boolean(store.Message.records.size > 0));
                 assertExists(this.store);
-                const allMessagesInStore = Object.values(store.Message.records);
+                const allMessagesInStore = store.Message.all();
                 toRaw(this)._raw._lastAllMessagesInStore = allMessagesInStore;
                 return allMessagesInStore;
             },
@@ -1296,7 +1294,7 @@ test("Deleted records are not returned by 'Model.records' nor 'Model.get()'", as
     const message = store.Message.insert({ content: "msg-1", thread });
     expectRecord(thread.messages[0]).toEqual(message);
     expectRecord(store.Message.get("msg-1")).toEqual(message);
-    expectRecord(store.Message.records[message.localId]).toEqual(message);
+    expectRecord(store.Message.records.get(message.localId)).toEqual(message);
     deleting = true;
     message.delete();
     deleting = false;

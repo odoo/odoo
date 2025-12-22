@@ -173,7 +173,7 @@ export function makeStore(env, { localRegistry } = {}) {
         Model._ = markRaw(new ModelInternal());
         Object.assign(Model, {
             Class,
-            records: reactive({}),
+            records: reactive(new Map()),
         });
         Models[Model.getName()] = Model;
         store[Model.getName()] = Model;

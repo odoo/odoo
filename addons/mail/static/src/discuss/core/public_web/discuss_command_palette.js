@@ -160,12 +160,14 @@ export class DiscussCommandPalette {
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
         let partners = [];
         if (this.store.self_user) {
-            partners = Object.values(this.store["res.partner"].records).filter(
-                (partner) =>
-                    partner.main_user_id?.share === false &&
-                    cleanTerm(partner.displayName).includes(this.cleanedTerm) &&
-                    (!filtered || !filtered.has(partner))
-            );
+            partners = this.store["res.partner"]
+                .all()
+                .filter(
+                    (partner) =>
+                        partner.main_user_id?.share === false &&
+                        cleanTerm(partner.displayName).includes(this.cleanedTerm) &&
+                        (!filtered || !filtered.has(partner))
+                );
             partners = this.suggestion
                 .sortPartnerSuggestions(partners, this.cleanedTerm)
                 .slice(0, TOTAL_LIMIT);
@@ -177,7 +179,8 @@ export class DiscussCommandPalette {
             // selfPersona filtered here to put at the bottom as lowest priority
             partners = partners.filter((p) => p.notEq(selfPartner));
         }
-        const channels = Object.values(this.store["discuss.channel"].records)
+        const channels = this.store["discuss.channel"]
+            .all()
             .filter(
                 (channel) =>
                     channel.channel_type &&
