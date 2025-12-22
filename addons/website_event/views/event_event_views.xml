@@ -43,11 +43,6 @@
                         <field name="website_menu" class="w-auto"/>
                         <label for="website_menu" string="Website Submenu" />
                     </span>
-                    <!-- hidden sub-menus, they are triggered all at once based on "website_menu" -->
-                    <span name="community_menu" invisible="1">
-                        <field name="community_menu" class="w-auto"/>  <!-- The computation relies on `_origin` for an `onchange` context. Changed from a template that has no community menu to one that has a community menu. -->
-                        <label for="community_menu" string="Community" />
-                    </span>
                 </div>
             </xpath>
             <field name="tag_ids" position="attributes">
