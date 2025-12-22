@@ -439,7 +439,12 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
             for grouping_key, values in aggregated_tax_details.items()
             if grouping_key
         )
-        total_amount = base_line['tax_details']['total_excluded_currency'] + total_tax_amount
+        total_base_amount = sum(
+            values['base_amount_currency']
+            for grouping_key, values in aggregated_tax_details.items()
+            if grouping_key
+        )
+        total_amount = total_base_amount + total_tax_amount
 
         line_node['cac:TaxTotal'] = {
             'cbc:TaxAmount': {
