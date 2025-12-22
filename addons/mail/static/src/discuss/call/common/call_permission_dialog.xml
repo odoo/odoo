@@ -3,7 +3,7 @@
 
     <t t-name="discuss.CallPermissionDialog">
         <Dialog title="''" size="'md'">
-            <div class="d-flex flex-fill align-items-center gap-3">
+            <div class="d-flex flex-fill align-items-center gap-3" t-att-class="{ 'flex-column-reverse': ui.isSmall }">
                 <div>
                     <h2 t-out="permissionPrompt"/>
                     <p class="text-muted" t-out="permissionNote"/>
@@ -18,7 +18,7 @@
     </t>
 
     <t t-name="discuss.CallPermissionDialogImg">
-        <svg role="img" aria-label="Permissions Lady - Lady pushing a giant toggle button" width="431" height="294" viewBox="0 0 431 294" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg role="img" aria-label="Permissions Lady - Lady pushing a giant toggle button" width="auto" height="auto" viewBox="0 0 431 294" fill="none" xmlns="http://www.w3.org/2000/svg">
             <title>Permissions Lady</title>
             <description>Illustration showing a lady pushing a giant toggle button representing microphone and camera permissions</description>
             <g>
