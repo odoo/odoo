@@ -14,6 +14,7 @@ from odoo.tests import Form, tagged, users
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 @tagged('leave_requests')
+@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestLeaveRequests(TestHrHolidaysCommon):
 
     def _check_holidays_status(self, work_entry_type, employee, ml, lt, rl, vrl):

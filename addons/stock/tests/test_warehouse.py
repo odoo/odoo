@@ -6,6 +6,7 @@ from odoo.tests import tagged, Form
 from odoo.tests.common import new_test_user
 
 
+@tagged('-post_install', 'at_install')  # test_resupply_route breaks post install
 class TestWarehouse(TestStockCommon):
 
     def test_inventory_product(self):

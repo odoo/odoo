@@ -967,6 +967,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         self.assertFalse(mo.picking_ids.filtered(lambda p: p.state == 'cancel' and p.product_id == self.product_6))
 
 
+@tagged('-post_install', 'at_install')  # test_mrp_backorder_operations breaks post install
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod
     def setUpClass(cls):

@@ -332,6 +332,7 @@ class TestPortalProject(TestProjectPortalCommon):
             'mail_create_nolog': True}).create, {'name': 'Pigs task', 'project_id': pigs.id})
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestAccessRightsPrivateTask(TestAccessRights):
 
     @classmethod

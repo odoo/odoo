@@ -10,6 +10,7 @@ from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
 
 
 @tagged('work_entry')
+@tagged('at_install', '-post_install')  # breaks post install
 class TestWorkEntry(TestWorkEntryBase):
 
     @classmethod
