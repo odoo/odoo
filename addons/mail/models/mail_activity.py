@@ -716,6 +716,10 @@ class MailActivity(models.Model):
     def action_reschedule_nextweek(self):
         self.filtered('active').date_deadline = fields.Date.context_today(self) + relativedelta(weeks=1, weekday=MO(-1))
 
+    def action_reschedule_customdate(self, date_deadline):
+        date_deadline = fields.Date.to_date(date_deadline)
+        self.filtered('active').date_deadline = date_deadline
+
     def _store_activity_fields(self, res: Store.FieldList):
         res.attr("activity_category")
         res.one("activity_type_id", ["name"])
