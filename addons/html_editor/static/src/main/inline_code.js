@@ -7,11 +7,19 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
-    static dependencies = ["selection", "history", "input"];
+    static dependencies = ["selection", "history", "input", "feff"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         input_handlers: this.onInput.bind(this),
         normalize_handlers: this.normalize.bind(this),
+        feff_providers: (root, cursors) => {
+            const result = [];
+            for (const node of selectElements(root, "code.o_inline_code:last-child")) {
+                const feff = this.dependencies.feff.addFeff(node, "after", cursors);
+                result.push(feff);
+            }
+            return result;
+        },
     };
 
     onInput(ev) {
