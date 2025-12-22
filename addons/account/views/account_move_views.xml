@@ -496,7 +496,6 @@
                     <field name="amount_total_signed" sum="Total Amount" string="Total" decoration-bf="1"/>
                     <field name="review_state" optional="hide" groups="account.group_account_user"
                            widget="account_review_state_selection_badge"
-                           class="o_account_review_state_selection_badge_audit_list"
                            options="{
                                False: {'can_edit': 'account.group_account_user,account.group_account_manager'},
                                'todo': {'decoration': 'info'},
@@ -564,7 +563,6 @@
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="review_state" optional="hide" groups="account.group_account_user"
                            widget="account_review_state_selection_badge"
-                           class="o_account_review_state_selection_badge_audit_list"
                            options="{
                                False: {'can_edit': 'account.group_account_user,account.group_account_manager'},
                                'todo': {'decoration': 'info'},
