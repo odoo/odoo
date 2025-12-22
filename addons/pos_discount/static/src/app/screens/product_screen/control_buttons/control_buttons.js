@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 patch(ControlButtons.prototype, {
     async clickDiscount() {
         this.dialog.add(NumberPopup, {
-            title: _t("Discount Percentage"),
+            title: _t("Discount"),
             startingValue: this.pos.config.discount_pc,
             startingType: "percent",
             types: [
