@@ -272,6 +272,10 @@
                     align-items: center;
                 }
 
+                .o_cw_day_number:hover {
+                    cursor: default;
+                }
+
                 &.fc-day-today .o_cw_day_number {
                     color: var(--o-cw-color);
                     background-color: var(--o-cw-bg);
@@ -288,6 +292,7 @@
             // Align labels and timelines
             .fc-timegrid-slot {
                 font-size: .6rem;
+                height: 2em;
 
                 @include media-breakpoint-up(md) {
                     font-size: .75rem;

@@ -5432,12 +5432,12 @@ test(`scroll to current hour when clicking on today`, async () => {
         arch: `<calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="week"/>`,
     });
     // Default scroll time should be 6am no matter the current hour
-    expect(queryOne(".fc-scroller:last").scrollTop).toBeWithin(210, 230);
+    expect(queryOne(".fc-scroller:last").scrollTop).toBeWithin(280, 300);
     await contains(".o_calendar_button_today").click();
     expect(queryOne(".fc-scroller:last").scrollTop).toBe(0);
     mockDate("2016-12-12T20:00:00", 1);
     await contains(".o_calendar_button_today").click();
-    expect(queryOne(".fc-scroller:last").scrollTop).toBeWithin(360, 380);
+    expect(queryOne(".fc-scroller:last").scrollTop).toBeWithin(620, 640);
 });
 
 test("save selected date during view switching", async () => {

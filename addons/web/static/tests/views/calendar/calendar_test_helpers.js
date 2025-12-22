@@ -1,5 +1,5 @@
 import { click, drag, edit, hover, queryFirst, queryRect } from "@odoo/hoot-dom";
-import { advanceFrame, advanceTime, animationFrame } from "@odoo/hoot-mock";
+import { advanceFrame, advanceTime, animationFrame } from "@odoo/hoot";
 import { EventBus } from "@odoo/owl";
 import { contains, getMockEnv, swipeLeft, swipeRight } from "@web/../tests/web_test_helpers";
 
@@ -516,7 +516,7 @@ export async function moveEventToTime(eventId, dateTime) {
 
     await moveTo(row, {
         position: {
-            y: rowRect.y + 1,
+            y: rowRect.y + 0.5,
             x: columnRect.x + columnRect.width / 2,
         },
     });

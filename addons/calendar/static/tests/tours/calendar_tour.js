@@ -67,7 +67,7 @@ registry.category("web_tour.tours").add("calendar_appointments_hour_tour", {
         {
             trigger: ".fc-col-header-cell.fc-day.fc-day-mon",
             content: "Check the day is properly displayed",
-            run: "click",
+            run: "hover",
         },
         {
             trigger: '.fc-time:contains("10:00")',

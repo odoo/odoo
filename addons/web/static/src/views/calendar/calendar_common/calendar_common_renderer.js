@@ -75,6 +75,7 @@ export class CalendarCommonRenderer extends Component {
         this.clickTimeoutId = null;
         this.popover = useCalendarPopover(this.constructor.components.Popover);
         this.timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
+        this.dayHeaderListeners = {};
         useBus(this.props.model.bus, "SCROLL_TO_CURRENT_HOUR", () =>
             this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
         );
@@ -145,6 +146,8 @@ export class CalendarCommonRenderer extends Component {
             dayHeaderFormat: this.env.isSmall
                 ? SHORT_SCALE_TO_HEADER_FORMAT[this.props.model.scale]
                 : SCALE_TO_HEADER_FORMAT[this.props.model.scale],
+            dayHeaderDidMount: this.onDayHeaderDidMount,
+            dayHeaderWillUnmount: this.onDayHeaderWillUnmount,
             dateClick: this.handleDateClick,
             dayCellClassNames: this.getDayCellClassNames,
             events: (_, successCb) => successCb(this.mapRecordsToEvents()),
@@ -202,6 +205,36 @@ export class CalendarCommonRenderer extends Component {
 
     getEndTime(record) {
         return record.end.toFormat(this.timeFormat);
+    }
+    /**
+    * Register an event listener, to create all day events when the day header is clicked in week/day view
+    * @param info Object passed from the fullcalendar library. See https://fullcalendar.io/docs/day-header-render-hooks
+    */
+    onDayHeaderDidMount(info) {
+        if (["day", "week"].includes(this.props.model.scale)) {
+            const date = DateTime.fromJSDate(info.date);
+            const handler = (event) => {
+                this.onDateClick({
+                    date: info.date,
+                    dateStr: date.toISODate(),
+                    allDay: true,
+                    jsEvent: event,
+                });
+            };
+            this.dayHeaderListeners[date] = handler;
+            info.el.addEventListener("click", handler);
+        }
+    }
+
+    onDayHeaderWillUnmount(info) {
+        if (["day", "week"].includes(this.props.model.scale)) {
+            const date = DateTime.fromJSDate(info.date);
+            const customListener = this.dayHeaderListeners[date];
+            if (customListener) {
+                info.el.removeEventListener("click", customListener);
+                delete this.dayHeaderListeners[date];
+            }
+        }
     }
 
     computeEventSelector(event) {
