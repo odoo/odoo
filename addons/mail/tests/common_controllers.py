@@ -118,11 +118,16 @@ class MailControllerAttachmentCommon(MailControllerCommon):
                     ):
                         self._upload_attachment(document, route_kw)
 
-    def _execute_subtests_delete(self, users, token, allowed, thread=None):
+    def _execute_subtests_delete(self, users, token, allowed, thread=None, exp_error=None):
         for user_data in users:
             user, guest = self._authenticate_pseudo_user(user_data)
             with self.subTest(
-                user=user.name, guest=guest.name, token=token, allowed=allowed, thread=thread,
+                user=user.name,
+                guest=guest.name,
+                token=token,
+                allowed=allowed,
+                thread=thread,
+                exp_error=exp_error,
             ):
                 attachment = self.env["ir.attachment"].create({"name": "sample attachment"})
                 if thread:
@@ -131,8 +136,10 @@ class MailControllerAttachmentCommon(MailControllerCommon):
                     self._delete_attachment(attachment, token)
                     self.assertFalse(attachment.exists())
                 else:
-                    with self.assertRaises(JsonRpcException, msg="Wrong access token"):
+                    with self.assertRaises(JsonRpcException) as e:
                         self._delete_attachment(attachment, token)
+                    if exp_error:
+                        self.assertEqual(str(e.exception), exp_error)
 
     def _upload_attachment(self, document, route_kw):
         cookies = route_kw.pop("cookies", None)
