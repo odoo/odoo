@@ -12,7 +12,7 @@ from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request, content_disposition
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
-from odoo.tools.misc import file_open
+from odoo.tools.misc import file_open, verify_limited_field_access_token
 from odoo.tools.pdf import DependencyError, PdfReadError, extract_page
 
 logger = logging.getLogger(__name__)
@@ -87,11 +87,22 @@ class AttachmentController(ThreadController):
 
     @http.route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
-    def mail_attachment_delete(self, attachment_id, access_token=None):
+    def mail_attachment_delete(self, attachment_id, access_token=None, raw_access_token=None):
+        """
+        Deletes given attachment.
+        :param attachment_id: ID of the attachment to delete.
+        :param access_token: attachment_ownership_token for write access.
+        :param raw_access_token: raw field token for read access.
+        """
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
-        if not attachment or not attachment._has_attachments_ownership([access_token]):
-            request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
+        if not (
+            attachment
+            and raw_access_token
+            and verify_limited_field_access_token(attachment, "raw", raw_access_token, scope="binary")
+        ):
             raise NotFound()
+        if not attachment._has_attachments_ownership([access_token]):
+            raise AccessError(self.env._("You are not allowed to delete this attachment."))
         message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
         # sudo: ir.attachment: access is validated with _has_attachments_ownership

@@ -4,7 +4,7 @@ import { generatePdfThumbnail } from "@mail/utils/common/pdf_thumbnail";
 
 import { FileModelMixin } from "@web/core/file_viewer/file_model";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+import { rpc, RPCError } from "@web/core/network/rpc";
 import { imageUrl, url } from "@web/core/utils/urls";
 
 export class Attachment extends FileModelMixin(Record) {
@@ -73,7 +73,7 @@ export class Attachment extends FileModelMixin(Record) {
         if (this.message && this.store.self.main_user_id?.share !== false) {
             return this.message.editable;
         }
-        return true;
+        return (this.ownership_token || this.hasWriteAccess) ?? true;
     }
 
     get monthYear() {
@@ -101,10 +101,29 @@ export class Attachment extends FileModelMixin(Record) {
      */
     async remove() {
         if (this.id > 0) {
-            await rpc(
-                "/mail/attachment/delete",
-                assignDefined({ attachment_id: this.id }, { access_token: this.ownership_token })
-            );
+            try {
+                await rpc(
+                    "/mail/attachment/delete",
+                    assignDefined(
+                        { attachment_id: this.id },
+                        {
+                            access_token: this.ownership_token,
+                            raw_access_token: this.raw_access_token,
+                        }
+                    )
+                );
+            } catch (error) {
+                if (
+                    error instanceof RPCError &&
+                    error.data.name === "werkzeug.exceptions.NotFound"
+                ) {
+                    this.store.env.services.notification.add(_t("Attachment not found"), {
+                        type: "error",
+                    });
+                } else {
+                    throw error;
+                }
+            }
         }
         this.delete();
     }
