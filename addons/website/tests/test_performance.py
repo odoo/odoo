@@ -200,6 +200,7 @@ class TestWebsitePerformanceCommon(UtilPerf):
         return (page, menu)
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestWebsitePerformance(TestWebsitePerformanceCommon):
 
     def test_10_perf_sql_queries_page(self):

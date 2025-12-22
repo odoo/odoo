@@ -316,6 +316,7 @@ class TestAccess(common.SlidesCase):
             self.slide.with_user(self.user_portal).read(['name'])
 
 
+@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestAccessHttp(common.SlidesCase, HttpCase):
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule', 'odoo.http')
     def test_access_slide_attachment(self):
