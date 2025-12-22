@@ -1,5 +1,5 @@
 import { useEffect } from "@odoo/owl";
-import { browser } from "../browser/browser";
+import { memoize } from "@web/core/utils/functions";
 
 /**
  * This is used on text inputs or textareas to automatically resize it based on its
@@ -23,7 +23,7 @@ export function useAutoresize(ref, options = {}) {
                         return;
                     }
                     if (el instanceof HTMLInputElement) {
-                        resizeInput(el, options);
+                        resizeInput(el);
                     } else {
                         resizeTextArea(el, options);
                     }
@@ -56,27 +56,50 @@ export function useAutoresize(ref, options = {}) {
     });
 }
 
+const doesScrollWidthExcludePadding = memoize(() => {
+    const input = document.createElement("input");
+    input.style.cssText = `
+        position: absolute;
+        visibility: hidden;
+        padding: 0;
+        border: 0;
+        width: auto;
+    `;
+    document.body.appendChild(input);
+    const widthWithoutPadding = input.scrollWidth;
+    input.style.padding = "10px";
+    const widthWithPadding = input.scrollWidth;
+    input.remove();
+    return widthWithPadding === widthWithoutPadding;
+});
+
 /**
  * @param {HTMLInputElement} input
- * @param {{ offset?: number }} [options]
  */
-function resizeInput(input, options) {
+function resizeInput(input) {
+    const style = window.getComputedStyle(input);
     // This mesures the maximum width of the input which can get from the flex layout.
     input.style.width = "100%";
     const maxWidth = input.clientWidth;
-    // Somehow Safari 16 computes input sizes incorrectly. This is fixed in Safari 17
-    const isSafari16 = /Version\/16.+Safari/i.test(browser.navigator.userAgent);
     // Minimum width of the input
     input.style.width = "10px";
     if (input.value === "" && input.placeholder !== "") {
         input.style.width = "auto";
         return;
     }
-    if (input.scrollWidth + 5 + (isSafari16 ? 8 : 0) > maxWidth) {
+    // scrollWidth measures the content box only; borders are added separately
+    let boxExtraWidth = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
+    // Some browsers (Safari ≤16, Firefox ≥145) exclude padding from input scrollWidth
+    if (doesScrollWidthExcludePadding()) {
+        const padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+        boxExtraWidth += padding;
+    }
+    const desiredWidth = input.scrollWidth + boxExtraWidth + 1;
+    if (desiredWidth > maxWidth) {
         input.style.width = "100%";
         return;
     }
-    input.style.width = input.scrollWidth + 5 + (isSafari16 ? 8 : 0) + (options.offset || 0) + "px";
+    input.style.width = `${desiredWidth}px`;
 }
 
 /**

@@ -999,7 +999,7 @@ test("list daterange: start date input width matches its span counterpart", asyn
     await contains(".o_list_record_selector input").click();
     const initialWidth = queryFirst(".o_field_daterange span").offsetWidth;
     await contains(".o_field_daterange span:first").click();
-    expect(".o_field_daterange input:first").toHaveProperty("offsetWidth", initialWidth);
+    expect(".o_field_daterange input:first").toHaveProperty("offsetWidth", initialWidth + 1);
 });
 
 test("always range: related end date, both start date and end date empty", async () => {
