@@ -7,7 +7,7 @@ export const callActionsRegistry = registry.category("discuss.call/actions");
 
 callActionsRegistry
     .add("mute", {
-        condition: (component) => component.rtc,
+        condition: (component) => component.rtc.channel?.isSelfInCall,
         name: (component) => (component.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
         isActive: (component) => component.rtc.selfSession?.isMute,
         isTracked: true,
@@ -19,7 +19,7 @@ callActionsRegistry
         sequence: 10,
     })
     .add("deafen", {
-        condition: (component) => component.rtc,
+        condition: (component) => component.rtc.channel?.isSelfInCall,
         name: (component) => (component.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
         isActive: (component) => component.rtc.selfSession?.is_deaf,
         isTracked: true,
@@ -31,7 +31,7 @@ callActionsRegistry
         sequence: 20,
     })
     .add("camera-on", {
-        condition: (component) => component.rtc,
+        condition: (component) => component.rtc.channel?.isSelfInCall,
         available: (component) => !component.rtc?.isRemote,
         name: (component) => {
             if (component.rtc?.isRemote) {
@@ -49,7 +49,7 @@ callActionsRegistry
         sequence: 30,
     })
     .add("raise-hand", {
-        condition: (component) => component.rtc,
+        condition: (component) => component.rtc.channel?.isSelfInCall,
         name: (component) =>
             component.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand"),
         isActive: (component) => component.rtc.selfSession?.raisingHand,
@@ -59,7 +59,7 @@ callActionsRegistry
         sequence: 50,
     })
     .add("share-screen", {
-        condition: (component) => component.rtc && !isMobileOS(),
+        condition: (component) => component.rtc.channel?.isSelfInCall && !isMobileOS(),
         available: (component) => !component.rtc?.isRemote,
         name: (component) => {
             if (component.rtc?.isRemote) {
@@ -79,7 +79,7 @@ callActionsRegistry
     .add("blur-background", {
         condition: (component) =>
             !isBrowserSafari() &&
-            component.rtc &&
+            component.rtc.channel?.isSelfInCall &&
             component.rtc.selfSession?.is_camera_on &&
             component.rtc?.isHost,
         name: (component) =>
@@ -92,7 +92,10 @@ callActionsRegistry
         sequence: 60,
     })
     .add("fullscreen", {
-        condition: (component) => component.props?.fullscreen && !component.rtc?.state.isPipMode,
+        condition: (component) =>
+            component.rtc.channel?.isSelfInCall &&
+            component.props?.fullscreen &&
+            !component.rtc?.state.isPipMode,
         name: (component) =>
             component.props.fullscreen.isActive ? _t("Exit Fullscreen") : _t("Enter Full Screen"),
         isActive: (component) => component.props.fullscreen.isActive,
@@ -108,7 +111,8 @@ callActionsRegistry
         sequence: 70,
     })
     .add("picture-in-picture", {
-        condition: (component) => component.pipService && component.rtc && !component.env?.isSmall,
+        condition: (component) =>
+            component.pipService && component.rtc.channel?.isSelfInCall && !component.env?.isSmall,
         available: (component) => !component.rtc?.isRemote,
         name: (component) => {
             if (component.rtc?.state.isPipMode) {
