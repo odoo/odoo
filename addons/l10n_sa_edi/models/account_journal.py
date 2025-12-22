@@ -599,70 +599,81 @@ class AccountJournal(models.Model):
 
     # ====== API Helper Methods =======
 
+    def _l10n_sa_is_successful_response(self, server_response):
+        """
+            A successful response in terms of the zatca implementation is one where we don't
+            have to retry because something went wrong.
+        """
+        return server_response.ok or server_response.status_code == 409
+
+    def _l10n_sa_prepare_error_vals(self, error, warning=False, **kwargs):
+        warning_vals = {} if not warning else {
+            'blocking_level': 'warning',
+            'excepted': True,
+        }
+        return {
+            "error": error,
+            **warning_vals,
+            **kwargs
+        }
+
+    def _l10n_sa_get_response_for_bad_request(self, server_response):
+        data = server_response.json()
+        error = ""
+        # Validation Errors
+        if val_res := data.get('validationResults'):
+            error_vals = {'blocking_level': 'error'}
+            error = Markup("<b>[%s]</b>") % (server_response.status_code)
+            if isinstance(data, dict) and val_res.get('errorMessages'):
+                error += _("Invoice submission to ZATCA returned errors")
+                error_vals['json_errors'] = data
+            else:
+                error += server_response.reason
+            return self._l10n_sa_prepare_error_vals(error, **error_vals)
+        # Onboarding Errors
+        if errors := data.get('errors'):
+            if isinstance(errors[0], dict):
+                errors = [err.get('message') for err in errors]
+            error = "".join('\n\t- ' + err for err in errors)
+        return self._l10n_sa_prepare_error_vals(error or data.get('error'))
+
     def _l10n_sa_call_api(self, request_data, request_url, method):
         """
             Helper function to make api calls to the ZATCA API Endpoint
         """
         api_url = ZATCA_API_URLS[self.company_id.l10n_sa_api_mode]
         request_url = urljoin(api_url, request_url)
-        status_code = False
+        response_code = False
         try:
             request_response = requests.request(method, request_url, data=request_data.get('body'),
                                                 headers={
                                                     **self._l10n_sa_api_headers(),
                                                     **request_data.get('header')
                                                 }, timeout=30)
+            response_code = request_response.status_code
             request_response.raise_for_status()
         except (ValueError, HTTPError) as ex:
             # The 400 case means that it is rejected by ZATCA, but we need to update the hash as done for accepted.
             # In the 401+ cases, it is like the server is overloaded e.g. and we still need to resend later.  We do not
             # erase the index chain (excepted) because for ZATCA, one ICV (index chain) needs to correspond to one invoice.
-            status_code = ex.response.status_code
-            if status_code not in {400, 409}:
-                return {
-                    'error': (Markup("<b>[%s]</b>") % status_code) + _("Server returned an unexpected error: %(error)s",
-                               error=(request_response.text or str(ex))),
-                    'blocking_level': 'warning',
-                    'status_code': status_code,
-                    'excepted': True,
-                }
+            if response_code not in {400, 409}:
+                msg = _("%(code)s Server returned an unexpected error: %(error)s", code=Markup("<b>[%s]</b>" % response_code), error=(request_response.text or str(ex)))
+                return self._l10n_sa_prepare_error_vals(msg, warning=True, status_code=response_code)
         except RequestException as ex:
             # Usually only happens if a Timeout occurs. In this case we're not sure if the invoice was accepted or
             # rejected, or if it even made it to ZATCA
-            return {'error': str(ex), 'blocking_level': 'warning', 'excepted': True}
+            return self._l10n_sa_prepare_error_vals(str(ex), warning=True)
 
-        if request_response.status_code == '303':
-            return {'error': _('Clearance and reporting seem to have been mixed up. '),
-                    'blocking_level': 'warning', 'excepted': True}
+        if response_code == 303:
+            return self._l10n_sa_prepare_error_vals(_('Clearance and reporting seem to have been mixed up. '), warning=True)
 
         try:
             response_data = request_response.json()
+            response_data['status_code'] = response_code
         except json.decoder.JSONDecodeError:
-            return {
-                'error': _("JSON response from ZATCA could not be decoded"),
-                'blocking_level': 'error'
-            }
-        response_data['status_code'] = request_response.status_code
+            return self._l10n_sa_prepare_error_vals(_("JSON response from ZATCA could not be decoded"), blocking_level="error")
 
-        if status_code == 409:
-            return response_data
-
-        val_res = response_data.get('validationResults', {})
-        if not request_response.ok and (val_res.get('errorMessages') or val_res.get('warningMessages')):
-            error = "" if not status_code else Markup("<b>[%s]</b>") % (status_code)
-            if isinstance(response_data, dict) and val_res.get('errorMessages'):
-                error += _("Invoice submission to ZATCA returned errors")
-                return {
-                    'error': error,
-                    'json_errors': response_data,
-                    'blocking_level': 'error',
-                }
-            error += request_response.reason
-            return {
-                'error': error,
-                'blocking_level': 'error',
-            }
-        return response_data
+        return response_data if self._l10n_sa_is_successful_response(request_response) else self._l10n_sa_get_response_for_bad_request(request_response)
 
     def _l10n_sa_api_headers(self):
         """
