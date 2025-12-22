@@ -553,9 +553,10 @@ class StockRule(models.Model):
             if product_routes:
                 res = Rule.search(Domain('route_id', 'in', product_routes.ids) & domain, order='route_sequence, sequence', limit=1)
         if not res and warehouse_id:
-            warehouse_routes = warehouse_id.route_ids
+            filter_function = partial(self._filter_warehouse_routes, product_id, warehouse_id)
+            warehouse_routes = warehouse_id.route_ids.filtered(filter_function).ids
             if warehouse_routes:
-                res = Rule.search(Domain('route_id', 'in', warehouse_routes.ids) & domain, order='route_sequence, sequence', limit=1)
+                res = Rule.search(Domain('route_id', 'in', warehouse_routes) & domain, order='route_sequence, sequence', limit=1)
         return res
 
     @api.model

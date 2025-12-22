@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, Command, fields, models, _
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import split_every
+from odoo.fields import Domain
 
 
 class StockWarehouse(models.Model):
@@ -55,15 +56,15 @@ class StockWarehouse(models.Model):
                     ('action', '=', 'manufacture'), ('warehouse_id', '=', warehouse.id)]).route_id
             if not manufacture_route:
                 continue
-            if warehouse.manufacture_to_resupply:
+            if warehouse.manufacture_to_resupply and manufacture_route.warehouse_selectable:
                 manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
             else:
                 manufacture_route.warehouse_ids = [Command.unlink(warehouse.id)]
 
     def _create_or_update_route(self):
-        manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', _('Manufacture'))
+        manufacture_route = self._find_or_create_global_route('mrp.route_warehouse0_manufacture', self.env._('Manufacture'))
         for warehouse in self:
-            if warehouse.manufacture_to_resupply:
+            if warehouse.manufacture_to_resupply and manufacture_route.warehouse_selectable:
                 manufacture_route.warehouse_ids = [Command.link(warehouse.id)]
         return super()._create_or_update_route()
 
@@ -328,3 +329,7 @@ class StockWarehouseOrderpoint(models.Model):
             non_kit_ids.extend(id_ for id_ in products.ids if id_ not in kit_ids)
             products.invalidate_recordset()
         return self.env['product.product'].browse(non_kit_ids)
+
+    def _get_route_domain(self):
+        domain = super()._get_route_domain()
+        return Domain.OR([domain, Domain([('rule_ids.action', '=', 'manufacture')])])

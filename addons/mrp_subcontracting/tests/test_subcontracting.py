@@ -32,6 +32,7 @@ class TestSubcontractingBasic(TransactionCase):
             # If purchase is installed, the buy route would be reused instead of duplicated.
             wh_original.buy_to_resupply = False
         wh_original.manufacture_to_resupply = False
+        wh_original.subcontracting_to_resupply = False
         # Check if warehouse routes got RECREATED (instead of reused)
         route_types = [
             "route_ids",

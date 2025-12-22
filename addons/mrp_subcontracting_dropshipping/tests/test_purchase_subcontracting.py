@@ -21,7 +21,6 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         - Delivery for the component to the subcontractor for the specified wh.
         - Po created for the component.
         """
-        self.warehouse.manufacture_pull_id.route_id.write({'sequence': 20})
         self.env.ref('stock.route_warehouse0_mto').active = True
         mto_route = self.env['stock.route'].search([('name', '=', 'Replenish on Order (MTO)')])
         resupply_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
@@ -361,7 +360,6 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         supplier to each subcontractor.
         """
         dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
-        dropship_route.rule_ids.filtered(lambda r: r.action == 'buy').group_propagation_option = 'none'
 
         subcontractor01, subcontractor02, component_supplier = self.env['res.partner'].create([{
             'name': 'Super Partner %d' % i
@@ -413,7 +411,6 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
         dropship_route = self.env['stock.route'].search([('name', '=', 'Dropship')], limit=1)
         warehouse = self.env['stock.warehouse'].search([], limit=1)
-        warehouse.manufacture_pull_id.route_id.write({'sequence': 20})
 
         compo_drop, compo_rr = self.env['product.product'].create([{
             'name': name,

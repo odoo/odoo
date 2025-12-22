@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import Command, _, api, fields, models
 
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
 
     subcontracting_to_resupply = fields.Boolean(
-        'Resupply Subcontractors', default=True)
+        'Resupply Subcontractors', compute='_compute_subcontracting_to_resupply',
+        inverse='_inverse_subcontracting_to_resupply', default=True)
     subcontracting_mto_pull_id = fields.Many2one(
         'stock.rule', 'Subcontracting MTO Rule', copy=False)
     subcontracting_pull_id = fields.Many2one(
@@ -52,6 +53,36 @@ class StockWarehouse(models.Model):
                 ]
             })
         return result
+
+    def _compute_subcontracting_to_resupply(self):
+        for warehouse in self:
+            subcontracting_route = warehouse.subcontracting_pull_id.route_id
+            warehouse.subcontracting_to_resupply = bool(subcontracting_route.product_selectable or subcontracting_route.warehouse_ids.filtered(lambda w: w.id == warehouse.id))
+
+    def _inverse_subcontracting_to_resupply(self):
+        for warehouse in self:
+            subcontracting_route = warehouse.subcontracting_pull_id.route_id
+            if not subcontracting_route:
+                rules = self.env['stock.rule'].search([
+                    ('action', '=', 'pull'),
+                    ('picking_type_id.code', '=', 'internal'),
+                    ('warehouse_id', '=', warehouse.id),
+                    ('active', '=', True),
+                ])
+                subcontracting_route = rules.filtered(lambda r: r.location_src_id.is_subcontract()).mapped('route_id')
+            if not subcontracting_route:
+                continue
+            if warehouse.subcontracting_to_resupply and subcontracting_route.warehouse_selectable:
+                subcontracting_route.warehouse_ids = [Command.link(warehouse.id)]
+            else:
+                subcontracting_route.warehouse_ids = [Command.unlink(warehouse.id)]
+
+    def _create_or_update_route(self):
+        subcontracting_route = self._find_or_create_global_route('mrp_subcontracting.route_resupply_subcontractor_mto', self.env._('Resupply Subcontractor on Order'))
+        for warehouse in self:
+            if warehouse.subcontracting_to_resupply and subcontracting_route.warehouse_selectable:
+                subcontracting_route.warehouse_ids = [Command.link(warehouse.id)]
+        return super()._create_or_update_route()
 
     def _update_global_route_resupply_subcontractor(self):
         route_id = self._find_or_create_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',

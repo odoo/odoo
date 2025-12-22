@@ -18,3 +18,10 @@ class StockRule(models.Model):
             if values.get('move_dest_ids') and values['move_dest_ids'].raw_material_production_id.subcontractor_id:
                 move_values['partner_id'] = values['move_dest_ids'].raw_material_production_id.subcontractor_id.id
         return move_values
+
+    def _filter_warehouse_routes(self, product, warehouses, route):
+        if any(rule.action == 'pull' and rule.picking_type_id.code == 'internal' and rule.location_src_id.is_subcontract() for rule in route.rule_ids):
+            if any(bom_line.bom_id.type == 'subcontract' for bom_line in product.bom_line_ids):
+                return super()._filter_warehouse_routes(product, warehouses, route)
+            return False
+        return super()._filter_warehouse_routes(product, warehouses, route)

@@ -76,8 +76,9 @@ class StockWarehouseOrderpoint(models.Model):
     lead_days = fields.Float(compute='_compute_lead_days')
     route_id = fields.Many2one(
         'stock.route', string='Route',
-        domain="['|', ('product_selectable', '=', True), ('rule_ids.action', 'in', ['buy', 'manufacture'])]",
-        inverse='_inverse_route_id')
+        domain=lambda self: self._get_route_domain(),
+        inverse='_inverse_route_id'
+    )
     route_id_placeholder = fields.Char(compute='_compute_route_id_placeholder')
     effective_route_id = fields.Many2one(
         'stock.route', search='_search_effective_route_id', compute='_compute_effective_route_id',
@@ -228,6 +229,9 @@ class StockWarehouseOrderpoint(models.Model):
     def _inverse_route_id(self):
         # Override this method to add custom behavior when route is set
         pass
+
+    def _get_route_domain(self):
+        return Domain([('product_selectable', '=', True)])
 
     @api.depends('product_id', 'product_id.categ_id', 'product_id.route_ids', 'product_id.categ_id.route_ids', 'location_id')
     def _compute_route_id_placeholder(self):

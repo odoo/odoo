@@ -60,7 +60,6 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         manu_route = self.env.ref('mrp.route_warehouse0_manufacture')
-        manu_route.product_selectable = True
         mto_route.active = True
         self.finished.route_ids = [Command.set((mto_route | manu_route).ids)]
 
