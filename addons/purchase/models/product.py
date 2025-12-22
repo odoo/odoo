@@ -41,7 +41,7 @@ class ProductTemplate(models.Model):
         if self.env.context.get('purchase_product_template'):
             return [{
                 'label': _('Import Template for Products'),
-                'template': '/purchase/static/xls/product_purchase.xls'
+                'template': '/purchase/static/xls/products_import_template.xlsx'
             }]
         return res
 
