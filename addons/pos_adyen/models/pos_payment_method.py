@@ -24,6 +24,7 @@ class PosPaymentMethod(models.Model):
     # Adyen
     adyen_api_key = fields.Char(string="Adyen API key", help='Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description', copy=False, groups='base.group_erp_manager')
     adyen_terminal_identifier = fields.Char(help='[Terminal model]-[Serial number], for example: P400Plus-123456789', copy=False)
+    adyen_merchant_account = fields.Char(help='The POS merchant account code used in Adyen')
     adyen_test_mode = fields.Boolean(help='Run transactions in the test environment.', groups='base.group_erp_manager')
 
     adyen_latest_response = fields.Char(copy=False, groups='base.group_erp_manager') # used to buffer the latest asynchronous notification from Adyen.
@@ -38,7 +39,7 @@ class PosPaymentMethod(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         params = super()._load_pos_data_fields(config)
-        params += ['adyen_terminal_identifier']
+        params += ['adyen_terminal_identifier', 'adyen_merchant_account']
         return params
 
     @api.model
@@ -68,6 +69,8 @@ class PosPaymentMethod(models.Model):
         return {
             'terminal_request': 'https://terminal-api-%s.adyen.com/async',
             'payment_status': 'https://terminal-api-%s.adyen.com/sync',
+            'adjust': 'https://pal-%s.adyen.com/pal/servlet/Payment/v52/adjustAuthorisation',
+            'capture': 'https://pal-%s.adyen.com/pal/servlet/Payment/v52/capture',
         }
 
     def _is_write_forbidden(self, fields):

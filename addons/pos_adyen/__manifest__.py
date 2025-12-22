@@ -8,7 +8,7 @@
         'views/res_config_settings_views.xml',
         'views/pos_payment_method_views.xml',
     ],
-    'depends': ['point_of_sale'],
+    'depends': ['point_of_sale', 'payment_adyen'],
     'assets': {
         'point_of_sale._assets_pos': [
             'pos_adyen/static/src/**/*',
