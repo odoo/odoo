@@ -73,13 +73,12 @@
                             data-hotkey="d" invisible="state != 'done'"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="k"/>
                         <button name="action_cancel" type="object" invisible="state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
-                        <button name="action_retry_failed" type="object" invisible="state != 'done' or failed == 0" class="oe_highlight" string="Retry" data-hotkey="y"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,in_queue,sending,done"/>
                     </header>
                     <div class="alert alert-info o_mass_mailing_alert_message" role="alert"
                             invisible="state not in ['in_queue', 'done'] and sent == 0 and canceled == 0 and scheduled == 0 and failed == 0 and not warning_message">
                         <div class="o_mails_canceled" invisible="canceled == 0">
-                            <button class="btn btn-link py-0"
+                            <button class="btn btn-link p-0"
                                     name="action_view_traces_canceled"
                                     type="object">
                                 <strong>
@@ -89,7 +88,7 @@
                             </button>
                         </div>
                         <div class="o_mails_scheduled" invisible="scheduled == 0">
-                            <button class="btn btn-link py-0"
+                            <button class="btn btn-link p-0"
                                     name="action_view_traces_scheduled"
                                     type="object">
                                 <strong>
@@ -99,7 +98,7 @@
                             </button>
                         </div>
                         <div class="o_mails_process" invisible="process == 0">
-                            <button class="btn btn-link py-0"
+                            <button class="btn btn-link p-0"
                                     name="action_view_traces_process"
                                     type="object">
                                 <strong>
@@ -109,7 +108,7 @@
                             </button>
                         </div>
                         <div class="o_mails_sent" invisible="sent == 0 and state in ('draft', 'test', 'in_queue')">
-                            <button class="btn btn-link py-0"
+                            <button class="btn btn-link p-0"
                                     name="action_view_traces_sent"
                                     type="object">
                                 <strong>
@@ -122,7 +121,7 @@
                             </strong>
                         </div>
                         <div class="o_mails_failed" invisible="state != 'done' or failed == 0">
-                            <button class="btn btn-link py-0"
+                            <button class="btn btn-link p-0"
                                     name="action_view_traces_failed"
                                     type="object">
                                 <strong>

@@ -5,9 +5,6 @@
         <field name="model">mailing.list</field>
         <field name="inherit_id" ref="mass_mailing.mailing_list_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//a[@name='action_send_mailing']" position="after">
-                <a name="action_send_mailing_sms" class="dropdown-item" role="menuitem" type="object">Send SMS</a>
-            </xpath>
             <xpath expr="//div[hasclass('o_mailing_list_kanban_stats')]//a" position="after">
                 <a class="me-sm-0 me-3 fs-4 fw-light lh-1" tabindex="-1"
                     name="action_view_contacts_sms" type="object">
