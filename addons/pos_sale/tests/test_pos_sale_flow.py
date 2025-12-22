@@ -1995,6 +1995,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line[2].qty_invoiced, 1)
 
     def test_refund_ship_later_qty_delivered(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_pack_ship'
+
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [Command.create({
@@ -2089,7 +2092,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pos_order_refund_id = data['pos.order'][0]['id']
         pos_order_refund_record = self.env['pos.order'].browse(pos_order_refund_id)
         self.assertEqual(sale_order.order_line.qty_delivered, 5)
-        pos_order_refund_record.picking_ids.button_validate()
+        for picking in pos_order_refund_record.picking_ids:
+            picking.button_validate()
         self.assertEqual(sale_order.order_line.qty_delivered, 2)
 
     def test_settle_groupable_lot_total_amount(self):
