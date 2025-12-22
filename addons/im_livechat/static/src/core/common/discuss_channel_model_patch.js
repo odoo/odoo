@@ -103,5 +103,11 @@ const discussChannelPatch = {
         }
         return super.showCorrespondentCountry;
     },
+    get showImStatus() {
+        if (this.self_member_id?.livechat_member_type === "visitor") {
+            return false;
+        }
+        return super.showImStatus;
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

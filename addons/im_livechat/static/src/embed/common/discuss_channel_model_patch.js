@@ -47,9 +47,6 @@ const discussChannelPatch = {
     get hasAttachmentPanel() {
         return this.channel_type !== "livechat" && super.hasAttachmentPanel;
     },
-    get showImStatus() {
-        return (this.channel_type === "livechat" && this.correspondent) || super.showImStatus;
-    },
     _onDeleteChatWindow() {
         if (this.isTransient && this.channel_type === "livechat") {
             this.delete();
