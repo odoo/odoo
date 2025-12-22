@@ -26,6 +26,6 @@ export function clickType(name) {
 export function hasTypeSelected(name) {
     return {
         content: `check if --${name}-- type is selected`,
-        trigger: `.modal .number-popup-types .number-popup-type-${name}.btn-primary`,
+        trigger: `.modal .number-popup-types .number-popup-type-${name}.text-primary`,
     };
 }
