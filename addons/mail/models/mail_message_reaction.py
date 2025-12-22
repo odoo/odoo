@@ -40,7 +40,7 @@ class MailMessageReaction(models.Model):
                         "partners",
                         lambda res: (
                             res.from_method("_store_avatar_fields"),
-                            message._store_author_dynamic_fields(res),
+                            message._store_partner_name_dynamic_fields(res),
                         ),
                         value=reactions.partner_id,
                     ),
