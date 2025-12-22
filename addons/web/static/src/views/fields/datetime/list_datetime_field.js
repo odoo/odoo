@@ -7,7 +7,7 @@ export class ListDateTimeField extends DateTimeField {
     setup() {
         super.setup();
         const startDateRef = useRef("start-date");
-        useAutoresize(startDateRef, { offset: -5, ignoreIfEmpty: true });
+        useAutoresize(startDateRef, { ignoreIfEmpty: true });
     }
 }
 
