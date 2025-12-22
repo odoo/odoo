@@ -8,8 +8,9 @@
     <t t-set="filteredTemplates" t-value="dynamicOptionParams.getFilteredTemplates()"/>
     <t t-set="isSingleMode" t-value="dynamicOptionParams.domState.isSingleMode"/>
     <t t-set="numberOfRecords" t-value="dynamicOptionParams.domState.numberOfRecords"/>
+    <t t-set="modelNameFilter" t-value="dynamicOptionParams.modelNameFilter"/>
     <!-- Single record filter options -->
-    <BuilderRow label.translate="Model" t-if="!props.modelNameFilter and isSingleMode">
+    <BuilderRow label.translate="Model" t-if="!modelNameFilter and isSingleMode">
         <BuilderSelect action="'dynamicModel'" preview="false" id="'model_opt'"></BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Record" t-if="isSingleMode">
@@ -30,7 +31,7 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow id="template_opt_row" label.translate="Template" t-if="!props.modelNameFilter and filteredTemplates.length > 1">
+    <BuilderRow id="template_opt_row" label.translate="Template" t-if="!modelNameFilter and filteredTemplates.length > 1">
         <BuilderSelect action="'dynamicSnippetTemplate'" preview="false" id="'template_opt'">
             <t t-foreach="filteredTemplates" t-as="template" t-key="template.key">
                 <t t-if="template.thumb">
