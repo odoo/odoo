@@ -7,7 +7,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, waitFor } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
 
@@ -114,4 +114,44 @@ test("Display livechat custom name in typing status", async () => {
         })
     );
     await contains(".o-discuss-Typing", { text: "livechat custom username is typing..." });
+});
+
+test("Display name changes according to member type", async () => {
+    const pyEnv = await startServer();
+    const janePartnerId = pyEnv["res.partner"].create({
+        name: "Jane",
+        user_ids: [Command.create({ name: "jane" })],
+    });
+    const johnPartnerId = pyEnv["res.partner"].create({
+        name: "John",
+        user_ids: [Command.create({ name: "john" })],
+    });
+    const [chatAsNonMember, chatAsVisitor, chatAsAgent] = pyEnv["discuss.channel"].create([
+        { channel_type: "livechat", channel_member_ids: [] },
+        { channel_type: "livechat", channel_member_ids: [] },
+        { channel_type: "livechat", channel_member_ids: [] },
+    ]);
+    pyEnv["discuss.channel.member"].create([
+        {
+            channel_id: chatAsVisitor,
+            partner_id: serverState.partnerId,
+            livechat_member_type: "visitor",
+        },
+        { channel_id: chatAsVisitor, partner_id: janePartnerId, livechat_member_type: "agent" },
+        {
+            channel_id: chatAsAgent,
+            partner_id: serverState.partnerId,
+            livechat_member_type: "agent",
+        },
+        { channel_id: chatAsAgent, partner_id: johnPartnerId, livechat_member_type: "visitor" },
+        { channel_id: chatAsNonMember, partner_id: johnPartnerId, livechat_member_type: "visitor" },
+        { channel_id: chatAsNonMember, partner_id: janePartnerId, livechat_member_type: "agent" },
+    ]);
+    await start();
+    await openDiscuss(chatAsNonMember);
+    await waitFor(".o-mail-DiscussContent-threadName[title=John]");
+    await openDiscuss(chatAsVisitor);
+    await waitFor(".o-mail-DiscussContent-threadName[title=Jane]");
+    await openDiscuss(chatAsAgent);
+    await waitFor(".o-mail-DiscussContent-threadName[title=John]");
 });
