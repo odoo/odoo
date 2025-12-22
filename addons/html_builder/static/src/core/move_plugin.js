@@ -158,6 +158,33 @@ export class MovePlugin extends Plugin {
                 buttons.reverse();
             }
         }
+
+        // Add move to top and bottom buttons for all movable elements (except sections)
+        // Sections should only have left/right or up/down arrows to avoid nuance
+        const isSection = this.overlayTarget.tagName === "SECTION";
+        if (!isSection) {
+            const topElementExists = this.hasElementInDirection("top");
+            const bottomElementExists = this.hasElementInDirection("bottom");
+
+            if (topElementExists) {
+                const topButton = {
+                    class: "fa fa-fw fa-angle-up",
+                    title: _t("Move to top"),
+                    handler: this.onMoveClick.bind(this, "top"),
+                };
+                buttons.push(topButton);
+            }
+
+            if (bottomElementExists) {
+                const bottomButton = {
+                    class: "fa fa-fw fa-angle-down",
+                    title: _t("Move to bottom"),
+                    handler: this.onMoveClick.bind(this, "bottom"),
+                };
+                buttons.push(bottomButton);
+            }
+        }
+
         return buttons;
     }
 
@@ -219,9 +246,39 @@ export class MovePlugin extends Plugin {
     }
 
     /**
+     * Checks if there's an element in the given direction (top or bottom)
+     *
+     * @param {String} direction "top" or "bottom"
+     * @returns {Boolean} true if an element exists in that direction
+     */
+    hasElementInDirection(direction) {
+        const parentEl = this.overlayTarget.parentNode;
+        const allSiblings = [...parentEl.children];
+        const currentRect = this.overlayTarget.getBoundingClientRect();
+        const currentCenterY = currentRect.top + currentRect.height / 2;
+
+        for (const sibling of allSiblings) {
+            if (sibling === this.overlayTarget) {
+                continue;
+            }
+
+            const siblingRect = sibling.getBoundingClientRect();
+            const siblingCenterY = siblingRect.top + siblingRect.height / 2;
+
+            if (direction === "top" && siblingCenterY < currentCenterY) {
+                return true;
+            }
+            if (direction === "bottom" && siblingCenterY > currentCenterY) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Moves the element in the given direction
      *
-     * @param {String} direction "prev" or "next"
+     * @param {String} direction "prev", "next", "top", or "bottom"
      */
     onMoveClick(direction) {
         const isMobile = this.config.isMobileView(this.overlayTarget);
@@ -242,10 +299,24 @@ export class MovePlugin extends Plugin {
             hasMobileOrder = false;
         }
 
-        const siblingEl = this.dependencies.visibility.getVisibleSibling(
-            this.overlayTarget,
-            direction
-        );
+        let siblingEl = null;
+
+        // Determine target sibling based on direction
+        if (direction === "top" || direction === "bottom") {
+            // Find closest element in visual direction
+            siblingEl = this._findClosestElementInDirection(direction);
+        } else {
+            // Find adjacent sibling (prev or next)
+            siblingEl = this.dependencies.visibility.getVisibleSibling(
+                this.overlayTarget,
+                direction
+            );
+        }
+
+        if (!siblingEl) {
+            return;
+        }
+
         if (hasMobileOrder) {
             // Swap the mobile orders.
             const currentOrder = this.overlayTarget.style.order;
@@ -253,10 +324,16 @@ export class MovePlugin extends Plugin {
             siblingEl.style.order = currentOrder;
         } else {
             // Swap the DOM elements.
-            siblingEl.insertAdjacentElement(
-                direction === "prev" ? "beforebegin" : "afterend",
-                this.overlayTarget
-            );
+            if (direction === "top") {
+                siblingEl.insertAdjacentElement("beforebegin", this.overlayTarget);
+            } else if (direction === "bottom") {
+                siblingEl.insertAdjacentElement("afterend", this.overlayTarget);
+            } else {
+                siblingEl.insertAdjacentElement(
+                    direction === "prev" ? "beforebegin" : "afterend",
+                    this.overlayTarget
+                );
+            }
         }
 
         // Scroll to the element.
@@ -271,5 +348,56 @@ export class MovePlugin extends Plugin {
                 duration: 500,
             });
         }
+    }
+
+    /**
+     * Finds the closest element in the given visual direction
+     *
+     * @param {String} direction "top" or "bottom"
+     * @returns {Element|null} the closest sibling in that direction
+     */
+    _findClosestElementInDirection(direction) {
+        const parentEl = this.overlayTarget.parentNode;
+        const allSiblings = [...parentEl.children];
+        const currentRect = this.overlayTarget.getBoundingClientRect();
+        const currentCenterX = currentRect.left + currentRect.width / 2;
+        const currentCenterY = currentRect.top + currentRect.height / 2;
+
+        let targetElement = null;
+        let bestDistance = Infinity;
+
+        for (const sibling of allSiblings) {
+            if (sibling === this.overlayTarget) {
+                continue;
+            }
+
+            const siblingRect = sibling.getBoundingClientRect();
+            const siblingCenterX = siblingRect.left + siblingRect.width / 2;
+            const siblingCenterY = siblingRect.top + siblingRect.height / 2;
+
+            // Check if element is in the requested direction
+            const isInDirection =
+                (direction === "top" && siblingCenterY < currentCenterY) ||
+                (direction === "bottom" && siblingCenterY > currentCenterY);
+
+            if (isInDirection) {
+                // Calculate distance (prioritize vertical distance, then horizontal)
+                const distance = Math.sqrt(
+                    Math.pow(
+                        direction === "top"
+                            ? currentCenterY - siblingCenterY
+                            : siblingCenterY - currentCenterY,
+                        2
+                    ) + Math.pow(Math.abs(currentCenterX - siblingCenterX) / 2, 2)
+                );
+
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    targetElement = sibling;
+                }
+            }
+        }
+
+        return targetElement;
     }
 }
