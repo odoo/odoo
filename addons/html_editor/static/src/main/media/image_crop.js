@@ -44,6 +44,8 @@ export class ImageCrop extends Component {
         this.elRef = useRef("el");
         this.cropperWrapper = useRef("cropperWrapper");
         this.imageRef = useRef("imageRef");
+        this.applyButtonRef = useRef("applyButton");
+        this.discardButtonRef = useRef("discardButton");
         this.isCropperActive = false;
 
         // We use capture so that the handler is called before other editor handlers
@@ -53,6 +55,9 @@ export class ImageCrop extends Component {
             capture: true,
         });
         useExternalListener(this.document, "keydown", this.onDocumentKeydown, {
+            capture: true,
+        });
+        useExternalListener(document, "keydown", this.onDocumentKeydown, {
             capture: true,
         });
         useExternalListener(
@@ -209,6 +214,7 @@ export class ImageCrop extends Component {
             }
         });
         this.isCropperActive = true;
+        this.applyButtonRef.el?.focus({ preventScroll: true });
     }
     /**
      * Updates the DOM image with cropped data and associates required
@@ -309,9 +315,18 @@ export class ImageCrop extends Component {
      * @param {KeyboardEvent} ev
      */
     onDocumentKeydown(ev) {
+        if (!this.isCropperActive) {
+            return;
+        }
         if (ev.key === "Enter") {
+            ev.preventDefault();
+            ev.stopImmediatePropagation();
+            if (ev.target === this.discardButtonRef.el) {
+                return this.closeCropper();
+            }
             return this.save();
-        } else if (ev.key === "Escape") {
+        } else if (["Backspace", "Escape"].includes(ev.key)) {
+            ev.preventDefault();
             ev.stopImmediatePropagation();
             return this.closeCropper();
         }
