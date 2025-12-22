@@ -672,6 +672,14 @@ export class FormatPlugin extends Plugin {
                     selectionToRestore ??= this.dependencies.selection.preserveSelection();
                     selectionToRestore.update(callbacksForCursorUpdate.merge(node));
                 }
+                if (node.matches("code.o_inline_code")) {
+                    while (
+                        node.previousSibling?.nodeType === Node.TEXT_NODE &&
+                        /^\uFEFF*$/.test(node.previousSibling.nodeValue)
+                    ) {
+                        node.previousSibling.remove();
+                    }
+                }
                 node.previousSibling.append(...childNodes(node));
                 node.remove();
             }
@@ -683,9 +691,18 @@ export class FormatPlugin extends Plugin {
         const isMergeable = (node) =>
             FORMATTABLE_TAGS.includes(node.nodeName) &&
             !this.getResource("unsplittable_node_predicates").some((predicate) => predicate(node));
+        let previousSibling = node.previousSibling;
+        if (node.matches("code.o_inline_code")) {
+            while (
+                previousSibling?.nodeType === Node.TEXT_NODE &&
+                /^\uFEFF*$/.test(previousSibling.nodeValue)
+            ) {
+                previousSibling = previousSibling.previousSibling;
+            }
+        }
         return (
             !isSelfClosingElement(node) &&
-            areSimilarElements(node, node.previousSibling) &&
+            areSimilarElements(node, previousSibling) &&
             isMergeable(node)
         );
     }
