@@ -79,8 +79,4 @@ export class ChatBubble extends Component {
     get channel() {
         return this.props.chatWindow.channel;
     }
-
-    get showImStatus() {
-        return this.channel.showImStatus;
-    }
 }
