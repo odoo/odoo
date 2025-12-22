@@ -33,6 +33,7 @@ export class HtmlMailField extends HtmlField {
     getConfig() {
         const config = super.getConfig();
         config.dropImageAsAttachment = false;
+        config.defaultLinkAttributes = { target: "_blank", rel: "noreferrer noopener" };
         config.Plugins = config.Plugins.filter((plugin) => plugin !== ColumnPlugin);
         config.dynamicFieldFilter = this.dynamicFieldFilter.bind(this);
         config.dynamicFieldPreprocess = ({ resModel }) => this.loadAllowedExpressions(resModel);
