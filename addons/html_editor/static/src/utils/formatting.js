@@ -35,7 +35,7 @@ export const DEFAULT_FONT_SIZE_CLASSES = [
     "o_default_font_size",
 ];
 
-export const FORMATTABLE_TAGS = ["SPAN", "FONT", "B", "STRONG", "I", "EM", "U", "S"];
+export const FORMATTABLE_TAGS = ["SPAN", "FONT", "B", "STRONG", "I", "EM", "U", "S", "CODE"];
 
 export const formatsSpecs = {
     italic: {
