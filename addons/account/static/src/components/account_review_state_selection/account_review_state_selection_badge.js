@@ -88,15 +88,18 @@ export class AccountReviewStateSelectionBadge extends Component {
             }
             return `text-bg-${decoration}`;
         }
-        return "text-bg-200"
+        return "text-bg-200";
     }
 
     get additionalClassName() {
-        return this.props.class || "";
-    }
-
-    get capsuleStyle() {
-        return "min-width: 10ch; min-height: 2em;";
+        const addClasses = [];
+        if (this.props.size === 'small' || this.env.config.viewType === 'list') {
+            addClasses.push('o_account_review_state_selection_badge_button_small');
+        }
+        if (this.props.class) {
+            addClasses.push(this.props.class);
+        }
+        return addClasses.join(' ');
     }
 
     async onChange(value) {

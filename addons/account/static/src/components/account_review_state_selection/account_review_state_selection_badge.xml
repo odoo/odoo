@@ -4,11 +4,8 @@
     <t t-name="account_reports.AccountReviewStateSelectionBadgeField">
         <t t-if="this.editableOptions.includes(value)">
             <Dropdown>
-                <button
-                    t-attf-class="btn btn-link d-flex align-items-center shadow-none rounded-pill {{ this.additionalClassName }} {{ this.getDropdownButtonDecoration(value) }}"
-                    t-att-style="this.capsuleStyle"
-                >
-                    <span t-esc="display"/>
+                <button t-attf-class="btn {{ this.getDropdownButtonDecoration(value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}">
+                    <div t-esc="display || '&#8203;'"/>
                 </button>
                 <t t-set-slot="content">
                     <t t-if="this.editableOptions.includes(false)">
@@ -35,11 +32,16 @@
         </t>
         <t t-else="">
             <div
-                t-attf-class="badge border rounded px-2 py-1 cursor-default {{ this.additionalClassName }} {{ this.getDropdownButtonDecoration(value) }}"
-                t-att-style="this.capsuleStyle"
-                t-on-click.stop.prevent="() => {}"
-                t-out="display"
-            />
+                class="cursor-default"
+                t-on-click="(ev) => ev.stopPropagation()"
+            >
+                <button
+                    t-attf-class="btn {{ this.getDropdownButtonDecoration(value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}"
+                    t-att-disabled="true"
+                >
+                    <div t-esc="display || '&#8203;'"/>
+                </button>
+            </div>
         </t>
     </t>
 
