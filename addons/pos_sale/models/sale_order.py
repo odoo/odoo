@@ -128,13 +128,20 @@ class SaleOrderLine(models.Model):
             'write_date',
         ]
 
-    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state')
+    @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state', 'pos_order_line_ids.refund_orderline_ids.order_id.picking_ids.state')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
-        for sale_line in self:
-            pos_lines = sale_line.pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+
+        def update_qty_delivered_from_pickings(sale_line, pos_lines):
             if all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids):
                 sale_line.qty_delivered += sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines if sale_line.product_id.type != 'service'), 0)
+
+        for sale_line in self:
+            pos_lines = sale_line.pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+            update_qty_delivered_from_pickings(sale_line, pos_lines)
+
+            refund_lines = sale_line.pos_order_line_ids.refund_orderline_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+            update_qty_delivered_from_pickings(sale_line, refund_lines)
 
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.state')
     def _compute_qty_invoiced(self):
