@@ -7,7 +7,6 @@ from odoo.addons.website_sale_stock.tests.common import WebsiteSaleStockCommon
 
 
 class ClickAndCollectCommon(PaymentCustomCommon, WebsiteSaleStockCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -31,10 +30,9 @@ class ClickAndCollectCommon(PaymentCustomCommon, WebsiteSaleStockCommon):
         default_values = {
             'partner_id': self.partner.id,
             'website_id': self.website.id,
-            'order_line': [Command.create({
-                'product_id': self.storable_product.id,
-                'product_uom_qty': 5.0,
-            })],
+            'order_line': [
+                Command.create({'product_id': self.storable_product.id, 'product_uom_qty': 5.0})
+            ],
             'carrier_id': self.in_store_dm.id,
         }
         return self.env['sale.order'].create(dict(default_values, **values))

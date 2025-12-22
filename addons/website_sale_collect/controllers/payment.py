@@ -7,9 +7,8 @@ from odoo.addons.website_sale.controllers.payment import PaymentPortal
 
 
 class OnSitePaymentPortal(PaymentPortal):
-
     def _validate_transaction_for_order(self, transaction, sale_order):
-        """ Override of `website_sale` to ensure the on-site payment provider is not used without
+        """Override of `website_sale` to ensure the on-site payment provider is not used without
         the in-store pickup delivery method.
 
         This also sets the warehouse of the selected pickup location on the sales order.

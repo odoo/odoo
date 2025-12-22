@@ -6,29 +6,37 @@ from odoo.exceptions import UserError
 
 class ChooseDeliveryCarrier(models.TransientModel):
     _name = 'choose.delivery.carrier'
-    _description = 'Delivery Method Selection Wizard'
+    _description = "Delivery Method Selection Wizard"
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
 
-    order_id = fields.Many2one('sale.order', required=True, ondelete="cascade")
-    partner_id = fields.Many2one('res.partner', related='order_id.partner_id', required=True)
+    order_id = fields.Many2one(comodel_name='sale.order', ondelete='cascade', required=True)
+    partner_id = fields.Many2one(
+        comodel_name='res.partner', related='order_id.partner_id', required=True
+    )
     carrier_id = fields.Many2one(
-        'delivery.carrier',
         string="Delivery Method",
-        required=True,
+        comodel_name='delivery.carrier',
         domain="[('id', 'in', available_carrier_ids)]",
+        required=True,
     )
     delivery_type = fields.Selection(related='carrier_id.delivery_type')
     delivery_price = fields.Float()
-    display_price = fields.Float(string='Cost', readonly=True)
-    currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
-    company_id = fields.Many2one('res.company', related='order_id.company_id')
-    available_carrier_ids = fields.Many2many("delivery.carrier", compute='_compute_available_carrier', string="Available Carriers")
+    display_price = fields.Float(string="Cost", readonly=True)
+    currency_id = fields.Many2one(comodel_name='res.currency', related='order_id.currency_id')
+    company_id = fields.Many2one(comodel_name='res.company', related='order_id.company_id')
+    available_carrier_ids = fields.Many2many(
+        string="Available Carriers",
+        comodel_name='delivery.carrier',
+        compute='_compute_available_carrier',
+    )
     invoicing_message = fields.Text(compute='_compute_invoicing_message')
     delivery_message = fields.Text(readonly=True)
-    total_weight = fields.Float(string='Total Order Weight', related='order_id.shipping_weight', readonly=False)
-    weight_uom_name = fields.Char(readonly=True, default=_get_default_weight_uom)
+    total_weight = fields.Float(
+        string="Total Order Weight", related='order_id.shipping_weight', readonly=False
+    )
+    weight_uom_name = fields.Char(default=_get_default_weight_uom, readonly=True)
 
     @api.onchange('carrier_id', 'total_weight')
     def _onchange_carrier_id(self):
@@ -43,8 +51,13 @@ class ChooseDeliveryCarrier(models.TransientModel):
 
     @api.onchange('order_id')
     def _onchange_order_id(self):
-        # fixed and base_on_rule delivery price will computed on each carrier change so no need to recompute here
-        if self.carrier_id and self.order_id.delivery_set and self.delivery_type not in ('fixed', 'base_on_rule'):
+        # Fixed and base_on_rule delivery price will compute on each carrier change so no need to
+        # recompute here
+        if (
+            self.carrier_id
+            and self.order_id.delivery_set
+            and self.delivery_type not in ('fixed', 'base_on_rule')
+        ):
             vals = self._get_delivery_rate()
             if vals.get('error_message'):
                 warning = {
@@ -62,11 +75,19 @@ class ChooseDeliveryCarrier(models.TransientModel):
     @api.depends('partner_id')
     def _compute_available_carrier(self):
         for rec in self:
-            carriers = self.env['delivery.carrier'].search(self.env['delivery.carrier']._check_company_domain(rec.order_id.company_id))
-            rec.available_carrier_ids = carriers.available_carriers(rec.order_id.partner_shipping_id, rec.order_id) if rec.partner_id else carriers
+            carriers = self.env['delivery.carrier'].search(
+                self.env['delivery.carrier']._check_company_domain(rec.order_id.company_id)
+            )
+            rec.available_carrier_ids = (
+                carriers.available_carriers(rec.order_id.partner_shipping_id, rec.order_id)
+                if rec.partner_id
+                else carriers
+            )
 
     def _get_delivery_rate(self):
-        vals = self.carrier_id.with_context(order_weight=self.total_weight).rate_shipment(self.order_id)
+        vals = self.carrier_id.with_context(order_weight=self.total_weight).rate_shipment(
+            self.order_id
+        )
         if vals.get('success'):
             self.delivery_message = vals.get('warning_message', False)
             self.delivery_price = vals['price']

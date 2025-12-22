@@ -8,7 +8,6 @@ from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 @tagged('post_install', '-at_install')
 class TestOnSitePaymentTransaction(HttpCase, ClickAndCollectCommon):
-
     def test_choosing_on_site_payment_confirms_order(self):
         order = self._create_so(carrier_id=self.carrier.id, state='draft')
         tx = self._create_transaction(
