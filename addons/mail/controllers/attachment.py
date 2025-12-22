@@ -102,32 +102,42 @@ class AttachmentController(ThreadController):
     @http.route("/mail/attachment/delete", methods=["POST"], type="jsonrpc", auth="public")
     @add_guest_to_context
     def mail_attachment_delete(self, attachment_id, access_token=None):
+        """
+        Deletes given attachment.
+        :param attachment_id: ID of the attachment to delete.
+        :param access_token: attachment_ownership_token for write access.
+        """
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
         message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
-        if not attachment or not attachment._has_attachments_ownership([access_token]):
-            if not attachment or not (
-                attachment.has_access("read") or self._get_message_with_access(message.id)
-            ):
-                partner, guest = request.env["res.partner"]._get_current_persona()
-                if target := partner or guest:
-                    # Notify from a new cursor, as NotFound rolls the request back.
-                    @request.env.cr.postrollback.add
-                    def notify_delete():
-                        try:
-                            with target.env.registry.cursor() as cr:
-                                target.with_env(target.env(cr=cr))._bus_send(
-                                    "ir.attachment/delete",
-                                    {"id": attachment_id},
-                                )
-                        except psycopg2.Error:
-                            logger.warning(
-                                "Could not notify the deletion of attachment %s",
-                                attachment_id,
-                                exc_info=True,
+        has_ownership = attachment and attachment._has_attachments_ownership([access_token])
+        # do not leak the existence of attachments the user cannot see
+        if not attachment or not (
+            has_ownership
+            or attachment.has_access("read")
+            or (message and message.sudo(False).has_access("read"))
+        ):
+            partner, guest = request.env["res.partner"]._get_current_persona()
+            if target := partner or guest:
+                # Notify from a new cursor, as NotFound rolls the request back.
+                @request.env.cr.postrollback.add
+                def notify_delete():
+                    try:
+                        with target.env.registry.cursor() as cr:
+                            target.with_env(target.env(cr=cr))._bus_send(
+                                "ir.attachment/delete",
+                                {"id": attachment_id},
                             )
+                    except psycopg2.Error:
+                        logger.warning(
+                            "Could not notify the deletion of attachment %s",
+                            attachment_id,
+                            exc_info=True,
+                        )
 
             raise NotFound()
+        if not has_ownership:
+            raise AccessError(self.env._("You are not allowed to delete this attachment."))
         # sudo: ir.attachment: access is validated with _has_attachments_ownership
         attachment.sudo()._delete_and_notify(message)
 
