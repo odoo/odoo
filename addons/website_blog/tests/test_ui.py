@@ -120,3 +120,6 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         blog_post_2.write({'tag_ids': [(4, blog_tag.id)]})
 
         self.start_tour("/blog", "blog_tags_with_date", login="admin")
+
+    def test_blog_posts_dynamic_snippet_options(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog_posts_dynamic_snippet_options', login='admin')
