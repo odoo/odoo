@@ -25,12 +25,22 @@ def MockRequest(
     in base module.
     """
     lang_code = context.get('lang', env.context.get('lang', 'en_US'))
-    env = env(context=dict(context, lang=lang_code))
+    env_context = dict(context, lang=lang_code)
+
+    if 'website' in env:
+        if website:
+            env_context['website_id'] = website.id
+        else:
+            env_context['fallback_website_id'] = env.ref('website.default_website').id
+
+    env = env(context=env_context)
+
     if HttpCase.http_port():
         base_url = HttpCase.base_url()
     else:
         base_url = f"http://{HOST}:{config['http_port']}"
-    request = Mock(
+
+    mock_spec = dict(
         # request
         httprequest=Mock(
             host='localhost',
@@ -68,13 +78,19 @@ def MockRequest(
         registry=env.registry,
         cookies=cookies,
         lang=env['res.lang']._get_data(code=lang_code),
-        website=website,
         render=lambda *a, **kw: '<MockResponse>',
+        update_context=None,
+    )
+    if 'website' in env:
+        mock_spec['is_frontend'] = True
+        mock_spec['website_routing'] = env_context.get('website_id') or env_context.get('fallback_website_id')
+
+    request = Mock(
+        # spec_set=list(mock_spec),  TODO: enable when cart and pricelist are removed from request
+        **mock_spec,
     )
     if url_root is not None:
         request.httprequest.url = url_join(url_root, path)
-    if website:
-        request.website_routing = website.id
     if country_code or city_name:
         try:
             request.geoip._city_record = geoip2.models.City(['en'], country=(country_code and {'iso_code': country_code}) or {}, city=(city_name and {'names': {'en': city_name}}) or {})
