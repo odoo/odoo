@@ -428,3 +428,36 @@ class TestEdiZatca(TestSaEdiCommon):
         self.assertTrue(price_amount_nodes, "PriceAmount node not found in XML")
         price_amount_str = price_amount_nodes[0].text
         self.assertEqual(price_amount_str, '173.9128571429')
+
+    def test_zatca_xml_line_rounding_amount_consistency(self):
+        """Test that LineExtensionAmount + TaxAmount = RoundingAmount for each invoice line."""
+        self.tax_15.price_include_override = 'tax_included'
+        invoice = self._create_test_invoice(
+            name='INV/2022/00001',
+            invoice_date='2022-09-05',
+            invoice_date_due='2022-09-22',
+            partner_id=self.partner_sa,
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 18.0,
+                    'tax_ids': self.tax_15.ids,
+                },
+                {
+                    'product_id': self.product_b.id,
+                    'price_unit': 14.0,
+                    'tax_ids': self.tax_15.ids,
+                }
+            ]
+        )
+        invoice.action_post()
+        xml_content = self.env['account.edi.format']._l10n_sa_generate_zatca_template(invoice)
+        xml_root = etree.fromstring(xml_content)
+        namespaces = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
+
+        for line in xml_root.xpath('//cac:InvoiceLine', namespaces=namespaces):
+            line_ext = float(line.xpath('cbc:LineExtensionAmount/text()', namespaces=namespaces)[0])
+            tax_amt = float(line.xpath('cac:TaxTotal/cbc:TaxAmount/text()', namespaces=namespaces)[0])
+            rounding_amt = float(line.xpath('cac:TaxTotal/cbc:RoundingAmount/text()', namespaces=namespaces)[0])
+            self.assertEqual(line_ext + tax_amt, rounding_amt,
+                msg=f"LineExtensionAmount ({line_ext}) + TaxAmount ({tax_amt}) != RoundingAmount ({rounding_amt})")
