@@ -136,7 +136,7 @@ class ProductProduct(models.Model):
         products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
         res = products._compute_quantities_dict(self._context.get('lot_id'), self._context.get('owner_id'), self._context.get('package_id'), self._context.get('from_date'), self._context.get('to_date'))
         # Set qty fields to 0 for all products as services have 0 quantities. Also skips calling __setitem__ on products with 0 quantites in res.
-        self.qty_available = 0.0
+        self.with_context(skip_qty_available_update=True).qty_available = 0.0
         self.incoming_qty = 0.0
         self.outgoing_qty = 0.0
         self.virtual_available = 0.0
