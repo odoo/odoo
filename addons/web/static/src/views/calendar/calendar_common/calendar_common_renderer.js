@@ -151,12 +151,12 @@ export class CalendarCommonRenderer extends Component {
         return `[data-event-id="${event.id}"]`;
     }
     highlightEvent(event, className) {
-        for (const el of this.fc.el.querySelectorAll(this.computeEventSelector(event))) {
+        for (const el of this.fc.api.el.querySelectorAll(this.computeEventSelector(event))) {
             el.classList.add(className);
         }
     }
     unhighlightEvent(event, className) {
-        for (const el of this.fc.el.querySelectorAll(this.computeEventSelector(event))) {
+        for (const el of this.fc.api.el.querySelectorAll(this.computeEventSelector(event))) {
             el.classList.remove(className);
         }
     }
