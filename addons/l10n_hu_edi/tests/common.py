@@ -13,6 +13,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         super().setUpClass()
 
         cls.today = datetime.date.today()
+        cls.yesterday = cls.today - datetime.timedelta(days=1)
 
         # Company
         company = cls.company_data['company']
@@ -312,7 +313,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'journal_id': self.company_data['default_journal_sale'].id,
             'currency_id': self.env.ref('base.EUR').id,
             'partner_id': self.partner_company.id,
-            'invoice_date': self.today,
+            'invoice_date': self.yesterday,
             'delivery_date': self.today,
             'l10n_hu_payment_mode': 'TRANSFER',
             'invoice_line_ids': [
