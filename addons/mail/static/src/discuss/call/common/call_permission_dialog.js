@@ -19,6 +19,7 @@ export class CallPermissionDialog extends Component {
 
     setup() {
         this.rtc = useService("discuss.rtc");
+        this.ui = useService("ui");
     }
 
     async onClickUseMicrophone() {
