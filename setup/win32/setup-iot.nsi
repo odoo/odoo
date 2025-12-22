@@ -193,17 +193,25 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     # set modules to load
     WriteIniStr "$INSTDIR\odoo.conf" "options" "server_wide_modules" "iot_drivers,web"
     # Configure logging
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "logfile" "$INSTDIR\odoo.log"
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_handler" ":WARNING"
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_level" "warn"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_handler" ":INFO,werkzeug:WARNING"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_level" "info"
     # Other configuration
     WriteIniStr "$INSTDIR\odoo.conf" "options" "list_db" "False"
     WriteIniStr "$INSTDIR\odoo.conf" "options" "max_cron_threads" "0"
 
     DetailPrint "Installing Windows service"
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe"'
+
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppStdout "$INSTDIR\odoo.log"'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppStderr "$INSTDIR\odoo.log"'
+
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppRotateFiles 1'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppRotateOnline 1'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppRotateBytes 1073741824'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppRotateSeconds 86400'
+
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\python$\""'
-    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\odoo\odoo-bin\" -c "\"$INSTDIR\odoo.conf\"'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\odoo\odoo-bin\" -c \"$INSTDIR\odoo.conf\""'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
     AccessControl::GrantOnFile "$INSTDIR" "LOCALSERVICE" "FullAccess"
 
