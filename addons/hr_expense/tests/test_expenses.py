@@ -5,10 +5,11 @@ from datetime import date
 from freezegun import freeze_time
 
 from odoo import Command, fields
+from odoo.exceptions import UserError, ValidationError
+from odoo.tests import Form, tagged
+
 from odoo.addons.base.tests.files import GIF_RAW
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
-from odoo.exceptions import UserError, ValidationError
-from odoo.tests import tagged, Form
 
 
 @tagged('-at_install', 'post_install')
@@ -150,6 +151,18 @@ class TestExpenses(TestExpenseCommon):
             {'balance':   18.46, 'account_id': tax_account_id,              'name': '15% (copy)',                                'date': date(2021, 10, 11), 'invoice_date': False},
             {'balance': -160.00, 'account_id': company_payment_account_id,  'name': 'expense_employee: Company PB 160 + 2*15%',  'date': date(2021, 10, 11), 'invoice_date': False},
 
+        ])
+
+        # Check lines partners:
+        self.assertRecordValues(expenses_by_employee.account_move_id.line_ids, [
+            # If the test fails, it is probably because the partner is the company's partner instead of the employee's one
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
+            {'partner_id': employee_partner_id},
         ])
 
         in_payment_state = expenses_by_employee.account_move_id._get_invoice_in_payment_state()

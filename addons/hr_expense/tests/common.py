@@ -4,6 +4,7 @@ from datetime import datetime
 from freezegun import freeze_time
 
 from odoo import Command, fields
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -53,7 +54,15 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'user_id': cls.expense_user_employee.id,
             'expense_manager_id': cls.expense_user_manager.id,
             'work_contact_id': cls.expense_user_employee.partner_id.id,
+            'bank_account_ids': [
+                Command.create({
+                    'account_number': 'BE68539007547034',
+                    'allow_out_payment': True,
+                    'partner_id': cls.expense_user_employee.partner_id.id,
+            })]
         }).sudo(False)
+
+        cls.expense_employee.user_partner_id.parent_id = cls.env.company.partner_id
 
         # Allow the current accounting user to access the expenses.
         cls.env.user.group_ids |= group_expense_manager
@@ -138,4 +147,5 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
                 'journal_id': self.company_data['default_journal_bank'].id,
                 'payment_method_line_id': self.inbound_payment_method_line.id,
             })
+            self.assertEqual(payment_register.partner_bank_id.partner_id, expenses.employee_id.work_contact_id)
             return payment_register._create_payments()
