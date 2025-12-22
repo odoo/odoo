@@ -21,7 +21,11 @@
         bottom: 1rem;
 
         input[type=radio] {
-            display: none;
+            // Hide radios visually but keep them focusable for keyboard
+            // navigation.
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .btn-group {
@@ -43,7 +47,7 @@
             }
         }
 
-        button:not(.btn), label {
+        button:not(.btn), label, label:active {
             margin: 0;
             border: none;
             border-right: 1px solid $o-we-bg;
@@ -60,6 +64,12 @@
                 border-bottom-right-radius: 0.25rem;
                 border-right: none;
             }
+        }
+
+        button:focus-visible, label:focus-within {
+            box-shadow: unset;
+            outline: 1px solid $o-we-color;
+            z-index: 1;
         }
     }
 }
