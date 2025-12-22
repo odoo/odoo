@@ -72,13 +72,6 @@ class EventEvent(models.Model):
     register_menu_ids = fields.One2many(
         "website.event.menu", "event_id", string="Register Menus",
         domain=[("menu_type", "=", "register")])
-    community_menu = fields.Boolean(
-        "Community Menu", compute="_compute_community_menu",
-        readonly=False, store=True,
-        help="Display community tab on website")
-    community_menu_ids = fields.One2many(
-        "website.event.menu", "event_id", string="Event Community Menus",
-        domain=[("menu_type", "=", "community")])
     other_menu_ids = fields.One2many(
         "website.event.menu", "event_id", string="Other Menus",
         domain=[("menu_type", "=", "other")])
@@ -189,13 +182,6 @@ class EventEvent(models.Model):
             elif not event.website_menu:
                 event.website_menu = False
 
-    @api.depends("event_type_id", "website_menu", "community_menu")
-    def _compute_community_menu(self):
-        """ Set False in base module. Sub modules will add their own logic
-        (meet or track_quiz). """
-        for event in self:
-            event.community_menu = False
-
     @api.depends("website_menu")
     def _compute_website_menu_data(self):
         """ Synchronize with website_menu at change and let people update them
@@ -253,7 +239,7 @@ class EventEvent(models.Model):
             new_event.menu_id = old_event.menu_id.copy({'name': new_event.name, 'website_id': new_event.website_id.id})
             new_event.introduction_menu_ids = old_event.introduction_menu_ids.copy(default_menu_values)
             new_event.other_menu_ids = old_event.other_menu_ids.copy(default_menu_values)
-            (new_event.introduction_menu_ids + new_event.other_menu_ids + new_event.community_menu_ids + new_event.register_menu_ids).menu_id.parent_id = new_event.menu_id
+            (new_event.introduction_menu_ids + new_event.other_menu_ids + new_event.register_menu_ids).menu_id.parent_id = new_event.menu_id
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -283,11 +269,10 @@ class EventEvent(models.Model):
         :returns: list of fields, each of which triggering a menu update
           like website_menu, website_track, ...
         :rtype: list"""
-        return ['community_menu', 'introduction_menu', 'register_menu']
+        return ['introduction_menu', 'register_menu']
 
     def _get_menu_type_field_matching(self):
         return {
-            'community': 'community_menu',
             'introduction': 'introduction_menu',
             'register': 'register_menu',
         }
@@ -353,7 +338,6 @@ class EventEvent(models.Model):
         return [
             (_('Home'), False, 'website_event.template_intro', 1, 'introduction', False),
             (_('Practical'), '/event/%s/register' % self.env['ir.http']._slug(self), False, 100, 'register', False),
-            (_('Rooms'), '/event/%s/community' % self.env['ir.http']._slug(self), False, 80, 'community', False),
         ]
 
     def _update_website_menus(self, menus_update_by_field=None):
@@ -368,8 +352,6 @@ class EventEvent(models.Model):
             elif event.website_menu and not event.menu_id:
                 root_menu = self.env['website.menu'].sudo().create({'name': event.name, 'website_id': event.website_id.id})
                 event.menu_id = root_menu
-            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('community_menu')):
-                event._update_website_menu_entry('community_menu', 'community_menu_ids', 'community')
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('introduction_menu')):
                 event._update_website_menu_entry('introduction_menu', 'introduction_menu_ids', 'introduction')
             if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('register_menu')):

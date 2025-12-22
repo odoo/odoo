@@ -25,7 +25,6 @@ class TestEventWebsiteTrack(OnlineEventCase):
                 'name': 'test_reg',
             })],
             'website_menu': True,
-            'community_menu': True,
             'website_track': True,
             'website_track_proposal': True,
         }
@@ -36,7 +35,7 @@ class TestEventWebsiteTrack(OnlineEventCase):
             'website_track': False,
             'website_track_proposal': False,
         })
-        self._assert_website_menus(event, ['Home', 'Rooms', 'Practical'], menus_out=['Talks', 'Agenda', 'Propose a talk'])
+        self._assert_website_menus(event, ['Home', 'Practical'], menus_out=['Talks', 'Agenda', 'Propose a talk'])
 
     @users('user_event_web_manager')
     def test_menu_management_frontend(self):
@@ -45,7 +44,6 @@ class TestEventWebsiteTrack(OnlineEventCase):
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'website_menu': True,
-            'community_menu': True,
             'website_track': True,
             'website_track_proposal': True,
         }
@@ -57,7 +55,7 @@ class TestEventWebsiteTrack(OnlineEventCase):
         menus = event.menu_id.child_id
         home_menu = menus.filtered(lambda menu: menu.name == 'Home')
         home_menu.unlink()
-        self._assert_website_menus(event, ['Talks', 'Agenda', 'Propose a talk', 'Rooms', 'Practical'], menus_out=['Home'])
+        self._assert_website_menus(event, ['Talks', 'Agenda', 'Propose a talk', 'Practical'], menus_out=['Home'])
 
         sub_menus = menus.child_id.filtered(lambda menu: menu.name in ['Agenda', 'Propose a talk'])
         sub_menus.unlink()
@@ -69,14 +67,14 @@ class TestEventWebsiteTrack(OnlineEventCase):
         self.assertFalse(event.website_track)
         self.assertFalse(event.website_track_proposal)
 
-        self._assert_website_menus(event, ['Practical', 'Rooms'], menus_out=['Home', 'Talks', 'Agenda', 'Propose a talk'])
+        self._assert_website_menus(event, ['Practical'], menus_out=['Home', 'Talks', 'Agenda', 'Propose a talk'])
 
         event.write({'website_track': True})
         self.assertTrue(event.website_track)
         self.assertTrue(event.website_track_proposal)
-        self._assert_website_menus(event, ['Practical', 'Rooms', 'Talks', 'Agenda', 'Propose a talk'], menus_out=['Home'])
+        self._assert_website_menus(event, ['Practical', 'Talks', 'Agenda', 'Propose a talk'], menus_out=['Home'])
 
         event.write({'website_track_proposal': False})
         self.assertTrue(event.website_track)
         self.assertFalse(event.website_track_proposal)
-        self._assert_website_menus(event, ['Practical', 'Rooms', 'Talks', 'Agenda'], menus_out=['Home', 'Propose a talk'])
+        self._assert_website_menus(event, ['Practical', 'Talks', 'Agenda'], menus_out=['Home', 'Propose a talk'])

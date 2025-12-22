@@ -4,11 +4,11 @@
 import math
 
 from odoo import http
-from odoo.addons.website_event.controllers.community import EventCommunityController
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.http import request
 
 
-class WebsiteEventTrackQuizCommunityController(EventCommunityController):
+class WebsiteEventTrackQuizCommunityController(EventTrackController):
 
     _visitors_per_page = 30
     _pager_max_pages = 5
@@ -26,7 +26,7 @@ class WebsiteEventTrackQuizCommunityController(EventCommunityController):
         values = self._get_community_leaderboard_render_values(event, None, None)
         return request.render('website_event_track_quiz.event_leaderboard', values)
 
-    @http.route()
+    @http.route('/event/<model("event.event"):event>/community', type="http", auth="public", website=True, sitemap=False)
     def community(self, event, **kwargs):
         values = self._get_community_leaderboard_render_values(event, None, None)
         return request.render('website_event_track_quiz.event_leaderboard', values | {'seo_object': event.community_menu_ids})
