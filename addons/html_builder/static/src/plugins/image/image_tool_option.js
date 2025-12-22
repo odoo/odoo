@@ -14,13 +14,14 @@ export class ImageToolOption extends BaseOptionComponent {
         ImageTransformOption,
     };
     static selector = "img";
-    static exclude = "[data-oe-type='image'] > img";
+    static exclude = "[data-oe-type='image'] > img:not([data-attachment-id])";
     static name = "imageToolOption";
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
             isImageAnimated: editingElement.classList.contains("o_animate"),
             isDynamicSVG: editingElement.matches(dynamicSVGSelector),
+            isImageBinaryField: editingElement.parentElement.matches("[data-oe-type=image]"),
         }));
     }
 }
