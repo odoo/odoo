@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_form_inherited_l10n_in_withholding" model="ir.ui.view">
+        <field name="name">account.tax.form.inherited.l10n_in_withholding</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="l10n_in_tds_tax_type" invisible="country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//field[@name='tax_group_id']" position="after">
+                <field name="l10n_in_section_id" invisible="country_code != 'IN'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

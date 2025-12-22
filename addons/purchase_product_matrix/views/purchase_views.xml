@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="purchase_order_form_matrix" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.matrix</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list/field[@name='product_id']" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </xpath>
+            <xpath expr="//list/field[@name='product_id']" position="after">
+                <!-- optional="show" allows name (description) to be editable -->
+                <field name="product_template_id"
+                    string="Product"
+                    readonly="state in ('purchase', 'to approve', 'done', 'cancel')"
+                    required="not display_type"
+                    optional="show"
+                    context="{'partner_id': parent.partner_id}"
+                    widget="pol_product_many2one"/>
+                <field name="product_template_attribute_value_ids" column_invisible="1"/>
+                <field name="product_no_variant_attribute_value_ids" column_invisible="1"/>
+                <field name="is_configurable_product" column_invisible="1"/>
+            </xpath>
+            <field name="partner_id" position="after">
+                <field name="grid" invisible="1"/>
+                <field name="grid_product_tmpl_id" invisible="1"/>
+                <field name="grid_update" invisible="1"/>
+            </field>
+            <group name="other_info" position="inside">
+                <field name="report_grids" groups="base.group_no_one"/>
+            </group>
+        </field>
+    </record>
+
+</odoo>

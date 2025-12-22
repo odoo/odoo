@@ -1,0 +1,9 @@
+.combo-item-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+@include media-breakpoint-down(md) {
+    .sale-combo-configurator-dialog .css_quantity .form-control {
+        max-width: inherit;
+    }
+}

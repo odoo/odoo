@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ThreadIcon" t-inherit-mode="extension">
+        <xpath expr="//t[@name='chat']" position="replace">
+            <Typing t-if="props.thread.hasOtherMembersTyping" channel="props.thread" size="props.size" displayText="false"/>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

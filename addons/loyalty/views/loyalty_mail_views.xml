@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="loyalty_mail_view_tree" model="ir.ui.view">
+        <field name="name">loyalty.mail.view.list</field>
+        <field name="model">loyalty.mail</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="trigger"/>
+                <field name="points" string="Limit"
+                    invisible="trigger != 'points_reach'"
+                    required="trigger == 'points_reach'"/>
+                <field name="mail_template_id"/>
+            </list>
+        </field>
+    </record>
+</odoo>

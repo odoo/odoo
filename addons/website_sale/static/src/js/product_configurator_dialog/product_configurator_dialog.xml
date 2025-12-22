@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.ProductConfiguratorDialog" t-inherit-mode="extension">
+        <button name="sale_product_configurator_confirm_button" position="attributes">
+            <attribute name="t-if">!showShopButtons()</attribute>
+        </button>
+        <button name="sale_product_configurator_cancel_button" position="attributes">
+            <attribute name="t-if">!showShopButtons()</attribute>
+        </button>
+        <button name="sale_product_configurator_confirm_button" position="after">
+            <button
+                name="website_sale_product_configurator_continue_button"
+                class="btn btn-secondary"
+                t-if="showShopButtons()"
+                t-on-click="() => this.onConfirm({goToCart: false})"
+                t-att-disabled="!isPossibleConfiguration() || !canBeSold()"
+            >
+                Continue Shopping
+            </button>
+        </button>
+        <button name="sale_product_configurator_cancel_button" position="after">
+            <button
+                name="website_sale_product_configurator_checkout_button"
+                class="btn btn-primary"
+                t-if="showShopButtons()"
+                t-on-click="() => this.onConfirm({goToCart: true})"
+                t-att-disabled="!isPossibleConfiguration() || !canBeSold()"
+            >
+                Proceed to Checkout
+            </button>
+        </button>
+    </t>
+</templates>

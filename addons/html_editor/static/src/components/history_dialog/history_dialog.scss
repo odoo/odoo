@@ -1,0 +1,52 @@
+.html-history-dialog {
+    .history-container {
+        --border-color: #ddd;
+        margin-left: 240px;
+        .o_notebook_content {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-top: 0;
+        }
+        .nav {
+            padding-left: 24px;
+        }
+
+        removed {
+            display: inline;
+            background-color: #f1afaf;
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+        added {
+            display: inline;
+            background-color: #c8f1af;
+        }
+        p {
+            margin-bottom: 0.6rem;
+        }
+    }
+    .revision-list {
+        margin: 38px 0 0 8px;
+        overflow: auto;
+        max-height: 100%;
+        width: 220px;
+        float : left;
+
+        .btn {
+            border-radius: 0;
+            display: block;
+            text-align: left;
+            width: 220px;
+            margin-bottom: 8px;
+            position: relative;
+            &:before {
+                content: '\f105';
+                font-family: 'FontAwesome';
+                position: absolute;
+                right : 8px;
+                top: 0;
+                font-size: 34px;
+            }
+        }
+    }
+}

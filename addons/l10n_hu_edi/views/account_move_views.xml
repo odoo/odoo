@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_invoice_tree_inherit_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">account.invoice.list.inherit.l10n_hu_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="l10n_hu_edi_state" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_inherit_l10n_hu_edi" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_hu_edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button string="Update Status"
+                        name="l10n_hu_edi_button_update_status"
+                        type="object"
+                        groups="account.group_account_invoice"
+                        invisible="not l10n_hu_edi_state"/>
+            </xpath>
+
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="not l10n_hu_edi_messages or not l10n_hu_edi_messages.get('blocking_level') or l10n_hu_edi_messages.get('hide_banner')">
+                    <field name="l10n_hu_edi_messages" invisible="1"/>
+                    <field name="l10n_hu_edi_message_html" readonly="1"/>
+                    <button name="l10n_hu_edi_button_hide_banner"
+                            type="object"
+                            class="btn btn-link p-0"
+                            string="Hide this message"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//label[@for='journal_id']" position="before">
+                <field name="l10n_hu_payment_mode" invisible="country_code != 'HU'" readonly="state != 'draft'"/>
+            </xpath>
+
+            <!-- Documents tab -->
+            <xpath expr="//page[@id='other_tab_entry']" position="after">
+                <page id="l10n_hu_edi"
+                      string="NAV 3.0"
+                      invisible="not l10n_hu_edi_state">
+                    <group>
+                        <group>
+                            <field name="l10n_hu_edi_state" readonly="1"/>
+                            <field name="l10n_hu_invoice_chain_index" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="l10n_hu_edi_send_time" readonly="1"/>
+                            <field name="l10n_hu_edi_transaction_code" readonly="l10n_hu_edi_state == 'rejected'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="l10n_hu_edi_message_html" readonly="1"/>
+                        <field name="l10n_hu_edi_attachment" widget="binary" filename="l10n_hu_edi_attachment_filename" readonly="1"/>
+                        <field name="l10n_hu_edi_attachment_filename" invisible="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

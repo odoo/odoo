@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="website.slides.fullscreen.certification">
+        <div class="justify-content-center align-self-center text-center">
+            <div t-if="widget._slideValue.category === 'certification' &amp;&amp; !widget._slideValue.completed" class="">
+                <a class="btn btn-primary" t-att-href="'/slides_survey/slide/get_certification_url?slide_id=' + widget._slideValue.id" target="_blank">
+                    <i class="fa fa-graduation-cap"/>
+                    <span t-if="widget._slideValue.isMember"> Begin Certification</span>
+                    <span t-else="">Test Certification</span>
+                </a>
+            </div>
+            <div t-if="widget._slideValue.category === 'certification' &amp;&amp; widget._slideValue.completed">
+                <h4 class="mb-3 text-white">Congratulations, you passed the Certification!</h4>
+                <a role="button" class="btn btn-primary" t-att-href="'/survey/' + widget._slideValue.certificationId + '/get_certification'">
+                    <i class="fa fa-fw fa-trophy" role="img" aria-label="Download certification" title="Download certification"/> Download certification
+                </a>
+            </div>
+            <div t-if="widget._slideValue.category === 'certification' &amp;&amp; widget._slideValue.canUpload" class="mt-3 h6">
+                <a t-att-href="'/odoo/survey.survey/' + widget._slideValue.certificationId">
+                    <i class="oi oi-arrow-right me-1"/>Add Questions to this Survey
+                </a>
+            </div>
+        </div>
+    </t>
+</templates>

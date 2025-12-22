@@ -1,0 +1,101 @@
+.editor_enable .s_website_form[data-vcss="001"] {
+    // Hidden field is only partially hidden in editor
+    .s_website_form_field_hidden {
+        display: block;
+        opacity: 0.5;
+    }
+    // Fields with conditional visibility are visible and identifiable in the editor
+    .s_website_form_field_hidden_if {
+        display: block !important;
+        background-color: $o-we-fg-light;
+    }
+    // Select inputs do not trigger the default browser behavior
+    // Since we use a custom editable element
+    .s_website_form_field select {
+        pointer-events: none;
+    }
+}
+
+.s_website_form[data-vcss="001"] {
+    .s_website_form_label {
+        @include media-breakpoint-down(sm) {
+            width: auto !important;
+        }
+    }
+
+    .s_website_form_field_hidden {
+        display: none;
+    }
+
+    span.s_website_form_mark {
+        @include font-size(0.85em);
+        font-weight: 400;
+    }
+
+    .s_website_form_dnone {
+        display: none;
+    }
+
+    .s_website_form_submit, .s_website_form_recaptcha {
+        .s_website_form_label {
+            float: left;
+            height: 1px;
+        }
+    }
+    .s_website_form_no_submit_label {
+        .s_website_form_label {
+            display: none;
+        }
+    }
+
+    // File blocks.
+    div.o_files_zone {
+        div.o_file_wrap {
+            border: 1px solid $o-gray-400;
+            border-radius: 0.25rem;
+            @include font-size(0.9em);
+            line-height: normal;
+
+            div.o_file_name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            i.o_file_delete {
+                max-width: 25%;
+                padding: 2px 4px 3px 4px;
+                color: $primary;
+                cursor: pointer;
+
+                &:hover {
+                    color: darken($primary, 7.5%);
+                }
+            }
+        }
+    }
+
+    .o_add_files_button {
+        background-color: $o-gray-200;
+        width: fit-content;
+
+        &:hover {
+            background-color: darken($o-gray-200, 4.5%);
+        }
+    }
+    @include media-breakpoint-down(md) {
+        .datetimepicker-input{
+            caret-color: transparent;
+        }
+    }
+}
+
+body:not(.editor_enable) .s_website_form[data-vcss="001"] {
+    .s_website_form_date, .s_website_form_datetime {
+        &:not(.s_website_form_datepicker_initialized) {
+            [value] {
+                color: transparent;
+            }
+        }
+    }
+}

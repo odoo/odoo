@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="FieldMany2ManyTagsEmailTagsList" t-inherit="web.TagsList" t-inherit-mode="primary">
+        <xpath expr="//span[contains(@class, 'o_tag')]" position="replace">
+            <div t-if="tag.email" t-attf-class="badge rounded-pill dropdown o_tag o_tag_color_0 #{tag.email.indexOf('@') &lt; 0 ? 'o_tag_error' : ''}" t-att-data-color="tag.colorIndex" t-att-data-index="tag_index" t-att-data-id="tag.id" t-att-title="tag.text">
+                <span class="o_badge_text" t-att-title="tag.email"><t t-esc="tag.text"/></span>
+                <a t-if="!readonly &amp;&amp; tag.onDelete" t-on-click.stop.prevent="tag.onDelete" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

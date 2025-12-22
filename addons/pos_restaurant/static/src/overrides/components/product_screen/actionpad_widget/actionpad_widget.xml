@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.ActionpadWidget" t-inherit="point_of_sale.ActionpadWidget" t-inherit-mode="extension">
+        <xpath expr="//BackButton" position="attributes">
+            <attribute name="t-if">!this.swapButton and !props.showActionButton and pos.showBackButton()</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('validation')]" position="attributes">
+            <attribute name="t-if">this.swapButton or props.showActionButton</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('validation')]//button[hasclass('pay-order-button')]" position="attributes">
+            <attribute name="t-if">!this.swapButton</attribute>
+        </xpath>
+        <!-- Replace the payment button by the order button -->
+        <xpath expr="//div[hasclass('validation')]" position="inside">
+            <div t-if="this.swapButton" class="d-flex gap-2 flex-fill">
+                <button
+                    class="submit-order h-100 button btn btn-lg d-flex align-items-center w-50 flex-fill position-relative px-3"
+                    t-att-class="swapButtonClasses"
+                    t-on-click="submitOrder"
+                >
+                    <t t-if="!(ui.isSmall or displayCategoryCount.length > 2) or (!displayCategoryCount.length and ui.isSmall)">Order</t>
+                    <div t-attf-class="{{ !(displayCategoryCount.length > 2) ? 'd-flex flex-column align-items-end gap-1' : 'row row-cols-2 g-1 gx-2' }} {{ isCategoryCountOverflow ? 'mt-n3' : ''}}">
+                        <t t-if="displayCategoryCount.length">
+                            <t t-foreach="displayCategoryCount" t-as="categoryCountLine"  t-key="categoryCountLine_index">
+                                <div class="d-flex align-items-center justify-content-between small" t-att-class="{ 'gap-2' : !(displayCategoryCount.length > 2) }">
+                                    <label class="text-truncate"><t t-esc="categoryCountLine.name"/></label>
+                                    <label class="rounded px-2 py-0" style="background-color:rgba(0, 0, 0, 0.3);"><t t-esc="this.env.utils.formatProductQty(categoryCountLine.count, false)"/></label>
+                                </div>
+                            </t>
+                        </t>
+                        <t t-if="isCategoryCountOverflow">
+                            <div class="position-absolute bottom-0 start-50 translate-middle-x">...</div>
+                        </t>
+                    </div>
+                </button>
+                <button t-if="!currentOrder.is_empty()"
+                    t-on-click="() => pos.pay()" 
+                    class="button pay-order-button btn btn-lg w-50"
+                    t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-light' }}" 
+                >
+                    Payment
+                </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

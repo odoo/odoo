@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.ReceiptScreen" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension">
+        <xpath expr="//div[@id='action_btn_desktop']" position="inside">
+            <button t-if="isContinueSplitting()" class="button next validation btn btn-primary w-100 py-5 rounded-0 fs-2" t-att-class="{ highlight: !locked }" t-on-click="continueSplitting" name="resume">
+                <i class="fa fa-chevron-right" role="img" aria-label="Pay" title="Pay" />
+                Continue
+            </button>
+        </xpath>
+        <xpath expr="//div[@id='action_btn_mobile']" position="inside">
+            <div t-if="isContinueSplitting()" class="btn-switchpane validation-button btn btn-primary flex-fill d-flex justify-content-center align-items-center rounded-0 fw-bolder fs-1" t-att-class="{ highlight: !locked }" t-on-click="continueSplitting" name="resume">
+                Continue
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='action_btn_desktop']/button[hasclass('validation')]" position="attributes">
+            <attribute name="t-if">!isContinueSplitting()</attribute>
+        </xpath>
+        <xpath expr="//div[@id='action_btn_mobile']/div[hasclass('validation-button')]" position="attributes">
+            <attribute name="t-if">!isContinueSplitting()</attribute>
+        </xpath>
+    </t>
+</templates>

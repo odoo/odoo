@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.PinnedMessagesPanel">
+        <ActionPanel title.translate="Pinned Messages" minWidth="200" initialWidth="400" icon="'fa fa-thumb-tack'">
+            <MessageCardList emptyText="emptyText" messages="props.thread.pinnedMessages" thread="props.thread" mode="'pin'"/>
+        </ActionPanel>
+    </t>
+</templates>

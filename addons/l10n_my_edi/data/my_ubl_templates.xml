@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="ubl_21_InvoiceType_my" inherit_id="account_edi_ubl_cii.ubl_21_InvoiceType" primary="True">
+        <xpath expr="//*[local-name()='BillingReference']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:AdditionalDocumentReference t-if="vals.get('custom_form_reference')">
+                    <cbc:ID t-out="vals['custom_form_reference']"/>
+                    <cbc:DocumentType>CustomsImportForm</cbc:DocumentType>
+                </cac:AdditionalDocumentReference>
+                <cac:AdditionalDocumentReference t-if="vals.get('invoice_incoterm_code')">
+                    <cbc:ID t-out="vals['invoice_incoterm_code']"/>
+                </cac:AdditionalDocumentReference>
+                <cac:AdditionalDocumentReference t-if="vals.get('export_custom_form_reference')">
+                    <cbc:ID t-out="vals['export_custom_form_reference']"/>
+                    <cbc:DocumentType>K2</cbc:DocumentType>
+                </cac:AdditionalDocumentReference>
+            </t>
+        </xpath>
+        <xpath expr="//*[local-name()='TaxTotal']" position="before">
+            <!-- When applicable, the tax exchange rate MUST be provided. -->
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:TaxExchangeRate t-if="invoice.currency_id.name != 'MYR'">
+                    <cbc:SourceCurrencyCode t-out="invoice.currency_id.name"/>
+                    <cbc:TargetCurrencyCode>MYR</cbc:TargetCurrencyCode>
+                    <cbc:CalculationRate t-out="vals.get('tax_exchange_rate')"/>
+                </cac:TaxExchangeRate>
+            </t>
+        </xpath>
+        <!-- MyInvois does not support order references, having one will cause issues -->
+        <xpath expr="//*[local-name()='OrderReference']" position="replace"/>
+        <xpath expr="//*[local-name()='PaymentTerms']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:PrepaidPayment>
+                    <cbc:PaidAmount
+                        t-att-currencyID="vals['prepaid_payment_vals']['currency'].name"
+                        t-out="format_float(vals['prepaid_payment_vals']['amount'], vals['prepaid_payment_vals']['currency_dp'])"/>
+                </cac:PrepaidPayment>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- They are not using the same template at all, so we make a new one. They basically want the same data as supplier/customer party -->
+    <template id="ubl_20_DeliveryType_my">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+           xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cac:DeliveryParty>
+                <t t-set="accounting_delivery_vals" t-value="vals.get('accounting_delivery_party_vals', {})"/>
+                <t t-call="{{PartyType_template}}">
+                    <t t-set="vals" t-value="accounting_delivery_vals"/>
+                </t>
+            </cac:DeliveryParty>
+        </t>
+    </template>
+
+    <template id="ubl_20_InvoiceLineType_my" inherit_id="account_edi_ubl_cii.ubl_20_InvoiceLineType" primary="True">
+        <xpath expr="//*[local-name()='Price']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:ItemPriceExtension>
+                    <cbc:Amount t-att-currencyID="vals['currency'].name"
+                                t-out="format_float(vals.get('item_price_extension_amount'), vals.get('currency_dp'))"/>
+                </cac:ItemPriceExtension>
+            </t>
+        </xpath>
+    </template>
+</odoo>

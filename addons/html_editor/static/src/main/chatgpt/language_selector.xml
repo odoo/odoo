@@ -1,0 +1,24 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.LanguageSelector">
+        <button t-if="state.languages.length === 1"
+            class="btn btn-light px-1"
+            name="translate"
+            t-att-title="props.title"
+            t-on-click="() => this.onSelected(state.languages[0][1])"
+            t-att-disabled="props.isDisabled()">
+                Translate
+        </button>
+        <Dropdown t-elif="state.languages.length > 1" menuRef="menuRef">
+            <button class="btn btn-light" name="translate" t-att-title="props.title" t-att-disabled="props.isDisabled()">
+                Translate
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach="state.languages" t-as="language" t-key="language[0]">
+                    <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(language[1])">
+                        <div class="lang" t-esc="language[1]"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

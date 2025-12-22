@@ -1,0 +1,21 @@
+<odoo>
+    <record id="dom-tom" model="res.country.group">
+             <field name="name">DOM-TOM</field>
+             <field name="country_ids" eval="[(6,0,[
+                                                ref('base.yt'),
+                                                ref('base.gp'),
+                                                ref('base.mq'),
+                                                ref('base.gf'),
+                                                ref('base.re'),
+                                                ref('base.pf'),
+                                                ref('base.pm'),
+                                                ref('base.mf'),
+                                                ref('base.bl'),
+                                                ref('base.nc')])]"/>
+       </record>
+
+    <record id="fr_and_mc" model="res.country.group">
+        <field name="name">France and Monaco</field>
+        <field name="country_ids" eval="[Command.set([ref('base.fr'), ref('base.mc')])]"/>
+    </record>
+</odoo>

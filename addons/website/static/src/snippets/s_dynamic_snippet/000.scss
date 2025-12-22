@@ -1,0 +1,62 @@
+.s_dynamic {
+    #wrap &:not(.o_check_scroll_position) {
+        // Compatibility code: The `o_dynamic_empty` class was originally used to control
+        // the visibility of dynamic snippets. It was later renamed (starting from 18.0)
+        // to `s_dynamic_empty`, while another class `o_dynamic_snippet_empty` was added by
+        // the public widget before leaving edit mode (on destroy). As a result, a dynamic
+        // snippet may end up with:
+        // - `o_dynamic_empty` & `o_dynamic_snippet_empty` > for old but edited snippets.
+        // - `o_dynamic_empty` > for old snippets never updated in edit mode.
+        // - `s_dynamic_empty` and `o_dynamic_snippet_empty` > for new snippets.
+        &.o_dynamic_empty,
+        &.o_dynamic_snippet_empty {
+            body:not(.editor_enable) & {
+                display: none !important;
+            }
+        }
+    }
+    [data-url] {
+        cursor: pointer;
+    }
+    img {
+        object-fit: scale-down;
+    }
+
+    //
+    // Handle adaptations according to the container size and s_dynamic_snippet_title position.
+    //
+
+    // Define entries minimum size as half 'o_small_container' width.
+    $-container-small-inner-width-max: map-get($container-max-widths, md) - $grid-gutter-width;
+    $-entry-min-width: ($-container-small-inner-width-max * 0.5) - $grid-gutter-width;
+
+    > .container {
+        .s_dynamic_snippet_title.s_dynamic_snippet_title_aside + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
+            @include media-breakpoint-up(lg) {
+                // Switch to a fluid layout in order to keep entries readable.
+                // Our target grid is 2columns based
+                flex: 0 1 MAX($-entry-min-width, 50%);
+            }
+        }
+    }
+
+    > .o_container_small {
+        .s_dynamic_snippet_row > * {
+            @include media-breakpoint-up(lg) {
+                flex: 0 1 MAX($-entry-min-width, 50%);
+            }
+        }
+
+        .s_dynamic_snippet_title.s_dynamic_snippet_title_aside {
+            // By default 's_dynamic_snippet_title_aside' is col-3.
+            // We adjust it col-5 to increase readability when inside a small container
+            min-width: percentage(divide(5, $grid-columns));
+
+            + .s_dynamic_snippet_content .s_dynamic_snippet_row > * {
+                @include media-breakpoint-up(lg) {
+                    flex: 1 1 $-entry-min-width;
+                }
+            }
+        }
+    }
+}

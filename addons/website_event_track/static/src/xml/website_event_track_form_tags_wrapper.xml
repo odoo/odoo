@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website_event_track.WebsiteEventTrackProposalFormTagsWrapper">
+    <input name="tags" type="hidden" class="form-control o_wetrack_select_tags d-none" t-att-value="state.value"/>
+    <SelectMenu
+        choices="state.defaultChoices"
+        multiSelect="true"
+        searchable="true"
+        onSelect.bind="onSelect"
+        value="state.value"
+        placeholder="state.placeholder"/>
+</t>
+
+</templates>

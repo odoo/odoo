@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="html_editor.EmbeddedComponentToolbar">
+        <span class="o_embedded_toolbar d-flex justify-content-end align-items-center">
+            <span t-attf-class="btn-group d-flex flex-wrap #{ props.buttonsGroupClass ? props.buttonsGroupClass : '' }">
+                <t t-slot="buttons"/>
+            </span>
+        </span>
+    </t>
+    <t t-name="html_editor.EmbeddedComponentToolbarButton">
+        <button t-if="!props.hidden" t-ref="buttonRef" t-on-click="props.onClick" t-att-name="props.name" t-att-title="props.title"
+            class="btn btn-primary btn-link btn-sm border-0 py-0 text-break text-start text-o-color-2 text-capitalize fw-bold border-transparent bg-transparent">
+            <i t-if="props.icon" t-attf-class="fa #{props.icon} me-1"/>
+            <span class="o_embedded_toolbar_button_text" t-out="props.label"/>
+        </button>
+    </t>
+</templates>

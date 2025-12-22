@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rating_rating_view_tree_project" model="ir.ui.view">
+        <field name="name">rating.rating.list.project</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <field name="res_name" position="attributes">
+                <attribute name="string">Task</attribute>
+            </field>
+            <field name="parent_res_name" position="attributes">
+                <attribute name="string">Project</attribute>
+            </field>
+            <field name="rated_partner_id" position="attributes">
+                <attribute name="string">Assigned to</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_form_project" model="ir.ui.view">
+        <field name="name">rating.rating.form.project</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_form_text"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="edit">0</attribute>
+            </xpath>
+            <field name="resource_ref" position="before">
+                <field name="rated_partner_id" position="move"/>
+                <field name="parent_ref" position="move"/>
+            </field>
+            <field name="res_name" position="attributes">
+                <attribute name="string">Task</attribute>
+            </field>
+            <field name="resource_ref" position="attributes">
+                <attribute name="string">Task</attribute>
+            </field>
+            <field name="parent_ref" position="attributes">
+                <attribute name="string">Project</attribute>
+            </field>
+            <field name="parent_res_name" position="attributes">
+                <attribute name="string">Project</attribute>
+            </field>
+            <field name="rated_partner_id" position="attributes">
+                <attribute name="string">Assigned to</attribute>
+            </field>
+            <field name="create_date" position="replace">
+                <field name="write_date" readonly="1" string="Submitted On"/>
+            </field>
+            <field name="feedback" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+            <field name="write_date" position="after">
+                <field name="partner_id" position="move"/>
+            </field>
+            <xpath expr="//field[@name='is_internal']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_pivot" model="ir.ui.view">
+        <field name="name">rating.rating.view.pivot.project</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_pivot"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='rating']" position="attributes">
+                <attribute name="string">Rating (1-5)</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_graph" model="ir.ui.view">
+        <field name="name">rating.rating.view.graph.project</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_graph"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='rating']" position="attributes">
+                <attribute name="string">Rating (1-5)</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_project_view_kanban" model="ir.ui.view">
+        <field name="name">rating.rating.kanban.project</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_kanban"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="replace">
+                <field name="write_date"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_search_project" model="ir.ui.view">
+        <field name="name">rating.rating.search.project</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_search"/>
+        <field name="mode">primary</field>
+        <field name="priority">64</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='rated_partner_id']" position="after">
+                <field name="parent_res_name" position="move"/>
+                <field name="res_name" position="move"/>
+            </xpath>
+            <xpath expr="//field[@name='rated_partner_id']" position="attributes">
+                <attribute name="string">Assigned to</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_res_name']" position="attributes">
+                <attribute name="string">Project</attribute>
+            </xpath>
+            <xpath expr="//field[@name='res_name']" position="attributes">
+                <attribute name="string">Task</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='responsible']" position="after">
+                <filter name="rating_text" position="move"/>
+                <filter string="Project" name="groupby_project" context="{'group_by': 'parent_res_name'}"/>
+                <filter name="resource" position="move"/>
+                <filter name="customer" position="move"/>
+            </xpath>
+            <xpath expr="//filter[@name='resource']" position="attributes">
+                <attribute name="string">Task</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='responsible']" position="attributes">
+                <attribute name="string">Assigned to</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='filter_create_date']" position="replace">
+                <filter name="filter_write_date" string="Submitted On" date="write_date" default_period="custom_write_date_last_30_days">
+                    <filter name="write_date_last_7_days" string="Last 7 Days" domain="[('write_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=7), datetime.time(23, 59, 59)).to_utc())]"/>
+                    <filter name="write_date_last_30_days" string="Last 30 Days" domain="[('write_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=30), datetime.time(23, 59, 59)).to_utc())]"/>
+                    <filter name="write_date_last_365_days" string="Last 365 Days" domain="[('write_date', '&gt;', datetime.datetime.combine(context_today() - datetime.timedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
+                </filter>
+            </xpath>
+            <xpath expr="//filter[@name='month']" position="attributes">
+                <attribute name="context">{'group_by':'write_date:month'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_view_project_rating" model="ir.actions.act_window">
+        <field name="name">Ratings</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">kanban,list,graph,pivot,form</field>
+        <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id', '=', active_id)]</field>
+        <field name="search_view_id" ref="rating_rating_view_search_project"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There are no ratings for this project at the moment
+            </p>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_view_project_rating_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="rating_rating_action_view_project_rating"/>
+        <field name="view_id" ref="rating_rating_project_view_kanban"/>
+    </record>
+
+    <record id="rating_rating_action_view_project_rating_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">list</field>
+        <field name="act_window_id" ref="rating_rating_action_view_project_rating"/>
+        <field name="view_id" ref="rating_rating_view_tree_project"/>
+    </record>
+
+    <record id="rating_rating_action_view_project_rating_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="rating_rating_action_view_project_rating"/>
+        <field name="view_id" ref="rating_rating_view_form_project"/>
+    </record>
+
+    <record id="rating_rating_action_view_project_rating_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="rating_rating_action_view_project_rating"/>
+        <field name="view_id" ref="rating_rating_view_pivot"/>
+    </record>
+
+    <record id="rating_rating_action_view_project_rating_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="rating_rating_action_view_project_rating"/>
+        <field name="view_id" ref="rating_rating_view_graph"/>
+    </record>
+
+    <record id="rating_rating_action_task" model="ir.actions.act_window">
+        <field name="name">Ratings</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">kanban,list,pivot,graph,form</field>
+        <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>
+        <field name="search_view_id" ref="rating_rating_view_search_project"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No customer ratings yet
+            </p>
+            <p>
+                Let's wait for your customers to manifest themselves.
+            </p>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_task_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="rating_rating_action_task"/>
+        <field name="view_id" ref="rating_rating_project_view_kanban"/>
+    </record>
+
+    <record id="rating_rating_action_task_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">list</field>
+        <field name="act_window_id" ref="rating_rating_action_task"/>
+        <field name="view_id" ref="rating_rating_view_tree_project"/>
+    </record>
+
+    <record id="rating_rating_action_task_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="rating_rating_action_task"/>
+        <field name="view_id" ref="rating_rating_view_form_project"/>
+    </record>
+
+    <record id="rating_rating_action_task_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="rating_rating_action_task"/>
+        <field name="view_id" ref="rating_rating_view_pivot"/>
+    </record>
+
+    <record id="rating_rating_action_task_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="rating_rating_action_task"/>
+        <field name="view_id" ref="rating_rating_view_graph"/>
+    </record>
+
+    <record id="rating_rating_action_project_report" model="ir.actions.act_window">
+        <field name="name">Customer Ratings</field>
+        <field name="res_model">rating.rating</field>
+        <field name="path">task-ratings</field>
+        <field name="view_mode">kanban,list,pivot,graph,form</field>
+        <field name="domain">[('parent_res_model','=','project.project'), ('consumed', '=', True)]</field>
+        <field name="search_view_id" ref="rating_rating_view_search_project"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No customer ratings yet
+            </p>
+            <p>
+                Measure your customer satisfaction by sending rating requests when your tasks reach a certain stage.
+            </p>
+        </field>
+        <field name="context">{
+            'search_default_filter_write_date': 1,
+            'graph_groupbys': ['rated_partner_id'],
+        }</field>
+    </record>
+
+    <record id="rating_rating_action_project_report_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">kanban</field>
+        <field name="act_window_id" ref="rating_rating_action_project_report"/>
+        <field name="view_id" ref="rating_rating_project_view_kanban"/>
+    </record>
+
+    <record id="rating_rating_action_project_report_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">list</field>
+        <field name="act_window_id" ref="rating_rating_action_project_report"/>
+        <field name="view_id" ref="rating_rating_view_tree_project"/>
+    </record>
+
+    <record id="rating_rating_action_project_report_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="rating_rating_action_project_report"/>
+        <field name="view_id" ref="rating_rating_view_form_project"/>
+    </record>
+
+    <record id="rating_rating_action_project_report_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="rating_rating_action_project_report"/>
+        <field name="view_id" ref="rating_rating_view_pivot"/>
+    </record>
+
+    <record id="rating_rating_action_project_report_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="rating_rating_action_project_report"/>
+        <field name="view_id" ref="rating_rating_view_graph"/>
+    </record>
+</odoo>

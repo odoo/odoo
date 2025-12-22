@@ -1,0 +1,496 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_edi_ubl_cii_tax_extension
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__ae
+msgid "AE - Vat Reverse Charge"
+msgstr "AE - 부가세 환급"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__b
+msgid "B - Transferred (VAT), In Italy"
+msgstr "B - 이전 (VAT), 이탈리아 내"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model,name:account_edi_ubl_cii_tax_extension.model_account_edi_common
+msgid ""
+"Common functions for EDI documents: generate the data, the constraints, etc"
+msgstr "EDI 문서의 일반 기능: 데이터, 제약 조건 생성 등"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__e
+msgid "E - Exempt from Tax"
+msgstr "E - 면세 대상"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__g
+msgid "G - Free export item, VAT not charged"
+msgstr "G - 무료 수출 품목, 부가가치세 미부과"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__k
+msgid "K - VAT exempt for EEA intra-community supply of goods and services"
+msgstr "K - EEA 지역 내 상품 및 서비스 공급에 대한 부가가치세 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__l
+msgid "L - Canary Islands general indirect tax"
+msgstr "L - 카나리아 제도 일반 간접세"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__m
+msgid "M - Tax for production, services and importation in Ceuta and Melilla"
+msgstr "M - 세우타와 멜리야의 생산, 서비스 및 수입에 대한 세금"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__o
+msgid "O - Services outside scope of tax"
+msgstr "O - 세금 범위 외 서비스"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__s
+msgid "S - Standard rate"
+msgstr "S - 기본 요금"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model,name:account_edi_ubl_cii_tax_extension.model_account_tax
+msgid "Tax"
+msgstr "세금"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,field_description:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_category_code
+msgid "Tax Category Code"
+msgstr "세금 분류 코드"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,field_description:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_exemption_reason_code
+msgid "Tax Exemption Reason Code"
+msgstr "세금 면제 사유 코드"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,help:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_category_code
+msgid "The VAT category code used for electronic invoicing purposes."
+msgstr "전자 청구서 발행에 사용되는 부가가치세 카테고리 코드입니다."
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,help:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_exemption_reason_code
+msgid ""
+"The reason why the amount is exempted from VAT or why no VAT is being "
+"charged, used for electronic invoicing purposes."
+msgstr "부가가치세가 면제되거나 부가가치세가 부과되지 않는 이유는 전자 청구서 발행을 목적으로 제공됩니다."
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132
+msgid ""
+"VATEX-EU-132 - Exempt based on article 132 of Council Directive 2006/112/EC"
+msgstr "VATEX-EU-132 - 이사회 지침 2006/112/EC 132조에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1a
+msgid ""
+"VATEX-EU-132-1A - Exempt based on article 132, section 1 (a) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1A - 이사회 지침 2006/112/EC 132조 1항 (a)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1b
+msgid ""
+"VATEX-EU-132-1B - Exempt based on article 132, section 1 (b) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1B - 이사회 지침 2006/112/EC 132조 1항 (b)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1c
+msgid ""
+"VATEX-EU-132-1C - Exempt based on article 132, section 1 (c) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1C - 이사회 지침 2006/112/EC 132조 1항 (c)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1d
+msgid ""
+"VATEX-EU-132-1D - Exempt based on article 132, section 1 (d) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1D - 이사회 지침 2006/112/EC 132조 1항 (d)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1e
+msgid ""
+"VATEX-EU-132-1E - Exempt based on article 132, section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1E - 이사회 지침 2006/112/EC 132조 1항 (e)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1f
+msgid ""
+"VATEX-EU-132-1F - Exempt based on article 132, section 1 (f) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1F - 이사회 지침 2006/112/EC 132조 1항 (f)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1g
+msgid ""
+"VATEX-EU-132-1G - Exempt based on article 132, section 1 (g) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1G - 이사회 지침 2006/112/EC 132조 1항 (g)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1h
+msgid ""
+"VATEX-EU-132-1H - Exempt based on article 132, section 1 (h) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1H - 이사회 지침 2006/112/EC 132조 1항 (h)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1i
+msgid ""
+"VATEX-EU-132-1I - Exempt based on article 132, section 1 (i) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1I - 이사회 지침 2006/112/EC 132조 1항 (i)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1j
+msgid ""
+"VATEX-EU-132-1J - Exempt based on article 132, section 1 (j) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1J - 이사회 지침 2006/112/EC 132조 1항 (j)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1k
+msgid ""
+"VATEX-EU-132-1K - Exempt based on article 132, section 1 (k) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1K - 이사회 지침 2006/112/EC 132조 1항 (k)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1l
+msgid ""
+"VATEX-EU-132-1L - Exempt based on article 132, section 1 (l) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1L - 이사회 지침 2006/112/EC 132조 1항 (l)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1m
+msgid ""
+"VATEX-EU-132-1M - Exempt based on article 132, section 1 (m) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1M - 이사회 지침 2006/112/EC 132조 1항 (m)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1n
+msgid ""
+"VATEX-EU-132-1N - Exempt based on article 132, section 1 (n) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1N - 이사회 지침 2006/112/EC 132조 1항 (n)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1o
+msgid ""
+"VATEX-EU-132-1O - Exempt based on article 132, section 1 (o) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1O - 이사회 지침 2006/112/EC 132조 1항 (o)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1p
+msgid ""
+"VATEX-EU-132-1P - Exempt based on article 132, section 1 (p) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1P - 이사회 지침 2006/112/EC 132조 1항 (p)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1q
+msgid ""
+"VATEX-EU-132-1Q - Exempt based on article 132, section 1 (q) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-132-1Q - 이사회 지침 2006/112/EC 132조 1항 (q)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143
+msgid ""
+"VATEX-EU-143 - Exempt based on article 143 of Council Directive 2006/112/EC"
+msgstr "VATEX-EU-143 - 이사회 지침 2006/112/EC 제143조에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1a
+msgid ""
+"VATEX-EU-143-1A - Exempt based on article 143, section 1 (a) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1A - 이사회 지침 2006/112/EC 143조 1항 (a)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1b
+msgid ""
+"VATEX-EU-143-1B - Exempt based on article 143, section 1 (b) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1B - 이사회 지침 2006/112/EC 143조 1항 (b)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1c
+msgid ""
+"VATEX-EU-143-1C - Exempt based on article 143, section 1 (c) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1C - 이사회 지침 2006/112/EC 143조 1항 (c)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1d
+msgid ""
+"VATEX-EU-143-1D - Exempt based on article 143, section 1 (d) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1D - 이사회 지침 2006/112/EC 143조 1항 (d)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1e
+msgid ""
+"VATEX-EU-143-1E - Exempt based on article 143, section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1E - 이사회 지침 2006/112/EC 143조 1항 (e)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1f
+msgid ""
+"VATEX-EU-143-1F - Exempt based on article 143, section 1 (f) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1F - 이사회 지침 2006/112/EC 143조 1항 (f)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1fa
+msgid ""
+"VATEX-EU-143-1FA - Exempt based on article 143, section 1 (fa) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1FA - 이사회 지침 2006/112/EC 143조 1항 (fa)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1g
+msgid ""
+"VATEX-EU-143-1G - Exempt based on article 143, section 1 (g) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1G - 이사회 지침 2006/112/EC 143조 1항 (g)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1h
+msgid ""
+"VATEX-EU-143-1H - Exempt based on article 143, section 1 (h) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1H - 이사회 지침 2006/112/EC 143조 1항 (h)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1i
+msgid ""
+"VATEX-EU-143-1I - Exempt based on article 143, section 1 (i) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1I - 이사회 지침 2006/112/EC 143조 1항 (i)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1j
+msgid ""
+"VATEX-EU-143-1J - Exempt based on article 143, section 1 (j) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1J - 이사회 지침 2006/112/EC 143조 1항 (j)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1k
+msgid ""
+"VATEX-EU-143-1K - Exempt based on article 143, section 1 (k) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1K - 이사회 지침 2006/112/EC 143조 1항 (k)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1l
+msgid ""
+"VATEX-EU-143-1L - Exempt based on article 143, section 1 (l) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-143-1L - 이사회 지침 2006/112/EC 143조 1항 (l)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148
+msgid ""
+"VATEX-EU-148 - Exempt based on article 148 of Council Directive 2006/112/EC"
+msgstr "VATEX-EU-148 - 유럽의회 지침 2006/112/EC 148조에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-a
+msgid ""
+"VATEX-EU-148-A - Exempt based on article 148, section (a) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-148-A - 이사회 지침 2006/112/EC의 148조 (a)항에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-b
+msgid ""
+"VATEX-EU-148-B - Exempt based on article 148, section (b) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-148-B - 이사회 지침 2006/112/EC 148조 (b)항에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-c
+msgid ""
+"VATEX-EU-148-C - Exempt based on article 148, section (c) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-148-C - 이사회 지침 2006/112/EC 148조, 섹션 (c)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-d
+msgid ""
+"VATEX-EU-148-D - Exempt based on article 148, section (d) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-148-D - 이사회 지침 2006/112/EC 148조, 섹션 (d)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-e
+msgid ""
+"VATEX-EU-148-E - Exempt based on article 148, section (e) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-148-E - 이사회 지침 2006/112/EC 148조 (e)항에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-f
+msgid ""
+"VATEX-EU-148-F - Exempt based on article 148, section (f) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-148-F - 이사회 지침 2006/112/EC 148조, 섹션 (f)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-g
+msgid ""
+"VATEX-EU-148-G - Exempt based on article 148, section (g) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-148-G - 이사회 지침 2006/112/EC 148조 (g)항에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151
+msgid ""
+"VATEX-EU-151 - Exempt based on article 151 of Council Directive 2006/112/EC"
+msgstr "VATEX-EU-151 - 이사회 지침 2006/112/EC 151조에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1a
+msgid ""
+"VATEX-EU-151-1A - Exempt based on article 151, section 1 (a) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-151-1A - 이사회 지침 2006/112/EC 151조 1항 (a)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1aa
+msgid ""
+"VATEX-EU-151-1AA - Exempt based on article 151, section 1 (aa) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-151-1AA - 이사회 지침 2006/112/EC 151조 1항 (aa)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1b
+msgid ""
+"VATEX-EU-151-1B - Exempt based on article 151, section 1 (b) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-151-1B - 이사회 지침 2006/112/EC 151조 1항 (b)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1c
+msgid ""
+"VATEX-EU-151-1C - Exempt based on article 151, section 1 (c) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-151-1C - 이사회 지침 2006/112/EC 151조 1항 (c)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1d
+msgid ""
+"VATEX-EU-151-1D - Exempt based on article 151, section 1 (d) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-151-1D - 이사회 지침 2006/112/EC 151조 1항 (d)에 따라 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1e
+msgid ""
+"VATEX-EU-151-1E - Exempt based on article 151, section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr "VATEX-EU-151-1E - 이사회 지침 2006/112/EC 151조 1항 (e)에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-309
+msgid ""
+"VATEX-EU-309 - Exempt based on article 309 of Council Directive 2006/112/EC"
+msgstr "VATEX-EU-309 - 이사회 지침 2006/112/EC 309조에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-79-c
+msgid ""
+"VATEX-EU-79-C - Exempt based on article 79, point c of Council Directive "
+"2006/112/EC"
+msgstr "VATEX-EU-79-C - 이사회 지침 2006/112/EC 79조 c항에 근거하여 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_ae
+msgid "VATEX-EU-AE - Reverse charge"
+msgstr "VATEX-EU-AE - 환급"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_d
+msgid ""
+"VATEX-EU-D - Intra-Community acquisition from second hand means of transport"
+msgstr "VATEX-EU-D - 중고 교통수단을 통한 커뮤니티 내 취득"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_f
+msgid "VATEX-EU-F - Intra-Community acquisition of second hand goods"
+msgstr "VATEX-EU-F - 커뮤니티 내 중고 상품 구매"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_g
+msgid "VATEX-EU-G - Export outside the EU"
+msgstr "VATEX-EU-G - EU 역외 수출"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_i
+msgid "VATEX-EU-I - Intra-Community acquisition of works of art"
+msgstr "VATEX-EU-I - 커뮤니티 내 예술 작품 구입"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_ic
+msgid "VATEX-EU-IC - Intra-Community supply"
+msgstr "VATEX-EU-IC - 커뮤니티 내 공급"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_j
+msgid ""
+"VATEX-EU-J - Intra-Community acquisition of collectors items and antiques"
+msgstr "VATEX-EU-J - 수집가 아이템 및 골동품의 커뮤니티 내 획득"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_o
+msgid "VATEX-EU-O - Not subject to VAT"
+msgstr "VATEX-EU-O - 부가가치세 미적용"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_fr-cnwvat
+msgid ""
+"VATEX-FR-CNWVAT - France domestic Credit Notes without VAT, due to supplier "
+"forfeit of VAT for discount"
+msgstr ""
+"VATEX-FR-CNWVAT - 부가가치세가 없는 프랑스 국내 신용장, 할인을 위한 공급업체의 부가가치세 포기로 인해 부가가치세 면제"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_fr-franchise
+msgid "VATEX-FR-FRANCHISE - France domestic VAT franchise in base"
+msgstr "VATEX-FR-FRANCHISE - 프랑스 국내 부가가치세 프랜차이즈 기반"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__z
+msgid "Z - Zero rated goods"
+msgstr "Z - 무등급 상품"

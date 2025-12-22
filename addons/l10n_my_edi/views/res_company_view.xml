@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_inherit_l10n_my_myinvois" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.l10n_my_myinvois</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_info']" position="inside">
+                <group invisible="country_code != 'MY'">
+                    <group string="E-Invoicing" colspan="2">
+                        <label for="l10n_my_identification_type" string="Identification"/>
+                        <div class="d-flex gap-2 w-50">
+                            <field name="l10n_my_identification_type"/>
+                            <span class="d-flex gap-2 w-50">
+                                <field name="l10n_my_identification_number_placeholder" invisible="1"/> <!-- Needed for the placeholder widget -->
+                                <field name="l10n_my_identification_number" options="{'placeholder_field': 'l10n_my_identification_number_placeholder'}"/>
+                            </span>
+                        </div>
+                        <field class="w-50" name="l10n_my_edi_industrial_classification"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

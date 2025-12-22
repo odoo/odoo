@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="event_quiz_view_search" model="ir.ui.view">
+        <field name="name">event.quiz.view.search</field>
+        <field name="model">event.quiz</field>
+        <field name="arch" type="xml">
+            <search string="Quizzes">
+                <field name="name"/>
+                <field name="event_track_id"/>
+                <field name="event_id"/>
+                <group string="Group By" expand="0">
+                    <filter string="Track" name="groupby_event_track_id" context="{'group_by': 'event_track_id'}"/>
+                    <filter string="Event" name="groupby_event_id" context="{'group_by': 'event_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_quiz_view_tree" model="ir.ui.view">
+        <field name="name">event.quiz.view.list</field>
+        <field name="model">event.quiz</field>
+        <field name="arch" type="xml">
+            <list string="Quizzes">
+                <field name="name"/>
+                <field name="event_id"/>
+                <field name="event_track_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="event_quiz_view_form" model="ir.ui.view">
+        <field name="name">event.quiz.view.form</field>
+        <field name="model">event.quiz</field>
+        <field name="arch" type="xml">
+            <form string="Quiz">
+                <sheet>
+                    <h1>
+                        <field name="name" default_focus="1"
+                            placeholder="e.g. Test your Knowledge"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="repeatable" string="Allow multiple tries"/>
+                        </group>
+                        <group>
+                            <field name="event_id"/>
+                            <field name="event_track_id"/>
+                        </group>
+                    </group>
+                    <group name="questions">
+                        <field name="question_ids" nolabel="1"
+                            context="{
+                                'list_view_ref': 'website_event_track_quiz.event_quiz_question_view_tree_from_quiz',
+                                'form_view_ref': 'website_event_track_quiz.event_quiz_question_view_form_from_quiz'
+                            }"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_quiz_action" model="ir.actions.act_window">
+        <field name="name">Event Quizzes</field>
+        <field name="res_model">event.quiz</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              No Quiz added yet!
+            </p><p>
+              From here you will be able to overview all quizzes you have linked to Tracks.
+            </p>
+        </field>
+    </record>
+</odoo>

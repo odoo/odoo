@@ -1,0 +1,20 @@
+.o-discuss-CallMenu-buttonContent {
+    max-width: 150px;
+    @include o-mail-call-bordered(.7);
+
+    &.o-isOdooCommunity {
+        height: $o-navbar-height - 20px !important; // same button height as in enterprise.
+        overflow: hidden;
+        color: $o-action !important;
+    }
+}
+
+.o-discuss-CallMenu-animation {
+    animation: flash 2s;
+    animation-direction: alternate;
+    animation-iteration-count: 2;
+
+    &.o-isOdooCommunity {
+        transform: translateY(10px);
+    }
+}

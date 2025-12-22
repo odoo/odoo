@@ -1,0 +1,504 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* uom
+# 
+# Translators:
+# Tamás Dombos, 2024
+# Ákos Nagy <akos.nagy@oregional.hu>, 2024
+# Kovács Tibor <kovika@gmail.com>, 2024
+# krnkris, 2024
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+# Martin Trigaux, 2024
+# Tamás Németh <ntomasz81@gmail.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:42+0000\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2024\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
+"                                </span>"
+msgstr ""
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid ""
+"<span class=\"oe_grey oe_inline\">\n"
+"                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
+"                                </span>"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__active
+msgid "Active"
+msgstr "Aktív"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
+msgid "Add a new unit of measure"
+msgstr "Új mértékegység"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
+msgid "Add a new unit of measure category"
+msgstr "Új mértékegység kategória"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Archived"
+msgstr "Archivált"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
+msgid "Bigger Ratio"
+msgstr "Nagyítási arányszám"
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
+msgid "Bigger than the reference Unit of Measure"
+msgstr "Nagyobb, mint a referencia mértékegység"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Category"
+msgstr "Kategória"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__color
+msgid "Color"
+msgstr "Szín"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__ratio
+msgid "Combined Ratio"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"A mértékegységek közötti átváltás csak akkor lehetséges, ha ugyanabba a "
+"kategóriába tartoznak. Az átváltás az arányszámok alapján történik."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
+msgid "Created by"
+msgstr "Létrehozta"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__create_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
+msgid "Created on"
+msgstr "Létrehozva"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_day
+msgid "Days"
+msgstr "nap"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__display_name
+#: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
+msgid "Display Name"
+msgstr "Megjelenített név"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_dozen
+msgid "Dozens"
+msgstr "Tucat"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Group By"
+msgstr "Csoportosítás"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_hour
+msgid "Hours"
+msgstr "óra"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__factor_inv
+msgid ""
+"How many times this Unit of Measure is bigger than the reference Unit of "
+"Measure in this category: 1 * (this unit) = ratio * (reference unit)"
+msgstr ""
+"Hányszor nagyobb ez a mértékegység, mint ennek a kategóriának a referencia "
+"mértékegysége: 1 * (ez az egység) = arány * (referencia egység)"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__factor
+msgid ""
+"How much bigger or smaller this unit is compared to the reference Unit of "
+"Measure for this category: 1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+"Mennyivel nagyobb vagy kisebb ez az egység ezen kategória referencia-"
+"mértékegységhez képest: 1 * (referencia egység) = arány * (ez az egység)"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__id
+#: model:ir.model.fields,field_description:uom.field_uom_uom__id
+msgid "ID"
+msgstr "ID"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
+msgid "Last Updated by"
+msgstr "Frissítette"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__write_date
+#: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
+msgid "Last Updated on"
+msgstr "Frissítve"
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_length
+msgid "Length / Distance"
+msgstr "Hossz / Távolság"
+
+#. module: uom
+#: model:res.groups,name:uom.group_uom
+msgid "Manage Multiple Units of Measure"
+msgstr "Mértékegységek kezelése"
+
+#. module: uom
+#: model:ir.model,name:uom.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Termék mértékegység"
+
+#. module: uom
+#: model:ir.model,name:uom.model_uom_category
+msgid "Product UoM Categories"
+msgstr "Termék me. kategóriák"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__factor
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+msgid "Ratio"
+msgstr "Arány"
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
+msgid "Reference Unit of Measure for this category"
+msgstr "Ezen kategória referencia mértékegysége"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__reference_uom_id
+msgid "Reference UoM"
+msgstr "Referencia me."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
+msgid "Rounding Precision"
+msgstr "Kerekítési pontosság"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
+msgid "Search UOM"
+msgstr "Me. keresése"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
+msgid "Search UoM Category"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
+msgid "Smaller than the reference Unit of Measure"
+msgstr "Kisebb, mint a referencia mértékegység"
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"E.g. modifying the rounding could disturb your inventory balance.\n"
+"\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+msgstr ""
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_surface
+msgid "Surface"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__rounding
+msgid ""
+"The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
+"of Measure that cannot be further split, such as a piece."
+msgstr ""
+"A kiszámított mennyiség ezen érték többszöröse lesz. Használja az 1.0 "
+"értéket olyan mértékegységhez, amely nem osztható tovább, mint például egy "
+"darab."
+
+#. module: uom
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
+msgid "The conversion ratio for a unit of measure cannot be 0!"
+msgstr "Egy mértékegység átváltási aránya nem lehet 0!"
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
+msgstr ""
+
+#. module: uom
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
+msgid "The reference unit must have a conversion factor equal to 1."
+msgstr "A referencia egység átváltási arányának 1-nek kell lennie."
+
+#. module: uom
+#: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
+msgid "The rounding precision must be strictly positive."
+msgstr "A kerekítési pontosság csak pozitív lehet."
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid ""
+"The unit of measure %(unit)s defined on the order line doesn't belong to the"
+" same category as the unit of measure %(product_unit)s defined on the "
+"product. Please correct the unit of measure defined on the order line or on "
+"the product. They should belong to the same category."
+msgstr ""
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid "The value of ratio could not be Zero"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
+msgid "Type"
+msgstr "Típus"
+
+#. module: uom
+#: model:ir.model.fields,help:uom.field_uom_uom__active
+msgid ""
+"Uncheck the active field to disable a unit of measure without deleting it."
+msgstr ""
+"Az aktív mező kijelölésének megszüntetésével kikapcsolhat egy mértékegységet"
+" annak törlése nélkül."
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_unit
+msgid "Unit"
+msgstr "Egység"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__name
+msgid "Unit of Measure"
+msgstr "Mértékegység"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__name
+msgid "Unit of Measure Category"
+msgstr "Mértékegység kategória"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_unit
+msgid "Units"
+msgstr "Egység"
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_form_action
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
+msgid "Units of Measure"
+msgstr "Mértékegységek"
+
+#. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr "Mértékegység kategóriák"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
+msgid "Units of Measure categories"
+msgstr "Mértékegység kategóriák"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
+msgid ""
+"Units of measure belonging to the same category can be\n"
+"            converted between each others. For example, in the category\n"
+"            <i>'Time'</i>, you will have the following units of measure:\n"
+"            Hours, Days."
+msgstr ""
+"Ugyanabba a kategóriába tartozó mértékegységek \n"
+"            átválthatóak egymás közt. Például, az\n"
+"            <i>'Idő'</i>, kategóriában, a következő mértékegységek találhatók: óra, nap."
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid "UoM category %s must have at least one reference unit of measure."
+msgstr ""
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid "UoM category %s should have a reference unit of measure."
+msgstr ""
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid "UoM category %s should only have one reference unit of measure."
+msgstr ""
+"A(z) %s mértékegység kategória csak egy referencia mértékegységgel kéne, "
+"hogy rendelkezzen."
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__uom_ids
+msgid "Uom"
+msgstr "Me"
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_vol
+msgid "Volume"
+msgstr "Térfogat"
+
+#. module: uom
+#. odoo-python
+#: code:addons/uom/models/uom_uom.py:0
+msgid "Warning for %s"
+msgstr "Figyelmeztetés erre %s"
+
+#. module: uom
+#: model:uom.category,name:uom.product_uom_categ_kgm
+msgid "Weight"
+msgstr "Súly"
+
+#. module: uom
+#: model:uom.category,name:uom.uom_categ_wtime
+msgid "Working Time"
+msgstr "Munkaidő"
+
+#. module: uom
+#: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
+msgid ""
+"You must define a conversion rate between several Units of\n"
+"            Measure within the same category."
+msgstr ""
+"Meg kell határoznia egy átváltási arányt a mértékegységek\n"
+"            között ugyanazon kategórián belül."
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cm
+msgid "cm"
+msgstr "cm"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_floz
+msgid "fl oz (US)"
+msgstr "folyékony uncia"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_foot
+msgid "ft"
+msgstr "láb"
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_foot
+msgid "ft²"
+msgstr "négyzetláb"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_foot
+msgid "ft³"
+msgstr "köbláb"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_gal
+msgid "gal (US)"
+msgstr "gallon (US)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_inch
+msgid "in"
+msgstr "hüvelyk"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_inch
+msgid "in³"
+msgstr "köbhüvelyk"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_kgm
+msgid "kg"
+msgstr "kg"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_km
+msgid "km"
+msgstr "km"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_lb
+msgid "lb"
+msgstr "font"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_mile
+msgid "mi"
+msgstr "mi"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_millimeter
+msgid "mm"
+msgstr "mm"
+
+#. module: uom
+#: model:uom.uom,name:uom.uom_square_meter
+msgid "m²"
+msgstr "m²"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_cubic_meter
+msgid "m³"
+msgstr "m³"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_oz
+msgid "oz"
+msgstr "uncia"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_qt
+msgid "qt (US)"
+msgstr "kvart (US)"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_yard
+msgid "yd"
+msgstr "yard"

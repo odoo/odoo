@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="turkey_tax_report" model="account.report">
+        <field name="name">Türkiye Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.tr"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tr_base_column" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="tr_tax_column" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="purchases_vat" model="account.report.line">
+                <field name="name">Purchases VAT</field>
+                <field name="sequence">0</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="purchases_vat_line_0" model="account.report.line">
+                        <field name="name">Purchases 0% VAT</field>
+                        <field name="sequence">1</field>
+                        <field name="code">PUR_0</field>
+                        <field name="expression_ids">
+                            <record id="purchases_vat_expression_0_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_BASE_0</field>
+                            </record>
+                            <record id="purchases_vat_expression_0_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_TAX_0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="purchases_vat_line_1" model="account.report.line">
+                        <field name="name">Purchases 1% VAT</field>
+                        <field name="sequence">2</field>
+                        <field name="code">PUR_1</field>
+                        <field name="expression_ids">
+                            <record id="purchases_vat_expression_1_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_BASE_1</field>
+                            </record>
+                            <record id="purchases_vat_expression_1_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_TAX_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="purchases_vat_line_10" model="account.report.line">
+                        <field name="name">Purchases 10% VAT</field>
+                        <field name="sequence">3</field>
+                        <field name="code">PUR_10</field>
+                        <field name="expression_ids">
+                            <record id="purchases_vat_expression_10_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_BASE_10</field>
+                            </record>
+                            <record id="purchases_vat_expression_10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_TAX_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="purchases_vat_line_20" model="account.report.line">
+                        <field name="name">Purchases 20% VAT</field>
+                        <field name="sequence">4</field>
+                        <field name="code">PUR_20</field>
+                        <field name="expression_ids">
+                            <record id="purchases_vat_expression_20_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_BASE_20</field>
+                            </record>
+                            <record id="purchases_vat_expression_20_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_TAX_20</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sales_vat" model="account.report.line">
+                <field name="name">Sales VAT</field>
+                <field name="sequence">5</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sales_vat_line_0" model="account.report.line">
+                        <field name="name">Export Sales 0%</field>
+                        <field name="sequence">6</field>
+                        <field name="code">SAL_0</field>
+                        <field name="expression_ids">
+                            <record id="sales_vat_expression_0_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_BASE_0</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sales_vat_line_1" model="account.report.line">
+                        <field name="name">Sales 1% VAT</field>
+                        <field name="sequence">7</field>
+                        <field name="code">SAL_1</field>
+                        <field name="expression_ids">
+                            <record id="sales_vat_expression_1_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_BASE_1</field>
+                            </record>
+                            <record id="sales_vat_expression_1_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_TAX_1</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sales_vat_line_10" model="account.report.line">
+                        <field name="name">Sales 10% VAT</field>
+                        <field name="sequence">8</field>
+                        <field name="code">SAL_10</field>
+                        <field name="expression_ids">
+                            <record id="sales_vat_expression_10_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_BASE_10</field>
+                            </record>
+                            <record id="sales_vat_expression_10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_TAX_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sales_vat_line_20" model="account.report.line">
+                        <field name="name">Sales 20% VAT</field>
+                        <field name="sequence">9</field>
+                        <field name="code">SAL_20</field>
+                        <field name="expression_ids">
+                            <record id="sales_vat_expression_20_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_BASE_20</field>
+                            </record>
+                            <record id="sales_vat_expression_20_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_TAX_20</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="purchases_wh" model="account.report.line">
+                <field name="name">Purchases Withholding</field>
+                <field name="sequence">10</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="purchases_wh_line_2" model="account.report.line">
+                        <field name="name">Purchases Withholding 20% (2/10)</field>
+                        <field name="sequence">11</field>
+                        <field name="code">PUR_WH_2</field>
+                        <field name="expression_ids">
+                            <record id="purchases_wh_expression_2_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_BASE_2_10</field>
+                            </record>
+                            <record id="purchases_wh_expression_2_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_TAX_2_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="purchases_wh_line_3" model="account.report.line">
+                        <field name="name">Purchases Withholding 20% (3/10)</field>
+                        <field name="sequence">12</field>
+                        <field name="code">PUR_WH_3</field>
+                        <field name="expression_ids">
+                            <record id="purchases_wh_expression_3_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_BASE_3_10</field>
+                            </record>
+                            <record id="purchases_wh_expression_3_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_TAX_3_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="purchases_wh_line_4" model="account.report.line">
+                        <field name="name">Purchases Withholding 20% (4/10)</field>
+                        <field name="sequence">13</field>
+                        <field name="code">PUR_WH_4</field>
+                        <field name="expression_ids">
+                            <record id="purchases_wh_expression_4_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_BASE_4_10</field>
+                            </record>
+                            <record id="purchases_wh_expression_4_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_TAX_4_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="purchases_wh_line_5" model="account.report.line">
+                        <field name="name">Purchases Withholding 20% (5/10)</field>
+                        <field name="sequence">14</field>
+                        <field name="code">PUR_WH_5</field>
+                        <field name="expression_ids">
+                            <record id="purchases_wh_expression_5_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_BASE_5_10</field>
+                            </record>
+                            <record id="purchases_wh_expression_5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_TAX_5_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="purchases_wh_line_7" model="account.report.line">
+                        <field name="name">Purchases Withholding 20% (7/10)</field>
+                        <field name="sequence">15</field>
+                        <field name="code">PUR_WH_7</field>
+                        <field name="expression_ids">
+                            <record id="purchases_wh_expression_7_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_BASE_7_10</field>
+                            </record>
+                            <record id="purchases_wh_expression_7_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_TAX_7_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="purchases_wh_line_9" model="account.report.line">
+                        <field name="name">Purchases Withholding 20% (9/10)</field>
+                        <field name="sequence">16</field>
+                        <field name="code">PUR_WH_9</field>
+                        <field name="expression_ids">
+                            <record id="purchases_wh_expression_9_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_BASE_9_10</field>
+                            </record>
+                            <record id="purchases_wh_expression_9_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_TAX_9_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="purchases_wh_line_10" model="account.report.line">
+                        <field name="name">Purchases Withholding 20% (10/10)</field>
+                        <field name="sequence">17</field>
+                        <field name="code">PUR_WH_10</field>
+                        <field name="expression_ids">
+                            <record id="purchases_wh_expression_10_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_BASE_10_10</field>
+                            </record>
+                            <record id="purchases_wh_expression_10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">PUR_20_TAX_10_10</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="sales_wh" model="account.report.line">
+                <field name="name">Sales Withholding</field>
+                <field name="sequence">18</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="sales_wh_line_2" model="account.report.line">
+                        <field name="name">Sales Withholding 20% (2/10)</field>
+                        <field name="sequence">19</field>
+                        <field name="code">SAL_WH_2</field>
+                        <field name="expression_ids">
+                            <record id="sales_wh_expression_2_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_BASE_2_10</field>
+                            </record>
+                            <record id="sales_wh_expression_2_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_TAX_2_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sales_wh_line_3" model="account.report.line">
+                        <field name="name">Sales Withholding 20% (3/10)</field>
+                        <field name="sequence">20</field>
+                        <field name="code">SAL_WH_3</field>
+                        <field name="expression_ids">
+                            <record id="sales_wh_expression_3_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_BASE_3_10</field>
+                            </record>
+                            <record id="sales_wh_expression_3_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_TAX_3_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sales_wh_line_4" model="account.report.line">
+                        <field name="name">Sales Withholding 20% (4/10)</field>
+                        <field name="sequence">21</field>
+                        <field name="code">SAL_WH_4</field>
+                        <field name="expression_ids">
+                            <record id="sales_wh_expression_4_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_BASE_4_10</field>
+                            </record>
+                            <record id="sales_wh_expression_4_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_TAX_4_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sales_wh_line_5" model="account.report.line">
+                        <field name="name">Sales Withholding 20% (5/10)</field>
+                        <field name="sequence">22</field>
+                        <field name="code">SAL_WH_5</field>
+                        <field name="expression_ids">
+                            <record id="sales_wh_expression_5_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_BASE_5_10</field>
+                            </record>
+                            <record id="sales_wh_expression_5_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_TAX_5_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sales_wh_line_7" model="account.report.line">
+                        <field name="name">Sales Withholding 20% (7/10)</field>
+                        <field name="sequence">23</field>
+                        <field name="code">SAL_WH_7</field>
+                        <field name="expression_ids">
+                            <record id="sales_wh_expression_7_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_BASE_7_10</field>
+                            </record>
+                            <record id="sales_wh_expression_7_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_TAX_7_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sales_wh_line_9" model="account.report.line">
+                        <field name="name">Sales Withholding 20% (9/10)</field>
+                        <field name="sequence">24</field>
+                        <field name="code">SAL_WH_9</field>
+                        <field name="expression_ids">
+                            <record id="sales_wh_expression_9_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_BASE_9_10</field>
+                            </record>
+                            <record id="sales_wh_expression_9_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_TAX_9_10</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="sales_wh_line_10" model="account.report.line">
+                        <field name="name">Sales Withholding 20% (10/10)</field>
+                        <field name="sequence">25</field>
+                        <field name="code">SAL_WH_10</field>
+                        <field name="expression_ids">
+                            <record id="sales_wh_expression_10_balance" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_BASE_10_10</field>
+                            </record>
+                            <record id="sales_wh_expression_10_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAL_20_TAX_10_10</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="net_vat" model="account.report.line">
+                <field name="name">Net VAT</field>
+                <field name="sequence">26</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="net_vat_line_p" model="account.report.line">
+                        <field name="name">Total VAT on Purchases</field>
+                        <field name="sequence">27</field>
+                        <field name="code">PUR_VAT_TOTAL</field>
+                        <field name="expression_ids">
+                            <record id="net_vat_expression_p_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PUR_0.tax + PUR_1.tax + PUR_10.tax + PUR_20.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="net_vat_line_s" model="account.report.line">
+                        <field name="name">Total VAT on Sales</field>
+                        <field name="sequence">28</field>
+                        <field name="code">SAL_VAT_TOTAL</field>
+                        <field name="expression_ids">
+                            <record id="net_vat_expression_s_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SAL_1.tax + SAL_10.tax + SAL_20.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="net_vat_line_total" model="account.report.line">
+                        <field name="name">Total Net VAT</field>
+                        <field name="sequence">29</field>
+                        <field name="code">TOTAL_NET_VAT</field>
+                        <field name="expression_ids">
+                            <record id="net_vat_expression_total" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">(SAL_1.tax + SAL_10.tax + SAL_20.tax) - 
+                                                      (PUR_0.tax + PUR_1.tax + PUR_10.tax + PUR_20.tax)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="wh_vat" model="account.report.line">
+                <field name="name">Withholding Tax Total</field>
+                <field name="sequence">30</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="wh_vat_line_p" model="account.report.line">
+                        <field name="name">Total VAT on Purchases Withheld</field>
+                        <field name="sequence">31</field>
+                        <field name="code">PUR_WH_VAT_TOTAL</field>
+                        <field name="expression_ids">
+                            <record id="wh_vat_expression_p_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PUR_WH_2.tax + PUR_WH_3.tax + PUR_WH_4.tax + PUR_WH_5.tax 
+                                                        + PUR_WH_7.tax + PUR_WH_9.tax + PUR_WH_10.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="wh_vat_line_s" model="account.report.line">
+                        <field name="name">Total VAT on Sales Withheld</field>
+                        <field name="sequence">32</field>
+                        <field name="code">SAL_WH_VAT_TOTAL</field>
+                        <field name="expression_ids">
+                            <record id="wh_vat_expression_s_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SAL_WH_2.tax + SAL_WH_3.tax + SAL_WH_4.tax + SAL_WH_5.tax 
+                                                        + SAL_WH_7.tax + SAL_WH_9.tax + SAL_WH_10.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="vat_due" model="account.report.line">
+                <field name="name">VAT Due</field>
+                <field name="sequence">33</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="vat_due_line_p" model="account.report.line">
+                        <field name="name">Total Purchase Taxes Paid</field>
+                        <field name="sequence">34</field>
+                        <field name="code">PUR_VAT_PAID_TOTAL</field>
+                        <field name="expression_ids">
+                            <record id="vat_due_expression_p_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">PUR_VAT_TOTAL.tax - PUR_WH_VAT_TOTAL.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="vat_due_line_s" model="account.report.line">
+                        <field name="name">Total Sales Tax Collected</field>
+                        <field name="sequence">35</field>
+                        <field name="code">SAL_VAT_PAID_TOTAL</field>
+                        <field name="expression_ids">
+                            <record id="vat_due_expression_s_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">SAL_VAT_TOTAL.tax - SAL_WH_VAT_TOTAL.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

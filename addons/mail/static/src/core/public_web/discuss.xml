@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Discuss">
+    <t t-set="partitionedActions" t-value="threadActions.partition"/>
+    <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
+        <DiscussSidebar t-if="!ui.isSmall and props.hasSidebar"/>
+        <div t-if="!(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
+            <div class="o-mail-Discuss-header px-3 d-flex flex-shrink-0 align-items-center border-bottom border-secondary z-1 flex-grow-0" t-ref="header">
+                <t t-if="thread">
+                    <div t-if="['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
+                        <img class="rounded o_object_fit_cover" t-att-src="thread.parent_channel_id?.avatarUrl ?? thread.avatarUrl" alt="Thread Image"/>
+                        <FileUploader t-if="!thread.parent_channel_id and thread.is_editable and thread.channel_type !== 'chat'" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
+                            <t t-set-slot="toggler">
+                                <a href="#" class="position-absolute z-1 h-100 w-100 rounded start-0 bottom-0" title="Upload Avatar">
+                                    <i class="position-absolute top-50 start-50 fa fa-sm fa-pencil text-white"/>
+                                </a>
+                            </t>
+                        </FileUploader>
+                    </div>
+                    <t t-else="">
+                        <ThreadIcon className="'me-2 align-self-center'" size="'large'" thread="thread"/>
+                    </t>
+                    <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-Discuss-headerCountry border'"/>
+                    <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" className="'me-1'" member="thread.correspondent" />
+                    <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
+                        <div t-if="thread.parent_channel_id" class="d-flex align-items-center gap-1 ms-1">
+                            <span class="fw-bolder cursor-pointer opacity-75 opacity-100-hover o-hover-text-underline" t-esc="thread.parent_channel_id.displayName" t-on-click="() => this.thread.parent_channel_id.open()"/>
+                            <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                        </div>
+                        <AutoresizeInput
+                            className="'o-mail-Discuss-threadName fw-bolder flex-shrink-1 text-dark py-0 fs-4'"
+                            enabled="thread.is_editable or thread.channel_type === 'chat'"
+                            onValidate.bind="renameThread"
+                            value="thread.displayName"
+                        />
+                        <t t-if="thread.allowDescription and (thread.is_editable or (!thread.is_editable and thread.description))">
+                            <div class="flex-shrink-0 mx-1 py-2 border-start"/>
+                            <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
+                            <AutoresizeInput
+                                className="'o-mail-Discuss-threadDescription flex-shrink-1 text-muted small pt-1'"
+                                enabled="thread.is_editable"
+                                onValidate.bind="updateThreadDescription"
+                                placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
+                                value="thread.description or ''"
+                            />
+                        </t>
+                    </div>
+                    <div class="o-mail-Discuss-headerActions flex-shrink-0 d-flex align-items-center ms-1">
+                        <span t-if="partitionedActions.quick.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark">
+                            <t t-set="groupBefore" t-value="true"/>
+                            <t t-foreach="partitionedActions.quick" t-as="action" t-key="action.id" t-call="mail.Discuss.action">
+                                <t t-set="action" t-value="action"/>
+                            </t>
+                        </span>
+                        <t t-else="" t-set="groupBefore" t-value="false"/>
+                        <span t-if="groupBefore" class="text-muted align-self-stretch ms-2 me-1"/>
+                        <span t-if="partitionedActions.other.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark">
+                         <t t-set="groupBefore" t-value="true"/>
+                            <t t-foreach="partitionedActions.other" t-as="action" t-key="action.id" t-call="mail.Discuss.action">
+                                <t t-set="action" t-value="action"/>
+                            </t>
+                        </span>
+                        <t t-else="" t-set="groupBefore" t-value="false"/>
+                        <span t-if="groupBefore" class="text-muted align-self-stretch ms-2 me-1"/>
+                        <t t-foreach="partitionedActions.group.slice().reverse()" t-as="group" t-key="group_index">
+                            <span t-if="group.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark">
+                                <t t-foreach="group" t-as="action" t-key="action.id" t-call="mail.Discuss.action">
+                                    <t t-set="action" t-value="action"/>
+                                </t>
+                            </span>
+                            <span t-if="!group_last" class="text-muted align-self-stretch ms-2 me-1"/>
+                        </t>
+                        <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
+                            <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl"/>
+                            <div class="lead fw-bold flex-shrink-1 text-dark">
+                                <t t-if="store.self.type === 'partner'" t-esc="store.self.name"/>
+                                <t t-else="">
+                                    <AutoresizeInput
+                                        className="'py-1'"
+                                        onValidate.bind="renameGuest"
+                                        value="store.self.name"
+                                    />
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <div class="o-mail-Discuss-main d-flex overflow-hidden flex-grow-1" t-ref="main">
+                <t t-if="ui.isSmall" t-call="mail.Discuss.loading"/>
+                <div class="o-mail-Discuss-core overflow-auto d-flex flex-grow-1 w-100" t-ref="core">
+                    <t name="core-content">
+                        <t t-if="thread">
+                            <div class="o-mail-Discuss-threadContainer d-flex flex-column flex-grow-1">
+                                <t name="thread"><Thread thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/></t>
+                                <Composer t-if="thread.model !== 'mail.box' or thread.eq(messageToReplyTo.thread)" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="messageToReplyTo?.message ? (messageToReplyTo.message.is_note ? 'note' : 'message') : undefined"/>
+                            </div>
+                            <div t-if="threadActions.activeAction?.componentCondition" t-attf-class="{{ threadActions.activeAction.panelOuterClass }}" class="o-mail-Discuss-panelContainer h-100 border-start border-secondary flex-shrink-0">
+                                <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
+                            </div>
+                        </t>
+                        <div t-elif="(!ui.isSmall or store.discuss.activeTab === 'main') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+                            <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+        <MessagingMenu t-if="ui.isSmall"/>
+    </div>
+</t>
+
+<t t-name="mail.Discuss.action">
+    <button class="btn px-1 btn-group-item btn-secondary bg-inherit m-0 border-0" t-attf-class="{{ action.isActive ? 'o-isActive' : '' }}" t-att-disabled="action.disabledCondition" t-att-title="action.name" t-att-name="action.id" t-on-click="() => action.onSelect()">
+        <i t-if="action.iconLarge" t-att-class="action.iconLarge"/> <span t-if="action.text" t-esc="action.text"/>
+    </button>
+</t>
+
+<t t-name="mail.MobileMailbox">
+    <button class="btn btn-secondary flex-grow-1 p-2"
+        t-att-class="{
+            'active o-active shadow-none': mailbox.eq(store.discuss.thread),
+        }" t-on-click="mailbox.setAsDiscussThread" t-esc="mailbox.name"
+    />
+</t>
+
+<t t-name="mail.Discuss.loading">
+    <div t-if="store.channels.status === 'fetching'" class="d-flex flex-grow-1 align-items-center justify-content-center h-100 w-100 o-pointer-events-none">
+        <h4 class="text-muted opacity-50 o-visible-short-delay"><b><i class="o-mail-Discuss-mobileLoading fa fa-circle-o-notch fa-spin"/></b></h4>
+    </div>
+</t>
+
+</templates>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_repairorder" inherit_id="repair.report_repairorder">
+        <xpath expr="//t[@t-set='o']" position="after">
+            <t t-set="din5008_document_information">
+                <div class="information_block" t-if="o and o._name=='repair.order'">
+                    <table>
+                        <tr t-if="o.product_id">
+                            <td>Product to Repair:</td>
+                            <td><t t-out="o.product_id.name"/></td>
+                        </tr>
+                        <tr t-if="o.lot_id">
+                            <td>Lot/Serial Number:</td>
+                            <td><t t-out="o.lot_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td>Printing Date:</td>
+                            <td><t t-out="o.l10n_din5008_printing_date" t-options="{'widget': 'date'}"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+
+            <t t-set="din5008_document_title">
+                <span t-if="o and o._name == 'repair.order'">
+                    <t t-if="o.state == 'draft'">Repair Quotation</t>
+                    <t t-else="">Repair Order</t>
+                </span>
+            </t>
+        </xpath>
+    </template>
+</odoo>

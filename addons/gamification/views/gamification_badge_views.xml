@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Badge views -->
+    <record id="gamification_badge_view_search" model="ir.ui.view">
+        <field name="name">gamification.badge.view.search</field>
+        <field name="model">gamification.badge</field>
+        <field name="arch" type="xml">
+            <search string="Search Badge">
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="badge_list_action" model="ir.actions.act_window">
+        <field name="name">Badges</field>
+        <field name="res_model">gamification.badge</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="gamification_badge_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new badge
+            </p><p>
+                A badge is a symbolic token granted to a user as a sign of reward.
+                It can be deserved automatically when some conditions are met or manually by users.
+                Some badges are harder than others to get with specific conditions.
+            </p>
+        </field>
+    </record>
+
+    
+    <record id="badge_list_view" model="ir.ui.view">
+        <field name="name">Badge List</field>
+        <field name="model">gamification.badge</field>
+        <field name="arch" type="xml">
+            <list string="Badge List">
+                <field name="name"/>
+                <field name="granted_count"/>
+                <field name="stat_this_month"/>
+                <field name="stat_my"/>
+                <field name="rule_auth"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="badge_form_view" model="ir.ui.view">
+        <field name="name">Badge Form</field>
+        <field name="model">gamification.badge</field>
+        <field name="arch" type="xml">
+            <form string="Badge">
+                <header>
+                    <button string="Grant this Badge" type="action" name="%(action_grant_wizard)d" class="oe_highlight" invisible="remaining_sending == 0" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Problem Solver"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="description" nolabel="1" placeholder="Badge Description" colspan="2"/>
+                    </group>
+                    <group string="Granting">
+                        <div class="oe_grey" colspan="2">
+                            Security rules to define who is allowed to manually grant badges. Not enforced for administrator.
+                        </div>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="rule_auth" widget="radio"/>
+                            <field name="rule_auth_user_ids" invisible="rule_auth != 'users'" widget="many2many_tags" />
+                            <field name="rule_auth_badge_ids" invisible="rule_auth != 'having'" widget="many2many_tags" />
+                            <field name="rule_max" invisible="rule_auth == 'nobody'" />
+                            <field name="rule_max_number" invisible="not rule_max or rule_auth == 'nobody'"/>
+                            <label for="stat_my_monthly_sending"/>
+                            <div>
+                                <field name="stat_my_monthly_sending" invisible="rule_auth == 'nobody'" />
+                                <div invisible="remaining_sending == -1" class="oe_grey">
+                                    You can still grant <field name="remaining_sending" class="oe_inline"/> badges this month
+                                </div>
+                                <div invisible="remaining_sending != -1" class="oe_grey">
+                                    No monthly sending limit
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Rewards for challenges">
+                        <field name="challenge_ids" mode="kanban" widget="many2many" nolabel="1" context="{'default_reward_id': id}" colspan="2"/>
+                        <field name="level" colspan="2"/>
+                    </group>
+                    <group id="badge_statistics" string="Statistics">
+                        <group>
+                            <field name="granted_count"/>
+                            <field name="stat_this_month"/>
+                            <field name="granted_users_count"/>
+                        </group>
+                        <group>
+                            <field name="stat_my"/>
+                            <field name="stat_my_this_month"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="badge_kanban_view" model="ir.ui.view" >
+        <field name="name">Badge Kanban View</field>
+        <field name="model">gamification.badge</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="remaining_sending" />
+                <templates>
+                    <t t-name="card" class="row g-0">
+                        <aside class="col-2">
+                            <field name="image_1024" widget="image" t-att-alt="record.name.value"/>
+                        </aside>
+                        <main class="col ps-2">
+                            <span>
+                                <field class="fw-bold fs-5 me-1" name="name"/>
+                                <t t-if="record.remaining_sending.value != -1">
+                                    <field name="stat_my_monthly_sending"/>/<field name="rule_max_number"/>
+                                </t>
+                                <t t-else="">
+                                    <field name="stat_my_monthly_sending"/>/∞
+                                </t>
+                            </span>
+                            <div t-if="record.remaining_sending.value == 0">Can not grant</div>
+                            <div>
+                                <field class="fw-bold" name="granted_count"/> granted,
+                                <field class="fw-bold" name="stat_this_month"/> this month
+                            </div>
+                            <div>
+                                <field class="fst-italic" name="description"/>
+                                <field name="unique_owner_ids" widget="many2many_avatar_user"/>
+                            </div>
+                            <footer t-if="record.remaining_sending.value != 0 and !selection_mode">
+                                <button type="action" name="%(action_grant_wizard)d" class="btn btn-primary ms-auto">Grant</button>
+                            </footer>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

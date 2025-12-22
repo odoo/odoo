@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="mail_canned_response_view_search" model="ir.ui.view">
+            <field name="name">mail.canned.response.view.search</field>
+            <field name="model">mail.canned.response</field>
+            <field name="arch" type="xml">
+                <search string="Canned Responses Search">
+                    <field name="source"/>
+                    <field name="substitution"/>
+                    <filter string="My canned responses" name="filter_create_uid" domain="[('create_uid', '=', uid)]"/>
+                    <filter string="Shared canned responses" name="filter_is_shared" domain="[('is_shared', '=', True)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="mail_canned_response_view_tree" model="ir.ui.view">
+            <field name="name">mail.canned.response.list</field>
+            <field name="model">mail.canned.response</field>
+            <field name="arch" type="xml">
+                <list string="Canned responses" editable="bottom" default_order="is_shared" sample="1">
+                    <field name="source" readonly="not is_editable"/>
+                    <field name="substitution" readonly="not is_editable"/>
+                    <field name="description" readonly="not is_editable"/>
+                    <field name="create_uid" widget="many2one_avatar_user"/>
+                    <field name="group_ids" widget="many2many_tags" readonly="not is_editable"/>
+                    <field name="last_used" readonly="1"/>
+                    <field name="is_editable" column_invisible="True"/>
+                    <field name="is_shared" column_invisible="True"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="mail_canned_response_view_form" model="ir.ui.view">
+            <field name="name">mail.canned.response.form</field>
+            <field name="model">mail.canned.response</field>
+            <field name="arch" type="xml">
+                <form string="Canned response">
+                    <sheet>
+                        <group>
+                            <field name="source" readonly="not is_editable"/>
+                            <field name="substitution" readonly="not is_editable"/>
+                            <field name="description" readonly="not is_editable"/>
+                            <field name="create_uid" widget="many2one_avatar_user"/>
+                            <field name="group_ids" widget="many2many_tags" readonly="not is_editable"/>
+                            <field name="is_editable" invisible="True"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_canned_response_action" model="ir.actions.act_window">
+            <field name="name">Canned Responses</field>
+            <field name="res_model">mail.canned.response</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="mail_canned_response_view_search"/>
+            <field name="context">{
+                'search_default_filter_create_uid': 1,
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new canned response
+                </p><p>
+                    Canned responses allow you to insert prewritten responses in
+                    your messages by typing <i>:shortcut</i>. The shortcut is
+                    replaced directly in your message, so that you can still edit
+                    it before sending.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

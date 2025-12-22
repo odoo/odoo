@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-name="account.AccountPickCurrencyDate">
+        <button
+            type="button"
+            t-on-click.prevent="() => this.dateTimePicker.open()"
+            class="btn btn-link text-dark p-0"
+            title="Pick the rate on a certain date"
+            t-ref="datetime-picker-target"
+        >
+            <i class="fa fa-calendar"/>
+        </button>
+    </t>
+
+</template>

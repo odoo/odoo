@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="timesheet_action_view_from_employee_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_timesheet_line_form"/>
+        <field name="act_window_id" ref="timesheet_action_from_employee"/>
+    </record>
+
+    <record id="hr_employee_view_form_inherit_timesheet" model="ir.ui.view">
+        <field name="name">hr.employee.form.timesheet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_hourly_cost.view_employee_form"/>
+        <field name="priority" eval="40"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form" position="attributes">
+                <attribute name="delete">0</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="has_timesheet" groups="hr_timesheet.group_hr_timesheet_user" invisible="1"/>
+                <button invisible="not has_timesheet" class="oe_stat_button" type="object" name="action_timesheet_from_employee" icon="fa-calendar" groups="hr_timesheet.group_hr_timesheet_user">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Timesheets</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_employee_tree_inherit_timesheet" model="ir.ui.view">
+        <field name="name">hr.employee.list.timesheet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="/list" position="attributes">
+                <attribute name="delete">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="unlink_employee_action" model="ir.actions.server">
+        <field name="name">Delete</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_unlink_wizard()</field>
+    </record>
+</odoo>

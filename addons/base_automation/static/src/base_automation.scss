@@ -1,0 +1,56 @@
+.o_base_automation_actions_field,
+.o_base_automation_kanban_view {
+    .o_kanban_ungrouped {
+        padding: 0;
+
+        .o_kanban_record {
+            width: 100%;
+            margin: 0;
+
+            &.o_kanban_ghost {
+                display: none;
+            }
+        }
+    }
+}
+
+.o_base_automation_actions_field .o_kanban_ghost {
+    display: none;
+}
+
+.o_base_automation_kanban_view {
+    .o_kanban_grouped .row {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+
+        > * {
+            width: 100% !important;
+
+            > * {
+                margin: 0 0.5rem !important;
+            }
+        }
+    }
+
+    .o_kanban_ungrouped .o_kanban_record .oe_kanban_global_click {
+        border-top: 0;
+        display: flex;
+        align-items: center;
+
+        .o_widget_web_ribbon {
+            align-self: flex-start;
+        }
+    }
+}
+
+.o_base_automation_error {
+    pre {
+        max-height: 25vh !important;
+    }
+}
+
+.o_field_base_automation_trigger_selection select {
+    option, optgroup {
+        background-color: $dropdown-bg;
+    }
+}

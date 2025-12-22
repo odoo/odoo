@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_in_pos.companyStateDialog">
+        <Dialog size="'md'" title.translate="Company address is missing">
+            <div>
+                <p>Your company <span><t t-esc="this.pos.company.name"/></span> needs to have a correct address in order validate the invoice.</p>
+                <p>Set the address of your company (Don't forget the State field)</p>
+            </div>
+            <t t-set-slot="footer">
+                <div class="modal-footer-right d-flex gap-2">
+                    <button class="button icon btn btn-lg btn-primary" t-on-click="redirect">
+                            Go to company configuration
+                    </button>
+                    <button class="button btn btn-secondary" t-on-click="onClose">
+                            Ok
+                    </button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

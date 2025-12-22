@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.Navbar">
+        <div class="pos-topheader navbar-height d-flex align-items-center justify-content-between px-2 py-1 m-0 bg-white border-bottom">
+            <div class="pos-leftheader d-flex align-items-center overflow-hidden">
+                <OrderTabs orders="getOrderTabs()"/>
+            </div>
+            <div t-if="!ui.isSmall" class="pos-centerheader d-flex justify-content-center overflow-hidden">
+                <img class="pos-logo pos-logo mw-100" height="42" t-on-click="() => debug.toggleWidget()" src="/web/static/img/logo.png" alt="Logo" />
+            </div>
+            <div class="pos-rightheader d-flex justify-content-end overflow-hidden"
+                t-att-class="{ 'ms-auto': !ui.isSmall, 'me-1 position-absolute end-0 width-100 pos-nav-small': ui.isSmall }"
+            >
+                <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
+                    <Input tModel="[pos, 'searchProductWord']"
+                    class="'p-0'"
+                    isSmall="ui.isSmall"
+                    placeholder.translate="Search products..."
+                    icon="{type: 'fa', value: 'fa-search fa-lg fa-fw'}"
+                    debounceMillis="500"
+                    t-if="pos.showSearchButton()" />
+                    <button class="btn btn-light btn-lg lh-lg" t-if="isBarcodeScannerSupported() and pos.mainScreen.component.name == 'ProductScreen'" t-on-click="onClickScan">
+                        <i class="fa fa-fw fa-lg fa-barcode" /><span t-if="this.pos.scanning" class="ms-1">Stop</span>
+                    </button>
+                    <div t-if="this.pos.data.network.offline or this.pos.data.network.loading" class="oe_status btn btn-light btn-lg lh-lg h-100 pe-none" t-on-click="onSyncNotificationClick">
+                        <span t-if="this.pos.data.network.unsyncData.length > 0" t-esc="this.pos.data.network.unsyncData.length" /> 
+                        <div t-if="this.pos.data.network.offline" class="fa fa-fw fa-chain-broken text-danger"/>
+                        <div t-else="" class="fa fa-fw fa-spin fa-circle-o-notch text-warning"/>
+                    </div>
+                    <!-- No need to show the cashier name on small screens -->
+                    <CashierName t-if="!ui.isSmall"/>
+                    <Dropdown>
+                        <button class="btn btn-light btn-lg lh-lg">
+                            <i class="fa fa-fw fa-lg fa-bars"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <div t-if="customerFacingDisplayButtonIsShown" class="d-flex gap-2 p-2 border-bottom">
+                                <ProxyStatus t-if="pos.useProxy()" />
+                                <span t-on-click="openCustomerDisplay" class="btn btn-secondary btn-lg w-100 text-center" title="Customer Display">
+                                    <i class="fa fa-fw fa-desktop"/>
+                                </span>
+                            </div>
+                            <div class="p-2 pos-burger-menu-items">
+                                <DropdownItem t-if="!isDisplayStandalone" onSelected="() => window.open(this.appUrl)">
+                                    Install App
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => this.pos.showScreen('TicketScreen')">
+                                    Orders <span t-if="orderCount gt 0" class="badge text-bg-info rounded-pill py-1 ms-2 float-end" t-esc="orderCount"/>
+                                </DropdownItem>
+                                <DropdownItem t-if="showCashMoveButton" onSelected="() => this.pos.cashMove()">
+                                    Cash In/Out
+                                </DropdownItem>
+                                <DropdownItem t-if="showToggleProductView" onSelected="() => this.toggleProductView()">
+                                    Switch Product View
+                                </DropdownItem>
+                                <DropdownItem t-if="showCreateProductButton" onSelected="() => this.pos.editProduct()">
+                                    Create Product
+                                </DropdownItem>
+                                <DropdownItem t-if="hardwareProxy.printer" onSelected="() => this.showSaleDetails()">
+                                    Print Report
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => pos.closePos()">
+                                    Backend
+                                </DropdownItem>
+                                <DropdownItem onSelected="() => this.pos.closeSession()">
+                                    Close Register
+                                </DropdownItem>
+                                <DropdownItem t-if="this.env.debug" onSelected="() => this.clearCache()">
+                                    Clear Cache
+                                </DropdownItem>
+                                <DropdownItem t-if="this.env.debug" onSelected="() => debug.toggleWidget()">
+                                    Debug Window
+                                </DropdownItem>
+                            </div>
+                        </t>
+                    </Dropdown>
+                </div> 
+            </div>
+        </div>
+    </t>
+
+</templates>

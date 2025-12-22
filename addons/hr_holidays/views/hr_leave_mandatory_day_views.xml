@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_leave_mandatory_day_view_form" model="ir.ui.view">
+        <field name="model">hr.leave.mandatory.day</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="start_date" string="Dates" widget="daterange" options="{'end_date_field': 'end_date'}" />
+                            <field name="end_date" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_leave_mandatory_day_view_list" model="ir.ui.view">
+        <field name="model">hr.leave.mandatory.day</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="company_id" column_invisible="True"/>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="department_ids" widget="many2many_tags" optional="hide"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_leave_mandatory_day_view_search" model="ir.ui.view">
+        <field name="model">hr.leave.mandatory.day</field>
+        <field name="arch" type="xml">
+            <search string="Mandatory Day">
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <separator />
+                <filter name="filter_date" date="start_date" default_period="year" string="Period"/>
+                <group expand="0" string="Group By">
+                    <filter name="department" string="Department" context="{'group_by': 'department_ids'}"/>
+                    <filter name="company" string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_leave_mandatory_day_action" model="ir.actions.act_window">
+        <field name="name">Mandatory Days</field>
+        <field name="res_model">hr.leave.mandatory.day</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hr_leave_mandatory_day_view_search"/>
+        <field name="context">{'search_default_filter_date': True}</field>
+    </record>
+</odoo>

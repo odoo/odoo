@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sale.QuantityButtons">
+        <div name="quantity_buttons_wrapper" class="input-group justify-content-center">
+            <button
+                t-attf-class="btn btn-secondary {{ props.btnClasses or 'd-none d-md-inline-block' }}"
+                name="sale_quantity_button_minus"
+                aria-label="Remove one"
+                t-att-disabled="props.isMinusButtonDisabled"
+                t-on-click="decreaseQuantity">
+                <i class="fa fa-minus"/>
+            </button>
+            <input
+                class="form-control quantity text-center"
+                name="sale_quantity"
+                type="number"
+                t-att-value="props.quantity"
+                t-on-change="setQuantity"/>
+            <button
+                t-attf-class="btn btn-secondary {{ props.btnClasses or 'd-none d-md-inline-block' }}"
+                name="sale_quantity_button_plus"
+                aria-label="Add one"
+                t-att-disabled="props.isPlusButtonDisabled"
+                t-on-click="increaseQuantity">
+                <i class="fa fa-plus"/>
+            </button>
+        </div>
+    </t>
+</templates>

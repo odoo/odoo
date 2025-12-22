@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCallIndicator">
+        <div t-if="props.thread.rtcSessions.length > 0" title="Ongoing call" class="o-mail-DiscussSidebarCallIndicator o-py-0_5 fa-fw rounded-circle fa fa-volume-up" t-att-class="{
+            'o-discuss-inCallIconColor opacity-75': props.thread.eq(rtc.state.channel),
+            'opacity-50': !props.thread.eq(rtc.state.channel),
+            'me-2': !store.discuss.isSidebarCompact,
+        }"/>
+    </t>
+</templates>

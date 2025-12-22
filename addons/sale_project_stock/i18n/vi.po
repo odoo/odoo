@@ -1,0 +1,94 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project_stock
+# 
+# Translators:
+# Wil Odoo, 2025
+# Thi Huong Nguyen, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_project_stock
+#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
+msgid "No stock move found"
+msgstr "Không tìm thấy điều chuyển tồn kho"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_project_project
+msgid "Project"
+msgstr "Dự án"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Dòng đơn bán hàng"
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Điều chuyển tồn kho"
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s is cancelled. "
+"You cannot validate a stock picking on a cancelled Sales Order."
+msgstr ""
+"Đơn bán hàng %(order)s được liên kết với dự án %(project)s đã bị hủy. Bạn "
+"không thể xác thực phiếu xuất kho tồn kho cho một đơn bán hàng đã bị hủy."
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s is currently "
+"locked. You cannot validate a stock picking on a locked Sales Order. Please "
+"create a new SO linked to this Project."
+msgstr ""
+"Đơn bán hàng %(order)s được liên kết với dự án %(project)s hiện đang bị "
+"khóa. Bạn không thể xác thực phiếu xuất kho tồn kho cho một đơn bán hàng bị "
+"khóa. Vui lòng tạo một đơn bán hàng mới được liên kết với dự án này."
+
+#. module: sale_project_stock
+#. odoo-python
+#: code:addons/sale_project_stock/models/stock_picking.py:0
+msgid ""
+"The Sales Order %(order)s linked to the Project %(project)s must be "
+"validated before validating the stock picking."
+msgstr ""
+"Đơn bán hàng %(order)s được liên kết với dự án %(project)s phải được xác "
+"thực trước khi xác thực phiếu xuất kho tồn kho."
+
+#. module: sale_project_stock
+#: model_terms:ir.actions.act_window,help:sale_project_stock.stock_move_per_sale_order_line_action
+msgid ""
+"This menu gives you the full traceability of inventory\n"
+"                operations on a specific product. You can filter on the product\n"
+"                to see all the past or future movements for the product."
+msgstr ""
+"Menu này cho phép bạn truy xuất toàn bộ các hoạt động\n"
+"                tồn kho theo một sản phẩm cụ thể. Bạn có thể lọc theo sản phẩm\n"
+"                để xem tất cả các điều chuyển trong quá khứ hoặc tương lai của sản phẩm."
+
+#. module: sale_project_stock
+#: model:ir.model,name:sale_project_stock.model_stock_picking
+msgid "Transfer"
+msgstr "Lệnh chuyển hàng"
+
+#. module: sale_project_stock
+#: model:ir.actions.act_window,name:sale_project_stock.stock_move_per_sale_order_line_action
+msgid "Transfers"
+msgstr "Lệnh chuyển hàng"

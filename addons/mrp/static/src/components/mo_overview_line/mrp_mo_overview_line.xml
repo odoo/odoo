@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <tr t-name="mrp.MoOverviewLine" t-on-click="() => this.props.hasFoldButton? this.props.toggleFolded(data.index) : false">
+        <td class="text-start">
+            <div t-attf-style="margin-left: {{ marginMultiplicator * 20 }}px" class="d-inline-block">
+                <span t-if="props.hasFoldButton" class="btn btn-light p-0" t-attf-aria-label="{{ foldButtonTitle }}" t-attf-title="{{ foldButtonTitle }}" style="margin-right: 1px">
+                    <i t-attf-class="fa fa-fw fa-caret-{{ props.isFolded ? 'right' : 'down' }}" role="img"/>
+                </span>
+                <a t-if="data.id and data.model === 'mrp.workorder'" href="#" t-on-click.prevent="openWorkorder" t-out="data.name"/>
+                <a t-elif="data.id and data.model" href="#" t-on-click.prevent="openForm" t-out="data.name"/>
+                <t t-else="" t-out="data.name"/>
+                <button t-if="data.model === 'to_order'" class="ms-2 py-0 btn btn-secondary" t-on-click="openReplenish">Replenish</button>
+            </div>
+        </td>
+        <td class="text-center" t-if="props.showOptions.replenishments">
+            <div class="o_field_badge">
+                <span t-attf-class="badge rounded-pill o_mrp_overview_badge {{ stateDecorator }}" t-out="data.formatted_state"/>
+            </div>
+        </td>
+        <td t-attf-class="text-end" t-out="formattedQuantity"/>
+        <td t-if="props.showOptions.uom" class="text-start" t-out="data.uom_name"/>
+        <td class="text-end" t-if="props.showOptions.availabilities">
+            <t t-if="hasQuantity('quantity_on_hand')">
+                <t t-out="formatFloat(data.quantity_free)"/> /
+                <t t-out="formatFloat(data.quantity_on_hand)"/>
+            </t>
+        </td>
+        <td class="text-end" t-if="props.showOptions.availabilities">
+            <t t-if="hasQuantity('quantity_reserved')" t-out="formatFloat(data.quantity_reserved)"/>
+        </td>
+        <td class="text-end" t-if="props.showOptions.receipts">
+            <t t-if="data.receipt">
+                <span t-attf-class="{{ getColorClass(data.receipt.decorator) }}" t-out="data.receipt.display"/>
+                <a href="#" role="button" t-on-click.prevent="openForecast" title="Forecast Report" t-attf-class="fa fa-fw fa-area-chart ms-1 {{getColorClass(data.receipt.decorator)}}"/>
+            </t>
+        </td>
+        <td class="text-end" t-if="props.showOptions.unitCosts" t-out="formatMonetary(data.unit_cost)"/>
+        <td t-attf-class="text-end {{ getColorClass(data.mo_cost_decorator) }}" t-if="props.showOptions.moCosts" t-out="formatMonetary(data.mo_cost)"/>
+        <td class="text-end" t-if="props.showOptions.bomCosts" t-out="formatMonetary(data.bom_cost)"/>
+        <td t-attf-class="text-end {{ getColorClass(data.real_cost_decorator) }}" t-if="props.showOptions.realCosts" t-out="formatMonetary(data.real_cost)"/>
+    </tr>
+
+</templates>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_attendance_overtime_tree" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.list</field>
+        <field name="model">hr.attendance.overtime</field>
+        <field name="arch" type="xml">
+            <list edit="0" create="0">
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="duration" widget="float_time"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_attendance_overtime_search" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.search</field>
+        <field name="model">hr.attendance.overtime</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="duration" filter_domain="[('duration', '>=', self)]"/>
+                <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[(
+                'date','&gt;=', (
+                    context_today() + relativedelta(months=-3)
+                    )
+                )]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="groupby_date" context="{'group_by': 'date:week'}"/>
+                    <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_attendance_overtime_graph" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.graph</field>
+        <field name="model">hr.attendance.overtime</field>
+        <field name="arch" type="xml">
+            <graph string="Overtime" type="bar" stacked="0" sample="1">
+                <field name="employee_id" type="row"/>
+                <field name="date" interval="week" type="col"/>
+                <field name="duration" type="measure" widget="float_time"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_view_pivot" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.pivot</field>
+        <field name="model">hr.attendance.overtime</field>
+        <field name="arch" type="xml">
+            <pivot string="Worked Hours">
+                <field name="employee_id" type="row"/>
+                <field name="date" type="col" interval="month"/>
+                <field name="duration" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_attendance_overtime_action" model="ir.actions.act_window">
+        <field name="name">Extra Hours</field>
+        <field name="res_model">hr.attendance.overtime</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="context">
+            {
+                "search_default_groupby_date": 1,
+                "search_default_employee": 1,
+                "search_default_last_three_months": 1
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No overtime records found
+            </p><p>
+                The overtime records of your employees will be displayed here.
+            </p>
+        </field>
+
+    </record>
+
+</odoo>

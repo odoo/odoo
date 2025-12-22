@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.Chatter">
+    <div t-if="state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column" t-att-class="{ 'overflow-auto': props.isChatterAside, 'o-chatter-disabled': props.threadId === false }" t-on-scroll="onScrollDebounced" t-ref="root">
+        <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': state.isTopStickyPinned }" t-ref="top">
+            <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto">
+                <div t-if="state.isSearchOpen" class="flex-grow-1">
+                    <SearchMessageInput closeSearch.bind="closeSearch" messageSearch="messageSearch" thread="state.thread"/>
+                </div>
+                <t t-else="" name="chatter-topbar-left-buttons">
+                    <button class="o-mail-Chatter-sendMessage btn text-nowrap me-1" t-att-class="{
+                        'btn-primary': state.composerType !== 'note',
+                        'btn-secondary': state.composerType === 'note',
+                        'active': state.composerType === 'message',
+                        'my-2': !props.compactHeight
+                    }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
+                        Send message
+                    </button>
+                    <button class="o-mail-Chatter-logNote btn text-nowrap me-1" t-att-class="{
+                        'btn-primary active': state.composerType === 'note',
+                        'btn-secondary': state.composerType !== 'note',
+                        'my-2': !props.compactHeight
+                    }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+                        Log note
+                    </button>
+                    <button t-if="props.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }" data-hotkey="shift+a" t-on-click="scheduleActivity">
+                        <span>Activities</span>
+                    </button>
+                    <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
+                    <button class="btn btn-link text-action" aria-label="Search Messages" title="Search Messages" t-on-click="onClickSearch">
+                        <i class="oi oi-search" role="img"/>
+                    </button>
+                </t>
+                <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action" t-on-click="popoutAttachment">
+                    <i class="fa fa-window-restore" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
+                </button>
+                <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                    <t t-set-slot="toggler">
+                        <t t-call="mail.Chatter.attachFiles"/>
+                    </t>
+                </FileUploader>
+                <t t-else="" t-call="mail.Chatter.attachFiles"/>
+                <div class="o-mail-Followers d-flex me-1">
+                    <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown d-flex flex-column'" state="followerListDropdown">
+                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 ' + (props.compactHeight ? '' : 'my-2')" t-att-disabled="isDisabled" t-att-title="followerButtonLabel">
+                            <i class="fa fa-user-o me-1" role="img"/>
+                            <i t-if="state.thread.id and state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
+                            <sup t-else="" class="o-mail-Followers-counter" t-esc="state.thread.followersCount ?? 0"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <FollowerList onAddFollowers.bind="onAddFollowers" onFollowerChanged.bind="onFollowerChanged" thread="state.thread" dropdown="followerListDropdown"/>
+                        </t>
+                    </Dropdown>
+                </div>
+                <button t-if="state.thread.selfFollower" class="btn px-0" t-att-class="{ 'text-success': !unfollowHover.isHover, 'text-warning': unfollowHover.isHover, 'my-2': !props.compactHeight }" t-att-disabled="!props.threadId" t-on-click="onClickUnfollow" t-ref="unfollow">
+                    <div class="position-relative">
+                        <!-- Hidden element used to set the button maximum size -->
+                        <span class="d-flex invisible text-nowrap">
+                            <t t-out="followingText.length > unfollowText.length ? followingText : unfollowText"/>
+                        </span>
+                        <span class="o-mail-Chatter-follow position-absolute end-0 top-0" t-out="unfollowHover.isHover ? unfollowText : followingText"/>
+                    </div>
+                </button>
+                <button t-if="!state.thread.selfFollower" class="o-mail-Chatter-follow btn btn-link  px-0 text-600" t-on-click="onClickFollow">
+                    <div class="position-relative">
+                        <span class="d-flex invisible text-nowrap">
+                            <t t-out="followingText.length > unfollowText.length ? followingText : unfollowText"/>
+                        </span>
+                        <span class="position-absolute end-0 top-0">
+                            Follow
+                        </span>
+                    </div>
+                </button>
+                <button t-if="props.close" class="o-mail-Chatter-close btn btn-secondary flex-shrink-0 ms-2" aria-label="Close" t-on-click="props.close">
+                    <i class="oi oi-close"/>
+                </button>
+            </div>
+            <t t-if="state.composerType">
+                <t t-if="state.composerType === 'message'">
+                    <div class="d-flex flex-shrink-0 pt-3 text-truncate small mb-2 ms-5 gap-1">
+                        <span class="fw-bold">To: </span>
+                        <BaseRecipientsList
+                            t-if="state.thread.recipients.length > 0"
+                            thread="state.thread"/>
+                        <SuggestedRecipientsList
+                            t-elif="state.thread.suggestedRecipients.length > 0"
+                            thread="state.thread"
+                            onSuggestedRecipientAdded.bind="onSuggestedRecipientAdded"/>
+                        <span t-else="" class="fst-italic">No recipient</span>
+                    </div>
+                </t>
+                <t t-set="type" t-value="state.composerType === 'message' ? 'message' : 'note'"/>
+                <SuggestedRecipientsList
+                    t-if="state.composerType !== 'note' and state.thread.recipients.length > 0"
+                    styleString="'margin-left:48px;'"
+                    thread="state.thread"
+                    onSuggestedRecipientAdded.bind="onSuggestedRecipientAdded"/>
+                <Composer composer="state.thread.composer" autofocus="true" className="state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'" onPostCallback.bind="onPostCallback" onCloseFullComposerCallback.bind="onCloseFullComposerCallback" dropzoneRef="rootRef" type="state.composerType" t-key="props.threadId"/>
+            </t>
+        </div>
+        <div class="o-mail-Chatter-content d-flex flex-column flex-grow-1">
+            <t>
+                <t t-if="props.has_activities and activities.length and !messageSearch.searching and !messageSearch.searched">
+                    <t t-call="mail.ActivityList"/>
+                </t>
+                <t t-if="scheduledMessages.length">
+                    <t t-call="mail.ScheduledMessagesList"/>
+                </t>
+                <div t-if="state.isAttachmentBoxOpened" class="o-mail-AttachmentBox position-relative">
+                    <div class="d-flex align-items-center">
+                        <hr class="flex-grow-1"/>
+                        <span class="p-3 fw-bold">
+                            Files
+                        </span>
+                        <hr class="flex-grow-1"/>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <AttachmentList
+                            attachments="attachments"
+                            unlinkAttachment.bind="unlinkAttachment"
+                            imagesHeight="100"
+                        />
+                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                            <t t-set-slot="toggler">
+                                <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">
+                                    <i class="fa fa-plus-square"/>
+                                    Attach files
+                                </button>
+                            </t>
+                        </FileUploader>
+                    </div>
+                </div>
+                <SearchMessageResult t-if="messageSearch.searching or messageSearch.searched" thread="state.thread"  messageSearch="messageSearch" onClickJump.bind="closeSearch"/>
+                <Thread t-else="" thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.ActivityList">
+    <div class="o-mail-ActivityList">
+        <div class="d-flex pt-2 cursor-pointer fw-bolder" t-on-click="toggleActivities">
+            <hr class="flex-grow-1 fs-3"/>
+            <div class="d-flex align-items-center px-3">
+                <i class="fa fa-fw" t-att-class="state.showActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
+                Planned Activities
+                <span t-if="!state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="activities.length"/></span>
+            </div>
+            <hr class="flex-grow-1 fe-3"/>
+        </div>
+        <t t-if="state.showActivities">
+            <t t-foreach="activities" t-as="activity" t-key="activity.id">
+                <Activity activity="activity" onActivityChanged.bind="onActivityChanged" reloadParentView.bind="reloadParentView"/>
+            </t>
+        </t>
+    </div>
+</t>
+
+<t t-name="mail.ScheduledMessagesList">
+    <div class="o-mail-ScheduledMessagesList">
+        <div class="d-flex pt-2 cursor-pointer fw-bolder" t-on-click="toggleScheduledMessages">
+            <hr class="flex-grow-1 fs-3"/>
+            <div class="d-flex align-items-center px-3">
+                <i class="fa fa-fw" t-att-class="state.showScheduledMessages ? 'fa-caret-down' : 'fa-caret-right'"/>
+                Scheduled Messages
+                <span t-if="!state.showScheduledMessages" class="badge rounded-pill ms-2 text-bg-success" t-out="scheduledMessages.length"/>
+            </div>
+            <hr class="flex-grow-1 fe-3"/>
+        </div>
+        <div t-if="state.showScheduledMessages">
+            <t t-foreach="scheduledMessages" t-as="scheduledMessage" t-key="scheduledMessage.id">
+                <ScheduledMessage scheduledMessage="scheduledMessage" onScheduledMessageChanged.bind="onScheduledMessageChanged"/>
+            </t>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.Chatter.attachFiles">
+    <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments" t-att-disabled="state.isSearchOpen">
+        <i class="fa fa-paperclip fa-lg me-1"/>
+        <sup t-if="attachments.length > 0" t-esc="attachments.length"/>
+        <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments and state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
+    </button>
+</t>
+
+</templates>

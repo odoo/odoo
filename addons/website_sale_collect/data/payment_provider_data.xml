@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_on_site" model="payment.provider">
+        <field name="name">Pay on Site</field>
+        <field name="module_id" ref="base.module_website_sale_collect"/>
+        <field name="code">custom</field>
+        <field name="state">enabled</field>
+        <field name="custom_mode">on_site</field>
+        <field name="payment_method_ids"
+               eval="[(6, 0, [
+                         ref('website_sale_collect.payment_method_pay_on_site'),
+                     ])]"
+        />
+        <field
+            name="image_128"
+            type="base64"
+            file="website_sale_collect/static/description/icon.png"
+        />
+        <field name="redirect_form_view_id" ref="payment_custom.redirect_form"/>
+        <field name="pending_msg" type="html">
+            <p>
+                <i>Your order has been confirmed.</i><br/>Please come to the store to pay for your products.
+            </p>
+        </field>
+    </record>
+
+</odoo>

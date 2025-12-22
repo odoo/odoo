@@ -1,0 +1,23 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.ImageTransformation">
+        <div class="transfo-container" t-ref="transfoContainer" t-on-mousedown.prevent="mouseDown">
+            <div class="transfo-controls" t-ref="transfoControls">
+                <div style="cursor: crosshair; position: absolute; margin: -30px; top: 0; right: 0; padding: 1px 0 0 1px;" class="transfo-rotator">
+                    <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-repeat fa-stack-1x fa-inverse"></i>
+                    </span>
+                </div>
+                <div style="top: 0%; left: 0%; cursor: nw-resize;" class="transfo-scaler transfo-scaler-tl"></div>
+                <div style="top: 0%; left: 100%; cursor: ne-resize;" class="transfo-scaler transfo-scaler-tr"></div>
+                <div style="top: 100%; left: 100%; cursor: se-resize;" class="transfo-scaler transfo-scaler-br"></div>
+                <div style="top: 100%; left: 0%; cursor: sw-resize;" class=" transfo-scaler transfo-scaler-bl"></div>
+                <div style="top: 0%; left: 50%; cursor: n-resize;" class="transfo-scaler transfo-scaler-tc"></div>
+                <div style="top: 100%; left: 50%; cursor: s-resize;" class="transfo-scaler transfo-scaler-bc"></div>
+                <div style="top: 50%; left: 0%; cursor: w-resize;" class="transfo-scaler transfo-scaler-ml"></div>
+                <div style="top: 50%; left: 100%; cursor: e-resize;" class="transfo-scaler transfo-scaler-mr"></div>
+                <div style="border: 0; width: 0px; height: 0px; top: 50%; left: 50%;" class="transfo-scaler transfo-scaler-mc" t-ref="transfoCenter"></div>
+            </div>
+        </div>
+    </t>
+</templates>

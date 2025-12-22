@@ -1,0 +1,14 @@
+.category-button {
+    --btn-border-color: #{$o-gray-200};
+}
+
+.category-list {
+    overflow-y: auto;
+    flex-shrink: 0;
+    margin-bottom: map-get($spacers, 2);
+    max-height: 13.5rem;
+
+    @include media-breakpoint-down(md) {
+        max-height: 9rem;
+    }
+}

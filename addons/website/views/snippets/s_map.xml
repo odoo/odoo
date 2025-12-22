@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Map" id="s_map">
+    <section class="s_map pb56 pt56" data-map-type="m" data-map-zoom="12" t-att-data-map-address="' '.join(filter(None, (user_id.company_id.street, user_id.company_id.city, user_id.company_id.state_id.display_name, user_id.company_id.country_id.display_name)))">
+        <div class="map_container o_not_editable">
+            <div class="css_non_editable_mode_hidden">
+                <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none">
+                    An address must be specified for a map to be embedded
+                </div>
+            </div>
+            <iframe t-if="not test_mode_enabled" class="s_map_embedded o_not_editable" src="https://maps.google.com/maps?q=250%20Executive%20Park%20Blvd%2C%20Suite%203400%20San%20Francisco%20California%20(US)%20United%20States&amp;t=m&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" aria-label="Map"/>
+            <div class="s_map_color_filter"/>
+        </div>
+    </section>
+</template>
+
+<!-- Snippet's Options -->
+<template id="s_map_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='Box']" position="before">
+        <div data-js="Map" data-selector=".s_map">
+            <we-input class="o_we_large" string="Address" data-select-data-attribute="" data-no-preview="true" data-attribute-name="mapAddress" placeholder="e.g. De Brouckere, Brussels, Belgium"/>
+            <we-select string="Type" data-no-preview="true" data-attribute-name="mapType">
+                <we-button data-select-data-attribute="m">Road</we-button>
+                <we-button data-select-data-attribute="k">Satellite</we-button>
+            </we-select>
+            <we-select string="Zoom" data-select-data-attribute="12" data-no-preview="true" data-attribute-name="mapZoom">
+                <we-button data-select-data-attribute="21">2.5 m</we-button>
+                <we-button data-select-data-attribute="20">5 m</we-button>
+                <we-button data-select-data-attribute="19">10 m</we-button>
+                <we-button data-select-data-attribute="18">20 m</we-button>
+                <we-button data-select-data-attribute="17">50 m</we-button>
+                <we-button data-select-data-attribute="16">100 m</we-button>
+                <we-button data-select-data-attribute="15">200 m</we-button>
+                <we-button data-select-data-attribute="14">400 m</we-button>
+                <we-button data-select-data-attribute="13">1 km</we-button>
+                <we-button data-select-data-attribute="12">2 km</we-button>
+                <we-button data-select-data-attribute="11">4 km</we-button>
+                <we-button data-select-data-attribute="10">8 km</we-button>
+                <we-button data-select-data-attribute="9">15 km</we-button>
+                <we-button data-select-data-attribute="8">30 km</we-button>
+                <we-button data-select-data-attribute="7">50 km</we-button>
+                <we-button data-select-data-attribute="6">100 km</we-button>
+                <we-button data-select-data-attribute="5">200 km</we-button>
+                <we-button data-select-data-attribute="4">400 km</we-button>
+                <we-button data-select-data-attribute="3">1000 km</we-button>
+                <we-button data-select-data-attribute="2">2000 km</we-button>
+            </we-select>
+            <we-colorpicker string="Color Filter" data-select-style="true"
+                data-css-property="background-color" data-color-prefix="bg-" data-apply-to=".s_map_color_filter"/>
+            <we-checkbox string="Description" data-no-preview="true" data-show-description="true"/>
+        </div>
+    </xpath>
+</template>
+
+<asset id="website.s_map_000_scss" name="Map 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_map/000.scss</path>
+</asset>
+
+<asset id="website.s_map_000_js" name="Map 000 JS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_map/000.js</path>
+</asset>
+
+</odoo>

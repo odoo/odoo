@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="web_tour.TourListController.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="." position="inside">
+            <button class="btn btn-primary me-1 o_button_tour_recorder" title="Record Tour"
+                t-on-click="() => this.env.services.tour_service.startTourRecorder()">
+                Record
+            </button>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,13 @@
+
+@each $font-name, $font-config in $o-theme-font-configs {
+    $url: map-get($font-config, 'url');
+    @if $url {
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
+    } @else {
+        $name: map-get($font-config, 'name');
+        $attachment: map-get($font-config, 'attachment');
+        @if $attachment {
+            @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}");
+        }
+    }
+}

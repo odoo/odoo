@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template
+        id="website_sale.s_mega_menu_thumbnails"
+        name="eCommerce: Menu - Thumbnails"
+        groups="base.group_user"
+    >
+        <section class="s_mega_menu_thumbnails pt24 o_colored_level o_cc o_cc1">
+            <div class="container">
+                <div class="row ustify-content-center">
+                    <t
+                        t-set="categories"
+                        t-value="request.env['product.public.category'].search([
+                            ('parent_id', '=', False)
+                        ])[:10]"
+                    />
+                    <t t-set="counter" t-value="0"/>
+                    <t t-foreach="categories" t-as="category">
+                        <t t-set="counter" t-value="counter + 1"/>
+                        <t t-if="(counter - 1) % 5 == 0 and counter != 1">
+                            <div class="w-100 d-none d-lg-block"></div>
+                        </t>
+                        <div class="col-6 col-lg-2 text-center py-2">
+                            <a
+                                t-att-href="'/shop/category/%s' % category.id"
+                                class="nav-link o_default_snippet_text p-0"
+                            >
+                                <img
+                                    t-if="category.image_1920"
+                                    t-att-src="image_data_uri(category.image_1920)"
+                                    class="img-fluid rounded shadow"
+                                    alt=""
+                                />
+                                <br/>
+                                <span class="d-block p-2 small">
+                                    <b>
+                                        <t t-esc="category.name"/>
+                                    </b>
+                                </span>
+                            </a>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+
+</odoo>

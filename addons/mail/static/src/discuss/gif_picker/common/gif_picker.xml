@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="discuss.GifPicker">
+        <div class="o-discuss-GifPicker bg-view d-flex flex-column" t-attf-class="{{ props.className }}">
+            <div class="o-EmojiPicker-search d-flex align-items-center m-2 rounded">
+                <i t-if="!state.showCategories" aria-label="back" t-on-click="openCategories" class="oi oi-arrow-left cursor-pointer p-2 fs-5"/>
+                <span class="d-flex mx-1 w-100 rounded o-active">
+                    <t t-call="discuss.GifPicker.searchInput">
+                        <t t-if="props.state" t-set="localState" t-value="props.state"/>
+                        <t t-else="" t-set="localState" t-value="state"/>
+                    </t>
+                    <i class="oi oi-search p-2 fs-5 rounded-start-0 rounded-3 o-active" title="Search..." role="img" aria-label="Search..."/>
+                </span>
+            </div>
+            <div class="o-discuss-GifPicker-content overflow-y-auto overflow-x-hidden ps-2 pe-3 pb-2 h-100" t-ref="scroller">
+                <div t-if="state.loadingError" class="text-center">
+                    <span class="o-discuss-GifPicker-error d-block">😵‍💫</span>
+                    <span class="fs-5 text-muted d-block">Failed to load gifs...</span>
+                </div>
+                <div t-if="state.showCategories and !state.loadingError" class="row row-cols-2 gy-2 gx-2" aria-label="list">
+                    <div t-if="store.self.type === 'partner'" class="col">
+                        <div class="position-relative ratio ratio-16x9 cursor-pointer rounded overflow-hidden" t-on-click="onClickFavoritesCategory" aria-label="list-item">
+                            <img
+                                t-if="state.favorites.gifs.length > 0"
+                                class="o-discuss-GifPicker-category"
+                                t-att-src="state.favorites.gifs[0].media_formats.tinygif.url"
+                                loading="lazy"
+                                alt="GIF Favorites"
+                            />
+                            <div class="position-absolute w-100 h-100 top-0 start-0 text-center o-text-white align-middle fs-2 o-bg-black bg-opacity-50">
+                                Favorites
+                            </div>
+                        </div>
+                    </div>
+                    <t t-if="state.categories.length === 0">
+                        <t t-foreach="Array(10).keys()" t-as="category" t-key="category_index">
+                            <div class="col">
+                                <div class="position-relative ratio ratio-16x9 cursor-pointer rounded overflow-hidden" aria-label="list-item">
+                                    <div class="position-absolute w-100 h-100 top-0 start-0 text-center o-text-white align-middle fs-2 o-bg-black bg-opacity-50"/>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <t t-foreach="state.categories" t-as="category" t-key="category_index">
+                            <div class="col">
+                                <div class="position-relative ratio ratio-16x9 cursor-pointer rounded overflow-hidden" t-on-click="() => this.onClickCategory(category)" aria-label="list-item">
+                                    <img class="o-discuss-GifPickerCategory-img img-fluid" t-att-src="category.image" loading="lazy" alt="GIF Category"/>
+                                    <div class="position-absolute w-100 h-100 top-0 start-0 text-center o-text-white align-middle fs-2 o-bg-black bg-opacity-50">
+                                        <t t-out="category.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+                <t t-if="!state.showCategories">
+                    <div class="d-flex gap-1">
+                        <div>
+                            <t t-foreach="state.evenGif.gifs" t-as="gif" t-key="gif_index">
+                                <t t-call="discuss.Gif"/>
+                            </t>
+                        </div>
+                        <div>
+                            <t t-foreach="state.oddGif.gifs" t-as="gif" t-key="gif_index">
+                                <t t-call="discuss.Gif"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div t-if="state.loadingGif" class="text-center fs-6 h-100 d-flex flex-column justify-content-center">
+                        <i class="fa fa-spin fa-circle-o-notch"/>
+                    </div>
+                    <div t-elif="showFavorite and state.evenGif.gifs.size === 0 and state.oddGif.gifs.size === 0" class="d-flex flex-column h-100 align-items-center justify-content-center text-center text-muted gap-2">
+                        <i class="o-discuss-GifPicker-noFavoritesIcon fa fa-star fs-1"/>
+                        <span class="fs-5">So uhh... maybe go favorite some GIFs?</span>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="discuss.Gif">
+        <div class="o-discuss-Gif position-relative mt-1 fs-5 cursor-pointer rounded overflow-hidden">
+            <i
+                t-if="store.self.type === 'partner'"
+                class="position-absolute top-0 end-0 me-3 mt-3 p-2 o-bg-black bg-opacity-75 fa cursor-pointer opacity-0"
+                t-att-class="{ 'o-text-white fa-star-o': !isFavorite(gif_value), 'fa-star o-starred': isFavorite(gif_value) }"
+                t-on-click="() => this.onClickFavorite(gif_value)"
+            />
+            <img
+                class="img-fluid"
+                t-att-src="gif_value.media_formats.tinygif.url"
+                t-on-click="() => this.onClickGif(gif_value)"
+                loading="lazy"
+                alt="GIF"
+                t-att-style="style"
+            />
+        </div>
+    </t>
+
+    <t t-name="discuss.GifPicker.searchInput">
+        <input class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active" placeholder="Search for a GIF" t-model="localState.searchTerm" t-ref="autofocus" />
+    </t>
+</templates>

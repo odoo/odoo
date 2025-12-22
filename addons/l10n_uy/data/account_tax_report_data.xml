@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report" model="account.report">
+        <field name="name">Tax Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.uy"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_base_impb" model="account.report.line">
+                <field name="name">Taxable income</field>
+                <field name="aggregation_formula">BASE_IMPONIBLE_COMPRAS.balance + BASE_IMPONIBLE_VENTAS.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_base_impb_cmprs" model="account.report.line">
+                        <field name="name">Tax Base Purchases</field>
+                        <field name="code">BASE_IMPONIBLE_COMPRAS</field>
+                        <field name="aggregation_formula">UYTAX_010101.balance + UYTAX_020101.balance + UYTAX_030101.balance + UYTAX_040101.balance + UYTAX_050101.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_base_impb_cmprs_22" model="account.report.line">
+                                <field name="name">Base Purchases 22%</field>
+                                <field name="code">UYTAX_010101</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_base_impb_cmprs_22_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Base Purchases 22%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_base_impb_cmprs_10" model="account.report.line">
+                                <field name="name">Base Purchases 10%</field>
+                                <field name="code">UYTAX_020101</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_base_impb_cmprs_10_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Base Purchases 10%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_base_impb_cmprs_0" model="account.report.line">
+                                <field name="name">Base Purchases 0%</field>
+                                <field name="code">UYTAX_030101</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_base_impb_cmprs_0_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Base Purchases 0%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_impb_cmprs" model="account.report.line">
+                                <field name="name">Tax Base Purchases</field>
+                                <field name="code">UYTAX_040101</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_impb_cmprs_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Tax Base Purchases</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_base_impb_cmprs_reduced" model="account.report.line">
+                                <field name="name">Base Purchases Reduced VAT</field>
+                                <field name="code">UYTAX_050101</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_base_impb_cmprs_reduced_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Base Purchases Reduced VAT</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_base_impb_vnts" model="account.report.line">
+                        <field name="name">Taxable Sales Base</field>
+                        <field name="code">BASE_IMPONIBLE_VENTAS</field>
+                        <field name="aggregation_formula">UYTAX_010201.balance + UYTAX_020201.balance + UYTAX_030201.balance + UYTAX_040201.balance + UYTAX_050201.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_base_impb_vnts_22" model="account.report.line">
+                                <field name="name">Base Sales 22%</field>
+                                <field name="code">UYTAX_010201</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_base_impb_vnts_22_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Base Sales 22%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_base_impb_vnts_10" model="account.report.line">
+                                <field name="name">Base Sales 10%</field>
+                                <field name="code">UYTAX_020201</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_base_impb_vnts_10_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Base Sales 10%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_base_impb_vnts_0" model="account.report.line">
+                                <field name="name">Base Sales 0%</field>
+                                <field name="code">UYTAX_030201</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_base_impb_vnts_0_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Base Sales 0%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_impb_vnts" model="account.report.line">
+                                <field name="name">Taxable Sales Base</field>
+                                <field name="code">UYTAX_040201</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_impb_vnts_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Taxable Sales Base</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_base_impb_vnts_reduced" model="account.report.line">
+                                <field name="name">Base Sales Reduced VAT</field>
+                                <field name="code">UYTAX_050201</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_base_impb_vnts_reduced_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Base Sales Reduced VAT</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_sldo_iva" model="account.report.line">
+                <field name="name">VAT balance</field>
+                <field name="aggregation_formula">IVA_COMPRAS__PAGADO.balance + UYTAX_040102.balance + IVA_VENTAS__PERCIBIDO.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_iva_cmprs_pagdo" model="account.report.line">
+                        <field name="name">VAT Purchases - paid</field>
+                        <field name="code">IVA_COMPRAS__PAGADO</field>
+                        <field name="aggregation_formula">UYTAX_010102.balance + UYTAX_020102.balance + COMPRAS_EXENTO_IVA.balance + UYTAX_030102.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_iva_cmprs_22" model="account.report.line">
+                                <field name="name">VAT Purchases 22%</field>
+                                <field name="code">UYTAX_010102</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_iva_cmprs_22_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">VAT Purchases 22%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_iva_cmprs_10" model="account.report.line">
+                                <field name="name">VAT Purchases 10%</field>
+                                <field name="code">UYTAX_020102</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_iva_cmprs_10_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">VAT Purchases 10%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_cmprs_exnto_iva" model="account.report.line">
+                                <field name="name">Purchases Exempt from VAT</field>
+                                <field name="code">COMPRAS_EXENTO_IVA</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_cmprs_exnto_iva_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_cmprs_iva_reduced" model="account.report.line">
+                                <field name="name">Purchases Reduced VAT</field>
+                                <field name="code">UYTAX_030102</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_cmprs_iva_formula_reduced" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Purchases Reduced VAT</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_cmprs_pagdo" model="account.report.line">
+                        <field name="name">VAT Purchases - paid</field>
+                        <field name="code">UYTAX_040102</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_cmprs_pagdo_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT Purchases - paid</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_iva_vnts_prcbdo" model="account.report.line">
+                        <field name="name">VAT Sales - received</field>
+                        <field name="code">IVA_VENTAS__PERCIBIDO</field>
+                        <field name="aggregation_formula">UYTAX_010202.balance + UYTAX_020202.balance + VENTAS_EXENTO_IVA.balance + UYTAX_030202.balance + UYTAX_040202.balance</field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_iva_vnts_22" model="account.report.line">
+                                <field name="name">Sales VAT 22%</field>
+                                <field name="code">UYTAX_010202</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_iva_vnts_22_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Sales VAT 22%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_iva_vnts_10" model="account.report.line">
+                                <field name="name">Sales VAT 10%</field>
+                                <field name="code">UYTAX_020202</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_iva_vnts_10_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Sales VAT 10%</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_vnts_iva" model="account.report.line">
+                                <field name="name">Sales VAT exempt</field>
+                                <field name="code">VENTAS_EXENTO_IVA</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_vnts_iva_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">external</field>
+                                        <field name="formula">sum</field>
+                                        <field name="subformula">editable;rounding=2</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_vnts_iva_reduced" model="account.report.line">
+                                <field name="name">Sales Reduced VAT</field>
+                                <field name="code">UYTAX_030202</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_vnts_iva_formula_reduced" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">Sales Reduced VAT</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_vnts_prcbdo" model="account.report.line">
+                                <field name="name">VAT Sales - received</field>
+                                <field name="code">UYTAX_040202</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_vnts_prcbdo_tag" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">VAT Sales - received</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

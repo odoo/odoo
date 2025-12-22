@@ -1,0 +1,122 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_discount
+# 
+# Translators:
+# emre oktem, 2024
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2024
+# Umur Akın <umura@projetgrup.com>, 2024
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# Martin Trigaux, 2024
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2024
+# Murat Kaplan <muratk@projetgrup.com>, 2024
+# Halil, 2024
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: pos_discount
+#. odoo-python
+#: code:addons/pos_discount/models/pos_config.py:0
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
+msgstr ""
+"Genel İndirim özelliğini kullanabilmek için bir indirim ürünü "
+"tanımlanmalıdır. Bunun için Satış Noktası > Yapılandırma > Ayarlar menüsüne "
+"gidin ve ilgili ürünü belirleyin."
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
+msgid "Allow the cashier to give discounts on the whole order."
+msgstr "Kasiyerin tüm siparişe indirim verebilmesine izin verin."
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_res_config_settings
+msgid "Config Settings"
+msgstr "Yapılandırma Ayarları"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.xml:0
+#: model:product.template,name:pos_discount.product_product_consumable_product_template
+msgid "Discount"
+msgstr "İndirim"
+
+#. module: pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount %"
+msgstr "İndirim %"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
+msgid "Discount Percentage"
+msgstr "İndirim Yüzde"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
+msgid "Discount Product"
+msgstr "İndirimli Ürün"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
+msgid "No discount product found"
+msgstr "İndirimli ürün bulunamadı"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
+msgid "Order Discounts"
+msgstr "Sipariş İndirimleri"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Satış Noktası Yapılandırması"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
+msgid "Pos Discount Product"
+msgstr "Pos İndirim Ürünü"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_product_product
+msgid "Product Variant"
+msgstr "Ürün Varyantı"
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
+msgid "The default discount percentage when clicking on the Discount button"
+msgstr "İndirim düğmesine tıklandığında varsayılan indirim yüzdesi"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+"İndirim ürünü yanlış yapılandırılmış görünüyor. 'Satılabilir' ve ‘Satış "
+"Noktasında Mevcut’ olarak işaretlendiğinden emin olun."
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
+msgid "The product used to apply the discount on the ticket."
+msgstr "İndirimi bilete uygulamak için kullanılan ürün."

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            width: 600px;
+            margin: 30px auto;
+            font-family: sans-serif;
+            text-align: justify;
+            color: #6B6B6B;
+            background-color: #f1f1f1;
+        }
+
+        a {
+            text-decoration: none;
+            color: #00a09d;
+        }
+
+        a:hover {
+            color: #006d6b;
+        }
+
+        .container {
+            padding: 10px 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.17);
+        }
+
+        input[type="text"], input[type="password"] {
+            padding: 6px 12px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            color: inherit;
+        }
+
+        input::placeholder {
+            color: #ccc;
+            opacity: 1; /* Firefox */
+        }
+
+        select {
+            padding: 6px 12px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            color: inherit;
+            background: #ffffff;
+            width: 100%;
+        }
+
+        .footer {
+            margin-top: 12px;
+            text-align: right;
+        }
+
+        .footer a {
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+        <h1 style="color: red">IoT Box is down</h1>
+        <h2>502 Bad Gateway</h2>
+        <p>The IoT Box received the request but was not able to handle it. You can try to refresh the page to see if the request can now be handled.</p>
+        <p>If the error persist for more than 5 minutes:</p>
+        <ol>
+            <li>Force restart the IoT box by plug off the IoT power supply then on again</li>
+            <li>Re-flash the SD card of the IoT box, see: <a
+                href="https://www.odoo.com/documentation/18.0/applications/general/iot/config/updating_iot.html#flashing-the-sd-card-on-iot-box" target="_blank">documentation</a></li>
+        </ol>
+</div>
+<div class="footer">
+    <a href='https://www.odoo.com/help'>Help</a>
+    <a href='https://www.odoo.com/documentation/18.0/applications/productivity/iot.html'>Documentation</a>
+</div>
+</body>
+</html>

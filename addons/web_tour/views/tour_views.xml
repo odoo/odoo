@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tour_form" model="ir.ui.view">
+        <field name="model">web_tour.tour</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <div>
+                        <field name="name" widget="tour_start_widget"/>
+                    </div>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. My_Tour"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="url"/>
+                        </group>
+                        <group>
+                            <field name="custom" readonly="1"/>
+                            <field name="sharing_url" widget="CopyClipboardURL"/>
+                        </group>
+                        <notebook>
+                            <page name="steps" string="Steps" invisible="not custom">
+                                <field name="step_ids">
+                                    <list>
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="trigger"/>
+                                        <field name="run"/>
+                                        <field name="content"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                        <field colspan="2" name="rainbow_man_message" placeholder="Rainbow Man Message..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tour_list" model="ir.ui.view">
+        <field name="model">web_tour.tour</field>
+        <field name="arch" type="xml">
+            <list string="Menu" create="0" edit="0" js_class="tour_list">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="url"/>
+                <field name="custom"/>
+                <field name="rainbow_man_message" column_invisible="1"/> <!-- Invisible to get the data in JS -->
+                <field name="name" widget="tour_start_widget" options="{'link': true}" string=""/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tour_search" model="ir.ui.view">
+        <field name="name">tour.search</field>
+        <field name="model">web_tour.tour</field>
+        <field name="arch" type="xml">
+            <search string="Tip">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="tour_action" model="ir.actions.act_window">
+        <field name="name">Tours</field>
+        <field name="res_model">web_tour.tour</field>
+        <field name="view_id" ref="tour_list"/>
+        <field name="search_view_id" ref="tour_search"/>
+    </record>
+    <menuitem action="tour_action" id="menu_tour_action" parent="base.next_id_2" sequence="5"/>
+
+
+    <record id="tour_export_js_action" model="ir.actions.server">
+        <field name="name">Export JS</field>
+        <field name="model_id" ref="web_tour.model_web_tour_tour"/>
+        <field name="binding_model_id" ref="web_tour.model_web_tour_tour"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.export_js_file()
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.event</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="65"/>
+            <field name="inherit_id" ref="mail.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app data-string="Events" string="Events" name="event" groups="event.group_event_manager">
+                        <block title="Events" name="events_setting_container">
+                            <setting id="manage_tracks" title="Add a navigation menu to your event web pages with schedule, tracks, a track proposal form, etc." string="Schedule &amp; Tracks" help="Manage &amp; publish a schedule with tracks">
+                                <field name="module_website_event_track"/>
+                                <div class="mt-3 d-flex" invisible="not module_website_event_track">
+                                    <field name="module_website_event_track_live" class="w-auto"/>
+                                    <div>
+                                        <label string="Live Broadcast" for="module_website_event_track_live"/><br/>
+                                        <span class="text-muted">Air your tracks online through a Youtube integration</span>
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-flex" invisible="not module_website_event_track">
+                                    <field name="module_website_event_track_quiz" class="w-auto"/>
+                                    <div>
+                                        <label string="Event Gamification" for="module_website_event_track_quiz"/><br/>
+                                        <span class="text-muted">Share a quiz to your attendees once a track is over</span>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting string="Community Chat Rooms" help="Foster interactions between attendees by creating virtual conference rooms">
+                                <field name="module_website_event_meet"/>
+                            </setting>
+                            <setting string="Online Exhibitors" help="Display Sponsors and Exhibitors on your event pages">
+                                <field name="module_website_event_exhibitor"/>
+                            </setting>
+                            <setting string="Booth Management" help="Create Booths and manage their reservations">
+                                <field name="module_event_booth"/>
+                            </setting>
+                        </block>
+                        <block title="Registration" name="registration_setting_container">
+                            <setting id="sell_tickets" help="Sell tickets with sales orders">
+                                <field name="module_event_sale"/>
+                            </setting>
+                            <setting id="sell_tickets_pos" help="Sell tickets with Point of Sale">
+                                <field name="module_pos_event"/>
+                            </setting>
+                            <setting name="event_settings_website" help="Sell tickets on your website">
+                                <field name="module_website_event_sale"/>
+                            </setting>
+                        </block>
+                        <block title="Attendance" name="attendance_setting_container">
+                            <setting id="event" company_dependent="1" help="Enable barcode scanning">
+                                <field name="use_event_barcode"/>
+                                <div class="content-group row mt16" invisible="use_event_barcode==False">
+                                    <label for="barcode_nomenclature_id" string="Barcode Nomenclature" class="col-lg-3 o_light_label"/>
+                                    <field name="barcode_nomenclature_id" required="use_event_barcode==True"/>
+                                </div>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+
+                <xpath expr="//setting[@id='restrict_template_rendering_setting']" position="before">
+                    <setting string="Google Maps" help="Insert dynamic Google Maps in your email templates"
+                             documentation="https://developers.google.com/maps/documentation/maps-static/get-api-key">
+                        <field name="use_google_maps_static_api"/>
+                        <div invisible="not use_google_maps_static_api">
+                            <div class="content-group mt16">
+                                <label for="google_maps_static_api_key" class="o_form_label col-lg-3 o_light_label"/>
+                                <field name="google_maps_static_api_key" string="Key"
+                                       required="use_google_maps_static_api"/>
+                            </div>
+                            <div class="content-group">
+                                <label for="google_maps_static_api_secret" class="o_form_label col-lg-3 o_light_label"/>
+                                <field name="google_maps_static_api_secret" string="Secret"
+                                       required="use_google_maps_static_api"/>
+                            </div>
+                        </div>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_event_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'event', 'bin_size': False}</field>
+        </record>
+
+        <menuitem id="menu_event_global_settings" name="Settings"
+            parent="menu_event_configuration" sequence="0" action="action_event_configuration" groups="base.group_system"/>
+    </data>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussCommand">
+        <div class="o_command_default d-flex align-items-center px-4 py-2">
+            <img class="rounded me-2" t-if="props.imgUrl" t-att-src="props.imgUrl"  style="width: 25px; height: 25px"/>
+            <ImStatus t-if="props.persona" className="'me-1'" persona="props.persona"/>
+            <span class="pe-1 text-ellipsis fw-bold d-flex align-items-center">
+                <t t-if="props.channel?.parent_channel_id">
+                    <span class="text-truncate flex-shrink-0 opacity-75 mw-50" t-esc="props.channel?.parent_channel_id.displayName"/>
+                    <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                </t>
+                <t t-slot="name" />
+            </span>
+            <span t-if="props.persona and props.persona.email" t-out="'- ' + props.persona.email"/>
+            <span class="flex-grow-1"/>
+            <div t-if="props.counter > 0">
+                <span t-attf-class="badge rounded-pill o-discuss-badge ms-3 me-1 fw-bold" t-esc="props.counter"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

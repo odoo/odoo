@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!-- TOOLS / UTILS -->
+<!-- ============================================================ -->
+
+<template id="show_flag_validator">
+    <a href="#" t-att-data-post-id="object.id" t-attf-data-action="validate" t-attf-class="o_wforum_flag_validator flag_validator btn btn-success #{'' if object.state == 'flagged' else 'd-none'} my-2 me-2" title="Validate" data-bs-toggle="tooltip" data-bs-placement="top">
+        <i class="fa fa-check"/> Accept
+    </a>
+    <a href="#" t-attf-data-action="/forum/#{object.id}/ask_for_mark_as_offensive" t-attf-class="o_wforum_flag_mark_as_offensive flag_validator #{'' if object.state == 'flagged' else 'd-none'} btn btn-danger my-2 me-2" title="Mark as Offensive"  data-bs-toggle="tooltip" data-bs-placement="top">
+        <i class="fa fa-times"/> Reject
+    </a>
+</template>
+
+<template id="link_button">
+    <form t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes}">
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+        <button t-if="label" t-attf-class="#{('fa ' + icon) if icon and not label else ''} #{ 'dropdown-item ps-3' if inDropdown else 'btn'} #{classes}#{ ' karma_required text-muted' if karma > 0 else ''}" t-attf-data-karma="#{karma}" t-att-title="title">
+            <i t-if="icon and label" t-attf-class="fa fa-fw #{icon} #{ 'me-1' if inDropdown else ''}"/>
+            <t t-out="label"/>
+        </button>
+        <t t-if="flag_validator" t-call="website_forum.show_flag_validator"/>
+    </form>
+</template>
+
+<!-- FAQ LAYOUT -->
+<!-- ============================================================ -->
+
+<!-- FAQ Layout -->
+<template id="faq" name="Frequently Asked Questions">
+    <t t-call="website_forum.header">
+        <t t-set="_page_name" t-value="'guidelines'"/>
+        <t t-set="_page_name_label">Guidelines</t>
+        <div t-field="forum.description" class="mb-4"/>
+        <div t-field="forum.faq"/>
+    </t>
+</template>
+
+<!-- FAQ Karma Layout -->
+<template id="faq_karma" name="Karma">
+    <t t-call="website_forum.header">
+        <div class="card bg-white" data-name="Item">
+            <div role="tab" class="card-header">
+                <b>Why can other people edit my questions/answers?</b>
+            </div>
+            <div role="tabpanel">
+                <div class="card-body">
+                <p>The goal of this site is create a relevant knowledge base that would answer questions related to Odoo.</p>
+                <p>Therefore questions and answers can be edited like wiki pages by experienced users of this site in order to improve the overall quality of the knowledge base content. Such privileges are granted based on user karma level: you will be able to do the same once your karma gets high enough.</p>
+                <p>If this approach is not for you, please respect the community.</p>
+                    <table class="table table-striped mt-4 bg-white">
+                        <tbody>
+                            <tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_upvote"/></td>
+                                <td>upvote, add comments</td>
+                            </tr><tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_editor"/></td>
+                                <td>insert text link, upload files</td>
+                            </tr><tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_downvote"/></td>
+                                <td>downvote</td>
+                            </tr><tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_comment_unlink_own"/></td>
+                                <td>delete own comment</td>
+                            </tr><tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_close_own"/></td>
+                                <td>flag offensive, close own questions</td>
+                            </tr><tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_edit_all"/></td>
+                                <td>edit any post, view offensive flags</td>
+                            </tr><tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_answer_accept_all"/></td>
+                                <td>accept any answer</td>
+                            </tr><tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_comment_unlink_all"/></td>
+                                <td>delete any comment</td>
+                            </tr><tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_close_all"/></td>
+                                <td>close any posts</td>
+                            </tr><tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_user_bio"/></td>
+                                <td>your biography can be seen as tooltip</td>
+                            </tr><tr>
+                                <td class="faq-rep-item"><strong t-field="forum.karma_unlink_all"/></td>
+                                <td>delete any question or answer</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<!-- TOOLS / UTILS -->
+<!-- ============================================================ -->
+
+<template id="vote">
+    <t t-set="own_vote" t-value="post.user_vote"/>
+    <t t-set="forum" t-value="post.forum_id"/>
+    <!-- can_upvote returns "true" for unregistered users -->
+    <t t-set="can_upvote" t-value="post.can_upvote"/>
+    <t t-set="can_downvote" t-value="post.can_downvote"/>
+    <div t-attf-class="vote d-inline-flex align-items-center gap-2 ms-n2 #{classes} text-muted text-center">
+        <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/upvote"
+            t-attf-class="btn vote_up py-0 px-2 #{ 'text-success' if own_vote == 1 else '' } #{ 'karma_required text-reset opacity-50' if not can_upvote else ''}#{ ' text-300' if post.create_uid.id == uid else ''}"
+            t-att-disabled="own_vote == 1 and 'disabled'"
+            t-att-data-karma="forum.karma_upvote"
+            t-att-data-can-upvote="can_upvote"
+            aria-label="Upvote" title="Upvote">
+            <i class="fa fa-caret-up" data-bs-toggle="tooltip" data-bs-placement="top" title="Upvote"/>
+        </button>
+        <small t-attf-class="vote_count #{ 'text-success' if own_vote == 1 else 'text-danger' if own_vote == -1 else ('text-muted opacity-75' if post.vote_count == 0 and not own_vote else '') }"
+            t-out="post.vote_count"/>
+        <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/downvote"
+            t-attf-class="btn vote_down py-0 px-2 #{ 'text-danger' if own_vote == -1 else ''} #{'karma_required text-reset opacity-50' if not can_downvote else '' }#{' text-300' if post.create_uid.id == uid else '' }"
+            t-att-disabled="own_vote == -1 and 'disabled'"
+            t-att-data-karma="forum.karma_downvote"
+            t-att-data-can-downvote="can_downvote"
+            aria-label="Downvote" title="Downvote">
+            <i class="fa fa-caret-down" data-bs-toggle="tooltip" data-bs-placement="top" title="Downvote"/>
+        </button>
+        <t t-out="0"/>
+    </div>
+</template>
+
+<template id="author_box">
+    <t t-set="display_info" t-value="show_name or show_date or show_karma"/>
+    <t t-if="allow_biography and object.can_display_biography and request.env.user.karma >= website.karma_profile_min" t-set="bio_popover_data">
+        <div class="o_wforum_bio_popover_wrap d-flex transition-fade">
+            <div class="d-flex flex-column">
+                <img class="o_wforum_avatar flex-shrink-0 rounded me-3" t-att-src="request.website.image_url(object.create_uid, 'avatar_128', '128x128')" alt="Avatar"/>
+            </div>
+            <div>
+                <h5 class="o_wforum_bio_popover_name mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name"]}'/>
+                <span class="o_wforum_bio_popover_info" t-field="object.create_uid" t-options='{"widget": "contact", "UserBio": True, "badges": True, "fields": ["karma"]}'/>
+                <div class="o_wforum_bio_popover_bio mt-1 mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "website_description": True, "fields": ["partner_id"]}'/>
+            </div>
+        </div>
+    </t>
+    <div t-attf-class="o_wforum_author_box d-inline-flex #{ 'o_show_info ' if display_info else '' }#{ 'o_compact align-items-center ' if compact else '' }#{ 'o_wforum_bio_popover ' if bio_popover_data else ''}#{_box_classes}"
+         t-att-data-bs-content="bio_popover_data"
+         data-bs-placement="top">
+        <t t-set="user_profile_url" t-value="False"/>
+        <t t-if="'forum_id' in object and (object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published)">
+            <t t-set="user_profile_url" t-valuef="/forum/user/#{ object.create_uid.id }?forum_id=#{ object.forum_id.id }&amp;forum_origin=#{ request.httprequest.path }"/>
+        </t>
+        <a t-if="show_image" t-att-href="user_profile_url or '#'" t-attf-class="o_wforum_author_pic position-relative #{ 'pe-none' if not user_profile_url else '' }">
+            <img t-attf-class="o_wforum_avatar rounded-circle o_object_fit_cover #{'me-2' if show_name or show_date or show_karma else '' } #{_image_classes}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '60x60')" alt="Avatar"/>
+        </a>
+        <div t-if="show_name or show_date or show_karma" t-attf-class="d-flex #{ 'align-items-baseline' if compact else 'flex-column justify-content-around' } #{ 'ms-2' if show_image else '' }">
+            <a t-att-href="user_profile_url" t-attf-class="my-0 text-reset h6 #{ 'small' if compact else ''}" t-field="object.create_uid" t-options='{"widget": "contact", "fields": ["name"]}'/>
+            <small t-if="show_karma and show_date" class="text-muted fw-bold"> - <t t-out="object.create_uid.karma"/>xp</small>
+
+            <div t-if="show_date or show_karma" t-attf-class="text-muted small #{ 'd-flex align-items-baseline' if compact else '' }">
+                <div t-if="show_date">
+                    <time  class="text-muted" t-field="object.create_date" t-options="{ 'format': 'd MMMM y ' }"/>
+                    at
+                    <time class="text-muted" t-field="object.create_date" t-options="{ 'format': 'HH:mm ' }"/>
+                </div>
+                <span t-if="show_karma and not show_date" class="text-muted"><t t-out="object.create_uid.karma"/>xp</span>
+            </div>
+        </div>
+    </div>
+</template>
+    </data>
+</odoo>

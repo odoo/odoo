@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_type_form_inherit_sale_project_stock" model="ir.ui.view">
+        <field name="name">stock.picking.type.inherit.sale_project_stock</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <field name="create_backorder" position="after">
+                <field name="analytic_costs" invisible="code not in ('incoming', 'outgoing')" groups="analytic.group_analytic_accounting"/>
+            </field>
+        </field>
+    </record>
+</odoo>

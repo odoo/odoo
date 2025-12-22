@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates>
+    <t t-name="mail.EmojisFieldButton">
+        <div class="o_mail_emojis_buttons position-relative d-inline">
+            <button
+                class="btn end-0"
+                t-attf-class="{{positionCenter ? 'pb-0 pt-0' : 'bottom-0'}}"
+                t-ref="emojisButton"
+            >
+                <i class="oi oi-smile-add" role="img" aria-label="Emojis"/>
+            </button>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<templates xml:space="preserve">
+    <t t-name="sms.SmsWidget" t-inherit="mail.EmojisTextField" t-inherit-mode="primary">
+        <xpath expr="/*[last()]/*[last()]" position="after">
+            <div class="o_sms_container">
+                <span class="text-muted o_sms_count">
+                    <t t-out="nbrChar"/> characters<t t-out="nbrCharExplanation"/>, fits in <t t-out="nbrSMS"/> SMS (<t t-out="encoding"/>)
+                    <a href="https://iap-services.odoo.com/iap/sms/pricing" target="_blank"
+                        title="SMS Pricing" aria-label="SMS Pricing" class="fa fa-lg fa-info-circle"/>
+                </span>
+            </div>
+        </xpath>
+    </t>
+</templates>

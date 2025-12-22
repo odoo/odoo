@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="sale.SaleActionHelper">
+        <div class="o_view_nocontent flex-wrap pt-5">
+            <div class="container">
+                <div class="o_nocontent_help">
+                    <div>
+                        <a
+                            class="o_sale_action_preview position-relative overflow-hidden d-inline-block rounded-4"
+                            role="button"
+                            t-on-click="this.openVideoPreview"
+                        >
+                            <i class="position-absolute top-50 start-50 translate-middle w-auto h-auto z-1 fa fa-4x fa-play-circle"/>
+                            <div class="position-absolute top-0 end-0 w-100 h-100"/>
+                            <img src="/sale/static/src/img/sales_quotation_thumbnail.webp" class="img w-100"/>
+                        </a>
+                        <t t-out="props.noContentHelp"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

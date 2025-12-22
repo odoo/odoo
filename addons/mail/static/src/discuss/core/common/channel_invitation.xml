@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.ChannelInvitation">
+        <ActionPanel title.translate="Invite people" resizable="false" icon="'fa fa-user-plus'">
+            <div class="d-flex flex-column flex-grow-1 bg-inherit" t-att-class="{ 'o-mail-Discuss-threadActionPopover w-100': props.hasSizeConstraints }">
+                <t t-if="store.self.type === 'partner'">
+                    <input class="o-discuss-ChannelInvitation-search form-control lh-1 px-2 bg-white" t-ref="input" placeholder="Type the name of a person" t-on-input="onInput"/>
+                    <ul class="d-flex flex-column mx-0 pt-1 pb-0 overflow-auto list-group border-0 flex-grow-1" t-att-class="{ 'align-items-center justify-content-center': state.selectablePartners.length === 0 }">
+                        <div t-if="state.selectablePartners.length === 0" class="small text-muted mx-1 fst-italic">No user found that is not already a member of this channel.</div>
+                        <div t-if="state.searchResultCount > state.selectablePartners.length" class="smaller text-muted mx-1 fst-italic">
+                            Showing
+                            <t t-esc="state.selectablePartners.length"/>
+                            results out of
+                            <t t-esc="state.searchResultCount"/>
+                            . Narrow your search to see more choices.
+                        </div>
+                        <t t-foreach="state.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
+                            <li class="o-discuss-ChannelInvitation-selectable o_object_fit_cover d-flex align-items-center px-1 py-0 btn list-group-item border-0 rounded-0" t-att-class="{ 'o-odd': selectablePartner_index % 2 === 1, 'o-selected': selectablePartner.in(state.selectedPartners) }" t-on-click="() => this.onClickSelectablePartner(selectablePartner)">
+                                <div class="d-flex align-items-center p-1 bg-inherit">
+                                    <div class="o-discuss-ChannelInvitation-avatar position-relative d-flex flex-shrink-0 bg-inherit">
+                                        <img class="w-100 h-100 rounded o_object_fit_cover" t-att-src="selectablePartner.avatarUrl"/>
+                                        <ImStatus persona="selectablePartner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
+                                    </div>
+                                </div>
+                                <t name="selectablePartnerDetail">
+                                    <span class="flex-grow-1 mx-2 text-truncate text-start" t-esc="selectablePartner.name"/>
+                                </t>
+                                <input class="form-check-input flex-shrink-0 me-1" type="checkbox" t-att-checked="selectablePartner.in(state.selectedPartners) ? 'checked' : undefined"/>
+                            </li>
+                        </t>
+                    </ul>
+                </t>
+                <div class="o-discuss-ChannelInvitation-invitationBox pt-0 pb-1 bg-inherit">
+                    <t t-if="store.self.type === 'partner'" >
+                        <div t-if="state.selectedPartners.length > 0" class="pt-2">
+                            <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap overflow-auto">
+                                <t t-foreach="state.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
+                                    <button class="btn btn-light fw-bolder smaller pe-1" title="Unselect person" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
+                                        <t t-esc="selectedPartner.name"/> <i class="oi oi-close border border-dark-subtle ms-1"/>
+                                    </button>
+                                </t>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-100 my-2" t-att-disabled="this.state.selectedPartners.length === 0" t-att-title="invitationButtonText" t-on-click="onClickInvite">
+                            <t t-esc="invitationButtonText"/>
+                        </button>
+                    </t>
+                    <div t-if="props.thread.invitationLink" class="input-group">
+                        <input class="border border-secondary form-control lh-1 px-2 py-0 opacity-75" type="text" t-att-value="props.thread.invitationLink" readonly="" t-on-focus="onFocusInvitationLinkInput"/>
+                        <button class="btn btn-primary px-2 py-1" t-on-click="onClickCopy">
+                            <i class="fa fa-copy"/>
+                        </button>
+                    </div>
+                    <div t-if="props.thread.accessRestrictedToGroupText" class="mt-2 text-muted smaller mx-1" t-esc="props.thread.accessRestrictedToGroupText"/>
+                </div>
+            </div>
+        </ActionPanel>
+    </t>
+
+</templates>

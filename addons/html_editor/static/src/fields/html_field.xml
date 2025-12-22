@@ -1,0 +1,32 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.HtmlField">
+        <t t-if="this.displayReadonly">
+            <HtmlViewer
+                config="getReadonlyConfig()"/>
+        </t>
+        <div t-else="" class="h-100" t-att-class="{'o_show_codeview': state.showCodeView, 'o_field_translate': isTranslatable}">
+            <t t-if="state.showCodeView">
+                <textarea t-ref="codeView" class="o_codeview" t-att-value="this.value" t-on-change="onChange"/>
+            </t>
+            <t t-if="!this.sandboxedPreview">
+                <Wysiwyg
+                    config="this.getConfig()"
+                    onLoad.bind="onEditorLoad"
+                    contentClass="`note-editable ${this.state.showCodeView ? 'd-none' : ''}`"
+                    onBlur.bind="onBlur"
+                    t-key="wysiwygKey"/>
+            </t>
+            <t t-if="isTranslatable">
+                <TranslationButton
+                    fieldName="props.name"
+                    record="props.record"
+                />
+            </t>
+        </div>
+        <div t-if="state.showCodeView || (sandboxedPreview and !props.readonly)" t-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="toggleCodeView">
+            <button class="o_codeview_btn btn btn-primary">
+                <i class="fa fa-code" />
+            </button>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="mass_mailing.SnippetsMenu" t-inherit="web_editor.SnippetsMenu" t-inherit-mode="primary">
+    <xpath expr="//div[hasclass('o_we_website_top_actions')]" position="inside">
+        <div class="email_designer_top_actions">
+            <button t-if="env.debug" class="o_codeview_btn btn btn-primary" t-on-click="this._onCodeViewBtnClick">
+                <i class="fa fa-code"></i>
+            </button>
+            <button class="o_mobile_preview_btn btn btn-primary" t-on-click="this._onMobilePreviewBtnClick">
+                <i class="fa fa-lg fa-mobile"/>
+            </button>
+            <button class="o_fullscreen_btn btn btn-primary" t-on-click="_onFullscreenBtnClick">
+                <img class="img-fluid" src="/web_editor/font_to_img/61541/rgb(255,255,255)/16" alt="Fullscreen"/>
+            </button>
+        </div>
+    </xpath>
+    <xpath expr="//div[hasclass('o_we_website_top_actions')]/form" position="attributes">
+        <attribute name="style">display: none !important;</attribute>
+    </xpath>
+    <xpath expr="//div[@id='snippets_menu']" position="inside">
+        <button type="button" tabindex="3"
+            t-att-class="{ 'active': state.currentTab === constructor.tabs.DESIGN }"
+            class="o_we_customize_design_btn text-uppercase" accesskey="2"
+            t-on-click="_onDesignTabClick">
+            <span>Design</span>
+        </button>
+    </xpath>
+</t>
+
+</templates>

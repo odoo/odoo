@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_warehouse" model="ir.ui.view">
+            <field name="name">stock.warehouse</field>
+            <field name="model">stock.warehouse</field>
+            <field name="arch" type="xml">
+                <form string="Warehouse">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_all_routes"
+                                    string="Routes"
+                                    icon="fa-refresh"
+                                    class="oe_stat_button"
+                                    type="object">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Routes</span>
+                                    </div>
+                            </button>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Central Warehouse" class="w-100"/></h1>
+                        <group>
+                            <group>
+                                <field name="active" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="code" placeholder="e.g. CW"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                <field name="partner_id"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4" groups="stock.group_adv_location,stock.group_stock_multi_warehouses">
+                            <page string="Warehouse Configuration" name="warehouse_config" colspan="4">
+                                <group colspan="4">
+                                    <group string="Shipments" groups="stock.group_adv_location">
+                                        <field name="reception_steps" widget='radio'/>
+                                        <field name="delivery_steps" widget='radio'/>
+                                    </group>
+                                    <group name="group_resupply" string="Resupply" groups="stock.group_stock_multi_warehouses">
+                                        <field name="resupply_wh_ids" domain="[('id', '!=', id), ('company_id', '=', company_id)]" widget="many2many_checkboxes" groups="stock.group_stock_multi_warehouses"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Technical Information" name="technical_info" groups="base.group_no_one">
+                                <group>
+                                    <group string="Locations">
+                                        <field name="view_location_id" string="Warehouse view location" readonly="1" required="0"/>
+                                        <field name="lot_stock_id" readonly="1" required="0"/>
+                                        <field name="wh_input_stock_loc_id" readonly="1"/>
+                                        <field name="wh_qc_stock_loc_id" readonly="1"/>
+                                        <field name="wh_pack_stock_loc_id" readonly="1"/>
+                                        <field name="wh_output_stock_loc_id" readonly="1"/>
+                                    </group>
+                                    <group string="Operation Types">
+                                        <field name="int_type_id" readonly="1"/>
+                                        <field name="in_type_id" readonly="1"/>
+                                        <field name="qc_type_id" readonly="1"/>
+                                        <field name="store_type_id" readonly="1"/>
+                                        <field name="pick_type_id" readonly="1"/>
+                                        <field name="pack_type_id" readonly="1"/>
+                                        <field name="out_type_id" readonly="1"/>
+                                        <field name="xdock_type_id" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_warehouse_tree" model="ir.ui.view">
+            <field name="name">stock.warehouse.list</field>
+            <field name="model">stock.warehouse</field>
+            <field name="arch" type="xml">
+                <list string="Warehouse">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="active" column_invisible="True"/>
+                    <field name="lot_stock_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="partner_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="stock_warehouse_view_search" model="ir.ui.view">
+            <field name="name">stock.warehouse.search</field>
+            <field name="model">stock.warehouse</field>
+            <field name="arch" type="xml">
+                <search string="Warehouse">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_warehouse_form" model="ir.actions.act_window">
+            <field name="name">Warehouses</field>
+            <field name="res_model">stock.warehouse</field>
+            <field name="view_id" ref="view_warehouse_tree"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Define a new warehouse
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form"
+            parent="menu_warehouse_config" sequence="1"/>
+
+</odoo>

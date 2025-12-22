@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_analytic_account_view_form_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.account.form.inherit</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field eval="40" name="priority"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(analytic.account_analytic_line_action)d']" position="before">
+                <button class="oe_stat_button" type="object" name="action_view_projects"
+                    icon="fa-puzzle-piece" invisible="project_count == 0">
+                    <field string="Projects" name="project_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">analytic_account_form_view</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_account_list_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.account.list.inherit</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
+        <field name="priority">40</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="js_class">analytic_account_list_view</attribute>
+            </xpath>
+            <xpath expr="//list" position="inside">
+                <field name="project_count" column_invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

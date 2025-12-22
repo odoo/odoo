@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.ProductCard" t-inherit-mode="extension">
+        <article position="attributes">
+            <attribute
+                name="t-attf-class"
+                remove="cursor-pointer"
+                add="{{
+                    props.product.isQuantityAllowed(props.quantity)
+                    ? 'cursor-pointer' : 'unselectable-card'
+                }}"
+                separator=" "
+            />
+        </article>
+        <article position="inside">
+            <div
+                t-if="!props.product.isQuantityAllowed(props.quantity)"
+                class="overlay-container justify-content-center text-center text-danger fw-bold p-2"
+            >
+                <i class="fa fa-times fa-2x mb-2"/>
+                <span>Requested quantity not available</span>
+            </div>
+            <div
+                t-elif="
+                    props.isSelected &amp;&amp; !props.product.isQuantityAllowed(props.quantity + 1)
+                "
+                class="overlay-container text-end text-warning fw-bold p-2"
+            >
+                <i
+                    class="fa fa-warning fa-2x"
+                    data-toggle="tooltip"
+                    data-trigger="click hover focus"
+                    t-att-title="allQuantitySelectedTooltip"
+                />
+            </div>
+        </article>
+    </t>
+</templates>

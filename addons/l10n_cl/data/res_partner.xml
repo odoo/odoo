@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="True">
+
+        <record model='res.partner' id='par_cfa'>
+            <field name='name'>Consumidor Final Anónimo</field>
+            <field name='l10n_cl_sii_taxpayer_type'>3</field>
+            <field name='l10n_latam_identification_type_id' ref='l10n_cl.it_RUT'/>
+            <field name='vat'>66666666-6</field>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record model='res.partner' id='par_tgr'>
+            <field name='name'>Tesorería General de la República</field>
+            <field name="company_type">company</field>
+            <field name='l10n_cl_sii_taxpayer_type'>1</field>
+            <field name='l10n_latam_identification_type_id' ref='l10n_cl.it_RUT'/>
+            <field name='vat'>60805000-0</field>
+            <field name="image_1920" type="base64" file="l10n_cl/static/tgr_logo.png"/>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+        <record model='res.partner' id='par_sii'>
+            <field name='name'>Internal Revenue Service</field>
+            <field name="company_type">company</field>
+            <field name='l10n_cl_sii_taxpayer_type'>1</field>
+            <field name='l10n_latam_identification_type_id' ref='l10n_cl.it_RUT'/>
+            <field name='vat'>60803000-K</field>
+            <field name="image_1920" type="base64" file="l10n_cl/static/sii_logo.jpeg"/>
+            <field name="country_id" ref="base.cl"/>
+        </record>
+
+    </data>
+</odoo>

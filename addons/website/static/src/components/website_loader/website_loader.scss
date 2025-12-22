@@ -1,0 +1,303 @@
+.o_website_loader_container {
+    $-accent-color: #BB86FC; // dark mode primary color
+    background-color: $o-view-background-color;
+    pointer-events: all;
+    z-index: $zindex-modal - 1;
+
+    .o_website_loader_odoo_logo {
+        background-image: var(--configurator-logo, url('/web/static/img/odoo_logo.svg'));
+        background-repeat: no-repeat;
+        background-size: contain;
+        filter: var(--website-loader-logo-filter);
+    }
+    .o_website_loader_container_content {
+        color: var(--website-loader-color);
+        background-color: $gray-100;
+        width: 100%;
+
+        @include media-breakpoint-up(lg) {
+            max-width: 30rem;
+        }
+    }
+    .o_website_loader_tip {
+        color: var(--website-loader-color);
+
+        .o_tour_pointer {
+            --TourPointer__height: 1em;
+            --TourPointer__width: 1em;
+            --TourPointer__color: #{$-accent-color};
+            --TourPointer__color-accent: #{lighten($-accent-color, 7%)};
+        }
+    }
+    .o_website_loader_text_highlight {
+        color: $-accent-color;
+    }
+    .o_website_loader_progress {
+        --progress-height: 0.5rem;
+    }
+    .o_website_loader_check {
+        @keyframes loaderCheck {
+            from {
+                transform: translateX(-25%);
+                opacity: 0;
+            }
+        }
+
+        animation: loaderCheck 1s ease-out;
+    }
+    .o_website_loader_done {
+        @keyframes loaderDone {
+            from {
+                transform: translateX(.5em);
+                opacity: 0;
+            }
+        }
+
+        animation: loaderDone 1s ease-out;
+    }
+    // Animation Steps Container
+    #o_website_loader_animations_steps {
+        width: 55%;
+        background: #111827;
+        color: white;
+        perspective: 1000px;
+
+        &:after {
+            content: '';
+            @include o-position-absolute(0, 0, 0, 0);
+            box-shadow: 0 0 200px rgba(#111827, .9) inset;
+            z-index: 1;
+        }
+    }
+
+    // =======================================
+    // Stages Timeline Definition
+    // =======================================
+
+    #o_website_loader_step_colors, #o_website_loader_step_images, #o_website_loader_step_text, #o_website_loader_step_generic {
+        @include o-position-absolute(0, 0, 0, 0);
+        transition: opacity 1s ease-in-out;
+        transform-style: preserve-3d;
+    }
+    #o_website_loader_step_images, #o_website_loader_step_text, #o_website_loader_step_generic {
+        display: none;
+        opacity: 0;
+        transition-delay: .5s;
+    }
+    // IMAGES Stage
+    &.o_website_loader_container_images {
+        #o_website_loader_step_colors span {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        #o_website_loader_step_images {
+            display: flex;
+            opacity: 1;
+
+            .o_website_loader_filmstrip {
+                animation-play-state: running;
+            }
+        }
+    }
+    // TEXT Stage
+    &.o_website_loader_container_text {
+
+        #o_website_loader_step_colors {
+            display: none;
+        }
+        #o_website_loader_step_images {
+            display: flex;
+            opacity: 1;
+
+            .o_website_loader_filmstrip {
+                transition: opacity 1s ease-in-out;
+                animation-play-state: running;
+                opacity: 0;
+            }
+        }
+        #o_website_loader_step_text {
+            display: block;
+            opacity: 1;
+        }
+    }
+
+    // GENERIC Stage
+    &.o_website_loader_container_generic {
+
+        #o_website_loader_step_colors, #o_website_loader_step_images {
+            display: none;
+        }
+        #o_website_loader_step_text {
+            display: block;
+            opacity: 0;
+        }
+        #o_website_loader_step_generic {
+            display: block;
+            transition: opacity 1s ease-in-out;
+            transition-delay: 1s;
+            opacity: 1;
+        }
+    }
+
+    // =======================================
+    // Steps specific rules
+    // =======================================
+
+    // COLORS step
+    #o_website_loader_step_colors {
+        $-random-colors: #7d773c, #607944, #775c35, #3d6273, #5f414c, #805f54, #76527a, #56476e, #4b676b, #95985f;
+        $-random-color-cells: 28, 43, 31, 37, 14, 41, 34, 23, 19, 12;
+
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(8, 1fr);
+        grid-gap: .3vw;
+        transform: scale(1.5) rotate3d(1.6, 1, -1.1, 37deg) translateX(10%);
+        animation: 7s ease-in-out alternate colorsPlaneMotion;
+
+        @keyframes colorsPlaneMotion {
+            from {
+                transform: scale(1.6) rotate3d(1.6, 1, -1.1, 37deg) translateX(10%) translateY(-3%);
+            }
+            to {
+                transform: scale(1.5) rotate3d(1.4, 1, -1.1, 29deg) translateX(10%) translateY(0);
+            }
+        }
+
+        @keyframes elevateColoredCells {
+            0%, 100% {
+                transform: translateZ(0px);
+                background-color: #1F2937;
+            }
+            30% {
+                transform: translateZ(25px);
+                background-color: var(--background-color);
+            }
+        }
+
+        span {
+            border-radius: .4rem;
+            background-color: #1F2937;
+
+            @for $i from 1 through length($-random-color-cells) {
+                &:nth-child(#{nth($-random-color-cells, $i)}) {
+                    animation: elevateColoredCells (5s + ($i * .2s)) ease-in-out infinite;
+                    animation-delay: ($i - 1) * .5s;
+                    --background-color: #{nth($-random-colors, $i)};
+                }
+            }
+        }
+    }
+
+    // IMAGES step
+    #o_website_loader_step_images {
+        display: flex;
+        animation: 7s ease-in-out alternate imagesPlaneMotion forwards;
+    }
+
+    .o_website_loader_filmstrip {
+        min-height: 45vh;
+        animation-play-state: paused;
+
+        @keyframes filmstripScroll {
+            to {
+                transform: translateX(-100%);
+            }
+        }
+
+        .o_website_loader_filmstrip_inner {
+            width: 200%;
+            animation: filmstripScroll 30s linear infinite;
+            animation-play-state: inherit;
+        }
+        img {
+            height: auto;
+            padding: 4px;
+            border-radius: .6rem;
+            object-fit: cover;
+        }
+
+        &.o_website_loader_filmstrip_middle {
+            flex-grow: 1;
+            z-index: 1;
+
+            .o_website_loader_filmstrip_inner {
+                animation-name: filmstripScroll;
+                animation-duration: 20s;
+                animation-direction: reverse;
+            }
+        }
+
+        &:last-child .o_website_loader_filmstrip_inner {
+            animation-duration: 40s;
+        }
+    }
+
+    // TEXT step
+    #o_website_loader_step_text {
+
+        .o_website_loader_text_content {
+            font-size: 180vh;
+            transform: translate(-25%, -25%);
+            line-height: 1;
+            position: absolute;
+            opacity: 0;
+            animation: loaderTextFading 6s infinite;
+            mix-blend-mode: plus-lighter;
+            color: rgba(white, .5);
+
+            @keyframes loaderTextFading {
+                0%, 100% {
+                    opacity: 0;
+                }
+                50% {
+                    opacity: 1;
+                }
+            }
+            &:nth-child(2) {
+                animation-delay: 2s;
+                color: rgba(mix(cyan, white), .5);
+            }
+            &:nth-child(3) {
+                animation-delay: 4s;
+                color: rgba(mix(magenta, white), .5);;
+                transform: translate(-10%, -25%) scale(.9);
+            }
+        }
+    }
+
+    // GENERIC step
+    .o_website_loader_loader {
+        $-loader-size: 120px;
+        $-loader-gap: $-loader-size * .5;
+
+        @keyframes rotateLoader {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+
+        .o_website_loader_circle, .o_website_loader_circle_mask {
+            @include o-position-absolute(50%, $left: 50%);
+            margin-left: $-loader-gap * -1;
+            margin-top: $-loader-gap * -1;
+        }
+        .o_website_loader_circle, .o_website_loader_circle_line {
+            height: $-loader-size;
+            width: $-loader-size;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 1px #FFF;
+        }
+        .o_website_loader_circle {
+            height: $-loader-size;
+            opacity: .2;
+        }
+        .o_website_loader_circle_mask {
+            height: $-loader-size;
+            width: $-loader-gap;
+            transform-origin: $-loader-gap $-loader-gap;
+            -webkit-mask-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+            animation: rotateLoader 1.2s infinite linear;
+        }
+    }
+}

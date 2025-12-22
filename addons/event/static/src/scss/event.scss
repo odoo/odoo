@@ -1,0 +1,27 @@
+.o_kanban_view.o_event_kanban_view .o_kanban_renderer {
+    .o_kanban_record > div {
+        min-height: 140px;
+    }
+}
+
+.o_kanban_view.o_event_attendee_kanban_view .o_kanban_renderer {
+    .o_kanban_record_title {
+        margin-right: 35px;
+    }
+    .o_kanban_event_registration_event_name{
+        margin-right: 35px;
+    }
+    .o_event_registration_kanban_badge {
+        font-size: 1.2rem;
+        padding: 7px 5px;
+    }
+}
+
+.o_event_registration_view_tree {
+    .o_list_button > .o_btn_cancel_registration {
+        color: $danger;
+        &:hover {
+            color: darken($danger, $link-shade-percentage);
+        }
+    }
+}

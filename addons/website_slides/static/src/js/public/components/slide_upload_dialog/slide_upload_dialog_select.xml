@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Slide Category Selection templates -->
+
+    <t t-name="website_slides.SlideUploadDialogSelect">
+        <div class="row p-1 mt-4 mb-2">
+            <div
+                t-foreach="slideCategoryData"
+                t-as="slide_category"
+                t-key="slide_category_index"
+                class="col-6 col-md-4"
+            >
+                <SlideCategoryIcon
+                    slideCategory="slide_category"
+                    categoryData="slideCategoryData[slide_category]"
+                    onClickSlideCategoryIcon.bind="onClickSlideCategoryIcon"
+                />
+            </div>
+        </div>
+        <ModuleToInstallIcon
+            t-if="props.modulesToInstall.length"
+            t-foreach="props.modulesToInstall"
+            t-as="module_info"
+            t-key="module_info_index"
+            title="module_info['name']"
+            moduleId="module_info['id']"
+            motivational="module_info['motivational']"
+            onClickInstallModuleIcon.bind="onClickInstallModuleIcon"
+        />
+    </t>
+
+    <t t-name="website_slides.SlideCategoryIcon" owl="1">
+        <a
+            href="#"
+            t-on-click="() => props.onClickSlideCategoryIcon(props.slideCategory)"
+            t-att-data-slide-category="props.slideCategory"
+            class="content-type d-flex flex-column align-items-center mb-4 btn rounded border text-600 p-3"
+        >
+            <i t-attf-class="fa #{props.categoryData.icon} mb-2 fa-3x"/>
+            <t t-out="props.categoryData.label"/>
+        </a>
+    </t>
+
+    <t t-name="website_slides.ModuleToInstallIcon" owl="1">
+        <a class="w-100 text-center mb-4 btn rounded border text-600 p-3"
+            href="#" t-on-click="() => props.onClickInstallModuleIcon(props.moduleId)"
+            t-att-title="props.title"
+            t-att-data-module-id="props.moduleId">
+            <i class="fa fa-trophy"/> <t t-out="props.motivational"/><span class="text-primary"> Install the <t t-out="props.title"/> app.</span>
+        </a>
+    </t>
+</templates>

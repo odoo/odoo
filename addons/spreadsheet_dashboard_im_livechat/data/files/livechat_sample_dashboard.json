@@ -1,0 +1,605 @@
+{
+    "version": 21,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 5,
+            "rowNumber": 35,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "22": {
+                    "size": 40
+                },
+                "23": {
+                    "size": 40
+                },
+                "24": {
+                    "size": 29
+                },
+                "25": {
+                    "size": 29
+                },
+                "26": {
+                    "size": 29
+                },
+                "27": {
+                    "size": 29
+                },
+                "28": {
+                    "size": 29
+                },
+                "29": {
+                    "size": 29
+                },
+                "30": {
+                    "size": 29
+                },
+                "31": {
+                    "size": 29
+                },
+                "32": {
+                    "size": 29
+                },
+                "33": {
+                    "size": 29
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 372
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 50
+                },
+                "3": {
+                    "size": 209
+                },
+                "4": {
+                    "size": 260
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "content": "[Daily Sessions](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"start_date:day\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"start_date:day\"]},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Session per Day\"})"
+                },
+                "A23": {
+                    "content": "[Top Operators](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[],\"pivot_measures\":[\"nbr_channel\",\"time_to_answer\",\"duration\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})"
+                },
+                "A24": {
+                    "content": "=_t(\"Operator\")"
+                },
+                "B24": {
+                    "content": "=_t(\"Sessions\")"
+                },
+                "D7": {
+                    "content": "[Sessions by Operator](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"partner_id\"],\"graph_measure\":\"nbr_channel\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"partner_id\"]},\"modelName\":\"im_livechat.report.operator\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Operator Analysis\"})"
+                },
+                "D24": {
+                    "content": "=_t(\"Time to answer (seconds)\")"
+                },
+                "E24": {
+                    "content": "=_t(\"Average session (seconds)\")"
+                }
+            },
+            "styles": {
+                "A7": 1,
+                "A23": 1,
+                "D7": 1,
+                "A24": 2,
+                "B24": 3,
+                "D24:E24": 3
+            },
+            "formats": {},
+            "borders": {
+                "A7:B7": 1,
+                "D7:E7": 1,
+                "A23:E23": 1,
+                "A8:B8": 2,
+                "D8:E8": 2,
+                "A24:E24": 2,
+                "A25": 3,
+                "A26:A34": 4,
+                "A35:E35": 5,
+                "B25:D25": 6,
+                "B26:D34": 7,
+                "E25": 8,
+                "E26:E34": 9
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "082454d7-d797-48a6-8db5-9182050a8c55",
+                    "x": 0,
+                    "y": 12,
+                    "width": 200,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Sessions",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E2",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D2",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "ced6ca85-c9d2-4804-9100-e1ca5fd290d1",
+                    "x": 213,
+                    "y": 12,
+                    "width": 200,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Avg. Time to Answer",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FEF2F2",
+                        "baseline": "Data!E3",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!D3",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "e0b92164-4451-4c0b-bd28-3bab46fd88de",
+                    "x": 426,
+                    "y": 12,
+                    "width": 200,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Avg. Session Duration",
+                            "color": "#434343",
+                            "bold": true
+                        },
+                        "type": "scorecard",
+                        "background": "#FEF2F2",
+                        "baseline": "Data!E4",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!D4",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "5b8972f1-db5f-48dd-aeca-c0bc87c7155d",
+                    "x": 636,
+                    "y": 12,
+                    "width": 200,
+                    "height": 102,
+                    "tag": "chart",
+                    "data": {
+                        "background": "#EFF6FF",
+                        "sectionRule": {
+                            "colors": {
+                                "lowerColor": "#cc0000",
+                                "middleColor": "#f1c232",
+                                "upperColor": "#6aa84f"
+                            },
+                            "rangeMin": "0",
+                            "rangeMax": "5",
+                            "lowerInflectionPoint": {
+                                "type": "number",
+                                "value": "1"
+                            },
+                            "upperInflectionPoint": {
+                                "type": "number",
+                                "value": "3"
+                            }
+                        },
+                        "title": {
+                            "text": "Average Rating",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "gauge",
+                        "dataRange": "Data!D5"
+                    }
+                },
+                {
+                    "id": "d0e7d22f-834d-4d8e-88ee-ed66f743c812",
+                    "x": 522,
+                    "y": 178,
+                    "width": 469,
+                    "height": 345,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!B16:B18",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A16:A18",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                },
+                {
+                    "id": "95bfac8a-184e-4f8e-b781-ead13c7dd6c1",
+                    "x": 0,
+                    "y": 178,
+                    "width": 474,
+                    "height": 345,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!C8:C13",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A8:A13",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "16705d67-20c0-466d-ac72-3b955432e0ba",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 90,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "content": "=_t(\"Sessions\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Avg. time to answer\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Avg. session duration\")"
+                },
+                "A5": {
+                    "content": "=_t(\"Rating\")"
+                },
+                "A8": {
+                    "content": "=EDATE(TODAY(),-B8)"
+                },
+                "A9": {
+                    "content": "=EDATE(TODAY(),-B9)"
+                },
+                "A10": {
+                    "content": "=EDATE(TODAY(),-B10)"
+                },
+                "A11": {
+                    "content": "=EDATE(TODAY(),-B11)"
+                },
+                "A12": {
+                    "content": "=EDATE(TODAY(),-B12)"
+                },
+                "A13": {
+                    "content": "=EDATE(TODAY(),-B13)"
+                },
+                "A16": {
+                    "content": "=_t(\"Michael Bay\")"
+                },
+                "A17": {
+                    "content": "=_t(\"Emilia Stones\")"
+                },
+                "A18": {
+                    "content": "=_t(\"David Morenas\")"
+                },
+                "B1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "content": "382"
+                },
+                "B3": {
+                    "content": "10"
+                },
+                "B4": {
+                    "content": "47"
+                },
+                "B5": {
+                    "content": "4.6"
+                },
+                "B8": {
+                    "content": "5"
+                },
+                "B9": {
+                    "content": "4"
+                },
+                "B10": {
+                    "content": "3"
+                },
+                "B11": {
+                    "content": "2"
+                },
+                "B12": {
+                    "content": "1"
+                },
+                "B13": {
+                    "content": "0"
+                },
+                "B16": {
+                    "content": "45"
+                },
+                "B17": {
+                    "content": "234"
+                },
+                "B18": {
+                    "content": "99"
+                },
+                "C1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "C2": {
+                    "content": "297"
+                },
+                "C3": {
+                    "content": "13"
+                },
+                "C8": {
+                    "content": "=RANDBETWEEN(10,100)"
+                },
+                "C9": {
+                    "content": "=RANDBETWEEN(10,100)"
+                },
+                "C10": {
+                    "content": "=RANDBETWEEN(10,100)"
+                },
+                "C11": {
+                    "content": "=RANDBETWEEN(10,100)"
+                },
+                "C12": {
+                    "content": "=RANDBETWEEN(10,100)"
+                },
+                "C13": {
+                    "content": "=RANDBETWEEN(10,100)"
+                },
+                "D1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "D2": {
+                    "content": "=FORMAT.LARGE.NUMBER(B2)"
+                },
+                "D3": {
+                    "content": "=CONCATENATE(ROUND(B3),\"min\")"
+                },
+                "D4": {
+                    "content": "=CONCATENATE(ROUND(B4),\"min\")"
+                },
+                "D5": {
+                    "content": "=B5"
+                },
+                "E1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "E2": {
+                    "content": "=FORMAT.LARGE.NUMBER(C2)"
+                },
+                "E3": {
+                    "content": "13"
+                },
+                "E4": {
+                    "content": "56"
+                }
+            },
+            "styles": {
+                "A1:E1": 4,
+                "D2:D5": 5,
+                "E2:E4": 5
+            },
+            "formats": {
+                "B5": 1,
+                "B2:C2": 1,
+                "B3:B4": 2,
+                "C3": 2,
+                "E3:E4": 3
+            },
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "bold": true,
+            "fontSize": 16
+        },
+        "2": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true
+        },
+        "3": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true,
+            "align": "center"
+        },
+        "4": {
+            "bold": true
+        },
+        "5": {
+            "fillColor": "#f2f2f2"
+        }
+    },
+    "formats": {
+        "1": "0",
+        "2": "#,##0.00",
+        "3": "#,##0"
+    },
+    "borders": {
+        "1": {
+            "bottom": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "3": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "4": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "5": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "6": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "7": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "8": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "9": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        }
+    },
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 6,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 1
+}

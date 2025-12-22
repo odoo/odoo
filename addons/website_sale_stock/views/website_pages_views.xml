@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="product_pages_tree_view" model="ir.ui.view">
+    <field name="name">Product Pages List (stock inherit)</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="website_sale.product_pages_tree_view"/>
+    <field name="arch" type="xml">
+        <field name="virtual_available" position="attributes">
+            <attribute name="optional">hide</attribute>
+        </field>
+    </field>
+</record>
+
+</odoo>

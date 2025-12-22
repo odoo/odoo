@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_form" model="ir.ui.view">
+        <field name="name">Res Config Settings Form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="amazon_connector" position="after">
+                <setting
+                    id="gelato"
+                    documentation="/applications/sales/sales/gelato.html"
+                    help="Place orders through Gelato's print-on-demand service"
+                >
+                    <field name="module_sale_gelato" widget="upgrade_boolean"/>
+                    <div
+                        name="gelato_credentials"
+                        class="content-group"
+                        invisible="not module_sale_gelato"
+                    />
+                    <div>
+                        <label for="gelato_api_key" string="API Key" class="me-3"/>
+                        <field name="gelato_api_key" password="True"/>
+                    </div>
+                    <div>
+                        <label for="gelato_webhook_secret" string="Webhook Secret" class="me-3"/>
+                        <field name="gelato_webhook_secret" password="True"/>
+                    </div>
+                    <div class="mt-2">
+                        <button
+                            string="Manage Delivery Methods"
+                            type="action"
+                            name="%(delivery.action_delivery_carrier_form)d"
+                            icon="oi-arrow-right"
+                            class="btn-link"
+                            context="{'search_default_delivery_type': 'gelato'}"
+                        />
+                    </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>

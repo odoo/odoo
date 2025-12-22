@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Breadcrumbs">
+        <t t-set="currentBreadcrumbs" t-value="props.breadcrumbs.slice(-1)"/>
+        <t t-set="visiblePathBreadcrumbs" t-value="props.breadcrumbs.slice(-3, -1)"/>
+        <t t-set="collapsedBreadcrumbs" t-value="props.breadcrumbs.slice(0, -3).reverse()"/>
+        <t t-set="breadcrumb" t-value="currentBreadcrumbs[0] || {}"/>
+
+        <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
+            <t t-if="env.isSmall">
+                <t t-set="previousBreadcrumb" t-value="visiblePathBreadcrumbs.at(-1)"/>
+                <button class="o_back_button btn btn-link d-print-none px-1 py-0" t-on-click.prevent="previousBreadcrumb.onSelected">
+                    <i class="oi oi-fw oi-arrow-left"/>
+                </button>
+            </t>
+            <t t-else="">
+                <ol class="breadcrumb flex-nowrap text-nowrap lh-sm">
+                    <li t-if="collapsedBreadcrumbs.length" class="breadcrumb-item d-inline-flex min-w-0">
+                        <Dropdown>
+                            <button class="btn btn-light btn-sm px-1 p-0">
+                                <i class="fa fa-ellipsis-h"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-foreach="collapsedBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
+                                    <DropdownItem onSelected="breadcrumb.onSelected" attrs="{ href: breadcrumb.url, 'data-tooltip': getBreadcrumbTooltip(breadcrumb)}">
+                                        <t t-call="web.Breadcrumb.Name"/>
+                                    </DropdownItem>
+                                </t>
+                            </t>
+                        </Dropdown>
+                    </li>
+                    <t t-foreach="visiblePathBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
+                        <li class="breadcrumb-item d-inline-flex min-w-0" t-att-class="{ o_back_button: breadcrumb_last }" t-att-data-hotkey="breadcrumb_last and 'b'" t-on-click.prevent="breadcrumb.onSelected">
+                            <a t-att-href="breadcrumb.url" class="fw-bold text-truncate" t-att-data-tooltip="'Back to &quot;' + breadcrumb.name + '&quot;' + (breadcrumb.isFormView ? ' form' : '')"><t t-call="web.Breadcrumb.Name"/></a>
+                        </li>
+                    </t>
+                </ol>
+            </t>
+            <div class="d-flex gap-1 text-truncate">
+                <div class="o_last_breadcrumb_item active d-flex gap-2 align-items-center min-w-0 lh-sm">
+                    <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
+                </div>
+                <t t-call="web.Breadcrumb.Actions"/>
+            </div>
+        </div>
+
+        <div t-else="" class="o_breadcrumb d-flex gap-1 text-truncate">
+            <div class="o_last_breadcrumb_item active d-flex fs-4 min-w-0 align-items-center">
+                <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
+            </div>
+            <t t-call="web.Breadcrumb.Actions"/>
+        </div>
+
+        <t t-slot="breadcrumb-status-indicator" />
+    </t>
+
+    <t t-name="web.Breadcrumb.Actions">
+        <div class="o_control_panel_breadcrumbs_actions d-inline-flex d-print-none">
+            <t t-slot="breadcrumb-additional-actions"/>
+        </div>
+    </t>
+
+    <t t-name="web.Breadcrumb.Name">
+        <t t-if="breadcrumb.name" t-out="breadcrumb.name"/>
+        <em t-else="" class="text-warning">Unnamed</em>
+    </t>
+
+</templates>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="html_editor.HistoryDialog">
+        <Dialog size="size" title="title" contentClass="'h-100'">
+            <div class="dialog-container html-history-dialog">
+                <div class="revision-list d-flex flex-column align-content-stretch">
+                    <t t-if="!state.revisionsData.length">
+                        <div class="text-center w-100 pb-2 pt-0 px-0 fw-bolder">No history</div>
+                    </t>
+
+                    <t t-foreach="state.revisionsData" t-as="rev"
+                       t-key="rev.revision_id">
+                        <a type="object" href="#" role="button"
+                           t-attf-class="btn btn-outline-primary #{state.revisionId === rev.revision_id ? 'active' : ''}"
+                           t-on-click="() => this.updateCurrentRevision(rev.revision_id )">
+                            <strong><t t-esc="this.getRevisionDate(rev)" /></strong>
+                            <br/>
+                            <small><t t-esc="rev.create_user_name" /></small>
+                        </a>
+                    </t>
+                </div>
+                <div class="history-container">
+                    <Notebook defaultPage="'history'">
+                        <t t-set-slot="history" name="'history'" isVisible="true" title="notebookTabs[0]">
+                            <t t-if="state.revisionContent?.length">
+                                <div class="pe-none">
+                                    <HtmlViewer config="getConfig('revisionContent')"/>
+                                </div>
+                            </t>
+                            <t t-else="" t-out="props.noContentHelper" />
+                        </t>
+                        <t t-set-slot="comparison" name="'comparison'" isVisible="true" title="notebookTabs[1]">
+                            <div class="pe-none">
+                                <HtmlViewer config="getConfig('revisionComparison')"/>
+                            </div>
+                        </t>
+                    </Notebook>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_onRestoreRevisionClick">Restore history</button>
+                <button class="btn btn-secondary" t-on-click="props.close">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

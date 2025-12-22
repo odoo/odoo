@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_line_tree_l10n_in" model="ir.ui.view">
+        <field name="name">account.move.line.tree.l10n.in</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="l10n_in.view_move_line_tree_hsn_l10n_in"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_in_hsn_code']" position="after">
+                <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use', '=', 'sale')]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

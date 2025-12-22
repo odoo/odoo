@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="utm_campaign_view_form" model="ir.ui.view">
+        <field name="name">utm.campaign.view.form</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="%(link_tracker_action_campaign)d"
+                    type="action" class="oe_stat_button order-12" icon="fa-mouse-pointer">
+                    <field name="click_count" widget="statinfo" string="Clicks"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="utm_campaign_view_kanban" model="ir.ui.view">
+        <field name="name">utm.campaign.view.form</field>
+        <field name="model">utm.campaign</field>
+        <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/div" position="inside">
+                <a t-if="record.click_count" href="#" title="Clicks" role="button"
+                    type="action" name="%(link_tracker_action_campaign)d"
+                    class="btn-outline-primary rounded-pill me-1 order-4">
+                    <span class="badge">
+                        <i class="fa fa-fw fa-mouse-pointer" aria-label="Clicks" role="img"/>
+                        <field name="click_count"/>
+                    </span>
+                </a>
+            </xpath>
+        </field>
+    </record>
+</odoo>

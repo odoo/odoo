@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_multi_menus" name="Multi-Menus" groups="base.group_user">
+    <section class="s_mega_menu_multi_menus py-4 o_colored_level o_cc o_cc1">
+        <div class="container">
+            <div class="row">
+                <t t-set="menu1_title">First Menu</t>
+                <t t-set="menu2_title">Second Menu</t>
+                <t t-set="menu3_title">Third Menu</t>
+                <t t-set="menu4_title">Last Menu</t>
+                <t t-foreach="[menu1_title, menu2_title, menu3_title, menu4_title]" t-as="menu_title">
+                    <div class="col-12 col-lg-3 py-2 text-center">
+                        <h4 class="o_default_snippet_text" t-esc="menu_title"/>
+                        <nav class="nav flex-column">
+                            <t t-foreach="3" t-as="i">
+                                <t t-set="text">Menu Item %s</t>
+                                <t t-set="text" t-value="text % (i + 1)"/>
+                                <a href="#" class="nav-link o_default_snippet_text" data-name="Menu Item"
+                                   t-esc="text"/>
+                            </t>
+                        </nav>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

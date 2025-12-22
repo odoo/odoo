@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="cloud_storage_google_config_settings_view_form" model="ir.ui.view">
+        <field name="name">cloud_storage_google_config_settings_view_form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="cloud_storage.cloud_storage_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='cloud_storage_provider']" position="inside">
+                <div class="content-group mt16" invisible="cloud_storage_provider != 'google'">
+                    <label for="cloud_storage_google_bucket_name" class="o_light_label mr8"/>
+                    <field name="cloud_storage_google_bucket_name"/>
+                    <br/>
+                    <label for="cloud_storage_google_service_account_key" class="o_light_label mr8"/>
+                    <!-- hide the download button because it is a computed value without a stored attachment -->
+                    <field name="cloud_storage_google_service_account_key"
+                           widget="binary"
+                           class="o_field_binary_hide_download"
+                           options="{'accepted_file_extensions': '.json'}"/>
+                    <field name="cloud_storage_google_account_info" widget="text" class="w-100"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

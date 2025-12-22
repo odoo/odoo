@@ -1,0 +1,54 @@
+.left-content {
+  width: $left-pane-width;
+  min-width: $left-pane-width;
+
+  @include media-breakpoint-down(xl) {
+      width: $left-pane-width-tablet;
+      min-width: $left-pane-width-tablet;
+  }
+}
+
+.payment-summary {
+  padding-inline: 150px;
+}
+
+.paymentmethods {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.paymentmethod:nth-child(odd):last-child {
+  grid-column: span 2;
+}
+
+.payment-method-icon {
+    max-width: 50px;
+    max-height: 50px;
+    vertical-align: middle;
+    
+    @include media-breakpoint-down(sm) {
+      max-width: 32px;
+      max-height: 32px;
+    }
+}
+
+.paymentlines-container .total {
+  font-size: clamp(24px, 3vw, 64px);
+}
+
+@include media-breakpoint-down(md) {
+    .paymentlines-empty .message {
+        padding-bottom: map-get($spacers, 3);
+    }
+}
+
+@for $size from 1 through length($o-colors) {
+  .btn.o_colorlist_item_color_transparent_#{$size - 1} {
+    &:hover {
+      filter: brightness(98%);
+    }
+
+    &:active {
+      border: $border-width solid nth($o-colors, $size);
+    }
+  }
+}

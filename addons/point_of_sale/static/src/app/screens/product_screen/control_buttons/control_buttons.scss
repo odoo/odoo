@@ -1,0 +1,17 @@
+.control-buttons-modal {
+    grid-template-columns: repeat(3, 1fr);
+
+    @include media-breakpoint-down(lg) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include media-breakpoint-down(sm) {
+        grid-template-columns: 1fr;
+    }
+}
+
+.button.altlight {
+    background: #7F82AC !important;
+    border: solid 1px #756A99 !important;
+    color: white !important;
+}

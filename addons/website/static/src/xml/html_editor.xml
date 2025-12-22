@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.AutoCompleteInLinkPopover" t-inherit="web.AutoComplete">
+    <xpath expr="//input[@t-ref='input']" position="attributes">
+        <attribute name="class" remove="o_input pe-3" separator=" "/>
+        <attribute name="t-attf-class" add="{{inputClass}}" separator=" "/>
+    </xpath>
+</t>
+
+<t t-name="website.AutoCompleteItem">
+    <div t-att-class="{
+        'fw-bold text-capitalize p-2': option.separator,
+    }">
+        <t t-if="option.icon and option.icon.length">
+            <img t-att-src="option.icon" width="24px" height="24px" class="me-2 rounded"/>
+        </t>
+        <t t-out="option.label"/>
+    </div>
+</t>
+
+<t t-name="website.InputURLAutoComplete">
+    <AutoCompleteInLinkPopover
+        sources="sources"
+        value="state.url"
+        input="urlRef"
+        onSelect.bind="onSelect"
+        dropdown="true"
+        autofocus="true"
+        placeholder.translate="Type your URL"
+        inputClass="'o_we_href_input_link form-control form-control-sm'"
+        t-on-keydown="onKeydownEnter"
+        updateValue.bind="updateValue"
+    />
+</t>
+
+<t t-name="website.linkPopover" t-inherit="html_editor.linkPopover" t-inherit-mode="primary">
+    <xpath expr="//input[@name='o_linkpopover_url']" position="replace">
+        <t t-call="website.InputURLAutoComplete"/>
+    </xpath>
+    <xpath expr="//input[@name='o_linkpopover_url_img']" position="replace">
+        <t t-call="website.InputURLAutoComplete"/>
+    </xpath>
+</t>
+
+</templates>

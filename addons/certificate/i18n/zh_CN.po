@@ -1,0 +1,494 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* certificate
+# 
+# Translators:
+# Wil Odoo, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
+# 何彬 <vnsoft.he@gmail.com>, 2024
+# Chloe Wang, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Chloe Wang, 2025\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "A private key is required to decrypt data."
+msgstr "解密数据需要私钥。"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__active
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__active
+msgid "Active"
+msgstr "有效"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Add, edit and delete certificates."
+msgstr "添加，编辑和删除证书。"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Add, edit and delete keys."
+msgstr "添加，编辑和删除密钥。"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Archived"
+msgstr "已归档"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Archived certificates"
+msgstr "已归档的证书"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Archived keys"
+msgstr "已归档的密钥"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_start
+msgid "Available date"
+msgstr "可用日期"
+
+#. module: certificate
+#: model:ir.model,name:certificate.model_certificate_certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__content
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Certificate"
+msgstr "证书"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__pkcs12_password
+msgid "Certificate Password"
+msgstr "证书密码"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__pem_certificate
+msgid "Certificate in PEM format"
+msgstr "PEM 格式的证书"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__scope
+msgid "Certificate scope"
+msgstr "证书范围"
+
+#. module: certificate
+#: model:ir.actions.act_window,name:certificate.certificate_certificate_action_view_list
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Certificates"
+msgstr "证书"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Certificates and Keys"
+msgstr "证书和密钥"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__company_id
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__company_id
+msgid "Company"
+msgstr "公司"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__country_code
+msgid "Country Code"
+msgstr "国家/地区代码"
+
+#. module: certificate
+#: model_terms:ir.actions.act_window,help:certificate.certificate_certificate_action_view_list
+msgid "Create a first certificate"
+msgstr "创建第一个证书"
+
+#. module: certificate
+#: model_terms:ir.actions.act_window,help:certificate.certificate_key_action_view_list
+msgid "Create a first key"
+msgstr "创建第一个密钥"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_uid
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__create_uid
+msgid "Created by"
+msgstr "创建人"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_date
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__create_date
+msgid "Created on"
+msgstr "创建日期"
+
+#. module: certificate
+#: model:ir.model,name:certificate.model_certificate_key
+msgid "Cryptographic Keys"
+msgstr "加密密钥"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__der
+msgid "DER"
+msgstr "DER"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__display_name
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_end
+msgid "Expiration date"
+msgstr "到期日期"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__scope__general
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "General"
+msgstr "通用"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "General certificates"
+msgstr "通用证书"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__id
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__id
+msgid "ID"
+msgstr "ID"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Invalid"
+msgstr "无效"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
+msgid "Key"
+msgstr "密钥KEY"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__pem_key
+msgid "Key bytes in PEM format"
+msgstr "PEM 格式的密钥字节"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__content
+msgid "Key file"
+msgstr "密钥文件"
+
+#. module: certificate
+#: model:ir.actions.act_window,name:certificate.certificate_key_action_view_list
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Keys"
+msgstr "密钥"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__write_uid
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__write_uid
+msgid "Last Updated by"
+msgstr "最后更新人"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__write_date
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__loading_error
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__loading_error
+msgid "Loading error"
+msgstr "加载错误"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "Make sure to use a private key to sign documents."
+msgstr "确保使用私钥对文档进行签名。"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Manage your certificates"
+msgstr "管理您的证书"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Manage your keys"
+msgstr "管理您的密钥"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__name
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__name
+msgid "Name"
+msgstr "名称"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid ""
+"No private key linked to the certificate, it is required to sign documents."
+msgstr "没有链接到证书的私钥，文档签名需要它。"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Not valid certificates"
+msgstr "无效的证书"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__content_format
+msgid "Original certificate format"
+msgstr "原始证书格式"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__pem
+msgid "PEM"
+msgstr "PEM"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__pkcs12
+msgid "PKCS12"
+msgstr "PKCS12"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__pkcs12_password
+msgid "Password to decrypt the PKS file."
+msgstr "解密PKS文件的密码。"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Private"
+msgstr "私密"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__private_key_id
+msgid "Private Key"
+msgstr "私人密钥"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__password
+msgid "Private key password"
+msgstr "私钥密码"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Public"
+msgstr "公开"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__public_key_id
+msgid "Public Key"
+msgstr "公开密钥"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__public
+msgid "Public/Private key"
+msgstr "公钥/私钥"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__serial_number
+msgid "Serial number"
+msgstr "序列号"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__active
+msgid "Set active to false to archive the certificate"
+msgstr "将 active 设置为 false 以归档证书"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_key__active
+msgid "Set active to false to archive the key."
+msgstr "将 active 设置为 false 以归档密钥"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__subject_common_name
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Subject Name"
+msgstr "主题名称"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO国家/地区代码包含两个字符。\n"
+"可以使用该字段进行快速搜索。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The certificate and private key are not compatible."
+msgstr "证书和私钥不兼容。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The certificate and public key are not compatible."
+msgstr "证书和公钥不兼容。"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
+msgid "The date on which the certificate expires (UTC)"
+msgstr "证书到期日 ( UTC )"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
+msgid "The date on which the certificate starts to be valid (UTC)"
+msgstr "证书生效日期 ( UTC )"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The key size should be at least 512 bytes."
+msgstr "密钥大小最低应为 512 字节。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The private key could not be loaded."
+msgstr "私钥无法加载。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public exponent should be 65537 (or 3 for legacy purposes)."
+msgstr "公开的部份应为 65537（或为 3 供旧系统使用）。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public key could not be loaded."
+msgstr "公钥无法加载。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The public key from the certificate could not be loaded."
+msgstr "无法加载证书中的公钥。"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__serial_number
+msgid "The serial number to add to electronic documents"
+msgstr "添加到电子文件的序列号码"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid ""
+"This certificate could not be loaded. Either the content or the password is "
+"erroneous."
+msgstr "无法加载此证书。内容或密码错误。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "This certificate is not valid, its validity has expired."
+msgstr "这份证书已失效，已超过它的有效期。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"This key could not be loaded. Either its content or its password is "
+"erroneous."
+msgstr "无法加载此密钥。内容或密码错误。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"decryption: RSA."
+msgstr "不支持的非对称加密算法“%s”。目前支持解密方式：RSA。"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"signature: EC and RSA."
+msgstr "不支持的非对称加密算法 ''%s\"。目前支持签名方式：EC和RSA"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
+" RSA."
+msgstr "不支持的非对称加密算法 ''%s\"。目前支持：EC，RSA。"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
+msgid ""
+"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
+"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"             "
+msgstr ""
+"用于设置公钥，以防证书中自包含的公钥错误。\n"
+"        以这种方式设置公钥时，将使用该公钥而不是证书中的公钥。"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__is_valid
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Valid"
+msgstr "有效的"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Valid certificates"
+msgstr "有效的证书"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Validity"
+msgstr "有效期"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+msgid "certificate form"
+msgstr "证书表单"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "certificate list"
+msgstr "证书列表"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "certificate search"
+msgstr "证书搜索"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+msgid "e.g. New Certificate"
+msgstr "例如：新证书"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_form
+msgid "key form"
+msgstr "密钥表单"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
+msgid "key list"
+msgstr "密钥清单"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "key search"
+msgstr "密钥搜索"

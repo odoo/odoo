@@ -1,0 +1,214 @@
+// This file regroups the fixes and styling related to table inside reports
+
+table.table {
+    // Fix alignment in PDF (default bs inheritance doesn't seem to apply)
+    td {
+        vertical-align: $table-cell-vertical-align;
+    }
+
+    th {
+        text-align: left;
+        vertical-align: middle;
+    }
+}
+
+div#total {
+    // Avoid crop in the total table if in middle of 2 pages
+    page-break-inside: avoid;
+}
+
+// Table styling of the reports, apply the styling class .o_table_x
+// to the .article bloc of the report to change the table style.
+
+.o_table_standard {
+    table:not(.o_ignore_layout_styling) {
+        thead {
+            border-bottom: $border-width solid $o-gray-900;
+        }
+
+        th:first-child, td:first-child {
+            padding-left: 0;
+        }
+
+        th:last-child, td:last-child {
+            padding-right: 0;
+        }
+    }
+
+    .o_total_table:not(.o_ignore_layout_styling),
+    .o_total_table:not(.o_ignore_layout_styling) .o_total {
+        border-top: $border-width solid $border-color;
+    }
+}
+
+.o_table_bold {
+    table:not(.o_ignore_layout_styling) {
+        thead th {
+            border-top: $border-width * 3 solid $o-default-report-secondary-color;
+            text-transform: uppercase;
+        }
+
+        tbody {
+            tr:last-child td {
+                border-bottom: $border-width * 3 solid $o-default-report-secondary-color;
+            }
+
+            tr td {
+                padding: $table-cell-padding-y * 2 $table-cell-padding-x;
+            }
+        }
+    }
+
+    .o_total_table:not(.o_ignore_layout_styling) {
+        & .o_total, & .o_price_total {
+            border-top: $border-width solid $gray-200;
+        }
+    }
+}
+
+.o_table_striped {
+    table:not(.o_ignore_layout_styling) {
+        tr:not(:first-child) {
+            // Using border-top not bottom, to manage a different border on line sections
+            border-top: $border-width solid $gray-200;
+        }
+
+        tbody tr {
+            &:first-child, &.o_line_section {
+                border-top: $border-width solid $gray-400;
+            }
+
+            &:last-child {
+                border-bottom: $border-width solid $gray-200;
+            }
+
+            &:nth-child(odd) td {
+                background-color: rgba($gray-200, .5);
+            }
+
+            &.is-subtotal {
+                border-bottom: $border-width solid $gray-400;
+            }
+        }
+    }
+
+    .o_total_table:not(.o_ignore_layout_styling) {
+        tr:first-child {
+            border-top: none;
+        }
+
+        tr:nth-child(odd) td {
+            background-color: rgba($gray-200, .5);
+        }
+    }
+}
+
+.o_table_boxed, .o_table_boxed-rounded {
+    table:not(.o_ignore_layout_styling) {
+        position: relative;
+
+        &::before {
+            // Avoid inner borders overlapping the table borders
+            content: '';
+            // Position absolute will place the pseudo-element
+            // above the table. We need to prevent events on this pseudo-element
+            // to avoid messing up eventual user interaction with the table itself (report editor)
+            @include o-position-absolute(0, 0, 0, 0);
+            pointer-events: none;
+            border: $border-width solid $gray-700;
+        }
+
+        thead {
+            text-transform: uppercase;
+
+            th:not(:last-child) {
+                border-right: $border-width solid $gray-700;
+            }
+
+            th {
+                border-bottom: $border-width solid $border-color;
+            }
+        }
+
+        tbody {
+            tr:not(:last-child) td {
+                border-bottom: $border-width solid $gray-400;
+            }
+
+            td:not(:last-child) {
+                border-right: $border-width solid $gray-400;
+            }
+
+            &.o_line_section td,
+            &.o_line_note td,
+            &.is-subtotal td {
+                border-top: $border-width solid $gray-700;
+                border-bottom: $border-width solid $gray-700;
+            }
+
+            &.o_line_section td {
+                background-color: rgba($gray-200, .5);
+            }
+
+            td.o_price_total, .o_taxes td {
+                background-color: rgba($gray-200, .5);
+            }
+        }
+    }
+
+    .o_total_table:not(.o_ignore_layout_styling) {
+        td {
+            border-right: none;
+        }
+
+        &::before {
+            border-top: none;
+        }
+    }
+
+    .mt-5 .o_total_table:not(.o_ignore_layout_styling) {
+        &::before {
+            border-top: $border-width solid $border-color;
+        }
+    }
+}
+
+.o_table_boxed-rounded {
+    table:not(.o_ignore_layout_styling) {
+        &::before {
+            border-radius: $border-radius-lg;
+        }
+
+        &.o_has_total_table::before {
+            border-radius: $border-radius-lg $border-radius-lg 0 $border-radius-lg ;
+        }
+
+        th:first-child {
+            border-radius: $border-radius-lg 0 0 0;
+        }
+
+        th:last-child {
+            border-radius: 0 $border-radius-lg 0 0;
+        }
+
+        th {
+            border-color: $gray-300 !important;
+        }
+    }
+
+    .o_total_table:not(.o_ignore_layout_styling) {
+        &::before {
+            border-radius: 0 0 $border-radius-lg $border-radius-lg;
+        }
+
+        tr:last-child {
+            td:first-child {
+                border-radius: 0 0 0 $border-radius-lg;
+            }
+
+            td:last-child {
+                border-radius: 0 0 $border-radius-lg 0;
+            }
+        }
+    }
+}

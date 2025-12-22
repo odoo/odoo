@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_type_view_form_inherit_track" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.track</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="website_event.event_type_view_form"/>
+        <field name="arch" type="xml">
+                <xpath expr="//span[@name='website_menu']" position='after'>
+                <span>
+                    <label for="website_track" string="Tracks Menu Item" class="me-1"/>
+                    <field name="website_track" class="me-3"/>
+                </span>
+                <span name="website_track_proposal">
+                    <label for="website_track_proposal" string="Track Proposals Menu Item" class="me-1"/>
+                    <field name="website_track_proposal" class="me-3"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Stripe Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="before">
+                <div
+                     name="stripe_onboarding_group"
+                     invisible="context.get('stripe_onboarding', False) or (code != 'stripe' or stripe_secret_key or stripe_publishable_key)">
+                    <button string="Connect Stripe"
+                            type="object"
+                            name="action_stripe_connect_account"
+                            class="btn-primary"
+                            colspan="2"
+                            invisible="state == 'enabled'"/>
+                </div>
+            </group>
+            <group name="provider_credentials" position="inside">
+                <group invisible="code != 'stripe'" name="stripe_credentials">
+                    <field name="stripe_publishable_key" required="code == 'stripe' and state != 'disabled'"/>
+                    <field name="stripe_secret_key" required="code == 'stripe' and state != 'disabled'" password="True"/>
+                    <label for="stripe_webhook_secret"/>
+                    <div class="o_row" col="2">
+                        <field name="stripe_webhook_secret" password="True"/>
+                        <button string="Generate your webhook"
+                                type="object"
+                                name="action_stripe_create_webhook"
+                                class="btn-primary"
+                                invisible="stripe_webhook_secret or not stripe_secret_key"/>
+                    </div>
+                </group>
+                <div name="stripe_keys_link"
+                     invisible="not context.get('stripe_onboarding', False) or (code != 'stripe' or stripe_secret_key and stripe_publishable_key)">
+                    <a class="btn btn-link" role="button" href="https://dashboard.stripe.com/account/apikeys" target="_blank">
+                        Get your Secret and Publishable keys
+                    </a>
+                </div>
+            </group>
+            <field name="allow_express_checkout" position="replace">
+                <label for="allow_express_checkout" invisible="not support_express_checkout"/>
+                <div class="o_row" col="2" invisible="not support_express_checkout">
+                    <field name="allow_express_checkout"/>
+                    <button string="Enable Apple Pay"
+                            type="object"
+                            name="action_stripe_verify_apple_pay_domain"
+                            class="btn btn-primary"
+                            invisible="not allow_express_checkout or code != 'stripe'"/>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_payment_provider_onboarding" model="ir.actions.act_window">
+        <field name="name">Payment Providers</field>
+        <field name="res_model">payment.provider</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'stripe_onboarding': True}</field>
+    </record>
+
+</odoo>

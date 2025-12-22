@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form_inherit_pos_pine_labs" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit.pos.pine.labs</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_ids']//list//field[@name='cardholder_name']" position="after">
+                <field name="pine_labs_plutus_transaction_ref" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+
+    <t t-name="web_hierarchy.HierarchyCard">
+        <div class="o_hierarchy_node_container mb-4 d-flex flex-column" t-att-class="classNames" t-att-data-node-id="props.node.id">
+            <div class="o_hierarchy_node_button_container w-100 d-flex justify-content-end">
+                <button t-if="props.node.parentResId !== false and !props.node.parentNode and props.node.parentResId !== props.node.resId"
+                        name="hierarchy_search_parent_node"
+                        class="btn p-0"
+                        t-on-click.synthetic="onClickArrowUp"
+                >
+                    <i class="fa fa-chevron-up"/>
+                </button>
+            </div>
+            <div class="o_hierarchy_node w-100 h-100 d-flex flex-column justify-content-between border"
+                t-att-class="{
+                    'border-bottom-0': props.node.nodes.length or props.node.canShowChildNodes,
+                }"
+                t-att-data-node-id="props.node.id"
+                t-on-click.synthetic="onGlobalClick"
+            >
+                <div class="o_hierarchy_node_content">
+                    <Record resModel="props.node.model.resModel"
+                            resId="props.node.resId"
+                            fields="props.node.model.fields"
+                            activeFields="props.node.model.activeFields"
+                            values="props.node.data"
+                            t-slot-scope="data"
+                    >
+                        <t t-call="{{ templates['hierarchy-box'] }}" t-call-context="getRenderingContext(data)"/>
+                    </Record>
+                </div>
+                <button t-if="props.node.nodes.length or props.node.canShowChildNodes"
+                        name="hierarchy_search_subsidiaries"
+                        class="o_hierarchy_node_button btn rounded-0 d-grid"
+                        t-att-class="{
+                            'btn-primary': !props.node.nodes.length,
+                            'btn-secondary': props.node.nodes.length > 0,
+                        }"
+                        t-on-click.synthetic="onClickArrowDown"
+                >
+                    <t t-if="!props.node.nodes.length">
+                        <span style="grid-column: 2;">
+                            Unfold
+                        </span>
+                        <span class="text-end" style="grid-column: 3;">
+                            <t t-out="props.node.childResIds.length"/>
+                            <i class="fa ps-1" t-att-class="props.archInfo.icon"/>
+                        </span>
+                    </t>
+                    <t t-else="">
+                        <span style="grid-column: 2;">
+                            Fold
+                        </span>
+                    </t>
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

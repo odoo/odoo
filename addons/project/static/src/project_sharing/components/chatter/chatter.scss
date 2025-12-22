@@ -1,0 +1,68 @@
+.o-mail-Form-chatter {
+    display: flex;
+    border-color: $border-color;
+
+    .o_portal_chatter {
+        width: 100%;
+
+        .o_portal_chatter_header {
+            border-bottom: 1px solid $border-color;
+            padding-bottom: 14px;
+
+            .o_message_counter {
+                width: 90%;
+                margin: 0 auto;
+            }
+        }
+
+        div.o_portal_chatter_composer,
+        div.o_portal_chatter_messages {
+            div.d-flex {
+                gap: 10px;
+
+                .o_portal_chatter_attachments {
+                    margin-bottom: 1rem;
+                    .o_portal_chatter_attachment {
+                        > button {
+                            @include o-position-absolute($top: 0, $right: 0);
+                            opacity: 0;
+                        }
+
+                        &:hover > button {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        .o_portal_chatter_avatar {
+            width: 45px;
+            height: 45px;
+        }
+
+        .o_portal_message_internal_off {
+            .btn-danger {
+                display: none;
+            }
+        }
+
+        .o_portal_message_internal_on {
+            .btn-success {
+                display: none;
+            }
+        }
+    }
+
+    &.o-aside {
+        flex-direction: column;
+
+        .o_portal_chatter {
+            .o_portal_chatter_composer, .o_portal_chatter_messages {
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+
+        }
+    }
+}

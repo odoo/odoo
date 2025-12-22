@@ -1,0 +1,13 @@
+input[name="sale_quantity"] {
+    max-width: 4rem;
+    // removing input field=number arrows as their size might
+    // change depending on browser default styling and shift input's position
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    &[type=number] {
+        -moz-appearance: textfield;
+    }
+}

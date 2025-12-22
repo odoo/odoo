@@ -1,0 +1,72 @@
+.ribbon {
+    --Ribbon-wrapper-width-default: 10rem;
+    --Ribbon-wrapper-height: var(--Ribbon-wrapper-width, var(--Ribbon-wrapper-width-default));
+
+    width: var(--Ribbon-wrapper-width, var(--Ribbon-wrapper-width-default));
+    height: var(--Ribbon-wrapper-height);
+    overflow: hidden;
+    position: absolute;
+
+    & span {
+        --Ribbon-font-size-default: #{$font-size-lg};
+        --Ribbon-height-default: calc(var(--Ribbon-font-size, var(--Ribbon-font-size-default)) * 2.5);
+        --Ribbon-shadow-distance: .25rem;
+        --Ribbon-shadow-blur: .5rem;
+
+        z-index: var(--Ribbon-z-index);
+        position: absolute;
+        width: 141.421%; //Square root of 2 to get the diagonal of the parent
+        height: var(--Ribbon-height, var(--Ribbon-height-default));
+        box-shadow: 0 var(--Ribbon-shadow-distance) var(--Ribbon-shadow-blur) rgba(0, 0, 0, .1);
+        color: $white;
+        font-size: var(--Ribbon-font-size, var(--Ribbon-font-size-default));
+        line-height: var(--Ribbon-height, var(--Ribbon-height-default));
+        font-weight: $o-font-weight-bold;
+        font-family: 'Lato', sans-serif;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
+        text-transform: uppercase;
+        text-align: center;
+        overflow: hidden;
+        user-select: none;
+        transform-origin: left bottom;
+        pointer-events: none;
+        &.o_small {
+            font-size: $font-size-sm
+        }
+        &.o_medium {
+            font-size: $font-size-base;
+        }
+    }
+
+    &-top-right {
+        --Ribbon-gap-top-default: calc(var(--formView-sheet-padding-y, 0) * -1 - #{$border-width});
+        --Ribbon-gap-right-default: -#{$border-width};
+
+        pointer-events: none;
+        margin-top: var(--Ribbon-gap-top, var(--Ribbon-gap-top-default));
+        right: var(--Ribbon-gap-right, var(--Ribbon-gap-right-default));
+
+        & span {
+            --Ribbon-top-position-default: calc((var(--Ribbon-height-default) * -1));
+            --Ribbon-left-position-default: calc(var(--Ribbon-shadow-distance) + var(--Ribbon-shadow-blur));
+
+            left: var(--Ribbon-left-position, var(--Ribbon-left-position-default));
+            top: var(--Ribbon-top-position, var(--Ribbon-top-position-default));
+            transform: rotate(45deg);
+        }
+    }
+}
+
+// after ribbon widget there can be field widgets or oe_title which may
+// have widgets on right end, add margin-right so ribbon not overlap on it
+.ribbon {
+    &:not(.o_invisible_modifier) {
+        ~ .oe_title, ~ .o_field_widget {
+            margin-right: 100px;
+        }
+    }
+}
+
+.o_form_sheet .ribbon {
+   --Ribbon-z-index: 1;
+}

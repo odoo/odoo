@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="chat_room_view_search" model="ir.ui.view">
+        <field name="name">chat.room.search</field>
+        <field name="model">chat.room</field>
+        <field name="arch" type="xml">
+            <search string="Chat Room">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="chat_room_view_form" model="ir.ui.view">
+        <field name="name">chat.room.form</field>
+        <field name="model">chat.room</field>
+        <field name="arch" type="xml">
+            <form string="Chat Room">
+                <sheet>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="is_full"/>
+                            <field name="lang_id" options="{'no_create': True}"/>
+                            <field name="participant_count"/>
+                            <field name="max_capacity"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Reporting" string="Reporting">
+                            <group>
+                                <field name="last_activity"/>
+                                <field name="max_participant_reached"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="chat_room_view_tree" model="ir.ui.view">
+        <field name="name">chat.room.list</field>
+        <field name="model">chat.room</field>
+        <field name="arch" type="xml">
+            <list string="Chat Room">
+                <field name="name"/>
+                <field name="is_full"/>
+                <field name="lang_id"/>
+                <field name="participant_count"/>
+                <field name="max_capacity"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="chat_room_action" model="ir.actions.act_window">
+        <field name="name">Chat Rooms</field>
+        <field name="res_model">chat.room</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem name="Chat Rooms"
+        id="chat_room_menu"
+        sequence="50"
+        action="chat_room_action"
+        parent="website.menu_website_global_configuration"
+        groups="base.group_no_one"/>
+</odoo>

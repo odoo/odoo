@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="mail_group_moderation_view_tree" model="ir.ui.view">
+        <field name="name">mail.group.moderation.view.list</field>
+        <field name="model">mail.group.moderation</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <list string="Moderation Lists" editable="bottom" sample="1">
+                <field name="mail_group_id"/>
+                <field name="email"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+    <record id="mail_group_moderation_view_search" model="ir.ui.view">
+        <field name="name">mail.group.moderation.view.search</field>
+        <field name="model">mail.group.moderation</field>
+        <field name="priority">25</field>
+        <field name="arch" type="xml">
+            <search string="Search Moderation List">
+                <field name="mail_group_id"/>
+                <field name="email"/>
+                <field name="status"/>
+                <filter string="Is Banned"
+                        name="status_ban" help="Banned Emails"
+                        domain="[('status', '=', 'ban')]"/>
+                <separator/>
+                <filter string="Is Allowed"
+                        name="status_allow" help="Allowed Emails"
+                        domain="[('status', '=', 'allow')]"/>
+                <filter name="group_by_status" string="Status" domain="[]" context="{'group_by':'status'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="mail_group_moderation_action" model="ir.actions.act_window">
+        <field name="name">Moderation</field>
+        <field name="res_model">mail.group.moderation</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="mail_group_moderation_view_search"/>
+    </record>
+</odoo>

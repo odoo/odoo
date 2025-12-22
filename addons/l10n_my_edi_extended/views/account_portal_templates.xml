@@ -1,0 +1,36 @@
+<odoo>
+    <template id="portal_my_details_fields" inherit_id="account.portal_my_details_fields">
+        <xpath expr="//t[@t-if='invoice_edi_formats']" position="after">
+            <t t-if="partner.country_id.code == 'MY'">
+                <div class="clearfix" />
+                <t t-if="len(l10n_my_identification_types) > 1">
+                    <div t-attf-class="mb-3 #{error.get('l10n_my_identification_type') and 'o_has_error' or ''} col-xl-6">
+                        <label class="col-form-label" for="l10n_my_identification_type">ID Type</label>
+                        <select name="l10n_my_identification_type" class="form-select">
+                            <t t-foreach="l10n_my_identification_types" t-as="type">
+                                <option t-att-value="type" t-att-selected="(l10n_my_identification_type or partner.l10n_my_identification_type) == type">
+                                    <t t-esc="type_value"/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
+                    <div t-attf-class="mb-3 #{error.get('l10n_my_identification_number') and 'o_has_error' or ''} col-xl-6">
+                        <label class="col-form-label label-optional" for="l10n_my_identification_number">ID Number</label>
+                        <input type="text" name="l10n_my_identification_number" t-attf-class="form-control #{error.get('l10n_my_identification_number') and 'is-invalid' or ''}" t-att-value="l10n_my_identification_number or partner.l10n_my_identification_number" />
+                    </div>
+                </t>
+                <div t-attf-class="mb-3 #{error.get('l10n_my_edi_industrial_classification') and 'o_has_error' or ''} col-xl-6">
+                    <label class="col-form-label label-optional" for="l10n_my_edi_industrial_classification">Ind. Classification</label>
+                    <select name="l10n_my_edi_industrial_classification" t-attf-class="form-select #{error.get('l10n_my_edi_industrial_classification') and 'is-invalid' or ''}">
+                        <option value="">select...</option>
+                        <t t-foreach="l10n_my_edi_industrial_classifications or []" t-as="industrial_classification">
+                            <option t-att-value="industrial_classification.id" t-att-selected="industrial_classification.id == int(l10n_my_edi_industrial_classification) if l10n_my_edi_industrial_classification else industrial_classification.id == partner.l10n_my_edi_industrial_classification.id">
+                                <t t-esc="industrial_classification.name" />
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

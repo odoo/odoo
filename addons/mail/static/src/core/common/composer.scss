@@ -1,0 +1,155 @@
+.o-mail-Composer {
+    grid-template-areas:
+        "sidebar-header core-header"
+        "sidebar-main core-main"
+        "sidebar-footer core-footer";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr auto;
+
+    &.o-hasSelfAvatar {
+        grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
+    }
+
+    .o-mail-Composer-sidebarMain {
+        padding-top: 0.4375rem; // avatar centered with composer text input: 36px (avatar) + 2*7px (this value) = 20px + 2 * { 10px (padding) + 1px (border) + 4px (margin) }
+        width: 48px;
+    }
+
+    .o-mail-Composer-coreHeader {
+        grid-area: core-header;
+    }
+
+    .o-mail-Composer-coreMain {
+        grid-area: core-main;
+    }
+
+    .o-mail-Composer-sidebarMain {
+        grid-area: sidebar-main;
+    }
+
+    .o-mail-Composer-footer {
+        grid-area: core-footer;
+    }
+
+    &.o-chatWindow .o-mail-Composer-mainActions {
+        margin-top: map-get($spacers, 1) / 2;
+    }
+
+    &:not(.o-focused) {
+        .o-mail-Composer-input::placeholder {
+            opacity: 50%;
+        }
+
+        .o-mail-Composer-actions button:not(:hover):not(.o-active):not(.show) {
+            opacity: 25%;
+        }
+    }
+}
+
+.o-mail-Composer-actions {
+
+    button {
+        opacity: 35%;
+        @media (hover: hover) {
+            &:hover {
+                opacity: 100%;
+                color: var(--mail-Composer-actionHoverColor, black);
+                backdrop-filter: invert(.025);
+
+                .o-mail-Message.o-editing & {
+                    background-color: rgba(0, 0, 0, 0.05);
+                }
+            }
+        }
+        &:disabled {
+            --btn-active-color: var(--btn-disabled-color);
+            --btn-hover-color: var(--btn-disabled-color);
+            opacity: 25%;
+        }
+        &.o-mail-Composer-send.btn-link:not(:disabled) {
+            background-color: rgba($o-action, .75);
+            opacity: 100% !important;
+            &:focus-visible {
+                outline: darken($o-action, 15%) solid 1px;
+            }
+            i.fa-paper-plane-o {
+                color: #FFF;
+                transform: translate(-1px);
+                scale: .85;
+            }
+        }
+        &.rounded-circle {
+            aspect-ratio: 1;
+        }
+    }
+}
+
+.o-mail-Composer-bg {
+    background-color: var(--mail-Composer-bg, $o-view-background-color);
+    --border-opacity: .5;
+}
+
+.o-mail-Composer-inputStyle {
+    padding-top: 10px; // carefully crafted to have the text in the middle in chat window
+    padding-bottom: 10px;
+    padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+    padding-right: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+
+    line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
+
+    .o-mail-Composer.o-chatWindow & {
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
+
+    .o-mail-Composer.o-editing & {
+        padding-left: map-get($spacers, 2);
+        padding-right: map-get($spacers, 2);
+    }
+}
+
+.o-mail-Composer-input {
+    font-family: "text-emoji", $font-family-base;
+    max-height: Min(100px, 60vh);
+    resize: none;
+
+    .o-mail-Composer.o-chatWindow & {
+        @media (min-height: 325px) {
+            max-height: Min(550px, 70vh);
+        }
+    }
+
+    .o-mail-Composer.o-discussApp & {
+        @media (min-height: 425px) {
+            max-height: 50vh;
+        }
+    }
+
+    .o-mail-Composer.o-extended & {
+        max-height: Min(400px, 30vh);
+    }
+
+    &::placeholder {
+        opacity: 75%;
+        @include text-truncate();
+    }
+}
+
+.o-mail-Composer-avatar {
+    --Avatar-size: #{$o-mail-Avatar-size};
+}
+
+.o-mail-Composer-fake {
+    height: 0;
+    left: -10000px;
+    top: -10000px;
+    visibility: hidden;
+}
+
+.o-mail-Composer-bg {
+
+    &:has(textarea:focus) {
+        --border-opacity: 0.35;
+        border-color: rgba($o-action, var(--border-opacity)) !important;
+    }
+}

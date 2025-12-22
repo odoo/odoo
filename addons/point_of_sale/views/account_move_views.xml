@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_journal_pos_user_form" model="ir.ui.view">
+        <field name="name">account.move.pos.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_cash_basis_origin_move_id']" position="before">
+                <field name="reversed_pos_order_id" readonly="True" invisible="not reversed_pos_order_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

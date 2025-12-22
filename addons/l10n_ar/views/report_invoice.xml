@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- this header can be used on any Argentinean report, to be useful some variables should be passed -->
+    <template id="custom_header">
+        <div class="mb-3">
+            <div class="row mb-2">
+                <div name="left-upper-side" class="col-5" t-if="not pre_printed_report">
+                    <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 65px;" alt="Logo"/>
+                </div>
+                <div name="center-upper" class="col-2 text-center" t-att-style="'color: %s;' % o.company_id.primary_color">
+                    <span style="display: inline-block; text-align: center; line-height: 8px;">
+                        <h1 style="line-height: 35px;">
+                            <strong><span t-out="not pre_printed_report and document_letter or '&#160;'"/></strong>
+                        </h1>
+                        <span style="font-size: x-small;" t-out="not pre_printed_report and document_legend or '&#160;'"/>
+                    </span>
+                </div>
+                <div name="right-upper-side" class="col-5 text-end" style="padding-left: 0px;" t-if="not pre_printed_report">
+
+                    <!-- (6) Titulo de Documento -->
+                    <h4 t-att-style="'color: %s;' % o.company_id.primary_color"><strong>
+                        <span t-out="report_name"/>
+                    </strong></h4>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6" style="padding-right: 0px;">
+                    <t t-if="not pre_printed_report">
+                        <!-- (1) Nombre de Fantasia -->
+                        <!-- (2) Apellido y Nombre o Razon Social -->
+                        <span t-field="o.company_id.partner_id.name"/>
+
+                        <!-- (3) Domicilio Comercial (Domicilio Fiscal is the same) -->
+                        <br/>
+                        <div></div>
+                        <!-- we dont use the address widget as it adds a new line on the phone and we want to reduce at maximum lines qty -->
+                        <t t-out="' - '.join([item for item in [
+                            ', '.join([item for item in [header_address.street, header_address.street2] if item]),
+                            header_address.city,
+                            header_address.state_id and header_address.state_id.name,
+                            header_address.zip,
+                            header_address.country_id and header_address.country_id.name] if item])"/><span t-if="header_address.phone"> - </span><span t-if="header_address.phone" style="white-space: nowrap;" t-out="'Tel: ' + header_address.phone"/>
+                        <br/>
+                        <span t-att-style="'color: %s;' % o.company_id.primary_color" t-out="' - '.join([item for item in [(header_address.website or '').replace('https://', '').replace('http://', ''), header_address.email] if item])"/>
+                    </t>
+                </div>
+                <div class="col-6 text-end" style="padding-left: 0px;">
+
+                    <t t-if="not pre_printed_report">
+                        <!-- (7) Numero punto venta - (8) numero de documento -->
+                        <span t-att-style="'color: %s;' % o.company_id.secondary_color">Nro: </span><span t-out="report_number"/>
+                    </t>
+                    <br/>
+
+                    <!-- (9) Fecha -->
+                    <span t-att-style="'color: %s;' % o.company_id.secondary_color">Date: </span><span t-out="report_date" t-options='{"widget": "date"}'/>
+
+                    <t t-if="not pre_printed_report">
+                        <!-- (5) Condicion de IVA / Responsabilidad -->
+                        <!-- (10) CUIT -->
+                        <br/>
+                        <span t-field="o.company_id.l10n_ar_afip_responsibility_type_id"/><span t-att-style="'color: %s;' % o.company_id.secondary_color"> - CUIT: </span><span t-field="o.company_id.partner_id.l10n_ar_formatted_vat"/>
+
+                        <!-- (11) IIBB: -->
+                        <!-- (12) Inicio de actividades -->
+                        <br/><span t-att-style="'color: %s;' % o.company_id.secondary_color">IIBB: </span><span t-out="o.company_id.l10n_ar_gross_income_type == 'exempt' and 'Exento' or o.company_id.l10n_ar_gross_income_number"/><span t-att-style="'color: %s;' % o.company_id.secondary_color"> - Activities Start: </span><span t-field="o.company_id.l10n_ar_afip_start_date"/>
+                    </t>
+
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+      <!-- custom header and footer -->
+        <t t-set="o" position="after">
+            <t t-set="custom_header" t-value="'l10n_ar.custom_header'"/>
+            <t t-set="report_date" t-value="o.invoice_date"/>
+            <t t-set="report_number" t-value="o.l10n_latam_document_number"/>
+            <t t-set="pre_printed_report" t-value="report_type == 'pdf' and o.journal_id.l10n_ar_afip_pos_system == 'II_IM'"/>
+            <t t-set="document_letter" t-value="o.l10n_latam_document_type_id.l10n_ar_letter"/>
+            <t t-set="document_legend" t-value="o.l10n_latam_document_type_id.code and 'Cod. %02d' % int(o.l10n_latam_document_type_id.code) or ''"/>
+            <t t-set="report_name" t-value="o.l10n_latam_document_type_id.report_name"/>
+            <t t-set="header_address" t-value="o.journal_id.l10n_ar_afip_pos_partner_id"/>
+
+            <t t-set="custom_footer">
+                <div class="row">
+                    <div name="footer_left_column" class="col-8 text-start">
+                    </div>
+                    <div name="footer_right_column" class="col-4 text-end">
+                        <div name="pager" t-if="report_type == 'pdf'">
+                            Page: <span class="page"/> / <span class="topage"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-set="fiscal_bond" t-value="o.journal_id.l10n_ar_afip_pos_system in ['BFERCEL', 'BFEWS']"/>
+        </t>
+
+        <!-- remove default partner address -->
+        <t t-set="address" position="replace"/>
+        <xpath expr="//div[@name='address_not_same_as_shipping']" position="replace">
+            <div name="address_not_same_as_shipping"/>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']" position="replace">
+            <div name="address_same_as_shipping"/>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']" position="replace">
+            <div name="no_shipping"/>
+        </xpath>
+
+        <!-- remove default document title -->
+        <xpath expr="//t[@t-set='layout_document_title']" position="replace"/>
+
+        <!-- NCM column for fiscal bond -->
+        <th name="th_description" position="after">
+            <th t-if="fiscal_bond" name="th_ncm_code" class="text-start"><span>NCM</span></th>
+        </th>
+        <td name="account_invoice_line_name" position="after">
+            <td t-if="fiscal_bond" name="ncm_code"><span t-field="line.product_id.l10n_ar_ncm_code"/></td>
+        </td>
+
+        <!-- use latam prices (to include/exclude VAT) -->
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="before">
+            <t t-set="l10n_ar_values" t-value="line._l10n_ar_prices_and_taxes()"/>
+        </t>
+        <xpath expr="//span[@t-field='line.price_unit']" position="attributes">
+            <attribute name="t-field"></attribute>
+            <attribute name="t-out">l10n_ar_values['price_unit']</attribute>
+            <attribute name="t-options">{"widget": "float", "display_currency": o.currency_id, "decimal_precision": "Product Price"}</attribute>
+        </xpath>
+        <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" position="attributes">
+            <attribute name="t-value">current_subtotal + l10n_ar_values['price_subtotal']</attribute>
+        </t>
+        <!-- if b2c we still wants the latam subtotal -->
+        <t t-set="current_total" t-value="current_total + line.price_total" position="attributes">
+            <attribute name="t-value">current_subtotal + l10n_ar_values['price_subtotal']</attribute>
+        </t>
+        <!-- label amount for subtotal column on b2b and b2c -->
+        <xpath expr="//th[@name='th_subtotal']/span" position="replace">
+            <span>Amount</span>
+        </xpath>
+        <span t-field="line.price_subtotal" position="attributes">
+            <attribute name="t-field"></attribute>
+            <attribute name="t-out">l10n_ar_values['price_subtotal']</attribute>
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        </span>
+
+        <t t-set="tax_totals" position="attributes">
+            <attribute name="t-value">o._l10n_ar_get_invoice_totals_for_report()</attribute>
+        </t>
+
+        <!-- use column vat instead of taxes and only if vat discriminated -->
+        <xpath expr="//th[@name='th_taxes']" position="replace">
+            <th name="th_taxes"
+                t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"
+                t-if="not o._l10n_ar_include_vat()">
+                <span t-if="o.company_id.country_id.code == 'AR'">% VAT</span>
+                <span t-else="">Taxes</span>
+            </th>
+        </xpath>
+
+        <xpath expr="//span[@id='line_tax_ids']/.." position="attributes">
+            <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
+        </xpath>
+        <span id="line_tax_ids" position="attributes">
+            <attribute name="t-out">', '.join(map(lambda x: (x.invoice_label or x.name), line.tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)))</attribute>
+        </span>
+
+        <!-- remove payment reference that is not used in Argentina -->
+        <xpath expr="//span[@t-field='o.payment_reference']/../.." position="replace"/>
+
+        <!-- replace information section and usage argentinean style -->
+        <div id="informations" position="replace">
+            <div id="informations" class="row mt8 mb8">
+                <div class="col-6">
+
+                    <!-- IDENTIFICACION (ADQUIRIENTE-LOCATARIO-PRESTARIO) -->
+
+                    <!-- (14) Apellido uy Nombre: Denominicacion o Razon Soclial -->
+                    <t t-if="o.is_sale_document(include_receipts=True)"><strong>Customer: </strong></t>
+                    <t t-else=""><strong>Supplier: </strong></t>
+                    <span t-field="o.partner_id.commercial_partner_id.name"/>
+
+                    <!-- (15) Domicilio Comercial -->
+                    <br/>
+                    <span t-field="o.partner_id" t-options="{'widget': 'contact', 'fields': ['address'], 'no_marker': true, 'no_tag_br': True}"/>
+
+                    <!-- (16) Responsabilidad AFIP -->
+                    <strong>VAT Cond: </strong><span t-field="o.partner_id.l10n_ar_afip_responsibility_type_id"/>
+
+                    <!-- (17) CUIT -->
+                    <t t-if="o.partner_id.vat and o.partner_id.l10n_latam_identification_type_id and o.partner_id.l10n_latam_identification_type_id.l10n_ar_afip_code != '99'">
+                        <br/><strong><t t-out="o.partner_id.l10n_latam_identification_type_id.name or o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>:</strong> <span t-out="o.partner_id.l10n_ar_formatted_vat if o.partner_id.l10n_ar_vat else o.partner_id.vat"/>
+                    </t>
+
+                </div>
+                <div class="col-6">
+
+                    <t t-if="o.invoice_date_due">
+                        <strong>Due Date: </strong>
+                        <span t-field="o.invoice_date_due"/>
+                    </t>
+
+                    <t t-if="o.invoice_payment_term_id" name="payment_term">
+                        <br/><strong>Payment Terms: </strong><span t-field="o.invoice_payment_term_id.name"/>
+                    </t>
+
+                    <t t-if="o.invoice_origin">
+                        <br/><strong>Source:</strong>
+                        <span t-field="o.invoice_origin"/>
+                    </t>
+
+                    <t t-if="o.ref">
+                        <br/><strong>Reference:</strong>
+                        <span t-field="o.ref"/>
+                    </t>
+
+                    <!-- (18) REMITOS -->
+                    <!-- We do not have remitos implement yet. print here the remito number when we have it -->
+
+                    <t t-if="o.invoice_incoterm_id">
+                        <br/>
+                        <strong>Incoterm:</strong>
+                        <p t-if="o.incoterm_location">
+                            <span t-field="o.invoice_incoterm_id.code"/> <br/>
+                            <span t-field="o.incoterm_location"/>
+                        </p>
+                        <p t-else="" t-field="o.invoice_incoterm_id.name" class="m-0"/>
+                    </t>
+
+                </div>
+
+            </div>
+        </div>
+
+        <xpath expr="//div[@id='payment_term']" position="before">
+            <div class="mb-4">
+                <t t-if="o.l10n_ar_afip_concept in ['2', '3', '4'] and o.l10n_ar_afip_service_start and o.l10n_ar_afip_service_end">
+                    <strong>Invoiced period: </strong><span t-field="o.l10n_ar_afip_service_start"/> to <span t-field="o.l10n_ar_afip_service_end"/>
+                </t>
+                <t t-if="o.currency_id != o.company_id.currency_id">
+                    <br/><strong>Currency: </strong><span t-out="'%s - %s' % (o.currency_id.name, o.currency_id.currency_unit_label)"/>
+                    <br/><span>1 <t t-out="o.currency_id.name"/> = <t t-out="1 / o.invoice_currency_rate" t-options='{"widget": "float", "precision": 2}'/> <t t-out="o.company_currency_id.name"/></span>
+                </t>
+                <!-- Show CBU for FACTURA DE CREDITO ELECTRONICA MiPyMEs and NOTA DE DEBITO ELECTRONICA MiPyMEs -->
+                <t t-if="o.l10n_latam_document_type_id.code in ['201', '206', '211', '202', '207', '212'] and o.partner_bank_id">
+                    <br/><strong>CBU for payment: </strong><span t-out="o.partner_bank_id.acc_number or '' if o.partner_bank_id.acc_type == 'cbu' else ''"/>
+                </t>
+
+            </div>
+        </xpath>
+
+        <!-- Show total amount in letters for MiPyMEs document types according to the law
+         http://biblioteca.afip.gob.ar/dcp/LEY_C_027440_2018_05_09 article 5.f -->
+        <xpath expr="//div[@id='total']/div/table" position="after">
+            <t t-if="o.l10n_latam_document_type_id.code in ['201', '202', '203', '206', '207', '208', '211', '212', '213']">
+                <strong>Son: </strong><span t-out="o.currency_id.amount_to_text(o.amount_total)"/>
+            </t>
+        </xpath>
+
+        <!-- RG 5003: Add legend for 'A' documents that have a Monotribuista receptor -->
+        <div name="comment" position="after">
+            <p t-if="o.partner_id.l10n_ar_afip_responsibility_type_id.code in ['6', '13'] and o.l10n_latam_document_type_id.l10n_ar_letter == 'A'" >
+                The tax credit specified in this voucher may only be computed for purposes of the Tax Support and Inclusion Regime for Small Taxpayers of Law No. 27,618.
+            </p>
+        </div>
+
+        <t t-call="account.document_tax_totals" position="attributes">
+            <attribute name="t-call">l10n_ar.document_tax_totals</attribute>
+        </t>
+
+        <div id="qrcode" position="after">
+            <!-- RG 5614/2024: Show ARCA VAT and Other National Internal Taxes -->
+            <t t-set="l10n_ar_custom_tax_summary" t-value="o._l10n_ar_get_invoice_custom_tax_summary_for_report()"/>
+            <div t-attf-class="l10n_ar_tax_details {{ 'col-6' if report_type == 'pdf' else '' }}" t-if="l10n_ar_custom_tax_summary">
+                <table class="table table-sm table-borderless" style="page-break-inside: avoid;">
+                    <th class="border-black" style="border-bottom: 1px solid" colspan="2">
+                           Fiscal Transparency Regime for the Final Consumer (Law 27.743)
+                    </th>
+                    <t t-foreach="l10n_ar_custom_tax_summary" t-as="detail">
+                        <tr>
+                            <td class="text-end"><strong t-esc="detail['name']"/></td>
+                            <td class="text-end">
+                                <span
+                                    class="oe_subtotal_footer_separator"
+                                    t-out="detail['formatted_tax_amount_currency']"
+                                />
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+        </div>
+
+    </template>
+
+    <template id="document_tax_totals" inherit_id="account.document_tax_totals" primary="True">
+        <xpath expr="//t[@t-foreach]/tr" position="attributes">
+            <!-- Only for the Untaxed Amount  -->
+            <attribute name="t-if">not o._l10n_ar_include_vat()</attribute>
+        </xpath>
+    </template>
+
+    <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_ar.report_invoice_document'"
+               t-call="l10n_ar.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,21 @@
+.o_crm_team_kanban .o_kanban_renderer {
+    --KanbanRecord-width: 400px;
+
+    .o_dashboard_bottom_block {
+        border-top: 1px solid map-get($grays, '300');
+        background-color: map-get($grays, '200');
+        padding-top: var(--KanbanRecord-padding-v);
+        padding-bottom: var(--KanbanRecord-padding-v);
+    }
+}
+
+.o_crm_team_member_kanban .o_kanban_renderer {
+    --KanbanRecord-width: 350px;
+
+    .o_kanban_group:not(.o_column_folded) {
+        min-height: 100px;
+    }
+    .ribbon {
+        --Ribbon-wrapper-width: 6rem;
+    }
+}

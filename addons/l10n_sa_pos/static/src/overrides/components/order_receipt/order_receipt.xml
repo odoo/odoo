@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//img[hasclass('pos-receipt-logo')]" position="after">
+            <t t-if="props.data.is_gcc_country and !props.data.is_settlement">
+                <img t-if="props.data.qr_code" id="qrcode" t-att-src="props.data.qr_code" class="pos-receipt-qrcode"/>
+                <br/>
+            </t>
+        </xpath>
+
+        <xpath expr="//span[@id='title_english']" position="replace">
+            <t t-if="!props.data.is_settlement and props.data.is_simplified">
+                <span id="title_english" t-translation="off">Simplified Tax Invoice</span>
+            </t>
+            <t t-else="">
+                <span id="title_english" t-translation="off">Tax Invoice</span>
+            </t>
+        </xpath>
+
+        <xpath expr="//span[@id='title_arabic']" position="replace">
+            <t t-if="!props.data.is_settlement and props.data.is_simplified">
+                <span id="title_arabic" t-translation="off">فاتورة ضريبية مبسطة</span>
+            </t>
+            <t t-else="">
+                <span id="title_arabic" t-translation="off">الفاتورة الضريبية</span>
+            </t>
+        </xpath>
+    </t>
+</templates>

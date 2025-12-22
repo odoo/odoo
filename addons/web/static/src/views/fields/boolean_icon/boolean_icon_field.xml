@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.BooleanIconField">
+        <button t-attf-class="btn btn-sm btn-{{props.record.data[props.name] ? 'primary' : 'outline-secondary'}} mx-2 py-1 fa {{props.icon}}" t-att-data-tooltip="props.label" t-on-click.prevent.stop="update" />
+    </t>
+
+</templates>

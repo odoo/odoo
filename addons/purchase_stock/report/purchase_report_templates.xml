@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
+        <xpath expr="//t[@t-if='o.dest_address_id']" position="after">
+            <t t-else="">
+                <t t-set="information_block">
+                    <strong class="d-block mt-3">Shipping address:</strong>
+                    <div t-if="o.picking_type_id and o.picking_type_id.warehouse_id">
+                        <span t-field="o.picking_type_id.warehouse_id.name"/>
+                        <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//div[@t-if='o.date_planned']" position="after">
+            <div t-if="o.incoterm_id" class="col-2 bm-2">
+                <strong>Incoterm:</strong>
+                <p t-if="o.incoterm_location">
+                    <span t-field="o.incoterm_id.code"/> <br/>
+                    <span t-field="o.incoterm_location"/>
+                </p>
+                <p t-else="" t-field="o.incoterm_id.code" class="m-0"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_purchasequotation_document" inherit_id="purchase.report_purchasequotation_document">
+        <xpath expr="//t[@t-if='o.dest_address_id']" position="after">
+            <t t-else="">
+                <t t-set="information_block">
+                    <strong class="d-block mt-3">Shipping address</strong>
+                    <div t-if="o.picking_type_id and o.picking_type_id.warehouse_id">
+                        <span t-field="o.picking_type_id.warehouse_id.name"/>
+                        <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-set='layout_document_title']" position="after">
+            <div id="informations" class="row mt16 mb16">
+                <div t-if="o.incoterm_id" class="col-3 bm-2">
+                    <strong>Incoterm:</strong>
+                    <p t-if="o.incoterm_location">
+                        <span t-field="o.incoterm_id.code"/> <br/>
+                        <span t-field="o.incoterm_location"/>
+                    </p>
+                    <p t-else="" t-field="o.incoterm_id.code" class="m-0"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <!-- Work entry type on hr leave -->
+    <record id="work_entry_type_leave_form_inherit" model="ir.ui.view">
+        <field name="name">work_entry.type.leave.form.inherit</field>
+        <field name="model">hr.leave.type</field>
+        <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='visual']" position="before">
+                <group>
+                    <group name="payroll" string="Payroll">
+                        <field name="work_entry_type_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

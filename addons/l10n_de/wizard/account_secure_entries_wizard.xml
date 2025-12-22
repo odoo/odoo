@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_account_secure_entries_wizard" model="ir.ui.view">
+            <field name="name">account.secure.entries.wizard.form</field>
+            <field name="model">account.secure.entries.wizard</field>
+            <field name="inherit_id" ref="account.view_account_secure_entries_wizard"/>
+            <field name="mode">extension</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='hash_date']" position="after">
+                    <div class="text-muted mb-1" colspan="2"
+                         invisible="country_code != 'DE'">
+                        <i>By securing entries, you make them unchangeable.</i>
+                        <br/>
+                        <i>This is required by law to ensure complete and traceable bookkeeping in accordance with GoBD.</i>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+</odoo>

@@ -1,0 +1,180 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_paytm
+# 
+# Translators:
+# Wil Odoo, 2024
+# Marianna Ciofani, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__accept_payment
+msgid "Accept Payment"
+msgstr "Accetta pagamento"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__all
+msgid "All"
+msgstr "Tutti"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__allowed_payment_modes
+msgid "Allowed Payment Modes"
+msgstr "Modalità di pagamento consentite"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__accept_payment__auto
+msgid "Automatically"
+msgstr "Automaticamente"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__card
+msgid "Card"
+msgstr "Carta di credito"
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__accept_payment
+msgid ""
+"Choose accept payment mode: \n"
+" Manually or Automatically"
+msgstr ""
+"Scegli come accettare i pagamenti: \n"
+"manualmente o in automatico"
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__allowed_payment_modes
+msgid ""
+"Choose allow payment mode: \n"
+" All/Card or QR"
+msgstr ""
+"Scegli modalità di pagamento da abilitare: \n"
+" Tutte/Carta o QR"
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_mid
+msgid "Go to https://business.paytm.com/ and create the merchant account"
+msgstr "Vai su https://business.paytm.com/ e crea il conto esercente"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__accept_payment__manual
+msgid "Manually"
+msgstr "Manuale"
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_merchant_key
+msgid ""
+"Merchant/AES key \n"
+" ex: B1o6Ivjy8L1@abc9"
+msgstr ""
+"Chiave esercente/AES \n"
+"ad es.: B1o6Ivjy8L1@abc9"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__channel_id
+msgid "PayTM Channel ID"
+msgstr "ID canale PayTM"
+
+#. module: pos_paytm
+#. odoo-javascript
+#: code:addons/pos_paytm/static/src/js/payment_paytm.js:0
+msgid "PayTM Error"
+msgstr "Errore PayTM"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_merchant_key
+msgid "PayTM Merchant API Key"
+msgstr "Chiave API commerciante PayTM"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_mid
+msgid "PayTM Merchant ID"
+msgstr "ID commerciante PayTM"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_tid
+msgid "PayTM Terminal ID"
+msgstr "ID terminale PayTM"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_test_mode
+msgid "PayTM Test Mode"
+msgstr "Modalità test PayTM"
+
+#. module: pos_paytm
+#: model:ir.model,name:pos_paytm.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Metodi di pagamento punto vendita"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__qr
+msgid "QR"
+msgstr "QR"
+
+#. module: pos_paytm
+#. odoo-javascript
+#: code:addons/pos_paytm/static/src/js/payment_paytm.js:0
+msgid "Reference number mismatched"
+msgstr "Numero di riferimento non corrispondente"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "Something went wrong with paytm request. Please try later."
+msgstr "Qualcosa è andato storto per la richiesta PayTM. Prova più tardi."
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_tid
+msgid ""
+"Terminal model or Activation code \n"
+" ex: 70000123"
+msgstr ""
+"Modello terminale o codice di attivazione \n"
+"ad es.: 70000123"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "This Payment Terminal is only valid for INR Currency"
+msgstr "Il terminale di pagamento è valido esclusivamente per la valuta INR"
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_test_mode
+msgid "Turn it on when in Test Mode"
+msgstr "Attivalo in modalità di prova"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "makePaymentRequest expected resultCode not found in the response"
+msgstr "makePaymentRequest resultCode atteso non trovato nella risposta"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "paymentFetchRequest expected resultCode not found in the response"
+msgstr "paymentFetchRequest resultCode atteso non trovato nella risposta"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "paytm transaction failure"
+msgstr "fallimento operazione paytm"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "paytm transaction request declined"
+msgstr "richiesta operazione paytm rifiutata"

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="path">contacts</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form,activity</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="context">{'default_is_company': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a Contact in your address book
+          </p><p>
+            Odoo helps you track all activities related to your contacts.
+          </p>
+        </field>
+    </record>
+    <record id="action_contacts_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="act_window_id" ref="action_contacts"/>
+    </record>
+    <record id="action_contacts_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="base.view_partner_tree"/>
+        <field name="act_window_id" ref="action_contacts"/>
+    </record>
+    <record id="action_contacts_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="base.view_partner_form"/>
+        <field name="act_window_id" ref="action_contacts"/>
+    </record>
+
+
+    <menuitem name="Contacts"
+        id="menu_contacts"
+        sequence="20"
+        web_icon="contacts,static/description/icon.png"
+        groups="base.group_user,base.group_partner_manager"/>
+
+    <menuitem id="res_partner_menu_contacts"
+        name="Contacts"
+        action="action_contacts"
+        parent="menu_contacts"
+        sequence="2"/>
+
+    <menuitem id="res_partner_menu_config"
+        name="Configuration"
+        parent="menu_contacts"
+        groups="base.group_system"
+        sequence="2"/>
+
+    <menuitem id="menu_partner_category_form"
+        action="base.action_partner_category_form"
+        name="Contact Tags"
+        sequence="1" parent="res_partner_menu_config"/>
+
+    <menuitem id="menu_partner_title_contact"
+        action="base.action_partner_title_contact"
+        name="Contact Titles" parent="res_partner_menu_config"
+        sequence="3"/>
+
+    <menuitem id="res_partner_industry_menu" name="Industries"
+        action="base.res_partner_industry_action" parent="res_partner_menu_config"
+        sequence="4"/>
+
+    <menuitem id="menu_localisation" name="Localization"
+        parent="res_partner_menu_config" sequence="5"/>
+
+    <menuitem id="menu_country_partner"
+        action="base.action_country" parent="menu_localisation"
+        sequence="1"/>
+
+    <menuitem id="menu_country_group"
+        action="base.action_country_group"
+        name="Country Group" parent="menu_localisation"
+        sequence="3"/>
+
+    <menuitem id="menu_country_state_partner"
+        action="base.action_country_state"
+        parent="menu_localisation"
+        sequence="2"/>
+
+    <menuitem id="menu_config_bank_accounts"
+        name="Bank Accounts"
+        parent="res_partner_menu_config"
+        sequence="6"/>
+
+    <menuitem id="menu_action_res_bank_form"
+        action="base.action_res_bank_form"
+        parent="menu_config_bank_accounts"
+        sequence="1"/>
+
+    <menuitem id="menu_action_res_partner_bank_form"
+        action="base.action_res_partner_bank_account_form"
+        parent="menu_config_bank_accounts"
+        sequence="2"/>
+</odoo>

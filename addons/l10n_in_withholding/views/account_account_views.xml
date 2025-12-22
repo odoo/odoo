@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_account_tds_tcs_view_form_inherit" model="ir.ui.view">
+        <field name="name">account.account.tds.tcs.view.form.inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_ids']" position="after">
+                <field name="l10n_in_tds_tcs_section_id" invisible="company_fiscal_country_code != 'IN'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_account_tds_tcs_view_tree_inherit" model="ir.ui.view">
+        <field name="name">account.account.tds.tcs.view.list.inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_type']" position="after">
+                <field name="l10n_in_tds_tcs_section_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

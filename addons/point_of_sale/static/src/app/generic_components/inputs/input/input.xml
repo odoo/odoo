@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.input">
+        <div t-attf-class="{{props.class}} d-flex">
+            <button t-if="props.isSmall"
+                class="p-2 rounded btn btn-secondary"
+                t-on-click="() => state.isOpen = !state.isOpen">
+                <i t-if="state.isOpen" class="fa fa-arrow-right"/>
+                <t t-else="props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
+            </button>
+            <div t-if="!props.isSmall || state.isOpen"
+                class="input-group">
+                <div class="form-control form-control-lg input-container d-flex align-items-center bg-view"
+                    t-att-class="{'is-invalid': !props.isValid(getValue())}">
+                    <t t-if="props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
+                    <input class="border-0 mx-2" type="text" style="min-width: 60px;"
+                        t-on-focus="ev=>ev.target.select()"
+                        t-att-placeholder="props.placeholder"
+                        t-ref="input"
+                        t-att-value="getValue()"
+                        t-on-input="(event) => this.setValue(event.target.value)" />
+                    <t t-if="!props.iconOnLeftSide" t-call="point_of_sale.inputIcon" />
+                    <i t-att-class="{ 'invisible': !getValue() }" class="fa fa-times mx-2" t-on-click="() => this.setValue('')"/>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="point_of_sale.inputIcon">
+        <i t-if="props.icon.type === 'fa'" t-attf-class="fa {{props.icon.value}} {{margin}}"/>
+        <span t-if="props.icon.type === 'string'" t-attf-class="{{margin}}" t-esc="props.icon.value"/>
+    </t>
+
+</templates>

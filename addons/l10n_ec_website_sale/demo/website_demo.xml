@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="default_website_ec" model="website">
+        <field name="name">EC Company Website</field>
+        <field name="company_id" ref="base.demo_company_ec"/>
+    </record>
+
+    <function model="product.pricelist" name="write">
+        <value model="product.pricelist" eval="obj().sudo().search([
+                                                             ('currency_id', '=', ref('base.USD')),
+                                                             ('company_id', '=', ref('base.demo_company_ec'))
+                                                            ]).id"/>
+        <value model="website" eval="{'sequence': 1, 'website_id': ref('l10n_ec_website_sale.default_website_ec')}"/>
+    </function>
+
+</odoo>

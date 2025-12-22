@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.login_user_switch">
+        <t t-if="state.users.length">
+            <t t-if="state.displayUserChoice">
+                <div class="oe_login_form o_user_switch user-select-none my-4" t-ref="root">
+                    <p>Choose a user</p>
+                    <div class="list-group my-3">
+                        <t t-foreach="state.users" t-as="user" t-key="user_index">
+                            <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" t-on-click="() => this.fillForm(user.login)">
+                                <span class="d-flex justify-content-begin align-items-center">
+                                    <img class="o_avatar o_user_avatar rounded me-2" t-attf-src="{{getAvatarUrl(user)}}" t-att-alt="user.login"/>
+                                    <t t-esc="user.name" />
+                                </span>
+                                <i class="fa fa-times" title="Remove user from switcher" t-on-click.stop="() => this.remove(user)"/>
+                            </button>
+                        </t>
+                    </div>
+                    <button type="button" class="btn btn-link btn-sm w-100" t-on-click="() => this.fillForm()">
+                        <i class="fa fa-user-circle-o"/> <span class="ms-1">Use another user</span>
+                    </button>
+                </div>
+            </t>
+            <t t-else="" t-portal="'label.form-label'">
+                <button type="button" class="o_user_switch_btn btn btn-sm btn-link m-0 p-0" tabindex="1" t-on-click="() => this.toggleFormDisplay()">
+                    Choose a user
+                </button>
+            </t>
+        </t>
+    </t>
+</templates>

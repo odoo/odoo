@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template
+        id="payment_confirmation_status"
+        inherit_id="website_sale.payment_confirmation_status"
+    >
+        <xpath expr="(//div[hasclass('card-body')])[1]" position="replace">
+            <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
+                <div class="card-body">
+                    <div class="o_header_carrier_message">
+                        <b t-out="order.carrier_id.name"/>
+                        <span class="text-muted"> (In-store pickup)</span>
+                    </div>
+                    <div class="o_body_carrier_message">
+                        <t t-out="order.carrier_id.website_description"/>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <t>$0</t> <!-- Replaced by old content. -->
+            </t>
+        </xpath>
+    </template>
+
+    <template id="product_page_click_and_collect" inherit_id="website_sale.product">
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="before">
+            <owl-component
+                t-if="combination_info.get('show_click_and_collect_availability')"
+                name="website_sale_collect.ClickAndCollectAvailability"
+                t-att-props="json.dumps({
+                    'productId': product_variant.id,
+                    'zipCode': zip_code,
+                    'selectedWhLocation': selected_wh_location or {},
+                    'inStoreStock': combination_info['in_store_stock'],
+                })"
+                class="d-flex o_not_editable"
+            />
+        </xpath>
+    </template>
+
+</odoo>

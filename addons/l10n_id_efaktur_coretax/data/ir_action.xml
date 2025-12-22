@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="download_efaktur" model="ir.actions.server">
+        <field name="name">Download E-Faktur</field>
+        <field name="model_id" ref="l10n_id_efaktur_coretax.model_l10n_id_efaktur_coretax_document" />
+        <field name="state">code</field>
+        <field name="binding_model_id" ref="l10n_id_efaktur_coretax.model_l10n_id_efaktur_coretax_document"/>
+        <field name="code">action = records.action_download()</field>
+    </record>
+</odoo>

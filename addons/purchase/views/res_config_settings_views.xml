@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_purchase" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.purchase</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="25"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Purchase" string="Purchase" name="purchase" groups="purchase.group_purchase_manager">
+                    <field name="po_double_validation" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
+                    <field name="po_lock" invisible="1"/>
+                    <block title="Orders" name="purchase_setting_container">
+                        <setting id="po_order_approval" company_dependent="1" help="Request managers to approve orders above a minimum amount">
+                            <field name="po_order_approval"/>
+                            <div class="content-group" invisible="not po_order_approval">
+                                <div class="row mt16">
+                                    <label for="po_double_validation_amount" class="col-lg-4 o_light_label"/>
+                                    <field name="po_double_validation_amount"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="automatic_lock_confirmed_orders" help="Automatically lock confirmed orders to prevent editing">
+                            <field name="lock_confirmed_po"/>
+                        </setting>
+                        <setting id="get_order_warnings" string="Warnings" help="Get warnings in orders for products or vendors">
+                            <field name="group_warning_purchase"/>
+                        </setting>
+                        <setting id="manage_purchase_agreements" title="A blanket purchase order is a purchase agreement between a buyer and a supplier to deliver goods or services to the buyer at a preset price for a period of time." documentation="/applications/inventory_and_mrp/purchase/manage_deals/agreements.html" help="Manage blanket orders and purchase templates">
+                            <field name="module_purchase_requisition"/>
+                            <div class="content-group" invisible="not module_purchase_requisition">
+                                <div id="use_purchase_requisition"/>
+                            </div>
+                        </setting>
+                        <setting id="auto_receipt_reminder" help="Automatically remind the receipt date to your vendors">
+                            <field name="group_send_reminder"/>
+                        </setting>
+                    </block>
+                    <block title="Invoicing" name="invoicing_settings_container">
+                        <setting id="quantities_billed_vendor" title="This default value is applied to any new product created. This can be changed in the product detail form." documentation="/applications/inventory_and_mrp/purchase/manage_deals/control_bills.html" help="Quantities billed by vendors">
+                            <field name="default_purchase_method" class="o_light_label" widget="radio"/>
+                        </setting>
+                        <setting id="three_way_matching" title="If enabled, activates 3-way matching on vendor bills : the items must be received in order to pay the invoice." documentation="/applications/inventory_and_mrp/purchase/manage_deals/control_bills.html" help="Make sure you only pay bills for which you received the goods you ordered">
+                            <field name="module_account_3way_match" string="3-way matching" widget="upgrade_boolean"/>
+                        </setting>
+                    </block>
+                    <block title="Products" name="matrix_setting_container">
+                        <setting id="variant_options" help="Purchase variants of a product using attributes (size, color, etc.)" documentation="/applications/sales/sales/products_prices/products/variants.html">
+                            <field name="group_product_variant"/>
+                            <div class="content-group" invisible="not group_product_variant">
+                                <div class="mt8">
+                                    <button name="%(product.attribute_action)d" icon="oi-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="product_matrix" title="If installed, the product variants will be added to purchase orders through a grid entry." string="Variant Grid Entry" help="Add several variants to the purchase order from a grid">
+                            <field name="module_purchase_product_matrix"/>
+                        </setting>
+                        <setting id="stock_packaging_purchase" help="Purchase products by multiple of unit # per package" title="Ability to select a package type in purchase orders and to force a quantity that is a multiple of the number of units per package.">
+                            <field name="group_stock_packaging"/>
+                        </setting>
+                        <setting id="sell_purchase_uom" help="Sell and purchase products in different units of measure"
+                                 documentation="/applications/inventory_and_mrp/inventory/management/products/uom.html">
+                            <field name="group_uom"/>
+                            <div class="content-group">
+                                <div class="mt8" invisible="not group_uom">
+                                    <button name="%(uom.product_uom_categ_form_action)d" icon="oi-arrow-right"
+                                            type="action" string="Units Of Measure" class="btn-link"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_purchase_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'purchase', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="menu_purchase_general_settings" name="Settings" parent="menu_purchase_config"
+        sequence="0" action="action_purchase_configuration" groups="base.group_system"/>
+
+</odoo>

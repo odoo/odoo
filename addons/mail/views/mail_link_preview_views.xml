@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="mail_link_preview_view_form" model="ir.ui.view">
+        <field name="name">mail.link.preview.form</field>
+        <field name="model">mail.link.preview</field>
+        <field name="arch" type="xml">
+            <form string="Link Previews">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="message_id"/>
+                            <field name="source_url"/>
+                            <field name="og_type"/>
+                            <field name="og_title"/>
+                        </group>
+                        <group>
+                            <field name="og_image"/>
+                            <field name="og_mimetype"/>
+                            <field name="image_mimetype"/>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <label for="og_description"/>
+                    <field name="og_description"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_link_preview_view_tree" model="ir.ui.view">
+        <field name="name">mail.link.preview.list</field>
+        <field name="model">mail.link.preview</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <list string="Link Previews">
+                <field name="id"/>
+                <field name="source_url"/>
+                <field name="og_title"/>
+                <field name="og_type"/>
+                <field name="image_mimetype"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mail_link_preview_action" model="ir.actions.act_window">
+        <field name="name">Link Previews</field>
+        <field name="res_model">mail.link.preview</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

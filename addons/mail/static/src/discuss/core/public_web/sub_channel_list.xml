@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.SubChannelList">
+        <ActionPanel title.translate="Threads" resizable="false" icon="'fa fa-comments-o'">
+            <t t-set-slot="header">
+                <div class="d-flex align-items-center my-0">
+                    <div class="input-group ms-2 my-2">
+                        <div class="form-control d-flex align-items-center p-0 bg-view" role="search" aria-autocomplete="list">
+                            <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 h-100">
+                                <input t-ref="search" t-model="state.searchTerm" type="text" class="o_searchview_input rounded flex-grow-1 w-auto border-0 px-2" t-on-keydown="onKeydownSearch" placeholder="Search by name"/>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-secondary px-2 py-1" aria-label="Search button" t-on-click="search">
+                            <i t-if="!state.loading" class="o_searchview_icon oi oi-search" role="img" aria-label="Search Sub Channels" title="Search Sub Channels"/>
+                            <i t-else="" class="fa fa-spin fa-spinner" aria-label="Search in progress" title="Search in progress"/>
+                        </button>
+                        <button t-if="store.self.isInternalUser" class="ms-1 btn btn-primary smaller" aria-label="Create Thread" t-on-click="onClickCreate">Create</button>
+                    </div>
+                </div>
+            </t>
+            <div class="o-mail-SubChannelList o-mail-Discuss-threadActionPopover mw-100 w-100 h-100" t-att-class="{ 'align-items-center justify-content-center': state.subChannels.length === 0 }">
+                <div t-if="state.subChannels.length === 0" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+                    <p class="my-1 pb-2 text-center fst-italic text-500">
+                        <t t-if="state.searching" t-esc="NO_THREAD_FOUND"/>
+                        <t t-else="">This channel has no thread yet.</t>
+                    </p>
+                </div>
+                <div class="d-flex flex-column flex-grow-1 gap-1">
+                    <t t-foreach="state.subChannels" t-as="thread" t-key="thread.localId">
+                        <t t-set="message" t-value="thread.newestPersistentNotEmptyOfAllMessage ?? thread.from_message_id"/>
+                        <button class="o-mail-SubChannelList-thread btn btn-light d-flex flex-column border border-secondary mx-1 px-2 py-1" t-on-click="() => this.onClickSubThread(thread)">
+                            <div class="d-flex w-100">
+                                <span class="fw-bold text-truncate small" t-esc="thread.displayName"/>
+                                <span class="flex-grow-1"/>
+                                <span t-if="message" class="text-muted smaller" t-esc="dateText(message)"/>
+                            </div>
+                            <div class="o-mail-SubChannelList-threadLastMessage text-start text-muted fw-normal smaller overflow-hidden ms-2">
+                                <t t-if="message" t-call="mail.message_preview_prefix">
+                                    <t t-set="message" t-value="message"/>
+                                </t>
+                                <t t-esc="message?.inlineBody"/>
+                            </div>
+                        </button>
+                    </t>
+                    <span class="pt-1" t-ref="load-more"/>
+                </div>
+            </div>
+        </ActionPanel>
+    </t>
+</templates>

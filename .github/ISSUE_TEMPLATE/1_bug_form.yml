@@ -1,0 +1,54 @@
+name: Bug
+description: Open a Bug Report on Github
+title: '[18.0] module: description'
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to open a bug report. Please make sure to search in existing issues if the issue was not already raised.
+        Also, if you think it is a standard bug, please first try to reproduce the issue on runbot (http://runbot.odoo.com/runbot - click on the blue door icon of the version row - admin/admin).
+        To speed the process, we need some information."
+  - type: checkboxes
+    id: version
+    attributes:
+      label: Odoo Version
+      description: In which version(s) of Odoo does your issue occur?
+      options:
+        - label: "16.0"
+        - label: "17.0"
+        - label: "18.0"
+        - label: "Other (specify)"
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Please describe how to reproduce the issue with clear steps.
+        - Current behaviour:
+        - Expected behaviour:
+        - Video/Screenshot link (optional):
+  - type: textarea
+    id: howtoreproduce
+    attributes:
+      label: Steps to Reproduce
+      description:
+      placeholder: |
+        - Go to Quotations;
+        - Select one quotation and click on 'Create an Invoice';
+        
+        Current behaviour: traceback.
+        Expected behaviour: it creates a draft invoice.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log Output
+      description: Copy-paste full traceback or error message if you have some
+      render: shell
+  - type: input
+    id: supportticket
+    attributes:
+      label: Support Ticket
+      description: Optional odoo.com/help ticket number
+      placeholder: opw-123456789

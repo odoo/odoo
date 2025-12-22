@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_plan_action_sale_order" model="ir.actions.act_window">
+        <field name="name">Sale Order Plans</field>
+        <field name="res_model">mail.activity.plan</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="mail.mail_activity_plan_view_search"/>
+        <field name="context">{'default_res_model': 'sale.order'}</field>
+        <field name="domain">[('res_model', '=', 'sale.order')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Sale Order Activity Plan
+            </p>
+            <p>
+                Activity plans are used to assign a list of activities in just a few clicks
+                (e.g. "Delivery scheduling", "Order Payment Follow-up", ...)
+            </p>
+        </field>
+    </record>
+</odoo>

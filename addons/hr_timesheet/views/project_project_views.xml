@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="project_project_view_form_simplified_inherit_timesheet" model="ir.ui.view">
+            <field name="name">project.project.view.form.simplified.inherit.timesheet</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+            <field name="priority">24</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
+                    <setting string="Timesheets" help="Log time on tasks">
+                        <field name="allow_timesheets"/>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_invoice_form" model="ir.ui.view">
+            <field name="name">Inherit project form : Invoicing Data</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="priority">24</field>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="after">
+                    <field name="analytic_account_active" invisible="1"/>
+                    <t name="timesheet_error" invisible="not allow_timesheets">
+                        <div class="alert alert-warning mb-1 text-center" role="alert" colspan="2" invisible="not account_id or analytic_account_active">
+                            You cannot log timesheets on this project since it is linked to an inactive analytic account.<br/>
+                            Please switch to another account, or reactivate the current one to timesheet on the project.
+                        </div>
+                    </t>
+                </xpath>
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" invisible="not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
+                </xpath>
+                <xpath expr="//group[@name='group_time_managment']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//group[@name='group_time_managment']" position="inside">
+                    <setting class="col-lg-12" id="timesheet_settings" string="Timesheets" help="Log time on tasks">
+                        <field name="allow_timesheets"/>
+                    </setting>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_project_view_tree_inherit_sale_project" model="ir.ui.view">
+            <field name="name">project.project.list.inherit.sale.timesheet</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="allow_timesheets" column_invisible="1"/>
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" optional="hide" invisible="allocated_hours == 0 or not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="effective_hours" widget="timesheet_uom_no_toggle" optional="hide" invisible="effective_hours == 0 or not allow_timesheets" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="remaining_hours" widget="timesheet_uom_no_toggle"
+                        decoration-danger="remaining_hours &lt; 0"
+                        decoration-warning="allocated_hours > 0 and (remaining_hours / allocated_hours) &lt; 0.2"
+                        optional="hide"
+                        invisible="allocated_hours == 0 or not allow_timesheets"
+                        groups="hr_timesheet.group_hr_timesheet_user"
+                    />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_kanban_inherited" model="ir.ui.view">
+            <field name="name">project.project.timesheet.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="priority">24</field>
+            <field name="arch" type="xml">
+                <xpath expr="//templates" position="before">
+                    <field name="allow_timesheets"/>
+                    <field name="remaining_hours"/>
+                    <field name="encode_uom_in_days"/>
+                    <field name="allocated_hours"/>
+                </xpath>
+                <xpath expr="//div[@name='card_menu_view']" position="inside">
+                    <div role="menuitem" t-if="record.allow_timesheets.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
+                        <a name="action_project_timesheets" type="object">Timesheets</a>
+                    </div>
+                </xpath>
+                <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="after">
+                    <t t-set="badgeColor" t-value="'border-success'"/>
+                    <t t-set="badgeColor" t-value="'border-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
+                    <t t-set="title" t-value="'Days Remaining'" t-if="record.encode_uom_in_days.raw_value"/>
+                    <t t-set="title" t-value="'Time Remaining'" t-else=""/>
+                    <div t-if="record.allow_timesheets.raw_value and record.allocated_hours.raw_value &gt; 0"
+                        t-attf-class="me-1 ms-1 bg-transparent badge border {{ badgeColor }}" t-att-title="title" groups="hr_timesheet.group_hr_timesheet_user">
+                        <field name="remaining_hours" widget="timesheet_uom" class="p-0"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_project_filter_inherit_timesheet" model="ir.ui.view">
+            <field name="name">project.project.view.inherit.timesheet</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_project_filter"/>
+            <field name="arch" type="xml">
+                <filter name="late_milestones" position="before">
+                    <filter string="Timesheets &gt;100%" name="projects_in_overtime" domain="[('is_project_overtime', '=', True)]" groups="hr_timesheet.group_hr_timesheet_user"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="project.open_view_project_all" model="ir.actions.act_window">
+            <field name="domain">[('is_internal_project', '=', False)]</field>
+        </record>
+
+        <record id="project.open_view_project_all_group_stage" model="ir.actions.act_window">
+            <field name="domain">[('is_internal_project', '=', False)]</field>
+        </record>
+    </data>
+</odoo>

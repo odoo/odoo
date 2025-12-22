@@ -1,0 +1,224 @@
+<odoo>
+
+    <!-- Own checks search view -->
+    <record model="ir.ui.view" id="view_account_payment_search">
+        <field name="name">account.check.search</field>
+        <field name="model">l10n_latam.check</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="original_journal_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <separator/>
+                <filter string="Payment Date" name="payment_date" date="payment_date"/>
+                <separator/>
+                <filter string="Handed" name="checks_on_hand" domain="[('issue_state', '=', 'handed')]"/>
+                <filter string="Voided" name="checks_voided" domain="[('issue_state', '=', 'voided')]"/>
+                <filter string="Debited" name="checks_debited" domain="[('issue_state', '=', 'debited')]"/>
+                <separator/>
+                <filter string="Partner" name="groupby_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                <filter string="Payment Date" name="groupby_date" domain="[]" context="{'group_by': 'payment_date'}"/>
+                <filter string="State" name="groupby_issue_state" domain="[]" context="{'group_by': 'issue_state'}"/>
+                <filter string="Company" name="groupby_company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                <separator/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue" domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]" help="Show all records which has next action date is before today"/>
+                <filter invisible="1" string="Today Activities" name="activities_today" domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all" domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Third party checks search view -->
+    <record model="ir.ui.view" id="view_account_payment_third_party_checks_search">
+        <field name="name">account.check.search</field>
+        <field name="model">l10n_latam.check</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_account_payment_search"/>
+        <field name="arch" type="xml">
+            <filter name="checks_on_hand" position="replace"/>
+            <filter name="checks_voided" position="replace"/>
+            <filter name="checks_debited" position="replace">
+                <filter string="On hand" name="checks_on_hand"
+                    domain="[('current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_party_checks')]"/>
+            </filter>
+            <field name="original_journal_id" position="before">
+                <field name="issuer_vat"/>
+                <field name="bank_id"/>
+                <field name="current_journal_id"/>
+            </field>
+            <filter name="groupby_issue_state" position="replace">
+                <filter name="groupby_current_journal"
+                    string="Current Journal"
+                    context="{'group_by': 'current_journal_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_third_party_check_operations_tree">
+        <field name="name">account.check.operations.list</field>
+        <field name="model">account.payment</field>
+        <field name="priority" eval="99"/>
+        <field name="arch" type="xml">
+            <list default_order="date desc, id desc, name desc" create="false" delete="false" duplicate="false" >
+                <field name="date" readonly="state in ['cancel', 'posted']"/>
+                <field name="name"/>
+                <field name="payment_type"/>
+                <field name="journal_id"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="state" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_check_calendar">
+        <field name="name">account.check.calendar</field>
+        <field name="model">l10n_latam.check</field>
+        <field name="arch" type="xml">
+            <calendar
+                    mode="month"
+                    date_start="payment_date"
+                    color="original_journal_id">
+                <field name="amount"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_check_pivot">
+        <field name="name">account.check.calendar</field>
+        <field name="model">l10n_latam.check</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="payment_date" type="row" interval="month"/>
+                <field name="payment_date" type="row" interval="week"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="l10n_latam_check_view_form" model="ir.ui.view">
+        <field name="name">l10n_latam_check.view.form</field>
+        <field name="model">l10n_latam.check</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" delete="false">
+                <field name="outstanding_line_id" invisible="True"/>
+                <header>
+                    <button name="action_void" string="Void Check" invisible="issue_state != 'handed'" type="object" class="oe_highlight" confirm="Marking a check as void will cancel the check and generate a new entry that will re-open the debt."  data-hotkey="v"/>
+                    <field name="issue_state" statusbar_visible="issue_state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button  icon="fa-bars" type="object" name="button_open_check_operations" invisible="payment_method_code != 'new_third_party_checks'">
+                            <span>Operations</span>
+                        </button>
+                        <button  icon="fa-bars" type="object" name="button_open_payment" invisible="payment_method_code != 'own_checks'">
+                            <span>Payment</span>
+                        </button>
+                        <button  icon="fa-bars" type="object" invisible="not outstanding_line_id" name="action_show_journal_entry" groups="account.group_account_user,account.group_account_readonly">
+                            <span>Journal Entry</span>
+                        </button>
+                        <button  icon="fa-bars" type="object" invisible="not issue_state or issue_state == 'handed'" name="action_show_reconciled_move" groups="account.group_account_user,account.group_account_readonly">
+                            <span>Reconciled move</span>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="payment_date"/>
+                            <field name="original_journal_id"/>
+                            <field name="current_journal_id" invisible="issue_state"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="bank_id"  invisible="issue_state"/>
+                            <field name="issuer_vat"  invisible="issue_state"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+ <!-- Own Check Views and menus -->
+
+    <record model="ir.ui.view" id="view_account_own_check_tree">
+        <field name="name">account.check.list</field>
+        <field name="model">l10n_latam.check</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <list edit="false" create="false" delete="false" duplicate="false" sample="1" decoration-info="issue_state == 'handed'" decoration-muted="issue_state in ('voided','debited')">
+                    <header>
+                    </header>
+                    <field name="payment_date" optional="show"/>
+                    <field name="name"/>
+                    <field name="original_journal_id"/>
+                    <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+                    <field name="payment_method_line_id" column_invisible="True"/>
+                    <field name="partner_id" string="Customer"/>
+                    <field name="amount"  optional="show"/>
+                    <field name="currency_id" string="Payment Currency" optional="hide"/>
+                    <field name="issue_state" widget="badge" decoration-info="issue_state == 'handed'"  decoration-muted="issue_state in ('voided','debited')"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_own_check">
+        <field name="name">Own Checks</field>
+        <field name="res_model">l10n_latam.check</field>
+        <field name="view_mode">list,form,calendar,graph,pivot</field>
+        <field name="view_id" ref="view_account_own_check_tree"/>
+        <field name="search_view_id" ref="view_account_payment_search"/>
+        <field name="domain">[('outstanding_line_id', '!=', False)]</field>
+        <field name="context">{'search_default_checks_on_hand': True}</field>
+    </record>
+
+    <menuitem
+        action="action_own_check"
+        id="menu_own_check"
+        sequence="50"
+        parent="account.menu_finance_payables"/>
+
+<!-- Third party check Views and menus -->
+    <record model="ir.ui.view" id="view_account_third_party_check_tree">
+        <field name="name">account.check.list</field>
+        <field name="model">l10n_latam.check</field>
+        <field name="priority">110</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_account_own_check_tree"/>
+        <field name="arch" type="xml">
+            <field name="issue_state" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </field>
+            <field name="original_journal_id" position="replace">
+                <field name="current_journal_id" string="Current Journal"/>
+            </field>
+
+            <list position="inside">
+                <header>
+                    <button name="%(action_view_l10n_latam_payment_mass_transfer)d" type="action" string="Check Transfer"/>
+                </header>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_third_party_check">
+        <field name="name">Third Party Checks</field>
+        <field name="res_model">l10n_latam.check</field>
+        <field name="view_mode">list,form,calendar,graph,pivot</field>
+        <field name="view_id" ref="view_account_third_party_check_tree"/>
+        <field name="search_view_id" ref="l10n_latam_check.view_account_payment_third_party_checks_search"/>
+        <field name="domain">[('payment_method_code', '=', 'new_third_party_checks'), ('payment_id.state', '!=', 'draft')]</field>
+        <field name="context">{'search_default_checks_on_hand': 1}</field>
+    </record>
+
+    <menuitem
+        action="action_third_party_check"
+        id="menu_third_party_check"
+        sequence="40"
+        parent="account.menu_finance_receivables"/>
+
+</odoo>

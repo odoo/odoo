@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="move_form_inherit_l10n_in_gst_verification" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in.gst.verification</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref']" position="after">
+                <label for="l10n_in_partner_gstin_status"
+                    invisible="not l10n_in_show_gstin_status"/>
+                <div name="status_date_container"
+                    invisible="not l10n_in_show_gstin_status">
+                    <field name="l10n_in_partner_gstin_status" class="d-none"/>
+                    <span class="text-nowrap" readonly="1">
+                        <span invisible="not l10n_in_partner_gstin_status"
+                            class="oe_inline text-success">Active</span>
+                        <span invisible="not l10n_in_gstin_verified_date or l10n_in_partner_gstin_status"
+                            class="oe_inline text-danger">Inactive</span>
+                        <span class="text-muted oe_inline">
+                            <span invisible="l10n_in_gstin_verified_date">Not Checked</span>
+                            <span invisible="not l10n_in_gstin_verified_date" class="ps-3">Checked: </span>
+                            <field name="l10n_in_gstin_verified_date" class="oe_inline" widget="remaining_days"/>
+                            <button name="l10n_in_verify_partner_gstin_status"
+                                type="object" icon="fa-refresh"
+                                class="oe_link p-0 ps-3" title="Verify GSTIN status" />
+                        </span>
+                    </span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,219 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_mercado_pago
+# 
+# Translators:
+# lhmflexerp <lhm@flexerp.dk>, 2024
+# Martin Trigaux, 2024
+# Kira Petersen, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Kira Petersen, 2025\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+msgid "Access Token"
+msgstr "Adgangstoken"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"Call your card issuer to activate your card or use another payment method. "
+"The phone number is on the back of your card."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check expiration date."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check the card number."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check the card security code."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check the data."
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__code
+msgid "Code"
+msgstr "Kode"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "Det var ikke muligt at oprette forbindelse til API'et."
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields.selection,name:payment_mercado_pago.selection__payment_provider__code__mercado_pago
+msgid "Mercado Pago"
+msgstr "Mercado Pago"
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token
+msgid "Mercado Pago Access Token"
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model:ir.model,name:payment_mercado_pago.model_payment_provider
+msgid "Payment Provider"
+msgstr "Betalingsudbyder"
+
+#. module: payment_mercado_pago
+#: model:ir.model,name:payment_mercado_pago.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Betalingstransaktion"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Payment was not processed, use another card or contact issuer."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with invalid status: %s"
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with missing payment id."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with missing reference."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with missing status."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid ""
+"The communication with the API failed. Mercado Pago gave us the following "
+"information: '%(error_message)s' (code %(error_code)s)"
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid ""
+"The communication with the API failed. The response is empty. Please verify "
+"your access token."
+msgstr ""
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "This payment method does not process payments in installments."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"We are processing your payment. Don't worry, in less than 2 business days, "
+"we will notify you by e-mail if your payment has been credited."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"We are processing your payment. Don't worry, less than 2 business days we "
+"will notify you by e-mail if your payment has been credited or if we need "
+"more information."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"We were unable to process your payment, please check your card information."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "We were unable to process your payment, please use another card."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"You have already made a payment for that value. If you need to pay again, "
+"use another card or another payment method."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"You have reached the limit of allowed attempts. Choose another card or other"
+" means of payment."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "You must authorize the payment with this card."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Your card has not enough funds."
+msgstr ""
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"Your payment has been credited. In your summary you will see the charge as a"
+" statement descriptor."
+msgstr ""

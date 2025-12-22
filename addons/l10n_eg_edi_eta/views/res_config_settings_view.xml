@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="res_config_settings_view_form">
+        <field name="name">res.config.settings.view.form.inherit.l10n_eg_edi_eta</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']/block" position="after">
+                <block title="ETA E-Invoicing Settings" name="egyption_eta_edi" invisible="country_code != 'EG'">
+                    <field name="country_code" invisible="1"/>
+                    <setting string="ETA API Integration" help="Enter your API credentials to enable ETA E-Invoicing." company_dependent="1">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="l10n_eg_production_env" class="col-lg-6 o_light_label"/>
+                                <field name="l10n_eg_production_env" help="Check to start sending invoices to your e-invoicing production environment"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_eg_client_identifier" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_eg_client_identifier" help="The client ID retrieved from the ETA e-invoicing portal"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_eg_client_secret" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_eg_client_secret" password="True" help="The secret key provided by the ETA. You can input client secret 1 or 2"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_eg_invoicing_threshold" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_eg_invoicing_threshold" help="Set the threshold amount for invoices that won't require the VAT ID of individuals when invoicing"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

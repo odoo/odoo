@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="sale_project.ProjectProfitabilitySection">
+        <tr>
+            <t t-set="revenue_label" t-value="props.labels[revenue.id] or revenue.id"/>
+            <td class="align-middle">
+                <t t-if="this.props.revenue.isSectionFoldable">
+                    <button t-attf-class="btn o_group_caret fa fa-fw me-1 #{state.isFolded ? 'fa-caret-right' : 'fa-caret-down'}" t-on-click="() => this.toggleSaleItems()"/>
+                </t>
+                <a class="revenue_section" t-if="revenue.action" href="#"
+                    t-on-click="() => this.props.onClick(revenue.action)"
+                >
+                    <t t-esc="revenue_label"/>
+                </a>
+                <t t-esc="revenue_label" t-else=""/>
+            </td>
+            <td t-attf-class="text-end align-middle {{ revenue.invoiced + revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced + revenue.to_invoice)"/></td>
+            <td t-attf-class="text-end align-middle {{ revenue.to_invoice === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.to_invoice)"/></td>
+            <td t-attf-class="text-end align-middle {{ revenue.invoiced === 0 ? 'text-500' : ''}}"><t t-esc="props.formatMonetary(revenue.invoiced)"/></td>
+        </tr>
+        <t t-if="!state.isFolded and this.props.revenue.isSectionFoldable">
+            <tr>
+                <td colspan="4" class="p-0 m-0">
+                    <table class="table table-sm table-striped table-hover mb-0">
+                        <thead>
+                            <tr class="bg-light">
+                                <th style="padding-left:30px">Sales Order Items</th>
+                                <th class="text-end">Sold</th>
+                                <th class="text-end">Delivered</th>
+                                <th class="text-end">Invoiced</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-light" t-foreach="sale_items" t-as="sale_item" t-key="sale_item.id">
+                                <t t-set="uom_name" t-value="sale_item.product_uom and sale_item.product_uom[1]"/>
+                                <td style="padding-left: 30px">
+                                    <a t-if="sale_item.action" href="#" t-on-click="() => this.onSaleItemActionClick(sale_item.action)">
+                                        <t t-esc="sale_item.name"/>
+                                    </a>
+                                    <t t-else="" t-esc="sale_item.name"/>
+                                </td>
+                                <td class="text-end align-middle"><t t-esc="formatValue(sale_item.product_uom_qty, uom_name)"/> <t t-esc="uom_name"/></td>
+                                <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_delivered, uom_name)"/> <t t-esc="uom_name"/></td>
+                                <td class="text-end align-middle"><t t-esc="formatValue(sale_item.qty_invoiced, uom_name)"/> <t t-esc="uom_name"/></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="border-0 bg-light" t-if="state.displayLoadMore">
+                                <td class="text-center" colspan="4">
+                                    <a class="cursor-pointer btn-link w-100" t-on-click="() => this.onLoadMoreClick(revenue)">
+                                        Load more
+                                    </a>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </td>
+            </tr>
+        </t>
+    </t>
+</templates>

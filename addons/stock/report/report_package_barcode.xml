@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<template id="report_package_barcode">
+    <t t-call="web.basic_layout">
+        <!-- quantity patterns are always 3 digit codes + 1 digit for number of digits (excluding units) -->
+        <t t-set="uom_unit_id" t-value="env.ref('uom.product_uom_unit').id"/>
+        <t t-set="gs1_uom_patterns" t-value="{rule.associated_uom_id.id: rule.pattern[1:4] + str(len(str('{:.10f}'.format(rule.associated_uom_id.rounding).rstrip('0')).split('.')[1])) for rule in env['barcode.rule'].search([('associated_uom_id', '!=', False), ('associated_uom_id.id', '!=', uom_unit_id), ('is_gs1_nomenclature', '=', True)])}"/>
+        <t t-foreach="docs" t-as="o">
+        <!-- Filters out package's quants with no quantity. -->
+        <t t-set="package_quants" t-value="o.quant_ids.filtered('quantity')"/>
+            <div class="page">
+                <div class="oe_structure"/>
+                <!-- HEADER: Package's information -->
+                <div class="row mb-5">
+                    <h1 class="col-6">
+                        <span t-field="o.name" class="mt0 float-start">Package Reference</span>
+                    </h1>
+                    <div t-if="o.valid_sscc" class="col-6 text-center">
+                        <t t-set="barcode" t-value="'00' + o.name"/>
+                        <t t-if="o.pack_date" t-set="barcode" t-value="barcode + '13' + o.pack_date.strftime('%y%m%d')"/>
+                        <div name="datamatrix_barcode" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'QR', 'width': 100, 'height': 100}">
+                            <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2 opacity-75 text-muted text-center">
+                                (package barcode)
+                            </div>
+                        </div>
+                    </div>
+                    <div t-else="" class="col-6 text-center">
+                        <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}">
+                            <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2 opacity-75 text-muted text-center">
+                                (package barcode)
+                            </div>
+                        </div>
+                        <div t-field="o.name">Package Reference</div>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+                <div class="row mt32 mb32">
+                    <div t-if="o.pack_date" class="col">
+                        <strong>Pack Date:</strong>
+                        <span t-field="o.pack_date">2021-9-01</span>
+                    </div>
+                    <div t-if="o.package_type_id" class="o_packaging_type col">
+                        <strong>Package Type:</strong>
+                        <span t-field="o.package_type_id.name">Pallet</span>
+                    </div>
+                </div>
+                <div class="oe_structure"/>
+                <!-- TABLE'S HEADER -->
+                <table class="w-100 table table-sm table-striped"><thead><tr>
+                    <th name="th_product_barcode" class="text-start" style="width: 30%;">Barcode</th>
+                    <th name="th_product" class="text-start" style="width: 30%;">Product</th>
+                    <th name="th_quantity" class="text-end" style="width: 20%;">Quantity</th>
+                    <th name="th_content_barcode" class="text-center" style="width: 20%;">Contents</th>
+                </tr></thead></table>
+                <!-- PACKAGE CONTENT -->
+                <t t-foreach="package_quants.product_id" t-as="product">
+                    <t t-set="product_quants" t-value="package_quants.filtered(lambda q: q.product_id.id == product.id)"/>
+                    <t t-set="product_qty" t-value="sum(product_quants.mapped('quantity'))"/>
+                    <!-- Display each individual LN/SN if there is less than 50. -->
+                    <t t-set="display_content_details" t-value="0 &lt; len(product_quants.lot_id) &lt; 50"/>
+                    <t t-set="aggregate_barcodes" t-value="product_quants.get_aggregate_barcodes()"/>
+                    <table class="w-100 table table-sm table-striped">
+                        <!-- Quant's summary: product's barcode, product, qty and content's barcode.  -->
+                        <thead><tr>
+                            <th name="th_product_barcode" class="text-center" style="width: 30%;">
+                                <div t-field="product.barcode"
+                                    class="w-100 text-center pt-2 pb-1"
+                                    t-options="{
+                                        'widget': 'barcode',
+                                        'width': 600,
+                                        'height': 100,
+                                        'img_style': 'width:100%;height:50px;'
+                                    }"/>
+                                <div t-if="product.barcode" t-field="product.barcode" class="pb-2">Product barcode</div>
+                            </th>
+                            <th name="th_product" class="text-start" style="width: 30%;">
+                                <span t-field="product.display_name"/>
+                            </th>
+                            <th name="th_quantity" class="text-end" style="width: 20%;">
+                                <span t-out="product_qty">12.0</span>
+                                <span t-field="product.uom_id.name" groups="uom.group_uom">Units</span>
+                            </th>
+                            <th name="th_content_barcode" class="text-center" style="width: 20%;">
+                                <div t-if="len(aggregate_barcodes) == 1"
+                                    t-out="aggregate_barcodes[0]"
+                                    class="my-3"
+                                    t-options="{
+                                        'widget': 'barcode',
+                                        'symbology': 'QR',
+                                        'img_style': 'width: 24mm; height: 24mm',
+                                    }"/>
+                            </th>
+                        </tr></thead>
+                        <!-- Quant's details.  -->
+                        <tbody t-if="display_content_details or len(aggregate_barcodes) &gt; 1">
+                            <!-- Lot/Serial numbers, displayed 4 by 4.  -->
+                            <tr t-if="display_content_details" style="font-size: 0.8em;"
+                                t-foreach="product_quants[i:i+4] for i in range(0, len(product_quants), 4)"
+                                t-as="quants">
+                                <td colspan="4">
+                                    <div t-foreach="quants" t-as="quant"
+                                        class="d-inline-block w-25 text-end"
+                                        style="height: 18mm;">
+                                        <div class="d-inline-block p-2 text-end align-top">
+                                            <div t-field="quant.lot_id.name" class="mt-2">54326786758</div>
+                                            <div class="mt-1">
+                                                <span t-field="quant.quantity">3.00</span>
+                                                <span t-field="quant.product_id.uom_id.name" groups="uom.group_uom">Units</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-inline-block py-2 text-center">
+                                            <t t-set="quant_barcode" t-value="quant.lot_id.name"/>
+                                            <t groups="stock.group_stock_lot_print_gs1"
+                                                t-set="quant_barcode"
+                                                t-value="quant._get_gs1_barcode(gs1_uom_patterns) or quant_barcode"/>
+                                            <span t-out="quant_barcode" t-options="{
+                                                    'widget': 'barcode',
+                                                    'symbology': 'QR',
+                                                    'img_style': 'width: 14mm; height: 14mm',
+                                                }"/>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <!-- Content's Barcodes -->
+                            <tr t-if="len(aggregate_barcodes) &gt; 1" style="border-bottom-color: black">
+                                <td colspan="4" name="quant_qr_codes" class="py-4">
+                                    <t t-foreach="aggregate_barcodes[i:i+3] for i in range(0, len(aggregate_barcodes), 3)"
+                                        t-as="batch_aggregate_barcodes">
+                                        <div class="w-100 p-0 py-5">
+                                            <div t-foreach="batch_aggregate_barcodes" t-as="barcode" t-out="barcode"
+                                                class="d-inline-block text-center"
+                                                style="width: 33%;"
+                                                t-options="{
+                                                    'widget': 'barcode',
+                                                    'symbology': 'QR',
+                                                    'img_style': 'width: 48mm; height: 48mm',
+                                                    'width': 800,
+                                                    'height': 800,
+                                                }"/>
+                                        </div>
+                                    </t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+            <p style="page-break-after: always;"/>
+        </t>
+    </t>
+</template>
+
+<template id="report_package_barcode_small">
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="o">
+            <t>
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <t t-if="o.valid_sscc">
+                        <div class="row">
+                            <t t-set="barcode" t-value="'00' + o.name"/>
+                            <t t-if="o.pack_date" t-set="barcode" t-value="barcode + '13' + o.pack_date.strftime('%y%m%d')"/>
+                            <div class="col-5 text-end" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px">
+                                <span t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'width': 200, 'height': 200}">Barcode Demo</span>
+                            </div>
+                            <div class="col-7 text-start" style="font-size:20px;">
+                                <div class="row">SSCC: <span t-field="o.name">SSCC Demo</span></div>
+                                <div t-if="o.pack_date" class="row">Pack Date: <span t-field="o.pack_date">Pack Date Demo</span></div>
+                                <div t-if="o.package_type_id" class="row" name="datamatrix_pack_type">Package Type: <span t-field="o.package_type_id.name">Package Type Demo</span></div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="row">
+                            <div class="text-center col-12">
+                                <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:600px;height:100px;'}">Name Demo</span>
+                                <span t-field="o.name" style="font-size:20px; margin:100px; white-space: nowrap;">Name Demo</span>
+                            </div>
+                        </div>
+                        <div t-if="o.pack_date" class="col-12 text-center" style="font-size:24px; font-weight:bold;">Pack Date: <span t-field="o.pack_date">2023-01-01</span></div>
+                        <div class="row o_packaging_type" t-if="o.package_type_id">
+                            <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Package Type: </span><span t-field="o.package_type_id.name">Package Type Demo</span></div>
+                        </div>
+                    </t>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+<template id="report_picking_packages">
+    <t t-set="docs" t-value="docs.move_line_ids.mapped('result_package_id')"/>
+    <t t-call="stock.report_package_barcode"/>
+</template>
+</data>
+</odoo>

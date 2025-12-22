@@ -1,0 +1,72 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays_contract
+# 
+# Translators:
+# Tony Ng, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_leave.py:0
+msgid ""
+"A leave cannot be set across multiple contracts with different working schedules.\n"
+"\n"
+"Please create one time off for each contract.\n"
+"\n"
+"Time off:\n"
+"%(time_off)s\n"
+"\n"
+"Contracts:\n"
+"%(contracts)s"
+msgstr ""
+"休假不可對工作時間表不同的多份合約設置。\n"
+"\n"
+"請為每份合約建立一個休假。\n"
+"\n"
+"休假：\n"
+"%(time_off)s\n"
+"\n"
+"合約：\n"
+"%(contracts)s"
+
+#. module: hr_holidays_contract
+#: model:ir.model,name:hr_holidays_contract.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "一般員工"
+
+#. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_contract.py:0
+msgid ""
+"Changing the contract on this employee changes their working schedule in a "
+"period they already took leaves. Changing this working schedule changes the "
+"duration of these leaves in such a way the employee no longer has the "
+"required allocation for them. Please review these leaves and/or allocations "
+"before changing the contract."
+msgstr ""
+"更改該員工的合同會改變其已休假期間的工作安排。更改工作時間表會改變這些假期的持續時間，從而使該員工不再擁有所需的假期分配。請在更改合同前審查這些假期和/或分配。"
+
+#. module: hr_holidays_contract
+#: model:ir.model,name:hr_holidays_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "員工契約"
+
+#. module: hr_holidays_contract
+#: model:ir.model,name:hr_holidays_contract.model_hr_leave
+msgid "Time Off"
+msgstr "休假"

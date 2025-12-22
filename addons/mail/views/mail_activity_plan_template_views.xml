@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_activity_plan_template_view_tree" model="ir.ui.view">
+            <field name="name">mail.activity.plan.template.view.list</field>
+            <field name="model">mail.activity.plan.template</field>
+            <field name="arch" type="xml">
+                <list string="Activities">
+                    <field name="activity_type_id" context="{'form_view_ref': 'mail.mail_activity_type_form_inherit'}"/>
+                    <field name="summary" placeholder="e.g. Discuss Proposal"/>
+                    <field name="responsible_type"/>
+                    <field name="delay_count"/>
+                    <field name="delay_unit"/>
+                    <field name="delay_from"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="mail_activity_plan_template_view_form" model="ir.ui.view">
+            <field name="name">mail.activity.plan.template.view.form</field>
+            <field name="model">mail.activity.plan.template</field>
+            <field name="arch" type="xml">
+                <form string="Activity">
+                    <field name="company_id" invisible="1"/>
+                    <field name="res_model" invisible="1"/>
+                    <sheet>
+                        <group>
+                            <field name="activity_type_id" context="{'form_view_ref': 'mail.mail_activity_type_form_inherit'}"/>
+                            <field name="summary" placeholder="e.g. Discuss Proposal"/>
+                            <field name="responsible_type"/>
+                            <field name="responsible_id" invisible="responsible_type != 'other'"/>
+                            <label for="delay_count"/>
+                            <div>
+                                <field class="oe_inline pe-1 o_input_3ch" name="delay_count"/>
+                                <field class="oe_inline ps-1 pe-2" name="delay_unit"/>
+                                <field class="oe_inline" name="delay_from"/>
+                            </div>
+                        </group>
+                        <field name="note" nolabel="1" class="oe-bordered-editor" placeholder="e.g. Log a note"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,30 @@
+.o-mail-DiscussSidebarCallParticipants-avatar.o-isTalking {
+    outline: 3px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+    outline-offset: -2px;
+}
+
+.o-mail-DiscussSidebarCallParticipants-name {
+    color: $black;
+    opacity: 60%;
+
+    &.o-isTalking {
+        opacity: 100%;
+    }
+}
+
+.o-mail-DiscussSidebarCallParticipants-status {
+    &.o-compact {
+        span {
+            padding: map-get($spacers, 1) / 2;
+        }
+
+        .o-live {
+            font-size: 0.5rem;
+        }
+    }
+
+    .o-live {
+        font-size: 0.6rem;
+        padding: map-get($spacers, 1) / 2;
+    }
+}

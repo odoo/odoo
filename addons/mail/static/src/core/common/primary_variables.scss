@@ -1,0 +1,37 @@
+$o-mail-Avatar-size: 36px !default;
+$o-mail-Avatar-sizeSmall: 28px !default;
+$o-mail-ChatWindow-width: 380px !default; // same value as WINDOW
+$o-mail-ChatHub-bubblesWidth: 56px !default; // same value as BUBBLE
+$o-mail-ChatHub-bubblesMargin: 10px !default; // same value as BUBBLE_OUTER
+$o-mail-ChatHub-bubblesStart: 15px !default; // same value as BUBBLE_START
+$o-mail-ChatBubble-size: 45px !default;
+$o-mail-ChatBubble-sizeBig: 50px !default;
+$o-mail-ChatBubble-zindex: 1001 !default;
+// Needed because $border-radius variations are all set to 0 in enterprise.
+$o-RoundedRectangle-small: .2rem !default;
+$o-RoundedRectangle-large: 3 * $o-RoundedRectangle-small !default;
+
+$o-mail-LinkPreview-width: 320px !default;
+$o-mail-LinkPreview-height: 240px !default;
+$o-mail-LinkPreviewCard-height: 80px !default;
+
+$o-mail-Message-sidebarSmallWidth: 34px !default;
+$o-mail-Message-sidebarWidth: 42px !default;
+$o-mail-NavigableList-zIndex: 21;
+$o-mail-Chatter-minWidth: 530px !default;
+$o-mail-Discuss-inspector: 300px !default; // same value as INSPECTOR_WIDTH
+
+@mixin o-FileViewer-arrow {
+    background-color: rgba(black, 0.4);
+    color: rgba(map-get($theme-colors, 'light'), 0.7);
+
+    &:hover {
+        background-color: rgba(black, 0.6);
+        color: white;
+    }
+
+    &.disabled {
+        color: map-get($grays, '600');
+        background: none;
+    }
+}

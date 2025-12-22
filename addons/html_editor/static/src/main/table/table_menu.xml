@@ -1,0 +1,19 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.TableMenu">
+        <Dropdown menuClass="'m-0'" position="props.type === 'column' ? 'bottom' : 'right'" state="props.dropdownState">
+            <button t-att-data-type="props.type" class="o-we-table-menu fa" t-attf-class="fa-ellipsis-{{props.type === 'column' ? 'h w-100' : 'v h-100'}}" />
+            <t t-set-slot="content">
+                <div t-on-pointerdown.stop="() => {}">
+                    <t t-foreach="items" t-as="item" t-key="item_index">
+                        <DropdownItem onSelected="() => this.onSelected(item)">
+                            <div class="user-select-none" t-att-name="item.name">
+                                <span t-if="item.icon" class="me-2 fa" t-att-class="item.icon"/>
+                                <span t-esc="item.text"/>
+                            </div>
+                        </DropdownItem>
+                    </t>
+                 </div>
+            </t>
+        </Dropdown>
+    </t>
+</templates>

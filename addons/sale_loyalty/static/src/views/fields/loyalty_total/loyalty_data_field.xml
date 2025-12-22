@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="sale_loyalty.LoyaltyDataField">
+        <table class="table" t-if="LoyaltyCardData">
+            <tr class="border-bottom">
+                <td>Loyalty Card :</td>
+            </tr>
+            <tr class="border-none">
+                <td>Issued :</td>
+                <td class="text-end">
+                    <div class="p-0 m-0">
+                        <span t-out="LoyaltyCardData.issued"/>
+                        <span class="ms-1 d-none d-md-inline" t-out="LoyaltyCardData.point_name"/>
+                    </div>
+                </td>
+            </tr>
+            <tr class="border-bottom">
+                <td>Used :</td>
+                <td class="text-end">
+                    <div class="p-0 m-0">
+                        <span t-out="LoyaltyCardData.cost"/>
+                        <span class="ms-1 d-none d-md-inline" t-out="LoyaltyCardData.point_name"/>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </t>
+
+</templates>

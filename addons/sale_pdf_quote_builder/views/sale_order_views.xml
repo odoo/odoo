@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_form_inherit_sale_pdf_quote_builder" model="ir.ui.view">
+        <field name="name">sale.order.form.pdf.quote.builder</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
+        <field name="arch" type="xml">
+            <!-- Needed by customContentKanbanLikeWidget to save selected documents on the product. -->
+            <!-- Desktop view -->
+            <xpath expr="//field[@name='order_line']/list" position="inside">
+                <field name="product_document_ids" column_invisible="1"/>
+            </xpath>
+            <!-- Mobile view -->
+            <xpath expr="//field[@name='order_line']/kanban" position="inside">
+                <field name="product_document_ids" column_invisible="1"/>
+            </xpath>
+            <page name="optional_products" position="after">
+                <page
+                    name="pdf_quote_builder"
+                    string="Quote Builder"
+                    invisible="not (partner_id and is_pdf_quote_builder_available)"
+                >
+                    <!-- Needed by customContentKanbanLikeWidget to save selected documents. -->
+                    <field name="quotation_document_ids" invisible="1"/>
+                    <field name="customizable_pdf_form_fields" invisible="1"/>
+                    <widget
+                        name="customContentKanbanLikeWidget"
+                        class="d-inline"
+                    />
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>

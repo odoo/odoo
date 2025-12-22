@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel" name="Carousel">
+    <section class="s_carousel_wrapper p-0" data-vxml="001" data-vcss="001">
+        <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
+        <div t-attf-id="myCarousel{{uniq}}" class="s_carousel s_carousel_default carousel slide" data-bs-ride="true" data-bs-interval="10000">
+            <!-- Content -->
+            <div class="carousel-inner">
+                <!-- #01 -->
+                <div class="carousel-item active oe_img_bg o_bg_img_center o_cc o_cc5 pt152 pb152" style="background-image: url('/web/image/website.s_carousel_default_image_1');" data-name="Slide">
+                    <div class="o_we_bg_filter bg-black-25"/>
+                    <div class="container oe_unremovable">
+                        <div class="row">
+                            <div class="carousel-content col-lg-6">
+                                <h2 class="display-3-fs">Slide Title</h2>
+                                <p class="lead">Use this snippet to presents your content in a slideshow-like format. Don't write about products or services here, write about solutions.</p>
+                                <p>
+                                    <a href="/contactus" class="btn btn-primary">Contact us</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #02 -->
+                <div class="carousel-item oe_img_bg o_bg_img_center pt96 pb96" style="background-image: url('/web/image/website.s_carousel_default_image_2');" data-name="Slide">
+                    <div class="container oe_unremovable">
+                        <div class="row">
+                            <div class="carousel-content col-lg-8 offset-lg-2 text-center pt48 pb40">
+                                <h2 class="display-3-fs">Clever Slogan</h2>
+                                <div class="s_hr pt8 pb24" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-25 mx-auto"/>
+                                </div>
+                                <p class="lead">Storytelling is powerful.<br/> It draws readers in and engages them.</p>
+                                <p><a href="/" class="btn btn-primary">Start your journey</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #03 -->
+                <div class="carousel-item oe_img_bg o_bg_img_center pt128 pb128 o_cc o_cc5" style="background-image: url('/web/image/website.s_carousel_default_image_3');" data-name="Slide">
+                    <div class="container oe_unremovable">
+                        <div class="row">
+                            <div class="carousel-content col-lg-6 offset-lg-6 pb24 pt24">
+                                <h3>Edit this title</h3>
+                                <h6>Good writing is simple, but not simplistic.</h6>
+                                <p><br/></p>
+                                <p class="lead">Good copy starts with understanding how your product or service helps your customers. Simple words communicate better than big words and pompous language.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Controls -->
+            <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide="next" aria-label="Next" title="Next">
+                <span class="carousel-control-next-icon" aria-hidden="true"/>
+                <span class="visually-hidden">Next</span>
+            </button>
+            <!-- Indicators -->
+            <div class="carousel-indicators o_not_editable">
+                <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="0" class="active" aria-label="Carousel indicator"/>
+                <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="1" aria-label="Carousel indicator"/>
+                <button type="button" t-attf-data-bs-target="#myCarousel{{uniq}}" data-bs-slide-to="2" aria-label="Carousel indicator"/>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_carousel_000_scss" name="Carousel 000 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_carousel/000.scss</path>
+</asset>
+
+<asset id="website.s_carousel_001_scss" name="Carousel 001 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_carousel/001.scss</path>
+</asset>
+
+</odoo>

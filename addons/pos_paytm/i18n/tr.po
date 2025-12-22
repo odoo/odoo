@@ -1,0 +1,184 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_paytm
+# 
+# Translators:
+# İmat Yahya Çataklı <yahya.catakli@soluto.com.tr>, 2024
+# Umur Akın <umura@projetgrup.com>, 2024
+# abc Def <hdogan1974@gmail.com>, 2024
+# Hakan Türkün, 2025
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__accept_payment
+msgid "Accept Payment"
+msgstr "Ödemeyi Kabul Edin"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__all
+msgid "All"
+msgstr "Tümü"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__allowed_payment_modes
+msgid "Allowed Payment Modes"
+msgstr "İzin Verilen Ödeme Yöntemleri"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__accept_payment__auto
+msgid "Automatically"
+msgstr "Otomatik olarak"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__card
+msgid "Card"
+msgstr "Kart"
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__accept_payment
+msgid ""
+"Choose accept payment mode: \n"
+" Manually or Automatically"
+msgstr ""
+"Kabul edilecek ödeme yöntemini seçin: \n"
+" Manuel veya Otomatik"
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__allowed_payment_modes
+msgid ""
+"Choose allow payment mode: \n"
+" All/Card or QR"
+msgstr ""
+"İzin verilen ödeme yöntemini seçin: \n"
+" Tümü/Kart veya QR"
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_mid
+msgid "Go to https://business.paytm.com/ and create the merchant account"
+msgstr ""
+"https://business.paytm.com/ adresine gidin ve satıcı hesabınızı oluşturun"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__accept_payment__manual
+msgid "Manually"
+msgstr "Manuel olarak"
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_merchant_key
+msgid ""
+"Merchant/AES key \n"
+" ex: B1o6Ivjy8L1@abc9"
+msgstr ""
+"Mağaza/AES anahtarı \n"
+" örn: B1o6Ivjy8L1@abc9"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__channel_id
+msgid "PayTM Channel ID"
+msgstr "PayTM Kanal Kimliği"
+
+#. module: pos_paytm
+#. odoo-javascript
+#: code:addons/pos_paytm/static/src/js/payment_paytm.js:0
+msgid "PayTM Error"
+msgstr "PayTM Hatası"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_merchant_key
+msgid "PayTM Merchant API Key"
+msgstr "PayTM Mağaza API Anahtarı"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_mid
+msgid "PayTM Merchant ID"
+msgstr "PayTM Mağaza Kimliği"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_tid
+msgid "PayTM Terminal ID"
+msgstr "PayTM Terminal Kimliği"
+
+#. module: pos_paytm
+#: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_test_mode
+msgid "PayTM Test Mode"
+msgstr "PayTM Test Modu"
+
+#. module: pos_paytm
+#: model:ir.model,name:pos_paytm.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Satış Noktası Ödeme Yöntemleri"
+
+#. module: pos_paytm
+#: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__allowed_payment_modes__qr
+msgid "QR"
+msgstr "QR"
+
+#. module: pos_paytm
+#. odoo-javascript
+#: code:addons/pos_paytm/static/src/js/payment_paytm.js:0
+msgid "Reference number mismatched"
+msgstr "Referans numarası uyuşmuyor"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "Something went wrong with paytm request. Please try later."
+msgstr "Paytm isteğinde bir sorun oluştu. Lütfen daha sonra tekrar deneyin."
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_tid
+msgid ""
+"Terminal model or Activation code \n"
+" ex: 70000123"
+msgstr ""
+"Terminal modeli veya Aktivasyon kodu \n"
+" örn: 70000123"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "This Payment Terminal is only valid for INR Currency"
+msgstr "Bu Ödeme Terminali yalnızca INR para birimi için geçerlidir"
+
+#. module: pos_paytm
+#: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_test_mode
+msgid "Turn it on when in Test Mode"
+msgstr "Test Modundayken bunu etkinleştirin"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "makePaymentRequest expected resultCode not found in the response"
+msgstr "makePaymentRequest için beklenen resultCode yanıt içinde bulunamadı"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "paymentFetchRequest expected resultCode not found in the response"
+msgstr "paymentFetchRequest için beklenen resultCode yanıt içinde bulunamadı"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "paytm transaction failure"
+msgstr "paytm işlem hatası"
+
+#. module: pos_paytm
+#. odoo-python
+#: code:addons/pos_paytm/models/pos_payment_method.py:0
+msgid "paytm transaction request declined"
+msgstr "paytm işlem isteği reddedildi"

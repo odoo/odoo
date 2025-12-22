@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- DEPRECATED -->
+        <record model="ir.ui.view" id="peppol_service_configuration">
+            <field name="name">account.peppol.service.configuration.form</field>
+            <field name="model">account_peppol.service.wizard</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <group>
+                        <div colspan="2">
+                            <field name="service_info" role="status" class="o_field_html alert alert-info" invisible="not service_info"/>
+                            <field name="service_ids"
+                                   nolabel="1"
+                                   widget="one2many"
+                                   columns="2">
+                                <list editable="bottom" create="false" delete="false" edit="true">
+                                    <field name="wizard_id" column_invisible="1"/>
+                                    <field name="document_name" readonly="1"/>
+                                    <field name="document_identifier" groups="base.group_no_one" readonly="1"/>
+                                    <field name="enabled" widget="boolean_toggle" readonly="enabled"/>
+                                </list>
+                            </field>
+                        </div>
+                        <footer>
+                            <button name="confirm" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                            <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                        </footer>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

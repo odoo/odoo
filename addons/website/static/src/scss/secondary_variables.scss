@@ -1,0 +1,301 @@
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+// Complete the base website values palette with the first defined font in
+// $o-theme-font-configs, this allows themes to just define a list of fonts and
+// relying on the fact the first one will be used (but not SYSTEM_FONTS which
+// is defined in $o-base-theme-font-configs).
+$-first-font-name: nth(map-keys($o-theme-font-configs), 1);
+@if map-get($o-base-website-values-palette, 'font') == null {
+    $o-base-website-values-palette: map-merge($o-base-website-values-palette, (
+        'font': $-first-font-name,
+    ));
+}
+
+@function o-add-font-config($values) {
+    @each $alias, $key in $o-font-aliases-to-keys {
+        $font-name: map-get($values, $key);
+        $font-config: o-safe-get($o-theme-font-configs, $font-name, ());
+        $font-properties: o-safe-get($font-config, 'properties', ());
+        $type-font-properties: o-safe-get($font-properties, $alias, ());
+        $values: map-merge($values, $type-font-properties);
+    }
+    @return $values;
+}
+
+// Some fonts have been renamed in a stable version, and for retro compatibility
+// for users which have a custom user_values.css as attachment with an old font
+// already used, we map the old font with the new `similar` font
+$o-fonts-similar: (
+    'Droid Serif': 'Noto Serif',
+    'SinKinSans': 'Spartan',
+    'Proxima': 'Montserrat',
+    'Comic Sans MS': 'Comic Neue',
+    'Fontastique': 'Bubblegum Sans',
+    'Luminari': 'Eagle Lake',
+    'Fecske': 'Marcellus',
+    'Din Alternate': 'Roboto',
+    'Muli': 'Mulish',
+);
+
+@function o-map-font-aliases($values) {
+    $-values: $values;
+    @each $key in map-values($o-font-aliases-to-keys) {
+        $value: map-get($values, $key);
+        @if ($value and map-has-key($o-fonts-similar, $value)) {
+            $-values: map-merge($-values, (
+                $key: map-get($o-fonts-similar, $value),
+            ));
+        }
+    }
+    @return $-values;
+};
+
+// By default, most website palette values are null. Each null value is
+// automatically replaced with corresponsing values in chosen default values
+// palette.
+$o-user-website-values: o-map-normalize-website-values($o-user-website-values);
+$o-user-website-values: o-map-font-aliases($o-user-website-values);
+$-website-values-default: o-safe-nth($o-website-values-palettes, $o-website-values-palette-number, ());
+$-website-values-default: map-merge($o-base-website-values-palette, $-website-values-default);
+$-actual-user-website-values-palette: map-merge($-website-values-default, $o-user-website-values);
+// Default font selection + User font selection have been merged, now need to
+// add the right associated font default config
+$-actual-user-website-values-palette: o-add-font-config($-actual-user-website-values-palette);
+// Reforce the properties which already had a set values in the user map (the
+// font properties override the default palette values but not the user ones)
+$-actual-user-website-values-palette: map-merge($-actual-user-website-values-palette, $o-user-website-values);
+$o-website-values-palettes: append($o-website-values-palettes, $-actual-user-website-values-palette);
+
+// Enable last website values palette, which is now the user customized one
+$o-website-values-palette-number: length($o-website-values-palettes);
+$o-website-values: $-actual-user-website-values-palette !default;
+@function o-website-value($key) {
+    @return map-get($o-website-values, $key);
+}
+
+$o-theme-navbar-logo-height: o-website-value('logo-height') !default;
+$o-theme-navbar-fixed-logo-height: o-website-value('fixed-logo-height') !default;
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// First change the palette selection to the actual user choice if any, keeping
+// compatibility with old numbers too.
+$-color-palette-number: o-website-value('color-palettes-number') or if(variable-exists(o-color-palette-number), $o-color-palette-number, null); // Only in old databases
+$-color-palette-name: o-website-value('color-palettes-name');
+$-gray-color-palette-name: $-color-palette-name;
+$-theme-color-palette-name: $-color-palette-name;
+
+// If defined palette number but no *user* defined palette name, this is an
+// old database with a old palette selection, we have to find the name from
+// the old number
+@if ($-color-palette-number and not map-get($o-user-website-values, 'color-palettes-name')) {
+    $-compat: $o-color-palettes-compatibility-indexes;
+    $-color-palette-name: map-get($-compat, $-color-palette-number) or '';
+
+    $-compat: $o-gray-color-palettes-compatibility-indexes or $o-color-palettes-compatibility-indexes;
+    $-gray-color-palette-name: map-get($-compat, $-color-palette-number) or '';
+
+    $-compat: $o-theme-color-palettes-compatibility-indexes or $o-color-palettes-compatibility-indexes;
+    $-theme-color-palette-name: map-get($-compat, $-color-palette-number) or '';
+}
+
+@if ($-color-palette-name) {
+    $o-color-palette-name: $-color-palette-name;
+}
+@if ($-gray-color-palette-name) {
+    $o-gray-color-palette-name: $-gray-color-palette-name;
+}
+@if ($-theme-color-palette-name) {
+    $o-theme-color-palette-name: $-theme-color-palette-name;
+}
+
+$o-has-customized-13-0-color-system:
+    not not (map-get($o-user-theme-color-palette, 'primary')
+    or map-get($o-user-theme-color-palette, 'secondary')
+    or map-get($o-user-theme-color-palette, 'alpha')
+    or map-get($o-user-theme-color-palette, 'beta')
+    or map-get($o-user-theme-color-palette, 'gamma')
+    or map-get($o-user-theme-color-palette, 'delta')
+    or map-get($o-user-theme-color-palette, 'epsilon'));
+
+$o-has-customized-colors:
+    not not (length(map-keys($o-user-color-palette)) > 0
+    or map-get($o-user-theme-color-palette, 'success')
+    or map-get($o-user-theme-color-palette, 'info')
+    or map-get($o-user-theme-color-palette, 'warning')
+    or map-get($o-user-theme-color-palette, 'danger'));
+
+// Color palette
+// -------------
+
+// By default, most user color palette values are null. Each null value is
+// automatically replaced with corresponsing colors in chosen default color
+// palette.
+$o-user-color-palette: o-map-normalize-website-values($o-user-color-palette);
+$-palette-default: map-get($o-color-palettes, $o-color-palette-name) or ();
+$-actual-user-color-palette: map-merge($-palette-default, $o-user-color-palette);
+// Compatibility with old values in old names
+@each $name, $custom-name in (
+    // Each of those values were either a number for a color combination, a
+    // string for a color name or a color. Now they should only be a number for
+    // a color combination and the other value types for the color name/value
+    // are handled by another variable.
+    'menu': 'menu-custom',
+    'header-sales_one': 'header-sales_one-custom',
+    'header-sales_two': 'header-sales_two-custom',
+    'header-sales_three': 'header-sales_three-custom',
+    'header-sales_four': 'header-sales_four-custom',
+    'footer': 'footer-custom',
+    'copyright': 'copyright-custom'
+) {
+    $-base-value: map-get($-actual-user-color-palette, $name);
+    @if $-base-value and $-base-value != 'NULL' and type-of($-base-value) != 'number' {
+        $-base-custom-value: map-get($-actual-user-color-palette, $custom-name);
+        $-actual-user-color-palette: map-merge($-actual-user-color-palette, (
+            $name: 1,
+            $custom-name: $-base-custom-value or $-base-value,
+        ));
+    }
+}
+$o-color-palettes: map-merge($o-color-palettes, ('user-palette': $-actual-user-color-palette));
+
+// Gray palette
+// ------------
+
+// By default, most user gray palette values are null. Each null value is
+// automatically replaced with corresponsing colors in chosen default color
+// palette.
+$o-user-gray-color-palette: o-map-normalize-website-values($o-user-gray-color-palette);
+$-palette-default: map-get($o-gray-color-palettes, $o-gray-color-palette-name) or ();
+$-actual-user-gray-color-palette: map-merge($-palette-default, $o-user-gray-color-palette);
+$o-gray-color-palettes: map-merge($o-gray-color-palettes, ('user-palette': $-actual-user-gray-color-palette));
+
+// Theme color palette
+// -------------------
+
+// alpha -> epsilon colors are from the old color system, this is kept for
+// compatibility: Generate default theme color scheme if alpha is set
+$-alpha: map-get($o-user-theme-color-palette, 'alpha');
+@if ($-alpha) {
+    $o-user-theme-color-palette: map-merge((
+        beta: lighten(desaturate($-alpha, 60%), 30%),
+        gamma: desaturate(adjust-hue($-alpha, -45deg), 10%),
+        delta: desaturate(adjust-hue($-alpha, 45deg), 10%),
+        epsilon: desaturate(adjust-hue($-alpha, 180deg), 10%),
+    ), $o-user-theme-color-palette);
+}
+
+// By default, all user theme color palette values are null. Each null value is
+// automatically replaced with corresponsing colors in chosen default theme
+// color palette.
+$o-user-theme-color-palette: o-map-normalize-website-values($o-user-theme-color-palette);
+$-palette-default: map-get($o-theme-color-palettes, $o-theme-color-palette-name) or ();
+$-actual-user-theme-color-palette: map-merge($-palette-default, $o-user-theme-color-palette);
+// Always remove the primary/secondary which were customizable in some theme
+// in Odoo <= 13.3. The customer can always rechoose the right color in the
+// Odoo color system as the first two ones are mapped to primary/secondary.
+$-actual-user-theme-color-palette: map-remove($-actual-user-theme-color-palette,
+    'primary',
+    'secondary'
+);
+$o-theme-color-palettes: map-merge($o-theme-color-palettes, ('user-palette': $-actual-user-theme-color-palette));
+
+// ---
+
+// Enable last color and theme color palettes, which are now the user customized
+// color palettes.
+$o-original-color-palette-name: $o-color-palette-name;
+$o-color-palette-name: 'user-palette';
+$o-gray-color-palette-name: 'user-palette';
+$o-theme-color-palette-name: 'user-palette';
+
+$o-we-auto-contrast-exclusions: () !default;
+$o-we-auto-contrast-exclusions: join($o-we-auto-contrast-exclusions, map-keys($o-user-color-palette));
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+// Use $o-base-theme-font-configs to extend $o-theme-font-configs whatever
+// themes added inside.
+$o-theme-font-configs: map-merge($o-base-theme-font-configs, $o-theme-font-configs);
+
+// Merge base fonts with user-added google fonts
+@each $font-name in (o-website-value('google-fonts') or ()) {
+    $o-theme-font-configs: map-merge($o-theme-font-configs, (
+        $font-name: (
+            'family': (quote($font-name), sans-serif),
+            'url': quote($font-name) + ':300,300i,400,400i,700,700i',
+        ),
+    ));
+}
+
+// Add locally hosted google fonts
+@each $font-name, $font-attach-id in (o-website-value('google-local-fonts') or ()) {
+    // If a font exists both remotely and locally, we remove the remote font to
+    // prioritize the local font.
+    $o-theme-font-configs: map-remove($o-theme-font-configs, $font-name);
+    $o-theme-font-configs: map-merge($o-theme-font-configs, (
+        $font-name: (
+            'family': (quote($font-name), sans-serif),
+            'attachment': $font-attach-id,
+            'name': quote($font-name),
+        ),
+    ));
+}
+
+// Add locally hosted uploaded fonts
+@each $font-name, $font-attach-id in (o-website-value('uploaded-local-fonts') or ()) {
+    // If a font exists both remotely and locally, we remove the remote font to
+    // prioritize the local font.
+    $o-theme-font-configs: map-remove($o-theme-font-configs, $font-name);
+    $o-theme-font-configs: map-merge($o-theme-font-configs, (
+        $font-name: (
+            'family': (quote($font-name), sans-serif),
+            'attachment': $font-attach-id,
+            'name': quote($font-name),
+        ),
+    ));
+}
+
+// Add odoo unicode support for all fonts
+@each $font-name, $font-config in $o-theme-font-configs {
+    $o-theme-font-configs: map-merge($o-theme-font-configs, (
+        $font-name: map-merge($font-config, (
+            'family': o-add-unicode-support-font(map-get($font-config, 'family')),
+        )),
+    ));
+}
+
+// Function which allows to retrieve a base info (family, url, properties) about
+// a component (base, navbar, ...)'s font. The font name is retrievable via a
+// simple o-website-value call.
+@function o-get-font-info($alias: 'base', $config-key: 'family') {
+    $key: map-get($o-font-aliases-to-keys, $alias);
+    $font-name: o-website-value($key);
+    $-font-config: o-safe-get($o-theme-font-configs, $font-name, ());
+    @return map-get($-font-config, $config-key);
+}
+
+$o-theme-font: o-get-font-info('base') !default;
+// A theme which defines no default font normally automatically uses the first
+// one in $o-base-theme-font-configs. This ensures a misconfiguration also does.
+$o-theme-font: $o-theme-font or o-add-unicode-support-font($o-system-fonts);
+$o-theme-headings-font: o-get-font-info('headings') or $o-theme-font !default;
+$o-theme-h2-font: o-get-font-info('h2') or $o-theme-headings-font !default;
+$o-theme-h3-font: o-get-font-info('h3') or $o-theme-headings-font !default;
+$o-theme-h4-font: o-get-font-info('h4') or $o-theme-headings-font !default;
+$o-theme-h5-font: o-get-font-info('h5') or $o-theme-headings-font !default;
+$o-theme-h6-font: o-get-font-info('h6') or $o-theme-headings-font !default;
+$o-theme-display-1-font: o-get-font-info('display-1') or $o-theme-headings-font !default;
+$o-theme-display-2-font: o-get-font-info('display-2') or $o-theme-headings-font !default;
+$o-theme-display-3-font: o-get-font-info('display-3') or $o-theme-headings-font !default;
+$o-theme-display-4-font: o-get-font-info('display-4') or $o-theme-headings-font !default;
+$o-theme-navbar-font: o-get-font-info('navbar') or $o-theme-font !default;
+$o-theme-buttons-font: o-get-font-info('buttons') or $o-theme-font !default;
+
+$o-small-font-size: o-website-value('small-font-size') !default;

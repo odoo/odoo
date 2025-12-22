@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web.MobileSwitchCompanyMenu">
+    <div class="o_burger_menu_companies p-3 pb-0">
+        <div class="w-100" t-on-click="() => this.toggleCollapsible()">
+            <i t-if="hasLotsOfCompanies" class="fa me-2" style="width: 10px" t-att-class="{ 'fa-caret-right': !state.isOpen, 'fa-caret-down': state.isOpen }"/>
+            <span class="mb-3 fs-4">Companies</span>
+        </div>
+        <div t-if="show" class="mt-2">
+            <t t-call="web.SwitchCompanyMenu.Items"/>
+        </div>
+    </div>
+</t>
+
+</templates>

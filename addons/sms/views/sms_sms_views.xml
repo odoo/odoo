@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo><data>
+    <record id="sms_tsms_view_form" model="ir.ui.view">
+        <field name="name">sms.sms.view.form</field>
+        <field name="model">sms.sms</field>
+        <field name="arch" type="xml">
+            <form string="SMS">
+                <header>
+                    <field name="to_delete" invisible="1"/>
+                    <button name="send" string="Send Now" type="object" invisible="state != 'outgoing' or to_delete" class="oe_highlight"/>
+                    <button name="action_set_outgoing" string="Retry" type="object" invisible="state not in ('error', 'canceled')"/>
+                    <button name="action_set_canceled" string="Cancel" type="object" invisible="state not in ('error', 'outgoing')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="outgoing,sent,error,canceled"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id" string="Contact"/>
+                            <field name="mail_message_id" readonly="1" invisible="not mail_message_id"/>
+                        </group>
+                        <group>
+                            <field name="number" required="1"/>
+                            <field name="failure_type" readonly="1" invisible="not failure_type"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="body" widget="sms_widget" string="Message" required="1"
+                            readonly="state in ('process', 'sent')"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sms_sms_view_tree" model="ir.ui.view">
+        <field name="name">sms.sms.view.list</field>
+        <field name="model">sms.sms</field>
+        <field name="arch" type="xml">
+            <list string="SMS Templates">
+                <field name="number"/>
+                <field name="partner_id"/>
+                <field name="failure_type"/>
+                <field name="state" widget="badge" decoration-info="state == 'outgoing'" decoration-muted="state == 'canceled'" decoration-success="state == 'sent'" decoration-danger="state == 'error'"/>
+                <button name="send" string="Send Now" type="object" icon="fa-paper-plane" invisible="state != 'outgoing'"/>
+                <button name="action_set_outgoing" string="Retry" type="object" icon="fa-repeat" invisible="state not in ('error', 'canceled')"/>
+                <button name="action_set_canceled" string="Cancel" type="object" icon="fa-times-circle" invisible="state not in ('error', 'outgoing')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="sms_sms_view_search" model="ir.ui.view">
+        <field name="name">sms.sms.view.search</field>
+        <field name="model">sms.sms</field>
+        <field name="arch" type="xml">
+            <search string="Search SMS Templates">
+                <field name="number"/>
+                <field name="partner_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="sms_sms_action" model="ir.actions.act_window">
+        <field name="name">SMS</field>
+        <field name="res_model">sms.sms</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('to_delete', '!=', True)]</field>
+    </record>
+
+    <menuitem id="sms_sms_menu"
+        parent="phone_validation.phone_menu_main"
+        action="sms_sms_action"
+        sequence="1"/>
+
+    <record id="ir_actions_server_sms_sms_resend" model="ir.actions.server">
+        <field name="name">Resend</field>
+        <field name="model_id" ref="sms.model_sms_sms"/>
+        <field name="binding_model_id" ref="sms.model_sms_sms"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.resend_failed()</field>
+    </record>
+</data>
+</odoo>

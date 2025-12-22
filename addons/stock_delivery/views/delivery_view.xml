@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+      <record id="view_delivery_carrier_form_inherit_stock_delivery" model="ir.ui.view">
+            <field name="name">delivery.carrier.form</field>
+            <field name="model">delivery.carrier</field>
+            <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='provider_details']" position="inside">
+                    <field name="route_ids" string="Routes" options="{'no_create': True}" groups="stock.group_adv_location" widget="many2many_tags"/>
+                </xpath>
+            </field>
+       </record>
+
+        <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
+            <field name="name">delivery.stock.picking_withcarrier.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+              <data>
+                <xpath expr="//group[@name='other_infos']" position="before">
+                    <group name='carrier_data' string="Shipping Information">
+                        <field name="is_return_picking" invisible="1"/>
+                        <field name="carrier_id" readonly="state in ('done', 'cancel')" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="delivery_type" invisible="True"/>
+                        <label for="carrier_tracking_ref"/>
+                        <div name="tracking">
+                            <field name="carrier_tracking_ref" class="oe_inline text-break"/>
+                            <button type='object' class="oe_link" icon="oi-arrow-right" confirm="Cancelling a delivery may not be undoable. Are you sure you want to continue?" name="cancel_shipment" string="Cancel" invisible="not carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state != 'done'"/>
+                        </div>
+                        <label for="weight" string="Weight"/>
+                        <div>
+                            <field name="weight" class="oe_inline"/>
+                            <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                        </div>
+                        <label for="shipping_weight" string="Weight for shipping"/>
+                        <div>
+                            <field name="shipping_weight" class="oe_inline"/>
+                            <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                        </div>
+                    </group>
+                </xpath>
+                <div name="button_box" position="inside">
+                    <button type="object" name="open_website_url" class="oe_stat_button" icon='fa-truck' string="Tracking"
+                         invisible="not carrier_tracking_ref or not carrier_id or delivery_type == 'grid'" />
+                </div>
+                <xpath expr="/form/header/button[last()]" position="after">
+                    <button name="send_to_shipper" string="Send to Shipper" type="object" invisible="carrier_tracking_ref or delivery_type in ['fixed', 'base_on_rule'] or not delivery_type or state != 'done' or picking_type_code == 'incoming'" data-hotkey="shift+v"/>
+                </xpath>
+                <xpath expr="/form/header/button[last()]" position="after">
+                    <button name="print_return_label" string="Print Return Label" type="object" invisible="not is_return_picking or state == 'done' or picking_type_code != 'incoming'" data-hotkey="shift+o"/>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="required">carrier_id and carrier_id.integration_level == 'rate_and_ship'</attribute>
+                </xpath>
+              </data>
+            </field>
+        </record>
+
+        <menuitem action="delivery.action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="stock.menu_delivery" sequence="1"/>
+        <menuitem action="delivery.action_delivery_zip_prefix_list" id="menu_delivery_zip_prefix" parent="stock.menu_delivery" groups="base.group_no_one" sequence="100"/>
+        
+        <record id="view_picking_withweight_internal_move_form" model="ir.ui.view">
+            <field name="name">stock.picking_withweight.internal.move.form.view</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='location_dest_id']" position="after">
+                    <field name="weight"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_line_tree_detailed_delivery" model="ir.ui.view">
+            <field name="name">stock.move.line.list.detailed</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_tree_detailed"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='picking_partner_id']" position="after">
+                    <field name="destination_country_code" optional="hide"/>
+                    <field name="carrier_id" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_quant_package_weight_form" model="ir.ui.view">
+            <field name="name">stock.quant.package.weight.form</field>
+            <field name="model">stock.quant.package</field>
+            <field name="inherit_id" ref="stock.view_quant_package_form"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="before">
+                    <label for="shipping_weight"/>
+                    <div class="o_row" name="Shipping Weight">
+                        <field name="shipping_weight" class="oe_inline"/>
+                        <span><field name="weight_uom_name"/></span>
+                        <span class="text-muted">(computed: <field name="weight" class="oe_inline" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1" class="oe_inline"/>)</span>
+                    </div>
+                </field>
+            </field>
+        </record>
+
+        <record id="delivery_tracking_url_warning_form" model="ir.ui.view">
+            <field name="name">delivery.carrier.warning.url.form</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <form string="Trackers URL">
+                    <div class="alert alert-info" role="status">
+                        <p>You have multiple tracker links, they are available in the chatter.</p>
+                    </div>
+                    <footer>
+                        <button string="OK" special="cancel" data-hotkey="x" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_delivery_trackers_url" model="ir.actions.act_window">
+            <field name="name">Display tracking links</field>
+            <field name="res_model">stock.picking</field>
+            <field name="view_id" ref="stock_delivery.delivery_tracking_url_warning_form"/>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="vpicktree_view_tree" model="ir.ui.view">
+            <field name="name">stock.picking.delivery.list.inherit.delivery</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='backorder_id']" position="after">
+                    <field name="carrier_tracking_ref" optional="hide"/>
+                    <field name="carrier_id" optional="hide"/>
+                    <field name="destination_country_code" optional="hide" string="Destination"/>
+                    <field name="weight" optional="hide"/>
+                    <field name="shipping_weight" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

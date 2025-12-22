@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Interviewer Access Rules -->
+    <record id="hr_applicant_skill_interviewer_rule" model="ir.rule">
+        <field name="name">Applicant Skill: Interviewer</field>
+        <field name="model_id" ref="model_hr_candidate_skill"/>
+        <field name="domain_force">[
+            '|',
+                ('candidate_id.applicant_ids.job_id.interviewer_ids', 'in', user.id),
+                ('candidate_id.applicant_ids.interviewer_ids', 'in', user.id),
+        ]</field>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_interviewer'))]"/>
+    </record>
+
+    <record id="hr_applicant_skill_officer_rule" model="ir.rule">
+        <field name="name">Applicant Skill: Officer</field>
+        <field name="model_id" ref="model_hr_candidate_skill"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr_recruitment.group_hr_recruitment_user'))]"/>
+    </record>
+
+</odoo>

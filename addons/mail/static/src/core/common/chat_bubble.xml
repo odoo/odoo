@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ChatBubble">
+        <Dropdown t-if="!env.embedLivechat" state="preview" position="'left-middle'" menuClass="'bg-view border-0 p-0 overflow-visible rounded-3 mx-1'" arrow="true" manual="true">
+            <t t-call="mail.ChatBubble.core"/>
+            <t t-set-slot="content">
+                <t t-call="mail.ChatBubble.preview"/>
+            </t>
+        </Dropdown>
+        <t t-else="" t-call="mail.ChatBubble.core"/>
+    </t>
+
+    <t t-name="mail.ChatBubble.core">
+        <div class="o-mail-ChatBubble bg-view position-relative" t-att-name="props.chatWindow.displayName" t-att-class="{ 'o-bouncing': state.bouncing, 'position-fixed': env.embedLivechat, 'position-relative': !env.embedLivechat, 'o-active': preview.isOpen }" t-att-style="env.embedLivechat ? `top: ${ position.top }; left: ${ position.left };` : ''" t-on-click="() => props.chatWindow.open()" t-on-animationend="() => state.bouncing = false" t-ref="root">
+            <span class="o-mail-ChatBubble-unreadIndicator position-absolute" t-att-class="{ 'opacity-50': thread?.isUnread and !thread?.importantCounter, 'opacity-0': !thread?.isUnread or thread?.importantCounter }"><i class="fa fa-circle"/></span>
+            <div t-if="thread?.importantCounter > 0" class="o-mail-ChatBubble-counter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow" t-out="thread?.importantCounter"/>
+            <button t-if="state.showClose and !env.embedLivechat" class="o-mail-ChatBubble-close position-absolute shadow rounded-circle fw-bold bg-view" title="Close Chat Bubble" t-on-click.stop="() => this.props.chatWindow.close()"><i class="oi oi-close"/></button>
+            <ImStatus t-if="thread?.correspondent?.persona?.im_status and thread?.correspondent?.persona?.im_status != 'offline'" className="'o-mail-ChatBubble-status position-absolute o-mail-brighter'" member="thread.correspondent"/>
+            <CountryFlag t-if="thread?.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-ChatBubble-country position-absolute bottom-0 border'"/>
+            <button class="o-mail-ChatHub-bubbleBtn btn bg-view">
+                <img class="o-mail-ChatBubble-avatar rounded-circle o_object_fit_cover" t-att-class="{ 'o-big': env.embedLivechat }" t-att-src="thread?.avatarUrl" alt="Thread image" draggable="false"/>
+            </button>
+        </div>
+    </t>
+
+    <t t-name="mail.ChatBubble.preview">
+        <div class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border border-secondary rounded bg-100" t-ref="preview">
+            <div class="text-truncate fw-bolder mb-0 mx-2" t-esc="props.chatWindow.displayName"/>
+            <div t-if="previewContent" class="text-truncate small mx-2 text-muted">
+                <t t-call="mail.message_preview_prefix">
+                    <t t-set="message" t-value="thread?.newestPersistentNotEmptyOfAllMessage"/>
+                </t>
+                <t t-esc="previewContent"/>
+            </div>
+        </div>
+    </t>
+
+    <!-- @type {import("models").Message} message -->
+    <t t-name="mail.message_preview_prefix">
+        <t t-if="message.isSelfAuthored">
+            <i class="fa fa-mail-reply me-1"/>You:
+        </t>
+        <t t-elif="!message.author?.eq(thread.correspondent?.persona)">
+            <t t-esc="message.author?.name ?? message.email_from"/>:
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_config_settings_view_form_l10n_in_pos_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_in_pos.view</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='available_payment_terminal']" position="attributes">
+                <attribute name="invisible">not is_kiosk_mode or country_code == 'IN'</attribute>
+            </xpath>
+            <xpath expr="//div[@id='available_payment_terminal']" position="after">
+                <div class="o_notification_alert alert alert-warning" role="alert" invisible="not is_kiosk_mode or country_code != 'IN'">
+                    <span>Please note that the kiosk for INR currency only works with Razorpay terminal</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

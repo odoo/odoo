@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_cancel_view_form" model="ir.ui.view">
+        <field name="name">sale.order.cancel.form</field>
+        <field name="model">sale.order.cancel</field>
+        <field name="arch" type="xml">
+            <form>
+                <group col="1">
+                    <field name="author_id" invisible="1"/>
+                    <field name="lang" invisible="1"/>
+                    <field name="render_model" invisible="1"/>
+                    <field name="order_id" invisible="1"/>
+                    <field name="template_id" invisible="1"/>
+                    <field name="display_invoice_alert" invisible="1"/>
+                    <div col="2"
+                         class="alert alert-warning"
+                         role="alert">
+                        <span>Are you sure you want to cancel this order? <br/></span>
+                        <span id="display_invoice_alert"
+                              invisible="not display_invoice_alert">
+                            Draft invoices for this order will be cancelled. <br/>
+                        </span>
+                    </div>
+                    <group col="2">
+                        <field name="recipient_ids"
+                               widget="many2many_tags_email"
+                               options="{'no_quick_create': True}"
+                               context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                    </group>
+                    <group col="2">
+                        <field name="subject" placeholder="Subject"/>
+                    </group>
+                    <field name="body"
+                           class="oe-bordered-editor"
+                           widget="html_mail"/>
+                </group>
+                <footer>
+                    <button string="Send and cancel"
+                            name="action_send_mail_and_cancel"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            name="action_cancel"
+                            type="object"
+                            class="btn-primary mx-1"/>
+                    <button string="Discard"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

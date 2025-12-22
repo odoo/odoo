@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="slide_slide_partner_view_search" model="ir.ui.view">
+        <field name="name">slide.slide.partner.view.search</field>
+        <field name="model">slide.slide.partner</field>
+        <field name="arch" type="xml">
+            <search string="Attendees">
+                <field name="partner_id"/>
+                <field name="slide_id"/>
+                <field name="channel_id"/>
+                 <separator/>
+                <filter string="Completed" name="filter_completed" domain="[('completed', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Content" name="groupby_slide_id" context="{'group_by': 'slide_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="slide_slide_partner_view_tree" model="ir.ui.view">
+        <field name="name">slide.slide.partner.view.list</field>
+        <field name="model">slide.slide.partner</field>
+        <field name="arch" type="xml">
+            <list string="Attendees" create="0" delete="0">
+                <field name="create_date" string="Accessed on"/>
+                <field name="partner_id"/>
+                <field name="slide_id" optional="hide"/>
+                <field name="channel_id" optional="hide"/>
+                <field name="completed" readonly="1"/>
+                <field name="quiz_attempts_count" readonly="1" string="# Quizz Attempts"
+                    sum="# Total Attempts"/>
+                <field name="vote" readonly="1"
+                    sum="# Likes"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="slide_slide_partner_view_form" model="ir.ui.view">
+        <field name="name">slide.slide.partner.view.form</field>
+        <field name="model">slide.slide.partner</field>
+        <field name="arch" type="xml">
+            <form string="Attendee" create="0">
+                <sheet>
+                    <group col="2" name="main_content">
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="slide_id"/>
+                            <field name="slide_category" invisible="1"/>
+                            <field name="channel_id"/>
+                        </group>
+                        <group>
+                            <field name="completed" readonly="1"/>
+                            <field name="quiz_attempts_count" readonly="1"/>
+                            <field name="vote" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="slide_slide_partner_action_from_slide" model="ir.actions.act_window">
+        <field name="name">Attendees</field>
+        <field name="res_model">slide.slide.partner</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="search_view_id" ref="website_slides.slide_slide_partner_view_search"/>
+        <field name="context">{'default_slide_id': active_id}</field>
+        <field name="domain">[('slide_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                <strong>No Attendee Yet!</strong>
+            </p>
+            <p>
+                From here you'll be able to monitor attendees and to track their progress.
+            </p>
+        </field>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,73 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_holidays_contract
+# 
+# Translators:
+# Daye Jeong, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_leave.py:0
+msgid ""
+"A leave cannot be set across multiple contracts with different working schedules.\n"
+"\n"
+"Please create one time off for each contract.\n"
+"\n"
+"Time off:\n"
+"%(time_off)s\n"
+"\n"
+"Contracts:\n"
+"%(contracts)s"
+msgstr ""
+"근무 일정이 다른 여러 계약에 걸쳐 휴가를 설정할 수 없습니다.\n"
+"\n"
+"각 계약마다 하나의 휴가를 생성하세요.\n"
+"\n"
+"휴가:\n"
+"%(time_off)s\n"
+"\n"
+"계약:\n"
+"%(contracts)s"
+
+#. module: hr_holidays_contract
+#: model:ir.model,name:hr_holidays_contract.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "기본 직원"
+
+#. module: hr_holidays_contract
+#. odoo-python
+#: code:addons/hr_holidays_contract/models/hr_contract.py:0
+msgid ""
+"Changing the contract on this employee changes their working schedule in a "
+"period they already took leaves. Changing this working schedule changes the "
+"duration of these leaves in such a way the employee no longer has the "
+"required allocation for them. Please review these leaves and/or allocations "
+"before changing the contract."
+msgstr ""
+"이 직원의 계약을 변경하면 이미 휴가를 사용한 기간의 근무 일정이 변경됩니다. 이 근무 일정을 변경하면 해당 직원이 더 이상 필요한 "
+"휴가를 할당받지 못하는 방식으로 휴가 기간이 변경됩니다. 계약을 변경하기 전 이러한 휴가 및/또는 할당 내용을 검토하시기 바랍니다."
+
+#. module: hr_holidays_contract
+#: model:ir.model,name:hr_holidays_contract.model_hr_contract
+msgid "Employee Contract"
+msgstr "근로 계약서"
+
+#. module: hr_holidays_contract
+#: model:ir.model,name:hr_holidays_contract.model_hr_leave
+msgid "Time Off"
+msgstr "휴가"

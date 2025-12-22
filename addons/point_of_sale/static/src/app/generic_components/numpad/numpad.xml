@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+  <t t-name="point_of_sale.Numpad">
+    <div t-attf-class="d-grid numpad numpad-{{buttons.length / 4}}-cols m-n1 {{props.class}}">
+      <t t-foreach="buttons.map((b) => typeof b === 'object' ? b : { value: b })"  t-as="button" t-key="button.value">
+        <span t-if="Object.keys(button).length === 0"/>
+        <button 
+          t-else=""
+          t-attf-class="numpad-button btn btn-light btn-lg fs-3 lh-lg m-1 {{ button.class  or '' }}"
+          t-att-value="button.text or button.value"
+          t-on-click="() => this.onClick(button.value)"
+          t-att-disabled="button.disabled"
+          t-esc="button.text or button.value" />
+      </t>
+    </div>
+  </t>
+</templates>

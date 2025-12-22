@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.LoginScreen">
+        <div class="login-overlay o_attendance_background fixed-top w-100 h-100 p-4 d-flex flex-column">
+            <div class="screen-login-header d-flex justify-content-between">
+                <div t-if="!ui.isSmall" class="screen-login-timer d-flex align-items-center gap-2 bg-transparent">
+                    <div class="timer-hours fs-1" t-esc="time.hours"> </div>
+                    <div class="timer-date-container d-flex flex-column smaller">
+                        <div class="timer-day" t-esc="time.day"> </div>
+                        <div class="timer-date" t-esc="time.date"> </div>
+                    </div>
+                </div>
+                <div t-attf-class="screen-login-logo {{ ui.isSmall ? 'mx-auto' : 'ms-auto'}}">
+                    <img t-attf-src="/web/image?model=res.company&amp;id={{pos.company.id}}&amp;field=logo" alt="Logo"/>
+                </div>
+            </div>
+            <div class="screen-login flex-grow-1 d-flex flex-column">
+                <div class="login-body d-flex flex-column flex-md-row gap-3 m-auto">
+                    <button class="open-register-btn btn btn-light btn-lg d-flex flex-column align-items-center flex-grow-1 flex-basis-100 gap-2 p-5 rounded-4 lh-lg" t-on-click="() => this.openRegister()">
+                        <i class="fa fa-shopping-basket fa-3x" aria-hidden="true"></i>
+                        <span class="d-flex flex-grow-1 align-items-center">Open Register</span>
+                    </button>
+                </div>
+            </div>
+            <div class="w-100 d-flex justify-content-center">
+                <button class="select-logout btn btn-dark btn-lg" t-on-click="() => this.clickBack()">
+                    <span class="d-flex flex-grow-1 align-items-center" t-esc="backBtnName"/>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

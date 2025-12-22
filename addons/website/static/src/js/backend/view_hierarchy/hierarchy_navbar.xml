@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="website.hierarchy_navbar">
+    <nav class="o_tree_nav navbar justify-content-start w-100 bg-white shadow position-sticky top-0" t-ref="navbar">
+        <div class="dropdown ms-2 border border-info rounded">
+            <div class="btn-group">
+                <Dropdown items="websiteNames">
+                    <button class="btn btn-secondary">
+                        <span t-esc="props.websites.selected"/>
+                    </button>
+                </Dropdown>
+            </div>
+        </div>
+        <div class="ms-2 form-check form-switch">
+            <input t-on-click="(ev) => props.toggleInactive(ev.target.checked)" id="o_show_inactive" class="form-check-input" type="checkbox"/>
+            <label class="form-check-label" for="o_show_inactive">Show inactive views</label>
+        </div>
+        <div class="o_search input-group ms-auto col-8 col-sm-6 col-md-4 col-xl-3" role="search">
+            <input type="search" name="search" class="form-control border-info" placeholder="Name, id or key" t-on-keydown="onInputKeydown" t-ref="search"/>
+            <button type="submit" class="btn btn-info" aria-label="Search" title="Search" t-on-click="onInputClick">
+                <i class="fa fa-search"/>
+            </button>
+        </div>
+    </nav>
+</t>
+
+</templates>

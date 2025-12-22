@@ -1,0 +1,70 @@
+.modal .o_select_media_dialog {
+    $min-row-height: 128;
+    $scroll-button-height: 36px;
+
+    .o_we_file_selector_control_panel {
+        top: -$modal-inner-padding;
+        background-color: $modal-content-bg;
+    }
+
+    .o_we_existing_attachments {
+        min-height: $min-row-height + px;
+
+        .o_we_attachment_placeholder {
+            flex-grow: $min-row-height;
+            flex-basis: $min-row-height + px;
+        }
+
+        .o_existing_attachment_cell.o_we_image {
+            transition: opacity 0.5s ease 0.5s;
+
+            .o_we_media_dialog_img_wrapper {
+                @extend %o-preview-alpha-background;
+            }
+        }
+
+        .o_existing_attachment_remove {
+            border-radius: 0 0 0 $o-we-item-border-radius;
+
+            &:hover {
+                color: $o-we-color-danger;
+            }
+        }
+    }
+
+    .o_we_attachment_selected {
+        @include o-we-active-wrapper($top: 5px, $left: 5px);
+    }
+
+    .o_we_load_more {
+        scroll-margin: $modal-inner-padding;
+
+        &.o_hide_loading > * {
+            display: none;
+        }
+    }
+
+    .o_scroll_attachments {
+        bottom: 0px;
+        width: $scroll-button-height;
+        height: $scroll-button-height;
+        margin-top: -$scroll-button-height;
+        z-index: 2;
+    }
+
+    .font-icons-icons > span {
+        width: 50px;
+    }
+
+    .o_video_dialog_form textarea {
+        min-height: 95px;
+    }
+
+    .o_video_preview {
+        @include o-we-preview-box();
+
+        .media_iframe_video {
+            width: 100%;
+        }
+    }
+}

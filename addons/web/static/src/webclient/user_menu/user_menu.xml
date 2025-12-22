@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.UserMenu">
+        <div class="o_user_menu d-none d-md-block pe-0">
+            <DropdownGroup group="'web-navbar-group'">
+                <Dropdown>
+                    <button class="py-1 py-lg-0">
+                        <img class="o_avatar o_user_avatar rounded" t-att-src="source" alt="User"/>
+                        <small class="oe_topbar_name d-none ms-2 text-start smaller lh-1 text-truncate"  t-att-class="{'d-lg-inline-block' : env.debug}" style="max-width: 200px">
+                            <t t-esc="userName"/>
+                            <mark class="d-block font-monospace text-truncate">
+                                <i class="fa fa-database oi-small me-1"/><t t-esc="dbName"/>
+                            </mark>
+                        </small>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="getElements()" t-as="element" t-key="element_index">
+                            <t t-if="!element.hide">
+                                <DropdownItem
+                                    t-if="element.type == 'item' || element.type == 'switch'"
+                                    attrs="{ href: element.href, 'data-menu': element.id }"
+                                    onSelected="element.callback"
+                                >
+                                <div class="d-flex justify-content-between p-0 w-100">
+                                    <t t-out="element.description"/>
+                                    <CheckBox
+                                        t-if="element.type == 'switch'"
+                                        value="element.isChecked"
+                                        className="'form-switch ms-2'"
+                                        onChange="element.callback"
+                                    >
+                                    </CheckBox>
+                                </div>
+                                </DropdownItem>
+                                <div t-if="element.type == 'separator'" role="separator" class="dropdown-divider"/>
+                            </t>
+                        </t>
+                    </t>
+                </Dropdown>
+            </DropdownGroup>
+        </div>
+    </t>
+
+</templates>

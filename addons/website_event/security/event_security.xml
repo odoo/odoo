@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    <record id="event_event_public" model="ir.rule">
+        <field name="name">Event: public/portal: published read</field>
+        <field name="model_id" ref="event.model_event_event"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="ir_rule_event_tag_public" model="ir.rule">
+        <field name="name">Event Tag: public/portal: color = published and category = published</field>
+        <field name="model_id" ref="event.model_event_tag"/>
+        <field name="domain_force">[('category_id.website_published', '=', True), ('color', '!=', False), ('color', '!=', 0)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="ir_rule_event_event_ticket_public" model="ir.rule">
+        <field name="name">Event Ticket: public/portal: published read</field>
+        <field name="model_id" ref="event.model_event_event_ticket"/>
+        <field name="domain_force">[('event_id.website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="ir_rule_event_question_published" model="ir.rule">
+        <field name="name">Event Question: not event groups: event published read</field>
+        <field name="model_id" ref="event.model_event_question"/>
+        <field name="domain_force">[('event_id.is_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="ir_rule_event_question_event_user" model="ir.rule">
+        <field name="name">Event Question: event user: read all</field>
+        <field name="model_id" ref="event.model_event_question"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('event.group_event_registration_desk'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="ir_rule_event_question_answer_published" model="ir.rule">
+        <field name="name">Event Question Answer: not event groups: event published read</field>
+        <field name="model_id" ref="event.model_event_question_answer"/>
+        <field name="domain_force">[('question_id.event_id.is_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal')), (4, ref('base.group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="ir_rule_event_question_answer_event_user" model="ir.rule">
+        <field name="name">Event Question Answer: event user: read all</field>
+        <field name="model_id" ref="event.model_event_question_answer"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('event.group_event_registration_desk'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    </data>
+
+    <record id="event.group_event_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('website.group_website_restricted_editor'))]"/>
+    </record>
+</odoo>

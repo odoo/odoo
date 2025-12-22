@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//div[@name='header']" position="after">
+            <div t-if="ratingValue" class="mb-2">
+                <t t-call="portal_rating.rating_stars_static">
+                    <t t-set="val" t-value="ratingValue"/>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//*[@t-ref='messageContent']" position="inside">
+            <!--Only possible if a rating is link to the message, for now we can't comment if no rating
+                is link to the message (because publisher comment data
+                is on the rating.rating model - one comment max) -->
+            <div t-if="message.rating and message.rating.id" class="o_wrating_publisher_container">
+                <button t-if="store.self.is_user_publisher"
+                    t-attf-class="btn px-2 my-2 btn-sm border o_wrating_js_publisher_comment_btn {{ message.rating.publisher_comment !== '' ? 'd-none' : '' }}"
+                    t-att-data-mes_index="message.rating.mes_index"
+                    t-on-click="onClikEditComment">
+                    <i class="fa fa-comment text-muted me-1"/>Comment
+                </button>
+                <div t-if="state.editRating" class="mt-2">
+                    <Composer autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditCommentMode" onPostCallback.bind="exitEditCommentMode" mode="'compact'"/>
+                </div>
+                <div t-if="message.rating.publisher_comment and !state.editRating" class="o_wrating_publisher_comment mt-2 mb-2">
+                    <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
+                        <div class="o-mail-Message-sidebar d-flex flex-shrink-0">
+                            <div class="o-mail-Message-avatarContainer position-relative">
+                                <img class="o-mail-Message-avatar w-100 h-100 rounded"
+                                     t-att-src="message.rating.publisher_avatar" t-att-class="authorAvatarAttClass"/>
+                            </div>
+                        </div>
+                        <div class="w-100 o-min-width-0">
+                            <div class="o-mail-Message-header d-flex flex-wrap align-items-baseline mb-1 lh-1">
+                                <strong class="me-1 text-truncate"><t t-esc="message.rating.publisher_name"/></strong>
+                                <small class="text-muted opacity-50 me-2">Published on <t t-esc="message.rating.publisher_datetime"/></small>
+                                <div t-if="store.self.is_user_publisher" class="d-flex rounded-0">
+                                    <Dropdown>
+                                        <button class="bg-transparent border-0">
+                                            <i class="btn px-1 py-0 fa fa-ellipsis-v"/>
+                                        </button>
+                                        <t t-set-slot="content">
+                                            <DropdownItem class="'o_wrating_js_publisher_comment_edit'" onSelected="() => this.onClikEditComment()">
+                                                <i class="fa fa-fw fa-pencil me-1"/>Edit
+                                            </DropdownItem>
+                                            <DropdownItem class="'o_wrating_js_publisher_comment_delete'" onSelected="() => this.deleteComment()">
+                                                <i class="fa fa-fw fa-trash-o me-1"/>Delete
+                                            </DropdownItem>
+                                        </t>
+                                    </Dropdown>
+                                </div>
+                            </div>
+                            <div class="position-relative d-flex">
+                                <div class="o-min-width-0 position-relative d-flex overflow-x-auto d-inline-block">
+                                    <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100 bg-info-light opacity-25 rounded-end-3"/>
+                                    <div class="position-relative text-break o-mail-Message-body mb-0 py-2 px-3 align-self-start rounded-end-3 rounded-bottom-3">
+                                        <p><t t-out="message.rating.publisher_comment"/></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

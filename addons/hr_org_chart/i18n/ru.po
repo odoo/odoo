@@ -1,0 +1,203 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_org_chart
+#
+# Translators:
+# Wil Odoo, 2024
+# Anastasiia Koroleva, 2025
+#
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2025-08-28 06:23+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-18/"
+"hr_org_chart/ru/>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || ("
+"n%100>=11 && n%100<=14)? 2 : 3);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+msgid "<span class=\"o_stat_text\">Org Chart</span>"
+msgstr "<span class=\"o_stat_text\">Организационная диаграмма</span>"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid "Add a new employee"
+msgstr "Добавить нового сотрудника"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee_base
+msgid "Basic Employee"
+msgstr "Основной сотрудник"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__department_color
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
+msgid "Department Color"
+msgstr "Цвет отдела"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
+msgid "Direct Subordinates Count"
+msgstr "Учитываются прямые подчиненные"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
+#: model:ir.model.fields,help:hr_org_chart.field_hr_employee_public__subordinate_ids
+msgid "Direct and indirect subordinates"
+msgstr "Прямые и косвенные под партнеры"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "Direct subordinates"
+msgstr "Прямые подчиненные"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee
+msgid "Employee"
+msgstr "Сотрудник"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
+msgid "Employees"
+msgstr "Сотрудники"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "In order to get an organigram, set a manager and save the record."
+msgstr "Чтобы получить оргструктуру, укажите руководителя и сохраните запись."
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
+msgid ""
+"In the Organigram you will have a clear overview of the hierarchy of "
+"employees."
+msgstr "В оргструктуре вы получите наглядный обзор иерархии сотрудников."
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_all_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_base__child_all_count
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
+msgid "Indirect Subordinates Count"
+msgstr "Косвенные под партнеры количество"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "Indirect subordinates"
+msgstr "Косвенные подчиненные"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
+msgid "Is Subordinate"
+msgstr "Является подчиненным"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "More managers"
+msgstr "Больше руководителей"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_controller.xml:0
+msgid "No Data"
+msgstr "Нет данных"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "No hierarchy position."
+msgstr "Нет иерархии."
+
+#. module: hr_org_chart
+#. odoo-python
+#: code:addons/hr_org_chart/models/hr_org_chart_mixin.py:0
+msgid "Operation not supported"
+msgstr "Операция не поддерживается"
+
+#. module: hr_org_chart
+#: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
+#: model:ir.ui.menu,name:hr_org_chart.menu_hr_employee_org_chart
+msgid "Org Chart"
+msgstr "Организационная диаграмма"
+
+#. module: hr_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
+#: model_terms:ir.ui.view,arch_db:hr_org_chart.res_users_view_form
+msgid "Organization Chart"
+msgstr "Оргструктура"
+
+#. module: hr_org_chart
+#: model:ir.model,name:hr_org_chart.model_hr_employee_public
+msgid "Public Employee"
+msgstr "Государственный служащий"
+
+#. module: hr_org_chart
+#: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
+msgid ""
+"Quickly find all the information you need for your employees such as contact"
+" data, job position, availability, etc."
+msgstr ""
+"Быстро находите всю необходимую информацию о сотрудниках: контактные данные,"
+" должность, доступность и др."
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "Redirect"
+msgstr "Перенаправление"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "See All"
+msgstr "Посмотреть все"
+
+#. module: hr_org_chart
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
+#: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__subordinate_ids
+msgid "Subordinates"
+msgstr "Подчинённые"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hooks.js:0
+msgid "Team"
+msgstr "Команда"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "This employee has no manager or subordinate."
+msgstr "У этого сотрудника нет руководителя или подчиненного."
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
+msgid "Total"
+msgstr "Всего"
+
+#. module: hr_org_chart
+#. odoo-javascript
+#: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+msgid "people"
+msgstr "человек"

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="standard_delivery" model="delivery.carrier">
+        <field name="name">Standard Delivery</field>
+        <field name="delivery_type">gelato</field>
+        <field name="integration_level">rate</field>
+        <field name="gelato_shipping_service_type">normal</field>
+        <field name="product_id" ref="sale_gelato.standard_delivery_product"/>
+        <field name="prod_environment" eval="True"/>
+    </record>
+
+    <record id="express_delivery" model="delivery.carrier">
+        <field name="name">Express Delivery</field>
+        <field name="delivery_type">gelato</field>
+        <field name="integration_level">rate</field>
+        <field name="gelato_shipping_service_type">express</field>
+        <field name="product_id" ref="sale_gelato.express_delivery_product"/>
+        <field name="prod_environment" eval="True"/>
+    </record>
+
+</odoo>

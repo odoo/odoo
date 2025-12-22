@@ -1,0 +1,287 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="hr_accrual_level_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.level.form</field>
+        <field name="model">hr.leave.accrual.level</field>
+        <field name="arch" type="xml">
+            <form string="Accrual Level">
+                <sheet>
+                    <group name="accrue" col="1" width="800px">
+                        <div class="o_td_label">
+                            <label for="added_value" string="Employee accrue"/>
+                        </div>
+                        <div>
+                            <field name="accrued_gain_time" invisible="1"/>
+                            <field name="can_modify_value_type" invisible="1"/>
+                            <field name="added_value" widget="float_without_trailing_zeros" style="width: 4rem" class="me-1"/>
+                            <field name="added_value_type" style="width: 3.4rem" nolabel="1" readonly="not can_modify_value_type"/>
+                        </div>
+                        <div style="width: 5rem"/>
+                        <div name="hourly" invisible="frequency != 'hourly'">
+                            <field name="frequency" style="width: 5rem"/>
+                        </div>
+                        <div name="daily" invisible="frequency != 'daily'">
+                            <field name="frequency" style="width: 5rem"/>
+                        </div>
+                        <div name="weekly" invisible="frequency != 'weekly'">
+                            <field name="frequency" style="width: 4.5rem;"/>
+                            <label for="week_day" string="on" class="me-1"/><field name="week_day" style="width: 6.6rem"/>
+                        </div>
+                        <div name="monthly" invisible="frequency != 'monthly'">
+                            <field name="frequency" style="width: 4.5rem"/>
+                            <label for="first_day_display" string="on the" class="me-1"/>
+                            <field name="first_day_display" required="1" style="width: 4rem"/>
+                            of the month
+                        </div>
+                        <div name="bimonthly" invisible="frequency != 'bimonthly'" style="width: 100%">
+                            <field name="frequency" style="width: 7rem"/>
+                            <label for="first_day_display" string="on the" class="me-1"/><field name="first_day_display" required="1" style="width: 4rem"/>
+                            <label for="second_day_display" string="and on the" class="me-1"/><field name="second_day_display" required="1" style="width: 4.1rem"/>
+                            of the month
+                        </div>
+                        <div name="biyearly" invisible="frequency != 'biyearly'">
+                            <field name="frequency" style="width: 6rem"/>
+                            <label for="first_month_day_display" string="on the" class="me-1"/>
+                            <field name="first_month_day_display" required="1" style="width: 4.1rem"/>of <field name="first_month" required="1" style="width: 4.55rem"/>
+                            <label for="second_month_day_display" string="and" class="me-1"/>
+                            <field name="second_month_day_display" required="1" style="width: 4.1rem"/>of <field name="second_month" required="1" style="width: 5.4rem"/>
+                        </div>
+                        <div name="yearly" invisible="frequency != 'yearly'">
+                            <field name="frequency" style="width: 4rem"/>
+                            <label for="yearly_day_display" string="on the" class="me-1"/>
+                            <field name="yearly_day_display" required="1" style="width: 4rem"/> of <field name="yearly_month" required="1" style="width: 5.4rem"/>
+                        </div>
+                    </group>
+                    <group name="maximum_leave">
+                        <label for="cap_accrued_time"/>
+                        <span>
+                            <field name="cap_accrued_time" nolabel="1"/>
+                            <span class="position-absolute" invisible="not cap_accrued_time">
+                                <field name="maximum_leave" style="width: 5rem" widget="float_without_trailing_zeros"
+                                    nolabel="1"/>
+                                <field name="added_value_type" readonly="1" style="white-space: nowrap;width: 5rem"/>
+                            </span>
+                        </span>
+                    </group>
+                    <group name="milestone">
+                        <div class="o_td_label">
+                            <label for="start_count" string="Start Accruing"/>
+                        </div>
+                        <div>
+                            <field name="start_count" style="width: 2rem"/>
+                            <field name="start_type" style="width: 4.75rem"/> after allocation start date
+                        </div>
+                        <div class="o_td_label">
+                            <label for="action_with_unused_accruals" string="Carry over"/>
+                        </div>
+                        <div>
+                            <field name="action_with_unused_accruals" class="o_light_label" style="font-weight: 0" widget="radio"/><br/>
+                            <div invisible="action_with_unused_accruals != 'maximum'">
+                                <label for="postpone_max_days" string="Up to"/>
+                                <field name="postpone_max_days" style="width: 3rem"/>
+                                <field name="added_value_type" nolabel="1" readonly="1" force_save="1" style="width: 5rem"/>
+                            </div>
+                        </div>
+                        <div invisible="action_with_unused_accruals == 'lost'">
+                            <label for="cap_accrued_time_yearly"/>
+                        </div>
+                        <div invisible="action_with_unused_accruals == 'lost'">
+                            <span>
+                                <field name="cap_accrued_time_yearly" nolabel="1"/>
+                                <span class="position-absolute" invisible="not cap_accrued_time_yearly">
+                                    <field name="maximum_leave_yearly" style="width: 5rem" widget="float_without_trailing_zeros"
+                                        nolabel="1"/>
+                                    <field name="added_value_type" readonly="1" style="white-space: nowrap;width: 5rem"/>
+                                </span>
+                            </span>
+                        </div>
+                        <field name="postpone_max_days" class="w-25" invisible="action_with_unused_accruals != 'postponed'"/>
+                        <div class="o_td_label" invisible="action_with_unused_accruals == 'lost'">
+                            <label for="accrual_validity_count" string="Carry Over Validity"/>
+                        </div>
+                        <div class="col-lg-2 d-flex" invisible="action_with_unused_accruals == 'lost'">
+                            <div>
+                                <field name="accrual_validity" style="width: 9.35rem"/>
+                                <div class="d-flex" invisible="not accrual_validity">
+                                    <field name="accrual_validity_count" />
+                                    <field name="accrual_validity_type" />
+                                </div>
+                            </div>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="hr_accrual_plan_view_tree" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.plan.list</field>
+        <field name="model">hr.leave.accrual.plan</field>
+        <field name="arch" type="xml">
+            <list string="Accrual Plans">
+                <field name="name"/>
+                <field name="level_count"/>
+                <field name="employees_count"/>
+            </list>
+        </field>
+    </record>
+    <record id="hr_accrual_plan_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.plan.form</field>
+        <field name="model">hr.leave.accrual.plan</field>
+        <field name="arch" type="xml">
+            <form string="Accrual Plan">
+                <field name="active" invisible="1"/>
+                <field name="show_transition_mode" invisible="1" />
+                <sheet>
+                    <div class="oe_button_box" name="button_box" invisible="not id" >
+                        <button name="action_open_accrual_plan_employees" type="object" class="oe_stat_button" icon="fa-users" invisible="employees_count == 0" groups="hr.group_hr_user">
+                            <field name="employees_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="accrued_gain_time" widget="radio"/>
+                            <field name="carryover_date" widget="radio"/>
+                            <label for="carryover_month" string="Carry-Over Date" invisible="carryover_date != 'other'"/>
+                            <div name="carryover" invisible="carryover_date != 'other'">
+                                <field name="carryover_day" invisible="1"/>
+                                <field name="carryover_day_display"  required="1" style="width: 4.75rem;"/> of
+                                <field name="carryover_month"  required="1" style="width: 6rem;"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="is_based_on_worked_time" readonly="accrued_gain_time == 'start'"/>
+                            <field name="transition_mode" widget="radio" invisible="not show_transition_mode"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <span class="oe_grey" invisible="1">
+                    </span>
+                    <div class="o_hr_holidays_hierarchy">
+                        <div class="o_hr_holidays_title">Rules</div>
+                        <div class="o_hr_holidays_hierarchy_readonly" invisible="level_ids">
+                            <p>
+                                No rule has been set up for this accrual plan.
+                            </p>
+                        </div>
+                        <field name="level_ids" mode="kanban" nolabel="1"
+                            class="o_hr_holidays_plan_level_container"
+                            widget="accrual_levels_one2many"
+                            add-label="New Milestone"
+                            >
+                            <kanban default_order="sequence">
+                                <field name="sequence"/>
+                                <field name="action_with_unused_accruals"/>
+                                <field name="accrual_validity_count"/>
+                                <field name="accrual_validity_type"/>
+                                <field name="cap_accrued_time"/>
+                                <field name="accrual_validity"/>
+                                <templates>
+                                    <div t-name="card" class="bg-transparent border-0">
+                                        <div class="o_hr_holidays_body">
+                                            <div class="o_hr_holidays_timeline text-center">
+                                                <t t-if="record.start_count.raw_value > 0">
+                                                    after <field name="start_count"/> <field name="start_type"/>
+                                                </t>
+                                                <t t-else="">
+                                                    initially
+                                                </t>
+                                            </div>
+                                            <t t-if="!read_only_mode">
+                                                <a type="edit" t-attf-class="oe_kanban_action text-black">
+                                                    <t t-call="level_content"/>
+                                                </a>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-call="level_content"/>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <t t-name="level_content">
+                                        <div class="o_hr_holidays_card">
+                                            <div class="content container" style="width: 560px;">
+                                                <div class="row w-100">
+                                                    <div class="pe-0 me-0" style="width: 6rem;">
+                                                        <field name="added_value" invisible="1"/>
+                                                        <span t-out="record.added_value.raw_value"/> <field name="added_value_type"/>,
+                                                    </div>
+                                                    <div class="col-auto m-0 p-0">
+                                                        <field name="frequency" class="ms-1"/>
+                                                        <t t-if="record.frequency.raw_value === 'weekly'">
+                                                            on <field name="week_day"/>
+                                                        </t>
+                                                        <t t-elif="record.frequency.raw_value === 'monthly'">
+                                                            on the <field name="first_day"/> day of the month
+                                                        </t>
+                                                        <t t-elif="record.frequency.raw_value === 'bimonthly'">
+                                                            on the <field name="first_day"/> and on the <field name="second_day"/> days of the months
+                                                        </t>
+                                                        <t t-elif="record.frequency.raw_value === 'biyearly'">
+                                                            on the <field name="first_month_day"/> <field name="first_month"/> and on the <field name="second_month_day"/> <field name="second_month"/>
+                                                        </t>
+                                                        <t t-elif="record.frequency.raw_value === 'yearly'">
+                                                            on <field name="yearly_day"/> <field name="yearly_month"/>
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="row text-muted">
+                                                    <div class="pe-0 me-0" style="width: 6rem;">
+                                                        Cap:
+                                                    </div>
+                                                    <div class="col-3 m-0 ps-1 d-flex">
+                                                        <t t-if="record.cap_accrued_time.raw_value and record.maximum_leave.raw_value > 0">
+                                                            <field name="maximum_leave" widget="float_without_trailing_zeros"/> <field class="ms-1" name="added_value_type"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            Unlimited
+                                                        </t>
+                                                    </div>
+                                                </div>
+                                                <div class="row text-muted">
+                                                    <div class="pe-0 me-0" style="width: 6rem;">
+                                                        Carry over:
+                                                    </div>
+                                                    <div class="col-6 m-0 ps-1">
+                                                        <t t-if="record.action_with_unused_accruals.raw_value === 'all'">all
+                                                            <span invisible="not accrual_validity">
+                                                                - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/>
+                                                            </span>
+                                                        </t>
+                                                        <t t-elif="record.action_with_unused_accruals.raw_value === 'maximum'">up to <field name="postpone_max_days" /> <t t-esc="record.added_value_type.raw_value" />
+                                                            <span invisible="not accrual_validity">
+                                                                - Valid for <field name="accrual_validity_count"/> <field name="accrual_validity_type"/>
+                                                            </span>
+                                                        </t>
+                                                        <t t-else="">no</t>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="hr_accrual_plan_view_search" model="ir.ui.view">
+        <field name="name">hr.leave.accrual.plan.search</field>
+        <field name="model">hr.leave.accrual.plan</field>
+        <field name="arch" type="xml">
+            <search string="Group By">
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                <filter string="Company" name='company_id' context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="open_view_accrual_plans" model="ir.actions.act_window">
+        <field name="name">Accrual Plans</field>
+        <field name="res_model">hr.leave.accrual.plan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        'Mark as Lost' in action dropdown
+    -->
+    <record id="action_your_pipeline" model="ir.actions.server">
+        <field name="name">Crm: My Pipeline</field>
+        <field name="path">crm</field>
+        <field name="model_id" ref="crm.model_crm_team"/>
+        <field name="state">code</field>
+        <field name="groups_id"  eval="[(4, ref('base.group_user'))]"/>
+        <field name="code">action = model.action_your_pipeline()</field>
+    </record>
+
+    <record id="action_opportunity_forecast" model="ir.actions.server">
+        <field name="name">Crm: Forecast</field>
+        <field name="model_id" ref="crm.model_crm_team"/>
+        <field name="state">code</field>
+        <field name="groups_id"  eval="[(4, ref('base.group_user'))]"/>
+        <field name="code">action = model.action_opportunity_forecast()</field>
+    </record>
+
+</odoo>

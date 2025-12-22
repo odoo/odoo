@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
+        <!-- add a showOrderButton here (using the computeOrderChange method) -->
+        <xpath expr="//button[hasclass('pay-button')]" position="replace">
+            <t t-if="!pos.scanning">
+                <button
+                    t-if="this.swapButton"
+                    class="btn-switchpane pay-button btn btn-lg w-50 position-relative lh-sm overflow-hidden"
+                    t-on-click="submitOrder"
+                    t-attf-class="{{ primaryOrderButton ? 'btn-primary' : 'btn-light' }}">
+                    <!-- Replace the payment button by the order button -->
+                    <span class="d-block">Order</span>
+                    <small><t t-esc="nbrOfChanges"/> changes</small>
+                </button>
+                <t t-else="">
+                    <button
+                        class="btn-switchpane pay-button btn btn-lg w-50 lh-sm"
+                        t-attf-class="{{ currentOrder.is_empty() ? 'btn-light disabled' : 'btn-primary' }}"
+                        t-on-click="() => this.pos.pay()">
+                        <span class="d-block">Pay</span>
+                        <small><t t-esc="total" /></small>
+                    </button>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//button[hasclass('review-button')]" position="replace">
+            <button class="btn-switchpane btn btn-lg w-50 review-button lh-sm" t-attf-class="{{ primaryReviewButton ? 'btn-primary' : 'btn-secondary' }}" t-on-click="switchPane">
+                <span class="d-block">Cart</span>
+                <small t-if="this.swapButton"><t t-esc="total" /></small>
+                <small t-else=""><t t-esc="items"/> items</small>
+            </button>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- This one is kept in data instead of demo to avoid crashing if the user starts creating campaigns
+    before stages have been created, as they are mandatory -->
+    <record id="default_utm_stage" model="utm.stage">
+        <field name="name">New</field>
+        <field name="sequence">10</field>
+    </record>
+</odoo>

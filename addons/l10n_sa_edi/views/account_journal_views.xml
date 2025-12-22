@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_journal_form" model="ir.ui.view">
+            <field name="name">account.journal.form.l10n_sa_edi</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <field name="l10n_sa_csr" invisible="1"/>
+                    <field name="l10n_sa_compliance_csid_json" invisible="1"/>
+                    <field name="l10n_sa_production_csid_json" invisible="1"/>
+                    <field name="l10n_sa_compliance_checks_passed" invisible="1"/>
+                    <page name="zatca_einvoicing" string="ZATCA" invisible="country_code != 'SA' or type != 'sale'">
+                        <group>
+                            <group>
+                                <field name="l10n_sa_serial_number" readonly="1" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                        <p>
+                            <b>
+                                In order to be able to submit Invoices to ZATCA, the following steps need to be completed:
+                            </b>
+                            <ol class="mt-2 mb-4">
+                                <li>
+                                    Request a Compliance Certificate (CCSID)
+                                    <i class="fa fa-check text-success ms-1"
+                                       invisible="not l10n_sa_compliance_csid_json" groups="base.group_system"/>
+                                </li>
+                                <li>
+                                    Complete the Compliance Checks
+                                    <i class="fa fa-check text-success ms-1"
+                                       invisible="not l10n_sa_compliance_checks_passed"/>
+                                </li>
+                                <li>
+                                    Request a Production Certificate (PCSID)
+                                    <i class="fa fa-check text-success ms-1"
+                                       invisible="not l10n_sa_production_csid_json" groups="base.group_system"/>
+                                </li>
+                            </ol>
+                        </p>
+                        <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
+                             invisible="l10n_sa_csr_errors or l10n_sa_compliance_csid_json" groups="base.group_system">
+                            <p class="mb-0">
+                                Onboard the Journal by completing each step
+                            </p>
+                            <button name="%(l10n_sa_edi_otp_wizard_act_window)d" type="action" icon="fa-key"
+                                    class="btn-info ">
+                                Onboard Journal
+                            </button>
+                        </div>
+                        <div class="alert alert-danger d-flex flex-column align-items-end" role="alert"
+                             groups="base.group_system"
+                             invisible="not l10n_sa_csr_errors or l10n_sa_compliance_csid_json or l10n_sa_production_csid_json">
+                            <div class="w-100">
+                                <h4 role="alert" class="alert-heading">Journal could not be onboarded. Please make sure the Company VAT/Identification Number are correct.</h4>
+                                <field name="l10n_sa_csr_errors" nolabel="1" readonly="1"/>
+                                <hr/>
+                            </div>
+                            <button name="%(l10n_sa_edi_otp_wizard_act_window)d" type="action" icon="fa-key"
+                                    class="btn-danger">
+                                Onboard Journal
+                            </button>
+                        </div>
+                        <div class="alert alert-info d-flex justify-content-between align-items-center" role="alert"
+                             groups="base.group_system"
+                             invisible="not l10n_sa_compliance_checks_passed or not l10n_sa_production_csid_json">
+                            <p class="mb-0">
+                                The Production certificate is valid until
+                                <field name="l10n_sa_production_csid_validity" readonly="1" nolabel="1"
+                                       class="fw-bold"/>
+                            </p>
+                            <div>
+                                <button name="%(l10n_sa_edi_otp_wizard_act_window)d" type="action" icon="fa-refresh"
+                                        class="btn-info" context="{'default_l10n_sa_renewal': True}">
+                                    Renew Production CSID
+                                </button>
+                                <button name="%(l10n_sa_edi_otp_wizard_act_window)d" type="action" icon="fa-refresh" class="btn-warning ms-2"
+                                    confirm="Are you sure you wish to re-onboard the Journal?">
+                                    Re-Onboard
+                                </button>
+                            </div>
+                        </div>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

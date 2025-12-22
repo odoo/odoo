@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- The following cron is trigger-only. When the user triggers it, the cron processes some
+         products to add an image from an external provider and schedules itself until all products
+         are processed. The cron has then no reason to be triggered anymore. Also, its trigger
+         should always be unique to be able to optimize the number of requests in accordance with
+         the rate limit that some image providers may apply. -->
+    <record id="ir_cron_fetch_image" model="ir.cron">
+        <field name="name">Product Images: Get product images from Google</field>
+        <field name="interval_number">9999</field>
+        <field name="interval_type">months</field>
+        <field name="model_id" ref="model_product_fetch_image_wizard"/>
+        <field name="code">model._cron_fetch_image()</field>
+    </record>
+
+</odoo>

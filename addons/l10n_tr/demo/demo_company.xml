@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_tr" model="res.partner" forcecreate="1">
+        <field name="name">TR Company</field>
+        <field name="vat">3297552117</field>
+        <field name="street">3281. Cadde</field>
+        <field name="city">İç Anadolu Bölgesi</field>
+        <field name="country_id" ref="base.tr"/>
+        <field name="state_id" ref="base.state_tr_81"/>
+        <field name="zip">06810</field>
+        <field name="phone">+90 501 234 56 78</field>
+        <field name="email">info@company.trexample.com</field>
+        <field name="website">www.trexample.com</field>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="base.demo_company_tr" model="res.company" forcecreate="1">
+        <field name="name">TR Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_tr"/>
+    </record>
+
+    <record id="base.demo_bank_tr" model="res.partner.bank" forcecreate="1">
+        <field name="acc_number">TR440006279848365968382289</field>
+        <field name="partner_id" ref="base.partner_demo_company_tr"/>
+        <field name="company_id" ref="base.demo_company_tr"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('base.demo_company_tr')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_tr'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>tr</value>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_tr')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>

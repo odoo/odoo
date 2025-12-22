@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ListView">
+        <div t-att-class="className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+                <t t-set-slot="control-panel-create-button">
+                    <t t-if="!editedRecord and activeActions.create and props.showButtons">
+                        <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
+                            New
+                        </button>
+                    </t>
+                    <t t-if="env.isSmall" t-call="{{ props.buttonTemplate }}"/>
+                </t>
+
+                <t t-set-slot="layout-buttons">
+                    <t t-if="!env.isSmall" t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-set-slot="control-panel-always-buttons">
+                    <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                        <MultiRecordViewButton
+                            t-if="button.display === 'always'"
+                            list="model.root"
+                            className="button.className"
+                            clickParams="button.clickParams"
+                            defaultRank="'btn-secondary'"
+                            domain="props.domain"
+                            icon="button.icon"
+                            string="button.string"
+                            title="button.title"
+                            attrs="button.attrs"
+                        />
+                    </t>
+                </t>
+
+                <t t-set-slot="layout-actions">
+                    <SearchBar toggler="searchBarToggler" autofocus="firstLoad"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-if="!hasSelectedRecords" t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
+
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu t-if="!hasSelectedRecords"/>
+                    <CogMenu t-elif="env.isSmall and (props.info.actionMenus or archInfo.headerButtons.length)" t-props="this.actionMenuProps" hasSelectedRecords="hasSelectedRecords">
+                        <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                            <DropdownItem class="'o-dropdown-item-unstyled-button'">
+                                <MultiRecordViewButton
+                                    t-if="button.display !== 'always'"
+                                    list="model.root"
+                                    className="button.className"
+                                    clickParams="button.clickParams"
+                                    defaultRank="'btn-secondary'"
+                                    domain="props.domain"
+                                    icon="button.icon"
+                                    string="button.string"
+                                    title="button.title"
+                                    attrs="button.attrs"
+                                />
+                            </DropdownItem>
+                        </t>
+                    </CogMenu>
+                </t>
+                <t t-set-slot="control-panel-selection-actions">
+                    <div t-if="hasSelectedRecords" class="o_list_selection_container m-1 m-md-0 d-flex gap-1">
+                        <t t-call="web.ListView.Selection"/>
+                        <t t-if="!env.isSmall">
+                            <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id" t-if="!evalViewModifier(button.invisible)">
+                                <MultiRecordViewButton
+                                    t-if="button.display !== 'always'"
+                                    list="model.root"
+                                    className="button.className"
+                                    clickParams="button.clickParams"
+                                    defaultRank="'btn-secondary'"
+                                    domain="props.domain"
+                                    icon="button.icon"
+                                    string="button.string"
+                                    title="button.title"
+                                    attrs="button.attrs"
+                                />
+                            </t>
+                            <t t-if="props.info.actionMenus">
+                                <ActionMenus t-props="this.actionMenuProps"/>
+                            </t>
+                        </t>
+                    </div>
+                </t>
+                <t t-component="props.Renderer"
+                    list="model.root"
+                    activeActions="activeActions"
+                    archInfo="archInfo"
+                    allowSelectors="props.allowSelectors"
+                    editable="editable"
+                    onOpenFormView="onOpenFormView"
+                    hasOpenFormViewButton="hasOpenFormViewButton"
+                    openRecord.bind="openRecord"
+                    noContentHelp="props.info.noContentHelp"
+                    onAdd.bind="createRecord"
+                    optionalActiveFields="optionalActiveFields"
+                />
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="web.ListView.Buttons">
+        <div t-if="props.showButtons" class="o_list_buttons d-flex gap-1 d-empty-none align-items-baseline" role="toolbar" aria-label="Main actions">
+            <t t-if="editedRecord">
+                <button type="button" class="btn btn-primary o_list_button_save" data-hotkey="s" t-on-click.stop="onClickSave">
+                    Save
+                </button>
+                <button type="button" class="btn btn-secondary o_list_button_discard" data-hotkey="j" t-on-click.stop="onClickDiscard" t-on-mousedown="onMouseDownDiscard">
+                    Discard
+                </button>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.ListView.Selection">
+        <div class="o_list_selection_box list-group flex-row w-auto" t-att-class="{'m-1 gap-1': env.isSmall}" role="alert">
+            <span class="list-group-item active d-flex align-items-center pe-0 py-0 rounded-1 gap-1 flex-grow-1" t-att-class="{'shadow': env.isSmall}">
+                <span t-if="isDomainSelected">All <b><t t-esc="nbTotal"/><t t-if="model.root.hasLimitedCount">+</t></b> selected</span>
+                <t t-else="">
+                    <b t-esc="nbSelected"/> selected
+                    <button t-if="!env.isSmall and isPageSelected and (!model.root.isRecordCountTrustable or nbTotal > nbSelected)"
+                        class="o_list_select_domain btn btn-sm btn-info p-1 ms-2 me-n2 border-0 fw-normal"
+                        title="Select all records matching the search"
+                        t-on-click="onSelectDomain">
+                        <i class="oi oi-fw oi-arrow-right"/>
+                        Select all <span t-if="model.root.isRecordCountTrustable"><t t-esc="nbTotal"/><t t-if="model.root.hasLimitedCount">+</t></span>
+                    </button>
+                </t>
+                <button title="Unselect All" class="o_list_unselect_all btn btn-link ms-auto border-0" t-on-click="onUnselectAll">
+                    <i class="oi oi-close"/>
+                </button>
+            </span>
+            <button t-if="env.isSmall and !isDomainSelected and (!model.root.isRecordCountTrustable or nbTotal > nbSelected)"
+                class="o_list_select_domain btn btn-info shadow"
+                title="Select all records matching the search"
+                t-on-click="onSelectDomain">
+                All
+            </button>
+        </div>
+    </t>
+
+</templates>

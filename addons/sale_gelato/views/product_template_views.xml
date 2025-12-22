@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_form" model="ir.ui.view">
+        <field name="name">Product Template Form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath
+                expr="//page[@name='variants']/field[@name='attribute_line_ids']"
+                position="attributes"
+            >
+                <attribute name="readonly" separator=" or " add="gelato_template_ref"/>
+            </xpath>
+            <group name="upsell" position="after">
+                <group string="Gelato" invisible="type not in ['product', 'consu']">
+                    <field
+                        string="Template Reference"
+                        name="gelato_template_ref"
+                        readonly="gelato_product_uid"
+                    />
+                    <field
+                        string="Product UID"
+                        name="gelato_product_uid"
+                        invisible="product_variant_count &gt; 1"
+                        groups="base.group_no_one"
+                    />
+                    <label
+                        for="gelato_image_ids" invisible="not gelato_image_ids" class="opacity-100"
+                    />
+                    <div invisible="not gelato_image_ids" class="o_row align-items-center">
+                        <field
+                            string="Print Images"
+                            name="gelato_image_ids"
+                            widget="many2many_tags"
+                            options="{
+                                'no_create': True,
+                                'no_quick_create': True,
+                                'no_open': True,
+                                'edit_tags': True,
+                            }"
+                            context="{'form_view_ref': 'sale_gelato.product_document_form'}"
+                            force_save="True"
+                        />
+                        <i
+                            title="All print images are set"
+                            invisible="gelato_missing_images"
+                            class="fa fa-check-circle text-success fs-3 me-3"
+                        />
+                        <i
+                            title="Some print images are missing"
+                            invisible="not gelato_missing_images"
+                            class="fa fa-question-circle text-danger fs-3 me-3"
+                        />
+                    </div>
+                    <button
+                        string="Synchronize"
+                        type="object"
+                        name="action_sync_gelato_template_info"
+                        invisible="is_product_variant or not gelato_template_ref"
+                        colspan="2"
+                        class="btn btn-primary"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

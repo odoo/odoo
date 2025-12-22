@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="html_editor.StaticFileBox">
+        <span class="d-flex flex-grow-1 align-items-center alert alert-info">
+            <!-- mimetype icon -->
+            <span class="o_file_image d-flex o_image user-select-none"
+                t-att-title="fileModel.filename" t-att-data-mimetype="fileModel.mimetype"/>
+            <!-- file name -->
+            <span class="o_file_name_container mx-2">
+                <a class="o_link_readonly o-contenteditable-true" t-att-href="fileModel.downloadUrl"
+                    t-out="fileModel.filename"
+                    contenteditable="true"/>
+            </span>
+        </span>
+    </t>
+</templates>

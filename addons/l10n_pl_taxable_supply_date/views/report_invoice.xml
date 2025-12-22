@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@name='due_date']" position="after">
+            <div class="col" t-if="o.taxable_supply_date and o.taxable_supply_date != o.invoice_date and o.company_id.country_code == 'PL'" name="taxable_supply_date">
+                <strong>Taxable Supply:</strong>
+                <p class="m-0" t-field="o.taxable_supply_date"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

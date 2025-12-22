@@ -1,0 +1,60 @@
+.o_timeoff_card {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    flex: 1;
+    text-align: center;
+    border-right: 1px solid $border-color;
+
+    &>* {
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    span {
+        line-height: 1;
+    }
+
+    .o_timeoff_name {
+        color: $body-color;
+        font-size: 15px;
+        margin-bottom: 3px;
+    }
+
+    .o_timeoff_duration {
+        font-size: 30px;
+        font-weight: bold;
+        width: auto;
+        padding: auto 5px;
+
+        img {
+            height: 30px;
+            filter: var(--timeOffCard-icon-filter);
+        }
+    }
+
+    .o_timeoff_validity {
+        font-size: 10px;
+    }
+
+    .o_timeoff_details {
+        width: fit-content;
+        margin: 0 auto;
+        cursor: pointer;
+    }
+
+    .o_timeoff_info {
+        display: inline-block;
+        margin-right: -10px;
+        padding-right: 10px;
+    }
+}
+
+.o_time_off_icon_types img {
+    filter: var(--timeOffCard-icon-filter);
+}
+
+.o_time_off_card_popover_warning {
+    max-width: 300px;
+}

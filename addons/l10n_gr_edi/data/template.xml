@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="mydata_invoice">
+        <InvoicesDoc xmlns="http://www.aade.gr/myDATA/invoice/v1.0"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xmlns:icls="https://www.aade.gr/myDATA/incomeClassificaton/v1.0"
+                     xmlns:ecls="https://www.aade.gr/myDATA/expensesClassificaton/v1.0"
+                     xsi:schemaLocation="http://www.aade.gr/myDATA/invoice/v1.0/InvoicesDoc-v0.6.xsd">
+            <invoice t-foreach="invoice_values_list" t-as="invoice_vals">
+                <issuer>
+                    <vatNumber t-out="invoice_vals['issuer_vat_number']"/>
+                    <country t-out="invoice_vals['issuer_country']"/>
+                    <branch t-out="invoice_vals['issuer_branch']"/>
+                    <name t-out="invoice_vals['issuer_name']"/>
+                    <address>
+                        <postalCode t-out="invoice_vals['issuer_postal_code']"/>
+                        <city t-out="invoice_vals['issuer_city']"/>
+                    </address>
+                </issuer>
+                <counterpart>
+                    <vatNumber t-out="invoice_vals['counterpart_vat']"/>
+                    <country t-out="invoice_vals['counterpart_country']"/>
+                    <branch t-out="invoice_vals['counterpart_branch']"/>
+                    <name t-out="invoice_vals['counterpart_name']"/>
+                    <address>
+                        <postalCode t-out="invoice_vals['counterpart_postal_code']"/>
+                        <city t-out="invoice_vals['counterpart_city']"/>
+                    </address>
+                </counterpart>
+                <invoiceHeader>
+                    <series t-out="invoice_vals['header_series']"/>
+                    <aa t-out="invoice_vals['header_aa']"/>
+                    <issueDate t-out="invoice_vals['header_issue_date']"/>
+                    <invoiceType t-out="invoice_vals['header_invoice_type']"/>
+                    <currency t-out="invoice_vals['header_currency']"/>
+                    <correlatedInvoices t-out="invoice_vals['header_correlate']"/>
+                </invoiceHeader>
+                <paymentMethods>
+                    <paymentMethodDetails t-foreach="invoice_vals['payment_details']" t-as="payment_detail">
+                        <type t-out="payment_detail['type']"/>
+                        <amount t-out="payment_detail['amount']"/>
+                    </paymentMethodDetails>
+                </paymentMethods>
+                <invoiceDetails t-foreach="invoice_vals['details']" t-as="detail">
+                    <lineNumber t-out="detail['line_number']"/>
+                    <quantity t-out="detail['quantity']"/>
+                    <invoiceDetailType t-out="detail['detail_type']"/>
+                    <netValue t-out="detail['net_value']"/>
+                    <vatCategory t-out="detail['vat_category']"/>
+                    <vatAmount t-out="detail['vat_amount']"/>
+                    <vatExemptionCategory t-out="detail['vat_exemption_category']"/>
+                    <incomeClassification t-foreach="detail['icls']" t-as="icls">
+                        <icls:classificationType t-out="icls['type']"/>
+                        <icls:classificationCategory t-out="icls['category']"/>
+                        <icls:amount t-out="icls['amount']"/>
+                    </incomeClassification>
+                    <expensesClassification t-foreach="detail['ecls']" t-as="ecls">
+                        <ecls:classificationType t-out="ecls['type']"/>
+                        <ecls:classificationCategory t-out="ecls['category']"/>
+                        <ecls:amount t-out="ecls['amount']"/>
+                    </expensesClassification>
+                </invoiceDetails>
+                <invoiceSummary>
+                    <totalNetValue t-out="invoice_vals['summary_total_net_value']"/>
+                    <totalVatAmount t-out="invoice_vals['summary_total_vat_amount']"/>
+                    <totalWithheldAmount t-out="invoice_vals['summary_total_withheld_amount']"/>
+                    <totalFeesAmount t-out="invoice_vals['summary_total_fees_amount']"/>
+                    <totalStampDutyAmount t-out="invoice_vals['summary_total_stamp_duty_amount']"/>
+                    <totalOtherTaxesAmount t-out="invoice_vals['summary_total_other_taxes_amount']"/>
+                    <totalDeductionsAmount t-out="invoice_vals['summary_total_deductions_amount']"/>
+                    <totalGrossValue t-out="invoice_vals['summary_total_gross_value']"/>
+                    <incomeClassification t-foreach="invoice_vals['summary_icls']" t-as="icls">
+                        <icls:classificationType t-out="icls['type']"/>
+                        <icls:classificationCategory t-out="icls['category']"/>
+                        <icls:amount t-out="icls['amount']"/>
+                    </incomeClassification>
+                    <expensesClassification t-foreach="invoice_vals['summary_ecls']" t-as="ecls">
+                        <ecls:classificationType t-out="ecls['type']"/>
+                        <ecls:classificationCategory t-out="ecls['category']"/>
+                        <ecls:amount t-out="ecls['amount']"/>
+                    </expensesClassification>
+                </invoiceSummary>
+            </invoice>
+        </InvoicesDoc>
+    </template>
+
+    <template id="mydata_expense_classification">
+        <ecls:ExpensesClassificationsDoc xmlns:ecls="https://www.aade.gr/myDATA/expensesClassificaton/v1.0">
+            <ecls:expensesInvoiceClassification t-foreach="invoice_values_list" t-as="invoice_vals">
+                <ecls:invoiceMark t-out="invoice_vals['mark']"/>
+                <ecls:transactionMode t-out="invoice_vals['transaction_mode']"/>
+                <ecls:invoicesExpensesClassificationDetails t-foreach="invoice_vals['details']" t-as="detail">
+                    <ecls:lineNumber t-out="detail['line_number']"/>
+                    <ecls:expensesClassificationDetailData t-foreach="detail['ecls']" t-as="ecls">
+                        <ecls:classificationType t-out="ecls['type']"/>
+                        <ecls:classificationCategory t-out="ecls['category']"/>
+                        <ecls:amount t-out="ecls['amount']"/>
+                    </ecls:expensesClassificationDetailData>
+                </ecls:invoicesExpensesClassificationDetails>
+            </ecls:expensesInvoiceClassification>
+        </ecls:ExpensesClassificationsDoc>
+    </template>
+
+</odoo>

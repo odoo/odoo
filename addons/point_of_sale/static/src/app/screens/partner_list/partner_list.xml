@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.PartnerList">
+        <Dialog bodyClass="'partner-list overflow-y-auto'" contentClass="'h-100'">
+            <t t-set-slot="header">
+                <button t-if="!ui.isSmall" class="btn btn-primary btn-lg lh-lg" role="img" aria-label="Add a customer"
+                        t-on-click="() => this.editPartner()"
+                        title="Add a customer">
+                Create 
+                </button>
+                <Input tModel="[state, 'query']"
+                    class="'ms-auto'"
+                    isSmall="ui.isSmall"
+                    placeholder.translate="Search Customers..."
+                    icon="{type: 'fa', value: 'fa-search'}"
+                    autofocus="true"
+                    debounceMillis="100" />
+            </t>
+            <table class="table table-hover">
+                <thead t-if="!ui.isSmall">
+                    <tr>
+                        <th class="py-2">Name</th>
+                        <th class="py-2">Address</th>
+                        <th class="partner-line-email py-2">Contact</th>
+                        <th class="pos-right-align py-2" t-if="isBalanceDisplayed">Balance</th>
+                        <th class="py-2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="getPartners()" t-as="partner" t-key="partner.id">
+                        <PartnerLine
+                                close="props.close"
+                                partner="partner"
+                                isSelected="props.partner?.id === partner.id"
+                                isBalanceDisplayed="isBalanceDisplayed"
+                                onClickEdit.bind="(p) => this.editPartner(p)"
+                                onClickUnselect.bind="() => this.clickPartner()"
+                                onClickOrders.bind="(p) => this.goToOrders(p)"
+                                onClickPartner.bind="clickPartner"/>
+                    </t>
+                </tbody>
+            </table>
+            <div t-if="state.query" class="search-more-button d-flex justify-content-center my-2">
+                <button class="btn btn-lg btn-primary" t-on-click="onEnter">Search more</button>
+            </div>
+            <t t-set-slot="footer">
+                <div class="d-flex justify-content-start flex-wrap gap-2 w-100">
+                    <button t-if="ui.isSmall" class="btn btn-primary btn-lg lh-lg" role="img" aria-label="Add a customer"
+                        t-on-click="() => this.editPartner()"
+                        title="Add a customer">
+                    New 
+                    </button>
+                    <button class="btn btn-secondary btn-lg lh-lg o-default-button" t-on-click="() => this.clickPartner(this.props.partner)">Discard</button>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

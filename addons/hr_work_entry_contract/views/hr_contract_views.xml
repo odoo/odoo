@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_contract_view_form_inherit_work_entry" model="ir.ui.view">
+        <field name="name">hr.contract.view.form.inherit.work.entry</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='resource_calendar_warning']" position="replace">
+                <div id="resource_calendar_warning" class="d-flex align-items-center">
+                    <!-- resource calendar is only required when work_entry_source is set to 'calendar' -->
+                    <field name="resource_calendar_id"
+                        groups="!hr_contract.group_hr_contract_manager"
+                        placeholder="Fully Flexible"
+                        required="work_entry_source == 'calendar'"
+                        options="{'no_open': True, 'no_create': True}"/>
+                    <field name="resource_calendar_id"
+                        groups="hr_contract.group_hr_contract_manager"
+                        placeholder="Fully Flexible"
+                        required="work_entry_source == 'calendar'"/>
+                    <widget
+                        name="contract_warning_tooltip"
+                        invisible="not calendar_mismatch or state != 'open'"/>
+                </div>
+                <!-- Makes no sense to display only one possibility -->
+                <field name="work_entry_source" widget="work_entry_source_field" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

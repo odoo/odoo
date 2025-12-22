@@ -1,0 +1,189 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_pine_labs
+# 
+# Translators:
+# Wil Odoo, 2025
+# Larisa_nexterp, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"PO-Revision-Date: 2025-05-09 09:41+0000\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_client
+msgid "A client id issued directly to the merchant by Pine Labs."
+msgstr "Un ID de client emis direct comerciantului de către Pine Labs."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
+msgid "A merchant id issued directly to the merchant by Pine Labs."
+msgstr "Un ID de comerciant emis direct comerciantului de către Pine Labs."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
+msgid "A security token issued directly to the merchant by Pine Labs."
+msgstr "Un token de securitate emis direct comerciantului de către Pine Labs."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_store
+msgid "A store id issued directly to the merchant by Pine Labs."
+msgstr "Un ID de magazin emis direct comerciantului de către Pine Labs."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
+msgid "Accepted payment modes by Pine Labs for transactions."
+msgstr "Moduri de plată acceptate de Pine Labs pentru tranzacții."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__all
+msgid "All"
+msgstr "Toate"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Cannot process transactions with negative amount."
+msgstr "Nu se pot procesa tranzacții cu sumă negativă."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__card
+msgid "Card"
+msgstr "Card"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
+msgid "Pine Labs Allowed Payment Modes"
+msgstr "Moduri de plată permise Pine Labs"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_client
+msgid "Pine Labs Client ID"
+msgstr "ID Client Pine Labs"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs Error"
+msgstr "Eroare Pine Labs"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
+msgid "Pine Labs Merchant ID"
+msgstr "ID Comerciant Pine Labs"
+
+#. module: pos_pine_labs
+#. odoo-python
+#: code:addons/pos_pine_labs/models/pos_payment_method.py:0
+msgid ""
+"Pine Labs POS transaction cancelled. Retry again for collecting payment."
+msgstr ""
+"Tranzacția POS Pine Labs a fost anulată. Încercați din nou pentru a colecta "
+"plata."
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
+msgid "Pine Labs PlutusTransactionReferenceID"
+msgstr "ID Referință Tranzacție Plutus Pine Labs"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
+msgid "Pine Labs Security Token"
+msgstr "Token de securitate Pine Labs"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_store
+msgid "Pine Labs Store ID"
+msgstr "ID Magazin Pine Labs"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
+msgid "Pine Labs Test Mode"
+msgstr "Mod Test Pine Labs"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs get payment status request failed"
+msgstr "Cererea de verificare a statusului plății Pine Labs a eșuat"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs make payment request failed"
+msgstr "Cererea de efectuare a plății Pine Labs a eșuat"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Pine Labs payment cancellation request failed"
+msgstr "Cererea de anulare a plății Pine Labs a eșuat"
+
+#. module: pos_pine_labs
+#: model:ir.model,name:pos_pine_labs.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "Metode de plată Punct de Vânzare"
+
+#. module: pos_pine_labs
+#: model:ir.model,name:pos_pine_labs.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Plăți Punct de Vânzare"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Reference number mismatched"
+msgstr "Număr de referință necorespunzător"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
+msgid ""
+"Required during the refund order process: "
+"https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
+"request-for-Void-ICB-on-UPI-transaction"
+msgstr ""
+"Necesar în timpul procesului de rambursare a comenzii: "
+"https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
+"request-for-Void-ICB-on-UPI-transaction"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
+msgid "Test Pine Labs transaction process."
+msgstr "Testează procesul de tranzacție Pine Labs."
+
+#. module: pos_pine_labs
+#. odoo-python
+#: code:addons/pos_pine_labs/models/pos_payment_method.py:0
+msgid ""
+"The expected error code for the Pine Labs POS status request was not "
+"included in the response."
+msgstr ""
+"Codul de eroare așteptat pentru cererea de status POS Pine Labs nu a fost "
+"inclus în răspuns."
+
+#. module: pos_pine_labs
+#. odoo-python
+#: code:addons/pos_pine_labs/models/pos_payment_method.py:0
+msgid "This Payment Terminal is only valid for INR Currency"
+msgstr "Acest terminal de plată este valabil numai pentru moneda INR"
+
+#. module: pos_pine_labs
+#. odoo-javascript
+#: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
+msgid "Transaction failed due to inactivity"
+msgstr "Tranzacția a eșuat din cauza inactivității"
+
+#. module: pos_pine_labs
+#: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
+msgid "Upi"
+msgstr "Upi"

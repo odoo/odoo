@@ -1,0 +1,28 @@
+<odoo>
+    <!--Hr Department Inherit Kanban view-->
+    <record id="hr_department_view_kanban" model="ir.ui.view">
+        <field name="name">hr.department.kanban.inherit</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//div[@name='kanban_primary_right']" position="inside">
+                    <div t-if="record.expense_sheets_to_approve_count.raw_value > 0" class="row ml32 g-0" groups="hr_expense.group_hr_expense_team_approver">
+                        <a name="%(action_hr_expense_sheet_department_to_approve)d" class="col" type="action">
+                            <field name="expense_sheets_to_approve_count" groups="hr_expense.group_hr_expense_team_approver"/> Expense Reports
+                        </a>
+                    </div>
+                </xpath>
+
+                <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
+                    <div role="menuitem">
+                        <a class="dropdown-item" name="%(action_hr_expense_sheet_department_filtered)d"
+                            type="action" groups="hr_expense.group_hr_expense_team_approver">
+                            Expenses
+                        </a>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

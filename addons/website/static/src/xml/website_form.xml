@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Success status -->
+    <t t-name="website.s_website_form_status_success">
+        <span id="s_website_form_result" class="me-2 small text-success">
+            <i class="fa fa-paper-plane me-1" role="img" aria-hidden="true" title="Success"/>The form has been sent successfully.
+        </span>
+    </t>
+
+    <!-- Error status -->
+    <t t-name="website.s_website_form_status_error">
+        <span id="s_website_form_result" class="me-2 small text-danger">
+            <i class="fa fa-close me-1" role="img" aria-hidden="true" title="Error"/>
+            <t t-esc="message"/>
+        </span>
+    </t>
+
+    <!-- A block containing the file name and a cross to delete the file. -->
+    <t t-name="website.file_block">
+        <div class="o_file_block col-4">
+            <div class="o_file_wrap mb-1 px-2 py-1">
+                <div class="o_file_name d-inline-block w-75 pt-1" t-att-title="fileName" t-out="fileName"/>
+                <i class="o_file_delete fa fa-times mt-1 float-end"/>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PivotHeader">
+        <Dropdown state="this.dropdownState" manual="true" position="props.isXAxis ? 'bottom-start' : 'bottom-end'">
+            <th
+                class="bg-view text-nowrap cursor-pointer fw-normal user-select-none"
+                t-att-colspan="props.isXAxis ? cell.width : undefined"
+                t-att-rowspan="props.isXAxis ? cell.height : undefined"
+                t-att-class="{
+                    o_pivot_header_cell_closed: cell.isLeaf,
+                    o_pivot_header_cell_opened: !cell.isLeaf,
+                    'border-top': props.isInHead,
+                }"
+                t-attf-style="{{
+                    props.isXAxis
+                        ? undefined
+                        : l10n.direction === 'ltr'
+                            ? 'padding-left: ' + padding + 'px;'
+                            : 'padding-right: ' + padding + 'px;'
+                }}"
+                t-att-data-tooltip="cell.label"
+                t-attf-data-tooltip-position="{{ l10n.direction === 'ltr' ? 'right' : 'left' }}"
+                t-on-click.stop="this.onClick"
+            >
+                <i t-attf-class="fa fa-{{ cell.isLeaf ? 'plus-square' : 'minus-square-o' }} me-1"/>
+                <span t-esc="cell.title"/>
+            </th>
+
+            <t t-set-slot="content">
+                <t t-set="currentGroup" t-value="null"/>
+                <t t-foreach="items" t-as="item" t-key="item.id">
+                    <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                        <div class="dropdown-divider" role="separator"/>
+                    </t>
+                    <t t-if="item.fieldType === 'properties'">
+                        <PropertiesGroupByItem item="item" onGroup.bind="onGroupBySelected"/>
+                    </t>
+                    <t t-elif="item.options">
+                        <Dropdown>
+                            <button t-att-class="'o_menu_item' + (item.isActive ? ' selected' : '')">
+                                <t t-esc="item.description"/>
+                            </button>
+                            <t t-set-slot="content">
+                                <t t-set="subGroup" t-value="null"/>
+                                <t t-foreach="item.options" t-as="option" t-key="option.id">
+                                    <t t-if="subGroup !== null and subGroup !== option.groupNumber">
+                                        <div class="dropdown-divider" role="separator"/>
+                                    </t>
+                                    <CheckboxItem class="{ o_item_option: true, selected: option.isActive }"
+                                        checked="option.isActive ? true : false"
+                                        t-esc="option.description"
+                                        onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
+                                    />
+                                    <t t-set="subGroup" t-value="option.groupNumber"/>
+                                </t>
+                            </t>
+                        </Dropdown>
+                    </t>
+                    <t t-else="">
+                        <CheckboxItem class="{ o_menu_item: true, selected: item.isActive }"
+                            checked="item.isActive"
+                            t-esc="item.description"
+                            onSelected="() => this.onGroupBySelected({ itemId: item.id })"
+                        />
+                    </t>
+                    <t t-set="currentGroup" t-value="item.groupNumber"/>
+                </t>
+                <t t-if="!hideCustomGroupBy and fields.length">
+                    <div t-if="items.length" role="separator" class="dropdown-divider"/>
+                    <CustomGroupByItem fields="fields" onAddCustomGroup.bind="onAddCustomGroup"/>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

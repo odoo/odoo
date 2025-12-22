@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DynamicPlaceholderPopover">
+        <t t-if="state.isPathSelected">
+            <div class="o_model_field_selector_popover" t-on-keydown="onInputKeydown" tabindex="-1">
+                <div class="border-bottom p-2">
+                    <div class="d-flex justify-content-between align-items-center text-dark fw-bolder">
+                        <i class="btn btn-link me-n2 fa fa-arrow-left text-dark"
+                           title="Back"
+                           role="img"
+                           aria-label="Back"
+                           t-on-click="onBack"
+                        />
+                        <div class="o_model_field_selector_popover_title">Enter a default value</div>
+                        <i class="o_model_field_selector_popover_close btn btn-link me-n2 fa fa-times text-dark"
+                           title="Close"
+                           role="img"
+                           aria-label="Close"
+                           t-on-click="props.close"
+                        />
+                    </div>
+                    <t t-if="state.fieldName">
+                        <span t-out="state.fieldName"/>
+                        <br/>
+                        <span>or</span>
+                    </t>
+                    <div class="o_model_field_selector_default_value_input mt-2">
+                        <input type="text"
+                            placeholder="What should we write if the field is empty"
+                            class="o_input"
+                            t-att-value="state.defaultValue"
+                            t-on-input="(ev) => this.setDefaultValue(ev.target.value)"
+                            t-ref="autofocus"/>
+                    </div>
+                </div>
+                <div class="o_model_field_selector_popover_footer border-top py-1 my-2 px-2">
+                    <input type="text" class="o_input o_model_field_selector_debug"
+                        disabled="disabled" t-att-value="state.path" />
+                </div>
+                <div class="d-flex flex-row justify-content-around py-2">
+                    <button class="btn btn-primary" t-on-click="validate">
+                        Insert
+                    </button>
+                    <button class="btn btn-secondary" t-on-click="() => this.props.close()">
+                        Discard
+                    </button>
+                </div>
+            </div>
+        </t>
+        <t t-else="">
+            <ModelFieldSelectorPopover
+                close.bind="closeFieldSelector"
+                filter.bind="filter"
+                followRelations="true"
+                isDebugMode="!!env.debug"
+                path="state.path"
+                resModel="props.resModel"
+                showSearchInput="true"
+                update.bind="setPath"
+            />
+        </t>
+    </t>
+
+</templates>

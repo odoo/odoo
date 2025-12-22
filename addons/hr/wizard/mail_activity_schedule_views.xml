@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_activity_schedule_view_form" model="ir.ui.view">
+            <field name="name">mail.activity.schedule.view.form.inherit.hr</field>
+            <field name="model">mail.activity.schedule</field>
+            <field name="inherit_id" ref="mail.mail_activity_schedule_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='plan_available_ids']" position="after">
+                    <field name="department_id" invisible="1"/>
+                </xpath>
+                <xpath expr="//group[@invisible='not plan_available_ids']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//group[@invisible='not plan_id']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <xpath expr="//field[@name='plan_date']" position="before">
+                    <field name="plan_id" options='{"no_open": True, "no_create": True}' invisible="not bool(plan_available_ids)"/>
+                </xpath>
+                <xpath expr="//field[@name='plan_date']" position="attributes">
+                    <attribute name="invisible">not plan_id</attribute>
+                </xpath>
+                <xpath expr="//field[@name='plan_on_demand_user_id']" position="attributes">
+                    <attribute name="invisible">not plan_id or not plan_has_user_on_demand</attribute>
+                </xpath>
+                <xpath expr="//label[hasclass('o_form_label')]" position="attributes">
+                    <attribute name="invisible">not plan_id</attribute>
+                </xpath>
+                <xpath expr="//field[@name='plan_summary']" position="attributes">
+                    <attribute name="invisible">not plan_id</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

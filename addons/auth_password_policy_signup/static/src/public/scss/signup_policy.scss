@@ -1,0 +1,18 @@
+.field-password {
+    --PasswordMeter-width: 4rem;
+
+    position: relative;
+
+    meter.o_password_meter {
+        right: $input-padding-x;
+        // We can't use $input-height-sm because it relies on em units
+        // and the font size is defined in the input.
+        bottom: ($input-line-height * $input-font-size-sm) / 2 + $input-padding-y-sm + o-to-rem($border-width);
+        transform: translateY(50%);
+        inline-size: var(--PasswordMeter-width);
+    }
+
+    #password {
+        padding-right: calc(#{$input-padding-x * 2} + var(--PasswordMeter-width));
+    }
+}

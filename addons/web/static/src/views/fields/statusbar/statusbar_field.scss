@@ -1,0 +1,217 @@
+.o_field_statusbar {
+    $-btn-secondary-design: map-get($o-btns-bs-override, "secondary");
+
+    > .o_statusbar_status {
+        display: flex;
+        align-content: space-around;
+        margin-left: auto;
+        flex-flow: row-reverse wrap-reverse;
+        align-self: stretch;
+        align-items: stretch;
+
+        --o-statusbar-radius: 0.1rem;
+        --o-statusbar-border: #{$o-view-background-color};
+        --o-statusbar-background-active: #{map-get($-btn-secondary-design, active-background)};
+        --o-statusbar-border-active: #{map-get($-btn-secondary-design, active-border)};
+        --o-statusbar-background-hover: #{map-get($-btn-secondary-design, hover-background)};
+        --o-statusbar-caret-width: #{$o-statusbar-arrow-width};
+        --o-statusbar-border-width: #{$btn-border-width};
+        --o-statusbar-padding-x: calc(var(--o-statusbar-caret-width) * 1.25);
+        --o-statusbar-padding-y: calc(#{$btn-padding-y} + #{$btn-border-width});
+
+        --o-statusbar-point-top-left: 0 0;
+        --o-statusbar-point-top-right: calc(100% - var(--o-statusbar-caret-width)) 0;
+        --o-statusbar-point-middle-left: var(--o-statusbar-caret-width) 50%;
+        --o-statusbar-point-middle-right: 100% 50%;
+        --o-statusbar-point-bottom-left: 0 100%;
+        --o-statusbar-point-bottom-right: calc(100% - var(--o-statusbar-caret-width)) 100%;
+        --o-statusbar-point-inner-top-left: calc(var(--o-statusbar-border-width) * sqrt(2)) 0;
+        --o-statusbar-point-inner-top-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) * sqrt(2)) 0;
+        --o-statusbar-point-inner-middle-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-border-width) * sqrt(2)) 50%;
+        --o-statusbar-point-inner-middle-right: calc(100% - var(--o-statusbar-border-width) * sqrt(2)) 50%;
+        --o-statusbar-point-inner-bottom-left: calc(var(--o-statusbar-border-width) * sqrt(2)) 100%;
+        --o-statusbar-point-inner-bottom-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) * sqrt(2)) 100%;
+
+        > .o_arrow_button:not(.d-none) {
+            position: relative;
+            padding: var(--o-statusbar-padding-y) calc(var(--o-statusbar-padding-x) * 1.375);
+            border: 0;
+            clip-path: polygon(
+                var(--o-statusbar-point-top-left),
+                var(--o-statusbar-point-top-right),
+                var(--o-statusbar-point-middle-right),
+                var(--o-statusbar-point-bottom-right),
+                var(--o-statusbar-point-bottom-left),
+                var(--o-statusbar-point-middle-left)
+            );
+            margin-left: calc(-1 * var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) * sqrt(3));
+          
+            &.o_last {
+                --o-statusbar-point-middle-left: 0 50%;
+                padding-left: var(--o-statusbar-padding-x);
+                margin-left: 0;
+                border-top-left-radius: var(--o-statusbar-radius);
+                border-bottom-left-radius: var(--o-statusbar-radius);
+            }
+            
+            &.o_first {
+                --o-statusbar-point-top-right: 100% 0;
+                --o-statusbar-point-bottom-right: 100% 100%;
+                padding-right: var(--o-statusbar-padding-x);
+                border-top-right-radius: var(--o-statusbar-radius);
+                border-bottom-right-radius: var(--o-statusbar-radius);
+                flex-grow: 1;
+            }
+
+            &.dropdown-toggle::after {
+                content: normal;
+            }
+            
+            &::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background-color: var(--o-statusbar-border);
+                clip-path: polygon(
+                    var(--o-statusbar-point-top-left),
+                    var(--o-statusbar-point-top-right),
+                    var(--o-statusbar-point-middle-right),
+                    var(--o-statusbar-point-bottom-right),
+                    var(--o-statusbar-point-bottom-left),
+                    var(--o-statusbar-point-middle-left),
+                    var(--o-statusbar-point-top-left),
+                    var(--o-statusbar-point-inner-top-left),
+                    var(--o-statusbar-point-inner-middle-left),
+                    var(--o-statusbar-point-inner-bottom-left),
+                    var(--o-statusbar-point-inner-bottom-right),
+                    var(--o-statusbar-point-inner-middle-right),
+                    var(--o-statusbar-point-inner-top-right),
+                    var(--o-statusbar-point-inner-top-left)
+                );
+            }
+            
+            &.o_last::before {
+                --o-statusbar-point-inner-top-left: var(--o-statusbar-point-top-left);
+                --o-statusbar-point-inner-middle-left: var(--o-statusbar-point-middle-left);
+                --o-statusbar-point-inner-bottom-left: var(--o-statusbar-point-bottom-left);
+                border-top-left-radius: var(--o-statusbar-radius);
+                border-bottom-left-radius: var(--o-statusbar-radius);
+            }
+            
+            &.o_first::before {
+                --o-statusbar-point-inner-top-right: var(--o-statusbar-point-top-right);
+                --o-statusbar-point-inner-middle-right: var(--o-statusbar-point-middle-right);
+                --o-statusbar-point-inner-bottom-right: var(--o-statusbar-point-bottom-right);
+                border-top-right-radius: var(--o-statusbar-radius);
+                border-bottom-right-radius: var(--o-statusbar-radius);
+            }
+
+            &:hover, &:focus {
+                background-color: var(--o-statusbar-background-hover);
+            }
+
+            &:disabled {
+                opacity: 1;
+                cursor: default;
+
+                &:not(.o_arrow_button_current) {
+                    &, &:hover, &:focus {
+                        color: $text-muted;
+                    }
+                }
+            }
+            
+            &.o_arrow_button_current:disabled, &:active:not(.o_last) {
+                z-index: 1;
+                background-color: var(--o-statusbar-background-active);
+                
+                &::before {
+                    --o-statusbar-point-inner-top-left: calc(var(--o-statusbar-border-width) * sqrt(3)) var(--o-statusbar-border-width);
+                    --o-statusbar-point-inner-top-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) / sqrt(2)) var(--o-statusbar-border-width);
+                    --o-statusbar-point-inner-bottom-left: calc(var(--o-statusbar-border-width) * sqrt(3)) calc(100% - var(--o-statusbar-border-width));
+                    --o-statusbar-point-inner-bottom-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) / sqrt(2)) calc(100% - var(--o-statusbar-border-width));
+                    background-color: var(--o-statusbar-border-active);
+                }
+            
+                &.o_last::before {
+                    --o-statusbar-point-inner-top-left: calc(var(--o-statusbar-border-width) * sqrt(2)) var(--o-statusbar-border-width);
+                    --o-statusbar-point-inner-middle-left: calc(var(--o-statusbar-border-width) * sqrt(2)) 50%;
+                    --o-statusbar-point-inner-bottom-left: calc(var(--o-statusbar-border-width) * sqrt(2)) calc(100% - var(--o-statusbar-border-width));
+                }
+            
+                &.o_first::before {
+                    --o-statusbar-point-inner-top-right: calc(100% - var(--o-statusbar-border-width) * sqrt(2)) var(--o-statusbar-border-width);
+                    --o-statusbar-point-inner-middle-right: calc(100% - var(--o-statusbar-border-width) * sqrt(2)) 50%;
+                    --o-statusbar-point-inner-bottom-right: calc(100% - var(--o-statusbar-border-width) * sqrt(2)) calc(100% - var(--o-statusbar-border-width));
+                }
+            }
+
+            .o_rtl & {
+                --o-statusbar-point-top-left: var(--o-statusbar-caret-width) 0;
+                --o-statusbar-point-top-right: 100% 0;
+                --o-statusbar-point-middle-left: 0 50%;
+                --o-statusbar-point-middle-right: calc(100% - var(--o-statusbar-caret-width)) 50%;
+                --o-statusbar-point-bottom-left: var(--o-statusbar-caret-width) 100%;
+                --o-statusbar-point-bottom-right: 100% 100%;
+                --o-statusbar-point-inner-top-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-border-width) * sqrt(2)) 0;
+                --o-statusbar-point-inner-top-right: calc(100% - var(--o-statusbar-border-width) * sqrt(2)) 0;
+                --o-statusbar-point-inner-middle-left: calc(var(--o-statusbar-border-width) * sqrt(2)) 50%;
+                --o-statusbar-point-inner-middle-right: calc(100% - var(--o-statusbar-caret-width) - var(--o-statusbar-border-width) * sqrt(2)) 50%;
+                --o-statusbar-point-inner-bottom-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-border-width) * sqrt(2)) 100%;
+                --o-statusbar-point-inner-bottom-right: calc(100% - var(--o-statusbar-border-width) * sqrt(2)) 100%;
+          
+                &.o_last {
+                    --o-statusbar-point-middle-right: 100% 50%;
+                }
+                
+                &.o_first {
+                    --o-statusbar-point-top-left: 0 0;
+                    --o-statusbar-point-bottom-left: 0 100%;
+                }
+                
+                &.o_last::before {
+                    --o-statusbar-point-inner-top-right: var(--o-statusbar-point-top-right);
+                    --o-statusbar-point-inner-middle-right: var(--o-statusbar-point-middle-right);
+                    --o-statusbar-point-inner-bottom-right: var(--o-statusbar-point-bottom-right);
+                }
+                
+                &.o_first::before {
+                    --o-statusbar-point-inner-top-left: var(--o-statusbar-point-top-left);
+                    --o-statusbar-point-inner-middle-left: var(--o-statusbar-point-middle-left);
+                    --o-statusbar-point-inner-bottom-left: var(--o-statusbar-point-bottom-left);
+                }
+            
+                &.o_arrow_button_current:disabled, &:active:not(.o_last) {
+                    &::before {
+                        --o-statusbar-point-inner-top-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-border-width) / sqrt(2)) var(--o-statusbar-border-width);
+                        --o-statusbar-point-inner-top-right: calc(100% - var(--o-statusbar-border-width) * sqrt(3)) var(--o-statusbar-border-width);
+                        --o-statusbar-point-inner-bottom-left: calc(var(--o-statusbar-caret-width) + var(--o-statusbar-border-width) / sqrt(2)) calc(100% - var(--o-statusbar-border-width));
+                        --o-statusbar-point-inner-bottom-right: calc(100% - var(--o-statusbar-border-width) * sqrt(3)) calc(100% - var(--o-statusbar-border-width));
+                    }
+                
+                    &.o_last::before {
+                        --o-statusbar-point-inner-top-right: calc(100% - var(--o-statusbar-border-width) * sqrt(2)) var(--o-statusbar-border-width);
+                        --o-statusbar-point-inner-middle-right: calc(100% - var(--o-statusbar-border-width) * sqrt(2)) 50%;
+                        --o-statusbar-point-inner-bottom-right: calc(100% - var(--o-statusbar-border-width) * sqrt(2)) calc(100% - var(--o-statusbar-border-width));
+                    }
+                
+                    &.o_first::before {
+                        --o-statusbar-point-inner-top-left: calc(var(--o-statusbar-border-width) * sqrt(2)) var(--o-statusbar-border-width);
+                        --o-statusbar-point-inner-middle-left: calc(var(--o-statusbar-border-width) * sqrt(2)) 50%;
+                        --o-statusbar-point-inner-bottom-left: calc(var(--o-statusbar-border-width) * sqrt(2)) calc(100% - var(--o-statusbar-border-width));
+                    }
+                }
+            }
+        }
+    }
+}
+.o_cell {
+    .o_field_statusbar {
+        > .o_statusbar_status {
+            justify-content: flex-end;
+            .o_arrow_button:not(.d-none) {
+                flex: 1 1 auto !important;
+            }
+        }
+    }
+}

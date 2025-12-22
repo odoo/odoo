@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="stock.StockOrderpointSearchPanel.Regular" t-inherit="web.SearchPanel.Regular">
+        <xpath expr="//div[contains(@class, 'o_search_panel')]" position="inside">
+            <section class="o_search_panel_section o_search_panel_filter">
+                <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default">
+                    <i t-attf-class="fa fa-clock-o o_search_panel_section_icon text-warning me-2" />
+                    <b>Horizon</b>
+                </header>
+
+                <div class="input-group">
+                    <input type="number" min="0" t-att-value="globalVisibilityDays.value" class="form-control" aria-describedby="days-label" t-on-change="applyGlobalVisibilityDays"/>
+                    <span class="input-group-text" id="days-label">days</span>
+                </div>
+            </section>
+        </xpath>
+    </t>
+
+    <t t-name="stock.StockOrderpointSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="attributes">
+            <attribute name="t-call">stock.StockOrderpointSearchPanel.Regular</attribute>
+        </xpath>
+    </t>
+</templates>

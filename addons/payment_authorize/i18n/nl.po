@@ -1,0 +1,264 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_authorize
+# 
+# Translators:
+# Wil Odoo, 2024
+# Manon Rondou, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Manon Rondou, 2025\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid ""
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Personal Checking</option>\n"
+"                        <option value=\"savings\">Personal Savings</option>\n"
+"                        <option value=\"businessChecking\">Business Checking</option>\n"
+"                    </select>"
+msgstr ""
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">\n"
+"                        <option value=\"checking\">Persoonlijke rekening</option>\n"
+"                        <option value=\"savings\">Persoonlijk spaargeld</option>\n"
+"                        <option value=\"businessChecking\">Zakelijke rekening</option>\n"
+"                    </select>"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "ABA Routing Number"
+msgstr "ABA-routeringsnummer"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
+msgid "API Client Key"
+msgstr "API client sleutel"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
+msgid "API Login ID"
+msgstr "API-aanmeldings-ID"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
+msgid "API Signature Key"
+msgstr "API handtekening sleutel"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
+msgid "API Transaction Key"
+msgstr "API Transactiesleutel"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Account Number"
+msgstr "Rekeningnummer"
+
+#. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
+msgid "Authorize.Net Profile ID"
+msgstr "Authorize.Net profiel-ID"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Account Type"
+msgstr "Type bankrekening"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Name"
+msgstr "Naam bank"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Card Code"
+msgstr "Kaartcode"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Card Number"
+msgstr "Kaartnummer"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__code
+msgid "Code"
+msgstr "Code"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+msgid ""
+"Could not fetch merchant details:\n"
+"%s"
+msgstr ""
+"Kan verkopersgegevens niet ophalen:\n"
+"%s"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+msgid ""
+"Could not retrieve the transaction details. (error code: %(error_code)s; "
+"error_details: %(error_message)s)"
+msgstr ""
+"Kon de details van de transactie niet ophalen. (foutcode: %(error_code)s, "
+"error_details: %(error_message)s)"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Expiration"
+msgstr "Vervaldatum"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+msgid ""
+"Failed to authenticate.\n"
+"%s"
+msgstr ""
+"Kan niet verifiëren.\n"
+"%s"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Generate Client Key"
+msgstr "Genereer client sleutel"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "How to get paid with Authorize.Net"
+msgstr "Hoe betaald te worden met Authorize.Net"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "MM"
+msgstr "MM"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Name On Account"
+msgstr "Naam op account"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "Geen transactie gevonden die overeenkomt met referentie %s."
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+msgid "Only one currency can be selected by Authorize.Net account."
+msgstr "Er kan maar één valuta worden geselecteerd per Authorize.Net account."
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_provider
+msgid "Payment Provider"
+msgstr "Betaalprovider"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_token
+msgid "Payment Token"
+msgstr "Betalingstoken"
+
+#. module: payment_authorize
+#: model:ir.model,name:payment_authorize.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Betalingstransactie"
+
+#. module: payment_authorize
+#. odoo-javascript
+#: code:addons/payment_authorize/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "Betalingsverwerking mislukt"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+msgid "Received data with status code \"%(status)s\" and error code \"%(error)s\""
+msgstr "Gegevens ontvangen met statuscode \"%(status)s\" en foutcode \"%(error)s\""
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/controllers/main.py:0
+msgid "Received tampered payment request data."
+msgstr "Ontvangen van geknoeid betalingsverzoekgegevens."
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
+msgid "Set Account Currency"
+msgstr "Accountvaluta instellen"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
+msgid "The ID solely used to identify the account with Authorize.Net"
+msgstr ""
+"De ID die alleen wordt gebruikt om het account te identificeren bij "
+"Authorize.Net"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
+msgid ""
+"The public client key. To generate directly from Odoo or from Authorize.Net "
+"backend."
+msgstr ""
+"De openbare clientsleutel. Om rechtstreeks vanuit Odoo of vanuit "
+"Authorize.Net backend te genereren."
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "De technische code van deze betaalprovider."
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+msgid ""
+"The transaction is not in a status to be refunded. (status: %(status)s, "
+"details: %(message)s)"
+msgstr ""
+"De transactie heeft niet de status om terugbetaald te worden. (status: "
+"%(status)s, details: %(message)s)"
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr "De transactie is niet gekoppeld aan een token."
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
+msgid ""
+"The unique reference for the partner/token combination in the Authorize.net "
+"backend."
+msgstr ""
+"De unieke referentie voor de partner/token-combinatie in de Authorize.net-"
+"backend."
+
+#. module: payment_authorize
+#. odoo-python
+#: code:addons/payment_authorize/models/payment_provider.py:0
+msgid "This action cannot be performed while the provider is disabled."
+msgstr ""
+"Deze actie kan niet worden uitgevoerd terwijl de provider is uitgeschakeld."
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "YY"
+msgstr "YY"

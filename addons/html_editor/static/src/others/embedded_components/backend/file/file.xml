@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- /file template -->
+    <t t-name="html_editor.EmbeddedFile" t-inherit="html_editor.ReadonlyEmbeddedFile" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_file_name_container')]" position="after">
+            <input t-attf-class="rounded border-0 mx-2 #{ localState.editFileName ? '' : 'd-none'}"
+                t-ref="nameInput" type="text" maxLength="100" t-att-placeholder="fileModel.filename"
+                t-on-blur="onBlurNameInput" t-on-input.stop="" t-on-keydown.stop="onKeydownNameInput"
+                t-att-value="fileModel.filename"/>
+        </xpath>
+        <xpath expr="//span[hasclass('o_file_name_container')]" position="attributes">
+            <attribute name="t-att-class">{
+                "d-none": localState.editFileName,
+                "cursor-pointer": true,
+            }</attribute>
+            <attribute name="t-on-focus">onFocusFileName</attribute>
+            <attribute name="tabindex">-1</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o_file_name')]" position="after">
+            <i class="fa fa-pencil mx-1 invisible align-items-center d-inline-flex"/>
+        </xpath>
+    </t>
+</templates>

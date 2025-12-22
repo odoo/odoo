@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.s_image_gallery_mirror">
+        <div t-attf-id="#{id}" t-attf-class="carousel slide #{colorContrast}" t-att-data-bs-ride="ride" t-attf-data-bs-interval="#{interval}" style="margin: 0 12px;">
+            <div class="carousel-inner">
+                <t t-foreach="images" t-as="image" t-key="image_index">
+                    <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
+                        <img t-if="!hideImage" class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt" data-name="Image"/>
+                    </div>
+                </t>
+            </div>
+            <div class="o_carousel_controllers">
+                <button class="carousel-control-prev o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <div class="carousel-indicators s_image_gallery_indicators_bars">
+                    <t t-foreach="images" t-as="image" t-key="image_index">
+                        <button type="button" aria-label="Carousel indicator" t-attf-data-bs-target="##{id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.getAttribute('src')})"/>
+                    </t>
+                </div>
+                <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" data-bs-slide="next" aria-label="Next" title="Next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"/>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.gallery.s_image_gallery_mirror.lightbox">
+        <div role="dialog" class="modal o_technical_modal fade s_gallery_lightbox p-0" aria-label="Image Gallery Dialog" tabindex="-1">
+            <div class="modal-dialog m-0" role="Picture Gallery"
+                t-attf-style="">
+                <div class="modal-content bg-transparent modal-fullscreen">
+                    <main class="modal-body o_slideshow bg-transparent">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 10px; top: 10px;"></button>
+                        <t t-call="website.s_image_gallery_mirror"/>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!--
+    The templates (website.gallery.slideshow and
+    website.gallery.slideshow.lightbox) have been moved from "./000.xml" to
+    here for compatibility with version 18.0.
+
+    Deprecation notice:
+    - These templates will be removed in version 19.1 as we always want to
+    use website.s_image_gallery_mirror and
+    website.gallery.s_image_gallery_mirror.lightbox instead.
+
+    Additionally:
+    - The content of this file will be moved to "000.xml" and file "001.xml"
+    will no longer exist.
+    -->
+
+    <!--
+        ========================================================================
+        Gallery Slideshow
+
+        This template is used to display a slideshow of images inside a
+        bootstrap carousel.
+
+        ========================================================================
+    -->
+    <t t-name="website.gallery.slideshow">
+        <div t-attf-id="#{id}" class="carousel slide" t-att-data-bs-ride="ride" t-attf-data-bs-interval="#{interval}" style="margin: 0 12px;">
+            <div class="carousel-inner" style="padding: 0;">
+                 <t t-foreach="images" t-as="image" t-key="image_index">
+                    <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
+                        <img t-if="!hideImage" class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt" data-name="Image"/>
+                    </div>
+                 </t>
+            </div>
+
+            <ul class="carousel-indicators">
+                <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
+                    <i class="oi oi-chevron-left"/>
+                </li>
+                <t t-foreach="images" t-as="image" t-key="image_index">
+                    <li t-attf-data-bs-target="##{id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.getAttribute('src')})"></li>
+                </t>
+                <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
+                    <i class="oi oi-chevron-right"/>
+                </li>
+            </ul>
+
+            <a class="carousel-control-prev o_we_no_overlay o_not_editable" t-attf-href="##{id}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                <span class="oi oi-chevron-left fa-2x text-white"></span>
+                <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next o_we_no_overlay o_not_editable" t-attf-href="##{id}" data-bs-slide="next" aria-label="Next" title="Next">
+                <span class="oi oi-chevron-right fa-2x text-white"></span>
+                <span class="visually-hidden">Next</span>
+            </a>
+        </div>
+    </t>
+
+    <!--
+        ========================================================================
+        Gallery Slideshow LightBox
+
+        This template is used to display a lightbox with a slideshow.
+
+        This template wraps website.gallery.slideshow in a bootstrap modal
+        dialog.
+        ========================================================================
+    -->
+    <t t-name="website.gallery.slideshow.lightbox">
+        <div role="dialog" class="modal o_technical_modal fade s_gallery_lightbox p-0" aria-label="Image Gallery Dialog" tabindex="-1">
+            <div class="modal-dialog m-0" role="Picture Gallery"
+                t-attf-style="">
+                <div class="modal-content bg-transparent modal-fullscreen">
+                    <main class="modal-body o_slideshow bg-transparent">
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 10px; top: 10px;"></button>
+                        <t t-call="website.gallery.slideshow"></t>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

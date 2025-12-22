@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website_slides.SlideShareDialog">
+        <t t-if="this.props.isChannel" t-set="title">Share this Course</t>
+        <t t-else="" t-set="title">Share this Content</t>
+        <Dialog size="'md'" title="title">
+            <div class="row">
+                <div class="col-12">
+                    <h5 class="mt-0 mb-2">Share Link</h5>
+                    <div class="input-group">
+                        <input type="text" class="form-control text-center" t-att-value="this.props.url"
+                               readonly="readonly" onClick="this.select();"/>
+                        <CopyButton content="this.props.url" copyText="copyUrlText" className="'btn-primary'" successText="successText"/>
+                    </div>
+                </div>
+                <div class="col-12 mt-4">
+                    <h5 class="mt-0 mb-2">Share on Social Media</h5>
+                    <div class="btn-group" role="group">
+                        <div class="s_share">
+                            <a class="btn border bg-white" aria-label="Share on Facebook" title="Share on Facebook"
+                               t-on-click.prevent="() => onSocialShareClick(`https://www.facebook.com/sharer/sharer.php?u=${props.url}`)">
+                                <i class="fa fa-facebook-square fa-fw"/>
+                            </a>
+                            <a class="btn border bg-white" aria-label="Share on X" title="Share on X"
+                               t-on-click.prevent="() => onSocialShareClick(`https://twitter.com/intent/tweet?text=${props.name}&amp;url=${props.url}`)">
+                                <i class="fa fa-twitter fa-fw"/>
+                            </a>
+                            <a class="btn border bg-white" aria-label="Share on LinkedIn" title="Share on LinkedIn"
+                               t-on-click.prevent="() => onSocialShareClick(`http://www.linkedin.com/sharing/share-offsite/?url=${props.url}`)">
+                                <i class="fa fa-linkedin fa-fw"/>
+                            </a>
+                            <a class="btn border bg-white" aria-label="Share on Whatsapp" title="Share on Whatsapp"
+                               t-on-click.prevent="() => onSocialShareClick(`https://wa.me/?text=${window.location.href}`)">
+                                <i class="fa fa-whatsapp fa-fw"/>
+                            </a>
+                            <a class=" btn border bg-white" aria-label="Share on Pinterest" title="Share on Pinterest"
+                               t-on-click.prevent="() => onSocialShareClick(`http://pinterest.com/pin/create/button/?url=${window.location.href}`)">
+                                <i class="fa fa-pinterest fa-fw"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12" t-if="this.props.emailSharing">
+                    <h5 class="mt-4">Share by Email</h5>
+                    <EmailSharingInput id="this.props.id" category="this.props.category"
+                                       isFullscreen="this.props.isFullscreen" isChannel="this.props.isChannel"/>
+                </div>
+                <div class="col-12 o_wslides_embed_code" t-if="this.props.embedCode">
+                    <h5 class="mt-4">Embed in another Website</h5>
+                    <div class="input-group">
+                        <textarea t-ref="codeInput" class="form-control" t-att-value="this.props.embedCode"
+                                  readonly="readonly" onClick="this.select();"/>
+                        <CopyButton content="this.props.embedCode" copyText="copyEmbedCodeText"
+                                    successText="successText"/>
+                    </div>
+                    <div t-if="this.props.category == 'document' and this.props.documentMaxPage > 1" class="input-group mt-4">
+                        <span class="input-group-text">Start at Page</span>
+                        <input type="number" class="form-control" t-on-change="onPageChange"
+                               value="1" min="1" t-att-max="this.props.documentMaxPage"/>
+                    </div>
+                </div>
+            </div>
+
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="() => this.props.close()">Close</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

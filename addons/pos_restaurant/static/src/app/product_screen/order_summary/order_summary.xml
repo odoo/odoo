@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_restaurant.OrderSummary" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension">
+        <xpath expr="//OrderWidget/t[@t-set-slot='details']" position="inside">
+            <div class="d-flex flex-column align-items-center gap-2 table-booking">
+                <button t-if="showBookButton()" class="btn btn-primary btn-lg py-2 book-table" style="border:none; font-size: 20px;" t-on-click="bookTable">Book table</button>
+                <button t-if="showUnbookButton()" class="btn btn-primary btn-lg py-2 unbook-table" style="border:none; font-size: 20px;" t-on-click="unbookTable">
+                    <t t-if="pos.selectedTable">Release table</t>
+                    <t t-else="">Release Order</t>
+                </button>    
+            </div>
+        </xpath>
+        <xpath expr="//OrderWidget" position="attributes">
+            <attribute name="isConfigRestaurant">pos.config.module_pos_restaurant</attribute>
+            <attribute name="isOrderBooked">!!currentOrder.isBooked</attribute>
+        </xpath>
+    </t>
+</templates>

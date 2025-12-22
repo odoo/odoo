@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_presence.actionmenu" t-inherit="web.ActionMenus" t-inherit-mode="primary">
+        <xpath expr="//div[@t-if='props.items.print?.length']" position="before">
+            <t t-if="PresenceActionItems.length" class="d-inline-block">
+                <t t-call="hr_presence.menu">
+                    <t t-set="is_actionmenu" t-value="'True'"/>
+                </t>
+            </t>
+        </xpath>
+    </t>
+</templates>

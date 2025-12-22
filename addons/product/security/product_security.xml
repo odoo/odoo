@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_product_pricelist" model="res.groups">
+        <field name="name">Basic Pricelists</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_stock_packaging" model="res.groups">
+        <field name="name">Manage Product Packaging</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_product_variant" model="res.groups">
+        <field name="name">Manage Product Variants</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_product_manager" model="res.groups">
+        <field name="name">Product Creation</field>
+        <field name="users" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+        <field name="category_id" ref="base.module_category_usability"/>
+    </record>
+
+    <record id="base.default_user" model="res.users">
+        <field name="groups_id" eval="[Command.link(ref('group_product_manager'))]"/>
+    </record>
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[Command.link(ref('group_product_manager'))]"/>
+    </record>
+
+<data noupdate="1">
+
+    <record id="product_comp_rule" model="ir.rule">
+        <field name="name" >Product multi-company</field>
+        <field name="model_id" ref="model_product_template"/>
+        <field name="domain_force"> ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+    <record id="product_document_comp_rule" model="ir.rule">
+        <field name="name" >Product multi-company</field>
+        <field name="model_id" ref="model_product_document"/>
+        <field name="domain_force"> ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+    <record model="ir.rule" id="product_pricelist_comp_rule">
+        <field name="name">product pricelist company rule</field>
+        <field name="model_id" ref="model_product_pricelist"/>
+        <field name="domain_force"> ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+    <record model="ir.rule" id="product_pricelist_item_comp_rule">
+        <field name="name">product pricelist item company rule</field>
+        <field name="model_id" ref="model_product_pricelist_item"/>
+        <field name="domain_force"> ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]</field>
+    </record>
+
+    <record model="ir.rule" id="product_supplierinfo_comp_rule">
+        <field name="name">product supplierinfo company rule</field>
+        <field name="model_id" ref="model_product_supplierinfo"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="product_packaging_comp_rule">
+        <field name="name">product packaging company rule</field>
+        <field name="model_id" ref="model_product_packaging"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="product_combo_comp_rule">
+        <field name="name">Product combo multi-company rule</field>
+        <field name="model_id" ref="model_product_combo"/>
+        <field name="domain_force">
+            ['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]
+        </field>
+    </record>
+
+</data>
+</odoo>

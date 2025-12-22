@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_nilvera_view_move_form" model="ir.ui.view">
+        <field name="name">account.nilvera.view.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <label for="l10n_tr_nilvera_send_status" invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']"/>
+                <div name="nilvera_div"
+                     class="d-flex"
+                     invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'in_invoice']">
+                    <field name="l10n_tr_nilvera_send_status" class="oe_inline"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

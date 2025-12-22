@@ -1,0 +1,512 @@
+{
+  "version": 21,
+  "sheets": [
+    {
+      "id": "sheet1",
+      "name": "Dashboard",
+      "colNumber": 11,
+      "rowNumber": 50,
+      "rows": { "6": { "size": 40 }, "22": { "size": 40 } },
+      "cols": {
+        "0": { "size": 100 },
+        "1": { "size": 100 },
+        "2": { "size": 100 },
+        "3": { "size": 100 },
+        "4": { "size": 75 },
+        "5": { "size": 50 },
+        "6": { "size": 100 },
+        "7": { "size": 100 },
+        "8": { "size": 100 },
+        "9": { "size": 100 },
+        "10": { "size": 75 }
+      },
+      "merges": [],
+      "cells": {
+        "A7": {
+          "content": "[Revenues](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"product_id.channel_ids\",\"!=\",false]],\"context\":{\"group_by\":[\"date:month\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:month\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"eLearning Revenues\"})"
+        },
+        "A23": {
+          "content": "[Attendees by Course](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"channel_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"channel_id\"]},\"modelName\":\"slide.channel.partner\",\"views\":[[false,\"list\"],[false,\"form\"],[false,\"kanban\"],[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Attendees by Course\"})"
+        },
+        "G23": {
+          "content": "[Views by Course](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"is_category\",\"=\",false]],\"context\":{\"group_by\":[\"channel_id\",\"slide_category\"],\"graph_measure\":\"total_views\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"channel_id\",\"slide_category\"]},\"modelName\":\"slide.slide\",\"views\":[[false,\"graph\"],[false,\"list\"],[false,\"form\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Views by Course\"})"
+        }
+      },
+      "styles": { "A7": 1, "A23": 1, "G23": 1 },
+      "formats": {},
+      "borders": {
+        "A23:E23": 1,
+        "A7:K7": 1,
+        "G23:K23": 1,
+        "A24:E24": 2,
+        "A8:K8": 2,
+        "G24:K24": 2
+      },
+      "conditionalFormats": [],
+      "figures": [
+        {
+          "id": "e4d80a72-4568-4b7b-9f10-439064db939e",
+          "x": 0,
+          "y": 178,
+          "width": 1000,
+          "height": 344,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["date:month"],
+              "measure": "price_subtotal",
+              "order": null,
+              "resModel": "sale.report",
+              "mode": "line"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {
+                "group_by": ["date", "product_id"],
+                "pivot_measures": ["price_total"]
+              },
+              "domain": [["product_id.channel_ids", "!=", false]],
+              "groupBy": ["date:month"],
+              "orderBy": []
+            },
+            "type": "odoo_line",
+            "verticalAxisPosition": "left",
+            "stacked": false,
+            "fillArea": true,
+            "fieldMatching": {
+              "46b74887-ff98-4c97-9629-4a5a14084321": {
+                "chain": "date",
+                "type": "datetime",
+                "offset": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "cc154c8b-08a2-4878-b245-37ea92d373c8",
+          "x": 0,
+          "y": 12,
+          "width": 192,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "Courses", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "keyValue": "Data!D2",
+            "humanize": false
+          }
+        },
+        {
+          "id": "1a2f0ccc-460d-405a-aa89-a3f39a771104",
+          "x": 202,
+          "y": 12,
+          "width": 192,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "Content", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "keyValue": "Data!D3",
+            "humanize": false
+          }
+        },
+        {
+          "id": "1f39216f-cebd-4884-8cfb-27d94e5c2e22",
+          "x": 606,
+          "y": 12,
+          "width": 192,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Attendees", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!E4",
+            "baselineDescr": "since last period",
+            "keyValue": "Data!D4",
+            "humanize": false
+          }
+        },
+        {
+          "id": "165a7593-a6b6-4c5d-8758-d9b09572fa30",
+          "x": 808,
+          "y": 12,
+          "width": 192,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "percentage",
+            "title": { "text": "Revenue", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#FFF7ED",
+            "baseline": "Data!E6",
+            "baselineDescr": "since last period",
+            "keyValue": "Data!D6",
+            "humanize": false
+          }
+        },
+        {
+          "id": "bbd06704-ff49-496b-90dc-e1616f65d613",
+          "x": 404,
+          "y": 12,
+          "width": 192,
+          "height": 104,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#DC6965",
+            "baselineColorUp": "#00A04A",
+            "baselineMode": "difference",
+            "title": { "text": "Rating", "bold": true, "color": "#434343" },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "keyValue": "Data!D5",
+            "humanize": false
+          }
+        },
+        {
+          "id": "2f9b379a-0281-4399-8bc8-8847019c8ac7",
+          "x": 0,
+          "y": 563,
+          "width": 475,
+          "height": 400,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "none",
+            "metaData": {
+              "groupBy": ["channel_id"],
+              "measure": "__count",
+              "order": "DESC",
+              "resModel": "slide.channel.partner",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": ["channel_id"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "46b74887-ff98-4c97-9629-4a5a14084321": {
+                "chain": "create_date",
+                "type": "datetime",
+                "offset": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "122a4eb9-dc29-498c-bbbd-274252546078",
+          "x": 525,
+          "y": 563,
+          "width": 475,
+          "height": 400,
+          "tag": "chart",
+          "data": {
+            "title": { "text": "" },
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": ["channel_id", "slide_category"],
+              "measure": "total_views",
+              "order": "DESC",
+              "resModel": "slide.slide",
+              "mode": "bar"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [["is_category", "=", false]],
+              "groupBy": ["channel_id", "slide_category"],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "46b74887-ff98-4c97-9629-4a5a14084321": {
+                "chain": "create_date",
+                "type": "datetime",
+                "offset": 0
+              }
+            }
+          }
+        }
+      ],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    },
+    {
+      "id": "7c4d0b0e-26a0-410c-b37f-b7e0c2c819c8",
+      "name": "Data",
+      "colNumber": 26,
+      "rowNumber": 96,
+      "rows": {},
+      "cols": { "0": { "size": 114 }, "1": { "size": 89 } },
+      "merges": [],
+      "cells": {
+        "A2": { "content": "=_t(\"Courses\")" },
+        "A3": { "content": "=_t(\"Content\")" },
+        "A4": { "content": "=_t(\"Attendees\")" },
+        "A5": { "content": "=_t(\"Rating\")" },
+        "A6": { "content": "=_t(\"Revenue\")" },
+        "B1": { "content": "=_t(\"Current\")" },
+        "B2": { "content": "=PIVOT.VALUE(4,\"__count\")" },
+        "B3": { "content": "=PIVOT.VALUE(5,\"__count\")" },
+        "B4": { "content": "=PIVOT.VALUE(6,\"__count\")" },
+        "B5": { "content": "=PIVOT.VALUE(9,\"rating\")" },
+        "B6": { "content": "=PIVOT.VALUE(10,\"price_total\")" },
+        "C1": { "content": "=_t(\"Previous\")" },
+        "C2": { "content": "/" },
+        "C3": { "content": "/" },
+        "C4": { "content": "=PIVOT.VALUE(7,\"__count\")" },
+        "C6": { "content": "=PIVOT.VALUE(11,\"price_total\")" },
+        "D1": { "content": "=_t(\"Current\")" },
+        "D2": { "content": "=FORMAT.LARGE.NUMBER(B2)" },
+        "D3": { "content": "=FORMAT.LARGE.NUMBER(B3)" },
+        "D4": { "content": "=FORMAT.LARGE.NUMBER(B4)" },
+        "D5": { "content": "=CONCATENATE(B5,\"/5\")" },
+        "D6": { "content": "=FORMAT.LARGE.NUMBER(B6)" },
+        "E1": { "content": "=_t(\"Previous\")" },
+        "E4": { "content": "=FORMAT.LARGE.NUMBER(C4)" },
+        "E6": { "content": "=FORMAT.LARGE.NUMBER(C6)" }
+      },
+      "styles": { "B1:E1": 2, "D2:D4": 3, "E4": 3, "D6:E6": 3, "D5": 4 },
+      "formats": {},
+      "borders": {},
+      "conditionalFormats": [],
+      "figures": [],
+      "tables": [],
+      "areGridLinesVisible": true,
+      "isVisible": true,
+      "headerGroups": { "ROW": [], "COL": [] },
+      "dataValidationRules": [],
+      "comments": {}
+    }
+  ],
+  "styles": {
+    "1": { "textColor": "#01666b", "bold": true, "fontSize": 16 },
+    "2": { "bold": true },
+    "3": { "fillColor": "#f2f2f2" },
+    "4": { "fillColor": "#f2f2f2", "align": "right" }
+  },
+  "formats": {},
+  "borders": {
+    "1": { "bottom": { "style": "thin", "color": "#CCCCCC" } },
+    "2": { "top": { "style": "thin", "color": "#CCCCCC" } }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+    "locale": {
+      "name": "English (US)",
+      "code": "en_US",
+      "thousandsSeparator": ",",
+      "decimalSeparator": ".",
+      "dateFormat": "mm/dd/yyyy",
+      "timeFormat": "hh:mm:ss",
+      "formulaArgSeparator": ",",
+      "weekStart": 7
+    }
+  },
+  "pivots": {
+    "4": {
+      "type": "ODOO",
+      "fieldMatching": {},
+      "context": {},
+      "domain": [["is_published", "=", true]],
+      "id": "4",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "slide.channel",
+      "name": "courses",
+      "sortedColumn": {
+        "groupId": [[], []],
+        "measure": "create_date",
+        "order": "desc"
+      },
+      "formulaId": "4",
+      "columns": [],
+      "rows": []
+    },
+    "5": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "46b74887-ff98-4c97-9629-4a5a14084321": {
+          "chain": "create_date",
+          "type": "datetime"
+        }
+      },
+      "context": {},
+      "domain": ["&", ["is_category", "=", false], ["is_published", "=", true]],
+      "id": "5",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "slide.slide",
+      "name": "content",
+      "sortedColumn": null,
+      "formulaId": "5",
+      "columns": [],
+      "rows": []
+    },
+    "6": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "46b74887-ff98-4c97-9629-4a5a14084321": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        }
+      },
+      "context": {},
+      "domain": [],
+      "id": "6",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "slide.channel.partner",
+      "name": "attendees - current",
+      "sortedColumn": null,
+      "formulaId": "6",
+      "columns": [],
+      "rows": []
+    },
+    "7": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "46b74887-ff98-4c97-9629-4a5a14084321": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": -1
+        }
+      },
+      "context": {},
+      "domain": [],
+      "id": "7",
+      "measures": [{ "id": "__count", "fieldName": "__count" }],
+      "model": "slide.channel.partner",
+      "name": "attendees - previous",
+      "sortedColumn": null,
+      "formulaId": "7",
+      "columns": [],
+      "rows": []
+    },
+    "9": {
+      "type": "ODOO",
+      "fieldMatching": {},
+      "context": {},
+      "domain": [
+        "&",
+        ["consumed", "=", true],
+        ["res_model", "=", "slide.channel"]
+      ],
+      "id": "9",
+      "measures": [{ "id": "rating", "fieldName": "rating" }],
+      "model": "rating.rating",
+      "name": "rating",
+      "sortedColumn": null,
+      "formulaId": "9",
+      "columns": [],
+      "rows": []
+    },
+    "10": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "46b74887-ff98-4c97-9629-4a5a14084321": {
+          "chain": "date",
+          "type": "datetime",
+          "offset": 0
+        }
+      },
+      "context": {
+        "group_by": ["date", "product_id"],
+        "pivot_measures": ["price_total"]
+      },
+      "domain": [
+        "&",
+        ["product_id.channel_ids", "!=", false],
+        ["state", "not in", ["draft", "sent", "cancel"]]
+      ],
+      "id": "10",
+      "measures": [{ "id": "price_total", "fieldName": "price_total" }],
+      "model": "sale.report",
+      "name": "revenue - current",
+      "sortedColumn": null,
+      "formulaId": "10",
+      "columns": [],
+      "rows": []
+    },
+    "11": {
+      "type": "ODOO",
+      "fieldMatching": {
+        "46b74887-ff98-4c97-9629-4a5a14084321": {
+          "chain": "date",
+          "type": "datetime",
+          "offset": -1
+        }
+      },
+      "context": {
+        "group_by": ["date", "product_id"],
+        "pivot_measures": ["price_total"]
+      },
+      "domain": [
+        "&",
+        ["product_id.channel_ids", "!=", false],
+        ["state", "not in", ["draft", "sent", "cancel"]]
+      ],
+      "id": "11",
+      "measures": [{ "id": "price_total", "fieldName": "price_total" }],
+      "model": "sale.report",
+      "name": "revenue - previous",
+      "sortedColumn": null,
+      "formulaId": "11",
+      "columns": [],
+      "rows": []
+    }
+  },
+  "pivotNextId": 12,
+  "customTableStyles": {},
+  "odooVersion": 12,
+  "globalFilters": [
+    {
+      "id": "46b74887-ff98-4c97-9629-4a5a14084321",
+      "type": "date",
+      "label": "Period",
+      "defaultValue": "last_year",
+      "rangeType": "relative"
+    }
+  ],
+  "lists": {},
+  "listNextId": 1,
+  "chartOdooMenusReferences": {
+    "e4d80a72-4568-4b7b-9f10-439064db939e": "website_slides.website_slides_menu_root",
+    "2f9b379a-0281-4399-8bc8-8847019c8ac7": "website_slides.website_slides_menu_root",
+    "122a4eb9-dc29-498c-bbbd-274252546078": "website_slides.website_slides_menu_root",
+    "cc154c8b-08a2-4878-b245-37ea92d373c8": "website_slides.website_slides_menu_report_courses",
+    "1a2f0ccc-460d-405a-aa89-a3f39a771104": "website_slides.website_slides_menu_report_contents",
+    "bbd06704-ff49-496b-90dc-e1616f65d613": "website_slides.website_slides_menu_report_reviews",
+    "1f39216f-cebd-4884-8cfb-27d94e5c2e22": "website_slides.website_slides_menu_report_attendees",
+    "165a7593-a6b6-4c5d-8758-d9b09572fa30": "website_sale_slides.website_slides_menu_report_revenues"
+  }
+}

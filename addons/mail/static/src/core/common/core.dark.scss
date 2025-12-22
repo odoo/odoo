@@ -1,0 +1,17 @@
+.o-mail-discussSidebarBgColor {
+    background-color: mix($o-gray-100, $o-gray-200, 15%);
+}
+
+a.o_mail_redirect, a.o_channel_redirect {
+    @include o-mention-variant(rgba(lighten($o-action, 5%), .075), rgba(lighten($o-action, 10%), .25), lighten($o-action, 10%), rgba(lighten($o-action, 5%), .2), rgba(lighten($o-action, 5%), .3), lighten($o-action, 10%));
+}
+
+a.o-discuss-mention {
+    @include o-mention-variant(rgba(lighten($o-action, 5%), .075), rgba(lighten($o-action, 10%), .25), lighten($o-action, 10%), rgba(lighten($o-action, 5%), .075), rgba(lighten($o-action, 10%), .25), lighten($o-action, 10%));
+}
+
+.o-mail-DiscussSystray-class {
+    &:hover, &.show {
+        background-color: $white;
+    }
+}

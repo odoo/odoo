@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="sale.ComboConfiguratorDialog" t-inherit-mode="extension">
+        <span name="sale_combo_configurator_title" position="attributes">
+            <attribute name="class" remove="h4" add="h5" separator=" "/>
+        </span>
+        <span name="sale_combo_configurator_total" position="attributes">
+            <attribute name="class" remove="h4" add="h5" separator=" "/>
+        </span>
+        <button name="sale_combo_configurator_confirm_button" position="attributes">
+            <attribute name="t-if">!this.props.isFrontend</attribute>
+        </button>
+        <button name="sale_combo_configurator_cancel_button" position="attributes">
+            <attribute name="t-if">!this.props.isFrontend</attribute>
+        </button>
+        <button name="sale_combo_configurator_confirm_button" position="after">
+            <button
+                name="website_sale_combo_configurator_continue_button"
+                class="btn btn-secondary flex-grow-1 flex-md-grow-0"
+                t-if="this.props.isFrontend"
+                t-on-click="() => this.confirm({goToCart: false})"
+                t-att-disabled="!areAllCombosSelected"
+            >
+                Continue Shopping
+            </button>
+        </button>
+        <button name="sale_combo_configurator_cancel_button" position="after">
+            <button
+                name="website_sale_combo_configurator_checkout_button"
+                class="btn btn-primary flex-grow-1 flex-md-grow-0"
+                t-if="this.props.isFrontend"
+                t-on-click="() => this.confirm({goToCart: true})"
+                t-att-disabled="!areAllCombosSelected"
+            >
+                Proceed to Checkout
+            </button>
+        </button>
+    </t>
+</templates>

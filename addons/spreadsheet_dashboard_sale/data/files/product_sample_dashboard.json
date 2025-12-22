@@ -1,0 +1,740 @@
+{
+    "version": 21,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 7,
+            "rowNumber": 60,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "26": {
+                    "size": 40
+                },
+                "46": {
+                    "size": 40
+                },
+                "47": {
+                    "size": 40
+                },
+                "48": {
+                    "size": 29
+                },
+                "49": {
+                    "size": 29
+                },
+                "50": {
+                    "size": 29
+                },
+                "51": {
+                    "size": 29
+                },
+                "52": {
+                    "size": 29
+                },
+                "53": {
+                    "size": 29
+                },
+                "54": {
+                    "size": 29
+                },
+                "55": {
+                    "size": 29
+                },
+                "56": {
+                    "size": 29
+                },
+                "57": {
+                    "size": 29
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 275
+                },
+                "1": {
+                    "size": 100
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 50
+                },
+                "4": {
+                    "size": 275
+                },
+                "5": {
+                    "size": 100
+                },
+                "6": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "content": "[Best Sellers by Revenue](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"price_subtotal\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Best Sellers by Revenue\"})"
+                },
+                "A27": {
+                    "content": "[Best Sellers by Units Sold](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})"
+                },
+                "A47": {
+                    "content": "[Best Selling Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})"
+                },
+                "A48": {
+                    "content": "=_t(\"Product\")"
+                },
+                "B48": {
+                    "content": "=_t(\"Units\")"
+                },
+                "C48": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "E47": {
+                    "content": "[Best Selling Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"state\", \"not in\", [\"draft\", \"sent\", \"cancel\"]]],\"context\":{\"group_by\":[\"categ_id\"],\"pivot_measures\":[\"__count\",\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"categ_id\"]},\"modelName\":\"sale.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Sales Analysis\"})"
+                },
+                "E48": {
+                    "content": "=_t(\"Category\")"
+                },
+                "F48": {
+                    "content": "=_t(\"Units\")"
+                },
+                "G48": {
+                    "content": "=_t(\"Revenue\")"
+                }
+            },
+            "styles": {
+                "A7": 1,
+                "A27": 1,
+                "A47": 1,
+                "E47": 1,
+                "A48": 2,
+                "E48": 2,
+                "B48:C48": 3,
+                "F48:G48": 3
+            },
+            "formats": {},
+            "borders": {
+                "A47:C47": 1,
+                "A7:G7": 1,
+                "A27:G27": 1,
+                "E47:G47": 1,
+                "A48:C48": 2,
+                "A8:G8": 2,
+                "A28:G28": 2,
+                "E48:G48": 2,
+                "A49": 3,
+                "E49": 3,
+                "A50:A52": 4,
+                "A54:A58": 4,
+                "E50:E52": 4,
+                "E54:E58": 4,
+                "A53:C53": 5,
+                "E53:G53": 5,
+                "A59:C59": 6,
+                "E59:G59": 6,
+                "B49": 7,
+                "F49": 7,
+                "B50:B52": 8,
+                "B54:B58": 8,
+                "F50:F52": 8,
+                "F54:F58": 8,
+                "C49": 9,
+                "G49": 9,
+                "C50:C52": 10,
+                "C54:C58": 10,
+                "G50:G52": 10,
+                "G54:G58": 10
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "5f383918-4073-4f19-9cc9-603216c953ad",
+                    "x": 0,
+                    "y": 12,
+                    "width": 450,
+                    "height": 108,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "text",
+                        "title": {
+                            "text": "Best Seller",
+                            "color": "#434343",
+                            "bold": true
+                        },
+                        "type": "scorecard",
+                        "background": "#FEF2F2",
+                        "baseline": "Data!C2",
+                        "baselineDescr": "sold",
+                        "keyValue": "Data!B2",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "ec57f69b-f2b1-4dfc-990c-91ab61b526bf",
+                    "x": 459,
+                    "y": 12,
+                    "width": 450,
+                    "height": 108,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "text",
+                        "title": {
+                            "text": "Best Category",
+                            "color": "#434343",
+                            "bold": true
+                        },
+                        "type": "scorecard",
+                        "background": "#FEF2F2",
+                        "baseline": "Data!C3",
+                        "baselineDescr": "sold",
+                        "keyValue": "Data!B3",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "d710386b-9584-44aa-a5ec-5bbc9e4312d1",
+                    "x": 0,
+                    "y": 178.05078125,
+                    "width": 1000,
+                    "height": 438,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!B7:B26",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A7:A26",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                },
+                {
+                    "id": "66891187-fb5e-4190-b115-c15e37a0df97",
+                    "x": 0,
+                    "y": 655,
+                    "width": 1000,
+                    "height": 437,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!B29:B48",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A29:A48",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "a83a78f2-b124-4d6f-9726-125e62a32b8d",
+            "name": "Data",
+            "colNumber": 23,
+            "rowNumber": 88,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "content": "=_t(\"Best selling product\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Best selling category\")"
+                },
+                "A7": {
+                    "content": "=_t(\"TitanForge Gaming Chair\")"
+                },
+                "A8": {
+                    "content": "=_t(\"GlideSync Wireless Mouse\")"
+                },
+                "A9": {
+                    "content": "=_t(\"PulseFit Smartband\")"
+                },
+                "A10": {
+                    "content": "=_t(\"CrystalWave Smart Mirror\")"
+                },
+                "A11": {
+                    "content": "=_t(\"NovaTech Power Bank\")"
+                },
+                "A12": {
+                    "content": "=_t(\"UltraBeam Projector\")"
+                },
+                "A13": {
+                    "content": "=_t(\"VeloCharge Electric Bike\")"
+                },
+                "A14": {
+                    "content": "=_t(\"QuantumSound Earbuds\")"
+                },
+                "A15": {
+                    "content": "=_t(\"BreezePure Air Filter\")"
+                },
+                "A16": {
+                    "content": "=_t(\"FlexiDesk Standing Desk\")"
+                },
+                "A17": {
+                    "content": "=_t(\"AeroTrack Fitness Watch\")"
+                },
+                "A18": {
+                    "content": "=_t(\"AeroMax Travel Pillow\")"
+                },
+                "A19": {
+                    "content": "=_t(\"PureSonic Bluetooth Speaker\")"
+                },
+                "A20": {
+                    "content": "=_t(\"HydroLux Water Bottle\")"
+                },
+                "A21": {
+                    "content": "=_t(\"OmniClean Robot Vacuum\")"
+                },
+                "A22": {
+                    "content": "=_t(\"SolarSwift Charger\")"
+                },
+                "A23": {
+                    "content": "=_t(\"HyperChill Mini Fridge\")"
+                },
+                "A24": {
+                    "content": "=_t(\"FlexiGrip Yoga Mat\")"
+                },
+                "A25": {
+                    "content": "=_t(\"SnapGrip Camera Mount\")"
+                },
+                "A26": {
+                    "content": "=_t(\"EcoBlade Kitchen Knife\")"
+                },
+                "A29": {
+                    "content": "=_t(\"GlideSync Wireless Mouse\")"
+                },
+                "A30": {
+                    "content": "=_t(\"TitanForge Gaming Chair\")"
+                },
+                "A31": {
+                    "content": "=_t(\"PulseFit Smartband\")"
+                },
+                "A32": {
+                    "content": "=_t(\"CrystalWave Smart Mirror\")"
+                },
+                "A33": {
+                    "content": "=_t(\"NovaTech Power Bank\")"
+                },
+                "A34": {
+                    "content": "=_t(\"UltraBeam Projector\")"
+                },
+                "A35": {
+                    "content": "=_t(\"VeloCharge Electric Bike\")"
+                },
+                "A36": {
+                    "content": "=_t(\"QuantumSound Earbuds\")"
+                },
+                "A37": {
+                    "content": "=_t(\"BreezePure Air Filter\")"
+                },
+                "A38": {
+                    "content": "=_t(\"FlexiDesk Standing Desk\")"
+                },
+                "A39": {
+                    "content": "=_t(\"AeroTrack Fitness Watch\")"
+                },
+                "A40": {
+                    "content": "=_t(\"AeroMax Travel Pillow\")"
+                },
+                "A41": {
+                    "content": "=_t(\"PureSonic Bluetooth Speaker\")"
+                },
+                "A42": {
+                    "content": "=_t(\"HydroLux Water Bottle\")"
+                },
+                "A43": {
+                    "content": "=_t(\"OmniClean Robot Vacuum\")"
+                },
+                "A44": {
+                    "content": "=_t(\"SolarSwift Charger\")"
+                },
+                "A45": {
+                    "content": "=_t(\"HyperChill Mini Fridge\")"
+                },
+                "A46": {
+                    "content": "=_t(\"FlexiGrip Yoga Mat\")"
+                },
+                "A47": {
+                    "content": "=_t(\"SnapGrip Camera Mount\")"
+                },
+                "A48": {
+                    "content": "=_t(\"EcoBlade Kitchen Knife\")"
+                },
+                "B1": {
+                    "content": "=_t(\"Name\")"
+                },
+                "B2": {
+                    "content": "=_t(\"GlideSync Wireless Mouse\")"
+                },
+                "B3": {
+                    "content": "=_t(\"TitanForge Gaming Chair\")"
+                },
+                "B7": {
+                    "content": "150000"
+                },
+                "B8": {
+                    "content": "145000"
+                },
+                "B9": {
+                    "content": "140000"
+                },
+                "B10": {
+                    "content": "138000"
+                },
+                "B11": {
+                    "content": "125000"
+                },
+                "B12": {
+                    "content": "125000"
+                },
+                "B13": {
+                    "content": "118000"
+                },
+                "B14": {
+                    "content": "110000"
+                },
+                "B15": {
+                    "content": "95000"
+                },
+                "B16": {
+                    "content": "98000"
+                },
+                "B17": {
+                    "content": "85500"
+                },
+                "B18": {
+                    "content": "85000"
+                },
+                "B19": {
+                    "content": "74000"
+                },
+                "B20": {
+                    "content": "65000"
+                },
+                "B21": {
+                    "content": "60000"
+                },
+                "B22": {
+                    "content": "45000"
+                },
+                "B23": {
+                    "content": "30000"
+                },
+                "B24": {
+                    "content": "25000"
+                },
+                "B25": {
+                    "content": "15500"
+                },
+                "B26": {
+                    "content": "7500"
+                },
+                "B29": {
+                    "content": "500"
+                },
+                "B30": {
+                    "content": "475"
+                },
+                "B31": {
+                    "content": "460"
+                },
+                "B32": {
+                    "content": "445"
+                },
+                "B33": {
+                    "content": "420"
+                },
+                "B34": {
+                    "content": "410"
+                },
+                "B35": {
+                    "content": "390"
+                },
+                "B36": {
+                    "content": "365"
+                },
+                "B37": {
+                    "content": "350"
+                },
+                "B38": {
+                    "content": "330"
+                },
+                "B39": {
+                    "content": "315"
+                },
+                "B40": {
+                    "content": "290"
+                },
+                "B41": {
+                    "content": "270"
+                },
+                "B42": {
+                    "content": "250"
+                },
+                "B43": {
+                    "content": "225"
+                },
+                "B44": {
+                    "content": "195"
+                },
+                "B45": {
+                    "content": "150"
+                },
+                "B46": {
+                    "content": "120"
+                },
+                "B47": {
+                    "content": "95"
+                },
+                "B48": {
+                    "content": "60"
+                },
+                "C1": {
+                    "content": "=_t(\"Units\")"
+                },
+                "C2": {
+                    "content": "500"
+                },
+                "C3": {
+                    "content": "475"
+                },
+                "D1": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "D2": {
+                    "content": "110000"
+                },
+                "D3": {
+                    "content": "311155"
+                }
+            },
+            "styles": {},
+            "formats": {
+                "B7:B26": 1,
+                "D2:D3": 1
+            },
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "7283c8f8-6ecc-4537-90c3-2a8fd8c3a431",
+                    "x": 660,
+                    "y": 376.5,
+                    "width": 536,
+                    "height": 335,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "B29:B48",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "A29:A48",
+                        "title": {},
+                        "stacked": false,
+                        "aggregated": false
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "bold": true,
+            "fontSize": 16
+        },
+        "2": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true
+        },
+        "3": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true,
+            "align": "center"
+        }
+    },
+    "formats": {
+        "1": "[$$]#,##0"
+    },
+    "borders": {
+        "1": {
+            "bottom": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "3": {
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "4": {
+            "top": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "5": {
+            "top": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "6": {
+            "top": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "7": {
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "8": {
+            "top": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "9": {
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        },
+        "10": {
+            "top": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thin",
+                "color": "#FFFFFF"
+            }
+        }
+    },
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 3,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 1
+}

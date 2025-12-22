@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <template id="hr_recruitment_survey_button_form_view" inherit_id="survey.survey_button_form_view">
+        <xpath expr="//div[hasclass('survey_button_form_view_hook')]" position="inside">
+            <a t-if="(env.user.has_group('hr_recruitment.group_hr_recruitment_manager') and survey.survey_type == 'recruitment')"
+                t-attf-href="/odoo/action-hr_recruitment_survey.survey_survey_action_recruitment/{{survey.id}}"
+                class="ms-2">
+                <i class="oi oi-fw oi-arrow-right"/>Go to Recruitment
+            </a>
+        </xpath>
+    </template>
+</data>
+</odoo>

@@ -1,0 +1,111 @@
+
+.o-mail-ChatBubble {
+    height: auto !important;
+    z-index: $o-mail-ChatBubble-zindex;
+    border: none !important;
+    padding: 0 map-get($spacers, 2);
+    background-color: transparent !important;
+
+    &:hover {
+        .o-mail-ChatBubble-close {
+            display: inline-flex;
+        }
+        .o-mail-ChatBubble-counter {
+            display: none;
+        }
+    }
+
+    &:hover, &.o-active {
+        filter: brightness(1.1);
+    }
+
+    &.o-bouncing {
+        animation: o-mail-ChatBubble-bouncing 0.25s;
+        animation-direction: alternate;
+        animation-timing-function: cubic-bezier(.5, 0.95, 0, .5);
+        animation-iteration-count: 16;
+    }
+
+}
+
+.o-mail-ChatBubble-avatar {
+    width: $o-mail-ChatBubble-size;
+    height: $o-mail-ChatBubble-size;
+
+    &.o-big {
+        width: $o-mail-ChatBubble-sizeBig;
+        height: $o-mail-ChatBubble-sizeBig;
+    }
+}
+
+.o-mail-ChatBubble-close {
+    right: 3px;
+    top: -3px;
+    z-index: 6;
+    font-size: 11px;
+    display: none;
+    padding: map-get($spacers, 1) / 2;
+    border: $border-width solid mix($o-gray-300, $o-gray-400);
+
+    &:not(:hover) {
+        color: $text-muted;
+    }
+
+    &:hover {
+        background-color: $o-gray-300 !important;
+        border-color: $o-gray-500;
+    }
+}
+
+.o-mail-ChatBubble-country {
+    width: 16px;
+    left: 3px;
+}
+
+.o-mail-ChatBubble-counter {
+    z-index: 7;
+    top: -3px;
+    right: 3px;
+    display: inline-flex;
+}
+
+.o-mail-ChatBubble-preview {
+    max-width: 225px;
+    right: $o-mail-ChatHub-bubblesWidth;
+    z-index: $o-mail-ChatBubble-zindex - 1;
+    border-color: mix($o-gray-300, $o-gray-400) !important;
+    
+    & + .popover-arrow {
+        // puts arrow above preview border
+        &::before {
+            border-left-color: mix($o-gray-300, $o-gray-400) !important;
+            right: 1px !important;
+        }
+        &::after {
+            border-left-color: $gray-100 !important;
+            right: 2px !important;
+        }
+    }
+}
+
+.o-mail-ChatBubble-status {
+    z-index: 6;
+    bottom: -2px;
+    right: 2px;
+    background-color: transparent;
+}
+
+.o-mail-ChatBubble-unreadIndicator {
+    font-size: .5rem;
+    bottom: 40%;
+    right: -2px;
+}
+
+@keyframes o-mail-ChatBubble-bouncing { 
+    from { 
+        transform: translate3d(0, 0, 0); 
+    } 
+    to {
+        transform: translate3d(0, -10px, 0); 
+    } 
+} 

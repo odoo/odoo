@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_self_order_search_view" model="ir.ui.view">
+        <field name="name">pos.self.order.search.view</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <filter string="Kiosk" name="filter_kiosk_only"
+                    domain="[('self_ordering_mode', '=', 'kiosk')]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_pos_self_order_search_view" model="ir.actions.act_window">
+        <field name="name">Kiosk</field>
+        <field name="res_model">pos.config</field>
+        <field name="view_mode">kanban,list</field>
+        <field name="search_view_id" ref="pos_self_order_search_view"/>
+    </record>
+
+    <record id="pos_self_order_menu_item" model="ir.ui.view">
+        <field name="name">pos.config.kanban.view.inherit.self_order</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//div[hasclass('dropdown-pos-config')]/div/div[hasclass('o_kanban_manage_view')]"
+                position="inside">
+                <field name="self_ordering_mode" invisible="1" />
+                <div role="menuitem">
+                    <a name="preview_self_order_app"
+                        type="object"
+                        style="white-space: nowrap;"
+                        invisible="not self_ordering_mode == 'mobile'">
+                        Mobile Menu
+                    </a>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="self_ordering_mode" invisible="1" />
+                <div class="badge text-bg-info o_kanban_inline_block me-2"
+                    invisible="not self_ordering_mode == 'mobile'">
+                    Self Ordering Enabled
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='card_left']" position="after">
+                <field name="self_ordering_mode" invisible="1" />
+                <field name="current_session_id" invisible="1" />
+                <div class="col-6 d-flex flex-column align-items-start" invisible="not self_ordering_mode == 'kiosk'">
+                    <button t-if="!record.current_session_id.raw_value" class="btn btn-primary pos_open_session_btn" name="action_open_wizard" type="object">
+                        Start Kiosk
+                    </button>
+                    <button t-else="" name="action_close_kiosk_session" class="btn btn-secondary" type="object">
+                        Close Session
+                    </button>
+                    <button t-if="record.current_session_id.raw_value" class="btn-link mt-2" name="action_open_wizard" type="object">
+                        Open Kiosk
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='card_left']" position="attributes">
+                <field name="self_ordering_mode" invisible="1" />
+                <attribute name="invisible">self_ordering_mode == 'kiosk'</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

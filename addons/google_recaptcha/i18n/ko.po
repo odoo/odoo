@@ -1,0 +1,127 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* google_recaptcha
+# 
+# Translators:
+# Wil Odoo, 2024
+# Sarah Park, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Sarah Park, 2025\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: google_recaptcha
+#: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
+msgid "<i class=\"oi oi-arrow-right\"/> Generate reCAPTCHA v3 keys"
+msgstr "<i class=\"oi oi-arrow-right\"/> reCAPTCHA v3 키 생성"
+
+#. module: google_recaptcha
+#: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
+msgid ""
+"By default, should be one of 0.1, 0.3, 0.7, 0.9.\n"
+"1.0 is very likely a good interaction, 0.0 is very likely a bot"
+msgstr ""
+"기본값으로, 0.1, 0.3, 0.7, 0.9 중 하나여야 합니다.\n"
+"1.0에 가까울수록 상호 작용이 좋을 확률이 높고, 0.0에 가까울수록 봇일 확률이 높습니다."
+
+#. module: google_recaptcha
+#: model:ir.model,name:google_recaptcha.model_res_config_settings
+msgid "Config Settings"
+msgstr "환경 설정"
+
+#. module: google_recaptcha
+#: model:ir.model,name:google_recaptcha.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 라우팅"
+
+#. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_min_score
+msgid "Minimum score"
+msgstr "최소 점수"
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
+msgid "No recaptcha site key set."
+msgstr "보안 문자 사이트 키가 설정되어 있지 않습니다."
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
+msgid "Privacy Policy"
+msgstr "개인 정보 보호 정책"
+
+#. module: google_recaptcha
+#: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
+msgid ""
+"Protect your forms from spam and abuse. If no keys are provided, no checks "
+"will be done."
+msgstr "양식이 스팸 처리되거나 악용되는 것을 방지하세요. 키가 제공되지 않으면 확인 절차가 진행되지 않습니다."
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
+msgid "Protected by reCAPTCHA,"
+msgstr "reCAPTCHA로 보호됨,"
+
+#. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_private_key
+msgid "Secret Key"
+msgstr "비밀 키"
+
+#. module: google_recaptcha
+#: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__recaptcha_public_key
+msgid "Site Key"
+msgstr "사이트 키"
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
+msgid "Terms of Service"
+msgstr "서비스 약관"
+
+#. module: google_recaptcha
+#. odoo-python
+#: code:addons/google_recaptcha/models/ir_http.py:0
+msgid "The reCaptcha private key is invalid."
+msgstr "reCaptcha 개인 키가 유효하지 않습니다."
+
+#. module: google_recaptcha
+#. odoo-python
+#: code:addons/google_recaptcha/models/ir_http.py:0
+msgid "The reCaptcha token is invalid."
+msgstr "reCaptcha 토큰이 유효하지 않습니다."
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/js/recaptcha.js:0
+msgid "The recaptcha site key is invalid."
+msgstr "recaptcha 사이트 키가 유효하지 않습니다."
+
+#. module: google_recaptcha
+#. odoo-python
+#: code:addons/google_recaptcha/models/ir_http.py:0
+msgid "The request is invalid or malformed."
+msgstr "요청이 유효하지 않거나 잘못된 형식입니다."
+
+#. module: google_recaptcha
+#. odoo-python
+#: code:addons/google_recaptcha/models/ir_http.py:0
+msgid "Your request has timed out, please retry."
+msgstr "요청 시간이 초과되었습니다. 다시 시도해 주십시오."
+
+#. module: google_recaptcha
+#. odoo-javascript
+#: code:addons/google_recaptcha/static/src/xml/recaptcha.xml:0
+msgid "apply."
+msgstr "적용."

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_online_payment.OnlinePaymentPopup">
+        <Dialog title.translate="Scan to pay" footer="false" bodyClass="'w-100 h-100 d-flex flex-column justify-content-center align-items-center'">
+            <p>Scan the QR code to pay</p>
+            <img class="w-25 pb-3" t-att-src="props.qrCode" alt="QR Code to pay"/>
+            <div class="amount">Amount: <t t-esc="props.formattedAmount"/></div>
+            <div>Order reference: <t t-esc="props.orderName"/></div>
+        </Dialog>
+    </t>
+</templates>

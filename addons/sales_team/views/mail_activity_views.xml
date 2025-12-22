@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_activity_type_action_config_sales" model="ir.actions.act_window">
+        <field name="name">Activity Types</field>
+        <field name="res_model">mail.activity.type</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">['|', ('res_model', '=', False), ('res_model', '=', 'res.partner')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an Activity Type
+            </p><p>
+                Those represent the different categories of things you have to do (e.g. "Call" or "Prepare meeting").
+            </p>
+        </field>
+    </record>
+</odoo>

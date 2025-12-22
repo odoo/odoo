@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Product Tags -->
+    <record id="product_tag_form_view" model="ir.ui.view">
+        <field name="name">product.tag.form</field>
+        <field name="model">product.tag</field>
+        <field name="arch" type="xml">
+            <form string="Product Tag">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <notebook>
+                        <page string="Product Templates" name="page_product_templates">
+                            <field name="product_template_ids"
+                                   context="{'list_view_ref':'product.product_template_view_tree_tag'}"
+                            />
+                        </page>
+                        <page string="Product Variants" name="page_product_variants">
+                            <field name="product_product_ids"
+                                   context="{'list_view_ref':'product.product_product_view_tree_tag'}"
+                            />
+                        </page>
+                        <page string="All Products" name="page_all_products" invisible="not product_ids">
+                            <field name="product_ids"
+                                   context="{'list_view_ref':'product.product_product_view_tree_tag'}"
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_tag_tree_view" model="ir.ui.view">
+        <field name="name">product.tag.list</field>
+        <field name="model">product.tag</field>
+        <field name="arch" type="xml">
+            <list string="Product Tags" multi_edit="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="product_template_ids" widget="many2many_tags" optional="show"/>
+                <field name="product_product_ids" widget="many2many_tags" string="Product Variant" optional="show"/>
+            </list>
+        </field>
+    </record>
+    <record id="product_tag_action" model="ir.actions.act_window">
+        <field name="name">Product Tags</field>
+        <field name="res_model">product.tag</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="context">{'create': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Define a new tag
+          </p><p>
+            Tags are used to search product for a given theme.
+          </p>
+        </field>
+    </record>
+</odoo>

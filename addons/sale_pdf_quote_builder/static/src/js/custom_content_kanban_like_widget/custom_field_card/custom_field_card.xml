@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="sale_pdf_quote_builder.customFieldCard">
+        <div>
+            <h5 t-out="this.props.name" class="text-primary"/>
+            <div class="mb-3">
+                <span t-attf-class="card-text #{this.props.value ? '' : 'text-muted'}">
+                    <textarea
+                        t-ref="customFieldCardTextArea"
+                        t-model.lazy="this.props.value"
+                        t-on-change="(ev) => { this.props.onChange(this.props.value) }"
+                        t-att-placeholder="this.placeholder"
+                        class="customFieldCardTextArea form-control overflow-y-hidden"
+                    />
+                </span>
+            </div>
+        </div>
+    </t>
+
+</templates>

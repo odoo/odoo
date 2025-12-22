@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template id="template" xml:space="preserve">
+
+    <t t-name="sale_stock.QtyAtDate">
+        <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'"
+            t-on-click="showPopup"
+            t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''"
+            t-attf-class="fa fa-area-chart cursor-pointer {{ calcData.forecasted_issue ? 'text-danger' : '' }}"
+        />
+    </t>
+
+    <t t-name="sale_stock.QtyAtDatePopover">
+        <div class="p-2">
+        <h6>Availability</h6>
+        <table class="table table-borderless table-sm">
+            <tbody>
+                <t t-if="!props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
+                    <tr>
+                        <td><strong>Forecasted Stock</strong><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
+                        <td class="text-end"><b t-out='props.record.data.virtual_available_at_date'/> <t t-out='props.record.data.product_uom[1]'/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Available</strong><br /><small>All planned operations included</small></td>
+                        <td class="text-end"><b t-out='props.record.data.free_qty_today' t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out='props.record.data.product_uom[1]'/></td>
+                    </tr>
+                </t>
+                <t t-elif="props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
+                    <tr>
+                        <td><strong>Expected Delivery</strong></td>
+                        <td class="oe-right"><span t-out="props.calcData.delivery_date"/></td>
+                    </tr>
+                    <tr>
+                        <p>This product is replenished on demand.</p>
+                    </tr>
+                </t>
+                <t t-elif="props.record.data.state == 'sale'">
+                    <tr>
+                        <td>
+                            <strong>Reserved</strong><br/>
+                        </td>
+                        <td style="min-width: 50px; text-align: right;">
+                            <b t-out='props.record.data.qty_available_today'/> <t t-out='props.record.data.product_uom[1]'/>
+                        </td>
+                    </tr>
+                    <tr t-if="props.record.data.qty_available_today &lt; props.record.data.qty_to_deliver">
+                        <td>
+                            <span t-if="props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str">
+                                Remaining demand available at <b t-out="props.calcData.forecast_expected_date_str" t-att-class="props.record.data.scheduled_date &lt; props.record.data.forecast_expected_date ? 'text-danger' : ''"/>
+                            </span>
+                            <span t-elif="!props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str" class="text-danger">
+                                Not enough future availability
+                            </span>
+                            <span t-elif="!props.calcData.will_be_fulfilled" class="text-danger">
+                                No future availability
+                            </span>
+                            <span t-else="">
+                                Available in stock
+                            </span>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+        <button t-if="!props.record.data.is_mto" class="text-start btn btn-link"
+            type="button" t-on-click="openForecast">
+            <i class="oi oi-fw o_button_icon oi-arrow-right"></i>
+            View Forecast
+        </button>
+        </div>
+    </t>
+</template>

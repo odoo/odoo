@@ -1,0 +1,24 @@
+.o-discuss-CallInvitation {
+    background-color: #000;
+    color: #fff;
+    border-color: $gray-300 !important;
+
+    &.o-cameraPreview {
+        aspect-ratio: 16 / 9;
+        width: Min(720px, 92vw);
+    }
+
+    button {
+        aspect-ratio: 1;
+    }
+
+    img {
+        aspect-ratio: 1;
+        width: 75px;
+        border: 3px solid gray;
+    }
+
+    &.o-cameraPreview img {
+        width: 50px;
+    }
+}

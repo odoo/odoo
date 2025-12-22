@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.CallInvitation">
+        <div class="o-discuss-CallInvitation d-flex flex-column m-2 rounded-3 border align-items-center position-relative" t-attf-class="{{ className }}" t-ref="root" t-att-class="{
+            'o-cameraPreview': state.videoStream,
+        }">
+            <div class="position-relative d-flex justify-content-center position-absolute h-100 w-100 rounded-3">
+                <video class="shadow rounded bg-dark h-100 w-100 o_object_fit_cover rounded-3" autoplay="" t-ref="video"/>
+            </div>
+            <div t-if="props.thread.rtcInvitingSession" class="o-discuss-CallInvitation-correspondent d-flex justify-content-around align-items-center text-nowrap px-3 mb-2 z-1" t-att-class="{
+                'align-self-start mt-3': state.videoStream,
+                'flex-column mt-4': !state.videoStream,
+            }">
+                <img class="o-discuss-CallInvitation-avatar mb-2 rounded-circle cursor-pointer o_object_fit_cover"
+                    t-att-src="props.thread.rtcInvitingSession.channelMember.persona.avatarUrl"
+                    t-on-click="onClickAvatar"
+                    alt="Avatar"/>
+                <div class="d-flex pb-2 flex-column" t-att-class="{
+                    'justify-content-start ps-2': state.videoStream,
+                    'justify-content-center': !state.videoStream,
+                }">
+                    <span class="w-100 fw-bolder text-truncate overflow-hidden" t-att-class="{ 'text-center': !state.videoStream }" t-esc="props.thread.rtcInvitingSession.channelMember.persona.name"/>
+                    <span class="opacity-75 smaller">
+                        <t t-if="props.thread.rtcInvitingSession.isCameraOn">Incoming Video Call...</t>
+                        <t t-else="">Incoming Call...</t>
+                    </span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center align-items-center w-100 px-3 mt-auto gap-2 z-1" t-att-class="{ 'pb-3': state.videoStream }">
+                <button class="btn user-select-none p-1 rounded-circle border-0 btn-danger"
+                    aria-label="Refuse"
+                    title="Refuse"
+                    t-on-click="onClickRefuse">
+                    <i class="fa-lg fa-fw m-2 oi oi-close"/>
+                </button>
+                <button t-if="props.thread.rtcInvitingSession.isCameraOn" class="btn user-select-none p-1 rounded-circle border-0 btn-success"
+                    aria-label="Accept with camera"
+                    title="Accept with camera"
+                    t-on-click="(ev) => this.onClickAccept(ev, { camera: true })">
+                    <i class="fa-lg fa-fw m-2 fa fa-video-camera"/>
+                </button>
+                <button class="btn user-select-none p-1 rounded-circle border-0 btn-success"
+                    aria-label="Accept"
+                    title="Accept"
+                    t-on-click="onClickAccept">
+                    <i class="fa-lg fa-fw m-2 fa fa-phone"/>
+                </button>
+            </div>
+            <div t-if="!state.videoStream" class="py-3 z-1">
+                <span class="fw-bold smaller px-3 opacity-50 opacity-75-hover cursor-pointer" t-on-click="onClickPreviewCamera">Preview my camera</span>
+            </div>
+        </div>
+    </t>
+
+</templates>

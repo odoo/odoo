@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_bill_line_match_tree" model="ir.ui.view">
+        <field name="name">purchase.bill.line.match.list</field>
+        <field name="model">purchase.bill.line.match</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Bill Lines"
+                  decoration-info="pol_id != False"
+                  decoration-muted="state == 'draft'"
+                  editable="bottom" edit="1"
+                  type="object">
+                <header>
+                    <button name="action_match_lines" type="object" string="Match" groups="account.group_account_invoice" class="btn btn-primary"/>
+                    <button name="action_add_to_po" type="object" string="Add to PO" groups="purchase.group_purchase_user"/>
+                </header>
+                <field name="partner_id" string="Vendor" optional="hidden"/>
+                <field name="reference" widget="open_match_line_widget"/>
+                <field name="display_name" string="Product Description" decoration-it="not product_id"/>
+                <field name="product_uom_qty" string="Qty"/>
+                <field name="product_uom_id" groups="uom.group_uom" string="Unit"/>
+                <field name="product_uom_price" string="Price"/>
+                <field name="qty_invoiced" optional="hidden"/>
+                <field name="billed_amount_untaxed" widget="monetary_no_zero" sum="Total Billed" string="Billed"/>
+                <field name="purchase_amount_untaxed" widget="monetary_no_zero" sum="Total Purchased" string="Purchased"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+</odoo>

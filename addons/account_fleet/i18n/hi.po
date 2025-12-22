@@ -1,0 +1,139 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_fleet
+# 
+# Translators:
+# Wil Odoo, 2024
+# Ujjawal Pathak, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Ujjawal Pathak, 2025\n"
+"Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
+msgid ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">Service's Bill</span>\n"
+"                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">Service's Bill</span>"
+msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">सर्विस के लिए बिल</span>\n"
+"                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">सर्विस के लिए बिल</span>"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
+msgid "Account Move"
+msgstr "अकाउंट मूव"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
+msgid "Account Move Line"
+msgstr "अकाउंट मूव लाइन"
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
+msgid "Bill"
+msgstr "बिल"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
+msgid "Bills"
+msgstr "बिल"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
+msgid "Bills Count"
+msgstr "बिल काउंट"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
+msgid "Cost"
+msgstr "कीम"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_automatic_entry_wizard
+msgid "Create Automatic Entries"
+msgstr "ऑटोमैटिक एंट्रीज़ बनाएं"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.account_move_view_tree
+msgid "Creation Date"
+msgstr "निर्माण दिनांक"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_move
+msgid "Journal Entry"
+msgstr "जर्नल एंट्री"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_move_line
+msgid "Journal Item"
+msgstr "जर्नल आइटम"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
+msgid "Need Vehicle"
+msgstr "व्हीकल की ज़रूरत है"
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/account_move.py:0
+msgid "Service Vendor Bill: %s"
+msgstr "सर्विस वेंडर बिल: %s"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_fleet_vehicle_log_services
+msgid "Services for vehicles"
+msgstr "व्हीकल के लिए सर्विस"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_state
+msgid "Status"
+msgstr "स्थिति"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_fleet_vehicle
+#: model:ir.model.fields,field_description:account_fleet.field_account_move_line__vehicle_id
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__vehicle_id
+msgid "Vehicle"
+msgstr "व्हीकल"
+
+#. module: account_fleet
+#: model:fleet.service.type,name:account_fleet.data_fleet_service_type_vendor_bill
+msgid "Vendor Bill"
+msgstr "वेंडर बिल"
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
+msgid ""
+"You cannot delete log services records because one or more of them were bill"
+" created."
+msgstr ""
+"आप लॉग सेवाओं के रिकॉर्ड नहीं मिटा सकते, क्योंकि उनके बिल पहले ही बन चुके "
+"हैं."
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
+msgid ""
+"You cannot modify amount of services linked to an account move line. Do it "
+"on the related accounting entry instead."
+msgstr ""
+"आप किसी बिल लाइन से जुड़ी सेवा की रकम नहीं बदल सकते. इसे उसकी असल अकाउंटिंग "
+"एंट्री में जाकर बदलें."
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
+msgid "show the vendor bills for this vehicle"
+msgstr "इस व्हीकल के लिए वेंडर बिल दिखाएं"

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_with_carrier" model="ir.ui.view">
+        <field name="name">delivery.sale.order.form.view.with_carrier</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position='after'>
+                <field name="delivery_set" invisible="1"/>
+                <field name="is_all_service" invisible="1"/>
+                <field name="recompute_delivery_price" invisible="1"/>
+            </field>
+            <div name="so_button_below_order_lines" position="inside">
+                <button
+                    string="Add shipping"
+                    name="action_open_delivery_wizard"
+                    type="object"
+                    invisible="is_all_service or not order_line or delivery_set"/>
+                <button
+                    string="Update shipping cost"
+                    name="action_open_delivery_wizard"
+                    context="{'carrier_recompute':True}"
+                    type="object"
+                    class="text-warning btn-secondary"
+                    invisible="is_all_service or not recompute_delivery_price or not delivery_set"/>
+                <button
+                    string="Update shipping cost"
+                    name="action_open_delivery_wizard"
+                    context="{'carrier_recompute':True}"
+                    type="object"
+                    invisible="is_all_service or recompute_delivery_price or not delivery_set"/>
+            </div>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
+                <field name="recompute_delivery_price" invisible="1"/>
+                <field name="is_delivery" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='price_unit']" position="before">
+                <field name="recompute_delivery_price" column_invisible="True"/>
+                <field name="is_delivery" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list" position="attributes">
+                <attribute name="decoration-warning" add="(recompute_delivery_price and is_delivery)" separator="or"/>
+            </xpath>
+            <label for="commitment_date" position="before">
+                <field name="shipping_weight" readonly="True"/>
+            </label>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,40 @@
+$o-we-switch-size: 1.2em !default;
+$o-we-switch-inactive-color: rgba($text-muted, 0.4) !default;
+.o_switch {
+    display: flex;
+    align-items: center;
+    font-weight: normal;
+    cursor: pointer;
+
+    > input {
+        display: none;
+
+        + span {
+            border-radius: $o-we-switch-size;
+            width: $o-we-switch-size * 1.7;
+            padding-left: 3px;
+            padding-right: 3px;
+            background-color: $o-we-switch-inactive-color;
+            font-size: $o-we-switch-size * 1.09;
+            line-height: $o-we-switch-size;
+            color: $o-we-switch-inactive-color;
+            transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+
+            &:after {
+                content: "\f057"; // fa-times-circle
+                font-family: 'FontAwesome';
+                color: white;
+                transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+            }
+        }
+
+        &:checked + span {
+            background: $o-brand-primary;
+
+            &:after {
+                content: "\f058"; // fa-check-circle
+                margin-left: ($o-we-switch-size * 1.7) - $o-we-switch-size;
+            }
+        }
+    }
+}

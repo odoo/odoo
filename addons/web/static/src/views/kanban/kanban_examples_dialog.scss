@@ -1,0 +1,59 @@
+// container ghost card in modal
+.o_kanban_examples_dialog {
+    .modal-body {
+        padding: 0;
+        background: map-get($theme-colors, 'light');
+    }
+
+    .o_notebook {
+        --notebook-link-border-color: #{$border-color};
+        --notebook-link-border-color-hover: #{$border-color};
+        --notebook-link-border-color-active-accent: #{$o-brand-primary};
+
+        // sidebar
+        .nav-link.active {
+            $o-btn-primary-theme-colors: map-get($o-btns-bs-override, "primary");
+            background-color: map-get($o-btn-primary-theme-colors, "background");
+            color: map-get($o-btn-primary-theme-colors, "color");
+            &, &:hover, &:focus, &:active {
+                border-right-color: var(--notebook-link-border-color-active);
+            }
+        }
+
+        // content
+        .o_notebook_content {
+            flex: 1 1 100%;
+            min-height: 300px;
+
+            .o_kanban_examples_description {
+                padding: 16px 16px 0;
+                text-align: justify;
+            }
+        }
+    }
+}
+
+// container ghost card in background
+.o_kanban_example_background_container {
+
+    // content
+    .o_kanban_example_background {
+        flex-basis: 100%;
+
+        .o_kanban_examples .o_kanban_examples_group .o_kanban_examples_ghost {
+            width: var(--KanbanRecord--small-width);
+        }
+    }
+}
+
+// kanban ghost card
+.o_kanban_examples .o_kanban_examples_group .o_kanban_examples_ghost {
+    &.o_collapse {
+        margin-top: -1px;
+    }
+
+    .o_ghost_avatar {
+        height: 20px;
+        width: 20px;
+    }
+}

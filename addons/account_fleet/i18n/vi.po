@@ -1,0 +1,139 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_fleet
+# 
+# Translators:
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
+msgid ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Service's Bill\">Service's Bill</span>\n"
+"                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">Service's Bill</span>"
+msgstr ""
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != 'posted'\" title=\"Hoá đơn dịch vụ\">Hoá đơn dịch vụ</span>\n"
+"                            <span class=\"o_stat_text text-warning\" invisible=\"account_move_state == 'posted'\" title=\"Hoá đơn dịch vụ\">Hoá đơn dịch vụ</span>"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
+msgid "Account Move"
+msgstr "Bút toán kế toán"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
+msgid "Account Move Line"
+msgstr "Dòng bút toán kế toán"
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
+msgid "Bill"
+msgstr "Hoá đơn"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
+msgid "Bills"
+msgstr "Hoá đơn"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
+msgid "Bills Count"
+msgstr "Số hoá đơn"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__amount
+msgid "Cost"
+msgstr "Chi phí"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_automatic_entry_wizard
+msgid "Create Automatic Entries"
+msgstr "Tạo bút toán tự động"
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.account_move_view_tree
+msgid "Creation Date"
+msgstr "Ngày tạo"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_move
+msgid "Journal Entry"
+msgstr "Bút toán"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_move_line
+msgid "Journal Item"
+msgstr "Hạng mục bút toán"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
+msgid "Need Vehicle"
+msgstr "Cần xe"
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/account_move.py:0
+msgid "Service Vendor Bill: %s"
+msgstr "Hoá đơn mua dịch vụ: %s"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_fleet_vehicle_log_services
+msgid "Services for vehicles"
+msgstr "Dịch vụ cho xe"
+
+#. module: account_fleet
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_state
+msgid "Status"
+msgstr "Trạng thái"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_fleet_vehicle
+#: model:ir.model.fields,field_description:account_fleet.field_account_move_line__vehicle_id
+#: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__vehicle_id
+msgid "Vehicle"
+msgstr "Xe"
+
+#. module: account_fleet
+#: model:fleet.service.type,name:account_fleet.data_fleet_service_type_vendor_bill
+msgid "Vendor Bill"
+msgstr "Hóa đơn mua hàng"
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
+msgid ""
+"You cannot delete log services records because one or more of them were bill"
+" created."
+msgstr ""
+"Bạn không thể xóa bản ghi nhật ký dịch vụ vì một hoặc nhiều bản ghi trong số"
+" đó đã được lập hóa đơn."
+
+#. module: account_fleet
+#. odoo-python
+#: code:addons/account_fleet/models/fleet_vehicle_log_services.py:0
+msgid ""
+"You cannot modify amount of services linked to an account move line. Do it "
+"on the related accounting entry instead."
+msgstr ""
+"Bạn không thể sửa đổi số tiền dịch vụ được liên kết với một dòng bút toán kế"
+" toán. Thay vào đó hãy thực hiện việc này trên bút toán kế toán liên quan."
+
+#. module: account_fleet
+#: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
+msgid "show the vendor bills for this vehicle"
+msgstr "hiển thị hoá đơn mua hàng cho xe này"

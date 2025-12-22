@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_crm_lead2opportunity_partner_mass" model="ir.ui.view">
+        <field name="name">crm.lead2opportunity.partner.mass.form</field>
+        <field name="model">crm.lead2opportunity.partner.mass</field>
+        <field name="arch" type="xml">
+            <form string="Convert to Opportunity">
+                <field name="lead_tomerge_ids" invisible="1"/>
+                <separator string="Conversion Options"/>
+                <group>
+                    <field name="name" class="oe_inline" widget="radio"/>
+                    <field name="deduplicate" class="oe_inline"/>
+                </group>
+                <group string="Assign these opportunities to">
+                    <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
+                    <field name="user_ids" widget="many2many_avatar_user" domain="[('share', '=', False)]"/>
+                    <field name="force_assignment"/>
+                </group>
+                <label for="duplicated_lead_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" invisible="not deduplicate"/>
+                <group invisible="not deduplicate">
+                    <field name="duplicated_lead_ids" nolabel="1" readonly="1">
+                        <list create="false" delete="false">
+                            <field name="create_date"/>
+                            <field name="name"/>
+                            <field name="type" optional="hide"/>
+                            <field name="contact_name" optional="show"/>
+                            <field name="country_id" column_invisible="context.get('invisible_country', True)" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="email_from" optional="show"/>
+                            <field name="stage_id"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="team_id" optional="hide"/>
+                        </list>
+                    </field>
+                </group>
+                <group invisible="name != 'convert'" string="Customers" col="1">
+                    <field name="action" class="oe_inline" widget="radio"/>
+                    <group col="2">
+                        <field name="partner_id"
+                            widget="res_partner_many2one"
+                            invisible="action != 'exist'"
+                            required="action == 'exist'"
+                            context="{'show_vat': True}"
+                            class="oe_inline"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Convert to Opportunities" name="action_mass_convert" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_crm_send_mass_convert" model="ir.actions.act_window">
+        <field name="name">Convert to opportunities</field>
+        <field name="res_model">crm.lead2opportunity.partner.mass</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_crm_lead2opportunity_partner_mass"/>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+        <field name="binding_model_id" ref="model_crm_lead"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

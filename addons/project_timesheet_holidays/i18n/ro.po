@@ -1,0 +1,217 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* project_timesheet_holidays
+# 
+# Translators:
+# Wil Odoo, 2024
+# Cozmin Candea <office@terrabit.ro>, 2025
+# Larisa_nexterp, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 13:24+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Larisa_nexterp, 2025\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Linie analitică"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__timesheet_ids
+msgid "Analytic Lines"
+msgstr "Linii Analitice"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
+msgid ""
+"Both the internal project and task are required to generate a timesheet for "
+"the time off %s. If you don't want a timesheet, you should leave the "
+"internal project and task empty."
+msgstr ""
+"Atât proiectul intern, cât și sarcina sunt necesare pentru a genera o fișă "
+"de pontaj pentru concediul %s. Dacă nu doriți o fișă de pontaj, lăsați "
+"proiectul și sarcina interne necompletate."
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_hr_employee
+msgid "Employee"
+msgstr "Angajat"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
+msgid "Generate Timesheets"
+msgstr "Generează foi de pontaj"
+
+#. module: project_timesheet_holidays
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
+msgid "Generate timesheets when validating time off requests of this type"
+msgstr ""
+"Generează foi de pontaj la validarea cererilor de concediu de acest tip"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
+msgid ""
+"If checked, when validating a time off, timesheet will be generated in the "
+"Vacation Project of the company."
+msgstr ""
+"Dacă este bifat, la validarea unui concediu, va fi generată o fișă de pontaj"
+" în proiectul de concediu al companiei."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
+msgid "Internal"
+msgstr "Intern"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__internal_project_id
+msgid "Internal Project"
+msgstr "Proiect intern"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/project_task.py:0
+msgid "Operation not supported"
+msgstr "Operațiune neacceptată"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
+msgid "Project"
+msgstr "Proiect"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Detaliu timp liber resursă"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_project_task
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__task_id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
+msgid "Task"
+msgstr "Sarcină"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
+msgid ""
+"The default project used when automatically generating timesheets via time "
+"off requests. You can specify another project on each time off type "
+"individually."
+msgstr ""
+"Proiectul implicit folosit la generarea automată a fișelor de pontaj prin "
+"cereri de concediu. Puteți specifica alt proiect pentru fiecare tip de "
+"concediu."
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
+msgid ""
+"The default task used when automatically generating timesheets via time off "
+"requests. You can specify another task on each time off type individually."
+msgstr ""
+"Sarcina implicită folosită la generarea automată a fișelor de pontaj prin "
+"cereri de concediu. Puteți specifica altă sarcină pentru fiecare tip de "
+"concediu."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/__init__.py:0
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+#: code:addons/project_timesheet_holidays/models/res_company.py:0
+#: model:ir.model,name:project_timesheet_holidays.model_hr_leave
+msgid "Time Off"
+msgstr "Concediu"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
+#: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
+msgid "Time Off (%(index)s/%(total)s)"
+msgstr "Concediu (%(index)s/%(total)s)"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
+msgid "Time Off Task"
+msgstr "Sarcină concediu"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
+msgid "Time Off Type"
+msgstr "Tip concediu"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_project_task__leave_types_count
+msgid "Time Off Types Count"
+msgstr "Număr tipuri concediu"
+
+#. module: project_timesheet_holidays
+#: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
+msgid "Timesheets"
+msgstr "Fișe de pontaj"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "View Time Off"
+msgstr "Vizualizează concediu"
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid ""
+"You cannot create timesheets for a task that is linked to a time off type. "
+"Please use the Time Off application to request new time off instead."
+msgstr ""
+"Nu puteți crea fișe de pontaj pentru o sarcină care este legată de un tip de"
+" concediu. Vă rugăm să folosiți aplicația Concediu pentru a solicita un nou "
+"concediu."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid "You cannot delete timesheets that are linked to global time off."
+msgstr "Nu puteți șterge fișe de pontaj care sunt legate de concediu global."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid ""
+"You cannot delete timesheets that are linked to time off requests. Please "
+"cancel your time off request from the Time Off application instead."
+msgstr ""
+"Nu puteți șterge fișe de pontaj care sunt legate de cereri de concediu. Vă "
+"rugăm să anulați cererea de concediu din aplicația Concediu."
+
+#. module: project_timesheet_holidays
+#. odoo-python
+#: code:addons/project_timesheet_holidays/models/account_analytic.py:0
+msgid ""
+"You cannot modify timesheets that are linked to time off requests. Please "
+"use the Time Off application to modify your time off requests instead."
+msgstr ""
+"Nu puteți modifica fișe de pontaj care sunt legate de cereri de concediu. Vă"
+" rugăm să folosiți aplicația Concediu pentru a modifica cererile de "
+"concediu."

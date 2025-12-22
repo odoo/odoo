@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Template to fill with the chosen view -->
+<template id="s_masonry_block" name="Masonry">
+    <section class="s_masonry_block pt48 pb48" data-vcss="001" data-vxml="001">
+        <div class="container">
+            <t t-call="website.s_masonry_block_default_template"/>
+        </div>
+    </section>
+</template>
+
+<template id="s_masonry_block_default_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="8" style="gap: 16px;">
+        <div class="o_grid_item o_grid_item_image g-height-8 g-col-lg-5 col-lg-5 text-center order-lg-0 rounded-4" data-name="Block" style="order: 0; z-index: 1; grid-area: 1 / 1 / 9 / 6;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-4 g-col-lg-3 col-lg-3 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 2; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; z-index: 2; grid-area: 1 / 6 / 5 / 9;">
+            <h3>Key <br class="d-none d-lg-inline"/>Milestone</h3>
+            <p>Reaching new heights</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc3 g-height-4 g-col-lg-4 col-lg-4 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 1; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; z-index: 3; grid-area: 1 / 9 / 5 / 13; background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-2) 100%);">
+            <h3>Greater <br class="d-none d-lg-inline"/>Impact</h3>
+            <p>Making a difference every day</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc4 g-height-4 g-col-lg-4 col-lg-4 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 3; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; z-index: 4; grid-area: 5 / 6 / 9 / 10; background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-1) 100%);">
+            <h3>Innovation <br class="d-none d-lg-inline"/>Hub</h3>
+            <p>Where ideas come to life</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-4 g-col-lg-3 col-lg-3 justify-content-end order-lg-0 rounded-4" data-name="Block" style="order: 4; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; z-index: 5; grid-area: 5 / 10 / 9 / 13;">
+            <h3>Community <br class="d-none d-lg-inline"/>Focus</h3>
+            <p>Building connections</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_reversed_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item o_cc o_cc3 g-height-5 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block"
+            style="grid-area: 1 / 1 / 6 / 4; z-index: 1; background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-2) 100%);">
+            <h3>Greater <br class="d-none d-lg-inline"/>Impact</h3>
+            <p>Making a difference every day</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-5 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block"
+            style="grid-area: 1 / 4 / 6 / 7; z-index: 2;">
+            <h3>Key <br class="d-none d-lg-inline"/>Milestone</h3>
+            <p>Reaching new heights together</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-5 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block"
+            style="grid-area: 6 / 1 / 11 / 4; z-index: 3;">
+            <h3>Innovation <br class="d-none d-lg-inline"/>Hub</h3>
+            <p>Where ideas come to life</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc4 g-height-5 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block"
+            style="grid-area: 6 / 4 / 11 / 7; z-index: 4; background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-1) 100%);">
+            <h3>Community <br class="d-none d-lg-inline"/>Focus</h3>
+            <p>Building connections</p>
+        </div>
+        <div class="o_grid_item o_grid_item_image g-height-10 g-col-lg-6 col-lg-6 text-center" data-name="Block"
+            style="grid-area: 1 / 7 / 11 / 13; z-index: 5;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_images_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="8" style="gap: 16px;">
+        <div class="o_grid_item o_cc o_cc5 g-height-8 g-col-lg-6 col-lg-6 justify-content-start shadow rounded-3 oe_img_bg o_bg_img_center" data-name="Block" style="z-index: 1; grid-area: 1 / 1 / 9 / 7; background-image: url(/web/image/website.s_masonry_block_default_image_2); --grid-item-padding-y: 30px; --grid-item-padding-x: 30px;">
+            <div class="o_we_bg_filter bg-black-50"/>
+            <h3 class="display-4-fs">Key <br class="d-none d-lg-inline"/>Milestone</h3>
+            <p class="lead">Reaching new heights together</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc5 g-height-8 g-col-lg-6 col-lg-6 justify-content-start shadow rounded-3 oe_img_bg o_bg_img_center" data-name="Block" style="z-index: 2; grid-area: 1 / 7 / 9 / 13; background-image: url(/web/image/website.s_masonry_block_default_image_1); --grid-item-padding-y: 30px; --grid-item-padding-x: 30px;">
+            <div class="o_we_bg_filter bg-black-50"/>
+            <h3 class="display-4-fs">Innovation <br class="d-none d-lg-inline"/>Hub</h3>
+            <p class="lead">Where ideas come to life</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_image_texts_image_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item o_cc o_cc3 g-height-5 g-col-lg-1 col-lg-1 justify-content-center text-center d-none d-lg-flex o_snippet_mobile_invisible" data-name="Block" style="z-index: 1; grid-area: 1 / 1 / 6 / 2;">
+            <h3><br/></h3>
+        </div>
+        <div class="o_grid_item o_grid_item_image g-height-10 g-col-lg-3 col-lg-3 text-center" data-name="Block" style="z-index: 2; grid-area: 1 / 2 / 11 / 5;">
+            <img src="/web/image/website.s_masonry_block_default_image_2" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item o_cc o_cc3 g-height-5 g-col-lg-4 col-lg-4 justify-content-center text-center" data-name="Block" style="z-index: 3; grid-area: 1 / 5 / 6 / 9;">
+            <h3>Innovation <br class="d-none d-lg-inline"/>Hub</h3>
+            <p>Where ideas come to life</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc4 g-height-5 g-col-lg-4 col-lg-4 justify-content-center text-center" data-name="Block" style="z-index: 4; grid-area: 6 / 5 / 11 / 9;">
+            <h3>Community <br class="d-none d-lg-inline"/>Focus</h3>
+            <p>Building connections</p>
+        </div>
+        <div class="o_grid_item o_grid_item_image g-height-10 g-col-lg-3 col-lg-3 text-center" data-name="Block" style="z-index: 5; grid-area: 1 / 9 / 11 / 12;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item o_cc o_cc4 g-height-5 g-col-lg-1 col-lg-1 justify-content-center text-center d-none d-lg-flex o_snippet_mobile_invisible" data-name="Block" style="z-index: 6; grid-area: 6 / 12 / 11 / 13;">
+            <h3><br/></h3>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_mosaic_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10" style="gap: 16px;">
+        <div class="o_grid_item o_cc o_cc3 g-height-3 g-col-lg-3 col-lg-3 justify-content-start order-lg-0 rounded-3" data-name="Block" style="order: 1; z-index: 1; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; grid-area: 1 / 1 / 4 / 4; linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-2) 100%);">
+            <h3>Innovation</h3>
+            <p>How ideas come to life</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-3 g-col-lg-3 col-lg-3 justify-content-start order-lg-0 rounded-3" data-name="Block" style="order: 2; z-index: 2; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; grid-area: 1 / 4 / 4 / 7;">
+            <h3>Focus</h3>
+            <p>Building connections</p>
+        </div>
+        <div class="o_grid_item o_grid_item_image g-height-7 g-col-lg-6 col-lg-6 rounded-3 text-center order-lg-0" data-name="Block" style="order: 0; z-index: 3; grid-area: 1 / 7 / 8 / 13;">
+            <img src="/web/image/website.s_masonry_block_default_image_2" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item o_grid_item_image g-height-7 g-col-lg-6 col-lg-6 rounded-3 text-center order-lg-0" data-name="Block" style="order: 3; z-index: 4; grid-area: 4 / 1 / 11 / 7;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-3 g-col-lg-3 col-lg-3 justify-content-center text-center order-lg-0 rounded-3" data-name="Block" style="order: 4; z-index: 5; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; grid-area: 8 / 7 / 11 / 10;">
+            <h3 class="display-1-fs">22%</h3>
+            <p>Reaching new heights</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc4 g-height-3 g-col-lg-3 col-lg-3 justify-content-center text-center order-lg-0 rounded-3" data-name="Block" style="order: 5; z-index: 6; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px; grid-area: 8 / 10 / 11 / 13; linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-1) 100%);">
+            <h3 class="display-1-fs">+12</h3>
+            <p>Mark the difference</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_texts_image_texts_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="9" style="gap: 16px;">
+        <div class="o_grid_item o_cc o_cc3 g-height-5 g-col-lg-3 col-lg-3 justify-content-center rounded-4 text-center" data-name="Block" style="grid-area: 1 / 1 / 6 / 4; z-index: 1; background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-2) 100%);">
+            <h3>Innovation <br class="d-none d-lg-inline"/>Hub</h3>
+            <p>Where ideas come to life</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-4 g-col-lg-3 col-lg-3 justify-content-center rounded-4 text-center" data-name="Block" style="grid-area: 6 / 1 / 10 / 4; z-index: 2;">
+            <h3>Community <br class="d-none d-lg-inline"/>Focus</h3>
+            <p>Building connections</p>
+        </div>
+        <div class="o_grid_item o_grid_item_image g-height-9 g-col-lg-6 col-lg-6 rounded-4 text-center" data-name="Block" style="grid-area: 1 / 4 / 10 / 10; z-index: 3;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-4 g-col-lg-3 col-lg-3 justify-content-center rounded-4 text-center" data-name="Block" style="grid-area: 1 / 10 / 5 / 13; z-index: 4;">
+            <h3>Key <br class="d-none d-lg-inline"/>Milestone</h3>
+            <p>Reaching new heights together</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc4 g-height-5 g-col-lg-3 col-lg-3 justify-content-center rounded-4 text-center" data-name="Block" style="grid-area: 5 / 10 / 10 / 13; z-index: 5; background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-1) 100%);">
+            <h3>Greater <br class="d-none d-lg-inline"/>Impact</h3>
+            <p>Making a difference every day</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_alternation_text_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="3">
+        <div class="o_grid_item o_cc o_cc2 g-height-3 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block"
+            style="grid-area: 1 / 1 / 4 / 4; z-index: 1;">
+            <h3 class="h4-fs">Innovation Hub</h3>
+            <p>Where ideas come to life</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc4 g-height-3 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block"
+            style="grid-area: 1 / 4 / 4 / 7; z-index: 2; background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-1) 100%);">
+            <h3 class="h4-fs">Community Focus</h3>
+            <p>Building connections</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-3 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block"
+            style="grid-area: 1 / 7 / 4 / 10; z-index: 3;">
+            <h3 class="h4-fs">Key Milestone</h3>
+            <p>Reaching new heights together</p>
+        </div>
+        <div class="o_grid_item o_cc o_cc3 g-height-3 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block"
+            style="grid-area: 1 / 10 / 4 / 13; z-index: 4; background-image: linear-gradient(135deg, var(--o-color-4) -400%, var(--o-color-2) 100%);">
+            <h3 class="h4-fs">Greater Impact</h3>
+            <p>Making a difference every day</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_alternation_text_image_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="4" style="gap: 16px;">
+        <div class="o_grid_item o_cc o_cc2 g-height-4 g-col-lg-3 col-lg-3 justify-content-start rounded" data-name="Block" style="z-index: 1; grid-area: 1 / 1 / 5 / 4; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+            <h3 class="h4-fs">Incredible <br class="d-none d-lg-inline"/>Features</h3>
+            <p>&#160;</p>
+        </div>
+        <div class="o_grid_item o_grid_item_image g-height-4 g-col-lg-3 col-lg-3 rounded" data-name="Block" style="z-index: 2; grid-area: 1 / 4 / 5 / 7;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-4 g-col-lg-3 col-lg-3 justify-content-start rounded" data-name="Block" style="z-index: 3; grid-area: 1 / 7 / 5 / 10; --grid-item-padding-y: 20px; --grid-item-padding-x: 20px;">
+            <h3 class="h4-fs">Advanced <br class="d-none d-lg-inline"/>Capabilities</h3>
+            <p>&#160;</p>
+        </div>
+        <div class="o_grid_item o_grid_item_image g-height-4 g-col-lg-3 col-lg-3 rounded" data-name="Block" style="z-index: 4; grid-area: 1 / 10 / 5 / 13;">
+            <img src="/web/image/website.s_masonry_block_default_image_2" class="img img-fluid mx-auto" alt=""/>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_alternation_image_text_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item o_grid_item_image g-height-10 g-col-lg-3 col-lg-3 text-center" data-name="Block" style="grid-area: 1 / 1 / 11 / 4; z-index: 1;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-10 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block" style="grid-area: 1 / 4 / 11 / 7; z-index: 2; position: relative;" data-oe-shape-data="{'shape':'web_editor/Rainy/06','flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0'}">
+            <div class="o_we_shape o_web_editor_Rainy_06"/>
+            <h3 class="h2-fs">Innovation Hub</h3>
+            <p>Where ideas come to life</p>
+        </div>
+        <div class="o_grid_item o_grid_item_image g-height-10 g-col-lg-3 col-lg-3 text-center" data-name="Block" style="grid-area: 1 / 7 / 11 / 10; z-index: 3;">
+            <img src="/web/image/website.s_masonry_block_default_image_2" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-10 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block" style="grid-area: 1 / 10 / 11 / 13; z-index: 4; position: relative;" data-oe-shape-data="{'shape':'web_editor/Floats/01','flip':[],'showOnMobile':false,'shapeAnimationSpeed':'0','animated':'true'}">
+            <div class="o_we_shape o_web_editor_Floats_01 o_we_animated"/>
+            <h3 class="h2-fs">Key Milestone</h3>
+            <p>Reaching new heights together</p>
+        </div>
+    </div>
+</template>
+
+<template id="s_masonry_block_alternation_text_image_text_template" groups="base.group_user">
+    <div class="row o_grid_mode" data-row-count="10">
+        <div class="o_grid_item o_cc o_cc2 g-height-10 g-col-lg-3 col-lg-3 justify-content-center text-center" data-name="Block" style="grid-area: 1 / 1 / 11 / 4; z-index: 1;">
+            <h3 class="h2-fs">Innovation Hub</h3>
+            <p>Where ideas come to life</p>
+        </div>
+        <div class="o_grid_item o_grid_item_image g-height-10 g-col-lg-6 col-lg-6 text-center" data-name="Block" style="grid-area: 1 / 4 / 11 / 10; z-index: 2;">
+            <img src="/web/image/website.s_masonry_block_default_image_1" class="img img-fluid mx-auto" alt=""/>
+        </div>
+        <div class="o_grid_item o_cc o_cc2 g-height-10 g-col-lg-3 col-lg-3 text-center justify-content-center" data-name="Block" style="grid-area: 1 / 10 / 11 / 13; z-index: 3;">
+            <h3 class="h2-fs">Key Milestone</h3>
+            <p>Reaching new heights together</p>
+        </div>
+    </div>
+</template>
+
+<!-- Options -->
+<template id="s_masonry_block_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='layout_column']" position="after">
+        <div data-js="MasonryLayout" data-selector=".s_masonry_block">
+            <we-select string="Template"
+                data-name="masonry_template_opt"
+                data-attribute-name="masonryTemplate"
+                data-attribute-default-value="default">
+                <we-button title="Default"
+                    data-select-container-class="container"
+                    data-select-template="website.s_masonry_block_default_template"
+                    data-select-data-attribute="default"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_default.svg"/>
+                <we-button title="Default Reversed"
+                    data-select-container-class="container-fluid"
+                    data-select-template="website.s_masonry_block_reversed_template"
+                    data-select-data-attribute="default_reversed"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_reversed.svg"/>
+                <we-button title="Images"
+                    data-select-container-class="container"
+                    data-select-template="website.s_masonry_block_images_template"
+                    data-select-data-attribute="images"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_images.svg"/>
+                <we-button title="Image Text Image"
+                    data-select-container-class="container-fluid"
+                    data-select-template="website.s_masonry_block_image_texts_image_template"
+                    data-select-data-attribute="image_text_image"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_image_texts_image.svg"/>
+                <we-button title="Mosaic"
+                    data-select-container-class="container"
+                    data-select-template="website.s_masonry_block_mosaic_template"
+                    data-select-data-attribute="mosaic"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_mosaic.svg"/>
+                <we-button title="Text Image Text"
+                    data-select-container-class="container"
+                    data-select-template="website.s_masonry_block_texts_image_texts_template"
+                    data-select-data-attribute="text_image_text"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_texts_image_texts.svg"/>
+                <we-button title="Alternate Text"
+                    data-select-container-class="container-fluid"
+                    data-select-template="website.s_masonry_block_alternation_text_template"
+                    data-select-data-attribute="alternate_text"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_alternate_texts.svg"/>
+                <we-button title="Alternate Text Image"
+                    data-select-container-class="container"
+                    data-select-template="website.s_masonry_block_alternation_text_image_template"
+                    data-select-data-attribute="alternate_text_image"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_alternate_text_image.svg"/>
+                <we-button title="Alternate Image Text"
+                    data-select-container-class="container-fluid"
+                    data-select-template="website.s_masonry_block_alternation_image_text_template"
+                    data-select-data-attribute="alternate_image_text"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_alternate_image_text.svg"/>
+                <we-button title="Alternate Text Image Text"
+                    data-select-container-class="container-fluid"
+                    data-select-template="website.s_masonry_block_alternation_text_image_text_template"
+                    data-select-data-attribute="alternate_text_image_text"
+                    data-img="/website/static/src/img/snippets_options/masonry_template_alternate_text_image_text.svg"/>
+            </we-select>
+        </div>
+    </xpath>
+
+    <!--  Box Vertical Alignment -->
+    <xpath expr="//div[@data-js='WebsiteAnimate']" position="after">
+        <div data-selector=".s_masonry_block .o_grid_item" data-exclude=".o_grid_item_image">
+            <we-button-group string="Vert. Alignment" title="Vertical Alignment">
+                <we-button title="Align Top"
+                        data-select-class="justify-content-start"
+                        data-img="/website/static/src/img/snippets_options/align_solo_top.svg"/>
+                <we-button title="Align Middle"
+                        data-select-class="justify-content-center"
+                        data-img="/website/static/src/img/snippets_options/align_solo_middle.svg"/>
+                <we-button title="Align Bottom"
+                        data-select-class="justify-content-end"
+                        data-img="/website/static/src/img/snippets_options/align_solo_bottom.svg"/>
+            </we-button-group>
+        </div>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<asset id="website.s_masonry_block_000_scss" name="Masonry block 000 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_masonry_block/000.scss</path>
+</asset>
+
+<asset id="website.s_masonry_block_001_scss" name="Masonry block 001 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_masonry_block/001.scss</path>
+</asset>
+
+<asset id="website.s_masonry_block_000_variables_scss" name="Masonry block 000 variables SCSS" active="False">
+    <bundle>web._assets_primary_variables</bundle>
+    <path>website/static/src/snippets/s_masonry_block/000_variables.scss</path>
+</asset>
+
+</odoo>

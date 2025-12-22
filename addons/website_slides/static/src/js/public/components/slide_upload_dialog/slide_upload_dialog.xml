@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_slides.SlideUploadDialog" owl="1">
+        <Dialog size="state.size" title="state.title" contentClass="'o_w_slide_upload_dialog_content'">
+            <t t-set-slot="footer">
+                <button t-if="state.page ==='select'" type="button" class="btn" t-on-click="() => this.props.close()">
+                    <span>Cancel</span>
+                </button>
+                <t t-elif="!['select', 'upload'].includes(state.page)">
+                    <div id="o_w_slide_upload_btns"/>
+                    <button class="btn" t-on-click="onClickGoBack">
+                        <span>Back</span>
+                    </button>
+                </t>
+            </t>
+            <div class="o_w_slide_upload_modal_container">
+                <SlideUploadCategory
+                    t-if="Object.keys(slideCategoryData).includes(state.page)"
+                    alertMsg="state.alertMsg"
+                    categoryId="props.categoryId"
+                    channelId="props.channelId"
+                    slideCategory="state.page"
+                    canPublish="props.canPublish"
+                    canUpload="props.canUpload"
+                    upload.bind="uploadSlide"
+                >
+                    <t t-set-slot="tutorial">
+                        <t t-call="{{pagesTemplates[state.page]}}"/>
+                    </t>
+                </SlideUploadCategory>
+                <t t-else="">
+                    <t t-call="{{pagesTemplates[state.page]}}"/>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+
+    <!-- Slide Category templates -->
+    <t t-name="website_slides.SlideCategoryTutorial.Document">
+        <div class="h5">How do I add new content?</div>
+        <div>
+            <span>You can either upload a file from your computer or insert a Google Drive link.</span><br/>
+        </div>
+        <div class="h5 mt-3">What types of documents do we support?</div>
+        <div>
+            <span>When using local files, we only support PDF files.</span><br/>
+            <span>If you want to use other types of files, you may want to use an external source (Google Drive) instead.</span>
+        </div>
+        <div class="h5 mt-3">How to upload your PowerPoint Presentations or Word Documents?</div>
+        <div>
+            <span>Save your presentations or documents as PDF files and upload them.</span>
+        </div>
+        <div>
+            Through Google Drive, we support most common types of documents.
+            Including regular documents (Google Doc, .docx), Sheets (Google Sheet, .xlsx), PowerPoints, ...
+        </div>
+        <div class="h5 mt-3">How to use Google Drive?</div>
+        <div>
+            <span>First, upload the file on your Google Drive account.</span><br/>
+            <span>Then, go into the file permissions and set it as "Anyone with the link".</span><br/>
+            <span>The Google Drive link to use here can be obtained by clicking the "Share" button in the Google interface.</span><br/>
+            <span>It should look similar to
+            <span class="fst-italic">https://drive.google.com/file/d/ABC/view?usp=sharing</span></span>
+        </div>
+    </t>
+
+    <t t-name="website_slides.SlideCategoryTutorial.Infographic">
+        <div class="h5">How do I add new content?</div>
+        <div>
+            <span>You can either upload a file from your computer or insert a Google Drive link.</span><br/>
+            <span>The Google Drive link can be obtained by using the 'share' button in the Google interface.</span><br/>
+            <span>It should look similar to
+            <span class="fst-italic">https://drive.google.com/file/d/ABC/view?usp=sharing</span></span>
+        </div>
+    </t>
+
+    <t t-name="website_slides.SlideCategoryTutorial.Article">
+        <div class="h5">How to create a Lesson as an Article?</div>
+        <div>First, create your lesson, then edit it with the website builder. You'll be able to drop building blocks on your page and edit them.</div>
+    </t>
+
+    <t t-name="website_slides.SlideCategoryTutorial.Video">
+        <div class="p-3">
+            <div class="h5">How to upload your videos?</div>
+            <div class="h6">On YouTube</div>
+            <div>First, upload your videos on YouTube and mark them as <strong>unlisted</strong>. This way, they will be secured.</div>
+            <div>What does <strong>unlisted</strong> means? The YouTube "unlisted" means it is a video which can be viewed only by the users with the link to it. Your video will never come up in the search results nor on your channel.</div>
+            <div><a href="https://support.google.com/youtube/answer/157177" target="_blank" >Change video privacy settings</a></div>
+            <br/>
+            <div class="h6">On Vimeo</div>
+            <div>
+                <span>First, upload your videos on Vimeo and mark them as <strong>Private</strong>. This way, they will be secured.</span><br/>
+                <span>What does <strong>Private</strong> mean? The Vimeo "Private" privacy setting means it is a video which can be viewed only by the users with the link to it.
+                Your video will never come up in the search results nor on your channel.</span><br/>
+                <span><a href="https://vimeo.zendesk.com/hc/en-us/articles/224819527-Changing-the-privacy-settings-of-your-videos" target="_blank" >Change video privacy settings</a></span><br/><br/>
+                <span>The video link to input here can be obtained by using the 'share' button in the Vimeo interface.</span><br/>
+                <span>It should look similar to </span>
+                <span class="fst-italic">https://vimeo.com/558907333/30da9ff3d8</span>
+                <span> for 'Private' videos and similar to</span>
+                <span class="fst-italic">https://vimeo.com/558907555</span>
+                <span> for public ones.</span>
+            </div>
+            <br/>
+            <div class="h6">On Google Drive</div>
+            <div>
+                <span>The Google Drive link can be obtained by using the 'share' button in the Google interface.</span><br/>
+                <span>It should look similar to
+                <span class="fst-italic">https://drive.google.com/file/d/ABC/view?usp=sharing</span></span>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website_slides.SlideCategoryTutorial.Quiz">
+        <div class="h5">Test your students with small Quizzes</div>
+        <div>With Quizzes you can keep your students focused and motivated by answering some questions and gaining some karma points</div>
+        <img src="/website_slides/static/src/img/onboarding-quiz.png" title="Quiz Demo Data" class="img-fluid"/>
+    </t>
+
+    <!-- Misc -->
+    
+    <t t-name="website_slides.UploadInProgressDialog">
+        <div class="text-center" role="status">
+            <div class="fa-3x">
+                <i class="fa fa-circle-o-notch fa-spin"></i>
+            </div>
+            <h4>Uploading document ...</h4>
+        </div>
+    </t>
+
+    <t t-name="website_slides.UploadDialogInstallModule">
+        <SlideInstallModule moduleData="this.state.installModuleData"/>
+    </t>
+
+</templates>

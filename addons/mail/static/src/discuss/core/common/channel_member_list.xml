@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="discuss.ChannelMemberList">
+        <ActionPanel title.translate="Members" minWidth="200" initialWidth="250" icon="'fa fa-users'">
+            <button t-on-click="() => props.openChannelInvitePanel({ keepPrevious: env.inChatWindow })" class="btn btn-sm btn-secondary mt-2 d-flex align-items-center justify-content-center gap-1 rounded"><i class="fa fa-user-plus opacity-75"/><span>Invite a User</span></button>
+            <t t-if="props.thread.onlineMembers.length > 0">
+                <t t-call="discuss.ChannelMemberList.section">
+                    <t t-set="sectionName" t-value="onlineSectionText"/>
+                </t>
+                <div class="d-flex flex-column bg-inherit gap-1">
+                    <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
+                </div>
+            </t>
+            <t name="offlineMembers" t-if="props.thread.offlineMembers.length > 0">
+                <t t-call="discuss.ChannelMemberList.section">
+                    <t t-set="sectionName" t-value="offlineSectionText"/>
+                </t>
+                <div class="d-flex flex-column bg-inherit gap-1">
+                    <t t-foreach="props.thread.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member">
+                        <t t-set="offline" t-value="1"/>
+                    </t>
+                </div>
+            </t>
+            <span t-if="props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
+            <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.thread.unknownMembersCount"/> other members.</span>
+            <div t-if="!props.thread.areAllMembersLoaded" class="mx-2 my-1">
+                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => props.thread.fetchChannelMembers()">Load more</button>
+            </div>
+        </ActionPanel>
+    </t>
+
+    <t t-name="discuss.ChannelMemberList.section">
+        <h6 class="text-muted pt-4 text-uppercase o-xsmaller opacity-75" t-esc="sectionName"/>
+    </t>
+
+    <t t-name="discuss.channel_member">
+        <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded" t-att-class="{ 'cursor-pointer': canOpenChatWith(member), 'o-offline': offline }" t-on-click.stop="(ev) => this.onClickAvatar(ev, member)">
+            <div class="bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex flex-shrink-0">
+                <img class="w-100 h-100 rounded o_object_fit_cover" t-att-src="member.persona.avatarUrl"/>
+                <ImStatus member="member" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'" size="'md'"/>
+            </div>
+            <div t-ref="displayName" class="d-flex overflow-hidden flex-column">
+                <span class="ms-2 text-truncate text-muted fw-bold" t-esc="member.name" t-att-title="member.name"/>
+            </div>
+            <span class="ms-auto">
+                <span t-if="member.in(props.thread.invitedMembers)" class="p-1 fa fa-user-plus opacity-75"/>
+                <span t-if="member.rtcSession?.isSelfMuted and !member.rtcSession?.isDeaf" class="p-1 fa fa-microphone-slash opacity-75"/>
+                <span t-elif="member.rtcSession?.isDeaf" class="p-1 fa fa-deaf opacity-75"/>
+                <span t-if="member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>
+            </span>
+
+        </div>
+    </t>
+
+</templates>

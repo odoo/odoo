@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="product_product_ext_form_view2" model="ir.ui.view">
+            <field name="name">product_extended.product.form.view</field>
+            <field name="model">product.template</field>
+            <field name="priority">3</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='standard_price_uom']" position="inside">
+                    <t groups="mrp.group_mrp_manager">
+                        <field name="bom_count" invisible="1"/>
+                        <field name="cost_method" invisible="1"/>
+                        <field name="valuation" invisible="1"/>
+                        <button name="button_bom_cost"
+                            string="Compute Price from BoM" type="object"
+                            invisible="bom_count == 0 or valuation == 'real_time' and cost_method == 'fifo'"
+                            help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
+                            class="oe_link pt-0"/>
+                        </t>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_product_view_form_normal_inherit_extended" model="ir.ui.view">
+            <field name="name">product.product.view.form.normal.inherit.extended</field>
+            <field name="model">product.product</field>
+            <field name="priority">4</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='standard_price_uom']" position="inside">
+                    <t groups="mrp.group_mrp_manager">
+                        <field name="bom_count" invisible="1"/>
+                        <field name="cost_method" invisible="1"/>
+                        <field name="valuation" invisible="1"/>
+                        <button name="button_bom_cost"
+                            string="Compute Price from BoM" type="object"
+                            invisible="bom_count == 0 or valuation == 'real_time' and cost_method == 'fifo'"
+                            help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
+                            class="oe_link pt-0"
+                            colspan="2"/>
+                    </t>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_variant_easy_edit_view_bom_inherit" model="ir.ui.view">
+            <field name="name">product.product.product.view.form.easy.bom.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="arch" type="xml">
+                <data>
+                <xpath expr="//field[@name='standard_price']" position="after">
+                    <t groups="mrp.group_mrp_manager">
+                        <field name="bom_count" invisible="1"/>
+                        <field name="cost_method" invisible="1"/>
+                        <field name="valuation" invisible="1"/>
+                        <button name="button_bom_cost"
+                            string="Compute Price from BoM"
+                            type="object"
+                            invisible="bom_count == 0 or valuation == 'real_time' and cost_method == 'fifo'"
+                            help="Compute the price of the product using products and operations of related bill of materials, for manufactured products only."
+                            class="oe_link pt-0"/>
+                    </t>
+                </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="stock_account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <field name="property_stock_account_output_categ_id" position="after">
+                    <field name="property_stock_account_production_cost_id" options="{'no_create': True}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_compute_price_bom_template" model="ir.actions.server">
+            <field name="name">Compute Price from BoM</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                records.action_bom_cost()
+            </field>
+        </record>
+
+        <record id="action_compute_price_bom_product" model="ir.actions.server">
+            <field name="name">Compute Price from BoM</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                records.action_bom_cost()
+            </field>
+        </record>
+</odoo>

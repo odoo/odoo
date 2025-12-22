@@ -1,0 +1,741 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="event_registration_mail_template_badge" model="mail.template">
+            <field name="name">Event: Registration Badge</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="subject">Your badge for {{ object.event_id.name }}</field>
+            <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
+            <field name="description">Sent automatically to someone after they registered to an event</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<t t-set="date_begin" t-value="format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)"/>
+<t t-set="date_end" t-value="format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)"/>
+<t t-set="is_online" t-value="'is_published' in object.event_id and object.event_id.is_published"/>
+<t t-set="event_organizer" t-value="object.event_id.organizer_id"/>
+<t t-set="event_address" t-value="object.event_id.address_id"/>
+<t t-set="registration_ids" t-value="object.ids if not is_sale else object._get_event_registration_ids_from_order()"/>
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your registration</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">
+                        <t t-out="object.name or 'Guest'"/>
+                    </span>
+                </td><td valign="middle" align="right">
+                    <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?badge_mode=1&amp;registration_ids={{ registration_ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}"
+                        target="_blank" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
+                        Download Badges
+                    </a>
+                    <t t-if="not object.company_id.uses_default_logo">
+                        <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % object.company_id.name"/>
+                    </t>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- EVENT DESCRIPTION -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 14px;">
+                    <div>
+                        Hello <t t-out="object.name or 'Guest'"/>,<br/><br/>
+                        Please find attached your badge for
+                        <t t-if="is_online">
+                            <a t-att-href="object.event_id.website_url" style="font-weight:bold;color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
+                        </t>
+                        <t t-else="">
+                            <strong t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</strong>.
+                        </t>
+                    </div>
+                    <div>
+                        <br />
+                        <strong>Add this event to your calendar</strong>
+                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
+                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
+                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
+                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
+                        </a>
+                        <br /><br />
+                    </div>
+                    <div>
+                        See you soon,<br/>
+                        <span style="color: #454748;">
+                        -- <br/>
+                        <t t-if="event_organizer">
+                            <t t-out="event_organizer.name or ''">YourCompany</t>
+                        </t>
+                        <t t-else="">
+                            The <t t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</t> Team
+                        </t>
+                        </span>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- DETAILS -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 14px;">
+                    <table style="width:100%;">
+                        <tr>
+                            <td style="vertical-align:top;">
+                                <img src="/web_editor/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
+                            </td>
+                            <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
+                                <div>
+                                    <strong>From</strong>
+                                    <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 4, 2021</t>
+                                     - <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>7:00 AM</t>
+                                </div>
+                                <div>
+                                    <strong>To</strong>
+                                    <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 6, 2021</t>
+                                     - <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>5:00 PM</t>
+                                </div>
+                                <div style="font-size:12px;color:#9e9e9e"><i>(<t t-out="object.event_id.date_tz or ''">Europe/Brussels</t>)</i></div>
+                            </td>
+                            <td style="vertical-align:top;">
+                                <t t-if="event_address">
+                                    <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
+                                </t>
+                            </td>
+                            <td style="padding: 0px 10px 0px 10px;width:50%;vertical-align:top;">
+                                <t t-if="event_address">
+                                    <t t-set="location" t-value="''"/>
+                                    <t t-if="object.event_id.address_id.name">
+                                        <div t-out="object.event_id.address_id.name">Teksa SpA</div>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.street">
+                                        <div t-out="object.event_id.address_id.street">Puerto Madero 9710</div>
+                                        <t t-set="location" t-value="object.event_id.address_id.street"/>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.street2">
+                                        <div t-out="object.event_id.address_id.street2">Of A15, Santiago (RM)</div>
+                                        <t t-set="location" t-valuef="{{location}}, {{object.event_id.address_id.street2}}"/>
+                                    </t>
+                                    <div>
+                                    <t t-if="object.event_id.address_id.city">
+                                        <t t-out="object.event_id.address_id.city">Pudahuel</t>,
+                                        <t t-set="location" t-valuef="{{location}}, {{object.event_id.address_id.city}}"/>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.state_id.name">
+                                        <t t-out="object.event_id.address_id.state_id.name">C1</t>,
+                                        <t t-set="location" t-valuef="{{location}}, {{object.event_id.address_id.state_id.name}}"/>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.zip">
+                                        <t t-out="object.event_id.address_id.zip">98450</t>
+                                        <t t-set="location" t-valuef="{{location}}, {{object.event_id.address_id.zip}}"/>
+                                    </t>
+                                    </div>
+                                    <t t-if="object.event_id.address_id.country_id.name">
+                                        <div t-out="object.event_id.address_id.country_id.name">Argentina</div>
+                                        <t t-set="location" t-valuef="{{location}}, {{object.event_id.address_id.country_id.name}}"/>
+                                    </t>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <t t-if="event_organizer">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </t>
+                </td></tr>
+
+                <tr><td valign="top" style="font-size: 14px;">
+                    <!-- CONTACT ORGANIZER -->
+                    <t t-if="event_organizer">
+                        <div>
+                            <span style="font-weight:300;margin:10px 0px">Questions about this event?</span>
+                            <div>Please contact the organizer:</div>
+                            <ul>
+                                <li><t t-out="event_organizer.name or ''">YourCompany</t></li>
+                                <t t-if="event_organizer.email">
+                                    <li>Mail: <a t-attf-href="mailto:{{ event_organizer.email }}" style="text-decoration:none;color:#875A7B;" t-out="event_organizer.email">info@yourcompany.com</a></li>
+                                </t>
+                                <t t-if="event_organizer.phone">
+                                    <li>Phone: <t t-out="event_organizer.phone">+1 650-123-4567</t></li>
+                                </t>
+                            </ul>
+                        </div>
+                    </t>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <!-- CONTACT ORGANIZER SEPARATION -->
+                    <t t-if="is_online or event_address">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </t>
+                </td></tr>
+
+                <tr><td valign="top" style="font-size: 14px;">
+                    <!-- PWA MARKGETING -->
+                    <t t-if="is_online">
+                        <div>
+                            <strong>Get the best mobile experience.</strong>
+                            <a href="/event">Install our mobile app</a>
+                        </div>
+                    </t>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <!-- PWA MARKGETING SEPARATION-->
+                    <t t-if="is_online and event_address">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </t>
+                </td></tr>
+
+                <tr><td valign="top" style="font-size: 14px;">
+                    <!-- GOOGLE MAPS LINK -->
+                    <t t-if="event_address and location">
+                        <table style="width:100%;"><tr><td>
+                            <div>
+                                <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/20" height="20" style="vertical-align: bottom;"/>
+                                <a t-attf-href="https://maps.google.com/maps?q={{ location }}" target="new">
+                                    <img t-if="event_address.static_map_url and event_address.static_map_url_is_valid"
+                                         t-att-src="event_address.static_map_url"
+                                         style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                    <t t-else="">See location on Google Maps</t>
+                                </a>
+                            </div>
+                        </td></tr></table>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- FOOTER BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <t t-if="object.company_id">
+        <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+        <tr><td style="text-align: center; font-size: 14px;">
+            Sent by <a target="_blank" t-attf-href="{{ object.company_id.website }}" style="color: #875A7B;" t-out="object.company_id.name or ''">YourCompany</a>
+            <t t-if="is_online">
+                <br />
+                Discover <a href="/event" style="color:#875A7B;">all our events</a>.
+            </t>
+        </td></tr>
+        </table>
+    </t>
+</td></tr>
+</table>
+            </field>
+            <field name="report_template_ids" eval="[(4, ref('event.action_report_event_registration_badge'))]"/>
+            <field name="lang">{{ object.event_id.lang or object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="event_subscription" model="mail.template">
+            <field name="name">Event: Registration Confirmation</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="subject">Your registration at {{ object.event_id.name }}</field>
+            <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
+            <field name="description">Sent to attendees after registering to an event</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<t t-set="date_begin" t-value="format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)"/>
+<t t-set="date_end" t-value="format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)"/>
+<t t-set="is_online" t-value="'is_published' in object.event_id and object.event_id.is_published"/>
+<t t-set="is_sale" t-value="'sale_order_id' in object and object.sale_order_id"/>
+<t t-set="event_organizer" t-value="object.event_id.organizer_id"/>
+<t t-set="event_address" t-value="object.event_id.address_id"/>
+<t t-set="registration_ids" t-value="object.ids if not is_sale else object._get_event_registration_ids_from_order()"/>
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your registration</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">
+                        <t t-out="object.name or 'Guest'"/>
+                    </span>
+                    <div style="margin-bottom: 5px;margin-top: 18px;">
+                        <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ registration_ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}&amp;responsive_html=1"
+                            target="_blank" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
+                            View Tickets
+                        </a>
+                    </div>
+                </td><td valign="middle" align="right">
+                    <t t-if="object.barcode"> 
+                        <div style="margin-bottom: 5px;">
+                            <img t-attf-src="/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0" width="100" height="100" alt="QR Code"
+                            t-att-style="'height: 100px !important;'"/>
+                        </div>
+                    </t>
+                    <t t-if="not object.company_id.uses_default_logo">
+                        <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; margin-right: 10px; height: auto; width: 80px;" t-att-alt="'%s' % object.company_id.name"/>
+                    </t>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- EVENT DESCRIPTION -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 14px;">
+                    <div>
+                        Hello <t t-out="object.name or 'Guest'"/>,<br/><br/>
+                        We are happy to confirm your registration to the event
+                        <t t-if="is_online">
+                            <a t-att-href="object.event_id.website_url" style="color:#875A7B;text-decoration:none;font-weight:bold;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
+                        </t>
+                        <t t-else="">
+                            <strong t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</strong>
+                        </t>.
+                        <t t-if="object.partner_id and object.partner_id.name and object.partner_id.name != object.name">
+                            This ticket was registered by <t t-out="object.partner_id.name"/>.
+                        </t>
+                    </div>
+                    <div t-if="is_sale">
+                        <br/>
+                        The order for this ticket has reference <t t-out="object.sale_order_id.name"/>
+                        and was placed on <t t-out="object.sale_order_id.date_order.date()"/>
+                        <t t-if="object.sale_order_line_id.price_total"> for an amount of
+                            <t t-out="object.sale_order_line_id.price_total" t-options="{'widget': 'monetary', 'display_currency': object.sale_order_line_id.currency_id}"/>
+                        </t>.
+                    </div>
+                    <div>
+                        <br />
+                        <strong>Add this event to your calendar</strong>
+                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
+                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
+                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
+                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
+                        </a>
+                        <br /><br />
+                    </div>
+                    <div>
+                        See you soon,<br/>
+                        <span style="color: #454748;">
+                        -- <br/>
+                        <t t-if="event_organizer">
+                            <t t-out="event_organizer.name">YourCompany</t>
+                        </t>
+                        <t t-else="">
+                            The <t t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</t> Team
+                        </t>
+                        </span>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- DETAILS -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 14px;">
+                    <table style="width:100%;">
+                        <tr>
+                            <td style="vertical-align:top;">
+                                <img src="/web_editor/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
+                            </td>
+                            <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
+                                <div>
+                                    <strong>From</strong>
+                                    <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 4, 2021</t>
+                                     - <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>7:00 AM</t>
+                                </div>
+                                <div>
+                                    <strong>To</strong>
+                                    <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 6, 2021</t>
+                                     - <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>5:00 PM</t>
+                                </div>
+                                <div style="font-size:12px;color:#9e9e9e"><i>(<t t-out="object.event_id.date_tz or ''">Europe/Brussels</t>)</i></div>
+                            </td>
+                            <td style="vertical-align:top;">
+                                <t t-if="event_address">
+                                    <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
+                                </t>
+                            </td>
+                            <td style="padding: 0px 10px 0px 10px;width:50%;vertical-align:top;">
+                                <t t-if="event_address">
+                                    <t t-set="location" t-value="''"/>
+                                    <t t-if="object.event_id.address_id.name">
+                                        <div t-out="object.event_id.address_id.name">Teksa SpA</div>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.street">
+                                        <div t-out="object.event_id.address_id.street">Puerto Madero 9710</div>
+                                        <t t-set="location" t-value="object.event_id.address_id.street"/>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.street2">
+                                        <div t-out="object.event_id.address_id.street2">Of A15, Santiago (RM)</div>
+                                        <t t-set="location" t-valuef="{{location}}, {{object.event_id.address_id.street2}}"/>
+                                    </t>
+                                    <div>
+                                    <t t-if="object.event_id.address_id.city">
+                                        <t t-out="object.event_id.address_id.city">Pudahuel</t>,
+                                        <t t-set="location" t-valuef="{{location}}, {{object.event_id.address_id.city}}"/>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.state_id.name">
+                                        <t t-out="object.event_id.address_id.state_id.name">C1</t>,
+                                        <t t-set="location" t-valuef="{{location}}, {{object.event_id.address_id.state_id.name}}"/>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.zip">
+                                        <t t-out="object.event_id.address_id.zip">98450</t>
+                                        <t t-set="location" t-valuef="{{location}}, {{object.event_id.address_id.zip}}"/>
+                                    </t>
+                                    </div>
+                                    <t t-if="object.event_id.address_id.country_id.name">
+                                        <div t-out="object.event_id.address_id.country_id.name">Argentina</div>
+                                        <t t-set="location" t-valuef="{{location}}, {{object.event_id.address_id.country_id.name}}"/>
+                                    </t>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <t t-if="event_organizer">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </t>
+                </td></tr>
+
+                <tr><td valign="top" style="font-size: 14px;">
+                    <!-- CONTACT ORGANIZER -->
+                    <t t-if="event_organizer">
+                        <div>
+                            <span style="font-weight:300;margin:10px 0px">Questions about this event?</span>
+                            <div>Please contact the organizer:</div>
+                            <ul>
+                                <li><t t-out="event_organizer.name or ''">YourCompany</t></li>
+                                <t t-if="event_organizer.email">
+                                    <li>Mail: <a t-attf-href="mailto:{{ event_organizer.email }}" style="text-decoration:none;color:#875A7B;" t-out="event_organizer.email or ''">info@yourcompany.com</a></li>
+                                </t>
+                                <t t-if="event_organizer.phone">
+                                    <li>Phone: <t t-out="event_organizer.phone">+1 650-123-4567</t></li>
+                                </t>
+                            </ul>
+                        </div>
+                    </t>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <!-- CONTACT ORGANIZER SEPARATION -->
+                    <t t-if="is_online or event_address">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </t>
+                </td></tr>
+
+                <tr><td valign="top" style="font-size: 14px;">
+                    <!-- PWA MARKGETING -->
+                    <t t-if="is_online">
+                        <div>
+                            <strong>Get the best mobile experience.</strong>
+                            <a href="/event">Install our mobile app</a>
+                        </div>
+                    </t>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <!-- PWA MARKGETING SEPARATION-->
+                    <t t-if="is_online and event_address">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </t>
+                </td></tr>
+
+                <tr><td valign="top" style="font-size: 14px;">
+                    <!-- GOOGLE MAPS LINK -->
+                    <t t-if="event_address and location">
+                        <table style="width:100%;"><tr><td>
+                            <div>
+                                <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/20" height="20" style="vertical-align: bottom;"/>
+                                <a t-attf-href="https://maps.google.com/maps?q={{ location }}" target="new">
+                                    <img t-if="event_address.static_map_url and event_address.static_map_url_is_valid"
+                                         t-att-src="event_address.static_map_url"
+                                         style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                    <t t-else="">See location on Google Maps</t>
+                                </a>
+                            </div>
+                        </td></tr></table>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- FOOTER BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <t t-if="object.company_id">
+        <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+        <tr><td style="text-align: center; font-size: 14px;">
+            Sent by <a target="_blank" t-attf-href="{{ object.company_id.website }}" style="color: #875A7B;" t-out="object.company_id.name or ''">YourCompany</a>
+            <t t-if="is_online">
+                <br />
+                Discover <a href="/event" style="color:#875A7B;">all our events</a>.
+            </t>
+        </td></tr>
+        </table>
+    </t>
+</td></tr>
+</table>
+            </field>
+            <field name="report_template_ids" eval="[(4, ref('event.action_report_event_registration_full_page_ticket'))]"/>
+            <field name="lang">{{ object.event_id.lang or object.partner_id.lang }}</field>
+        </record>
+
+        <record id="event_reminder" model="mail.template">
+            <field name="name">Event: Reminder</field>
+            <field name="model_id" ref="event.model_event_registration"/>
+            <field name="subject">{{ object.event_id.name }}: {{ object.event_date_range }}</field>
+            <field name="email_from">{{ (object.event_id.organizer_id.email_formatted or object.event_id.company_id.email_formatted or user.email_formatted or '') }}</field>
+            <field name="email_to">{{ (object.email and '"%s" &lt;%s&gt;' % (object.name, object.email) or object.partner_id.email_formatted or '') }}</field>
+            <field name="description">Sent automatically to attendees if there is a reminder defined on the event</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<t t-set="date_begin" t-value="format_datetime(object.event_id.date_begin, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)"/>
+<t t-set="date_end" t-value="format_datetime(object.event_id.date_end, tz='UTC', dt_format=&quot;yyyyMMdd'T'HHmmss'Z'&quot;)"/>
+<t t-set="is_online" t-value="'is_published' in object.event_id and object.event_id.is_published"/>
+<t t-set="is_sale" t-value="'sale_order_id' in object and object.sale_order_id"/>
+<t t-set="event_organizer" t-value="object.event_id.organizer_id"/>
+<t t-set="event_address" t-value="object.event_id.address_id"/>
+<t t-set="registration_ids" t-value="object.ids if not is_sale else object._get_event_registration_ids_from_order()"/>
+<table border="0" cellpadding="0" cellspacing="0"  width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your registration</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="object.name or 'Guest'"/>
+                    <div style="margin-bottom: 5px;margin-top: 18px;">
+                        <a t-attf-href="/event/{{ object.event_id.id }}/my_tickets?registration_ids={{ registration_ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}&amp;responsive_html=1"
+                            target="_blank" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
+                            View Tickets
+                        </a>
+                    </div>
+                </td><td valign="middle" align="right">
+                    <t t-if="object.barcode">
+                        <div style="margin-bottom: 5px;">
+                            <img t-attf-src="/report/barcode/QR/{{object.barcode}}?&amp;width=100&amp;height=100&amp;quiet=0" width="100" height="100" alt="QR Code"
+                            t-att-style="'height: 100px !important;'"/>
+                        </div>
+                    </t>
+                    <t t-if="not object.company_id.uses_default_logo">
+                        <img t-att-src="'/logo.png?company=%s' % object.company_id.id" style="padding: 0px; margin: 0px; margin-right: 10px; height: auto; width: 80px;" t-att-alt="'%s' % object.company_id.name"/>
+                    </t>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- EVENT DESCRIPTION -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 14px;">
+                    <div>
+                        Hello <t t-out="object.name or 'Guest'"/>,<br/><br/>
+                        We are excited to remind you that the event
+                        <t t-if="is_online">
+                            <a t-att-href="object.event_id.website_url" style="font-weight:bold;color:#875A7B;text-decoration:none;" t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</a>
+                        </t>
+                        <t t-else="">
+                            <strong t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</strong>
+                        </t>
+                        is starting <strong t-out="object.event_date_range or ''">today</strong>.
+                    </div>
+                    <div>
+                        <br />
+                        <strong>Add this event to your calendar</strong>
+                        <a t-attf-href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text={{ object.event_id.name }}&amp;dates={{ date_begin }}/{{ date_end }}&amp;location={{ location }}&amp;details={{ object.event_id._get_external_description_url_encoded() }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Google</a>
+                        <a t-attf-href="/event/{{ slug(object.event_id) }}/ics" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;"><img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> iCal/Outlook</a>
+                        <a t-attf-href="https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title={{ object.event_id.name }}&amp;in_loc={{ location }}&amp;st={{ format_datetime(object.event_id.date_begin, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}&amp;et={{ format_datetime(object.event_id.date_end, tz='UTC', dt_format='yyyyMMdd\'T\'HHmmss') }}" style="padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;" target="new">
+                            <img src="/web_editor/font_to_img/61525/rgb(135,90,123)/16" style="vertical-align:middle;" height="16" alt=""/> Yahoo
+                        </a>
+                        <br /><br />
+                    </div>
+                    <div>
+                        We confirm your registration and hope to meet you there,<br/>
+                        <span style="color: #454748;">
+                        -- <br/>
+                        <t t-if="event_organizer">
+                            <t t-out="event_organizer.name or ''">YourCompany</t>
+                        </t>
+                        <t t-else="">
+                            The <t t-out="object.event_id.name or ''">OpenWood Collection Online Reveal</t> Team
+                        </t>
+                        </span>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- DETAILS -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 14px;">
+                    <table style="width:100%;">
+                        <tr>
+                            <td style="vertical-align:top;">
+                                <img src="/web_editor/font_to_img/61555/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
+                            </td>
+                            <td style="padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;">
+                                <div>
+                                    <strong>From</strong>
+                                    <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 4, 2021</t>
+                                     - <t t-out="object.event_id.date_begin" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>7:00 AM</t>
+                                </div>
+                                <div>
+                                    <strong>To</strong>
+                                    <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "date_only": True, "tz_name": object.event_id.date_tz, "format": "long"}'>May 6, 2021</t>
+                                     - <t t-out="object.event_id.date_end" t-options='{"widget": "datetime", "time_only": True, "tz_name": object.event_id.date_tz, "hide_seconds": True, "format": "short"}'>5:00 PM</t>
+                                </div>
+                                <div style="font-size:12px;color:#9e9e9e"><i><t t-out="object.event_id.date_tz or ''">Europe/Brussels</t></i></div>
+                            </td>
+                            <td style="vertical-align:top;">
+                                <t t-if="event_address">
+                                    <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/34" style="padding:4px;max-width:inherit;" height="34" alt=""/>
+                                </t>
+                            </td>
+                            <td style="padding: 0px 10px 0px 10px;width:50%;vertical-align:top;">
+                                <t t-if="event_address">
+                                    <t t-set="location" t-value="''"/>
+                                    <t t-if="object.event_id.address_id.name">
+                                        <div t-out="object.event_id.address_id.name or ''">Teksa SpA</div>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.street">
+                                        <div t-out="object.event_id.address_id.street or ''">Puerto Madero 9710</div>
+                                        <t t-set="location" t-value="object.event_id.address_id.street"/>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.street2">
+                                        <div t-out="object.event_id.address_id.street2 or ''">Of A15, Santiago (RM)</div>
+                                        <t t-set="location" t-value="'%s, %s' % (location, object.event_id.address_id.street2)"/>
+                                    </t>
+                                    <div>
+                                    <t t-if="object.event_id.address_id.city">
+                                        <t t-out="object.event_id.address_id.city or ''">Pudahuel</t>,
+                                        <t t-set="location" t-value="'%s, %s' % (location, object.event_id.address_id.city)"/>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.state_id.name">
+                                        <t t-out="object.event_id.address_id.state_id.name or ''">C1</t>,
+                                        <t t-set="location" t-value="'%s, %s' % (location, object.event_id.address_id.state_id.name)"/>
+                                    </t>
+                                    <t t-if="object.event_id.address_id.zip">
+                                        <t t-out="object.event_id.address_id.zip or ''">98450</t>
+                                        <t t-set="location" t-value="'%s, %s' % (location, object.event_id.address_id.zip)"/>
+                                    </t>
+                                    </div>
+                                    <t t-if="object.event_id.address_id.country_id.name">
+                                        <div t-out="object.event_id.address_id.country_id.name or ''">Argentina</div>
+                                        <t t-set="location" t-value="'%s, %s' % (location, object.event_id.address_id.country_id.name)"/>
+                                    </t>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <t t-if="event_organizer">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </t>
+                </td></tr>
+
+                <tr><td valign="top" style="font-size: 14px;">
+                    <!-- CONTACT ORGANIZER -->
+                    <t t-if="event_organizer">
+                        <div>
+                            <span style="font-weight:300;margin:10px 0px">Questions about this event?</span>
+                            <div>Please contact the organizer:</div>
+                            <ul>
+                                <li t-out="event_organizer.name or ''">YourCompany</li>
+                                <t t-if="event_organizer.email">
+                                    <li>Mail: <a t-attf-href="mailto:{{ event_organizer.email }}" style="text-decoration:none;color:#875A7B;" t-out="event_organizer.email or ''"></a></li>
+                                </t>
+                                <t t-if="event_organizer.phone">
+                                    <li>Phone: <t t-out="event_organizer.phone or ''"></t></li>
+                                </t>
+                            </ul>
+                        </div>
+                    </t>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <!-- CONTACT ORGANIZER SEPARATION -->
+                    <hr t-if="is_online or event_address" width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+
+                <tr><td valign="top" style="font-size: 14px;">
+                    <!-- PWA MARKGETING -->
+                    <div t-if="is_online">
+                        <strong>Get the best mobile experience.</strong>
+                        <a href="/event">Install our mobile app</a>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                    <!-- PWA MARKGETING SEPARATION-->
+                    <hr t-if="is_online and event_address" width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+
+                <tr><td valign="top" style="font-size: 14px;">
+                    <!-- GOOGLE MAPS LINK -->
+                    <table t-if="event_address and location" style="width:100%;"><tr><td>
+                        <div>
+                            <img src="/web_editor/font_to_img/61505/rgb(81,81,102)/20" height="20" style="vertical-align: bottom;"/>
+                            <a t-attf-href="https://maps.google.com/maps?q={{ location }}" target="new">
+                                <img t-if="event_address.static_map_url and event_address.static_map_url_is_valid"
+                                     t-attf-src="{{ event_address.static_map_url }}"
+                                     style="vertical-align:bottom; width: 100%;" alt="Google Maps"/>
+                                <span t-else="">See location on Google Maps</span>
+                            </a>
+                        </div>
+                    </td></tr></table>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- FOOTER BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table t-if="object.company_id" width="590" border="0" cellpadding="0" cellspacing="0" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 14px;">
+        Sent by <a target="_blank" t-attf-href="{{ object.company_id.website }}" style="color: #875A7B;" t-out="object.company_id.name or ''">YourCompany</a>
+        <t t-if="'website_url' in object.event_id and object.event_id.website_url">
+            <br />
+            Discover <a href="/event" style="color:#875A7B;">all our events</a>.
+        </t>
+      </td></tr>
+    </table>
+</td></tr>
+</table>
+            </field>
+            <field name="lang">{{ object.event_id.lang or object.partner_id.lang }}</field>
+        </record>
+
+    </data>
+</odoo>

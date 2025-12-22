@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ExpressionEditor">
+        <div class="o_expression_editor w-100" aria-atomic="true">
+            <t t-if="tree">
+                <TreeEditor resModel="props.resModel"
+                    tree="tree"
+                    isDebugMode="isDebugMode"
+                    update.bind="update"
+                    getDefaultCondition.bind="getDefaultCondition"
+                    getDefaultOperator.bind="getDefaultOperator"
+                    getOperatorEditorInfo.bind="getOperatorEditorInfo"
+                    getPathEditorInfo.bind="getPathEditorInfo"
+                />
+            </t>
+            <t t-else="">
+                This expression is not supported.
+                <button t-on-click="() => this.resetExpression()">Reset expression</button>
+            </t>
+            <t t-if="isDebugMode">
+                <div class="o_expression_editor_debug_container d-block mt-3 border rounded p-3 bg-100 text-muted font-monospace">
+                    <span class="small"># Code editor</span>
+                    <textarea class="pt-2 border-0 bg-transparent text-body" type="text" spellcheck="false" t-att-value="props.expression" t-on-change="(ev) => this.onExpressionChange(ev.target.value)" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_repair_order_form_inherit" model="ir.ui.view">
+            <field name="name">repair.order.form.inherit</field>
+            <field name="model">repair.order</field>
+            <field name="inherit_id" ref="repair.view_repair_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_sale_order']" position="after">
+                    <button
+                        class="oe_stat_button" name="action_view_mrp_productions" type="object"
+                        icon="fa-wrench" groups="mrp.group_mrp_user"
+                        invisible="production_count == 0 or state == 'draft'">
+                        <div class="o_field_widget o_stat_info">
+                            <field name="production_count" string="Manufacturing" widget="statinfo"/>
+                        </div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

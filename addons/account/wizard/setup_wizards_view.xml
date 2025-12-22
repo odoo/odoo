@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+    <data>
+        <record id="setup_financial_year_opening_form" model="ir.ui.view">
+            <field name="name">account.financial.year.op.setup.wizard.form</field>
+            <field name="model">account.financial.year.op</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div>
+                        <span class="figure-caption">Never miss a deadline, with automated statements and alerts.</span>
+                    </div>
+                    <sheet>
+                        <group>
+                            <field name="opening_move_posted" invisible="1"/>
+                            <field name="opening_date" readonly="opening_move_posted"/>
+
+                            <label for="fiscalyear_last_month" string="Fiscal Year End"/>
+                            <div>
+                                <field name="fiscalyear_last_day" class="text-center me-2" style="width: 20% !important;"/>
+                                <field name="fiscalyear_last_month" class="w-75"/>
+                            </div>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_save_onboarding_fiscal_year" string="Apply"
+                               class="oe_highlight" type="object" data-hotkey="q" />
+                        <button special="cancel" data-hotkey="x" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="setup_bank_account_wizard" model="ir.ui.view">
+            <field name="name">account.online.sync.res.partner.bank.setup.form</field>
+            <field name="model">account.setup.bank.manual.config</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="num_journals_without_account" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="linked_journal_id" invisible="1"/>
+                    <sheet>
+                        <group>
+                            <field name="acc_number" placeholder="e.g BE15001559627230"/>
+                            <field name="bank_id" placeholder="e.g Bank of America"/>
+                            <field name="bank_bic" placeholder="e.g GEBABEBB" string="Bank Identifier Code"/>
+                            <field name="linked_journal_id" options="{'no_create': True}" placeholder="Leave empty to create new" invisible="num_journals_without_account == 0"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Create" class="oe_highlight" type="object" name="validate" data-hotkey="q"/>
+                        <button string="Cancel" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="init_accounts_tree" model="ir.ui.view">
+            <field name="name">account.setup.opening.move.line.list</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <list editable="top" create="1" delete="1" decoration-muted="opening_debit == 0 and opening_credit == 0" open_form_view="True">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="company_ids" column_invisible="True"/>
+                    <field name="account_type" widget="account_type_selection"/>
+                    <field name="reconcile" widget="boolean_toggle"/>
+                    <field name="opening_debit" options="{'no_symbol': True}"/>
+                    <field name="opening_credit" options="{'no_symbol': True}"/>
+                    <field name="opening_balance" optional="hide" options="{'no_symbol': True}"/>
+                    <field name="tax_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="tag_ids" optional="hide" widget="many2many_tags"/>
+                    <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
+                </list>
+            </field>
+        </record>
+
+    </data>
+</odoo>

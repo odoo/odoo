@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data noupdate="1">
+
+    <!--
+        This provides a working chatbot for people to work with.
+        It's placed into 'data' to give them a starting point.
+        From that record, they can duplicate / adapt / delete / ...
+    -->
+
+    <record id="chatbot_script_welcome_bot" model="chatbot.script">
+        <field name="title">Welcome Bot</field>
+        <field name="image_1920" type="base64" file="mail/static/src/img/odoobot.png"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_welcome" model="chatbot.script.step">
+        <field name="message">Welcome to CompanyName! 👋</field>
+        <field name="sequence">1</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_welcome_bot"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_dispatch" model="chatbot.script.step">
+        <field name="message">What are you looking for?</field>
+        <field name="sequence">2</field>
+        <field name="step_type">question_selection</field>
+        <field name="chatbot_script_id" ref="chatbot_script_welcome_bot"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_dispatch_answer_pricing" model="chatbot.script.answer">
+        <field name="name">I have a pricing question</field>
+        <field name="sequence">1</field>
+        <field name="script_step_id" ref="chatbot_script_welcome_step_dispatch"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_dispatch_answer_documentation" model="chatbot.script.answer">
+        <field name="name">I am looking for your documentation</field>
+        <field name="redirect_link">/</field>
+        <field name="sequence">2</field>
+        <field name="script_step_id" ref="chatbot_script_welcome_step_dispatch"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_dispatch_answer_just_looking" model="chatbot.script.answer">
+        <field name="name">I am just looking around</field>
+        <field name="sequence">3</field>
+        <field name="script_step_id" ref="chatbot_script_welcome_step_dispatch"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_pricing" model="chatbot.script.step">
+        <field name="message">Hmmm, let me check if I can find someone that could help you with that...</field>
+        <field name="sequence">3</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_welcome_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_welcome_step_dispatch_answer_pricing'))]"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_pricing_forward_operator" model="chatbot.script.step">
+        <field name="sequence">4</field>
+        <field name="step_type">forward_operator</field>
+        <field name="chatbot_script_id" ref="chatbot_script_welcome_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_welcome_step_dispatch_answer_pricing'))]"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_pricing_noone_available" model="chatbot.script.step">
+        <field name="message">Hu-ho, it looks like none of our operators are available 🙁</field>
+        <field name="sequence">5</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_welcome_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_welcome_step_dispatch_answer_pricing'))]"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_pricing_email" model="chatbot.script.step">
+        <field name="message">Would you mind leaving your email address so that we can reach you back?</field>
+        <field name="sequence">6</field>
+        <field name="step_type">question_email</field>
+        <field name="chatbot_script_id" ref="chatbot_script_welcome_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_welcome_step_dispatch_answer_pricing'))]"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_documentation_redirect" model="chatbot.script.step">
+        <field name="message">And tadaaaa here you go! 🌟</field>
+        <field name="sequence">7</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_welcome_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_welcome_step_dispatch_answer_documentation'))]"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_documentation_exit" model="chatbot.script.step">
+        <field name="message">If you need anything else, feel free to get back in touch</field>
+        <field name="sequence">8</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_welcome_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_welcome_step_dispatch_answer_documentation'))]"/>
+    </record>
+
+    <record id="chatbot_script_welcome_step_just_looking" model="chatbot.script.step">
+        <field name="message">Please do! If there is anything we can help with, let us know</field>
+        <field name="sequence">9</field>
+        <field name="step_type">text</field>
+        <field name="chatbot_script_id" ref="chatbot_script_welcome_bot"/>
+        <field name="triggering_answer_ids" eval="[(4, ref('chatbot_script_welcome_step_dispatch_answer_just_looking'))]"/>
+    </record>
+
+</data></odoo>

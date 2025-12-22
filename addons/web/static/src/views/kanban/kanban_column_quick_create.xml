@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanColumnQuickCreate">
+        <div class="o_column_quick_create d-print-none flex-shrink-0 flex-grow-1 flex-md-grow-0" t-ref="root">
+            <div t-if="props.folded" class="o_quick_create_folded position-sticky z-1 my-3 text-nowrap" t-on-click="unfold">
+                <button class="o_kanban_add_column btn btn-light w-100" aria-label="Add column" data-tooltip="Add column">
+                    <i class="fa fa-plus me-2" role="img"/><t t-out="relatedFieldName"/>
+                </button>
+            </div>
+            <div t-else="" class="o_quick_create_unfolded pt-3 pb-2">
+                <div class="o_kanban_header top-0 pb-3">
+                    <div class="input-group mb-1">
+                        <input type="text"
+                            class="form-control bg-view"
+                            t-attf-placeholder="{{ relatedFieldName }}..."
+                            t-ref="autofocus"
+                            t-on-focus="() => state.hasInputFocused = true"
+                            t-on-blur="() => state.hasInputFocused = false"
+                            t-on-keydown="onInputKeydown"
+                        />
+                        <button class="btn btn-primary o_kanban_add" type="button" t-on-click="validate">
+                            Add
+                        </button>
+                    </div>
+                    <div t-if="!env.isSmall and state.hasInputFocused" t-attf-class="o_discard_msg small text-muted {{ canShowExamples ? 'float-end' : 'text-end'}}">
+                        Press <kbd>Esc</kbd> to discard
+                    </div>
+                    <t t-if="canShowExamples and !env.isSmall">
+                        <button type="button" class="btn btn-link o_kanban_examples p-0" t-on-click="showExamples">See examples</button>
+                    </t>
+                </div>
+                <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record mb-2 py-5 bg-300 opacity-50" />
+            </div>
+        </div>
+    </t>
+
+</templates>
