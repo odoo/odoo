@@ -78,8 +78,8 @@ class MailMessage(models.Model):
                         ),
                     )
 
-    def _store_author_dynamic_fields(self, partner_res: Store.FieldList):
-        super()._store_author_dynamic_fields(partner_res)
+    def _store_partner_name_dynamic_fields(self, partner_res: Store.FieldList):
+        super()._store_partner_name_dynamic_fields(partner_res)
         if self.channel_id.channel_type == "livechat":
             partner_res.remove("name")
             partner_res.from_method("_store_livechat_username_fields")

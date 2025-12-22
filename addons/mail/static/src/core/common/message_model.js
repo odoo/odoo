@@ -623,6 +623,7 @@ export class Message extends Record {
             mentionedChannels,
             mentionedPartners,
             mentionedRoles,
+            thread: this.thread,
         });
         const hadLink = this.hasLink; // to remove old previews if message no longer contains any link
         const updateData = {
