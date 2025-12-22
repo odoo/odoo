@@ -95,5 +95,8 @@ const ThreadPatch = {
             },
         });
     },
+    get isSelfInCall() {
+        return this.store.rtc.selfSession && this.eq(this.store.rtc.channel);
+    },
 };
 patch(Thread.prototype, ThreadPatch);
