@@ -1,4 +1,5 @@
 import {
+    assertChatBubbleAndWindowImStatus,
     assertChatHub,
     click,
     contains,
@@ -464,7 +465,7 @@ test("chat window: TAB cycle with 3 open chat windows", async () => {
 test("chat window should open when receiving a new DM", async () => {
     mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({ im_status: "online", name: "DemoUser" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
@@ -483,13 +484,19 @@ test("chat window should open when receiving a new DM", async () => {
     await contains(".o-mail-ChatHub");
     withUser(userId, () =>
         rpc("/mail/message/post", {
-            post_data: { body: "Hi, are you here?", message_type: "comment" },
+            post_data: {
+                body: "Hi, are you here?",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
             thread_id: channelId,
             thread_model: "discuss.channel",
         })
     );
     await contains(".o-mail-ChatBubble");
     await contains(".o-mail-ChatBubble-counter:text('1')");
+    await contains(".o-mail-ChatBubble .o-mail-ImStatus [title='Online']");
+    await assertChatBubbleAndWindowImStatus("DemoUser", 1);
 });
 
 test("chat window should not open when receiving a new DM from odoobot", async () => {
