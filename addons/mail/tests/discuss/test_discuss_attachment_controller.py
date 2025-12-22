@@ -30,14 +30,9 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
         whether or not limited `ownership_token` is sent"""
         channel = self.env["discuss.channel"].create({"name": "public channel"})
         self._execute_subtests_delete(self.all_users, token=True, allowed=True, thread=channel)
+        self._execute_subtests_delete(self.user_admin, token=False, allowed=True, thread=channel)
         self._execute_subtests_delete(
-            (self.user_admin, self.user_employee),
-            token=False,
-            allowed=True,
-            thread=channel,
-        )
-        self._execute_subtests_delete(
-            (self.guest, self.user_portal, self.user_public),
+            (self.guest, self.user_employee, self.user_portal, self.user_public),
             token=False,
             allowed=False,
             thread=channel,
