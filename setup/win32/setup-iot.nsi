@@ -193,17 +193,26 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     # set modules to load
     WriteIniStr "$INSTDIR\odoo.conf" "options" "server_wide_modules" "iot_drivers,web"
     # Configure logging
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "logfile" "$INSTDIR\odoo.log"
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_handler" ":WARNING"
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_level" "warn"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_handler" ":INFO"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "log_level" "info"
     # Other configuration
     WriteIniStr "$INSTDIR\odoo.conf" "options" "list_db" "False"
     WriteIniStr "$INSTDIR\odoo.conf" "options" "max_cron_threads" "0"
 
     DetailPrint "Installing Windows service"
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" install ${SERVICENAME} "$INSTDIR\python\python.exe"'
+
+    CreateDirectory "$INSTDIR\logs"
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppStdout "$INSTDIR\logs\odoo.log"'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppStderr "$INSTDIR\logs\odoo.log"'
+
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppRotateFiles 10'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppRotateOnline 1'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppRotateBytes 104857600'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppRotateSeconds 86400'
+
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppDirectory "$\"$INSTDIR\python$\""'
-    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\odoo\odoo-bin\" -c "\"$INSTDIR\odoo.conf\"'
+    nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\odoo\odoo-bin\" -c \"$INSTDIR\odoo.conf\""'
     nsExec::ExecToLog '"$INSTDIR\nssm\win64\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
     AccessControl::GrantOnFile  "$INSTDIR" "LOCALSERVICE" "FullAccess"
 
@@ -239,8 +248,8 @@ Section -$(TITLE_Nginx) Nginx
     CreateDirectory $INSTDIR\nginx\logs
     File "conf\nginx\nginx.conf"
     # Temporary certs for the first start
-    File "..\..\odoo\setup\iot_box_builder\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
-    File "..\..\odoo\setup\iot_box_builder\overwrite_after_init\etc\ssl\private\nginx-cert.key"
+    File "..\..\setup\iot_box_builder\overwrite_after_init\etc\ssl\certs\nginx-cert.crt"
+    File "..\..\setup\iot_box_builder\overwrite_after_init\etc\ssl\private\nginx-cert.key"
 SectionEnd
 
 Section -$(TITLE_Ghostscript) SectionGhostscript
