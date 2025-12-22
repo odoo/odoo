@@ -285,7 +285,7 @@ class AccountMove(models.Model):
             from_currency=self.currency_id,
             to_currency=self.env.ref('base.HUF'),
             company=self.company_id,
-            date=self.invoice_date,
+            date=self._get_invoice_currency_rate_date(),
         )
 
     def _l10n_hu_edi_set_chain_index(self):
