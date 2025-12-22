@@ -26,11 +26,24 @@ test("clamp", () => {
 test("range", () => {
     expect(range(0, 10)).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
     expect(range(0, 35, 5)).toEqual([0, 5, 10, 15, 20, 25, 30]);
+    expect(range(0, 34, 5)).toEqual([0, 5, 10, 15, 20, 25, 30]);
+    expect(range(0, 36, 5)).toEqual([0, 5, 10, 15, 20, 25, 30, 35]);
     expect(range(-10, 6, 2)).toEqual([-10, -8, -6, -4, -2, 0, 2, 4]);
     expect(range(0, -10, -1)).toEqual([0, -1, -2, -3, -4, -5, -6, -7, -8, -9]);
     expect(range(4, -4, -1)).toEqual([4, 3, 2, 1, 0, -1, -2, -3]);
     expect(range(1, 4, -1)).toEqual([]);
     expect(range(1, -4, 1)).toEqual([]);
+    expect(range(3)).toEqual([0, 1, 2]);
+    expect(range(0, 3)).toEqual([0, 1, 2]);
+    expect(range(0, 3, 1)).toEqual([0, 1, 2]);
+    expect(range(3, 0)).toEqual([3, 2, 1]);
+    expect(range(3, 0, -1)).toEqual([3, 2, 1]);
+    expect(range(-3)).toEqual([0, -1, -2]);
+    expect(range(0, -3)).toEqual([0, -1, -2]);
+    expect(range(0, -3, -1)).toEqual([0, -1, -2]);
+    expect(range(2, -2)).toEqual([2, 1, 0, -1]);
+    expect(range(2, -2, -3)).toEqual([2, -1]);
+    expect(range(-2, 2)).toEqual([-2, -1, 0, 1]);
 });
 
 describe("roundPrecision", () => {
