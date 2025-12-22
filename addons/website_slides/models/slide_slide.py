@@ -1130,6 +1130,7 @@ class Slide(models.Model):
 
         params = {}
         params['projection'] = 'BASIC'
+        params['supportsAllDrives'] = 'true'  # Allow Shared Drive links
         if 'google.drive.config' in self.env:
             access_token = False
             try:
