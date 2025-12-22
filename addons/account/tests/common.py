@@ -679,13 +679,15 @@ class AccountTestInvoicingCommon(ProductCommon):
         # QoL: delete all keys with None value from invoice_args
         cls._prepare_record_kwargs('account.move', invoice_args)
 
+        if "line_ids" not in invoice_args and "invoice_line_ids" not in invoice_args:
+            invoice_args["invoice_line_ids"] = [  # default invoice_line_ids
+                cls._prepare_invoice_line(product_id=cls.product_a),
+                cls._prepare_invoice_line(product_id=cls.product_b),
+            ]
+
         invoice = cls.env['account.move'].create([{
             'move_type': move_type,
             'partner_id': cls.partner_a.id,
-            'invoice_line_ids': [  # default invoice_line_ids
-                cls._prepare_invoice_line(product_id=cls.product_a),
-                cls._prepare_invoice_line(product_id=cls.product_b),
-            ],
             **invoice_args,
         }])
 
