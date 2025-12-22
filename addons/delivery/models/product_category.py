@@ -9,6 +9,13 @@ class ProductCategory(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_delivery_category(self):
-        delivery_category = self.env.ref('delivery.product_category_deliveries', raise_if_not_found=False)
+        delivery_category = self.env.ref(
+            'delivery.product_category_deliveries', raise_if_not_found=False
+        )
         if delivery_category and delivery_category in self:
-            raise UserError(_("You cannot delete this product category as it is used on the products linked to delivery methods."))
+            raise UserError(
+                _(
+                    "You cannot delete this product category as it is used on the products linked"
+                    " to delivery methods."
+                )
+            )

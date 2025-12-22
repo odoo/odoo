@@ -5,7 +5,6 @@ from odoo.addons.payment_custom.tests.common import PaymentCustomCommon
 
 
 class CashOnDeliveryCommon(PaymentCustomCommon, DeliveryCommon):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

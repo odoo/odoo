@@ -14,7 +14,7 @@ class PaymentProvider(models.Model):
     # === CRUD METHODS === #
 
     def _get_default_payment_method_codes(self):
-        """ Override of `payment` to return the default payment method codes. """
+        """Override of `payment` to return the default payment method codes."""
         self.ensure_one()
         if self.custom_mode != 'cash_on_delivery':
             return super()._get_default_payment_method_codes()
@@ -24,7 +24,7 @@ class PaymentProvider(models.Model):
 
     @api.model
     def _get_compatible_providers(self, *args, sale_order_id=None, report=None, **kwargs):
-        """ Override of payment to exclude COD providers if the delivery method doesn't match.
+        """Override of payment to exclude COD providers if the delivery method doesn't match.
 
         :param int sale_order_id: The sales order to be paid, if any, as a `sale.order` id.
         :param dict report: The availability report.

@@ -4,7 +4,6 @@ from odoo.tests import TransactionCase
 
 
 class DeliveryCommon(TransactionCase):
-
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -36,10 +36,9 @@ class SaleOrderLine(models.Model):
     def _get_invalid_delivery_weight_lines(self):
         """Retrieve lines containing physical products with no weight defined."""
         return self.filtered(
-            lambda line:
-                line.product_qty > 0
-                and line.product_id.type not in ('service', 'combo')
-                and line.product_id.weight == 0,
+            lambda line: line.product_qty > 0
+            and line.product_id.type not in ('service', 'combo')
+            and line.product_id.weight == 0
         )
 
     # override to allow deletion of delivery line in a confirmed order
@@ -52,7 +51,6 @@ class SaleOrderLine(models.Model):
         :rtype: recordset sale.order.line
         :returns: set of lines that cannot be deleted
         """
-
         undeletable_lines = super()._check_line_unlink()
         return undeletable_lines.filtered(lambda line: not line.is_delivery)
 
