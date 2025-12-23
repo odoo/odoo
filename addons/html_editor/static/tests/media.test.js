@@ -253,6 +253,7 @@ describe("(non-)editable media", () => {
             await expectElementCount(".o-we-toolbar", 1);
             // Now pressing the delete button should remove the image.
             await click(".o-we-toolbar button[name='image_delete']");
+            await tick(); // selectionchange
             expect(getContent(editor.editable)).toBe(
                 `<p data-selection-placeholder=""><br></p><div contenteditable="false">[]<br></div><p data-selection-placeholder=""><br></p>`
             );
