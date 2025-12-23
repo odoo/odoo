@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatWindow">
-    <t t-if="props.chatWindow.exists()">
+    <t t-if="props.chatWindow.exists() and channel.exists()">
     <t t-set="partitionedActions" t-value="threadActions.partition"/>
     <div class="o-mail-ChatWindow fixed-bottom overflow-hidden d-flex flex-column shadow bg-100"
         t-att-style="style"

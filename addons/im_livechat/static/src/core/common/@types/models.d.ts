@@ -23,7 +23,8 @@ declare module "models" {
         livechat_member_type: "agent"|"bot"|"visitor";
     }
     export interface ChatWindow {
-        livechatStep: undefined|"CONFIRM_CLOSE"|"FEEDBACK";
+        confirmCloseResolver: PromiseWithResolvers<boolean>;
+        feedbackDoneResolver: PromiseWithResolvers<void>;
     }
     export interface DataResponse {
         chatbot_step: ChatbotStep;
@@ -35,6 +36,7 @@ declare module "models" {
         livechat_channel_member_history_ids: LivechatChannelMemberHistory[];
         livechat_customer_history_ids: LivechatChannelMemberHistory[];
         livechat_looking_for_help_since_dt: import("luxon").DateTime;
+        livechatShouldAskLeaveConfirmation: Readonly<boolean>;
     }
     export interface LivechatChannel {
         channel_ids: DiscussChannel[];

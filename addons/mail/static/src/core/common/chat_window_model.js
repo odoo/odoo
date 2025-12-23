@@ -51,8 +51,60 @@ export class ChatWindow extends Record {
         return !this.store.discuss?.isActive;
     }
 
-    async close(options = {}) {
+    /**
+     * Determine whether this chat window can be closed. May involve
+     * user interaction, such as showing a confirmation dialog. This
+     * method is only called as a part of {@link requestClose}.
+     */
+    async _canClose() {
+        return true;
+    }
+
+    /**
+     * Optional tasks to run right before the chat window is closed.
+     * This method is only called as a part of {@link requestClose}.
+     */
+    async _onBeforeClose() {}
+
+    /**
+     * Attempt to close this chat window:
+     * - First, asks if the window is allowed to close ({@link _canClose}).
+     * - Then runs any pre-close tasks ({@link _onBeforeClose}).
+     * - Finally, performs the technical close.
+     *
+     * @param {object} [options={}] Forwarded to {@link ChatWindow.close}
+     */
+    async requestClose(options) {
         await this.store.chatHub.initPromise;
+        this.actionsDisabled = true;
+        const canClose = await this._canClose();
+        if (!this.exists()) {
+            return;
+        }
+        if (!canClose) {
+            this.autofocus++;
+            this.actionsDisabled = false;
+            return;
+        }
+        await this._onBeforeClose();
+        if (this.exists()) {
+            this.close(options);
+        }
+    }
+
+    /**
+     * Perform the technical close of the chat window. This method
+     * should __never__ be overridden. To execute code before the chat
+     * window is closed, override `_onBeforeClose`. To determine if
+     * the chat window should be closed, override `_canClose`.
+     *
+     * @param {object} [options={}]
+     * @param {boolean} [options.notifyState=true] Whether to save the
+     * chat hub state after closing.
+     * @param {boolean} [options.escape=false] Whether the close was
+     * triggered by an escape action.
+     */
+    close(options = {}) {
         const { escape = false } = options;
         options.notifyState ??= true;
         const chatHub = this.store.chatHub;
@@ -106,7 +158,7 @@ export class ChatWindow extends Record {
         }
     }
 
-    _onClose() {}
+    _onClose(options) {}
 }
 
 ChatWindow.register();

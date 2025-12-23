@@ -75,7 +75,7 @@ export class ChatHub extends Record {
         await this.initPromise;
         const promises = [];
         for (const chatWindow of [...this.opened, ...this.folded]) {
-            promises.push(chatWindow.close({ notifyState: false }));
+            promises.push(chatWindow.requestClose({ notifyState: false }));
         }
         await Promise.all(promises);
         this.save(); // sync only once at the end
@@ -118,7 +118,7 @@ export class ChatHub extends Record {
         // close first to make room for others
         for (const chatWindow of [...this.opened, ...this.folded]) {
             if (chatWindow.notIn(toOpen) && chatWindow.notIn(toFold)) {
-                chatWindow.close({ force: true, notifyState: false });
+                chatWindow.close({ notifyState: false });
             }
         }
         // folded before opened because if there are too many opened they will be added to folded

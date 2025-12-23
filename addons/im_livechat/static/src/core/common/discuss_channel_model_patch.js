@@ -41,6 +41,15 @@ const discussChannelPatch = {
         }
         return super.isHideUntilNewMessageSupported;
     },
+    get livechatShouldAskLeaveConfirmation() {
+        if (this.isTransient || this.livechat_end_dt || !this.self_member_id) {
+            return false;
+        }
+        return (
+            this.self_member_id.livechat_member_type === "visitor" ||
+            this.channel_member_ids.length <= 2
+        );
+    },
     get typesAllowingCalls() {
         return [...super.typesAllowingCalls, "livechat"];
     },
