@@ -16,3 +16,7 @@ class ResPartner(models.Model):
                 partner.is_company = True
 
         super(ResPartner, self - l10n_tw_partners)._compute_is_company()
+
+    def _l10n_tw_edi_formatted_address(self):
+        address = self._display_address(without_company=True)
+        return ", ".join(filter(None, map(str.strip, address.splitlines())))
