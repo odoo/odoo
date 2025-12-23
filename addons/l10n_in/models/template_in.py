@@ -137,3 +137,23 @@ class AccountChartTemplate(models.AbstractModel):
             bank_journals = company.bank_journal_ids
             bank_journals._update_payment_method_lines("inbound")
             bank_journals._update_payment_method_lines("outbound")
+
+            # Load journals for Indian branch having different GSTIN than parent company.
+            # Process only Indian branches with GST and a parent company.
+            parent = company.parent_id
+            if (
+                company.country_code == 'IN'
+                and parent.chart_template == 'in'
+                and all(self.env['res.partner'].check_vat_in(vat) for vat in (parent.vat, company.vat))
+                and parent.vat != company.vat
+            ):
+                AccountChartTemplate = self.env['account.chart.template'].with_company(company)
+                journal_data = AccountChartTemplate._get_account_journal(template_code)
+                # Setting lower sequence to prioritize branch journals
+                journal_data['sale']['sequence'] = 1
+                journal_data['purchase']['sequence'] = 1
+                # Load Sales and Purchase journals for the branch
+                AccountChartTemplate._load_data({'account.journal': {
+                    AccountChartTemplate.company_xmlid('sale'): journal_data['sale'],
+                    AccountChartTemplate.company_xmlid('purchase'): journal_data['purchase'],
+                }})
