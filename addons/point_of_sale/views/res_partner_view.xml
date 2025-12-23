@@ -23,6 +23,17 @@
             </field>
         </record>
 
+        <record id="res_partner_kanban_view_inherit" model="ir.ui.view">
+            <field name="name">res.partner.view.kanban.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//aside" position="inside">
+                    <field name="activity_state" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="res_partner_action_edit_pos" model="ir.actions.act_window">
             <field name="name">Edit Partner</field>
             <field name="res_model">res.partner</field>
