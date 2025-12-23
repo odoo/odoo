@@ -25,10 +25,34 @@
             </field>
         </record>
 
+        <record id="res_city_view_form" model="ir.ui.view">
+            <field name="name">res.city.view.form</field>
+            <field name="model">res.city</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="oe_title">
+                        <label for="name" string="Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. London"/>
+                        </h1>
+                    </div>
+                    <group name="city_data">
+                        <group>
+                            <field name="zipcode" string="ZIP"/>
+                            <field name="state_id"/>
+                        </group>
+                        <group>
+                            <field name="country_id"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <record id="action_res_city_tree" model="ir.actions.act_window">
             <field name="name">Cities</field>
             <field name="res_model">res.city</field>
-            <field name="view_mode">list</field>
+            <field name="view_mode">list,form</field>
             <field name="help">
                 Display and manage the list of all cities that can be assigned to
                 your partner records. Note that an option can be set on each country separately

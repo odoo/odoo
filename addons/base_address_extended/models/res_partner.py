@@ -48,8 +48,10 @@ class ResPartner(models.Model):
     def _onchange_city_id(self):
         if self.city_id:
             self.city = self.city_id.name
-            self.zip = self.city_id.zipcode
-            self.state_id = self.city_id.state_id
+            if self.city_id.state_id:
+                self.state_id = self.city_id.state_id
+            if self.city_id.zipcode:
+                self.zip = self.city_id.zipcode
         elif self._origin:
             self.city = False
             self.zip = False
