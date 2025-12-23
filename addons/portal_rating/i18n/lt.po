@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* portal_rating
+# * portal_rating
 #
 # Translators:
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
@@ -9,15 +9,16 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Jonas Zinkevicius <jozi@odoo.com>, 2022
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:55+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2022\n"
-"Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-09-16 18:38+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
+"portal_rating/lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,13 +26,24 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
 "11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
 "1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: portal_rating
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_rating_view_form
+msgid "<span> on </span>"
+msgstr ""
+
+#. module: portal_rating
+#: model_terms:ir.ui.view,arch_db:portal_rating.rating_rating_view_form
+msgid "<span>by </span>"
+msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: code:addons/portal_rating/static/src/interactions/portal_rating_composer.js:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 msgid "Add Review"
-msgstr ""
+msgstr "Pridėti įvertinimą"
 
 #. module: portal_rating
 #. odoo-javascript
@@ -41,19 +53,13 @@ msgstr "Vidutinis"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Cancel"
-msgstr "Atšaukti"
-
-#. module: portal_rating
-#. odoo-javascript
 #: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
 msgid "Close"
 msgstr "Uždaryti"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_rating_view_form
 msgid "Comment"
 msgstr "Komentaras"
@@ -66,11 +72,11 @@ msgstr "Komentaro autorius"
 #. module: portal_rating
 #: model:ir.model.fields,field_description:portal_rating.field_rating_rating__publisher_datetime
 msgid "Commented on"
-msgstr "Komentaras parašytas "
+msgstr "Komentaras parašytas"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Delete"
 msgstr "Trinti"
 
@@ -81,26 +87,35 @@ msgid "Details"
 msgstr "Papildoma informacija"
 
 #. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_ir_http__display_name
+#: model:ir.model.fields,field_description:portal_rating.field_mail_message__display_name
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__display_name
+msgid "Display Name"
+msgstr "Rodomas pavadinimas"
+
+#. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Edit"
 msgstr "Redaguoti"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: code:addons/portal_rating/static/src/interactions/portal_rating_composer.js:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 msgid "Edit Review"
 msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/composer_patch.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Empty star"
 msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/composer_patch.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 msgid "Full star"
 msgstr ""
@@ -117,46 +132,17 @@ msgid "Half a star"
 msgstr "Pusė žvaigždutės"
 
 #. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I don't like it"
-msgstr "Nepatinka"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I hate it"
-msgstr "Labai nepatinka"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I like it"
-msgstr "Patinka"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "I love it"
-msgstr "Labai patinka"
+#: model:ir.model.fields,field_description:portal_rating.field_ir_http__id
+#: model:ir.model.fields,field_description:portal_rating.field_mail_message__id
+#: model:ir.model.fields,field_description:portal_rating.field_rating_rating__id
+msgid "ID"
+msgstr "ID"
 
 #. module: portal_rating
 #. odoo-python
 #: code:addons/portal_rating/controllers/portal_rating.py:0
 msgid "Invalid rating"
 msgstr "Netinkamas įvertinimas"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
-msgid "It's okay"
-msgstr "Neblogai"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Loading..."
-msgstr "Vykdoma..."
 
 #. module: portal_rating
 #: model:ir.model,name:portal_rating.model_mail_message
@@ -171,13 +157,19 @@ msgstr "Redaguokite savo įvertinimą"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Post comment"
-msgstr "Skelbti komentarą"
+#: code:addons/portal_rating/static/src/interactions/portal_rating_composer.js:0
+msgid "Post review"
+msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "Progress bar"
+msgstr ""
+
+#. module: portal_rating
+#. odoo-javascript
+#: code:addons/portal_rating/static/src/chatter/frontend/message_patch.xml:0
 msgid "Published on"
 msgstr "Paskelbtas"
 
@@ -199,14 +191,14 @@ msgstr "Pašalinti pasirinkimą"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_rating_composer.js:0
+#: code:addons/portal_rating/static/src/interactions/portal_rating_composer.js:0
 #: model_terms:ir.ui.view,arch_db:portal_rating.rating_stars_static_popup_composer
 msgid "Review"
 msgstr "Peržiūrėti"
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_composer.js:0
+#: code:addons/portal_rating/static/src/interactions/portal_composer.js:0
 msgid ""
 "The rating is required. Please make sure to select one before sending your "
 "review."
@@ -214,9 +206,9 @@ msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "Update comment"
-msgstr "Atnaujinti komentarą"
+#: code:addons/portal_rating/static/src/interactions/portal_rating_composer.js:0
+msgid "Update review"
+msgstr ""
 
 #. module: portal_rating
 #. odoo-python
@@ -232,15 +224,9 @@ msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript
-#: code:addons/portal_rating/static/src/js/portal_chatter.js:0
-msgid "Write your comment"
-msgstr "Parašykite savo komentarą"
-
-#. module: portal_rating
-#. odoo-javascript
-#: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
-msgid "avatar"
-msgstr "Portretas"
+#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
+msgid "comments"
+msgstr ""
 
 #. module: portal_rating
 #. odoo-javascript

@@ -1,26 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_event_track
+# * website_event_track
 #
 # Translators:
 # Martin Trigaux, 2022
 # Noma Yuki, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Andy Yiu, 2023\n"
-"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"PO-Revision-Date: 2025-12-05 07:58+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
+"website_event_track/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -38,13 +41,13 @@ msgstr "＃ウィッシュリスト"
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "%(name)s from %(company)s"
-msgstr ""
+msgstr "%(name)s %(company)sから"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "%(name)s, %(function)s at %(company)s"
-msgstr ""
+msgstr "%(name)s、%(function)s (%(company)sでの)"
 
 #. module: website_event_track
 #. odoo-python
@@ -59,9 +62,10 @@ msgid "%s Online Events Application"
 msgstr "%sオンラインイベントアプリケーション"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
-msgid "&amp;bull;"
-msgstr "&amp;bull;"
+msgid "(timezone:"
+msgstr "(タイムゾーン:"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_17
@@ -74,8 +78,10 @@ msgid "6 Woodworking tips and tricks for beginners"
 msgstr "初心者のための木工のヒントとコツ6"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
-msgid "<b>Contact Information</b>"
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid ""
+"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary "
+"o_translate_inline\">Home page</a>"
 msgstr ""
 
 #. module: website_event_track
@@ -96,41 +102,41 @@ msgstr "<b>提案者</b>:"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Speaker Biography</b>:"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "<b>Speaker Profile</b>"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "<b>Talk Intro</b>"
-msgstr ""
+msgstr "<b>スピーカーの経歴</b>:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Talk Introduction</b>:"
-msgstr "<b>トーク紹介</b>:"
+msgstr "<b>講演の紹介</b>:"
 
 #. module: website_event_track
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
-"    <br>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">Brandon Freeman</t><br/>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name "
+"or ''\">What This Event Is All About</t> has been accepted and confirmed for "
+"the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online "
+"Reveal</t>.\n"
+"    <br/>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: "
+"14px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; border-"
+"radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
-"    <br><br>\n"
+"    <br/><br/>\n"
 "    Thank you,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br>\n"
-"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
 "    </t>\n"
 "</div>"
 msgstr ""
@@ -142,53 +148,59 @@ msgstr "<i class=\"fa fa-ban me-2\"/>未公開"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
-msgid "<i class=\"fa fa-bell me-2 text-muted\"/> Favorite Talks"
-msgstr ""
+msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
+msgstr "<i class=\"fa fa-bell mx-2 text-muted\"/>お気に入り講演"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
-msgid "<i class=\"fa fa-folder-open\"/> Favorites"
-msgstr "<i class=\"fa fa-folder-open\"/>お気に入り</i>"
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
+msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
+msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
-msgid ""
-"<i class=\"oi oi-fw oi-arrow-right\"/>\n"
-"                        Write one."
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
-msgid "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
-msgid "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
-msgstr "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "<span class=\"fa fa-plus me-1\"/> Schedule Tracks"
+msgstr "<span class=\"fa fa-plus me-1\"/>セッションを予定"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                        <i class=\"fa fa-close mr4\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
-"                                        <span class=\"o_wetrack_proposal_error_message\"/>\n"
-"                                    </span>"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                </span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"エラー\" title=\"エラー\"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
+"                                </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Introduction</span>\n"
-"                                            <span>*</span>"
+"                                        <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">講演導入</span>\n"
+"                                        <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
-"                                            <span>*</span>"
+"                                        <span>*</span>"
 msgstr ""
+"<span class=\"o_wetrack_proposal_label_content\">講演タイトル</span>\n"
+"                                        <span>*</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "<span class=\"text-muted\"> tracks</span>"
+msgstr "<span class=\"text-muted\">セッション</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
@@ -196,33 +208,28 @@ msgid ""
 "<span for=\"contact_name\">Name</span>\n"
 "                    <span>*</span>"
 msgstr ""
+"<span for=\"contact_name\">氏名</span>\n"
+"                    <span>*</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
-msgstr ""
+msgstr "<span id=\"search_number\" class=\"me-1\">0</span>結果"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "<span> - </span>"
-msgstr ""
+msgstr "<span> - </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content_partner_info
 msgid "<span> at </span>"
-msgstr ""
+msgstr "<span> 以下にて:</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<span>New track proposal</span>"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid ""
-"<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
-"                                    different topics. Most topics are accepted in lightning talks."
-msgstr "<strong>ライトニングトーク</strong>。これらは、さまざまなトピックに関する30分の講演です。ほとんどのトピックはライトニングトークで受け入れられます。"
+msgstr "<span>新規セッション提案</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -230,11 +237,778 @@ msgid "<strong>Location:</strong>"
 msgstr "<strong>ロケーション:</strong>"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_reminder
 msgid ""
-"<strong>Regular Talks</strong>. These are standard talks with slides,\n"
-"                                    alocated in slots of 60 minutes."
-msgstr "<strong>定期的な話し合い</strong>。これらは、60分のスロットに配置されたスライド付きの標準的なトークです。"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"            <t t-set=\"event_organizer\" t-"
+"value=\"object.event_id.organizer_id\"/>\n"
+"            <t t-set=\"event_address\" t-"
+"value=\"object.event_id.address_id\"/>\n"
+"            <t t-set=\"is_online\" t-value=\"'is_published' in "
+"object.event_id and object.event_id.is_published\"/>\n"
+"            <t t-set=\"agenda_urls\" t-"
+"value=\"object._get_track_calendar_urls()\"/>\n"
+"            <t t-set=\"google_url\" t-value=\"agenda_urls.get('google_url')"
+"\"/>\n"
+"            <t t-set=\"iCal_url\" t-value=\"agenda_urls.get('iCal_url')\"/>\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\">\n"
+"            <tbody>\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"middle\">\n"
+"                                <span style=\"font-size: 10px;\">Your Event "
+"Track</span><br/>\n"
+"                                <span style=\"font-size: 20px; font-weight: "
+"bold;\" t-out=\"object.name\"/>\n"
+"                            </td><td valign=\"middle\" align=\"right\">\n"
+"                                <t t-if=\"not "
+"object.company_id.uses_default_logo\">\n"
+"                                    <img t-att-src=\"'/logo.png?company=%s' "
+"% object.company_id.id\" style=\"padding: 0px; margin: 0px; margin-right: "
+"10px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"/>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"                            <tr><td colspan=\"2\" style=\"text-align:center;"
+"\">\n"
+"                              <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- TALK DESCRIPTION -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <div>\n"
+"                                    Hello<t t-if=\"not user_id.is_public\" t-"
+"out=\"' ' + user_id.name\"/>,\n"
+"                                    <br/><br/>\n"
+"                                    You recently show interest for the talk\n"
+"                                    <a t-if=\"object.description or "
+"object.partner_biography\" t-attf-href=\"{{ object.get_base_url() }}"
+"{{ object.website_url }}\" style=\"font-weight:bold;color:#875A7B;text-"
+"decoration:none;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</a>\n"
+"                                    <span t-else=\"\" style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</span>.\n"
+"                                </div>\n"
+"                                <div t-if=\"agenda_urls\">\n"
+"                                    <br/>\n"
+"                                    <table style=\"width: auto;\">\n"
+"                                        <tr>\n"
+"                                            <td>\n"
+"                                                <strong>Add this talk to "
+"your calendar</strong>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"iCal_url\" t-att-"
+"href=\"iCal_url\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/apple-calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: "
+"20px; vertical-align: baseline;\"/>\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"iCal_url\" t-att-"
+"href=\"iCal_url\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/outlook-calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" "
+"style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"google_url\" t-att-"
+"href=\"google_url\" target=\"new\" style=\"padding-top: 10px; padding-"
+"right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-"
+"radius: 3px; background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/google-calendar-128.png\" alt=\"Google\" title=\"Google\" "
+"style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                    <br/><br/>\n"
+"                                </div>\n"
+"                                <div>\n"
+"                                    See you soon,<br/>\n"
+"                                    <span style=\"color: #454748;\">\n"
+"                                    -- <br/>\n"
+"                                    <t t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</t>\n"
+"                                    </span>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                              <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- DETAILS -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <table style=\"width:100%;\">\n"
+"                                    <tr>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <img src=\"/mail/font_to_img/"
+"61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" "
+"height=\"34\" alt=\"\"/>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                            <div t-"
+"if=\"object.is_one_day\">\n"
+"                                                <t t-out=\"object.date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">May 4, 2021</t>\n"
+"                                                <t t-out=\"object.date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}"
+"\">7:00 AM</t>\n"
+"                                                 - <t t-"
+"out=\"object.date_end\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: "
+"&quot;short&quot;}\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div t-else=\"\">\n"
+"                                                <strong>From</strong>\n"
+"                                                <t t-out=\"object.date or "
+"object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">May 4, "
+"2021</t>\n"
+"                                                 - <t t-out=\"object.date or "
+"object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: "
+"&quot;short&quot;}\">7:00 AM</t>\n"
+"                                                <strong>To</strong>\n"
+"                                                <t t-out=\"object.date_end "
+"or object.event_id.date_end\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">May 6, "
+"2021</t>\n"
+"                                                 - <t t-"
+"out=\"object.date_end or object.event_id.date_end\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}"
+"\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div style=\"font-"
+"size:12px;color:#9e9e9e\"><i><t t-out=\"object.event_id.date_tz or "
+"''\">Europe/Brussels</t></i></div>\n"
+"                                        </td>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address or "
+"object.location_id\">\n"
+"                                                <img src=\"/mail/font_to_img/"
+"61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" "
+"height=\"34\" alt=\"\"/>\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address\">\n"
+"                                                <t t-set=\"location\" t-"
+"value=\"''\"/>\n"
+"                                                <t t-"
+"if=\"event_address.name\">\n"
+"                                                    <div t-"
+"out=\"event_address.name or ''\">Teksa SpA</div>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"event_address.street\">\n"
+"                                                    <div t-"
+"out=\"event_address.street or ''\">Puerto Madero 9710</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"event_address.street\"/>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"event_address.street2\">\n"
+"                                                    <div t-"
+"out=\"event_address.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"'%s, %s' % (location, event_address.street2)\"/>\n"
+"                                                </t>\n"
+"                                                <div>\n"
+"                                                    <t t-"
+"if=\"event_address.city\">\n"
+"                                                        <t t-"
+"out=\"event_address.city or ''\">Pudahuel</t>,\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.city)\"/>\n"
+"                                                    </t>\n"
+"                                                    <t t-"
+"if=\"event_address.state_id.name\">\n"
+"                                                        <t t-"
+"out=\"event_address.state_id.name or ''\">C1</t>,\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.state_id.name)"
+"\"/>\n"
+"                                                    </t>\n"
+"                                                    <t t-"
+"if=\"event_address.zip\">\n"
+"                                                        <t t-"
+"out=\"event_address.zip or ''\">98450</t>\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.zip)\"/>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <t t-"
+"if=\"event_address.country_id.name\">\n"
+"                                                    <div t-"
+"out=\"event_address.country_id.name or ''\">Argentina</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"'%s, %s' % (location, event_address.country_id.name)\"/>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <div t-if=\"object.location_id\" "
+"t-out=\"'Talk location:' + object.location_id.name\"/>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </td></tr>\n"
+"                            <tr t-if=\"not object.date\">\n"
+"                                <td>\n"
+"                                    <strong><u>Note</u></strong>: The start "
+"and end times of the talk were not specified when the email was sent. The "
+"times indicated in this message correspond to those of the event.\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <t t-if=\"event_organizer\">\n"
+"                                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <!-- CONTACT ORGANIZER -->\n"
+"                                <t t-if=\"object.event_id.organizer_id.name "
+"or object.event_id.company_id.name\">\n"
+"                                    <div>\n"
+"                                        <span style=\"font-"
+"weight:300;margin:10px 0px\">Questions about this talk?</span>\n"
+"                                        <div>Please contact the organizer:</"
+"div>\n"
+"                                        <ul>\n"
+"                                            <li t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</li>\n"
+"                                            <t t-"
+"if=\"event_organizer.email\">\n"
+"                                                <li>Mail: <a t-attf-"
+"href=\"mailto:{{ event_organizer.email }}\" style=\"text-"
+"decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"/></"
+"li>\n"
+"                                            </t>\n"
+"                                            <t t-"
+"if=\"object.event_id.organizer_id.phone or "
+"object.event_id.company_id.phone\">\n"
+"                                                <li>Phone: <t t-"
+"out=\"object.event_id.organizer_id.phone or "
+"object.event_id.company_id.phone\"/></li>\n"
+"                                            </t>\n"
+"                                        </ul>\n"
+"                                    </div>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                                <hr t-if=\"is_online or event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <!-- PWA MARKGETING -->\n"
+"                                <div t-if=\"is_online\">\n"
+"                                    <strong>Get the best mobile experience.</"
+"strong>\n"
+"                                    <a href=\"/event\">Install our mobile "
+"app</a>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- PWA MARKGETING SEPARATION-->\n"
+"                                <hr t-if=\"is_online and event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <!-- GOOGLE MAPS LINK -->\n"
+"                                <table t-if=\"event_address and location\" "
+"style=\"width:100%;\"><tr><td>\n"
+"                                    <div>\n"
+"                                        <img src=\"/web_editor/font_to_img/"
+"61505/rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
+"                                        <a t-attf-href=\"https://"
+"maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                            <img t-"
+"if=\"event_address.static_map_url and "
+"event_address.static_map_url_is_valid\" t-attf-"
+"src=\"{{ event_address.static_map_url }}\" style=\"vertical-align:bottom; "
+"width: 100%;\" alt=\"Google Maps\"/>\n"
+"                                            <span t-else=\"\">See event "
+"location on Google Maps</span>\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td></tr></table>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"            </table>\n"
+"            </td></tr>\n"
+"            <!-- FOOTER BY -->\n"
+"            <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table t-if=\"object.company_id\" width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                  <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"                    Sent by <a target=\"_blank\" t-attf-"
+"href=\"{{ object.get_base_url() }}\" style=\"color: #875A7B;\" t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</a>\n"
+"                    <t t-if=\"'website_url' in object.event_id and "
+"object.event_id.website_url\">\n"
+"                        <br/>\n"
+"                        Discover <a href=\"/event\" style=\"color:#875A7B;"
+"\">all our events</a>.\n"
+"                    </t>\n"
+"                  </td></tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            </table>\n"
+"        "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\"><tr><td "
+"align=\"center\">\n"
+"            <t t-set=\"event_organizer\" t-"
+"value=\"object.event_id.organizer_id\"/>\n"
+"            <t t-set=\"event_address\" t-"
+"value=\"object.event_id.address_id\"/>\n"
+"            <t t-set=\"is_online\" t-value=\"'is_published' in "
+"object.event_id and object.event_id.is_published\"/>\n"
+"            <t t-set=\"agenda_urls\" t-"
+"value=\"object._get_track_calendar_urls()\"/>\n"
+"            <t t-set=\"google_url\" t-value=\"agenda_urls.get('google_url')"
+"\"/>\n"
+"            <t t-set=\"iCal_url\" t-value=\"agenda_urls.get('iCal_url')\"/>\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\">\n"
+"            <tbody>\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"middle\">\n"
+"                                <span style=\"font-size: 10px;\">Your Event "
+"Track</span><br/>\n"
+"                                <span style=\"font-size: 20px; font-weight: "
+"bold;\" t-out=\"object.name\"/>\n"
+"                            </td><td valign=\"middle\" align=\"right\">\n"
+"                                <t t-if=\"not "
+"object.company_id.uses_default_logo\">\n"
+"                                    <img t-att-src=\"'/logo.png?company=%s' "
+"% object.company_id.id\" style=\"padding: 0px; margin: 0px; margin-right: "
+"10px; height: auto; width: 80px;\" t-att-alt=\"'%s' % "
+"object.company_id.name\"/>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"                            <tr><td colspan=\"2\" style=\"text-align:center;"
+"\">\n"
+"                              <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- TALK DESCRIPTION -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <div>\n"
+"                                    Hello<t t-if=\"not user_id.is_public\" t-"
+"out=\"' ' + user_id.name\"/>,\n"
+"                                    <br/><br/>\n"
+"                                    You recently show interest for the talk\n"
+"                                    <a t-if=\"object.description or "
+"object.partner_biography\" t-attf-href=\"{{ object.get_base_url() }}"
+"{{ object.website_url }}\" style=\"font-weight:bold;color:#875A7B;text-"
+"decoration:none;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</a>\n"
+"                                    <span t-else=\"\" style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">OpenWood Collection Online "
+"Reveal</span>.\n"
+"                                </div>\n"
+"                                <div t-if=\"agenda_urls\">\n"
+"                                    <br/>\n"
+"                                    <table style=\"width: auto;\">\n"
+"                                        <tr>\n"
+"                                            <td>\n"
+"                                                <strong>Add this talk to "
+"your calendar</strong>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"iCal_url\" t-att-"
+"href=\"iCal_url\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/apple-calendar-128.png\" alt=\"iCal\" title=\"iCal\" style=\"height: "
+"20px; vertical-align: baseline;\"/>\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"iCal_url\" t-att-"
+"href=\"iCal_url\" style=\"padding-top: 10px; padding-right:8px; padding-"
+"bottom:2px; padding-left:8px; margin-left: 8px; border-radius: 3px; "
+"background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/outlook-calendar-128.png\" alt=\"Outlook\" title=\"Outlook\" "
+"style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                            <td>\n"
+"                                                <a t-if=\"google_url\" t-att-"
+"href=\"google_url\" target=\"new\" style=\"padding-top: 10px; padding-"
+"right:8px; padding-bottom:2px; padding-left:8px; margin-left: 8px; border-"
+"radius: 3px; background-color: #E7E9ED;\">\n"
+"                                                    <img src=\"/event/static/"
+"src/img/google-calendar-128.png\" alt=\"Google\" title=\"Google\" "
+"style=\"height: 20px; vertical-align: baseline;\"/>\n"
+"                                                </a>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                    <br/><br/>\n"
+"                                </div>\n"
+"                                <div>\n"
+"                                    よろしくおねがいいたします。<br/>\n"
+"                                    <span style=\"color: #454748;\">\n"
+"                                    -- <br/>\n"
+"                                    <t t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</t>\n"
+"                                    </span>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                              <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- DETAILS -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" border=\"0\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"min-width: 590px; background-color: white; "
+"padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <table style=\"width:100%;\">\n"
+"                                    <tr>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <img src=\"/mail/font_to_img/"
+"61555/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" "
+"height=\"34\" alt=\"\"/>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;line-height:20px;vertical-align:top;\">\n"
+"                                            <div t-"
+"if=\"object.is_one_day\">\n"
+"                                                <t t-out=\"object.date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: "
+"&quot;long&quot;}\">2021年5月4日</t>\n"
+"                                                <t t-out=\"object.date\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}"
+"\">7:00 AM</t>\n"
+"                                                 - <t t-"
+"out=\"object.date_end\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: "
+"&quot;short&quot;}\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div t-else=\"\">\n"
+"                                                <strong>開始日時：</strong>\n"
+"                                                <t t-out=\"object.date or "
+"object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">2021年5月4日"
+"</t>\n"
+"                                                 - <t t-out=\"object.date or "
+"object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: "
+"&quot;short&quot;}\">7:00 AM</t>\n"
+"                                                <strong>終了日時：</strong>\n"
+"                                                <t t-out=\"object.date_end "
+"or object.event_id.date_end\" t-options=\"{&quot;widget&quot;: "
+"&quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: "
+"object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">2021年5月6日"
+"</t>\n"
+"                                                 - <t t-"
+"out=\"object.date_end or object.event_id.date_end\" t-"
+"options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: "
+"True, &quot;tz_name&quot;: object.event_id.date_tz, "
+"&quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}"
+"\">5:00 PM</t>\n"
+"                                            </div>\n"
+"                                            <div style=\"font-"
+"size:12px;color:#9e9e9e\"><i><t t-out=\"object.event_id.date_tz or "
+"''\">Europe/Brussels</t></i></div>\n"
+"                                        </td>\n"
+"                                        <td style=\"vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address or "
+"object.location_id\">\n"
+"                                                <img src=\"/mail/font_to_img/"
+"61505/rgb(81,81,102)/34\" style=\"padding:4px;max-width:inherit;\" "
+"height=\"34\" alt=\"\"/>\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                        <td style=\"padding: 0px 10px 0px "
+"10px;width:50%;vertical-align:top;\">\n"
+"                                            <t t-if=\"event_address\">\n"
+"                                                <t t-set=\"location\" t-"
+"value=\"''\"/>\n"
+"                                                <t t-"
+"if=\"event_address.name\">\n"
+"                                                    <div t-"
+"out=\"event_address.name or ''\">Teksa SpA</div>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"event_address.street\">\n"
+"                                                    <div t-"
+"out=\"event_address.street or ''\">Puerto Madero 9710</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"event_address.street\"/>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"event_address.street2\">\n"
+"                                                    <div t-"
+"out=\"event_address.street2 or ''\">Of A15, Santiago (RM)</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"'%s, %s' % (location, event_address.street2)\"/>\n"
+"                                                </t>\n"
+"                                                <div>\n"
+"                                                    <t t-"
+"if=\"event_address.city\">\n"
+"                                                        <t t-"
+"out=\"event_address.city or ''\">Pudahuel</t>,\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.city)\"/>\n"
+"                                                    </t>\n"
+"                                                    <t t-"
+"if=\"event_address.state_id.name\">\n"
+"                                                        <t t-"
+"out=\"event_address.state_id.name or ''\">C1</t>,\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.state_id.name)"
+"\"/>\n"
+"                                                    </t>\n"
+"                                                    <t t-"
+"if=\"event_address.zip\">\n"
+"                                                        <t t-"
+"out=\"event_address.zip or ''\">98450</t>\n"
+"                                                        <t t-"
+"set=\"location\" t-value=\"'%s, %s' % (location, event_address.zip)\"/>\n"
+"                                                    </t>\n"
+"                                                </div>\n"
+"                                                <t t-"
+"if=\"event_address.country_id.name\">\n"
+"                                                    <div t-"
+"out=\"event_address.country_id.name or ''\">Argentina</div>\n"
+"                                                    <t t-set=\"location\" t-"
+"value=\"'%s, %s' % (location, event_address.country_id.name)\"/>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <div t-if=\"object.location_id\" "
+"t-out=\"'Talk location:' + object.location_id.name\"/>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </td></tr>\n"
+"                            <tr t-if=\"not object.date\">\n"
+"                                <td>\n"
+"                                    <strong><u>メモ</u></strong>:メール送信時"
+"には講演の開始時刻と終了時刻が指定されていませんでした。本メッセージに記載さ"
+"れている時刻はイベントの時刻に対応しています。\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <t t-if=\"event_organizer\">\n"
+"                                    <hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <!-- CONTACT ORGANIZER -->\n"
+"                                <t t-if=\"object.event_id.organizer_id.name "
+"or object.event_id.company_id.name\">\n"
+"                                    <div>\n"
+"                                        <span style=\"font-"
+"weight:300;margin:10px 0px\">この講演についてのお問い合わせは</span>\n"
+"                                        <div>主催者あてにおねがいいたします:"
+"</div>\n"
+"                                        <ul>\n"
+"                                            <li t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</li>\n"
+"                                            <t t-"
+"if=\"event_organizer.email\">\n"
+"                                                <li>メール: <a t-attf-"
+"href=\"mailto:{{ event_organizer.email }}\" style=\"text-"
+"decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"/></"
+"li>\n"
+"                                            </t>\n"
+"                                            <t t-"
+"if=\"object.event_id.organizer_id.phone or "
+"object.event_id.company_id.phone\">\n"
+"                                                <li>電話: <t t-"
+"out=\"object.event_id.organizer_id.phone or "
+"object.event_id.company_id.phone\"/></li>\n"
+"                                            </t>\n"
+"                                        </ul>\n"
+"                                    </div>\n"
+"                                </t>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                                <hr t-if=\"is_online or event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <!-- PWA MARKGETING -->\n"
+"                                <div t-if=\"is_online\">\n"
+"                                    <strong>最高のモバイル体験を</strong>\n"
+"                                    <a href=\"/event\">モバイルアプリをインス"
+"トールする</a>\n"
+"                                </div>\n"
+"                            </td></tr>\n"
+"                            <tr><td style=\"text-align:center;\">\n"
+"                                <!-- PWA MARKGETING SEPARATION-->\n"
+"                                <hr t-if=\"is_online and event_address\" "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; "
+"margin: 16px 0px 16px 0px;\"/>\n"
+"                            </td></tr>\n"
+"\n"
+"                            <tr><td valign=\"top\" style=\"font-size: 14px;"
+"\">\n"
+"                                <!-- GOOGLE MAPS LINK -->\n"
+"                                <table t-if=\"event_address and location\" "
+"style=\"width:100%;\"><tr><td>\n"
+"                                    <div>\n"
+"                                        <img src=\"/web_editor/font_to_img/"
+"61505/rgb(81,81,102)/20\" height=\"20\" style=\"vertical-align: bottom;\"/>\n"
+"                                        <a t-attf-href=\"https://"
+"maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
+"                                            <img t-"
+"if=\"event_address.static_map_url and "
+"event_address.static_map_url_is_valid\" t-attf-"
+"src=\"{{ event_address.static_map_url }}\" style=\"vertical-align:bottom; "
+"width: 100%;\" alt=\"Google Maps\"/>\n"
+"                                            <span t-else=\"\">Googleマップで"
+"イベントの開催場所を確認する</span>\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td></tr></table>\n"
+"                            </td></tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"            </table>\n"
+"            </td></tr>\n"
+"            <!-- FOOTER BY -->\n"
+"            <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"                <table t-if=\"object.company_id\" width=\"590\" border=\"0\" "
+"cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-"
+"color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"                  <tr><td style=\"text-align: center; font-size: 14px;\">\n"
+"                    Sent by <a target=\"_blank\" t-attf-"
+"href=\"{{ object.get_base_url() }}\" style=\"color: #875A7B;\" t-"
+"out=\"object.event_id.organizer_id.name or object.event_id.company_id.name "
+"or ''\">YourCompany</a>\n"
+"                    <t t-if=\"'website_url' in object.event_id and "
+"object.event_id.website_url\">\n"
+"                        <br/>\n"
+"                        <a href=\"/event\" style=\"color:#875A7B;\">すべての"
+"イベント</a>を見る。\n"
+"                    </t>\n"
+"                  </td></tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            </table>\n"
+"        "
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
@@ -249,10 +1023,11 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
-"トラックのカンバンステータスは、トラックに影響を与える特別な状況を示します。\n"
+"セッションのカンバンステータスは、セッションに影響を与える特別な状況を示しま"
+"す。\n"
 "*灰色はデフォルトの状況です\n"
-"*赤は何かがこのトラックの進行を妨げていることを示します\n"
-"*緑はトラックを次のステージにプルする準備ができていることを示します"
+"*赤は何かがこのセッションの進行を妨げていることを示します\n"
+"*緑はセッションを次のステージに移行させる準備ができていることを示します"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
@@ -262,7 +1037,7 @@ msgstr "要アクション"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__active
 msgid "Active"
-msgstr "有効"
+msgstr "アクティブ"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_ids
@@ -272,12 +1047,17 @@ msgstr "活動"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "例外の活動を示す文字装飾"
+msgstr "例外の活動を示す装飾"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
 msgid "Activity State"
-msgstr "活動状態"
+msgstr "活動ステータス"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
@@ -286,7 +1066,9 @@ msgstr "活動種別アイコン"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
-msgid "Add a description to help your coworkers understand the meaning and purpose of the stage."
+msgid ""
+"Add a description to help your coworkers understand the meaning and purpose "
+"of the stage."
 msgstr "同僚が理解できるようステージの意味と目的を説明してください。"
 
 #. module: website_event_track
@@ -300,14 +1082,38 @@ msgid "Add a new stage in the task pipeline"
 msgstr "タスクパイプラインに新しいステージを追加します"
 
 #. module: website_event_track
+#: model:mail.template,name:website_event_track.mail_template_data_track_reminder
+msgid "Add reminder via email"
+msgstr "メール経由でリマインダーを追加"
+
+#. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
-msgid "Add tags to your tracks to help your attendees browse your event web pages."
+msgid ""
+"Add tags to your tracks to help your attendees browse your event web pages."
 msgstr ""
+"セッションにタグを追加して、参加者がイベントのウェブページを閲覧しやすくしま"
+"しょう。"
+
+#. module: website_event_track
+#: model:mail.template,description:website_event_track.mail_template_data_track_reminder
+msgid "Add talk reminder"
+msgstr "講演リマインダーを追加"
+
+#. module: website_event_track
+#: model:mail.template,subject:website_event_track.mail_template_data_track_reminder
+msgid "Add talk reminder: {{ object.name }}"
+msgstr "講演リマインダーを追加: {{ object.name }}"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "Add this talk to your agenda ?"
+msgstr "この講演をアジェンダに追加しますか?"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management: tips and tricks from the fields"
-msgstr ""
+msgstr "高度なリード管理:現場からのヒントとコツ"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
@@ -317,15 +1123,23 @@ msgstr "高度なレポート"
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Agenda"
-msgstr "議事"
+msgstr "アジェンダ"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
 msgid "Agenda Color"
-msgstr ""
+msgstr "アジェンダ色"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "All Events"
+msgstr "すべてのイベント"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "All Talks"
 msgstr "すべての講演"
@@ -337,16 +1151,18 @@ msgstr "トラック提案を許可する"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Allow push notifications?"
-msgstr ""
+msgstr "プッシュ通知を許可しますか？"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Allow video and audio recording of their\n"
-"                                    presentation, for publishing on our website."
-msgstr "当社のウェブサイトで公開するために、プレゼンテーションのビデオとオーディオの録音を許可します。"
+"                            presentation, for publishing on our website."
+msgstr ""
+"当社のウェブサイトで公開するために、\n"
+"　　　　プレゼンテーションのビデオとオーディオの録音を許可します。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
@@ -373,19 +1189,28 @@ msgstr "アーカイブ済"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
-msgid "As key track cannot be un-favorited, this field store the partner choice to remove the reminder for key tracks."
+msgid ""
+"As key track cannot be un-favorited, this field store the partner choice to "
+"remove the reminder for key tracks."
 msgstr ""
+"キーセッションをお気に入りから外すことはできないため、このフィールドには、"
+"キーセッションのリマインダを削除するパートナーの選択肢が保存されます。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
 msgid ""
-"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
-"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
-"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"As you may have heard before, making your own furniture is actually not as "
+"difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete "
+"them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee "
+"table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
-"聞いたことがあるかもしれませんが、自分で家具を作ることは、実際には思ったほど難しくも複雑でもありません。\n"
-"実際、一部のプロジェクトは非常に簡単で、誰でも正常に完了することができます。\n"
+"聞いたことがあるかもしれませんが、自分で家具を作ることは、実際には思ったほど"
+"難しくも複雑でもありません。\n"
+"実際、一部のプロジェクトは非常に簡単で、誰でも正常に完了することができま"
+"す。\n"
 "たとえば、古いタイヤでかわいいスツールを作るのは本物のケーキです。\n"
 "コーヒーテーブルが必要な場合は、木枠を使って簡単に組み立てることができます。"
 
@@ -400,9 +1225,29 @@ msgid "Audience"
 msgstr "聴衆"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__publish_on
+msgid "Auto publish on"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__publish_on
+msgid "Automatically publish the page on the chosen date and time."
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
 msgid "Available Track Tags"
 msgstr "利用可能なトラックタグ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+msgid "Available on all event Agenda pages"
+msgstr "すべてのアジェンダページで閲覧可能"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_main
+msgid "Back to All Talks"
+msgstr "すべての講演に戻る"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -426,7 +1271,7 @@ msgstr "略歴"
 #: model:event.track.stage,legend_blocked:website_event_track.event_track_stage4
 #: model:event.track.stage,legend_blocked:website_event_track.event_track_stage5
 msgid "Blocked"
-msgstr "ブロック済"
+msgstr "不許可"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
@@ -436,7 +1281,7 @@ msgstr "最高の講演の席を予約する"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Book your talks"
-msgstr "あなたの話を予約する"
+msgstr "あなたの講演を予約する"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_14
@@ -466,17 +1311,17 @@ msgstr "提案を求めます"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
 msgid "Can Publish"
-msgstr "公開可能"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
-msgid "Canceled Stage"
-msgstr "取消済ステージ"
+msgstr "公開可"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
 msgid "Cancelled"
-msgstr "取消済"
+msgstr "キャンセル済"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
+msgid "Cancelled Stage"
+msgstr "キャンセル済ステージ"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -486,7 +1331,13 @@ msgstr "カテゴリ"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
 msgid "Category"
-msgstr "カテゴリ"
+msgstr "カテゴリー"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+msgid "Check your email to add the track to your agenda."
+msgstr "セッションをアジェンダに追加するには、メールを確認してください。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_12
@@ -494,7 +1345,15 @@ msgid "Climate positive"
 msgstr "気候変動"
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Close"
+msgstr "終了"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Color"
 msgstr "色"
 
@@ -527,12 +1386,18 @@ msgstr "会社名"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_res_config_settings
 msgid "Config Settings"
-msgstr "コンフィグ設定"
+msgstr "構成設定"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "Confirm"
+msgstr "確定"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
 msgid "Confirmation of {{ object.name }}"
-msgstr ""
+msgstr "{{ object.name }}の確認"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
@@ -542,12 +1407,16 @@ msgstr "確認済"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_13
 #: model_terms:event.track,description:website_event_track.event_7_track_3
-msgid "Considering to build a wooden house? Watch this video to find out more information about a construction process and final result. Step by step simple explanation! Interested?"
-msgstr "木造住宅の建設をお考えですか?建設プロセスと最終結果の詳細については、このビデオをご覧ください。ステップバイステップの簡単なご説明をします!ご興味ありますか？"
+msgid ""
+"Considering to build a wooden house? Watch this video to find out more "
+"information about a construction process and final result. Step by step "
+"simple explanation! Interested?"
+msgstr ""
+"木造住宅の建設をお考えですか?建設プロセスと最終結果の詳細については、このビデ"
+"オをご覧ください。ステップバイステップの簡単なご説明をします!ご興味あります"
+"か？"
 
 #. module: website_event_track
-#. odoo-python
-#: code:addons/website_event_track/models/event_track.py:0
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
 msgid "Contact"
 msgstr "連絡先"
@@ -555,14 +1424,17 @@ msgstr "連絡先"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Contact Details"
-msgstr "コンタクトの詳細"
+msgstr "連絡先詳細"
 
 #. module: website_event_track
-#. odoo-python
-#: code:addons/website_event_track/models/event_track.py:0
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
 msgid "Contact Email"
-msgstr ""
+msgstr "連絡先Eメール"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
+msgid "Contact Information"
+msgstr "連絡先情報"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_phone
@@ -572,23 +1444,23 @@ msgstr "連絡先電話番号"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Contact me through a different email/phone"
-msgstr ""
+msgstr "別のEメール/電話から連絡をする"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid "Create a Track"
-msgstr ""
+msgstr "セッションを作成"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
 msgid "Create a Track Location"
-msgstr ""
+msgstr "セッションロケーションを作成"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
 msgid "Create a Track Tag"
-msgstr ""
+msgstr "セッションタグを作成"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
@@ -621,6 +1493,15 @@ msgid "DIY Timber Cladding Project"
 msgstr "DIY木材クラッディングプロジェクト"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PROPOSAL PAGES "
+"OF ALL EVENTS"
+msgstr ""
+"ビルディングブロックをここにドロップすると、イベント一覧の全ての提案ページで"
+"利用できるようになります"
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Date"
 msgstr "日付"
@@ -638,12 +1519,12 @@ msgstr "OpenWood家具の取り扱い"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Define labels explaining kanban state management."
-msgstr ""
+msgstr "かんばんステータス管理を説明するラベルを定義します。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
 msgid "Define the order in which the location will appear on \"Agenda\" page"
-msgstr ""
+msgstr "\"アジェンダ\" ページに表示されるロケーションの順番を定義します。"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
@@ -653,8 +1534,9 @@ msgid ""
 "            You will use these stages in order to track the progress in\n"
 "            solving an event track."
 msgstr ""
-"トラックの作成からトラックの終了まで、イベントで使用されるステップを定義します。\n"
-"これらのステージを使用して、イベントトラックの解決の進捗状況を追跡します。"
+"トラックの作成からトラックの終了まで、イベントで使用されるステップを定義しま"
+"す。\n"
+"これらのステージを使用して、イベントセッションの解決の進捗状況を追跡します。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -671,7 +1553,7 @@ msgstr "説明"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
 msgid "Description of the partner (name, function and company name)"
-msgstr ""
+msgstr "取引先の定義 (名前、職位、会社名)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
@@ -694,19 +1576,28 @@ msgid "Discover our new design team"
 msgstr "新しいデザインチームをご覧ください"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__display_name
 msgid "Display Name"
 msgstr "表示名"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
-msgid "Display a Call to Action button to your Attendees while they watch your Track."
-msgstr ""
+msgid ""
+"Display a Call to Action button to your Attendees while they watch your "
+"Track."
+msgstr "セッション視聴中に行動を促すボタンを表示しましょう。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
@@ -721,7 +1612,7 @@ msgstr "ダウエルハック"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
 msgid "Duration"
-msgstr "経過時間"
+msgstr "期間"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_3
@@ -738,7 +1629,13 @@ msgstr "トラックの編集"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Email"
-msgstr "Eメール"
+msgstr "メール"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+msgid "Email Error"
+msgstr "Eメールエラー"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
@@ -747,9 +1644,9 @@ msgstr "メールテンプレート"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-msgid "Error"
-msgstr "エラー"
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "Email*"
+msgstr "Eメール*"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
@@ -771,9 +1668,10 @@ msgid "Event Locations"
 msgstr "イベントの場所"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/website_builder/event_track_page_option_plugin.js:0
 msgid "Event Page"
-msgstr ""
+msgstr "イベントページ"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
@@ -791,29 +1689,29 @@ msgstr "イベントテンプレート"
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
 msgid "Event Track"
-msgstr "イベントトラック"
+msgstr "イベントセッション"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
 msgid "Event Track Location"
-msgstr "イベントトラックの場所"
+msgstr "イベントセッションの場所"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
 msgid "Event Track Stage"
-msgstr "イベントトラックステージ"
+msgstr "イベントセッションステージ"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
 msgid "Event Track Tag"
-msgstr "イベントトラックタグ"
+msgstr "イベントセッションタグ"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag_category
 msgid "Event Track Tag Category"
-msgstr "イベントトラックタグカテゴリ"
+msgstr "イベントセッションタグカテゴリ"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track
@@ -821,13 +1719,13 @@ msgstr "イベントトラックタグカテゴリ"
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event Tracks"
-msgstr "イベントトラック"
+msgstr "イベントセッション"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
 #: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
 msgid "Event Tracks Menus"
-msgstr "イベントトラックメニュー"
+msgstr "イベントセッションメニュー"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_21
@@ -837,7 +1735,7 @@ msgstr "イベントのまとめ"
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
 msgid "Event: Track Confirmation"
-msgstr ""
+msgstr "イベント: セッション確認"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
@@ -852,8 +1750,7 @@ msgstr "イベントPWA"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Favorite On"
 msgstr "お気に入りに"
 
@@ -864,16 +1761,22 @@ msgstr "お気に入り"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
-msgid "Filter Tracks..."
-msgstr "フィルタートラック..."
+msgid "Filter Tracks"
+msgstr "セッションをフィルタ"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/website_builder/event_track_page_option.xml:0
 msgid "Filter by Tags"
-msgstr ""
+msgstr "タグごとのフィルタ"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Filters"
+msgstr "フィルタ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
 msgid "Finished"
 msgstr "完了"
 
@@ -903,6 +1806,11 @@ msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font awesomeのアイコン 例. fa-tasks"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__footer_visible
+msgid "Footer Visible"
+msgstr "フッタ表示"
+
+#. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
 msgid "Format"
 msgstr "フォーマット"
@@ -910,17 +1818,24 @@ msgstr "フォーマット"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
 msgid "Fully accessible"
-msgstr ""
+msgstr "フルアクセス可能"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Future Activities"
-msgstr "将来の活動"
+msgstr "今後の活動"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid "Get prepared and"
-msgstr "準備して"
+msgid ""
+"Get prepared and\n"
+"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
+"track' % (slug(event))\">register to your favorites talks now.</a>"
+msgstr ""
+"準備を整えて\n"
+"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
+"track' % (slug(event))\">お気に入りの講演に今すぐ登録しましょう。</a>"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -935,7 +1850,7 @@ msgstr "緑"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "グリーンかんばんラベル"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
@@ -945,13 +1860,7 @@ msgstr "グレー"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
-#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "Group By"
-msgstr "グループ化"
+msgstr "グレーかんばんラベル"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_11
@@ -964,6 +1873,11 @@ msgid "Has Message"
 msgstr "メッセージあり"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__header_visible
+msgid "Header Visible"
+msgstr "ヘッダ表示"
+
+#. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
 msgid "High"
 msgstr "高"
@@ -974,11 +1888,6 @@ msgid "Highest"
 msgstr "最高"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid "Home page"
-msgstr "ホームページ"
-
-#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
 msgid "House of World Cultures"
 msgstr "世界文化の家"
@@ -986,7 +1895,7 @@ msgstr "世界文化の家"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "How can our team get in touch with you?"
-msgstr ""
+msgstr "当社のチームからどのように連絡を取ればよろしいでしょうか？"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track18
@@ -1029,12 +1938,19 @@ msgid "How to optimize your sales, from leads to sales orders"
 msgstr "リードから受注まで、販売を最適化する方法"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_event_track.field_website__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
 
@@ -1046,38 +1962,49 @@ msgstr "アイコン"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "例外的なアクティビティを示唆するアイコン"
+msgstr "例外活動を示すアイコン"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_fully_accessible
-msgid "If checked, automatically publish tracks so that access links to customers are provided."
+msgid ""
+"If checked, automatically publish tracks so that access links to customers "
+"are provided."
 msgstr ""
+"チェックした場合、自動的にセッションを公開し、顧客へのアクセスリンクを提供し"
+"ます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
+msgstr "チェックした場合は、新しいメッセージに注意が必要です。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "チェックした場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "選択されている場合、一部のメッセージで配信エラーが発生しています。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
 msgid "If checked, the related tracks will be visible in the frontend."
-msgstr ""
+msgstr "チェックすると、関連するセッションがフロントエンドに表示されます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
-msgid "If set an email will be sent to the customer when the track reaches this step."
-msgstr "設定すると、トラックがこのステップに到達したときにメールが顧客に送信されます。"
+msgid ""
+"If set an email will be sent to the customer when the track reaches this "
+"step."
+msgstr ""
+"設定すると、セッションがこの段階に到達したときにメールが顧客に送信されます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
-msgid "If set, the talk will be set as favorite for each attendee registered to the event."
+msgid ""
+"If set, the talk will be set as favorite for each attendee registered to the "
+"event."
 msgstr ""
+"設定された場合、イベントに登録された参加者ごとに講演がお気に入りに設定されま"
+"す。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
@@ -1087,7 +2014,7 @@ msgstr "画像URL"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "In"
-msgstr "に"
+msgstr ":"
 
 #. module: website_event_track
 #. odoo-python
@@ -1109,7 +2036,8 @@ msgstr "このビデオでは、製材工場で製材がどのように行われ
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "In this video, I covered 6 tips and tricks to help out beginners:"
-msgstr "このビデオでは、初心者を支援するための6つのヒントとコツを取り上げました。"
+msgstr ""
+"このビデオでは、初心者を支援するための6つのヒントとコツを取り上げました。"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1134,6 +2062,30 @@ msgid "Introduction"
 msgstr "入門"
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+msgid "Invalid data"
+msgstr "無効なデータ"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+msgid "Invalid data."
+msgstr "無効なデータ。"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+msgid "Invalid email"
+msgstr "無効なEメール"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+msgid "Invalid email."
+msgstr "無効なメール。"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
 msgid "Is CTA Live"
 msgstr "CTAライブですか"
@@ -1141,7 +2093,12 @@ msgstr "CTAライブですか"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
 msgid "Is Follower"
-msgstr "フォロー中　"
+msgstr "フォロー中"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_one_day
+msgid "Is One Day"
+msgstr "1日"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
@@ -1151,32 +2108,32 @@ msgstr "公開済"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
 msgid "Is Reminder On"
-msgstr "リマインダーはオンになっています"
+msgstr "リマインダはオンか"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
 msgid "Is Track Done"
-msgstr "トラックは完了しました"
+msgstr "セッションが完了しました"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
 msgid "Is Track Live"
-msgstr "トラックライブですか"
+msgstr "セッションが現在進行中ですか"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
 msgid "Is Track Soon"
-msgstr "トラックはもうすぐです"
+msgstr "セッションまでもうすぐです"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
 msgid "Is Track Today"
-msgstr "今日はトラックです"
+msgstr "セッションは本日です"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
 msgid "Is Track Upcoming"
-msgstr "トラックは今後"
+msgstr "セッションは今後予定されています"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
@@ -1186,7 +2143,7 @@ msgstr "ウィッシュリスト登録済"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
 msgid "Is reminder off"
-msgstr "リマインダーはオフです"
+msgstr "リマインダーはオフか"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
@@ -1211,7 +2168,7 @@ msgstr "かんばん 進行中の説明"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
 msgid "Kanban State"
-msgstr "かんばん状態"
+msgstr "かんばんステータス"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state_label
@@ -1231,7 +2188,7 @@ msgstr "私たちの家具を販売する主な成功要因"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_9
 msgid "Kitchens for the Future"
-msgstr "未来のためのキッチン"
+msgstr "未来のキッチン"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__write_uid
@@ -1256,7 +2213,7 @@ msgstr "最終更新日"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Late Activities"
-msgstr "遅れた活動"
+msgstr "期限超過の活動"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track12
@@ -1274,14 +2231,23 @@ msgid "Life at Home Around the World: William’s Story"
 msgstr "世界中の家庭での生活:ウィリアムの物語"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Lightning Talks"
+msgstr "ライトニングトーク"
+
+#. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
-msgid "Link to Q&amp;A here! The time has come to hide those old block walls. Love simple and transformation type projects like this! :)-"
-msgstr "Q＆Aへのリンクはこちら'それらの古いブロック壁を隠す時が来ました。このようなシンプルで変革型のプロジェクトが大好きです' :)-"
+msgid ""
+"Link to Q&amp;A here! The time has come to hide those old block walls. Love "
+"simple and transformation type projects like this! :)-"
+msgstr ""
+"Q＆Aへのリンクはこちら'それらの古いブロック壁を隠す時が来ました。このようなシ"
+"ンプルで変革型のプロジェクトが大好きです' :)-"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
 msgid "Live"
 msgstr "有効"
 
@@ -1293,12 +2259,12 @@ msgstr "今を生きる"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_10
 msgid "Live Testimonial"
-msgstr "ライブの声"
+msgstr "ライブ参加者の声"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_25
 msgid "Live Testimonials"
-msgstr "ライブの声"
+msgstr "ライブ参加者の声"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
@@ -1339,13 +2305,16 @@ msgstr "センターマーキングゲージの作成"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
-msgid "Manage from here the places where you organize your tracks (e.g. Rooms, Channels, ...)."
+msgid ""
+"Manage from here the places where you organize your tracks (e.g. Rooms, "
+"Channels, ...)."
 msgstr ""
+"セッションを整理する場所はここから管理できます (例: 部屋、チャンネル、...)"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 msgid "Medium"
-msgstr "媒体"
+msgstr "中"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
@@ -1393,9 +2362,14 @@ msgid "Morning break"
 msgstr "モーニングブレーク"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "My Activities"
+msgstr "自分の活動"
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "活動の締切"
+msgstr "活動期限"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track27
@@ -1418,7 +2392,7 @@ msgstr "名称"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Name of your website's Events Progressive Web Application"
-msgstr "Webサイトのイベントの名前プログレッシブWebアプリケーション"
+msgstr "ウェブサイトのイベントの名前プログレッシブWebアプリケーション"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
@@ -1428,7 +2402,7 @@ msgstr "新しい認証プログラム"
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
 msgid "New Track"
-msgstr "新しいトラック"
+msgstr "新規セッション"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_calendar_event_id
@@ -1443,7 +2417,7 @@ msgstr "次の活動期限"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_summary
 msgid "Next Activity Summary"
-msgstr "次の活動サマリ"
+msgstr "次の活動概要"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_id
@@ -1453,24 +2427,36 @@ msgstr "次の活動タイプ"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid "No Track Visitors yet!"
-msgstr ""
+msgstr "まだ表示可能なセッションがありません！"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
-msgid "No results found"
-msgstr ""
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "No thanks"
+msgstr "いいえ、結構です"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "No thanks & don't ask again"
+msgstr "いいえ、結構です。今後は表示しないでください"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
 msgid "No track favorited by this visitor"
-msgstr ""
+msgstr "この訪問者がお気に入りに登録したセッションはありません。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
 msgid "No track found."
-msgstr "トラックが見つかりません。"
+msgstr "セッションが見つかりません。"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+msgid "Note"
+msgstr "メモ"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
@@ -1480,7 +2466,7 @@ msgstr "無色のタグはウェブサイトでは利用できないことに注
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
 msgid "Number of Actions"
-msgstr "アクションの数"
+msgstr "アクション数"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
@@ -1489,13 +2475,13 @@ msgstr "エラー数"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr "アクションを必要とするメッセージの数"
+msgid "Number of messages requiring action"
+msgstr "対応が必要なメッセージ数"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "配信エラーのメッセージ数"
+msgstr "配信エラーが発生されたメッセージ数"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_24
@@ -1505,7 +2491,7 @@ msgstr "古いものは新しい"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
 msgid "Our Last Day Together!"
-msgstr ""
+msgstr "一緒に行う最終日です！"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
@@ -1532,19 +2518,20 @@ msgstr "画像"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Plan your experience by adding your favorites talks to your wishlist"
-msgstr "お気に入りのトークをウィッシュリストに追加して、体験を計画します"
+msgstr ""
+"お気に入りの講演をウィッシュリストに追加して、参加の計画を立てましょう。"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#: code:addons/website_event_track/static/src/interactions/website_event_track_proposal_form.js:0
 msgid "Please enter either a contact email address or a contact phone number."
-msgstr ""
+msgstr "連絡先Eメールアドレスまたは連絡先電話番号のいずれかを入力して下さい。"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#: code:addons/website_event_track/static/src/interactions/website_event_track_proposal_form.js:0
 msgid "Please fill out the form correctly."
-msgstr ""
+msgstr "フォームに正しく記入して下さい。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track3
@@ -1568,8 +2555,13 @@ msgstr "優先度"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_7
-msgid "Probably one of the most asked questions I've gotten is how I got started woodworking! In this video I share with you how/why I started building furniture!"
-msgstr "おそらく私が得た最もよくある質問の1つは、私が木工を始めた方法です'このビデオでは、私が家具を作り始めた方法/理由をあなたと共有します'"
+msgid ""
+"Probably one of the most asked questions I've gotten is how I got started "
+"woodworking! In this video I share with you how/why I started building "
+"furniture!"
+msgstr ""
+"おそらく私が得た最もよくある質問の1つは、私が木工を始めた方法です'このビデオ"
+"では、私が家具を作り始めた方法/理由をあなたと共有します'"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage0
@@ -1578,13 +2570,19 @@ msgstr "提案"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Proposals are closed!"
-msgstr "提案は締め切らせていただきました'"
+msgid "Proposals are closed."
+msgstr "提案は締切りました。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
 msgid "Proposals on Website"
 msgstr "ウェブサイトでの提案"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_event.py:0
+msgid "Propose a talk"
+msgstr "講演を提案"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage3
@@ -1593,14 +2591,19 @@ msgid "Published"
 msgstr "公開済"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__published_date
+msgid "Published date"
+msgstr ""
+
+#. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
 msgid "Raising qualitive insights from your customers"
-msgstr "顧客から質的な洞察を得る"
+msgstr "顧客から良質なインサイトを得る"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "評価"
 
 #. module: website_event_track
 #. odoo-python
@@ -1622,12 +2625,17 @@ msgstr "赤"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "レッドかんばんビュー"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage4
 msgid "Refused"
-msgstr "却下済"
+msgstr "否認"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Regular Talks"
+msgstr "通常講演"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
@@ -1653,7 +2661,7 @@ msgstr "担当者"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_user_id
 msgid "Responsible User"
-msgstr "担当者"
+msgstr "担当ユーザ"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_23
@@ -1678,13 +2686,12 @@ msgstr "SEO最適化済"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS配信エラー"
+msgstr "SMS送信エラー"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-msgid "Schedule some tracks to get started"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Search a talk ..."
+msgstr "講演を検索 ..."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_6
@@ -1693,14 +2700,17 @@ msgstr "輸送中の木材の保護"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
-msgid "Select categories"
-msgstr ""
+#: code:addons/website_event_track/static/src/interactions/website_event_track_proposal_form_tags.js:0
+msgid "Select Categories"
+msgstr "カテゴリを選択"
 
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
-msgid "Sent to speakers whose track proposal is accepted (set the template on the right stage)"
+msgid ""
+"Sent to speakers whose track proposal is accepted (set the template on the "
+"right stage)"
 msgstr ""
+"セッション提案が受理されたスピーカーに送付 (右ステージにテンプレートを設定)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
@@ -1713,24 +2723,23 @@ msgstr "SEO名"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
 msgid "Sequence"
-msgstr "付番"
+msgstr "シーケンス"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Set Favorite"
 msgstr "お気に入りを設定"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
 msgid "Show Button"
-msgstr ""
+msgstr "ボタンを表示"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
-msgid "Show all records which has next action date is before today"
-msgstr "次のアクションの日付が今日より前のすべてのレコードを表示する"
+msgid "Show all records whose next activity date is past"
+msgstr "次回活動日が過去のすべてのレコードを表示"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
@@ -1739,24 +2748,29 @@ msgstr "トラック紹介"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Speaker"
 msgstr "スピーカー"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Speaker Bio"
-msgstr ""
+msgstr "スピーカー経歴"
 
 #. module: website_event_track
-#. odoo-python
-#: code:addons/website_event_track/models/event_track.py:0
-msgid "Speaker Email"
-msgstr "スピーカーEメール"
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
+msgid "Speaker Name"
+msgstr "スピーカー名"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__image
 msgid "Speaker Photo"
 msgstr "スピーカー写真"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker Profile"
+msgstr "スピーカー経歴"
 
 #. module: website_event_track
 #. odoo-python
@@ -1773,7 +2787,7 @@ msgstr "ステージ"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Stage Description and Tooltips"
-msgstr "ステージ説明およびステータス定義"
+msgstr "ステージ説明およびツールチップ"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
@@ -1783,7 +2797,7 @@ msgstr "ステージ名"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "Starting now!"
-msgstr ""
+msgstr "今始まります！"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
@@ -1798,10 +2812,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"活動に基づく状態\n"
-"延滞：期限は既に過ぎました\n"
-"当日：活動日は本日です\n"
-"予定：将来の活動。"
+"活動に基づくステータス\n"
+"遅延: 期限が既に過ぎています\n"
+"今日: 活動日は今日です\n"
+"予定: 将来の活動。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1816,7 +2830,7 @@ msgstr "提案を提出する"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
 msgid "Tag Line"
-msgstr ""
+msgstr "タグ明細"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
@@ -1826,7 +2840,7 @@ msgstr "タグ名"
 #. module: website_event_track
 #: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "タグ名がすでに存在します！"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
@@ -1836,50 +2850,50 @@ msgid "Tags"
 msgstr "タグ"
 
 #. module: website_event_track
-#. odoo-python
-#: code:addons/website_event_track/models/event_event.py:0
-msgid "Talk Proposals"
-msgstr "トークプロポーザル"
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Talk Intro"
+msgstr "講演イントロ"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-msgid "Talk added to your Favorites"
-msgstr "お気に入りにトークを追加"
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+msgid ""
+"Talk already in your Favorites. The page does not seem to be up-to-date and "
+"needs a refresh."
+msgstr ""
+"講演はすでにお気に入りに追加されています。このページは最新の状態ではないよう"
+"です。更新が必要です。"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-msgid "Talk already in your Favorites"
-msgstr "あなたのお気に入りですでに話してください"
-
-#. module: website_event_track
-#. odoo-javascript
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Talk removed from your Favorites"
-msgstr "お気に入りから削除されたトーク"
+msgstr "お気に入りから削除された講演"
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "Talks"
-msgstr "会談"
+msgstr "講演"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Talks Types"
-msgstr "トークタイプ"
+msgstr "講演タイプ"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
+msgstr "タスク進行中。ブロックまたは完了済にするにはクリックして下さい。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
+"タスクはブロックされています。ブロック解除または完了済にするにはクリックして"
+"下さい。"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1888,9 +2902,16 @@ msgid "Thank you for your proposal."
 msgstr "ご提案ありがとうございます。"
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr ""
+"ウェブサイト経由でこのドキュメントにアクセスするための完全な絶対URLです。"
+
+#. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
-msgid "The full URL to access the document through the website."
-msgstr "ウェブサイトを介してドキュメントにアクセスするために完全なURLです。"
+msgid "The full relative URL to access the document through the website."
+msgstr ""
+"ウェブサイト経由でこのドキュメントにアクセスするための完全な相対URLです。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
@@ -1904,33 +2925,77 @@ msgid "The new way to promote your creations"
 msgstr "あなたの作品を宣伝する新しい方法"
 
 #. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+msgid ""
+"The start and end times of the talk were not specified when you asked to add "
+"them to your calendar, therefore the times indicated in this reminder "
+"correspond to those of the event."
+msgstr ""
+"カレンダーへの追加をリクエストした際に、講演の開始時刻と終了時刻が指定されて"
+"いなかったため、このリマインダーに表示されている時刻はイベント全体の時刻に基"
+"づいています。"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+msgid "The talk has already begun."
+msgstr "講演はすでに開始されています。"
+
+#. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/controllers/event_track.py:0
+msgid "The talk is already finished."
+msgstr "講演はすでに終了しました。"
+
+#. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
-msgid "There are a lot of ideas worth exploring so start with the 10 DIY furniture ideas for absolute beginners."
-msgstr "探求する価値のあるアイデアがたくさんあるので、まったくの初心者のための10のDIY家具のアイデアから始めてください。"
+msgid ""
+"There are a lot of ideas worth exploring so start with the 10 DIY furniture "
+"ideas for absolute beginners."
+msgstr ""
+"探求する価値のあるアイデアがたくさんあるので、まったくの初心者のための10のDIY"
+"家具のアイデアから始めてください。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"There are several variants of wood is available in the world but we are talking about most expensive\n"
-"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+"There are several variants of wood is available in the world but we are "
+"talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most "
+"expensive wood."
 msgstr ""
 "世界にはいくつかの種類の木材がありますが、私たちは\n"
 "世界で最も高価なものにを扱い、最も高価な10の木材を保持しています。"
 
 #. module: website_event_track
-#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
-msgid "They will be created automatically once attendees start browsing your events."
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"These are 30 minutes talks on many different topics. Most topics are "
+"accepted in lightning talks."
 msgstr ""
+"これらは、さまざまなトピックに関する30分間の講演です。多くのトピックはライト"
+"ニングトークとしても受け付けています。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "This event does not accept proposals."
-msgstr "このイベントは提案を受け付けません。"
+msgid "These are standard talks with slides, alocated in slots of 60 minutes."
+msgstr "これらはスライドを使った標準的な講演で、60分の枠に割り当てられてます。"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"They will be created automatically once attendees start browsing your events."
+msgstr "参加者があなたのイベントを閲覧し始めると、自動的に作成されます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_website__app_icon
-msgid "This field holds the image used as mobile app icon on the website (PNG format)."
-msgstr "このフィールドには、Webサイトでモバイルアプリアイコンとして使用される画像(PNG形式)が保持されます。"
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
+msgstr ""
+"このフィールドには、ウェブサイトでモバイルアプリアイコンとして使用される画像"
+"(PNG形式)が保持されます。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
@@ -1940,32 +3005,42 @@ msgstr "このフィールドは、イベントのプログレッシブWebアプ
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid "This page hasn't been saved for offline reading yet.<br/>Please check your network connection."
-msgstr "このページはまだオフラインで読むために保存されていません。<br/>ネットワーク接続を確認してください。"
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
+msgstr ""
+"このページはまだオフラインで読むために保存されていません。<br/>ネットワーク接"
+"続を確認してください。"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
-msgid "This stage is folded in the kanban view when there are no records in that stage to display."
-msgstr "このステージは、そのステージにレコードが表示されていないときに、かんばんのビューで折り込まれます。"
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
+"このステージは、そのステージにレコードが表示されていないときに、かんばんの"
+"ビューで折り込まれます。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "This step is done. Click to block or set in progress."
 msgstr ""
+"このステップは完了です。ブロックまたは進行中に設定するにはクリックして下さ"
+"い。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "This track does not have a description."
-msgstr ""
+msgstr "このセッションには説明がありません"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "Timely release of presentation material (slides),\n"
-"                                    for publishing on our website."
+"                            for publishing on our website."
 msgstr ""
 "当社のウェブサイトで公開するためのプレゼンテーション\n"
-"資料(スライド)のタイムリーなリリース。"
+"　　　　　　　資料(スライド)のタイムリーなリリース。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
@@ -1990,10 +3065,13 @@ msgstr "世界で最も高価な木材トップ10"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_5
 msgid ""
-"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
-"    that there are hundreds of wood types exist around the globe following different properties and use."
+"Top most expensive wood in the world is quite interesting topic and several "
+"people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following "
+"different properties and use."
 msgstr ""
-"世界で最も高価な木材は非常に興味深いトピックであり、さまざまな特性と用途に従って\n"
+"世界で最も高価な木材は非常に興味深いトピックであり、さまざまな特性と用途に"
+"従って\n"
 "世界中に何百もの木材タイプが存在することに驚く人もいるかもしれません。"
 
 #. module: website_event_track
@@ -2006,7 +3084,7 @@ msgstr "追跡"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_visitor
 msgid "Track / Visitor Link"
-msgstr "トラック/ビジターリンク"
+msgstr "セッション/ビジターリンク"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
@@ -2036,7 +3114,7 @@ msgstr "場所を追跡する"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
 msgid "Track Proposals Menu Item"
-msgstr ""
+msgstr "セッション提案メニュー項目"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
@@ -2088,7 +3166,7 @@ msgstr "トラックタグカテゴリ"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
 msgid "Track Visitor"
-msgstr "訪問者を追跡する"
+msgstr "セッション訪問者を追跡する"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
@@ -2098,17 +3176,27 @@ msgstr "訪問者を追跡する"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 msgid "Track Visitors"
-msgstr "トラック訪問者"
+msgstr "セッション訪問者"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
-msgid "Track Visitors store statistics on your events, including how many times tracks have been wishlisted."
+msgid ""
+"Track Visitors store statistics on your events, including how many times "
+"tracks have been wishlisted."
 msgstr ""
+"ウィッシュリストに登録されたセッション数など、イベントに関する統計情報をセッ"
+"ション訪問者が保存します。"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
 msgid "Track blocked"
 msgstr "トラックがブロックされました"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+msgid "Track successfully added to your favorites."
+msgstr "セッションがお気に入りに追加されました。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
@@ -2123,7 +3211,7 @@ msgstr "トラック"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_type_view_form_inherit_track
 msgid "Tracks Menu Item"
-msgstr ""
+msgstr "セッションメニュー項目"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
@@ -2133,8 +3221,12 @@ msgstr "ウェブサイトで提案を追跡する"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
-msgid "Tracks define your event schedule. They can be talks, workshops or any similar activity."
+msgid ""
+"Tracks define your event schedule. They can be talks, workshops or any "
+"similar activity."
 msgstr ""
+"セッションはイベントのスケジュールを定義します。講演、ワークショップ、その他"
+"類似の活動があります。"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
@@ -2145,12 +3237,17 @@ msgstr "ウェブサイト上のトラック"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "記録上の例外アクティビティのタイプ。"
+msgstr "記録上の例外活動の種類。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "Unknown"
+msgstr "不明"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
 msgid "Unpublished"
 msgstr "未公開"
 
@@ -2160,24 +3257,42 @@ msgid "Unread Messages"
 msgstr "未読メッセージ"
 
 #. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+#: code:addons/website_event_track/models/website_visitor.py:0
+msgid "Unsupported 'Not In' operation on track wishlist visitors"
+msgstr ""
+"セッションのお気に入り訪問者に対する'含まれていない(Not In)' 操作はサポートさ"
+"れていません"
+
+#. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
-"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
-"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+"Use these simple steps to easily haul LONG lumber in a short box pickup "
+"truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws "
+"are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or "
+"jobsite."
 msgstr ""
-"これらの簡単な手順を使用して、短いボックスのピックアップトラックで長い材木を簡単に運搬します。\n"
-"いくつかのボード、頑丈なストラップ、数本のネジに加えて、大工の創意工夫を駆使して、\n"
+"これらの簡単な手順を使用して、短いボックスのピックアップトラックで長い材木を"
+"簡単に運搬します。\n"
+"いくつかのボード、頑丈なストラップ、数本のネジに加えて、大工の創意工夫を駆使"
+"して、\n"
 "長いボードを土場から次のレベルの大工店や現場に簡単に運ぶことができます。"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_6
 msgid ""
-"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
-"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) "
+"allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated "
+"knots."
 msgstr ""
-"タイダウンストラップ(バンジーコードではありません!!!)に独自の包装方法を使用すると、\n"
-"トリッキーな結び目や複雑な結び目を結び、解く必要なしに、木材をしっかりと締めることができます。"
+"タイダウンストラップ(バンジーコードではありません!!!)に独自の包装方法を使用す"
+"ると、\n"
+"トリッキーな結び目や複雑な結び目を結び、解く必要なしに、木材をしっかりと締め"
+"ることができます。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2187,12 +3302,12 @@ msgstr "トラックを見る"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_visible_in_agenda
 msgid "Visible in agenda"
-msgstr ""
+msgstr "アジェンダに表示"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
 msgid "Visible on current website"
-msgstr "現在のウェブサイトで見える状態"
+msgstr "現在のサイトに表示"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
@@ -2218,13 +3333,19 @@ msgstr "お客様からの声"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
 msgid "Wait for visitors to add this track to their list of favorites"
-msgstr ""
+msgstr "訪問者がこのセッションをお気に入りリストに加えるのを待ちましょう"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-msgid "We did not find any track matching your"
-msgstr "あなたに一致するトラックは見つかりませんでした"
+msgid "We could not find any track at this moment."
+msgstr "現在のセッションが見つかりませんでした。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "We could not find any track matching your search for:"
+msgstr "以下の検索に一致するセッションが見つかりませんでした:"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2235,13 +3356,21 @@ msgstr "講演者は、次のことを約束する合意に同意する必要が
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "We will accept a broad range of\n"
-"                            presentations, from reports on academic and\n"
-"                            commercial projects to tutorials and case\n"
-"                            studies. As long as the presentation is\n"
-"                            interesting and potentially useful to the\n"
-"                            audience, it will be considered for\n"
-"                            inclusion in the programme."
+"                                presentations, from reports on academic and\n"
+"                                commercial projects to tutorials and case\n"
+"                                studies. As long as the presentation is\n"
+"                                interesting and potentially useful to the\n"
+"                                audience, it will be considered for\n"
+"                                inclusion in the programme."
 msgstr ""
+"学術的、商業的プロジェクト\n"
+"                                の報告からチュートリアルやケーススタディま"
+"で、\n"
+"                                幅広いプレゼンテーションを受け付けます。\n"
+"                                プレゼンテーションの内容\n"
+"                                iが興味深く、聴衆の役に立つ\n"
+"                                可能性のあるものであれば、\n"
+"                                プログラムに含まれることがあります。"
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2250,9 +3379,25 @@ msgid "We will evaluate your proposition and get back to you shortly."
 msgstr "私たちはあなたの提案を評価し、すぐにあなたに連絡します。"
 
 #. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
+msgid "We will send you a link to add this talk to your agenda."
+msgstr "この講演をアジェンダに追加するためのリンクをお送りします。"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "We're sorry, this event does not accept proposals anymore"
+msgstr "申し訳ございませんが、このイベントは提案を受け付けておりません"
+
+#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website
 msgid "Website"
 msgstr "ウェブサイト"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_absolute_url
+msgid "Website Absolute URL"
+msgstr "ウェブサイト絶対URL"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
@@ -2282,37 +3427,37 @@ msgstr "ウェブサイトメッセージ"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
 msgid "Website URL"
-msgstr "ウェブサイトURL"
+msgstr "サイトURL"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_visitor
 msgid "Website Visitor"
-msgstr "ウェブサイト訪問者"
+msgstr "サイト訪問者"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
 msgid "Website communication history"
-msgstr "ウェブサイトコミュニケーション履歴"
+msgstr "ウェブサイト通信履歴"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
 msgid "Website meta description"
-msgstr "ウェブサイトメタディスクリプション"
+msgstr "サイトメタディスクリプション"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "ウェブサイトメタキーワード"
+msgstr "サイトメタキーワード"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
 msgid "Website meta title"
-msgstr "ウェブサイトメタタイトル"
+msgstr "サイトメタタイトル"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "ウェブサイトopengraph画像"
+msgstr "サイトopengraph画像"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_10
@@ -2327,17 +3472,21 @@ msgstr "このイベントとは"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "What is your talk about?"
-msgstr ""
+msgstr "あなたの講演は何についてですか？"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
-msgid "Who will give this talk? We will show this to attendees to showcase your talk."
+msgid ""
+"Who will give this talk? We will show this to attendees to showcase your "
+"talk."
 msgstr ""
+"この講演を行うのは誰ですか?この情報は、来場者に講演内容を紹介するために表示さ"
+"れます。"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_2
 msgid "Who's OpenWood anyway?"
-msgstr ""
+msgstr "そもそもOpenWoodとは？"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -2348,10 +3497,11 @@ msgstr "ウィッシュリスト登録者"
 #: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
 msgid "Wishlisted Tracks"
-msgstr "ウィッシュリストにあるトラック"
+msgstr "ウィッシュリストにあるセッション"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/website_builder/event_track_page_option.xml:0
 msgid "Wishlists"
 msgstr "ウィッシュリスト"
 
@@ -2362,15 +3512,19 @@ msgstr "木工:どうやって始めたの'"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
+#: code:addons/website_event_track/static/src/interactions/website_event_track_proposal_form.js:0
 msgid "You cannot access this page."
-msgstr ""
+msgstr "このページにアクセスできません。"
 
 #. module: website_event_track
 #. odoo-javascript
-#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
-msgid "You have to enable push notifications to get reminders for your favorite tracks."
+#: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
+msgid ""
+"You have to enable push notifications to get reminders for your favorite "
+"tracks."
 msgstr ""
+"お気に入りのセッションのリマインダを受け取るには、プッシュ通知を有効にして下"
+"さい。"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
@@ -2380,7 +3534,7 @@ msgstr "あなたはオフラインです'"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "a few seconds"
-msgstr ""
+msgstr "数秒"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -2390,29 +3544,29 @@ msgstr "前"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"John Doe was born in...\""
-msgstr ""
+msgstr "例: \"ジョン・ドーの生まれは...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
 msgid "e.g. \"Main Conference Room\""
-msgstr ""
+msgstr "例: \"メイン大会議室\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"This talk will be about...\""
-msgstr ""
+msgstr "例: \"この講演は以下についてです...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Get Yours Now!"
-msgstr ""
+msgstr "例: 今すぐ入手！"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
-msgstr "例:刺激的なビジネストーク"
+msgstr "例:刺激的なビジネス講演"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -2425,20 +3579,21 @@ msgid "hours"
 msgstr "時間"
 
 #. module: website_event_track
+#. odoo-python
+#: code:addons/website_event_track/models/event_track.py:0
+msgid "id"
+msgstr "id"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/interactions/event_track_timer.js:0
+msgid "in %s"
+msgstr "%sで"
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "minutes after Track start"
-msgstr ""
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid "register to your favorites talks now."
-msgstr "今すぐお気に入りのトークに登録してください。"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-msgid "search."
-msgstr "探す。"
+msgstr "分後(セッション開始から)"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -2449,8 +3604,3 @@ msgstr "で始まる"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "に始まります"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
-msgid "tracks"
-msgstr "トラック"

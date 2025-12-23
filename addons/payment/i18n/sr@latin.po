@@ -12,12 +12,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-12 10:37+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, "
 "2022\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
-"Language: sr\n"
+"Language: sr@latin\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -25,16 +25,13 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
-msgid " Data Fetched"
+#: model_terms:ir.ui.view,arch_db:payment.availability_report_records
+msgid "(ID:"
 msgstr ""
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
-msgid ""
-"<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
-"%s</li><li>Account Holder: %s</li></ul>"
+#: model:payment.method,name:payment.payment_method_7eleven
+msgid "7Eleven"
 msgstr ""
 
 #. module: payment
@@ -126,25 +123,24 @@ msgid "<span><i class=\"fa fa-lock\"/> Secured by</span>"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid ""
-"<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal account</"
-"span>"
+"<strong><i class=\"fa fa-file-text\"/> Show availability report</strong>"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "<span>Your payment methods</span>"
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Methods</strong>"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.pay
-#: model_terms:ir.ui.view,arch_db:payment.payment_methods
-msgid ""
-"<strong>No suitable payment method could be found.</strong><br/>\n"
-"                                If you believe that it is an error, please "
-"contact the website\n"
-"                                administrator."
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "<strong><i class=\"oi oi-arrow-right\"/> Payment Providers</strong>"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "<strong>No payment method available</strong>"
 msgstr ""
 
 #. module: payment
@@ -190,52 +186,14 @@ msgid "<strong>Warning</strong> You must be logged in to pay."
 msgstr ""
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_transaction.py:0
-msgid ""
-"A refund request of %(amount)s has been sent. The payment will be created "
-"soon. Refund transaction reference: %(ref)s (%(provider_name)s)."
+#: model:payment.method,name:payment.payment_method_ach_direct_debit
+msgid "ACH Direct Debit"
 msgstr ""
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_token.py:0
-msgid "A token cannot be unarchived once it has been archived."
+#: model:payment.method,name:payment.payment_method_abitab
+msgid "Abitab"
 msgstr ""
-
-#. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_transaction.py:0
-msgid ""
-"A transaction with reference %(ref)s has been initiated (%(provider_name)s)."
-msgstr ""
-
-#. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_transaction.py:0
-msgid ""
-"A transaction with reference %(ref)s has been initiated to save a new "
-"payment method (%(provider_name)s)"
-msgstr ""
-
-#. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_transaction.py:0
-msgid ""
-"A transaction with reference %(ref)s has been initiated using the payment "
-"method %(token)s (%(provider_name)s)."
-msgstr ""
-
-#. module: payment
-#. odoo-python
-#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
-msgid "Account"
-msgstr "Račun"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__acc_number
-msgid "Account Number"
-msgstr "Broj računa"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -249,6 +207,11 @@ msgid "Active"
 msgstr "Aktivno"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_config_settings__active_provider_id
+msgid "Active Provider"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Address"
@@ -257,6 +220,41 @@ msgstr "Adresa"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_adyen
 msgid "Adyen"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_affirm
+msgid "Affirm"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_afterpay_riverty
+msgid "AfterPay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_afterpay
+msgid "Afterpay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_akulaku
+msgid "Akulaku PayLater"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_alipay_hk
+msgid "AliPayHK"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_alipay
+msgid "Alipay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_alipay_plus
+msgid "Alipay+"
 msgstr ""
 
 #. module: payment
@@ -270,6 +268,11 @@ msgid "Allow Saving Payment Methods"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_alma
+msgid "Alma"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
 msgstr ""
@@ -280,17 +283,31 @@ msgid "Already Voided"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_aman
+msgid "Aman"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_amazon_pay
+msgid "Amazon Pay"
+msgstr ""
+
+#. module: payment
 #: model:payment.provider,name:payment.payment_provider_aps
 msgid "Amazon Payment Services"
 msgstr ""
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#: model:payment.method,name:payment.payment_method_amex
+msgid "American Express"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__amount
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.pay
+#: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Amount"
 msgstr "Iznos"
 
@@ -305,14 +322,14 @@ msgid "Amount To Capture"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+#: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "An error occurred during the processing of your payment."
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
-msgid "Apply"
-msgstr "Primenite"
+#: model_terms:ir.ui.view,arch_db:payment.state_header
+msgid "An error occurred while saving your payment method."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -336,8 +353,23 @@ msgstr ""
 "radnja se ne može opozvati."
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_argencard
+msgid "Argencard"
+msgstr ""
+
+#. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
 msgid "Asiapay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_astropay
+msgid "Astropay TEF"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_atome
+msgid "Atome"
 msgstr ""
 
 #. module: payment
@@ -366,19 +398,153 @@ msgid "Availability"
 msgstr "Dostupnost"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.availability_report
+msgid "Availability report"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_search
 msgid "Available methods"
 msgstr ""
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
-msgid "Bank"
-msgstr "Banka"
+#: model:payment.method,name:payment.payment_method_bacs_direct_debit
+msgid "BACS Direct Debit"
+msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
-msgid "Bank Name"
+#: model:payment.method,name:payment.payment_method_bank_bca
+msgid "BCA"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_becs_direct_debit
+msgid "BECS Direct Debit"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_blik
+msgid "BLIK"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bri
+msgid "BRI"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bancnet
+msgid "BancNet"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_banco_guayaquil
+msgid "Banco Guayaquil"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_banco_pichincha
+msgid "Banco Pichincha"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_banco_de_bogota
+msgid "Banco de Bogota"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bancolombia
+msgid "Bancolombia"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bancontact
+msgid "Bancontact"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bangkok_bank
+msgid "Bangkok Bank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bank_account
+msgid "Bank Account"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_installments_eg
+msgid "Bank Installments"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bni
+msgid "Bank Negara Indonesia"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bank_permata
+msgid "Bank Permata"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bsi
+msgid "Bank Syariah Indonesia"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bank_transfer
+msgid "Bank Transfer"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bank_of_ayudhya
+msgid "Bank of Ayudhya"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bank_reference
+msgid "Bank reference"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_belfius
+msgid "Belfius"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_benefit
+msgid "Benefit"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bharatqr
+msgid "BharatQR"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_billease
+msgid "BillEase"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_billink
+msgid "Billink"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_bizum
+msgid "Bizum"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_boleto
+msgid "Boleto"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_boost
+msgid "Boost"
 msgstr ""
 
 #. module: payment
@@ -393,34 +559,29 @@ msgid "Buckaroo"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
-msgid "Callback Document Model"
+#: model:payment.method,name:payment.payment_method_cimb_niaga
+msgid "CIMB Niaga"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_is_done
-msgid "Callback Done"
+#: model:payment.method,name:payment.payment_method_cmr
+msgid "CMR"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
-msgid "Callback Hash"
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "CONNECT"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
-msgid "Callback Method"
+#: model:payment.method,name:payment.payment_method_cabal
+msgid "Cabal"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
-msgid "Callback Record ID"
+#: model:payment.method,name:payment.payment_method_caixa
+msgid "Caixa"
 msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
-msgid "Cancel"
-msgstr "Otkaži"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__cancel
@@ -434,13 +595,13 @@ msgstr ""
 
 #. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Cannot delete payment method"
 msgstr ""
 
 #. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Cannot save payment method"
 msgstr ""
 
@@ -470,6 +631,46 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_card
+msgid "Card"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_dpo
+msgid "Card / Mobile"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_carnet
+msgid "Carnet"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_cartes_bancaires
+msgid "Cartes Bancaires"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_cash_app_pay
+msgid "Cash App Pay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_cashalo
+msgid "Cashalo"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_cebuana
+msgid "Cebuana"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_cencosud
+msgid "Cencosud"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
 msgid "Child Transactions"
 msgstr ""
@@ -481,13 +682,12 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
-#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
-msgid "Choose a payment method"
+msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.form
-msgid "Choose another method <i class=\"oi oi-arrow-down\"/>"
+#: model:payment.method,name:payment.payment_method_cirrus
+msgid "Cirrus"
 msgstr ""
 
 #. module: payment
@@ -495,6 +695,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "City"
 msgstr "Grad"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_clearpay
+msgid "Clearpay"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -509,16 +714,17 @@ msgid "Code"
 msgstr "Kod"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_codensa
+msgid "Codensa"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
 msgstr "Boja"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
-msgid "Companies"
-msgstr "Preduzeća"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__company_id
 #: model:ir.model.fields,field_description:payment.field_payment_provider__company_id
 #: model:ir.model.fields,field_description:payment.field_payment_token__company_id
@@ -530,6 +736,11 @@ msgid "Company"
 msgstr "Kompanija"
 
 #. module: payment
+#: model:ir.model,name:payment.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Configuration"
@@ -537,7 +748,13 @@ msgstr "Podešavanje"
 
 #. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/interactions/payment_form.js:0
+msgid "Confirm"
+msgstr ""
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Confirm Deletion"
 msgstr ""
 
@@ -548,8 +765,19 @@ msgstr "Potvrđeno"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
+#: model:payment.method,name:payment.payment_method_contact
 msgid "Contact"
 msgstr "Kontakt"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_cordial
+msgid "Cordial"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_cordobesa
+msgid "Cordobesa"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
@@ -557,11 +785,19 @@ msgid "Corresponding Module"
 msgstr ""
 
 #. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "Could not establish the connection to the payment provider."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__supported_country_ids
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_country_ids
 msgid "Countries"
 msgstr "Zemlje"
 
 #. module: payment
+#: model:ir.model,name:payment.model_res_country
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_country_id
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Country"
@@ -573,8 +809,8 @@ msgid "Create Token"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_provider
-msgid "Create a new payment provider"
+#: model:ir.model,website_form_label:payment.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: payment
@@ -582,7 +818,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_method__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_provider__create_uid
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_uid
 msgid "Created by"
@@ -593,7 +828,6 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_method__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_provider__create_date
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Created on"
@@ -611,12 +845,12 @@ msgid "Credentials"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
-#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
-msgid "Credit & Debit card (via Stripe)"
+#: model:payment.method,name:payment.payment_method_credit
+msgid "Credit Payment"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__supported_currency_ids
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
 msgid "Currencies"
 msgstr ""
@@ -630,15 +864,29 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
-#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
-msgid "Custom payment instructions"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
 msgid "Customer"
 msgstr "Kupac"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_dpo
+msgid "DPO Pay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_dana
+msgid "Dana"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_dankort
+msgid "Dankort"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_davivienda
+msgid "Davivienda"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__sequence
@@ -651,21 +899,40 @@ msgid "Demo"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_diners
+msgid "Diners Club International"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__disabled
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Disabled"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_discover
+msgid "Discover"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_ir_http__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_method__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_provider__display_name
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
+#: model:ir.model.fields,field_description:payment.field_res_company__display_name
+#: model:ir.model.fields,field_description:payment.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:payment.field_res_country__display_name
+#: model:ir.model.fields,field_description:payment.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_status
+msgid "Don't hesitate to contact us if you don't receive it."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
@@ -678,10 +945,33 @@ msgid "Draft"
 msgstr "Priprema"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_duitnow
+msgid "DuitNow"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_emi_india
+msgid "EMI"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_eps
+msgid "EPS"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_easypaisa
+msgid "EasyPaisa"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_elo
+msgid "Elo"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_email_account
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
-#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Email"
 msgstr "E-mail"
 
@@ -701,20 +991,14 @@ msgid "Error"
 msgstr "Greška"
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_transaction.py:0
-msgid "Error: %s"
+#: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
+msgid "Express Checkout"
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
 msgid "Express Checkout Form Template"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
-#: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
-msgid "Express Checkout Supported"
 msgstr ""
 
 #. module: payment
@@ -726,15 +1010,53 @@ msgid ""
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_fps
+msgid "FPS"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_fpx
+msgid "FPX"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_facilito
+msgid "Facilito"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_floa_bank
+msgid "Floa Bank"
+msgstr ""
+
+#. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
 msgid "Flutterwave"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_forsa
+msgid "Forsa"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_method__support_manual_capture__partial
+#: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__partial
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
+msgid "Full & Partial"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_method__support_manual_capture__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
 msgid "Full Only"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_gcash
+msgid "GCash"
 msgstr ""
 
 #. module: payment
@@ -758,11 +1080,19 @@ msgid "Go to my Account <i class=\"oi oi-arrow-right ms-2\"/>"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
-#: model_terms:ir.ui.view,arch_db:payment.payment_token_search
-#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
-msgid "Group By"
-msgstr "Grupiši po"
+#: model:payment.method,name:payment.payment_method_gopay
+msgid "GoPay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_grabpay
+msgid "GrabPay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_hd
+msgid "HD Bank"
+msgstr ""
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -770,8 +1100,18 @@ msgid "HTTP Routing"
 msgstr "HTTP rutiranje"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_halan
+msgid "Halan"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_config_settings__has_enabled_provider
+msgid "Has Enabled Provider"
 msgstr ""
 
 #. module: payment
@@ -790,20 +1130,39 @@ msgid "Help Message"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_hipercard
+msgid "Hipercard"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_hoolah
+msgid "Hoolah"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_humm
+msgid "Humm"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_ir_http__id
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__id
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__id
 #: model:ir.model.fields,field_description:payment.field_payment_method__id
 #: model:ir.model.fields,field_description:payment.field_payment_provider__id
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__id
 #: model:ir.model.fields,field_description:payment.field_payment_token__id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__id
+#: model:ir.model.fields,field_description:payment.field_res_company__id
+#: model:ir.model.fields,field_description:payment.field_res_config_settings__id
+#: model:ir.model.fields,field_description:payment.field_res_country__id
+#: model:ir.model.fields,field_description:payment.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-msgid "If the payment hasn't been confirmed you can contact us."
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid ""
+"If you believe that it is an error, please contact the website administrator."
 msgstr ""
 
 #. module: payment
@@ -833,6 +1192,11 @@ msgid "Install"
 msgstr "Instaliraj"
 
 #. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_provider
+msgid "Install the provider you want to add."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_state
 msgid "Installation State"
 msgstr ""
@@ -843,14 +1207,13 @@ msgid "Installed"
 msgstr "Instaliran"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-msgid "Internal server error"
+#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
+msgid "Is Amount To Capture Valid"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
-msgid "Is Amount To Capture Valid"
+#: model:ir.model.fields,field_description:payment.field_res_country__is_mercado_pago_supported_country
+msgid "Is Mercado Pago Supported Country"
 msgstr ""
 
 #. module: payment
@@ -864,9 +1227,94 @@ msgid "Is Primary Payment Method"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_res_country__is_stripe_supported_country
+msgid "Is Stripe Supported Country"
+msgstr ""
+
+#. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_form_templates.xml:0
 msgid "It is currently linked to the following documents:"
+msgstr ""
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_iyzico
+msgid "Iyzico"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_jcb
+msgid "JCB"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_jazzcash
+msgid "JazzCash"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_jeniuspay
+msgid "JeniusPay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_jkopay
+msgid "Jkopay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_kbc_cbc
+msgid "KBC/CBC"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_knet
+msgid "KNET"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_kakaopay
+msgid "KakaoPay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_kasikorn_bank
+msgid "Kasikorn Bank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_kiosk
+msgid "Kiosk"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_klarna
+msgid "Klarna"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_klarna_paynow
+msgid "Klarna - Pay Now"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_klarna_pay_over_time
+msgid "Klarna - Pay over time"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_kredivo
+msgid "Kredivo"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_krungthai_bank
+msgid "KrungThai Bank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_linepay
+msgid "LINE Pay"
 msgstr ""
 
 #. module: payment
@@ -889,7 +1337,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_method__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_provider__write_uid
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
 msgid "Last Updated by"
@@ -900,15 +1347,49 @@ msgstr "Poslednje izmenio/la"
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_method__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_provider__write_date
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
 msgid "Last Updated on"
 msgstr "Poslednje ažuriranje dana"
 
 #. module: payment
-#: model:onboarding.onboarding.step,button_text:payment.onboarding_onboarding_step_payment_provider
-msgid "Let's do it"
+#: model:payment.method,name:payment.payment_method_lider
+msgid "Lider"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_linkaja
+msgid "LinkAja"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_nuvei_local
+msgid "Local Payments"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_mpesa
+msgid "M-Pesa"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_mbway
+msgid "MB WAY"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_mada
+msgid "Mada"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_maestro
+msgid "Maestro"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_magna
+msgid "Magna"
 msgstr ""
 
 #. module: payment
@@ -925,13 +1406,23 @@ msgid "Manage your payment methods"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
-msgid "Manual"
-msgstr "Ručno"
+#: model:payment.method,name:payment.payment_method_mandiri
+msgid "Mandiri"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_method__support_manual_capture
+msgid "Manual Capture"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_manual_capture
 msgid "Manual Capture Supported"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_mastercard
+msgid "MasterCard"
 msgstr ""
 
 #. module: payment
@@ -945,8 +1436,34 @@ msgid "Maximum Capture Allowed"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_maya
+msgid "Maya"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_maybank
+msgid "Maybank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_meeza
+msgid "Meeza"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_mercado_livre
+msgid "Mercado Livre"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__mercado_pago
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
 msgid "Mercado Pago"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_mercado_pago_wallet
+msgid "Mercado Pago Wallet"
 msgstr ""
 
 #. module: payment
@@ -961,13 +1478,43 @@ msgid "Messages"
 msgstr "Poruke"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_name
-msgid "Method"
+#: model:payment.method,name:payment.payment_method_momo
+msgid "MoMo"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_mobile_wallet_eg
+msgid "Mobile Wallets Egypt"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_mobile_money
+msgid "Mobile money"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_mobile_pay
+msgid "MobilePay"
 msgstr ""
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mollie
 msgid "Mollie"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_multibanco
+msgid "Multibanco"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_mybank
+msgid "MyBank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_naps
+msgid "NAPS"
 msgstr ""
 
 #. module: payment
@@ -980,16 +1527,28 @@ msgid "Name"
 msgstr "Ime"
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__payment_provider__code__none
-msgid "No Provider Set"
+#: model:payment.method,name:payment.payment_method_napas_card
+msgid "Napas Card"
 msgstr ""
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
-msgid ""
-"No manual payment method could be found for this company. Please create one "
-"from the Payment Provider menu."
+#: model:payment.method,name:payment.payment_method_naranja
+msgid "Naranja"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_nativa
+msgid "Nativa"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_netbanking
+msgid "Netbanking"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__code__none
+msgid "No Provider Set"
 msgstr ""
 
 #. module: payment
@@ -998,9 +1557,44 @@ msgid "No payment methods found for your payment providers."
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "No payment providers are configured."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_provider
+msgid "No providers available"
+msgstr ""
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
 msgid "No token can be assigned to the public partner."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+msgid "None is configured for:"
+msgstr ""
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_nuvei
+msgid "Nuvei"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ovo
+msgid "OVO"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_oca
+msgid "Oca"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_octopus
+msgid "Octopus"
 msgstr ""
 
 #. module: payment
@@ -1014,18 +1608,34 @@ msgid "Offline payment by token"
 msgstr ""
 
 #. module: payment
-#: model:ir.model,name:payment.model_onboarding_onboarding_step
-msgid "Onboarding Step"
+#: model:payment.method,name:payment.payment_method_omannet
+msgid "OmanNet"
 msgstr ""
 
 #. module: payment
-#: model:onboarding.onboarding.step,step_image_alt:payment.onboarding_onboarding_step_payment_provider
-msgid "Onboarding Step Image"
+#: model:ir.model.fields,field_description:payment.field_res_company__onboarding_payment_module
+#: model:ir.model.fields,field_description:payment.field_res_config_settings__onboarding_payment_module
+msgid "Onboarding Payment Module"
 msgstr ""
 
 #. module: payment
-#: model:onboarding.onboarding.step,title:payment.onboarding_onboarding_step_payment_provider
-msgid "Online Payments"
+#: model:payment.method,name:payment.payment_method_online_banking_czech_republic
+msgid "Online Banking Czech Republic"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_online_banking_india
+msgid "Online Banking India"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_online_banking_slovakia
+msgid "Online Banking Slovakia"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_online_banking_thailand
+msgid "Online Banking Thailand"
 msgstr ""
 
 #. module: payment
@@ -1045,12 +1655,6 @@ msgstr ""
 
 #. module: payment
 #. odoo-python
-#: code:addons/payment/wizards/payment_onboarding_wizard.py:0
-msgid "Only administrators can access this data."
-msgstr ""
-
-#. module: payment
-#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Only authorized transactions can be voided."
 msgstr ""
@@ -1062,20 +1666,14 @@ msgid "Only confirmed transactions can be refunded."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
-msgid "Operation"
-msgstr "Zadatak"
-
-#. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_method.py:0
-msgid "Operation not supported."
+#: model:payment.method,name:payment.payment_method_open_banking
+msgid "Open banking"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
-msgid "Other"
-msgstr "Ostalo"
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
+msgid "Operation"
+msgstr "Zadatak"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -1083,14 +1681,37 @@ msgid "Other payment methods"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_pdt_token
-msgid "PDT Identity Token"
+#: model:payment.method,name:payment.payment_method_oxxopay
+msgid "Oxxo Pay"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__partial
+#: model:payment.method,name:payment.payment_method_p24
+msgid "P24"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_poli
+msgid "POLi"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_pps
+msgid "PPS"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_pse
+msgid "PSE"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_pace
+msgid "Pace."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
-#: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
 msgid "Partial"
 msgstr ""
 
@@ -1113,16 +1734,53 @@ msgid "Pay"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__paypal
-#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
-#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__paypal
+#: model:payment.method,name:payment.payment_method_paylater_india
+msgid "Pay Later"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_paybright
+msgid "PayBright"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_pay_id
+msgid "PayID"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_payme
+msgid "PayMe"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_paynow
+msgid "PayNow"
+msgstr ""
+
+#. module: payment
 #: model:payment.provider,name:payment.payment_provider_paypal
 msgid "PayPal"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_paysafecard
+msgid "PaySafeCard"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.pay
+msgid "Payment"
+msgstr ""
+
+#. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.confirm
+msgid "Payment Confirmation"
 msgstr ""
 
 #. module: payment
@@ -1141,8 +1799,8 @@ msgid "Payment Form"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_post_msg
-msgid "Payment Instructions"
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid "Payment Info"
 msgstr ""
 
 #. module: payment
@@ -1152,7 +1810,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__payment_method
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_method_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_method_id
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1170,6 +1827,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 #: model:ir.actions.act_window,name:payment.action_payment_method
+#: model_terms:ir.ui.view,arch_db:payment.payment_methods
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment Methods"
 msgstr "Metodi plaćanja"
@@ -1184,6 +1842,13 @@ msgstr "Provajder plaćanja"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
 msgid "Payment Providers"
 msgstr "Provajderi plaćanja"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/controllers/post_processing.py:0
+#: model_terms:ir.ui.view,arch_db:payment.payment_status
+msgid "Payment Status"
+msgstr ""
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1216,7 +1881,9 @@ msgstr "Transakcija plaćanja"
 #: model:ir.actions.act_window,name:payment.action_payment_transaction
 #: model:ir.model.fields,field_description:payment.field_payment_token__transaction_ids
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_graph
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_pivot
 msgid "Payment Transactions"
 msgstr "Platne transakcije"
 
@@ -1232,13 +1899,20 @@ msgid "Payment details saved on %(date)s"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_unknown
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Payment method"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.availability_report
 #: model_terms:ir.ui.view,arch_db:payment.portal_my_home_payment
 msgid "Payment methods"
 msgstr ""
 
 #. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
 msgstr ""
 
@@ -1248,14 +1922,39 @@ msgid "Payment provider"
 msgstr ""
 
 #. module: payment
-#: model:ir.model,name:payment.model_payment_provider_onboarding_wizard
-msgid "Payment provider onboarding wizard"
+#: model_terms:ir.ui.view,arch_db:payment.availability_report
+msgid "Payment providers"
+msgstr ""
+
+#. module: payment
+#: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
+msgid "Payment: Post-process transactions"
 msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 msgid "Payments"
 msgstr "Placanja"
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_paymob
+msgid "Paymob"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_paypal
+msgid "Paypal"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_paytm
+msgid "Paytm"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_paytrail
+msgid "Paytrail"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__pending
@@ -1271,6 +1970,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
 msgid "Phone"
 msgstr "Telefon"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_pix
+msgid "Pix"
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -1296,13 +2000,55 @@ msgid "Please switch to company"
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.state_header
+msgid "Please wait..."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Post-process"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_post_finance
+msgid "PostFinance Pay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_poste_pay
+msgid "PostePay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_premium_card
+msgid "Premium Card"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_presto
+msgid "Presto"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__primary_payment_method_id
 msgid "Primary Payment Method"
 msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__is_live
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+msgid "Production Environment"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_promptpay
+msgid "Prompt Pay"
 msgstr ""
 
 #. module: payment
@@ -1339,14 +2085,29 @@ msgid "Published"
 msgstr "Objavljeno"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_qris
+msgid "QRIS"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_rabbit_line_pay
+msgid "Rabbit LINE Pay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ratepay
+msgid "Ratepay"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__razorpay
 #: model:payment.provider,name:payment.payment_provider_razorpay
 msgid "Razorpay"
 msgstr ""
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_transaction.py:0
-msgid "Reason: %s"
+#: model_terms:ir.ui.view,arch_db:payment.availability_report_records
+msgid "Reason:"
 msgstr ""
 
 #. module: payment
@@ -1355,11 +2116,20 @@ msgid "Redirect Form Template"
 msgstr ""
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#: model:payment.method,name:payment.payment_method_redpagos
+msgid "Redpagos"
+msgstr ""
+
+#. module: payment
+#: model:payment.provider,name:payment.payment_provider_redsys
+msgid "Redsys"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.pay
+#: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Reference"
 msgstr "Referenca"
 
@@ -1371,12 +2141,15 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#: model:ir.model.fields,field_description:payment.field_payment_method__support_refund
+#: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
 msgid "Refund"
 msgstr "Povrat novca"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_refund
+#: model:ir.model.fields,help:payment.field_payment_provider__support_refund
 msgid ""
 "Refund is a feature allowing to refund customers directly from the payment "
 "in Odoo."
@@ -1403,18 +2176,49 @@ msgid "Related Document Model"
 msgstr "Model povezanog dokumenta"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__require_currency
-msgid "Require Currency"
+#: model:payment.method,name:payment.payment_method_revolut_pay
+msgid "Revolut Pay"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_rupay
+msgid "RuPay"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+msgid "Run the post-processing step for this transaction."
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_sepa_direct_debit
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
 msgid "SEPA Direct Debit"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_spei
+msgid "SPEI"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_stcpay
+msgid "STCPay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_samsung_pay
+msgid "Samsung Pay"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
 msgid "Save"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.state_header
+msgid "Saving your payment method."
 msgstr ""
 
 #. module: payment
@@ -1438,65 +2242,39 @@ msgid "Select currencies. Leave empty to allow any."
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
-msgid "Selected onboarding payment method"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__sequence
 #: model:ir.model.fields,field_description:payment.field_payment_provider__sequence
 msgid "Sequence"
 msgstr "Niz"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_express_checkout
-msgid "Show Allow Express Checkout"
+#: model:payment.method,name:payment.payment_method_shopback
+msgid "ShopBack"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_tokenization
-msgid "Show Allow Tokenization"
+#: model:payment.method,name:payment.payment_method_shopeepay
+msgid "ShopeePay"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__show_auth_msg
-msgid "Show Auth Msg"
+#: model:payment.method,name:payment.payment_method_shopping
+msgid "Shopping Card"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__show_cancel_msg
-msgid "Show Cancel Msg"
+#: model:payment.method,name:payment.payment_method_scb
+msgid "Siam Commerical Bank"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__show_credentials_page
-msgid "Show Credentials Page"
+#: model_terms:ir.ui.view,arch_db:payment.state_header
+msgid "Skip <i class=\"oi oi-arrow-right ms-1 small\"/>"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__show_done_msg
-msgid "Show Done Msg"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__show_pending_msg
-msgid "Show Pending Msg"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_provider__show_pre_msg
-msgid "Show Pre Msg"
-msgstr ""
-
-#. module: payment
-#: model:payment.provider,name:payment.payment_provider_sips
-msgid "Sips"
-msgstr ""
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-msgid "Skip"
+#: model:payment.method,name:payment.payment_method_sofort
+msgid "Sofort"
 msgstr ""
 
 #. module: payment
@@ -1505,6 +2283,11 @@ msgstr ""
 msgid ""
 "Some of the transactions you intend to capture can only be captured in full. "
 "Handle the transactions individually to capture a partial amount."
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_souhoola
+msgid "Souhoola"
 msgstr ""
 
 #. module: payment
@@ -1527,12 +2310,7 @@ msgid "Status"
 msgstr "Status"
 
 #. module: payment
-#: model:onboarding.onboarding.step,done_text:payment.onboarding_onboarding_step_payment_provider
-msgid "Step Completed!"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__stripe
+#: model:ir.model.fields.selection,name:payment.selection__res_company__onboarding_payment_module__stripe
 #: model:payment.provider,name:payment.payment_provider_stripe
 msgid "Stripe"
 msgstr ""
@@ -1540,16 +2318,6 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method__supported_country_ids
-msgid "Supported Countries"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method__supported_currency_ids
-msgid "Supported Currencies"
 msgstr ""
 
 #. module: payment
@@ -1563,16 +2331,119 @@ msgid "Supported by"
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.availability_report_records
+msgid "Supported providers:"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_swish
+msgid "Swish"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_sympl
+msgid "Sympl"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_tenpay
+msgid "TENPAY"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ttb
+msgid "TTB"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_tabby
+msgid "Tabby"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_tamara
+msgid "Tamara"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_tmb
+msgid "Tamilnad Mercantile Bank Limited"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_tarjeta_mercadopago
+msgid "Tarjeta MercadoPago"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_techcom
+msgid "Techcombank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_tendopay
+msgid "TendoPay"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Test Mode"
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.method_form
+#: model_terms:ir.ui.view,arch_db:payment.token_form
+msgid "Test mode"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.state_header
+msgid "Thank you!"
+msgstr ""
+
+#. module: payment
 #. odoo-python
-#: code:addons/payment/controllers/portal.py:0
-msgid "The access token is invalid."
-msgstr "Tok za pristup je nevažeći."
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s encountered an error."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been authorized."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been canceled."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s has been confirmed."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "The %(tx_label)s %(ref)s of %(formatted_amount)s is pending."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid ""
+"The amount from the payment data doesn't match the one from the transaction."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "The amount or currency is missing from the payment data."
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -1628,6 +2499,14 @@ msgstr ""
 
 #. module: payment
 #. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid ""
+"The currency from the payment data doesn't match the one from the "
+"transaction."
+msgstr ""
+
+#. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
 msgid "The following fields must be filled: %s"
 msgstr ""
@@ -1636,6 +2515,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 msgid "The following kwargs are not whitelisted: %s"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+msgid ""
+"The following payment methods cannot be enabled because their payment "
+"provider has manual capture activated: %s"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid ""
+"The following payment methods must be disabled in order to enable manual "
+"capture: %s"
 msgstr ""
 
 #. module: payment
@@ -1705,10 +2600,16 @@ msgid "The message displayed to explain and help the payment process"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
+msgid "The payment is authorized and captured in two steps instead of one."
+msgstr ""
+
+#. module: payment
 #. odoo-python
-#: code:addons/payment/controllers/portal.py:0
+#: code:addons/payment/models/payment_provider.py:0
 msgid ""
-"The payment should either be direct, with redirection, or made by a token."
+"The payment provider rejected the request.\n"
+"%s"
 msgstr ""
 
 #. module: payment
@@ -1731,6 +2632,12 @@ msgid "The provider reference of the transaction"
 msgstr ""
 
 #. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "The refund %(ref)s of %(formatted_amount)s has been initiated."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
 msgid "The resized image displayed on the payment form."
 msgstr ""
@@ -1738,6 +2645,11 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
 msgid "The route the user is redirected to after the transaction"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.state_header
+msgid "The saving of your payment method has been canceled."
 msgstr ""
 
 #. module: payment
@@ -1787,25 +2699,7 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
-msgid ""
-"The transaction with reference %(ref)s for %(amount)s encountered an error "
-"(%(provider_name)s)."
-msgstr ""
-
-#. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_transaction.py:0
-msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been authorized "
-"(%(provider_name)s)."
-msgstr ""
-
-#. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_transaction.py:0
-msgid ""
-"The transaction with reference %(ref)s for %(amount)s has been confirmed "
-"(%(provider_name)s)."
+msgid "The transaction %(ref)s of %(formatted_amount)s has been initiated."
 msgstr ""
 
 #. module: payment
@@ -1834,7 +2728,7 @@ msgstr "Nema šta da se plati."
 #: code:addons/payment/models/payment_method.py:0
 msgid ""
 "This action will also archive %s tokens that are registered with this "
-"payment method. Archiving tokens is irreversible."
+"payment method."
 msgstr ""
 
 #. module: payment
@@ -1842,7 +2736,7 @@ msgstr ""
 #: code:addons/payment/models/payment_provider.py:0
 msgid ""
 "This action will also archive %s tokens that are registered with this "
-"provider. Archiving tokens is irreversible."
+"provider. "
 msgstr ""
 
 #. module: payment
@@ -1880,11 +2774,23 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/models/payment_transaction.py:0
-msgid ""
-"This transaction has been confirmed following the processing of its partial "
-"capture and partial void transactions (%(provider)s)."
+#: model:payment.method,name:payment.payment_method_tienphong
+msgid "Tienphong"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_tinka
+msgid "Tinka"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_provider
+msgid "To add a provider to the current company:"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_provider
+msgid "Toggle the main company in the company switcher."
 msgstr ""
 
 #. module: payment
@@ -1895,7 +2801,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_tokenization
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_tokenization
-msgid "Tokenization Supported"
+msgid "Tokenization"
 msgstr ""
 
 #. module: payment
@@ -1903,6 +2809,11 @@ msgstr ""
 msgid ""
 "Tokenization is the process of saving the payment details as a token that "
 "can later be reused without having to enter the payment details again."
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_touch_n_go
+msgid "Touch'n Go"
 msgstr ""
 
 #. module: payment
@@ -1919,21 +2830,63 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_method__support_refund
-#: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
-msgid "Type of Refund Supported"
-msgstr "Vrste povraćaja koje su podržane"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-msgid "Unable to contact the server. Please wait."
+#: model:payment.method,name:payment.payment_method_troy
+msgid "Troy"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_truemoney
+msgid "TrueMoney"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_trustly
+msgid "Trustly"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_twint
+msgid "Twint"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_upi
+msgid "UPI"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ussd
+msgid "USSD"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_unionpay
+msgid "UnionPay"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_uob
+msgid "United Overseas Bank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_uatp
+msgid "Universal Air Travel Plan"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.method_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
+#: model_terms:ir.ui.view,arch_db:payment.token_form
 msgid "Unpublished"
 msgstr "Neobjavljeno"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_method__support_manual_capture__none
+#: model:ir.model.fields.selection,name:payment.selection__payment_method__support_refund__none
+#: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__none
+msgid "Unsupported"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1942,8 +2895,38 @@ msgid "Upgrade"
 msgstr ""
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_vpay
+msgid "V PAY"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_visa
+msgid "VISA"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_valu
+msgid "ValU"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
 msgid "Validation of the payment method"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_venmo
+msgid "Venmo"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_vietcom
+msgid "Vietcombank"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_vipps
+msgid "Vipps"
 msgstr ""
 
 #. module: payment
@@ -1955,6 +2938,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Void Transaction"
 msgstr "Ništavna transakcija"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_wallets_india
+msgid "Wallets India"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_walley
+msgid "Walley"
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -1970,20 +2963,23 @@ msgstr ""
 
 #. module: payment
 #. odoo-javascript
-#: code:addons/payment/static/src/js/payment_form.js:0
+#: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Warning!"
 msgstr "Upozorenje!"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-msgid "We are not able to find your payment, but don't worry."
+#: model:payment.method,name:payment.payment_method_wechat_pay
+msgid "WeChat Pay"
 msgstr ""
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/js/post_processing.js:0
-msgid "We are processing your payment. Please wait."
+#: model:payment.method,name:payment.payment_method_welend
+msgid "WeLend"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_webpay
+msgid "WebPay"
 msgstr ""
 
 #. module: payment
@@ -2000,15 +2996,17 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
-msgid "Whether the callback has already been executed"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__is_published
 msgid ""
 "Whether the provider is visible on the website or not. Tokens remain "
 "functional but are only visible on manage forms."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__is_live
+msgid ""
+"Whether the transaction happened in a production environment. False for "
+"transactions created before this tracking was implemented."
 msgstr ""
 
 #. module: payment
@@ -2017,8 +3015,21 @@ msgid "Wire Transfer"
 msgstr ""
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_worldline
+msgid "Worldline"
+msgstr ""
+
+#. module: payment
 #: model:payment.provider,name:payment.payment_provider_xendit
 msgid "Xendit"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_token.py:0
+msgid ""
+"You can't unarchive tokens linked to inactive payment methods or disabled "
+"providers."
 msgstr ""
 
 #. module: payment
@@ -2031,8 +3042,19 @@ msgstr ""
 
 #. module: payment
 #. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+msgid "You cannot delete a payment method linked to a provider."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+msgid "You cannot delete the default payment method."
+msgstr ""
+
+#. module: payment
+#. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
-#, python-format
 msgid ""
 "You cannot delete the payment provider %s; disable it or uninstall it "
 "instead."
@@ -2051,9 +3073,10 @@ msgid "You do not have access to this payment token."
 msgstr ""
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-msgid "You should receive an email confirming your payment in a few minutes."
+#: model_terms:ir.ui.view,arch_db:payment.payment_status
+msgid ""
+"You should receive an email confirming your payment within a few\n"
+"                                    minutes."
 msgstr ""
 
 #. module: payment
@@ -2065,15 +3088,20 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_authorize
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_dpo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_nuvei
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_sepa_direct_debit
-#: model_terms:payment.provider,auth_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_xendit
 msgid "Your payment has been authorized."
 msgstr "Vaše plaćanje je autorizovano."
@@ -2087,15 +3115,20 @@ msgstr "Vaše plaćanje je autorizovano."
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_authorize
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_dpo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_nuvei
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_sepa_direct_debit
-#: model_terms:payment.provider,cancel_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_xendit
 msgid "Your payment has been cancelled."
 msgstr ""
@@ -2109,17 +3142,21 @@ msgstr ""
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_authorize
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_dpo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_nuvei
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_xendit
-msgid ""
-"Your payment has been successfully processed but is waiting for approval."
+msgid "Your payment has been processed but is waiting for approval."
 msgstr ""
 
 #. module: payment
@@ -2131,22 +3168,56 @@ msgstr ""
 #: model_terms:payment.provider,done_msg:payment.payment_provider_authorize
 #: model_terms:payment.provider,done_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_demo
+#: model_terms:payment.provider,done_msg:payment.payment_provider_dpo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_flutterwave
+#: model_terms:payment.provider,done_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mercado_pago
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mollie
+#: model_terms:payment.provider,done_msg:payment.payment_provider_nuvei
+#: model_terms:payment.provider,done_msg:payment.payment_provider_paymob
 #: model_terms:payment.provider,done_msg:payment.payment_provider_paypal
 #: model_terms:payment.provider,done_msg:payment.payment_provider_razorpay
+#: model_terms:payment.provider,done_msg:payment.payment_provider_redsys
 #: model_terms:payment.provider,done_msg:payment.payment_provider_sepa_direct_debit
-#: model_terms:payment.provider,done_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,done_msg:payment.payment_provider_stripe
 #: model_terms:payment.provider,done_msg:payment.payment_provider_transfer
+#: model_terms:payment.provider,done_msg:payment.payment_provider_worldline
 #: model_terms:payment.provider,done_msg:payment.payment_provider_xendit
-msgid "Your payment has been successfully processed."
+msgid "Your payment has been processed."
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+#: model_terms:ir.ui.view,arch_db:payment.state_header
 msgid "Your payment has not been processed yet."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_status
+msgid "Your payment is on its way!"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.state_header
+msgid "Your payment method has been saved."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.form
+msgid "Your payment methods"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid ""
+"Your payment operation could not be completed for following transactions: %"
+"(tx_refs)s"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_transaction.py:0
+msgid "Your payment operation has been successfully submitted."
 msgstr ""
 
 #. module: payment
@@ -2156,17 +3227,76 @@ msgstr "Poštanski broj"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
+#: model:payment.method,name:payment.payment_method_zip
 msgid "Zip"
 msgstr "Poštanski broj"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
+#: model:payment.method,name:payment.payment_method_cofidis
+msgid "cofidis"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
+#: model:payment.method,name:payment.payment_method_enets
+msgid "eNETS"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/const.py:0
+msgid "express checkout not supported"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ideal
+msgid "iDEAL"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+msgid "id"
+msgstr ""
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_in3
+msgid "in3"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/const.py:0
+msgid "incompatible country"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/const.py:0
+msgid "incompatible currency"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/const.py:0
+msgid "incompatible website"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/const.py:0
+msgid "manual capture not supported"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/const.py:0
+msgid "maximum amount exceeded"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/const.py:0
+msgid "no supported provider available"
 msgstr ""
 
 #. module: payment
@@ -2175,19 +3305,9 @@ msgid "payment method"
 msgstr ""
 
 #. module: payment
-#: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
-msgid "payment: post-process transactions"
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "provider"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
 msgstr ""
 
 #. module: payment
@@ -2198,36 +3318,13 @@ msgid ""
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
+#. odoo-python
+#: code:addons/payment/const.py:0
+msgid "tokenization not supported"
 msgstr ""
 
-#~ msgid ""
-#~ "<strong>No suitable payment option could be found.</strong><br/>\n"
-#~ "                                If you believe that it is an error, "
-#~ "please contact the website administrator."
-#~ msgstr ""
-#~ "<strong>Nije moguće pronaći odgovarajuću opciju plaćanja.</strong><br/>\n"
-#~ "                                Ukoliko smatrate da je u pitanju greška, "
-#~ "molimo vas da kontaktirate administratora website-a."
-
-#~ msgid "Done"
-#~ msgstr "Završeno"
-
-#~ msgid "Fees"
-#~ msgstr "Porezi"
-
-#~ msgid "From"
-#~ msgstr "Od"
-
-#~ msgid "Just done"
-#~ msgstr "Upravo završeno"
-
-#~ msgid "Not done"
-#~ msgstr "Nije završeno"
-
-#~ msgid "Ok"
-#~ msgstr "U redu"
-
-#~ msgid "Server Error"
-#~ msgstr "Greška servera"
+#. module: payment
+#. odoo-python
+#: code:addons/payment/const.py:0
+msgid "tokenization without payment no supported"
+msgstr ""

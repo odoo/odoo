@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_payment
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_payment
@@ -26,8 +27,8 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
-"#%(number)s - 分期付款 <strong>%(amount)s</strong>，到期日 <strong class=\"text-"
-"primary\">%(date)s</strong>"
+"#%(number)s - 分期付款 <strong>%(amount)s</strong>，到期日 <strong "
+"class=\"text-primary\">%(date)s</strong>"
 
 #. module: account_payment
 #. odoo-javascript
@@ -46,8 +47,8 @@ msgid ""
 "<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
 "Pay Now</span>"
 msgstr ""
-"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> "
-"立即支付</span>"
+"<i class=\"fa fa-arrow-circle-right\"/><span class=\"d-none d-md-inline\"> 立"
+"即支付</span>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -110,12 +111,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
 msgid ""
 "<strong>Warning!</strong> There is a refund pending for this payment.\n"
-"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
-"                        few minutes, please check your payment provider configuration."
+"                        Wait a moment for it to be processed. If the refund "
+"is still pending in a\n"
+"                        few minutes, please check your payment provider "
+"configuration."
 msgstr ""
 "<strong>警告！</strong>這筆付款尚有退款正待處理。\n"
 "                        請稍等，讓系統先完成處理退款。\n"
-"                        若幾分鐘後，退款仍在處理中，請檢查付款服務商相關設置。"
+"                        若幾分鐘後，退款仍在處理中，請檢查付款服務商相關設"
+"置。"
 
 #. module: account_payment
 #. odoo-python
@@ -126,8 +130,8 @@ msgstr "如果客戶在包括 %s 之前付款，將可享折扣。"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid ""
-"A payment has already been made on this invoice, please make sure to not pay"
-" twice."
+"A payment has already been made on this invoice, please make sure to not pay "
+"twice."
 msgstr "此發票已付款，請確保不會重複付款。"
 
 #. module: account_payment
@@ -141,11 +145,6 @@ msgstr "使用 %s 的付款交易已存在。"
 #: code:addons/account_payment/models/account_payment.py:0
 msgid "A token is required to create a new payment transaction."
 msgstr "建立新的支付交易需要一個代碼(token)。"
-
-#. module: account_payment
-#: model:onboarding.onboarding.step,button_text:account_payment.onboarding_onboarding_step_payment_provider
-msgid "Activate Stripe"
-msgstr "啟用 Stripe"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -195,11 +194,6 @@ msgid "Close"
 msgstr "關閉"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
-msgid "Code"
-msgstr "程式碼"
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_res_config_settings
 msgid "Config Settings"
 msgstr "配置設定"
@@ -231,7 +225,6 @@ msgstr "折扣日期"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__display_name
-#: model:ir.model.fields,field_description:account_payment.field_onboarding_onboarding_step__display_name
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__display_name
 #: model:ir.model.fields,field_description:account_payment.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__display_name
@@ -261,11 +254,6 @@ msgstr "提早付款折扣資料"
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Early Payment Discount of"
 msgstr "提早付款折扣："
-
-#. module: account_payment
-#: model:onboarding.onboarding.step,description:account_payment.onboarding_onboarding_step_payment_provider
-msgid "Enable credit & debit card payments supported by Stripe."
-msgstr "啟用以 Stripe 支援的信用卡及扣賬卡付款。"
 
 #. module: account_payment
 #: model:ir.model.fields.selection,name:account_payment.selection__payment_refund_wizard__support_refund__full_only
@@ -299,7 +287,6 @@ msgstr "有待處理的退款"
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method__id
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__id
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__id
-#: model:ir.model.fields,field_description:account_payment.field_onboarding_onboarding_step__id
 #: model:ir.model.fields,field_description:account_payment.field_payment_link_wizard__id
 #: model:ir.model.fields,field_description:account_payment.field_payment_provider__id
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
@@ -399,22 +386,8 @@ msgstr "請注意，只限允許收取金額的服務商提供的代碼才可用
 msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
-msgstr "請注意，服務商若設為只可授權交易（而非收取金額），其提供的代碼便不可用。"
-
-#. module: account_payment
-#: model:onboarding.onboarding.step,step_image_alt:account_payment.onboarding_onboarding_step_payment_provider
-msgid "Onboarding Online Payments"
-msgstr "網上付款新手簡介"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_onboarding_onboarding_step
-msgid "Onboarding Step"
-msgstr "新手簡介步驟"
-
-#. module: account_payment
-#: model:onboarding.onboarding.step,title:account_payment.onboarding_onboarding_step_payment_provider
-msgid "Online Payments"
-msgstr "網上付款"
+msgstr ""
+"請注意，服務商若設為只可授權交易（而非收取金額），其提供的代碼便不可用。"
 
 #. module: account_payment
 #. odoo-python
@@ -478,6 +451,7 @@ msgid "Pay overdue"
 msgstr "支付逾期款項"
 
 #. module: account_payment
+#: model:ir.model,name:account_payment.model_account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__payment_id
 msgid "Payment"
@@ -495,7 +469,15 @@ msgstr "付款日記帳"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method
+msgid "Payment Method"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_method_line
+msgid "Payment Method Line"
+msgstr ""
+
+#. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_method_menu
 msgid "Payment Methods"
 msgstr "付款方式"
@@ -533,11 +515,6 @@ msgstr "付款交易"
 #: model:ir.ui.menu,name:account_payment.payment_transaction_menu
 msgid "Payment Transactions"
 msgstr "付款交易"
-
-#. module: account_payment
-#: model:ir.model,name:account_payment.model_account_payment
-msgid "Payments"
-msgstr "付款"
 
 #. module: account_payment
 #. odoo-python
@@ -612,11 +589,6 @@ msgid "State"
 msgstr "狀態"
 
 #. module: account_payment
-#: model:onboarding.onboarding.step,done_text:account_payment.onboarding_onboarding_step_payment_provider
-msgid "Step Completed!"
-msgstr "步驟已完成!"
-
-#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
@@ -643,10 +615,8 @@ msgstr "過賬成功交易的日記賬。"
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
-msgid ""
-"The payment related to the transaction with reference %(ref)s has been "
-"posted: %(link)s"
-msgstr "參考編號 %(ref)s 的交易，相關付款已過賬： %(link)s"
+msgid "The payment related to transaction %(ref)s has been posted: %(link)s"
+msgstr ""
 
 #. module: account_payment
 #. odoo-python
@@ -749,7 +719,8 @@ msgstr "無效交易"
 #. odoo-python
 #: code:addons/account_payment/models/account_payment_method_line.py:0
 msgid ""
-"You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
+"You can't delete a payment method that is linked to a provider in the "
+"enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
 "若付款方式連結至已啟用或在測試狀態的服務商，便不可刪除。\n"

@@ -1,38 +1,35 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* iap
-# 
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
-msgid ""
-"<i class=\"oi oi-arrow-right\"/>\n"
-"                                    Buy Credit"
-msgstr ""
-"<i class=\"oi oi-arrow-right\"/>\n"
-"                                    購買點數"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "Account Information"
 msgstr "帳號資訊"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
+msgid "Account Name"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__account_token
@@ -54,14 +51,45 @@ msgid ""
 msgstr "聯絡 %s 時，發生錯誤。如果此錯誤繼續發生，請聯絡 Odoo 技術支援人員。"
 
 #. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
+msgid "Auto-Refill"
+msgstr ""
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_pack_id
+msgid "Auto-refill Pack"
+msgstr ""
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__auto_refill_threshold
+msgid "Auto-refill Threshold"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__balance
 msgid "Balance"
 msgstr "餘額"
 
 #. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__balance_amount
+msgid "Balance Amount"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__banned
 msgid "Banned"
 msgstr "已封禁"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
+msgid "Buy"
+msgstr ""
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Buy Credits"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__company_ids
@@ -71,14 +99,21 @@ msgstr "公司"
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_uid
 #: model:ir.model.fields,field_description:iap.field_iap_service__create_uid
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__create_uid
 msgid "Created by"
 msgstr "建立人員"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__create_date
 #: model:ir.model.fields,field_description:iap.field_iap_service__create_date
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__create_date
 msgid "Created on"
 msgstr "建立於"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__credit
+msgid "Credit"
+msgstr ""
 
 #. module: iap
 #: model:iap.service,unit_name:iap.iap_service_reveal
@@ -95,8 +130,14 @@ msgstr "說明"
 #: model:ir.model.fields,field_description:iap.field_iap_account__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__display_name
 #: model:ir.model.fields,field_description:iap.field_iap_service__display_name
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
+msgid "Email Alert"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__warning_user_ids
@@ -112,9 +153,11 @@ msgstr "電郵警報門檻"
 #: model:iap.service,description:iap.iap_service_reveal
 msgid ""
 "Get quality leads and opportunities: convert your website visitors into "
-"leads, generate leads based on a set of criteria and enrich the company data"
-" of your opportunities."
-msgstr "獲取高質素的潛在客戶及銷售機會：將你的網站訪客轉換為潛在客戶，根據一套準則去產生新的潛在客戶，並豐富銷售機會的公司數據。"
+"leads, generate leads based on a set of criteria and enrich the company data "
+"of your opportunities."
+msgstr ""
+"獲取高質素的潛在客戶及銷售機會：將你的網站訪客轉換為潛在客戶，根據一套準則去"
+"產生新的潛在客戶，並豐富銷售機會的公司數據。"
 
 #. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
@@ -122,16 +165,8 @@ msgid "IAP"
 msgstr "IAP"
 
 #. module: iap
-#: model:ir.actions.act_window,name:iap.iap_account_action
 #: model:ir.model,name:iap.model_iap_account
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
 msgid "IAP Account"
-msgstr "IAP 帳戶"
-
-#. module: iap
-#: model:ir.ui.menu,name:iap.iap_account_menu
-#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
-msgid "IAP Accounts"
 msgstr "IAP 帳戶"
 
 #. module: iap
@@ -145,11 +180,39 @@ msgid "IAP Service"
 msgstr "IAP 服務"
 
 #. module: iap
+#: model:ir.model,name:iap.model_iap_service_pack
+msgid "IAP Service Pack"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__id
 #: model:ir.model.fields,field_description:iap.field_iap_enrich_api__id
 #: model:ir.model.fields,field_description:iap.field_iap_service__id
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__id
 msgid "ID"
 msgstr "識別號"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__iap_service_pack_identifier
+msgid "Iap Service Pack Identifier"
+msgstr ""
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
+msgid "In-App Purchase Account"
+msgstr ""
+
+#. module: iap
+#: model:ir.actions.act_window,name:iap.iap_account_action
+#: model:ir.ui.menu,name:iap.iap_account_menu
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "In-App Purchase Accounts"
+msgstr ""
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_service_pack_view_tree
+msgid "In-App Purchase Service Packs"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_service__integer_balance
@@ -157,14 +220,21 @@ msgid "Integer Balance"
 msgstr "整數結餘"
 
 #. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__is_balance_below_warning_threshold
+msgid "Is Balance Below Warning Threshold"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
 #: model:ir.model.fields,field_description:iap.field_iap_service__write_uid
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__write_uid
 msgid "Last Updated by"
 msgstr "最後更新者"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_date
 #: model:ir.model.fields,field_description:iap.field_iap_service__write_date
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__write_date
 msgid "Last Updated on"
 msgstr "最後更新於"
 
@@ -175,8 +245,14 @@ msgid "Manage Service & Buy Credits"
 msgstr "管理服務及購買點數"
 
 #. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_form
+msgid "Manage your auto-refill payment method"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__name
 #: model:ir.model.fields,field_description:iap.field_iap_service__name
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__name
 msgid "Name"
 msgstr "名稱"
 
@@ -188,8 +264,23 @@ msgstr "沒有服務使用所提供的技術名稱"
 
 #. module: iap
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
-msgid "Odoo IAP"
-msgstr "Odoo IAP"
+msgid "Odoo In-App Purchase"
+msgstr ""
+
+#. module: iap
+#: model:ir.model.fields,help:iap.field_iap_account__auto_refill_threshold
+msgid ""
+"Once you have this many credits or less, the system will automatically buy "
+"the following pack with your payment method on file. Set to 0 to disable "
+"auto-refill."
+msgstr ""
+
+#. module: iap
+#: model:ir.model.fields,help:iap.field_iap_account__warning_threshold
+msgid ""
+"Once you have this many credits or less, the system will automatically "
+"notify the following recipients by email. Set to 0 to disable email warnings."
+msgstr ""
 
 #. module: iap
 #. odoo-python
@@ -205,10 +296,22 @@ msgid "Only one service can exist with a specific technical_name"
 msgstr "使用特定技術名稱 technical_name 的服務，同一時間只可有一個存在"
 
 #. module: iap
+#: model:ir.model.constraint,message:iap.constraint_iap_service_pack_unique_iap_service_pack_identifier
+msgid ""
+"Only one service pack can exist with a specific iap_service_pack_identifier"
+msgstr ""
+
+#. module: iap
 #. odoo-python
 #: code:addons/iap/models/iap_account.py:0
 msgid "Please set a positive email alert threshold."
 msgstr "請將電郵警報門檻值設為正數數值。"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_account__service_price_description
+#: model:ir.model.fields,field_description:iap.field_iap_service__price_description
+msgid "Price Description"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__registered
@@ -216,7 +319,13 @@ msgid "Registered"
 msgstr "已註冊"
 
 #. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__price
+msgid "Sales Price (EUR)"
+msgstr ""
+
+#. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_id
+#: model:ir.model.fields,field_description:iap.field_iap_service_pack__service_id
 msgid "Service"
 msgstr "服務"
 
@@ -224,6 +333,16 @@ msgstr "服務"
 #: model:ir.model.fields,field_description:iap.field_iap_account__service_locked
 msgid "Service Locked"
 msgstr "服務已鎖定"
+
+#. module: iap
+#: model:ir.model.fields,field_description:iap.field_iap_service__pack_ids
+msgid "Service Packs"
+msgstr ""
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.iap_account_view_tree
+msgid "Set Alerts & Auto-Refill"
+msgstr ""
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__state
@@ -235,6 +354,27 @@ msgstr "狀態"
 #: model:ir.model.fields,field_description:iap.field_iap_service__technical_name
 msgid "Technical Name"
 msgstr "技術名稱"
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid ""
+"The IAP server is unreachable and the information may not be up to date.\n"
+"Please try again later."
+msgstr ""
+
+#. module: iap
+#. odoo-python
+#: code:addons/iap/models/iap_account.py:0
+msgid "The IAP token provided is invalid or empty."
+msgstr ""
+
+#. module: iap
+#: model:ir.model.fields,help:iap.field_iap_account__auto_refill_pack_id
+msgid ""
+"The In-App Purchase pack the system will automatically buy when reaching "
+"your refill threshold."
+msgstr ""
 
 #. module: iap
 #. odoo-python
@@ -253,6 +393,11 @@ msgstr "單位名稱"
 #: model:ir.model.fields.selection,name:iap.selection__iap_account__state__unregistered
 msgid "Unregistered"
 msgstr "未註冊"
+
+#. module: iap
+#: model_terms:ir.ui.view,arch_db:iap.view_iap_users_tree
+msgid "Users"
+msgstr ""
 
 #. module: iap
 #. odoo-javascript

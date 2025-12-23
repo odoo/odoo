@@ -9,17 +9,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-03 08:43+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, "
 "2022\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
-"Language: sr\n"
+"Language: sr@latin\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
+msgid "<strong>Amount of global discounts</strong>:"
+msgstr ""
+
+#. module: pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
+msgid "<strong>Number of global discounts</strong>:"
+msgstr ""
 
 #. module: pos_discount
 #. odoo-python
@@ -41,7 +51,7 @@ msgstr "Podešavanje konfiguracije"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.xml:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:product.template,name:pos_discount.product_product_consumable_product_template
 msgid "Discount"
 msgstr "Popust"
@@ -53,7 +63,7 @@ msgstr ""
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
+#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "Discount Percentage"
@@ -66,9 +76,31 @@ msgid "Discount Product"
 msgstr ""
 
 #. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_discount.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_discount.field_report_point_of_sale_report_saledetails__display_name
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_discount.field_product_template__id
+#: model:ir.model.fields,field_description:pos_discount.field_report_point_of_sale_report_saledetails__id
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid "No discount product found"
+msgstr ""
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
+msgid "Oh snap !"
 msgstr ""
 
 #. module: pos_discount
@@ -82,13 +114,18 @@ msgid "Point of Sale Configuration"
 msgstr "Podešavanje POS terminala mesta prodaje"
 
 #. module: pos_discount
+#: model:ir.model,name:pos_discount.model_report_point_of_sale_report_saledetails
+msgid "Point of Sale Details"
+msgstr ""
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
 msgid "Pos Discount Product"
 msgstr ""
 
 #. module: pos_discount
-#: model:ir.model,name:pos_discount.model_product_product
-msgid "Product Variant"
+#: model:ir.model,name:pos_discount.model_product_template
+msgid "Product"
 msgstr ""
 
 #. module: pos_discount
@@ -99,7 +136,7 @@ msgstr ""
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/overrides/components/control_buttons/control_buttons.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be "
 "Sold' and 'Available in Point of Sale'."
@@ -108,4 +145,10 @@ msgstr ""
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to apply the discount on the ticket."
+msgstr ""
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
+msgid "You cannot edit a discount line."
 msgstr ""
