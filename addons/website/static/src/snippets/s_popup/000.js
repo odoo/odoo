@@ -429,6 +429,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
      * @override
      */
     start() {
+        this.el.querySelector(".modal").addEventListener("keydown", this._onKeydown);
         this._super(...arguments);
 
         this.isCookiePolicyPage = window.location.pathname === "/cookie-policy";
@@ -502,6 +503,7 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
             this.toggleEl.removeEventListener("click", this._onToggleCookiesBar);
             this.toggleEl.remove();
         }
+        this.el.querySelector(".modal").removeEventListener("keydown", this._onKeydown);
         this._super(...arguments);
     },
 
@@ -621,7 +623,18 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
             }
         }
         setUtmsHtmlDataset();
-    }
+    },
+    /**
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onKeydown: (ev) => {
+        if (ev.key === "Escape") {
+            // Circumvent Bootstrap's keydown behavior which triggers a UI
+            // glitch.
+            ev.stopImmediatePropagation();
+        }
+    },
 });
 
 export default PopupWidget;

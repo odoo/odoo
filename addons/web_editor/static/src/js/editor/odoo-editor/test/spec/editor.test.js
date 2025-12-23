@@ -1211,6 +1211,13 @@ X[]
                         contentAfter: unformat(`<div>a[]d</div>`),
                     });
                 });
+                it('should fill empty block with a <br>', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>[]<i class="fa fa-bug" contenteditable="false"></i></p>',
+                        stepFunction: deleteForward,
+                        contentAfter: '<p>[]<br></p>',
+                    });
+                });
                 it('should delete the inline code style when removing its last character', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: unformat(`<div><code class="o_inline_code">ab</code>[]xyz</div>`),
@@ -2941,6 +2948,11 @@ X[]
                         stepFunction: deleteBackward,
                         contentAfter: '<p>[]<br></p>',
                     });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><i class="fa fa-bug" contenteditable="false"></i>[]</p>',
+                        stepFunction: deleteBackward,
+                        contentAfter: '<p>[]<br></p>',
+                    });
                 });
                 it('should merge a paragraph with text into a paragraph with text removing spaces', async () => {
                     await testEditor(BasicEditor, {
@@ -3916,6 +3928,15 @@ X[]
                         contentAfter: '<p>abc</p><p>[]<br></p>',
                     });
                 });
+                it('inserts an empty paragraph when Enter is pressed before a non-editable element', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>[]<i class="fa fa-bug" contenteditable="false"></i></p>',
+                        stepFunction: async editor => {
+                            await triggerEvent(editor.editable, 'input', { data: 'Enter', inputType: 'insertParagraph' });
+                        },
+                        contentAfter: '<p><br></p><p>[]<i class="fa fa-bug" contenteditable="false"></i></p>',
+                    });
+                });
             });
             describe('Pre', () => {
                 it('should insert a line break within the pre', async () => {
@@ -4589,6 +4610,15 @@ X[]
                         // The second <br> is needed to make the first
                         // one visible.
                         contentAfter: '<p>abc<br>[]<br></p>',
+                    });
+                });
+                it('inserts a <br> when a line break is inserted before a non-editable element', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p>[]<i class="fa fa-bug" contenteditable="false"></i></p>',
+                        stepFunction: async editor => {
+                            await triggerEvent(editor.editable, 'input', { data: 'Enter', inputType: 'insertLineBreak' });
+                        },
+                        contentAfter: '<p><br>[]<i class="fa fa-bug" contenteditable="false"></i></p>',
                     });
                 });
             });
