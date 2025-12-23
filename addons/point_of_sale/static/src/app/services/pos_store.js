@@ -2121,11 +2121,40 @@ export class PosStore extends WithLazyGetterTrap {
     async allowProductCreation() {
         return await user.hasGroup("base.group_system");
     }
+<<<<<<< 73e47f9d003b3025ed27832511214f9f5e4929f3
     editPayment(order) {
         this.setOrder(order);
         this.navigate("PaymentScreen", {
             orderUuid: order.uuid,
         });
+||||||| d088dbad84492234ae792b76545497c6cd62e4f4
+    orderDetailsProps(order) {
+        return {
+            resModel: "pos.order",
+            resId: order.id,
+            onRecordSaved: async (record) => {
+                await this.data.loadServerOrders([["id", "=", record.evalContext.id]]);
+                this.action.doAction({
+                    type: "ir.actions.act_window_close",
+                });
+            },
+        };
+=======
+    orderDetailsProps(order) {
+        return {
+            resModel: "pos.order",
+            resId: order.id,
+            context: {
+                from_frontend: true,
+            },
+            onRecordSaved: async (record) => {
+                await this.data.loadServerOrders([["id", "=", record.evalContext.id]]);
+                this.action.doAction({
+                    type: "ir.actions.act_window_close",
+                });
+            },
+        };
+>>>>>>> 454a4eda8e7d9fcd4d4c89919b905015c26143dc
     }
     showOrderDetails(order, props = {}) {
         this.dialog.add(OrderDetailsDialog, {
