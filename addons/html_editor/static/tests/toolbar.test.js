@@ -159,6 +159,45 @@ test("toolbar closes when selection leaves editor", async () => {
     await expectElementCount(".o-we-toolbar", 0);
 });
 
+test.tags("desktop");
+test("Focus should be trap in toolbar on tab", async () => {
+    await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    await expandToolbar();
+    const toolbarBtns = queryAll(".o-we-toolbar button:not([disabled])");
+    // Focus should be on the first button of the expanded toolbar
+    expect(getActiveElement()).toBe(toolbarBtns[0]);
+
+    for (let i = 1; i < toolbarBtns.length; i++) {
+        await press("Tab");
+        expect(getActiveElement()).toBe(toolbarBtns[i]);
+    }
+
+    // On next tab, focus should be move from last button to first button
+    await press("Tab");
+    expect(getActiveElement()).toBe(toolbarBtns[0]);
+
+    // On shift + tab, focus should be move from first button to last button
+    await press(["shift", "tab"]);
+    expect(getActiveElement()).toBe(toolbarBtns[toolbarBtns.length - 1]);
+});
+
+test.tags("desktop");
+test("toolbar closes on Escape key", async () => {
+    const { el } = await setupEditor("<p>[test]</p>");
+    await waitFor(".o-we-toolbar");
+
+    // Closes the toolbar on Escape when focus is inside the editable
+    expect(getActiveElement()).toBe(el);
+    await press("Escape");
+    await expectElementCount(".o-we-toolbar", 0);
+    expect(getActiveElement()).toBe(el);
+
+    // Selection should be at the end of the previous selection
+    expect(getContent(el)).toBe("<p>test[]</p>");
+});
+
 test("toolbar works: can format bold", async () => {
     const { el } = await setupEditor("<p>test</p>");
     expect(getContent(el)).toBe("<p>test</p>");

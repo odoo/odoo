@@ -964,3 +964,24 @@ export function isRedundantElement(node) {
 
     return true;
 }
+
+/**
+ * Moves keyboard focus to the next or previous focusable
+ * element in the given list of elements.
+ * Loops focus when reaching the start or end of the list.
+ *
+ * @param {Array} elements - The Array of Elements.
+ * @param {Boolean} backward - If true move focus backward
+ */
+export function trapFocus(elements, backward = false) {
+    if (!elements || !elements.length) {
+        return;
+    }
+
+    const focusableElements = Array.from(elements).filter((el) => !el.disabled);
+    const currentIndex = focusableElements.indexOf(document.activeElement);
+    const nextIndex =
+        (currentIndex + (backward ? -1 : 1) + focusableElements.length) % focusableElements.length;
+
+    focusableElements[nextIndex]?.focus();
+}
