@@ -144,6 +144,30 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(ValidationError, "does not contain any taxes"):
             out_invoice_no_tax.download_efaktur()
 
+        # Report invoice contains no ppn taxes but have new tax with new created tax group
+        new_tax = self.env["account.tax"].create({
+            'type_tax_use': 'sale',
+            'name': 'PPH',
+            'amount': -5.0,
+            'tax_group_id': self.env["account.tax.group"].create({'name': 'PPH Tax Group'}).id,
+        })
+        out_invoice_with_new_tax_group_and_no_ppn_taxes = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [new_tax.id]})
+            ],
+        })
+        out_invoice_with_new_tax_group_and_no_ppn_taxes.action_post()
+
+        with self.assertRaisesRegex(
+            ValidationError,
+            r"need to have at least one PPN or STLG tax group."
+        ):
+            out_invoice_with_new_tax_group_and_no_ppn_taxes.download_efaktur()
+
         # Report invoice contains luxury and non-luxury
         out_invoice_luxury_non_luxury = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -158,7 +182,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
 
         with self.assertRaisesRegex(
             ValidationError,
-            r"can only have one tax group \(excluding STLG\)[\s\S]*Luxury-Goods and Non-Luxury-Goods taxes"
+            r"can only have one PPN tax group \(excluding STLG\)[\s\S]*Luxury-Goods and Non-Luxury-Goods taxes"
         ):
             out_invoice_luxury_non_luxury.download_efaktur()
 
@@ -759,4 +783,113 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             '''
         )
 
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_with_new_tax_group(self):
+        """ Test efaktur with move line using new created tax & tax groups along with the luxury tax,
+        expected to work as normal and the new tax group not considered as regular tax which will make the
+        OtherTaxBase has 11/12 of the original value"""
+        # create new tax and new group
+        new_tax = self.env["account.tax"].create({
+            'type_tax_use': 'sale',
+            'name': 'PPH',
+            'amount': -5.0,
+            'tax_group_id': self.env["account.tax.group"].create({'name': 'PPH Tax Group'}).id,
+            'price_include_override': 'tax_included'
+        })
+
+        # create invoice containing the new tax along with one of the ppn tax group
+        move = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [new_tax.id, self.luxury_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        move.action_post()
+        move.download_efaktur()
+
+        result_tree = etree.fromstring(move.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//TrxCode" position="replace">
+                <TrxCode>04</TrxCode>
+            </xpath>
+            <xpath expr="//Price" position="replace">
+                <Price>105263.16</Price>
+            </xpath>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>105263.16</TaxBase>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>105263.16</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>12631.58</VAT>
+            </xpath>
+            <xpath expr="//VATRate" position="replace">
+                <VATRate>12</VATRate>
+            </xpath>
+            '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_with_new_tax_group_in_different_line(self):
+        """ Test efaktur with multiple invoice line where one is valid ppn invoice line
+        and the other one line have the new created tax group only
+
+        Expected to work since there is a valid invoice line for product_a while
+        the <GoodService> for product_b will still show up in the efaktur but their OtherTaxBase, VATRate, VAT are 0"""
+
+        # create new tax and new group
+        new_tax = self.env["account.tax"].create({
+            'type_tax_use': 'sale',
+            'name': 'PPH',
+            'amount': -5.0,
+            'tax_group_id': self.env["account.tax.group"].create({'name': 'PPH Tax Group'}).id,
+        })
+
+        # Create the product and the invoice with 1 valid ppn invoice line and 1 that is not
+        product_2 = self.env['product.product'].create({'name': "Product B"})
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1}),
+                (0, 0, {'product_id': product_2.id, 'name': 'line2', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [new_tax.id]})
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//ListOfGoodService" position="inside">
+                <GoodService>
+                    <Opt>A</Opt>
+                    <Code>000000</Code>
+                    <Name>Product B</Name>
+                    <Unit>UM.0018</Unit>
+                    <Price>100000.00</Price>
+                    <Qty>1.0</Qty>
+                    <TotalDiscount>0.00</TotalDiscount>
+                    <TaxBase>100000.00</TaxBase>
+                    <OtherTaxBase>0.00</OtherTaxBase>
+                    <VATRate>0.0</VATRate>
+                    <VAT>0.00</VAT>
+                    <STLGRate>0.0</STLGRate>
+                    <STLG>0.00</STLG>
+                </GoodService>
+            </xpath>
+            '''
+        )
         self.assertXmlTreeEqual(result_tree, expected_tree)
