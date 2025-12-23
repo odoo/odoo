@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* board
+# * board
 #
 # Translators:
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"PO-Revision-Date: 2025-09-14 21:08+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-19/board/fr/"
+">\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: board
 #. odoo-javascript
@@ -51,8 +53,6 @@ msgid "Are you sure that you want to remove this item?"
 msgstr "Êtes-vous sûr de vouloir supprimer cet élément ?"
 
 #. module: board
-#. odoo-javascript
-#: code:addons/board/static/src/board_view.js:0
 #: model:ir.model,name:board.model_board_board
 msgid "Board"
 msgstr "Tableau"
@@ -73,7 +73,12 @@ msgstr "Impossible d'ajouter le filtre au tableau de bord"
 #. odoo-javascript
 #: code:addons/board/static/src/add_to_board/add_to_board.xml:0
 msgid "Dashboard"
-msgstr ""
+msgstr "Tableau de bord"
+
+#. module: board
+#: model:ir.model.fields,field_description:board.field_board_board__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
 
 #. module: board
 #: model:ir.model.fields,field_description:board.field_board_board__id
@@ -144,4 +149,4 @@ msgstr "dans le menu \"Favoris\" des options de recherches."
 #. odoo-javascript
 #: code:addons/board/static/src/add_to_board/add_to_board.js:0
 msgid "“%s” added to dashboard"
-msgstr ""
+msgstr "“%s” est ajouté(e) au tableau de bord"

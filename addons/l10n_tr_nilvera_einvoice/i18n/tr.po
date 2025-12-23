@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-15 12:44+0000\n"
+"POT-Creation-Date: 2025-12-16 19:06+0000\n"
 "PO-Revision-Date: 2025-10-15 12:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -77,12 +78,6 @@ msgstr ""
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid "Check name on Invoice(s)"
 msgstr "Fatura(ları) ismi kontrol edin"
-
-#. module: l10n_tr_nilvera_einvoice
-#. odoo-python
-#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
-msgid "Check reference on Company(s)"
-msgstr "Şirket(ler) üzerindeki referansı kontrol edin"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
@@ -242,8 +237,8 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:ir.model,name:l10n_tr_nilvera_einvoice.model_res_partner_category
-msgid "Partner Tags"
-msgstr "Ortak Etiketleri"
+msgid "Partner Tag"
+msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
@@ -303,6 +298,12 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
+msgid "TR Company(s)"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/res_partner_category.py:0
 msgid ""
 "The Contact Tag(s) cannot be deleted because it is used in Türkiye "
@@ -325,21 +326,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
-"The following company(s) either do not have their country set as Türkiye or "
-"are missing at least one of these fields: Tax ID, Street, City, or State"
+"The following TR Company(s) must have the reference field set to the tax "
+"office name."
 msgstr ""
-"Aşağıdaki şirket(ler)in ya ülkesi Türkiye olarak ayarlanmamış ya da şu "
-"alanlardan en az biri eksik: Vergi Numarası, Adres, Şehir veya İl"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
-"The following company(s) must have the reference field set to the tax office"
-" name."
+"The following company(s) either do not have their country set as Türkiye or "
+"are missing at least one of these fields: Tax ID, Street, City, or State"
 msgstr ""
-"Aşağıdaki şirket(ler)in referans alanı vergi dairesi adı olarak "
-"ayarlanmalıdır."
+"Aşağıdaki şirket(ler)in ya ülkesi Türkiye olarak ayarlanmamış ya da şu "
+"alanlardan en az biri eksik: Vergi Numarası, Adres, Şehir veya İl"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
@@ -394,12 +393,11 @@ msgstr "Fatura Nilvera'ya başarıyla gönderildi."
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
 "The invoice name must follow the format when sending to Nilvera: 3 "
-"alphanumeric characters, followed by the year, and then a sequential number."
-" Example: INV/2025/000001"
+"alphanumeric characters, followed by the year, and then a sequential number. "
+"Example: INV/2025/000001"
 msgstr ""
 "Fatura isim Nilvera'ya gönderirken şu formatta olmalıdır: 3 alfanümerik "
-"karakter, ardından yıl, ve ardından sıralı bir numara. Örnek: "
-"INV/2025/000001"
+"karakter, ardından yıl, ve ardından sıralı bir numara. Örnek: INV/2025/000001"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
@@ -463,10 +461,10 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid "by Nilvera"
-msgstr "Nilvera'ya Gönder"
+msgstr "Nilvera tarafından"
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid "by Nilvera (Demo)"
-msgstr "Nilvera'ya Gönder (Demo)"
+msgstr ""

@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-09 11:01+0000\n"
+"POT-Creation-Date: 2025-12-05 19:07+0000\n"
 "PO-Revision-Date: 2025-10-09 11:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -30,8 +31,8 @@ msgstr "%s TCKN zorunlu."
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-msgid "%s is required."
-msgstr "%s gerekli."
+msgid "%s is required"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
@@ -40,7 +41,7 @@ msgid "%s's"
 msgstr "%s ait."
 
 #. module: l10n_tr_nilvera_edispatch
-#: model:ir.model.constraint,message:l10n_tr_nilvera_edispatch.constraint_l10n_tr_nilvera_trailer_plate_name_unique
+#: model:ir.model.constraint,message:l10n_tr_nilvera_edispatch.constraint_l10n_tr_nilvera_trailer_plate_name_uniq
 msgid "A Plate Number with that type already exists."
 msgstr "Bu tipte bir plaka numarası zaten mevcut."
 
@@ -81,7 +82,9 @@ msgstr "Taşıyıcı (TR)"
 msgid ""
 "Carrier is required (optional when both the Driver and Vehicle Plate are "
 "filled)."
-msgstr "Taşıyıcı gereklidir (Sürücü ve Araç Plakası birlikte girildiğinde isteğe bağlıdır)."
+msgstr ""
+"Taşıyıcı gereklidir (Sürücü ve Araç Plakası birlikte girildiğinde isteğe "
+"bağlıdır)."
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
@@ -99,6 +102,11 @@ msgstr "Kontak"
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
 msgid "Country"
 msgstr "Ülke"
+
+#. module: l10n_tr_nilvera_edispatch
+#: model:ir.model,website_form_label:l10n_tr_nilvera_edispatch.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_l10n_tr_nilvera_trailer_plate__create_uid
@@ -135,6 +143,9 @@ msgstr "İrsaliye Tipi"
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_l10n_tr_nilvera_trailer_plate__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_res_partner__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking_type__display_name
 msgid "Display Name"
 msgstr "Görünen Ad"
 
@@ -207,6 +218,9 @@ msgstr "GİB e-İrsaliye Durumu"
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_l10n_tr_nilvera_trailer_plate__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_res_partner__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking__id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking_type__id
 msgid "ID"
 msgstr ""
 
@@ -233,8 +247,8 @@ msgstr "Son Güncellenme Tarihi"
 
 #. module: l10n_tr_nilvera_edispatch
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_edispatch.l10n_tr_edispatch_format
-msgid "Pre-printed"
-msgstr "Matbu"
+msgid "MATBU"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.actions.server,name:l10n_tr_nilvera_edispatch.action_mark_l10n_tr_nilvera_edispatch_status
@@ -250,7 +264,8 @@ msgstr "Çevrimiçi"
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking_type.py:0
 msgid "Only 3 characters are allowed in the Sequence Prefix by GİB"
-msgstr "GİB kurallarına göre, sıra ön ekinde en fazla 3 karakter kullanılabilir."
+msgstr ""
+"GİB kurallarına göre, sıra ön ekinde en fazla 3 karakter kullanılabilir."
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
@@ -259,14 +274,14 @@ msgid ""
 "Only Drivers from Türkiye are valid. Please update the Country and enter a "
 "valid TCKN in the Tax ID."
 msgstr ""
-"Yalnızca Türkiye'den sürücüler geçerlidir. Lütfen ülke bilgisini güncelleyin ve "
-"Vergi Kimlik Numarası (TCKN) alanına geçerli bir değer girin."
+"Yalnızca Türkiye'den sürücüler geçerlidir. Lütfen ülke bilgisini güncelleyin "
+"ve Vergi Kimlik Numarası (TCKN) alanına geçerli bir değer girin."
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-javascript
 #: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.js:0
-msgid "Only XML files can be uploaded."
-msgstr "Sadece XML dosyaları yüklenebilir."
+msgid "Only XML files can be uploaded"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model,name:l10n_tr_nilvera_edispatch.model_stock_picking_type
@@ -331,13 +346,18 @@ msgstr "Gönderildi"
 #. odoo-javascript
 #: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.js:0
 msgid "Something went wrong. Please try again."
-msgstr "Bir hata oluştu. Lütfen tekrar deneyin.	"
+msgstr "Bir hata oluştu. Lütfen tekrar deneyin.\t"
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
 msgid "State"
 msgstr "İl"
+
+#. module: l10n_tr_nilvera_edispatch
+#: model:ir.model,name:l10n_tr_nilvera_edispatch.model_stock_picking
+msgid "Stock Picking - Delivery Guide (Uruguay)"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
@@ -348,8 +368,8 @@ msgstr "Adres"
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_edispatch/models/res_partner.py:0
-msgid "Identity Number/Tax ID"
-msgstr "TCKN/VKN"
+msgid "TCKN/VKN"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-javascript
@@ -363,8 +383,7 @@ msgstr "Dosya(lar): %s XML türünde olmalıdır."
 msgid ""
 "The postal code of the customs office used to ship to the destination "
 "country."
-msgstr ""
-"Hedef ülkeye sevkiyat için kullanılan gümrük ofisinin posta kodu."
+msgstr "Hedef ülkeye sevkiyat için kullanılan gümrük ofisinin posta kodu."
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_edispatch.selection__stock_picking__l10n_tr_nilvera_dispatch_state__to_send
@@ -375,11 +394,6 @@ msgstr "Gönderilecek"
 #: model:ir.model.fields,field_description:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_trailer_plate_ids
 msgid "Trailer Plates"
 msgstr "Römork Plakaları"
-
-#. module: l10n_tr_nilvera_edispatch
-#: model:ir.model,name:l10n_tr_nilvera_edispatch.model_stock_picking
-msgid "Transfer"
-msgstr "Nakil"
 
 #. module: l10n_tr_nilvera_edispatch
 #. odoo-javascript
@@ -396,8 +410,7 @@ msgstr "Kamyonu/tırı kullanan kişiler için kullanılır."
 #: model:ir.model.fields,help:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_seller_supplier_id
 msgid ""
 "Used for the information of the supplier of the goods in the delivery note."
-msgstr ""
-"Sevk irsaliyesindeki malların tedarikçisi bilgileri için kullanılır."
+msgstr "Sevk irsaliyesindeki malların tedarikçisi bilgileri için kullanılır."
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,help:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_buyer_originator_id
@@ -410,8 +423,8 @@ msgstr ""
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,help:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_buyer_id
 msgid ""
-"Used for the original party who purchases the good when the Delivery Address"
-" is for another recipient"
+"Used for the original party who purchases the good when the Delivery Address "
+"is for another recipient"
 msgstr ""
 "Teslimat adresi başka bir alıcı için olduğunda, malı satın alan orijinal "
 "taraf için kullanılır."
@@ -424,7 +437,8 @@ msgstr "Kamyonun/tırın plaka numarasını girmek için kullanılır."
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,help:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_trailer_plate_ids
 msgid "Used to input the plate numbers of the trailers attached to the truck."
-msgstr "Kamyona/tıra bağlı römorkların plaka numaralarını girmek için kullanılır."
+msgstr ""
+"Kamyona/tıra bağlı römorkların plaka numaralarını girmek için kullanılır."
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields,help:l10n_tr_nilvera_edispatch.field_stock_picking__l10n_tr_nilvera_dispatch_type
@@ -437,8 +451,9 @@ msgid ""
 "Used when the dispatch is made through a third-party carrier company. "
 "Populating this makes the Vehicle Plate and Drivers optional."
 msgstr ""
-"Sevkiyatın üçüncü taraf bir taşıyıcı şirket aracılığıyla yapılması durumunda kullanılır."
-"Bu alanın doldurulması Araç Plakası ve Sürücüler alanlarını isteğe bağlı yapar."
+"Sevkiyatın üçüncü taraf bir taşıyıcı şirket aracılığıyla yapılması durumunda "
+"kullanılır.Bu alanın doldurulması Araç Plakası ve Sürücüler alanlarını "
+"isteğe bağlı yapar."
 
 #. module: l10n_tr_nilvera_edispatch
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_edispatch.selection__l10n_tr_nilvera_trailer_plate__plate_number_type__vehicle
@@ -513,6 +528,12 @@ msgstr "e-İrsaliye başarıyla yüklendi."
 #: code:addons/l10n_tr_nilvera_edispatch/static/src/views/list_view/ereceipt_upload.js:0
 msgid "e-Receipt(s) Imported Successfully"
 msgstr "e-İrsaliye başarıyla yüklendi."
+
+#. module: l10n_tr_nilvera_edispatch
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_edispatch/models/stock_picking.py:0
+msgid "id"
+msgstr ""
 
 #. module: l10n_tr_nilvera_edispatch
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_edispatch.l10n_tr_edispatch_format

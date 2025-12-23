@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* google_gmail
-# 
+# * google_gmail
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-11-07 18:36+0000\n"
+"PO-Revision-Date: 2025-11-08 21:52+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/google_gmail/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -38,22 +41,26 @@ msgstr ""
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
 msgid ""
-"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" "
+"class=\"badge text-bg-success\">\n"
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"server_type != 'gmail' or not google_gmail_refresh_token\" "
+"class=\"badge text-bg-success\">\n"
 "                        Gmail 代碼有效\n"
 "                    </span>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
 msgid ""
-"<span invisible=\"smtp_authentication != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'gmail' or not "
+"google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span invisible=\"smtp_authentication != 'gmail' or not google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
+"<span invisible=\"smtp_authentication != 'gmail' or not "
+"google_gmail_refresh_token\" class=\"badge text-bg-success\">\n"
 "                        Gmail 代碼有效\n"
 "                    </span>"
 
@@ -72,10 +79,17 @@ msgid "Access Token Expiration Timestamp"
 msgstr "訪問代碼到期時間戳"
 
 #. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__active
+#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__active
+#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__active
+msgid "Active"
+msgstr "啟用"
+
+#. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
-msgid "An error occur during the authentication process."
-msgstr "驗證過程中發生錯誤。"
+msgid "An error occurred during the authentication process."
+msgstr ""
 
 #. module: google_gmail
 #. odoo-python
@@ -89,13 +103,6 @@ msgid "Authenticate with"
 msgstr "認證以"
 
 #. module: google_gmail
-#: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_authorization_code
-#: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__google_gmail_authorization_code
-#: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_authorization_code
-msgid "Authorization Code"
-msgstr "授權碼"
-
-#. module: google_gmail
 #: model:ir.model,name:google_gmail.model_res_config_settings
 msgid "Config Settings"
 msgstr "配置設定"
@@ -105,7 +112,8 @@ msgstr "配置設定"
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
-"You will be redirected to the Gmail login page where you will need to accept the permission."
+"You will be redirected to the Gmail login page where you will need to accept "
+"the permission."
 msgstr ""
 "將您的 Gmail 帳戶與 OAuth 驗證流程連結。\n"
 "您將被重定向到 Gmail 登入頁面，您需要在其中接受權限。"
@@ -115,18 +123,27 @@ msgstr ""
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
-"By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
+"By default, only a user with a matching email address will be able to use "
+"this server. To extend its use, you should set a \"mail.default.from\" "
+"system parameter."
 msgstr ""
 "將您的 Gmail 帳戶與 OAuth 驗證流程連結。\n"
-"預設情況下，只有具有匹配電子郵件地址的使用者才能使用此伺服器。 若要擴展其使用，您應該設定 mail.default.from 系統參數。"
+"預設情況下，只有具有匹配電子郵件地址的使用者才能使用此伺服器。 若要擴展其使"
+"用，您應該設定 mail.default.from 系統參數。"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__display_name
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__display_name
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__display_name
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:google_gmail.field_res_users__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
+
+#. module: google_gmail
+#: model:ir.model.fields.selection,name:google_gmail.selection__res_users__outgoing_mail_server_type__gmail
+msgid "Gmail"
+msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
@@ -145,6 +162,11 @@ msgid "Gmail OAuth Authentication"
 msgstr "Gmail OAuth 身份驗證"
 
 #. module: google_gmail
+#: model_terms:ir.ui.view,arch_db:google_gmail.google_gmail_oauth_error
+msgid "Go back"
+msgstr "返回"
+
+#. module: google_gmail
 #: model:ir.model,name:google_gmail.model_google_gmail_mixin
 msgid "Google Gmail Mixin"
 msgstr "Google Gmail 混入程式"
@@ -154,6 +176,7 @@ msgstr "Google Gmail 混入程式"
 #: model:ir.model.fields,field_description:google_gmail.field_google_gmail_mixin__id
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__id
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__id
+#: model:ir.model.fields,field_description:google_gmail.field_res_users__id
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "ID"
 msgstr "識別號"
@@ -190,8 +213,33 @@ msgstr "只有管理員可以連結一個Gmail郵件服務器。"
 #. module: google_gmail
 #. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "Oops, we could not authenticate you. Please try again later."
+msgstr ""
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/controllers/main.py:0
+msgid ""
+"Oops, you're creating an authorization to send from %(email_login)s but your "
+"address is %(email_server)s. Make sure your addresses match!"
+msgstr ""
+
+#. module: google_gmail
+#: model:ir.model.fields,field_description:google_gmail.field_res_users__outgoing_mail_server_type
+msgid "Outgoing Mail Server Type"
+msgstr ""
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
 msgid "Please configure your Gmail credentials."
 msgstr "請設定你的 Gmail 登入資訊。"
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/google_gmail_mixin.py:0
+msgid "Please enter a valid email address."
+msgstr ""
 
 #. module: google_gmail
 #. odoo-python
@@ -200,7 +248,9 @@ msgid ""
 "Please fill the \"Username\" field with your Gmail username (your email "
 "address). This should be the same account as the one used for the Gmail "
 "OAuthentication Token."
-msgstr "請在\"用戶名稱\"一欄填寫 Gmail 用戶名（電子郵件地址）。該帳戶應與 Gmail OAuthentication 代碼使用的帳戶一致。"
+msgstr ""
+"請在\"用戶名稱\"一欄填寫 Gmail 用戶名（電子郵件地址）。該帳戶應與 Gmail "
+"OAuthentication 代碼使用的帳戶一致。"
 
 #. module: google_gmail
 #. odoo-python
@@ -223,6 +273,12 @@ msgid "Refresh Token"
 msgstr "更新 Token"
 
 #. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/models/fetchmail_server.py:0
+msgid "SSL is required for server “%s”."
+msgstr "以下伺服器需要 SSL：%s"
+
+#. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret"
 msgstr "密鑰"
@@ -238,12 +294,10 @@ msgid "Server Type"
 msgstr "伺服器類型"
 
 #. module: google_gmail
-#: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
-#: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
-msgid ""
-"Setup your Gmail API credentials in the general settings to link a Gmail "
-"account."
-msgstr "在一般設定中設置你的 Gmail API 登入資訊，以連結至 Gmail 帳戶。"
+#. odoo-python
+#: code:addons/google_gmail/tools.py:0
+msgid "Something went wrong. Try again later"
+msgstr ""
 
 #. module: google_gmail
 #: model:ir.model.fields,help:google_gmail.field_fetchmail_server__google_gmail_uri
@@ -258,3 +312,14 @@ msgstr "以生成Google的授權碼的網址"
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "URI"
 msgstr "URI"
+
+#. module: google_gmail
+#: model:ir.model,name:google_gmail.model_res_users
+msgid "User"
+msgstr "使用者"
+
+#. module: google_gmail
+#. odoo-python
+#: code:addons/google_gmail/tools.py:0
+msgid "You don't have an active subscription"
+msgstr ""

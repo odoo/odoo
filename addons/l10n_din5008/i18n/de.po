@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_din5008
+# * l10n_din5008
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.3alpha1+e\n"
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-08 10:58+0000\n"
-"PO-Revision-Date: 2024-04-24 08:11+0000\n"
-"POT-Creation-Date: 2025-04-08 10:03+0000\n"
-"PO-Revision-Date: 2025-04-08 10:03+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"POT-Creation-Date: 2025-12-16 19:03+0000\n"
+"PO-Revision-Date: 2025-12-11 13:00+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-19-l10n/"
+"l10n_din5008/de/>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.din5008_css
@@ -37,7 +38,7 @@ msgstr ""
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "/12345"
-msgstr ""
+msgstr "/12345"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.din5008_css
@@ -66,7 +67,7 @@ msgid ""
 "                        &amp;.invoice_note {\n"
 "                            td {\n"
 "                                .address {\n"
-"                                    &gt; span {\n"
+"                                    .colored_address {\n"
 "                                        color:"
 msgstr ""
 ";\n"
@@ -76,7 +77,7 @@ msgstr ""
 "                        &amp;.invoice_note {\n"
 "                            td {\n"
 "                                .address {\n"
-"                                    &gt; span {\n"
+"                                    .colored_address {\n"
 "                                        color:"
 
 #. module: l10n_din5008
@@ -97,16 +98,6 @@ msgstr ""
 "[name=stock_move_table], .o_main_table {\n"
 "                                    th {\n"
 "                                        color:"
-
-#. module: l10n_din5008
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
-msgid "<span class=\"fw-bold\">Invoicing Address:</span>"
-msgstr "<span class=\"fw-bold\">Rechnungsadresse:</span>"
-
-#. module: l10n_din5008
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
-msgid "<span class=\"fw-bold\">Invoicing and Shipping Address:</span>"
-msgstr "<span class=\"fw-bold\">Rechnungs- und Lieferadresse:</span>"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
@@ -121,7 +112,7 @@ msgstr "<span class=\"fw-bold\">Lieferadresse:</span>"
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
 msgid "<span>|</span>"
-msgstr ""
+msgstr "<span>|</span>"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -144,6 +135,11 @@ msgid "City"
 msgstr "Stadt"
 
 #. module: l10n_din5008
+#: model:ir.model,name:l10n_din5008.model_res_company
+msgid "Company"
+msgstr ""
+
+#. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__company_details
 msgid "Company Details"
 msgstr "Unternehmensdetails"
@@ -157,6 +153,11 @@ msgstr "Dokumentlayout des Unternehmens"
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__company_registry
 msgid "Company ID"
 msgstr "Unternehmens-ID"
+
+#. module: l10n_din5008
+#: model:ir.model,name:l10n_din5008.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationseinstellungen"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
@@ -174,6 +175,13 @@ msgid "Delivery Date:"
 msgstr "Lieferdatum:"
 
 #. module: l10n_din5008
+#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__display_name
+#: model:ir.model.fields,field_description:l10n_din5008.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_din5008.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "Name anzeigen"
+
+#. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Draft Invoice"
 msgstr "Rechnungsentwurf"
@@ -182,6 +190,11 @@ msgstr "Rechnungsentwurf"
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "Due Date:"
 msgstr "Fälligkeitsdatum:"
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.res_config_settings_view_form
+msgid "Enable to show a 'Position' column on invoices and sales reports."
+msgstr ""
 
 #. module: l10n_din5008
 #: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__account_fiscal_country_id
@@ -209,9 +222,23 @@ msgid "IBAN:"
 msgstr "IBAN:"
 
 #. module: l10n_din5008
+#: model:ir.model.fields,field_description:l10n_din5008.field_base_document_layout__id
+#: model:ir.model.fields,field_description:l10n_din5008.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_din5008.field_res_config_settings__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_wizard_preview
 msgid "INV/"
 msgstr "INV/"
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.res_config_settings_view_form
+msgid ""
+"If this checkbox is ticked, a 'Position' column will be displayed on "
+"invoices and sales reports."
+msgstr ""
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
@@ -290,6 +317,12 @@ msgid "SO/2021/45678"
 msgstr "SO/2021/45678"
 
 #. module: l10n_din5008
+#: model:ir.model.fields,field_description:l10n_din5008.field_res_company__has_position_column
+#: model:ir.model.fields,field_description:l10n_din5008.field_res_config_settings__has_position_column
+msgid "Show Position Column in Reports"
+msgstr ""
+
+#. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Source"
 msgstr "Verweis"
@@ -306,7 +339,6 @@ msgstr "Straße 2"
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008
-#: model_terms:ir.ui.view,arch_db:l10n_din5008.external_layout_din5008_account_move
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
 msgid "Tax ID"
 msgstr "USt-IdNr."
@@ -326,6 +358,11 @@ msgstr ""
 "Die Registernummer des Unternehmens. Verwenden Sie diese, wenn sie sich von "
 "der USt-IdNr. unterscheidet. Sie muss für alle Partner desselben Landes "
 "eindeutig sein."
+
+#. module: l10n_din5008
+#: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document
+msgid "VAT"
+msgstr "USt-IdNr."
 
 #. module: l10n_din5008
 #: model_terms:ir.ui.view,arch_db:l10n_din5008.report_invoice_document

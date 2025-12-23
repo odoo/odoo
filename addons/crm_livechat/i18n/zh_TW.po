@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* crm_livechat
-# 
+# * crm_livechat
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-09-16 08:10+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/crm_livechat/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: crm_livechat
 #. odoo-python
@@ -63,10 +66,9 @@ msgstr "建立新潛在商機（輸入\"/lead 潛在商機指令\"）"
 #. odoo-python
 #: code:addons/crm_livechat/models/discuss_channel.py:0
 msgid ""
-"Create a new lead: %(pre_start)s%(lead_command)s %(i_start)slead "
-"title%(i_end)s%(pre_end)s"
+"Create a new lead with: %(pre_start)s%(lead_command)s %(i_start)slead title%"
+"(i_end)s%(pre_end)s"
 msgstr ""
-"建立新潛在客戶：%(pre_start)s%(lead_command)s 潛在客戶標題%(i_start)s%(i_end)s%(pre_end)s"
 
 #. module: crm_livechat
 #: model:ir.model,website_form_label:crm_livechat.model_crm_lead
@@ -106,12 +108,12 @@ msgid "Has Crm Lead"
 msgstr "有客戶關係潛在客戶"
 
 #. module: crm_livechat
-#: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
 msgid "Hi there, what brings you to our website today? 👋"
 msgstr "你好，今天是甚麼原因到訪我們網站？ 👋"
 
 #. module: crm_livechat
-#: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
 msgid "Hu-ho, it looks like none of our operators are available 🙁"
 msgstr "哎唷，目前似乎沒有服務員有空 🙁"
 
@@ -123,7 +125,7 @@ msgstr "哎唷，目前似乎沒有服務員有空 🙁"
 #: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__id
 #: model:ir.model.fields,field_description:crm_livechat.field_res_users__id
 msgid "ID"
-msgstr "識別碼"
+msgstr "識別號"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_crm_lead
@@ -157,6 +159,12 @@ msgid "Livechat Support Channel Report"
 msgstr "線上客服支援頻道報告"
 
 #. module: crm_livechat
+#. odoo-javascript
+#: code:addons/crm_livechat/static/src/core/web/livechat_channel_info_list_patch.xml:0
+msgid "Open leads"
+msgstr "未成交潛在客戶"
+
+#. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
 msgid "Sales Team"
 msgstr "銷售團隊"
@@ -167,7 +175,7 @@ msgid "Step Type"
 msgstr "步驟類型"
 
 #. module: crm_livechat
-#: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
 msgid "Thank you, you should hear back from us very soon!"
 msgstr "謝謝你，你應該很快會收到我們回覆！"
 
@@ -181,7 +189,9 @@ msgstr "設定潛在客戶後，銷售使用者便可存取頻道。"
 msgid ""
 "Used in combination with 'create_lead' step type in order to automatically "
 "assign the created lead/opportunity to the defined team"
-msgstr "與 create_lead 步驟類型結合使用，以將已建立的潛在客戶/銷售機會自動指派給指定的團隊"
+msgstr ""
+"與 create_lead 步驟類型結合使用，以將已建立的潛在客戶/銷售機會自動指派給指定"
+"的團隊"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_res_users
@@ -189,7 +199,7 @@ msgid "User"
 msgstr "使用者"
 
 #. module: crm_livechat
-#: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
+#: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
 msgid ""
 "Would you mind leaving your email address so that we can reach you back?"
 msgstr "介意留下你的電郵地址，以便我們回覆你嗎？"
@@ -212,3 +222,9 @@ msgstr "你不可更新潛在客戶、將其連結至你沒有存取權限的頻
 #: code:addons/crm_livechat/static/src/core/thread_actions.js:0
 msgid "e.g. Product pricing"
 msgstr "例：產品定價"
+
+#. module: crm_livechat
+#. odoo-python
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
+msgid "livechat discussion"
+msgstr ""
