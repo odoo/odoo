@@ -16,6 +16,7 @@ export class ProductProduct extends models.ServerModel {
             "product_tag_ids",
             "default_code",
             "standard_price",
+            "pos_categ_ids",
         ];
     }
 
@@ -31,6 +32,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [1],
         },
         {
             id: 5,
@@ -43,6 +45,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [2],
         },
         {
             id: 6,
@@ -55,6 +58,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [2],
         },
         {
             id: 7,
@@ -67,6 +71,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [],
         },
         {
             id: 8,
@@ -79,6 +84,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [],
         },
         {
             id: 9,
@@ -91,6 +97,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [],
         },
         {
             id: 10,
@@ -103,6 +110,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [],
         },
         {
             id: 11,
@@ -115,6 +123,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [],
         },
         {
             id: 12,
@@ -127,6 +136,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [4],
         },
         {
             id: 13,
@@ -139,6 +149,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [5],
         },
         {
             id: 14,
@@ -151,6 +162,7 @@ export class ProductProduct extends models.ServerModel {
             default_code: false,
             product_template_attribute_value_ids: [],
             product_template_variant_value_ids: [],
+            pos_categ_ids: [4],
         },
     ];
 }
