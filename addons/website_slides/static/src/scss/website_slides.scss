@@ -1,0 +1,34 @@
+.o_wslides_course_main {
+    &.o_wslides_course_cover_overlap {
+        margin-top: -$nav-link-padding-y * 2 - $font-size-base - $spacer - $btn-padding-y;
+
+        .o_wslides_nav_tabs {
+            --nav-link-color: #{rgba(white, $o-opacity-muted)};
+            --nav-pills-link-active-bg: white;
+            --nav-pills-link-active-color: #{color-contrast(white)};
+            --nav-link-hover-color: white;
+        }
+    }
+
+    .o_wslides_nav_tabs {
+        --nav-underline-border-width: #{$border-width * 3};
+        --nav-underline-link-active-color: #{$body-color};
+            .nav-link {
+                font-weight: $font-weight-normal;
+
+                &.active {
+                    border-bottom-color: var(--nav-link-color);
+                }
+            }
+    }
+}
+
+.o_wslides_course_header {
+    &, .o_wslides_header_text, .o_wslides_back, .breadcrumb-item.active span, .breadcrumb-item a:hover {
+        color: white;
+    }
+
+    .breadcrumb-item a, .o_wslides_back:hover, .breadcrumb-item + .breadcrumb-item::before {
+        color: rgba(white, $o-opacity-muted);
+    }
+}

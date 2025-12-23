@@ -701,6 +701,16 @@ class WebsiteSlides(WebsiteProfile):
             offset=pager['offset'])
         render_values['channel_progress'] = self._get_channel_progress(channel, include_quiz=True)
 
+        # Get completion date for the current user if they are a member
+        if channel.is_member:
+            channel_partner = request.env['slide.channel.partner'].sudo().search([
+                ('channel_id', '=', channel.id),
+                ('partner_id', '=', request.env.user.partner_id.id)
+            ], limit=1)
+            render_values['completion_date'] = channel_partner.completion_date if channel_partner else False
+        else:
+            render_values['completion_date'] = False
+
         # for sys admins: prepare data to install directly modules from eLearning when
         # uploading slides. Currently supporting only survey, because why not.
         if request.env.user.has_group('base.group_system'):
