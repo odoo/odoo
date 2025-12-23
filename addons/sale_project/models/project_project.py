@@ -211,7 +211,7 @@ class ProjectProject(models.Model):
         action_window = {
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order.line',
-            'name': _("%(name)s's Sales Order Items", name=self.name),
+            'name': self.env._("Sales Order Items"),
             'context': {
                 'show_sale': True,
                 'link_to_project': self.id,
@@ -240,7 +240,6 @@ class ProjectProject(models.Model):
         all_sale_orders = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]}).sudo().order_id
         embedded_action_context = self.env.context.get('from_embedded_action', False)
         action_window = self._get_view_action()
-        action_window["display_name"] = self.env._("%(name)s's %(action_name)s", name=self.name, action_name=action_window.get('name'))
         action_window["domain"] = self._get_sale_orders_domain(all_sale_orders)
         action_window['context'] = {
             **ast.literal_eval(action_window['context']),
