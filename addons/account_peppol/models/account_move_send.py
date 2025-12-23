@@ -201,8 +201,10 @@ class AccountMoveSend(models.AbstractModel):
         if not params['documents']:
             return
 
-        edi_user = next(iter(invoices_data)).company_id.account_edi_proxy_client_ids.filtered(
+        edi_user = next(iter(invoices_data)).company_id.with_context(active_test=False).account_edi_proxy_client_ids.filtered(
             lambda u: u.proxy_type == 'peppol')
+        active_user = edi_user.filtered(lambda u: u.active)[:1]
+        edi_user = active_user or edi_user.filtered(lambda u: not u.active)[:1]
 
         try:
             response = edi_user._call_peppol_proxy(
