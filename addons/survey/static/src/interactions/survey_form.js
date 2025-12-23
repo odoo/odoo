@@ -423,8 +423,6 @@ export class SurveyForm extends Interaction {
                 },
                 cancel: () => {},
             });
-        } else if (targetEl.value === "finish") {
-            this.submitForm({ isFinish: true });
         } else {
             this.submitForm();
         }
