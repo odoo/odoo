@@ -84,6 +84,39 @@ test("formviewdialog buttons in footer are positioned properly", async () => {
     });
 });
 
+test("expand with middleClick", async () => {
+    mockService("action", {
+        doAction(params, options) {
+            if (options?.newWindow) {
+                expect.step("opened in a new window");
+                return;
+            }
+            super.doAction(params);
+        },
+        loadState() {},
+    });
+
+    Partner._views.form = /* xml */ `
+        <form string="Partner">
+            <sheet>
+                <group><field name="foo"/></group >
+            </sheet>
+        </form>
+    `;
+
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        resId: 1,
+    });
+
+    await animationFrame();
+    expect(".o_expand_button").toHaveCount(1);
+    await contains(".o_expand_button").middleClick();
+
+    expect.verifySteps(["opened in a new window"]);
+});
+
 test("modifiers are considered on multiple <footer/> tags", async () => {
     Partner._views.form = /* xml */ `
         <form>

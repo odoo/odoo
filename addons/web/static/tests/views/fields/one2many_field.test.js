@@ -13583,6 +13583,33 @@ test("expand record in dialog", async () => {
     expect.verifySteps([[4, "turtle", "ir.actions.act_window", [[false, "form"]]]]);
 });
 
+test("expand with middleClick", async () => {
+    mockService("action", {
+        doAction(params, options) {
+            if (options?.newWindow) {
+                expect.step("opened in a new window");
+                return;
+            }
+            super.doAction(params);
+        },
+        loadState() {},
+    });
+    Turtle._views["form, false"] = `<form><field name="name"/></form>`;
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="turtles"><list><field name="name"/></list></field></form>`,
+        resId: 1,
+    });
+    expect(".o_field_widget[name=turtles] .o_data_row").toHaveCount(1);
+    expect(".o_data_cell").toHaveText("donatello");
+    await contains(queryFirst(".o_field_widget[name=turtles] .o_data_cell")).click();
+    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(1);
+
+    await contains(".o_expand_button").middleClick();
+    expect.verifySteps(["opened in a new window"]);
+});
+
 test("one2many kanban: add button kanban's card only with no control", async () => {
     Partner._fields.control = fields.One2many({
         string: "one2many field",

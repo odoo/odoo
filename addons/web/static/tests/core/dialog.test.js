@@ -78,6 +78,28 @@ test("simple rendering - touch display with trap focus", async () => {
     expect("input[placeholder=withFocus]").toBeFocused();
 });
 
+test("onExpand middleClick", async () => {
+    class Parent extends Component {
+        static components = { Dialog };
+        static template = xml`
+            <Dialog title="'Wow(l) Effect'" onExpand="this.onExpand">
+                Hello!
+            </Dialog>
+        `;
+        static props = ["*"];
+        onExpand(_ev, middleClick) {
+            expect.step("middleClick: " + middleClick);
+        }
+    }
+    assignDialogTestEnv();
+    await mountWithCleanup(Parent);
+    expect(".o_dialog").toHaveCount(1);
+    expect(".o_expand_button").toHaveCount(1);
+    await contains(".o_expand_button").middleClick();
+
+    expect.verifySteps(["middleClick: true"]);
+});
+
 test("hotkeys work on dialogs", async () => {
     class Parent extends Component {
         static components = { Dialog };

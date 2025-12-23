@@ -16,6 +16,7 @@ import {
     keyDown,
     keyUp,
     manuallyDispatchProgrammaticEvent,
+    middleClick,
     pointerDown,
     press,
     queryOne,
@@ -203,6 +204,13 @@ export function contains(target, options) {
         dblclick: async (options) => {
             consumeContains();
             await callClick(dblclick, nodePromise, options);
+        },
+        /**
+         * @param {PointerOptions & KeyModifierOptions} [options]
+         */
+        middleClick: async (options) => {
+            consumeContains();
+            await callClick(middleClick, nodePromise, options);
         },
         /**
          * @param {DragAndDropOptions} [options]
