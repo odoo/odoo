@@ -191,3 +191,17 @@ class TestUi(TestPosHrHttpCommon):
             "test_maximum_closing_difference",
             login="pos_admin"
         )
+
+    def test_scan_employee_barcode_with_pos_hr_disabled(self):
+        """
+        Ensure that scanning an employee barcode when module_pos_hr is disabled does not
+        trigger any traceback.
+        """
+        self.main_pos_config.module_pos_hr = False
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_scan_employee_barcode_with_pos_hr_disabled",
+            login="pos_admin"
+        )
