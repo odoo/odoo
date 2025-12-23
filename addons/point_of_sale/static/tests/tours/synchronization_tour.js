@@ -17,7 +17,9 @@ registry.category("web_tour.tours").add("test_sync_from_ui_one_by_one", {
                 run: async () => {
                     // Create 5 orders that will be synced one by one
                     for (let i = 0; i < 5; i++) {
-                        const product = posmodel.models["product.product"].getFirst();
+                        const product = posmodel.models["product.product"].find(
+                            (el) => el.attribute_line_ids.length == 0
+                        );
                         const order = posmodel.createNewOrder();
                         await posmodel.addLineToOrder({ product_id: product }, order);
                         posmodel.addPendingOrder([order.id]);
