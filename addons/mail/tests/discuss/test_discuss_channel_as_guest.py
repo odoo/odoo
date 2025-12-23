@@ -40,20 +40,32 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.tour = "discuss_channel_public_tour.js"
 
     def _open_channel_page_as_user(self, login):
-        self.start_tour(self.channel.invitation_url, self.tour, login=login)
+        user = self.env["res.users"].search([("login", "=", login)])
+        url = (
+            f"/discuss/channel/{self.channel.id}"
+            if user._is_internal()
+            else self.channel.invitation_url
+        )
+        self.start_tour(url, self.tour, login=login)
         # Update the body to a unique value to ensure the second run does not confuse the 2 messages.
         self.channel._get_last_messages().body = "a-very-unique-body-in-channel"
         # Second run of the tour as the first call has side effects, like creating user settings or adding members to
         # the channel, so we need to run it again to test different parts of the code.
-        self.start_tour(self.channel.invitation_url, self.tour, login=login)
+        self.start_tour(url, self.tour, login=login)
 
     def _open_group_page_as_user(self, login):
-        self.start_tour(self.group.invitation_url, self.tour, login=login)
+        user = self.env["res.users"].search([("login", "=", login)])
+        url = (
+            f"/discuss/channel/{self.channel.id}"
+            if user._is_internal()
+            else self.group.invitation_url
+        )
+        self.start_tour(url, self.tour, login=login)
         # Update the body to a unique value to ensure the second run does not confuse the 2 messages.
         self.channel._get_last_messages().body = "a-very-unique-body-in-group"
         # Second run of the tour as the first call has side effects, like creating user settings or adding members to
         # the channel, so we need to run it again to test different parts of the code.
-        self.start_tour(self.group.invitation_url, self.tour, login=login)
+        self.start_tour(url, self.tour, login=login)
 
     def test_discuss_channel_public_page_as_admin(self):
         self._open_channel_page_as_user('admin')
@@ -110,3 +122,12 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         channel_1._add_members(guests=guest)
         channel_2._add_members(guests=guest)
         self.start_tour(f"/discuss/channel/{channel_1.id}", "sidebar_in_public_page_tour", cookies={guest._cookie_name: guest._format_auth_cookie()})
+
+    def test_invitation_link_redirects_internal_users_to_discuss(self):
+        bob = mail_new_test_user(self.env, "bob", groups="base.group_user")
+        self.authenticate(bob.login, bob.login)
+        channel = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)
+        response = self.url_open(channel.invitation_url)
+        group = self.env["discuss.channel"]._create_group(name="Group 1", partners_to=bob.partner_id.ids)
+        response = self.url_open(group.invitation_url)
+        self.assertIn(f"/odoo/action-mail.action_discuss?active_id={group.id}", response.url)
