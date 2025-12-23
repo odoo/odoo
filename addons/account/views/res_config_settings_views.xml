@@ -123,10 +123,13 @@
                             <setting id="smallest_coinage_currency" help="Define the smallest coinage of the currency used to pay by cash"
                                 documentation="/applications/finance/accounting/receivables/customer_invoices/cash_rounding.html">
                                 <field name="group_cash_rounding"/>
-                                <div class="mt8">
+                                <div class="mt8" invisible="not group_cash_rounding">
                                     <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
-                                            type="action" string="Cash Roundings" class="btn-link"
-                                            invisible="not group_cash_rounding"/>
+                                            type="action" string="Cash Roundings" class="btn-link"/>
+                                    <div class="row mt8">
+                                        <label for="account_cash_rounding_id" class="col-lg-5 o_light_label"/>
+                                        <field name="account_cash_rounding_id"/>
+                                    </div>
                                 </div>
                             </setting>
                             <setting id="intrastat_statistics" help="Collect information and produce statistics on the trade in goods in Europe with intrastat"
