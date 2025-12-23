@@ -16,7 +16,8 @@ class ResPartner(models.Model):
                 partner.l10n_th_branch_name = ""
             else:
                 code = partner.company_registry
-                partner.l10n_th_branch_name = f"Branch {code}" if code and code != "00000" else "Headquarter"
+                partner.l10n_th_branch_name = partner.env._("Branch %(code)s", code=code) if code and code != "00000" else partner.env._(
+                    "Headquarter")
 
     @api.constrains('company_registry')
     def _check_company_registry_l10n_th(self):
