@@ -11,7 +11,7 @@ import { Component, onMounted } from "@odoo/owl";
 class BankTag extends Component {
     static template = "account.BankTag";
     static components = { BadgeTag };
-    static props = ["allowOutPayment?", "color", "onClick", "onDelete", "onClick", "text"];
+    static props = ["allowOutPayment?", "color", "onClick", "onDelete", "onClick", "text", "tooltip"];
 }
 
 export class FieldMany2ManyTagsBanks extends Many2ManyTagsField {
