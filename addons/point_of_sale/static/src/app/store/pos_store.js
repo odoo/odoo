@@ -1930,6 +1930,9 @@ export class PosStore extends Reactive {
         return {
             resModel: "pos.order",
             resId: order.id,
+            context: {
+                from_frontend: true,
+            },
             onRecordSaved: async (record) => {
                 await this.data.read("pos.order", [record.evalContext.id]);
                 await this.data.read(
