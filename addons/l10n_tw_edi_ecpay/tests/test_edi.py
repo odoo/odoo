@@ -31,12 +31,18 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         })
         cls.partner_a.write({
             'phone': '+886 123 456 789',
-            'contact_address': 'test address',
+            'street': 'street七美',
+            'city': '中正區',
+            'state_id': cls.env.ref('base.state_tw_tpc').id,
+            'country_id': cls.env.ref('base.tw').id,
         })
         cls.partner_b.write({
             'phone': '+886 123 456 789',
-            'contact_address': 'test address',
-            'vat': '12345678',
+            'vat': '24153791',
+            'street': 'street七美',
+            'city': '信義區',
+            'state_id': cls.env.ref('base.state_tw_klc').id,
+            'country_id': cls.env.ref('base.tw').id,
         })
         # We can reuse this invoice for the flow tests.
         cls.basic_invoice = cls.init_invoice(
@@ -62,6 +68,7 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         self.assertEqual(json_data.get("CustomerEmail"), "partner_a@tsointsoin")
         self.assertEqual(json_data.get("CustomerPhone"), "0123456789")
         self.assertEqual(json_data.get("SalesAmount"), 1050.0)
+        self.assertEqual(json_data.get("CustomerAddr"), "street七美, 中正區 TPC, Taiwan")
 
     @freeze_time("2025-01-06 15:00:00")
     def test_02_basic_submission(self):
@@ -202,7 +209,9 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
         test_partner = self.env['res.partner'].create({
             'name': 'Test Partner',
             'phone': '+886 123 456 789',
-            'contact_address': 'test address',
+            'street': 'street七美',
+            'city': '中正區',
+            'state_id': self.env.ref('base.state_tw_tpc').id,
             'vat': '00501503',
             'country_id': self.env.ref('base.tw').id,
         })
