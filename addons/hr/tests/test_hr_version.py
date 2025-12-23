@@ -669,3 +669,50 @@ class TestHrVersion(TransactionCase):
             f"""The following _onchange methods on hr.version should have corresponding methods implemented on hr.employee: {not_implemented_onchanges}\n
                 You might need to implement methods with the same name on hr.employee and call the corresponding self.version_id._onchange inside"""
         )
+
+    def test_multiple_versions_archive_validation(self):
+        """ This test is to ensure that employee always has at least one active version. """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+        })
+
+        version_0 = employee.version_id
+        version_1 = employee.create_version({
+            'date_version': '2025-12-01',
+            'contract_date_start': '2025-12-01',
+            'contract_date_end': '2025-12-31'
+        })
+        version_2 = employee.create_version({
+            'date_version': '2025-11-01',
+            'contract_date_start': '2025-11-01',
+            'contract_date_end': '2025-11-30'
+        })
+
+        with self.assertRaisesRegex(ValidationError, "Cannot archive the only active version of an employee."):
+            (version_0 | version_1 | version_2).write({'active': False})
+
+    def test_last_version_archive_validation(self):
+        """ This test is to ensure that employee always has at least one active version. """
+        employee = self.env['hr.employee'].create({
+            'name': 'John Doe',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'contract_date_end': '2020-12-31'
+        })
+
+        version = employee.version_id
+        version_1 = employee.create_version({
+            'date_version': '2025-12-01',
+            'contract_date_start': '2025-12-01',
+            'contract_date_end': '2025-12-31'
+        })
+        version_2 = employee.create_version({
+            'date_version': '2025-11-01',
+            'contract_date_start': '2025-11-01',
+            'contract_date_end': '2025-11-30'
+        })
+        version_1.write({'active': False})
+        version_2.write({'active': False})
+
+        with self.assertRaisesRegex(ValidationError, "Cannot archive the only active version of an employee."):
+            version.write({'active': False})
