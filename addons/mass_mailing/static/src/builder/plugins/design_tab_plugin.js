@@ -78,11 +78,7 @@ class DesignTabPlugin extends Plugin {
             id: id,
             element: this.editable,
             hasOverlayOptions: false,
-            headerMiddleButton: false,
-            isClonable: false,
-            isRemovable: false,
             options: [Option],
-            optionsContainerTopButtons: [],
             snippetModel: {},
         };
     }

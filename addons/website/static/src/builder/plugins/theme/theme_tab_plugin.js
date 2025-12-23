@@ -238,11 +238,7 @@ export class ThemeTabPlugin extends Plugin {
             id: id,
             element: el,
             hasOverlayOptions: false,
-            headerMiddleButton: false,
-            isClonable: false,
-            isRemovable: false,
             options: [options],
-            optionsContainerTopButtons: [],
             snippetModel: {},
         };
     }

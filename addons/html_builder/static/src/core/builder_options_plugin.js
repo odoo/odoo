@@ -1,10 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
-import { isRemovable } from "./remove_plugin";
-import { isClonable } from "./clone_plugin";
-import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
+import {
+    checkElement,
+    getElementsWithOption,
+    isElementInViewport,
+    mapElementsToOptions,
+} from "@html_builder/utils/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
-import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 
 /** @typedef {import("@html_builder/core/utils").BaseOptionComponent} BaseOptionComponent */
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -22,15 +24,7 @@ import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
  *     id: string;
  *     element: HTMLElement;
  *     options: BaseOptionComponent[];
- *     optionTitleComponents: BaseOptionComponent[] | [];
- *     headerMiddleButtons: Component[] | [];
- *     containerTitle: Component | {};
  *     hasOverlayOptions: boolean;
- *     isRemovable: boolean;
- *     removeDisabledReason: string;
- *     isClonable: boolean;
- *     cloneDisabledReason: string;
- *     optionsContainerTopButtons: BuilderButtonDescriptor[] | [];
  * }} BuilderOptionContainer
  *
  * @typedef {{
@@ -41,7 +35,6 @@ import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 
 /**
  * @typedef { Object } BuilderOptionsShared
- * @property { BuilderOptionsPlugin['checkElement'] } checkElement
  * @property { BuilderOptionsPlugin['computeContainers'] } computeContainers
  * @property { BuilderOptionsPlugin['findOption'] } findOption
  * @property { BuilderOptionsPlugin['getContainers'] } getContainers
@@ -54,6 +47,7 @@ import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
  * @property { BuilderOptionsPlugin['getReloadSelector'] } getReloadSelector
  * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
  * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
+ * @property { BuilderOptionsPlugin['getOptionsContainerTopButtons'] } getOptionsContainerTopButtons
  */
 
 /**
@@ -113,7 +107,6 @@ export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
     static dependencies = ["operation", "history"];
     static shared = [
-        "checkElement",
         "computeContainers",
         "findOption",
         "getContainers",
@@ -126,6 +119,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getReloadSelector",
         "setNextTarget",
         "getBuilderOptionContext",
+        "getOptionsContainerTopButtons",
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
@@ -152,17 +146,10 @@ export class BuilderOptionsPlugin extends Plugin {
             this.getBuilderOptionContext(Option);
         }
 
-        this.elementsToOptionsTitleComponents = withIds(
-            this.getResource("elements_to_options_title_components")
-        );
         // todo: remove that resource as we should be able to patch the class the normal way
         this.getResource("patch_builder_options").forEach((option) => {
             this.patchBuilderOptions(option);
         });
-        this.builderHeaderMiddleButtons = withIds(
-            this.getResource("builder_header_middle_buttons")
-        );
-        this.builderContainerTitle = withIds(this.getResource("container_title"));
         // doing this manually instead of using addDomListener. This is because
         // addDomListener will ignore all events from protected targets. But in
         // our case, we still want to update the containers.
@@ -194,33 +181,6 @@ export class BuilderOptionsPlugin extends Plugin {
         this.dependencies.operation.next(() => {
             this.updateContainers(ev.target);
         });
-    }
-    /**
-     * Checks if the given element is a valid builder option target.
-     *
-     * @param {HTMLElement} el
-     * @param {BaseOptionComponent | BuilderOptionConfig} option
-     * @returns {Boolean}
-     */
-    checkElement(el, { editableOnly = true, exclude = "" }) {
-        // Unless specified otherwise, the element should be in an editable.
-        if (editableOnly && !(el.closest(".o_savable") || el.closest(".o_savable_attribute"))) {
-            return false;
-        }
-        // Check that the element is not to be excluded.
-        exclude += `${exclude && ", "}.o_snippet_not_selectable`;
-        if (el.matches(exclude)) {
-            return false;
-        }
-        // If an editable is not required, do not check anything else.
-        if (!editableOnly) {
-            return true;
-        }
-        // `o_editable_media` bypasses the `o_not_editable` class.
-        if (el.matches(".o_editable_media")) {
-            return shouldEditableMediaBeEditable(el);
-        }
-        return !el.matches('.o_not_editable:not(.s_social_media) :not([contenteditable="true"])');
     }
 
     getReloadSelector(editingElement) {
@@ -279,16 +239,8 @@ export class BuilderOptionsPlugin extends Plugin {
             const newOverlays = newContainers.map((c) => c.hasOverlayOptions);
             const areSameOverlays = previousOverlays.every((check, i) => check === newOverlays[i]);
             if (areSameElements && areSameOverlays) {
-                const previousOptions = this.lastContainers.flatMap((c) => [
-                    ...c.options,
-                    ...c.headerMiddleButtons,
-                    c.containerTitle,
-                ]);
-                const newOptions = newContainers.flatMap((c) => [
-                    ...c.options,
-                    ...c.headerMiddleButtons,
-                    c.containerTitle,
-                ]);
+                const previousOptions = this.lastContainers.flatMap((c) => [...c.options]);
+                const newOptions = newContainers.flatMap((c) => [...c.options]);
                 const areSameOptions =
                     newOptions.length === previousOptions.length &&
                     newOptions.every((option, i) => option.id === previousOptions[i].id);
@@ -313,31 +265,7 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     computeContainers(target) {
-        const mapElementsToOptions = (Options) => {
-            const map = new Map();
-            for (const Option of Options) {
-                let elements = getClosestElements(target, Option.selector);
-                if (!elements.length) {
-                    continue;
-                }
-                elements = elements.filter((el) => this.checkElement(el, Option));
-
-                for (const element of elements) {
-                    if (map.has(element)) {
-                        map.get(element).push(Option);
-                    } else {
-                        map.set(element, [Option]);
-                    }
-                }
-            }
-            return map;
-        };
-        const elementToOptions = mapElementsToOptions(this.builderOptions);
-        const elementToHeaderMiddleButtons = mapElementsToOptions(this.builderHeaderMiddleButtons);
-        const elementToContainerTitle = mapElementsToOptions(this.builderContainerTitle);
-        const elementToOptionTitleComponents = mapElementsToOptions(
-            this.elementsToOptionsTitleComponents
-        );
+        const elementToOptions = mapElementsToOptions(this.builderOptions, target);
 
         // Find the closest element with no options that should still have the
         // overlay buttons.
@@ -357,18 +285,8 @@ export class BuilderOptionsPlugin extends Plugin {
                 id: previousElementToIdMap.get(element) || uniqueId(),
                 element,
                 options: Options,
-                optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
-                headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
-                containerTitle: elementToContainerTitle.get(element)
-                    ? elementToContainerTitle.get(element)[0]
-                    : {},
                 hideOverlay: Options.every((Option) => Option.hideOverlay),
                 hasOverlayOptions: this.hasOverlayOptions(element),
-                isRemovable: isRemovable(element),
-                removeDisabledReason: this.getRemoveDisabledReason(element),
-                isClonable: isClonable(element),
-                cloneDisabledReason: this.getCloneDisabledReason(element),
-                optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
             }));
         const lastValidContainerIdx = containers.findLastIndex((c) =>
             this.getResource("no_parent_containers").some((selector) => c.element.matches(selector))
@@ -398,7 +316,7 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         for (const { hasOption, editableOnly } of this.getResource("has_overlay_options")) {
-            if (this.checkElement(el, { editableOnly }) && hasOption(el)) {
+            if (checkElement(el, { editableOnly }) && hasOption(el)) {
                 return true;
             }
         }
@@ -607,17 +525,4 @@ export class BuilderOptionsPlugin extends Plugin {
         }
         return context;
     }
-}
-
-function getClosestElements(element, selector) {
-    if (!element) {
-        // TODO we should remove it
-        return [];
-    }
-    const parent = element.closest(selector);
-    return parent ? [parent, ...getClosestElements(parent.parentElement, selector)] : [];
-}
-
-function withIds(arr) {
-    return arr.map((el) => ({ ...el, id: uniqueId() }));
 }

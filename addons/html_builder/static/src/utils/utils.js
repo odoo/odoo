@@ -1,6 +1,8 @@
 import { DependencyManager } from "../core/dependency_manager";
 import { useSubEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { uniqueId } from "@web/core/utils/functions";
+import { shouldEditableMediaBeEditable } from "./utils_css";
 
 /**
  * Retrieves the default name corresponding to the edited element (to display it
@@ -186,4 +188,68 @@ export function removePlugins(plugins, pluginsToRemove) {
  */
 export function isSmallInteger(value) {
     return /^-?[0-9]{1,15}$/.test(value);
+}
+
+export function mapElementsToOptions(Options, targetEl) {
+    const map = new Map();
+    for (const Option of Options) {
+        let elements = getClosestElements(targetEl, Option.selector);
+        if (!elements.length) {
+            continue;
+        }
+        elements = elements.filter((el) => checkElement(el, Option));
+
+        for (const element of elements) {
+            if (map.has(element)) {
+                map.get(element).push(Option);
+            } else {
+                map.set(element, [Option]);
+            }
+        }
+    }
+    return map;
+}
+
+function getClosestElements(element, selector) {
+    if (!element) {
+        // TODO we should remove it
+        return [];
+    }
+    const parent = element.closest(selector);
+    return parent ? [parent, ...getClosestElements(parent.parentElement, selector)] : [];
+}
+
+/**
+ * Checks if the given element is valid in order to have an option.
+ *
+ * @param {HTMLElement} el
+ * @param {Boolean} editableOnly when set to false, the element does not need to
+ *     be in an editable area and the checks are therefore lighter.
+ *     (= previous data-no-check/noCheck)
+ * @param {String} exclude
+ * @returns {Boolean}
+ */
+export function checkElement(el, { editableOnly = true, exclude = "" }) {
+    // Unless specified otherwise, the element should be in an editable.
+    if (editableOnly && !(el.closest(".o_savable") || el.closest(".o_savable_attribute"))) {
+        return false;
+    }
+    // Check that the element is not to be excluded.
+    exclude += `${exclude && ", "}.o_snippet_not_selectable`;
+    if (el.matches(exclude)) {
+        return false;
+    }
+    // If an editable is not required, do not check anything else.
+    if (!editableOnly) {
+        return true;
+    }
+    // `o_editable_media` bypasses the `o_not_editable` class.
+    if (el.matches(".o_editable_media")) {
+        return shouldEditableMediaBeEditable(el);
+    }
+    return !el.matches('.o_not_editable:not(.s_social_media) :not([contenteditable="true"])');
+}
+
+export function withIds(arr) {
+    return arr.map((el) => ({ ...el, id: uniqueId() }));
 }

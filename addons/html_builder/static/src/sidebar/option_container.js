@@ -1,6 +1,13 @@
 import { BorderConfigurator } from "../plugins/border_configurator_option";
 import { ShadowOption } from "../plugins/shadow_option";
-import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
+import {
+    getSnippetName,
+    mapElementsToOptions,
+    useOptionsSubEnv,
+    withIds,
+} from "@html_builder/utils/utils";
+import { isRemovable } from "@html_builder/core/remove_plugin";
+import { isClonable } from "@html_builder/core/clone_plugin";
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
@@ -8,6 +15,7 @@ import { useOperation } from "../core/operation_plugin";
 import {
     BaseOptionComponent,
     useApplyVisibility,
+    useDomState,
     useGetItemValue,
     useVisibilityObserver,
 } from "../core/utils";
@@ -23,19 +31,6 @@ export class OptionsContainer extends BaseOptionComponent {
         snippetModel: { type: Object },
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
-        isRemovable: false,
-        removeDisabledReason: { type: String, optional: true },
-        isClonable: false,
-        cloneDisabledReason: { type: String, optional: true },
-        optionTitleComponents: { type: Array, optional: true },
-        containerTopButtons: { type: Array },
-        containerTitle: { type: Object, optional: true },
-        headerMiddleButtons: { type: Array, optional: true },
-    };
-    static defaultProps = {
-        containerTitle: {},
-        headerMiddleButtons: [],
-        optionTitleComponents: [],
     };
 
     setup() {
@@ -47,6 +42,40 @@ export class OptionsContainer extends BaseOptionComponent {
 
         this.callOperation = useOperation();
 
+        this.elementsToOptionsTitleComponents = withIds(
+            this.getResource("elements_to_options_title_components")
+        );
+        this.builderHeaderMiddleButtons = withIds(
+            this.getResource("builder_header_middle_buttons")
+        );
+        this.builderContainerTitle = withIds(this.getResource("container_title"));
+        const elementToHeaderMiddleButtons = mapElementsToOptions(
+            this.builderHeaderMiddleButtons,
+            this.props.editingElement
+        );
+        const elementToContainerTitle = mapElementsToOptions(
+            this.builderContainerTitle,
+            this.props.editingElement
+        );
+        const elementToOptionTitleComponents = mapElementsToOptions(
+            this.elementsToOptionsTitleComponents,
+            this.props.editingElement
+        );
+        this.containerControls = useDomState((editingElement) => ({
+            optionTitleComponents: elementToOptionTitleComponents.get(editingElement) || [],
+            headerMiddleButtons: elementToHeaderMiddleButtons.get(editingElement) || [],
+            containerTitle: elementToContainerTitle.get(editingElement)
+                ? elementToContainerTitle.get(editingElement)[0]
+                : {},
+            isRemovable: isRemovable(editingElement),
+            removeDisabledReason:
+                this.dependencies.builderOptions.getRemoveDisabledReason(editingElement),
+            isClonable: isClonable(editingElement),
+            cloneDisabledReason:
+                this.dependencies.builderOptions.getCloneDisabledReason(editingElement),
+            containerTopButtons:
+                this.dependencies.builderOptions.getOptionsContainerTopButtons(editingElement),
+        }));
         this.hasGroup = {};
         onWillStart(async () => {
             await this.updateAccessGroup(this.props.options);
@@ -85,8 +114,8 @@ export class OptionsContainer extends BaseOptionComponent {
             }
             title = option.title || title;
         }
-        const titleExtraInfo = this.props.containerTitle.getTitleExtraInfo
-            ? this.props.containerTitle.getTitleExtraInfo(this.props.editingElement)
+        const titleExtraInfo = this.containerControls.containerTitle.getTitleExtraInfo
+            ? this.containerControls.containerTitle.getTitleExtraInfo(this.props.editingElement)
             : "";
 
         return (title || getSnippetName(this.env.getEditingElement())) + titleExtraInfo;

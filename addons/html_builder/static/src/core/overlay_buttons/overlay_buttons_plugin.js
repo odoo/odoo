@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { reactive } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
+import { checkElement } from "@html_builder/utils/utils";
 import { OverlayButtons } from "./overlay_buttons";
 import { withSequence } from "@html_editor/utils/resource";
 
@@ -122,7 +123,7 @@ export class OverlayButtonsPlugin extends Plugin {
         }
         const buttons = [];
         for (const { getButtons, editableOnly } of this.getResource("get_overlay_buttons")) {
-            if (this.dependencies.builderOptions.checkElement(this.target, { editableOnly })) {
+            if (checkElement(this.target, { editableOnly })) {
                 buttons.push(...getButtons(this.target));
             }
         }

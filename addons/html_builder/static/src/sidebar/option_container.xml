@@ -16,14 +16,14 @@
                 t-att-role="isActionable ? 'button' : 'heading'"
                 t-on-click="selectElement"
             />
-            <t t-if="props.optionTitleComponents" t-foreach="props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
+            <t t-if="containerControls.optionTitleComponents" t-foreach="containerControls.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
                 <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
             </t>
             <span class="flex-grow-1" />
 
             <div class="d-flex align-items-center gap-1 p-2">
-                <div t-if="props.headerMiddleButtons">
-                    <t t-foreach="props.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
+                <div t-if="containerControls.headerMiddleButtons">
+                    <t t-foreach="containerControls.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
                         <BuilderContext applyTo="headerMiddleButton.applyTo">
                             <t t-if="headerMiddleButton.Component"
                                 t-component="headerMiddleButton.Component"
@@ -32,28 +32,28 @@
                         </BuilderContext>
                     </t>
                 </div>
-                <t t-foreach="props.containerTopButtons" t-as="button" t-key="button_index">
+                <t t-foreach="containerControls.containerTopButtons" t-as="button" t-key="button_index">
                     <button class="o-hb-btn" t-att-class="button.class"
                             t-att-title="button.title" t-att-aria-label="button.title"
                             t-on-click="() => button.handler(props.editingElement)"/>
                 </t>
-                <t t-if="props.isClonable || props.cloneDisabledReason">
+                <t t-if="containerControls.isClonable || containerControls.cloneDisabledReason">
                     <!-- Disabled buttons do not display their title -->
-                    <span t-att-title="props.cloneDisabledReason" t-att-aria-label="props.cloneDisabledReason">
+                    <span t-att-title="containerControls.cloneDisabledReason" t-att-aria-label="containerControls.cloneDisabledReason">
 	                    <button class="fa fa-fw fa-clone oe_snippet_clone o-hb-btn btn btn-success-color-hover"
 	                            title="Duplicate this block"
 	                            aria-label="Duplicate this block"
-                                t-att-disabled="!!props.cloneDisabledReason"
+                                t-att-disabled="!!containerControls.cloneDisabledReason"
 	                            t-on-click="cloneElement"/>
 	                </span>
                 </t>
-                <t t-if="props.isRemovable || props.removeDisabledReason">
+                <t t-if="containerControls.isRemovable || containerControls.removeDisabledReason">
                     <!-- Disabled buttons do not display their title -->
-                    <span t-att-title="props.removeDisabledReason" t-att-aria-label="props.removeDisabledReason">
+                    <span t-att-title="containerControls.removeDisabledReason" t-att-aria-label="containerControls.removeDisabledReason">
 	                    <button class="fa fa-fw fa-trash oe_snippet_remove o-hb-btn btn btn-danger-color-hover"
 	                            title="Remove this block"
 	                            aria-label="Remove this block"
-	                            t-att-disabled="!!props.removeDisabledReason"
+	                            t-att-disabled="!!containerControls.removeDisabledReason"
 	                            t-on-click="removeElement"/>
 	                </span>
                 </t>

@@ -3,6 +3,7 @@ import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
 import { BuilderOverlay, sizingY, sizingX, sizingGrid } from "./builder_overlay";
 import { withSequence } from "@html_editor/utils/resource";
+import { checkElement } from "@html_builder/utils/utils";
 
 function isResizable(el) {
     const isResizableY = el.matches(sizingY.selector) && !el.matches(sizingY.exclude);
@@ -106,9 +107,7 @@ export class BuilderOverlayPlugin extends Plugin {
                 iframe: this.iframe,
                 overlayContainer: this.overlayContainer,
                 history: this.dependencies.history,
-                hasOverlayOptions:
-                    this.dependencies.builderOptions.checkElement(option.element, {}) &&
-                    option.hasOverlayOptions,
+                hasOverlayOptions: checkElement(option.element, {}) && option.hasOverlayOptions,
                 next: this.dependencies.operation.next,
                 isMobileView: this.config.isMobileView,
                 mobileBreakpoint: this.config.mobileBreakpoint,
