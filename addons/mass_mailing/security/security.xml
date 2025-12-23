@@ -25,5 +25,12 @@
             <field name="domain_force">[('technical_usage', '=', 'mass_mailing')]</field>
             <field name="perm_read" eval="False"/>
         </record>
+
+        <record id="ir_ui_view_rule_system" model="ir.rule">
+            <field name="name">ir.ui.view: system CRUD all</field>
+            <field name="model_id" ref="base.model_ir_ui_view"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        </record>
     </data>
 </odoo>
