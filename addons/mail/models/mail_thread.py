@@ -5019,7 +5019,12 @@ class MailThread(models.AbstractModel):
             lambda res: (
                 res.many("attachment_ids", "_store_attachment_fields", sort="id"),
                 res.attr("body"),
-                res.many("partner_ids", "_store_recipients_fields", sort="id"),
+                res.many(
+                    "partner_ids",
+                    lambda res: res.from_method("_store_avatar_fields"),
+                    dynamic_fields="_store_partner_name_dynamic_fields",
+                    sort="id",
+                ),
                 res.attr("pinned_at"),
                 res.attr("write_date"),
                 res.from_method("_store_linked_messages_fields"),

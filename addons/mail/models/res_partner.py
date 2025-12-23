@@ -281,10 +281,6 @@ class ResPartner(models.Model):
         if res.is_for_internal_users():
             res.attr("email")
 
-    def _store_recipients_fields(self, res: Store.FieldList):
-        res.attr("name")
-        self._store_avatar_fields(res)
-
     @api.readonly
     @api.model
     def get_mention_suggestions(self, search, limit=8):

@@ -1119,7 +1119,7 @@ class MailMessage(models.Model):
                 res.one("main_user_id", ["share"]),
                 res.from_method("_store_avatar_fields"),
             ),
-            dynamic_fields="_store_author_dynamic_fields",
+            dynamic_fields="_store_partner_name_dynamic_fields",
             sudo=True,
         )
         res.extend(["body", "create_date", "date"])
@@ -1131,7 +1131,13 @@ class MailMessage(models.Model):
         # keep "model" for iOS app
         res.extend(["incoming_email_cc", "incoming_email_to", "message_type", "model"])
         # sudo: res.partner: reading limited data of recipients is acceptable
-        res.many("partner_ids", "_store_recipients_fields", sort="id", sudo=True)
+        res.many(
+            "partner_ids",
+            lambda res: res.from_method("_store_avatar_fields"),
+            dynamic_fields="_store_partner_name_dynamic_fields",
+            sort="id",
+            sudo=True,
+        )
         res.attr("pinned_at")
         # sudo: mail.message - reading reactions on accessible message is allowed
         res.many("reactions", [], value=lambda m: m.sudo().reaction_ids)
@@ -1274,7 +1280,7 @@ class MailMessage(models.Model):
             ),
         )
 
-    def _store_author_dynamic_fields(self, res: Store.FieldList):
+    def _store_partner_name_dynamic_fields(self, res: Store.FieldList):
         res.attr("name")
 
     def _store_attachment_dynamic_fields(self, attachment_res: Store.FieldList):
