@@ -75,8 +75,11 @@ msgstr "이동 라인의 수지가 맞고 날짜와 기간이 동일한지 확�
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
-msgid "Check on bank statement that the Closing Balance = Starting Balance + sum of statement lines"
-msgstr "예금거래 명세서에서 '결산 잔액 = 시작 잔액 + 명세서 내역 합계'인지 확인"
+msgid ""
+"Check on bank statement that the Closing Balance = Starting Balance + sum of "
+"statement lines"
+msgstr ""
+"예금거래 명세서에서 '결산 잔액 = 시작 잔액 + 명세서 내역 합계'인지 확인"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -85,13 +88,21 @@ msgstr "지급/조정된 청구서가 '미결산' 상태가 아닌지 확인"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
-msgid "Check that reconciled account moves, that define Payable and Receivable accounts, are belonging to reconciled invoices"
-msgstr "지급 계정과 수취 계정을 정의하는 조정된 계정 이동이 조정된 청구서에 속해 있는지 확인"
+msgid ""
+"Check that reconciled account moves, that define Payable and Receivable "
+"accounts, are belonging to reconciled invoices"
+msgstr ""
+"지급 계정과 수취 계정을 정의하는 조정된 계정 이동이 조정된 청구서에 속해 있는"
+"지 확인"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
-msgid "Check that reconciled invoice for Sales/Purchases has reconciled entries for Payable and Receivable Accounts"
-msgstr "판매/구매에 대한 조정된 청구서에 지급 계정 및 수취 계정의 조정된 항목이 있는지 확인"
+msgid ""
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
+"Payable and Receivable Accounts"
+msgstr ""
+"판매/구매에 대한 조정된 청구서에 지급 계정 및 수취 계정의 조정된 항목이 있는"
+"지 확인"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -106,23 +117,29 @@ msgstr "코드 도움말"
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your "
+"test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was "
+"successful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named "
+"`column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your code:\n"
+"Should you need them, you can also use the following variables into your "
+"code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct "
+"indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
@@ -219,7 +236,8 @@ msgstr "테스트 3: 이동 라인"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
-msgid "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgid ""
+"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr "테스트 5.1: 조정된 청구서의 지급 및 수취 계정"
 
 #. module: account_test

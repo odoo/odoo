@@ -1,24 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* utm
-# 
+# * utm
+#
 # Translators:
 # Tony Ng, 2025
 # Wil Odoo, 2025
-# 
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"PO-Revision-Date: 2025-09-16 08:12+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/utm/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: utm
 #. odoo-python
@@ -125,6 +128,11 @@ msgid "Campaigns that are assigned to me"
 msgstr "分配給我的活動"
 
 #. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_christmas_special
+msgid "Christmas Special"
+msgstr "聖誕節特價"
+
+#. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Collect ideas, design creative content and publish it once reviewed."
@@ -206,6 +214,7 @@ msgstr "已部署"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: model:utm.stage,name:utm.campaign_stage_2
 msgid "Design"
 msgstr "設計"
 
@@ -233,6 +242,16 @@ msgid "Edit"
 msgstr "編輯"
 
 #. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
+msgid "Email Campaign - Products"
+msgstr "電郵推廣活動 - 產品"
+
+#. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_email_campaign_services
+msgid "Email Campaign - Services"
+msgstr "電郵推廣活動 - 服務"
+
+#. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid "Event-driven Flow"
@@ -251,11 +270,6 @@ msgid ""
 "Gather data, build a recipient list and write content based on your "
 "Marketing target."
 msgstr "收集資料、建立收件人列表並根據您的營銷目標編寫內容。"
-
-#. module: utm
-#: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
-msgid "Group By"
-msgstr "分組依據"
 
 #. module: utm
 #: model:ir.model,name:utm.model_ir_http
@@ -421,6 +435,16 @@ msgid "Running"
 msgstr "執行中"
 
 #. module: utm
+#: model:utm.campaign,title:utm.utm_campaign_fall_drive
+msgid "Sale"
+msgstr "銷售"
+
+#. module: utm
+#: model:utm.stage,name:utm.campaign_stage_1
+msgid "Schedule"
+msgstr "預約"
+
+#. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Search UTM Medium"
 msgstr "搜尋 UTM 媒介"
@@ -434,6 +458,7 @@ msgstr "發送"
 #. module: utm
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#: model:utm.stage,name:utm.campaign_stage_3
 msgid "Sent"
 msgstr "發送"
 
@@ -489,9 +514,11 @@ msgstr "階段"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
 msgid ""
-"Stages allow you to organize your workflow  (e.g. plan, design, in progress,"
-" done, …)."
-msgstr "利用不同「階段」，你可細分和整理工作流程（例如：規劃、設計、進行中、已完成，等等）。"
+"Stages allow you to organize your workflow  (e.g. plan, design, in progress, "
+"done, …)."
+msgstr ""
+"利用不同「階段」，你可細分和整理工作流程（例如：規劃、設計、進行中、已完成，"
+"等等）。"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_tag__color
@@ -533,8 +560,8 @@ msgstr "本周"
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id
 msgid ""
-"This is a name that helps you keep track of your different campaign efforts,"
-" e.g. Fall_Drive, Christmas_Special"
+"This is a name that helps you keep track of your different campaign efforts, "
+"e.g. Fall_Drive, Christmas_Special"
 msgstr "此名稱可幫助你追蹤不同行銷活動，例：秋季推廣、聖誕特別優惠"
 
 #. module: utm
@@ -559,8 +586,8 @@ msgstr "待批准"
 #. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 msgid ""
-"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely"
-" content."
+"Track incoming events (e.g. Christmas, Black Friday, ...) and publish timely "
+"content."
 msgstr "追蹤將會發生的事件（例如：聖誕節、黑色星期五，等等），發佈適時的內容。"
 
 #. module: utm
@@ -605,8 +632,8 @@ msgstr "UTM 來源混入"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
 msgid ""
-"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
-"...)."
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", "
+"\"\", ...)."
 msgstr "「UTM 來源」追蹤流量從何而來（例：五月電子報）。"
 
 #. module: utm

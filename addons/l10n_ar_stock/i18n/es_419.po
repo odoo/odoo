@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-03 16:01+0000\n"
+"POT-Creation-Date: 2025-12-12 19:02+0000\n"
 "PO-Revision-Date: 2025-06-03 16:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,8 +29,8 @@ msgid ""
 "%(sequence_number)s is not a valid sequence number. Sequence numbers should "
 "contain exactly 8 digits (e.g. 00012345)."
 msgstr ""
-"%(sequence_number)s no es un número de secuencia válido. Los números de secuencia"
-"deben contener exactamente 8 dígitos (por ejemplo, 00012345)."
+"%(sequence_number)s no es un número de secuencia válido. Los números de "
+"secuenciadeben contener exactamente 8 dígitos (por ejemplo, 00012345)."
 
 #. module: l10n_ar_stock
 #: model:ir.actions.report,print_report_name:l10n_ar_stock.action_delivery_guide_report_pdf
@@ -53,7 +54,8 @@ msgid ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Dear\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -61,7 +63,8 @@ msgid ""
 "        <br/><br/>\n"
 "        Here is your\n"
 "        <t t-if=\"object.l10n_ar_delivery_guide_number\">\n"
-"            document <strong t-out=\"object.l10n_ar_delivery_guide_number or ''\">00001-00000001</strong>\n"
+"            document <strong t-out=\"object.l10n_ar_delivery_guide_number or "
+"''\">00001-00000001</strong>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            document\n"
@@ -80,7 +83,8 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Estimado/a\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> "
+"(<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
@@ -88,7 +92,8 @@ msgstr ""
 "        <br/><br/>\n"
 "        Aquí tiene su\n"
 "        <t t-if=\"object.l10n_ar_delivery_guide_number\">\n"
-"            documento <strong t-out=\"object.l10n_ar_delivery_guide_number or ''\">00001-00000001</strong>\n"
+"            documento <strong t-out=\"object.l10n_ar_delivery_guide_number "
+"or ''\">00001-00000001</strong>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            documento\n"
@@ -109,6 +114,11 @@ msgid "<strong>Customer: </strong>"
 msgstr "<strong>Cliente: </strong>"
 
 #. module: l10n_ar_stock
+#: model_terms:ir.ui.view,arch_db:l10n_ar_stock.custom_header
+msgid "<strong>DOCUMENT NOT VALID AS AN INVOICE</strong>"
+msgstr ""
+
+#. module: l10n_ar_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
 msgid "<strong>VAT Cond: </strong>"
 msgstr "<strong>Cond. IVA: </strong>"
@@ -119,8 +129,8 @@ msgid ""
 "Argentina: Add the CAI expiration date given by ARCA for the sequence "
 "configured here"
 msgstr ""
-"Argentina: Agrega la fecha de vencimiento del CAI proporcionada por ARCA para la secuencia "
-"configurada aquí"
+"Argentina: Agrega la fecha de vencimiento del CAI proporcionada por ARCA "
+"para la secuencia configurada aquí"
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_authorization_code
@@ -130,17 +140,22 @@ msgstr "Argentina: Agrega el número de CAI para Remitos proporcionado por ARCA"
 #. module: l10n_ar_stock
 #: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_start
 msgid "Argentina: Add the first sequence number given by ARCA for this CAI"
-msgstr "Argentina: Agrega el primer número de secuencia proporcionado por ARCA para este CAI"
+msgstr ""
+"Argentina: Agrega el primer número de secuencia proporcionado por ARCA para "
+"este CAI"
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_end
 msgid "Argentina: Add the last sequence number given by ARCA for this CAI"
-msgstr "Argentina: Agrega el último número de secuencia proporcionado por ARCA para este CAI"
+msgstr ""
+"Argentina: Agrega el último número de secuencia proporcionado por ARCA para "
+"este CAI"
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_next_delivery_number
 msgid "Argentina: Hold the next sequence to use as delivery guide number."
-msgstr "Argentina: Mantiene la siguiente secuencia a usar como número de Remito."
+msgstr ""
+"Argentina: Mantiene la siguiente secuencia a usar como número de Remito."
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_id
@@ -153,13 +168,14 @@ msgid ""
 "Argentina: Prefix for the delivery guide sequence number. It is used to "
 "generate the delivery guide number."
 msgstr ""
-"Argentina: Prefijo para el número de secuencia de los Remitos. "
-"Se usa para generar el número de Remito."
+"Argentina: Prefijo para el número de secuencia de los Remitos. Se usa para "
+"generar el número de Remito."
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,help:l10n_ar_stock.field_stock_picking_type__l10n_ar_document_type_id
 msgid "Argentina: Select the document type to be assigned on the Remito"
-msgstr "Argentina: Seleccione el tipo de documento que se asignará en el Remito"
+msgstr ""
+"Argentina: Seleccione el tipo de documento que se asignará en el Remito"
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_authorization_code
@@ -289,25 +305,25 @@ msgid "Sequence from"
 msgstr "Secuencia desde"
 
 #. module: l10n_ar_stock
+#: model:ir.model,name:l10n_ar_stock.model_stock_picking
+msgid "Stock Picking - Delivery Guide (Uruguay)"
+msgstr ""
+
+#. module: l10n_ar_stock
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid ""
 "The delivery guide number %s exceeds the range specified in the CAI. Please "
 "update the range or use a different CAI with a different range."
 msgstr ""
-"El número de remito %s excede el rango especificado en el CAI. Por favor,"
-"actualizá el rango o utilizá un CAI diferente con otro rango."
+"El número de remito %s excede el rango especificado en el CAI. Por "
+"favor,actualizá el rango o utilizá un CAI diferente con otro rango."
 
 #. module: l10n_ar_stock
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "The partner does not have an email address."
 msgstr "El contacto no tiene una dirección de correo electrónico."
-
-#. module: l10n_ar_stock
-#: model:ir.model,name:l10n_ar_stock.model_stock_picking
-msgid "Transfer"
-msgstr "Albarán"
 
 #. module: l10n_ar_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
@@ -317,7 +333,8 @@ msgstr "a"
 #. module: l10n_ar_stock
 #: model:mail.template,subject:l10n_ar_stock.email_template_ar_remitos_delivery_guide
 msgid ""
-"{{ object.company_id.name }} Document (Ref {{ "
-"object.l10n_ar_delivery_guide_number }})"
+"{{ object.company_id.name }} Document (Ref "
+"{{ object.l10n_ar_delivery_guide_number }})"
 msgstr ""
-"Documento de {{ object.company_id.name }} (Ref {{ object.l10n_ar_delivery_guide_number }})"
+"Documento de {{ object.company_id.name }} (Ref "
+"{{ object.l10n_ar_delivery_guide_number }})"
