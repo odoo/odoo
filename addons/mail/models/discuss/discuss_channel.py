@@ -738,6 +738,7 @@ class DiscussChannel(models.Model):
                     "body_html": body,
                     "email_from": self.env.user.partner_id.email_formatted,
                     "email_to": addr,
+                    "message_type": "user_notification",
                     "model": "discuss.channel",
                     "res_id": self.id,
                     "subject": self.env._("%(author_name)s has invited you to a channel")
