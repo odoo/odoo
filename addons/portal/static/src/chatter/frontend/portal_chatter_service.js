@@ -1,6 +1,7 @@
 import { PortalChatter } from "@portal/chatter/frontend/portal_chatter";
 import { App } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { customDirectives, globalValues } from "@web/env";
 import { rpc } from "@web/core/network/rpc";
 import { session } from "@web/session";
 import { appTranslateFn } from "@web/core/l10n/translation";
@@ -48,6 +49,8 @@ export class PortalChatterService {
                 translatableAttributes: ["data-tooltip"],
                 translateFn: appTranslateFn,
                 dev: env.debug,
+                customDirectives,
+                globalValues,
             }).mount(shadow);
         });
         const thread = this.store["mail.thread"].insert({ model: props.resModel, id: props.resId });

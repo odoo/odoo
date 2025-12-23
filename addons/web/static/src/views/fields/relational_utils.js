@@ -765,14 +765,17 @@ export class X2ManyFieldDialog extends Component {
             contentClass: this.contentClass,
         };
         if (!this.record.isNew) {
-            props.onExpand = async () => {
+            props.onExpand = async (_ev, newWindow) => {
                 await this.save({ saveAndNew: false });
-                this.actionService.doAction({
-                    type: "ir.actions.act_window",
-                    res_model: this.props.record.resModel,
-                    res_id: this.props.record.resId,
-                    views: [[false, "form"]],
-                });
+                this.actionService.doAction(
+                    {
+                        type: "ir.actions.act_window",
+                        res_model: this.props.record.resModel,
+                        res_id: this.props.record.resId,
+                        views: [[false, "form"]],
+                    },
+                    { newWindow }
+                );
             };
         }
         return props;

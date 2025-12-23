@@ -3,7 +3,7 @@ import publicWidget from '@web/legacy/js/public/public_widget';
 
 import lazyloader from "@web/legacy/js/public/lazyloader";
 
-import { makeEnv, startServices } from "@web/env";
+import { makeEnv, startServices, customDirectives, globalValues } from "@web/env";
 import { getTemplate } from '@web/core/templates';
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { browser } from '@web/core/browser/browser';
@@ -383,6 +383,8 @@ export async function createPublicRoot(RootWidget) {
         dev: env.debug,
         translateFn: appTranslateFn,
         translatableAttributes: ["data-tooltip"],
+        customDirectives,
+        globalValues,
     });
     const locale = pyToJsLocale(lang) || browser.navigator.language;
     Settings.defaultLocale = locale;

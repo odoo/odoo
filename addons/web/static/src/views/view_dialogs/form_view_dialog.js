@@ -116,20 +116,23 @@ export class FormViewDialog extends Component {
         this.props.close();
     }
 
-    async onExpand() {
+    async onExpand(_env, newWindow) {
         const beforeLeaveCallbacks = this.viewProps.__beforeLeave__.callbacks;
         const res = await Promise.all(beforeLeaveCallbacks.map((callback) => callback()));
         if (!res.includes(false)) {
-            this.actionService.doAction({
-                type: "ir.actions.act_window",
-                res_model: this.props.resModel,
-                res_id: this.currentResId,
-                views: [[false, "form"]],
-                context: {
-                    ...this.props.context,
-                    form_view_ref: this.props.expandedFormRef,
+            this.actionService.doAction(
+                {
+                    type: "ir.actions.act_window",
+                    res_model: this.props.resModel,
+                    res_id: this.currentResId,
+                    views: [[false, "form"]],
+                    context: {
+                        ...this.props.context,
+                        form_view_ref: this.props.expandedFormRef,
+                    },
                 },
-            });
+                { newWindow }
+            );
         }
     }
 }

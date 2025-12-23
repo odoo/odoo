@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, middleClick, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, runAllTimers, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
@@ -82,6 +82,39 @@ test("formviewdialog buttons in footer are positioned properly", async () => {
     expect(".modal-footer button:visible").toHaveCount(1, {
         message: "should have only one button in footer",
     });
+});
+
+test("expand with middleClick", async () => {
+    mockService("action", {
+        doAction(params, options) {
+            if (options?.newWindow) {
+                expect.step("opened in a new window");
+                return;
+            }
+            super.doAction(params);
+        },
+        loadState() {},
+    });
+
+    Partner._views.form = /* xml */ `
+        <form string="Partner">
+            <sheet>
+                <group><field name="foo"/></group >
+            </sheet>
+        </form>
+    `;
+
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        resId: 1,
+    });
+
+    await animationFrame();
+    expect(".o_expand_button").toHaveCount(1);
+    await middleClick(".o_expand_button");
+
+    expect.verifySteps(["opened in a new window"]);
 });
 
 test("modifiers are considered on multiple <footer/> tags", async () => {
