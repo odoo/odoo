@@ -1,7 +1,6 @@
 import { Thread } from "@mail/core/common/thread_model";
 import { fields } from "@mail/model/export";
 import { useSequential } from "@mail/utils/common/hooks";
-import { _t } from "@web/core/l10n/translation";
 
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -176,32 +175,6 @@ const threadPatch = {
                 { body }
             );
         }
-    },
-    async leaveChannel() {
-        if (this.channel?.channel_type === "channel" && this.create_uid?.eq(this.store.self_user)) {
-            await this.askLeaveConfirmation(
-                _t("You are the administrator of this channel. Are you sure you want to leave?")
-            );
-        }
-        if (this.channel?.channel_type === "group") {
-            await this.askLeaveConfirmation(
-                _t(
-                    "You are about to leave this group conversation and will no longer have access to it unless you are invited again. Are you sure you want to continue?"
-                )
-            );
-        }
-        await this.leaveChannelProcess();
-    },
-    async leaveChannelProcess() {
-        await this.closeChatWindow();
-        if (this.exists()) {
-            await this.leaveChannelRpc();
-        }
-    },
-    async leaveChannelRpc() {
-        await this.store.env.services.orm.silent.call("discuss.channel", "action_unfollow", [
-            this.id,
-        ]);
     },
 };
 patch(Thread.prototype, threadPatch);
