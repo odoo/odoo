@@ -5,7 +5,7 @@ class IrModuleModule(models.Model):
     _inherit = 'ir.module.module'
 
     @api.model
-    def _load_pos_data_fields(self):
+    def _load_pos_data_fields(self, config=None):
         return ['id', 'name', 'state']
 
     @api.model
