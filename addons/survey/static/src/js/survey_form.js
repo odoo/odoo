@@ -271,8 +271,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                 },
                 cancel: () => {},
             });
-        } else if (target.value === 'finish') {
-            this._submitForm({ isFinish: true });
         } else {
             this._submitForm({});
         }
