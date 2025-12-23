@@ -3,6 +3,13 @@
 
   <t t-name="web.FormViewDialog">
     <Dialog size="this.props.size" title="this.props.title" withBodyPadding="false" modalRef="this.modalRef" onExpand="this.onExpandCallback">
+      <t t-set-slot="header" t-slot-scope="scope">
+        <t t-call="{{ this.props.customHeader }}">
+          <t t-set="dismiss" t-value="scope.close"/>
+          <t t-set="fullscreen" t-value="scope.isFullscreen"/>
+          <t t-set="onExpand" t-value="this.onExpandCallback"/>
+        </t>
+      </t>
       <View t-props="this.viewProps"/>
       <t t-set-slot="footer">
         <t t-if="this.props.preventEdit and this.props.preventCreate">
