@@ -1,31 +1,43 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_discount
-# 
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/"
+"zh_TW/)\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
+msgid "<strong>Amount of global discounts</strong>:"
+msgstr ""
+
+#. module: pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
+msgid "<strong>Number of global discounts</strong>:"
+msgstr ""
 
 #. module: pos_discount
 #. odoo-python
 #: code:addons/pos_discount/models/pos_config.py:0
 msgid ""
-"A discount product is needed to use the Global Discount feature. Go to Point"
-" of Sale > Configuration > Settings to set it."
-msgstr "要使用全局折扣功能，需要有一個折扣產品。進入銷售點 > 配置 > 設置來設置它。"
+"A discount product is needed to use the Global Discount feature. Go to Point "
+"of Sale > Configuration > Settings to set it."
+msgstr ""
+"要使用全局折扣功能，需要有一個折扣產品。進入銷售點 > 配置 > 設置來設置它。"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
@@ -66,6 +78,7 @@ msgstr "折扣產品"
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_product_template__display_name
+#: model:ir.model.fields,field_description:pos_discount.field_report_point_of_sale_report_saledetails__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
@@ -73,15 +86,22 @@ msgstr "顯示名稱"
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__id
 #: model:ir.model.fields,field_description:pos_discount.field_product_template__id
+#: model:ir.model.fields,field_description:pos_discount.field_report_point_of_sale_report_saledetails__id
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__id
 msgid "ID"
 msgstr "識別號"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid "No discount product found"
 msgstr "未找到折扣產品"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
+msgid "Oh snap !"
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
@@ -92,6 +112,11 @@ msgstr "訂單折扣"
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "Point of Sale Configuration"
 msgstr "POS設定"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_report_point_of_sale_report_saledetails
+msgid "Point of Sale Details"
+msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
@@ -111,13 +136,19 @@ msgstr "點擊折扣按鈕時的預設折扣百分比"
 
 #. module: pos_discount
 #. odoo-javascript
-#: code:addons/pos_discount/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+#: code:addons/pos_discount/static/src/app/services/pos_store.js:0
 msgid ""
-"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
-" Sold' and 'Available in Point of Sale'."
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be "
+"Sold' and 'Available in Point of Sale'."
 msgstr "折扣產品似乎設定不當。確保它被標記為 \"可以出售\" 和 \"POS可用\"。"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to apply the discount on the ticket."
 msgstr "在票據上應用折扣的產品。"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/app/screens/ticket_screen/ticket_screen.js:0
+msgid "You cannot edit a discount line."
+msgstr ""

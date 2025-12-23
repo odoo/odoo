@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* http_routing
+# * http_routing
 #
 # Translators:
 # Ákos Nagy <akos.nagy@oregional.hu>, 2022
@@ -9,20 +9,27 @@
 # Istvan <leki69@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Tamás Dombos, 2022
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:59+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Tamás Dombos, 2022\n"
-"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"PO-Revision-Date: 2025-09-29 19:46+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
+"http_routing/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+msgid "400: Bad Request"
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.403
@@ -30,13 +37,21 @@ msgid "403: Forbidden"
 msgstr "403: Tiltott"
 
 #. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+msgid "415: Unsupported Media Type"
+msgstr ""
+
+#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
-msgid "<b>Don't panic.</b> If you think it's our mistake, please send us a message on"
-msgstr "<b>Nincs ok a pánikra.</b> Ha Ön szerint valami hiba van, írjon nekünk róla egy üzenetet itt:"
+msgid ""
+"<b>Don't panic.</b> If you think it's our mistake, please send us a message "
+"on"
+msgstr ""
+"<b>Nincs ok a pánikra.</b> Ha Ön szerint valami hiba van, írjon nekünk róla "
+"egy üzenetet"
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.error_message
-#: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
 msgid "<strong>Error message:</strong>"
 msgstr "<strong>Hibaüzenet:</strong>"
 
@@ -44,6 +59,13 @@ msgstr "<strong>Hibaüzenet:</strong>"
 #: model_terms:ir.ui.view,arch_db:http_routing.500
 msgid "Back"
 msgstr "Vissza"
+
+#. module: http_routing
+#: model:ir.model.fields,field_description:http_routing.field_ir_http__display_name
+#: model:ir.model.fields,field_description:http_routing.field_ir_qweb__display_name
+#: model:ir.model.fields,field_description:http_routing.field_res_lang__display_name
+msgid "Display Name"
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
@@ -67,12 +89,32 @@ msgid "Home"
 msgstr "Kezdőlap"
 
 #. module: http_routing
+#: model:ir.model.fields,field_description:http_routing.field_ir_http__id
+#: model:ir.model.fields,field_description:http_routing.field_ir_qweb__id
+#: model:ir.model.fields,field_description:http_routing.field_res_lang__id
+msgid "ID"
+msgstr ""
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.415
+msgid ""
+"It looks like the URL you are accessing doesn't support the format of the "
+"request. Take a look at the error message below."
+msgstr ""
+
+#. module: http_routing
+#: model:ir.model,name:http_routing.model_res_lang
+msgid "Language"
+msgstr ""
+
+#. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
 msgid "Maybe you were looking for one of these <b>popular pages?</b>"
 msgstr "Lehet, hogy ezeket a <b>népszerű oldalakat</b> keresi?"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
 msgid "Oops! Something went wrong."
 msgstr "Hoppá! Valami elromlott."
 
@@ -87,7 +129,8 @@ msgid "Qweb"
 msgstr "Qweb"
 
 #. module: http_routing
-#: model_terms:ir.ui.view,arch_db:http_routing.400
+#: model_terms:ir.ui.view,arch_db:http_routing.422
+#: model_terms:ir.ui.view,arch_db:http_routing.4xx
 msgid "Take a look at the error message below."
 msgstr "Vizsgálja meg az alábbi hibaüzenetet."
 
@@ -100,6 +143,13 @@ msgstr "Hiba a sablon feldolgozása közben"
 #: model_terms:ir.ui.view,arch_db:http_routing.403
 msgid "The page you were looking for could not be authorized."
 msgstr "Az oldal, amit keresett, nem engedélyezett."
+
+#. module: http_routing
+#: model_terms:ir.ui.view,arch_db:http_routing.400
+msgid ""
+"The server couldn't understand the request. Take a look at the error message "
+"below."
+msgstr ""
 
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.http_error_debug
@@ -119,4 +169,4 @@ msgstr "és értékelje a következő kifejezést:"
 #. module: http_routing
 #: model_terms:ir.ui.view,arch_db:http_routing.404
 msgid "this page"
-msgstr "ez az oldal"
+msgstr "ezen az oldalon"

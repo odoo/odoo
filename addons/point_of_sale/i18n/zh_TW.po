@@ -1,68 +1,56 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* point_of_sale
-# 
+# * point_of_sale
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"PO-Revision-Date: 2025-12-20 09:39+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/point_of_sale/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_order__pos_reference
-msgid ""
-"\n"
-"        Human readable reference for this order.\n"
-"            * Format: YYLL-SSS-FOOOO\n"
-"            * YY is the year\n"
-"            * LL is the login number (proxy to the device)\n"
-"            * SSS is the session id\n"
-"            * F is 1 or 0 (1 if sequence number is generated from client)\n"
-"            * OOOO is the sequence number.\n"
-"    "
-msgstr ""
-"\n"
-"        此訂單可供人類閱讀的參考編號。\n"
-"            * 格式：YYLL-SSS-FOOOO\n"
-"            * YY 是年份\n"
-"            * LL 是登入號碼（裝置代理）\n"
-"            * SSS 是操作時段識別碼\n"
-"            * F 會是 1 或 0（1 表示序號由客戶端產生）\n"
-"            * OOOO 是序號\n"
-"    "
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
 "\n"
-"This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
+"This issue occurs because the quantity becomes zero after rounding during "
+"the conversion. To fix this, adjust the conversion factors or rounding "
+"method to ensure that even the smallest quantity in the original unit does "
+"not round down to zero in the target unit."
 msgstr ""
 "\n"
-"出現此問題，是因為在換算過程進行四捨五入後，數量變為零。要解決此問題，請調整換算因數或捨入方式，以確保即使是原始單位中最小的數量，也不會在目標單位四捨五入變成零。"
+"出現此問題，是因為在換算過程進行四捨五入後，數量變為零。要解決此問題，請調整"
+"換算因數或捨入方式，以確保即使是原始單位中最小的數量，也不會在目標單位四捨五"
+"入變成零。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid " (Refund)"
+msgstr " （退款）"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid " - From \"%(uom_from)s\" to \"%(uom_to)s\""
 msgstr " - 由「%(uom_from)s」至「%(uom_to)s」"
-
-#. module: point_of_sale
-#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__iot
-msgid " Use a printer connected to the IoT Box"
-msgstr " 使用連接到 IoT 盒的印表機"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -87,7 +75,8 @@ msgstr "%(name)s 退款"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "%(old_pm)s changed to %(new_pm)s and from %(old_amount)s to %(new_amount)s"
-msgstr "%(old_pm)s 已更改為 %(new_pm)s，金額從 %(old_amount)s 更改為 %(new_amount)s"
+msgstr ""
+"%(old_pm)s 已更改為 %(new_pm)s，金額從 %(old_amount)s 更改為 %(new_amount)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -99,7 +88,9 @@ msgstr "%(old_pm)s 已更改為 %(new_pm)s，付款金額為 %(old_amount)s"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(payment_method)s POS payment of %(partner)s in %(session)s"
-msgstr "POS 付款，付款方式：%(payment_method)s，合作夥伴：%(partner)s，操作時段：%(session)s"
+msgstr ""
+"POS 付款，付款方式：%(payment_method)s，合作夥伴：%(partner)s，操作時段：%"
+"(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -127,9 +118,15 @@ msgstr "%(title)s %(product_name)s 及 %(taxes)s"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.js:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.js:0
 msgid "%(vatLabel)s: %(vatId)s"
 msgstr "%(vatLabel)s：%(vatId)s"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "%s almost runs out of paper."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -146,9 +143,9 @@ msgstr "%s 的總金額為 %s，您確定要刪除此訂單嗎?"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.js:0
-msgid "%s orders imported"
-msgstr "已匯入 %s 份訂單"
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid "%s required"
+msgstr "必須提供 %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -158,9 +155,27 @@ msgstr "%s 未連稅"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+msgid "%s update not allowed"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
+msgid "(DUPLICATE !)"
+msgstr "（重複！）"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "(as of opening)"
-msgstr "開店餘額"
+msgstr "（開店時結餘）"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
+msgid "(up to"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -210,6 +225,11 @@ msgstr "10000.00"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "11.11"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "123.45"
 msgstr "123.45"
 
@@ -225,6 +245,11 @@ msgstr "2-03-2000 9:00 AM"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "38.83"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "45"
 msgstr "45"
 
@@ -233,6 +258,16 @@ msgstr "45"
 msgid ""
 "5 digits alphanumeric code to be used by portal user to request an invoice"
 msgstr "5 位字母數字代碼，供門戶用戶申請發票時使用"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_template_blue_denim_jeans
+msgid "5-pocket jeans in cotton denim with a slight stretch for good comfort."
+msgstr "牛仔褲，五袋，採用棉質牛仔布製成，略有彈性，貼身又舒適。"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_template_blue_denim_jeans_slim
+msgid "5-pocket jeans in cotton denim.."
+msgstr "牛仔褲，棉質牛仔布，五袋"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -268,17 +303,27 @@ msgstr "99.99"
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hello <t t-out=\"client_name\">Client name</t>,</t>\n"
+"                        <t t-if=\"client_name\">Hello <t t-"
+"out=\"client_name\">Client name</t>,</t>\n"
 "                        <t t-else=\"\">Hello,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Thank you for purchasing from <t t-out=\"store_name\">Store name</t>!</div>\n"
-"                    <div>Attached, you will find your receipt for the purchase of <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or ''\">date</t> <t t-out=\"format_time(time=object.date_order, tz=tz, time_format='short',                          lang_code=lg)\">time</t>.</span>\n"
+"                    <div>Thank you for purchasing from <t t-"
+"out=\"store_name\">Store name</t>!</div>\n"
+"                    <div>Attached, you will find your receipt for the "
+"purchase of <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+"dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
+"''\">date</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">time</t>.</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>With kind regards,</div>\n"
@@ -288,17 +333,27 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client_name\" t-value=\"object.partner_id.name\"/>\n"
-"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\"><t t-out=\"client_name\">客戶名稱</t> 你好！</t>\n"
+"                        <t t-if=\"client_name\"><t t-out=\"client_name\">客戶"
+"名稱</t> 你好！</t>\n"
 "                        <t t-else=\"\">你好！</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>感謝你在 <t t-out=\"store_name\">商店名稱</t> 選購貨品。</div>\n"
-"                    <div>附上你的購物收據（<span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or ''\">日期</t> <t t-out=\"format_time(time=object.date_order, tz=tz, time_format='short',                          lang_code=lg)\">時間</t>）。</span>\n"
+"                    <div>感謝你在 <t t-out=\"store_name\">商店名稱</t> 選購貨"
+"品。</div>\n"
+"                    <div>附上你的購物收據（<span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">日期</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">時間</t>）。</"
+"span>\n"
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>順祝  安康</div>\n"
@@ -313,8 +368,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"<i class=\"fa fa-info-circle me-1\" title=\"此設定將在所有銷售點通用。\" pos-data-"
-"toggle=\"tooltip\"/>"
+"<i class=\"fa fa-info-circle me-1\" title=\"此設定將在所有銷售點通用。\" pos-"
+"data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -325,24 +380,28 @@ msgstr "<i class=\"fa fa-pencil\"/> 編輯"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"<p>Dear %(client_name)s,<br/>Here is your Receipt %(is_invoiced)sfor"
-"             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
-"</p>"
+"<p>Dear %(client_name)s,<br/>Here is your Receipt %"
+"(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
+"(company_name)s. </p>"
 msgstr ""
-"<p>親愛的 %(client_name)s：<br/>附上你的收據 %(is_invoiced)s 銷售點：             "
-"%(pos_name)s，總金額：%(amount)s，公司：%(company_name)s。</p>"
+"<p>親愛的 %(client_name)s：<br/>附上你的收據 %(is_invoiced)s 銷售"
+"點：             %(pos_name)s，總金額：%(amount)s，公司：%(company_name)s。</"
+"p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid ""
 "<span class=\"float-end\" invisible=\"is_total_cost_computed\">To be "
 "determined</span>"
-msgstr "<span class=\"float-end\" invisible=\"is_total_cost_computed\">待定</span>"
+msgstr ""
+"<span class=\"float-end\" invisible=\"is_total_cost_computed\">待定</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
-msgid "<span class=\"o_form_label oe_inline fw-bolder\">Includes</span>"
-msgstr "<span class=\"o_form_label oe_inline fw-bolder\">包括：</span>"
+msgid ""
+"<span class=\"o_form_label oe_inline fw-bolder\" "
+"invisible=\"is_upsell\">Includes</span>"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -353,10 +412,12 @@ msgstr "<span class=\"o_form_label oe_inline fw-bolder\">最多</span>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"fa fa-info-circle me-1\" "
+"title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
 "<span class=\"o_form_label\">條碼</span>\n"
-"                                <i class=\"fa fa-info-circle me-1\" title=\"此設定將在所有銷售點通用。\" pos-data-toggle=\"tooltip\"/>"
+"                                    <i class=\"fa fa-info-circle me-1\" "
+"title=\"此設定將適用於所有 POS 銷售點。\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -394,8 +455,28 @@ msgstr "<span>結算</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "<span>Date</span>"
+msgstr "<span>日期</span>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "<span>Ongoing</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "<span>Opening</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Reporting</span>"
 msgstr "<span>報表</span>"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "<span>Sold</span>"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -449,7 +530,7 @@ msgstr "<sup title=\"只適用於線上及自助訂購\">?</sup>"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? 點選 \"確認\"  將驗證付款。"
 
@@ -466,6 +547,17 @@ msgid "A note with this name already exists"
 msgstr "已有相同名稱的備註"
 
 #. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
+msgid "A payment with this uuid already exists"
+msgstr "已有此唯一識別碼（UUID）的付款"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.js:0
+msgid "A request is still being processed in the background. Please wait."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid ""
 "A session is a period of time, usually one day, during which you sell "
@@ -478,7 +570,8 @@ msgstr "POS營業點是一段時間, 通常是某一天, 在這期間您通過PO
 msgid ""
 "A session is currently opened for this PoS. Some settings can only be "
 "changed after the session is closed."
-msgstr "目前該POS營業點正處於開啟狀態，部分設定必須先完成POS營業點關閉後才可使用."
+msgstr ""
+"目前該POS營業點正處於開啟狀態，部分設定必須先完成POS營業點關閉後才可使用."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__sequence_number
@@ -520,21 +613,32 @@ msgstr "透過終端機或在手機上拍卡，使用 Viva.com 接受付款"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Accept payments with a Pine Labs payment terminal"
+msgstr "使用 Pine Labs 付款終端機接受付款"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Accept payments with a QFPay payment terminal"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Razorpay payment terminal"
-msgstr "使用 Razorpay 支付終端接受付款"
+msgstr "使用 Razorpay 付款終端機接受付款"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Stripe payment terminal"
-msgstr "接受Stripe支付終端的付款"
+msgstr "使用 Stripe 付款終端機接受付款"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with an Adyen payment terminal"
-msgstr "接受Adyen支付終端的付款"
+msgstr "使用 Adyen 付款終端機接受付款"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Access Denied"
 msgstr "存取被拒絕"
@@ -550,6 +654,7 @@ msgid "Access warning"
 msgstr "存取警告"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_account_account
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
 msgid "Account"
 msgstr "帳戶"
@@ -572,8 +677,8 @@ msgstr "帳戶付款代表匯總付款和銀行拆分付款。"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid ""
-"Account used as outstanding account when creating accounting payment records"
-" for bank payments."
+"Account used as outstanding account when creating accounting payment records "
+"for bank payments."
 msgstr "建立銀行付款的會計記錄時，用作未清繳款項的賬戶。"
 
 #. module: point_of_sale
@@ -611,6 +716,12 @@ msgstr "操作已取消（%s）"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Actions"
+msgstr "動作"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_payment_provider_cards/pos_payment_provider_cards.xml:0
 msgid "Activate"
 msgstr "啟動"
@@ -640,6 +751,11 @@ msgid "Activity Exception Decoration"
 msgstr "活動異常圖示"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_state
 msgid "Activity State"
 msgstr "活動狀態"
@@ -657,12 +773,6 @@ msgid "Add"
 msgstr "加入"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/orderline_note_button/orderline_note_button.js:0
-msgid "Add %s"
-msgstr "加入 %s"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Add Printer"
 msgstr "新增打印機"
@@ -672,6 +782,12 @@ msgstr "新增打印機"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Add Tip"
 msgstr "增加小費"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/orderline_note_button/orderline_note_button.js:0
+msgid "Add a "
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_unique_code
@@ -758,6 +874,8 @@ msgid "Additional required user information:"
 msgstr "額外所需用戶資訊："
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__address
 msgid "Address"
 msgstr "地址"
@@ -786,7 +904,7 @@ msgstr "Adyen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_adyen
 msgid "Adyen Payment Terminal"
-msgstr "Adyen 支付終端"
+msgstr "Adyen 付款終端機"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -807,7 +925,9 @@ msgid ""
 "All available pricelists must be in the same currency as the company or as "
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
-msgstr "如果您使用會計應用程式，所有可用的價目表必須與公司或與此POS營業點上設定的銷售日記帳使用相同的貨幣."
+msgstr ""
+"如果您使用會計應用程式，所有可用的價目表必須與公司或與此POS營業點上設定的銷售"
+"日記帳使用相同的貨幣."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -818,8 +938,8 @@ msgstr "所有備註"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"All payment methods must be in the same currency as the Sales Journal or the"
-" company currency if that is not set."
+"All payment methods must be in the same currency as the Sales Journal or the "
+"company currency if that is not set."
 msgstr "如果沒有設定的話所有付款方式必須與銷售日記帳或公司貨幣相同."
 
 #. module: point_of_sale
@@ -886,6 +1006,12 @@ msgid "Amount Authorized Difference"
 msgstr "授權差異的總金額"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+msgid "Amount Paid"
+msgstr "已付金額"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Amount for %(old_pm)s changed from %(old_amount)s to %(new_amount)s"
@@ -904,7 +1030,6 @@ msgstr "總額"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
-#: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.xml:0
 msgid "Amount:"
 msgstr "金額:"
 
@@ -920,7 +1045,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/product_template.js:0
+#: code:addons/point_of_sale/static/src/app/models/accounting/product_template_accounting.js:0
 msgid ""
 "An error occurred when loading product prices. Make sure all pricelists are "
 "available in the POS."
@@ -930,15 +1055,24 @@ msgstr "載入產品價格時出錯。確保所有價目表都在POS中可用。
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
-"An error occurred while closing the session. Unsynced orders will be "
-"available in the next session. The page will be reloaded."
-msgstr "關閉操作時段期間，發生錯誤。未同步的訂單將在下次操作時段才可用。頁面將會重新載入。"
+"An error occurred while closing the session. But don't worry, unsynced "
+"orders will be available in the next session.\n"
+"The page will now, be reloaded."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/data_service.js:0
 msgid "An error occurred while loading the Point of Sale: \n"
-msgstr "載入銷售點時，發生錯誤：\n"
+msgstr "載入銷售點時，發生錯誤： \n"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid ""
+"An error occurred while trying to generate an invoice. Try again from the "
+"order tab or generate the invoice from the backend."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__name
@@ -951,10 +1085,19 @@ msgid "An internal identification of the printer"
 msgstr "印表機的內部辨識碼"
 
 #. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_line_unique_uuid
+msgid "An order line with this uuid already exists"
+msgstr "已有此唯一識別碼（UUID）的訂單資料行"
+
+#. module: point_of_sale
+#: model:ir.model.constraint,message:point_of_sale.constraint_pos_order_unique_uuid
+msgid "An order with this uuid already exists"
+msgstr "已有此唯一識別碼（UUID）的訂單"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.js:0
-msgid ""
-"An unknown error occurred. Do you want to download the receipt instead?"
+msgid "An unknown error occurred. Do you want to download the receipt instead?"
 msgstr "發生不明錯誤。是否要改為下載收據？"
 
 #. module: point_of_sale
@@ -970,9 +1113,16 @@ msgid "Any shop"
 msgstr "任何商店"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_apple_pie_product_template
+msgid "Apple Pie"
+msgstr "蘋果派"
+
+#. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
 msgid "Apply"
 msgstr "套用"
 
@@ -986,9 +1136,20 @@ msgstr "已封存"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Are you sure that the customer wants to  pay"
 msgstr "您確定客戶想要付款嗎"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_sourdough_loaf_product_template
+msgid "Artisan sourdough bread with a crisp crust and soft interior."
+msgstr "手工製酸種麵包，外皮香脆，包心軟熟。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
+msgid "As from"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -997,8 +1158,8 @@ msgstr "截至"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__direct
-msgid "As soon as possible"
-msgstr "盡快"
+msgid "As soon as possible, with back orders"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -1006,7 +1167,8 @@ msgstr "盡快"
 msgid ""
 "At least one bank account must be defined on the journal to allow "
 "registering QR code payments with Bank apps."
-msgstr "日記賬必須定義最少一個銀行賬戶，以允許使用銀行應用程式登記 QR 二維碼付款。"
+msgstr ""
+"日記賬必須定義最少一個銀行賬戶，以允許使用銀行應用程式登記 QR 二維碼付款。"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
@@ -1017,11 +1179,17 @@ msgstr "時段結算時"
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__update_stock_quantities
 msgid ""
-"At the session closing: A picking is created for the entire session when it's closed\n"
+"At the session closing: A picking is created for the entire session when "
+"it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
 "在營業點結束時: 當它關閉時為整個營業點建立一個揀貨\n"
 "  實際上: 發送到伺服器的每個訂單都會建立自己的揀貨"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.sport_shoes_product_template
+msgid "Athletic sport shoes, designed for comfort and performance."
+msgstr "運動鞋，專為舒適及性能而設計。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_attachment_count
@@ -1163,6 +1331,12 @@ msgid "Backend"
 msgstr "後端"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid "Backend Invoice"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_customer_display_bg_img
 msgid "Background Image"
@@ -1178,6 +1352,11 @@ msgstr "背景圖片名稱"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "Badge ID"
 msgstr "員工條碼 ID"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_bagel_product_template
+msgid "Bagel"
+msgstr "貝果"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1202,6 +1381,12 @@ msgid "Bank"
 msgstr "銀行"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Bank App (QR Code)"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_payment_ids
 msgid "Bank Payments"
 msgstr "銀行付款"
@@ -1218,6 +1403,8 @@ msgid "Bar"
 msgstr "酒吧"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Barcode"
 msgstr "條碼"
@@ -1235,7 +1422,6 @@ msgstr "條碼規則"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Barcode Scanner"
 msgstr "條碼掃瞄"
 
@@ -1272,6 +1458,21 @@ msgid "Bills & Receipts"
 msgstr "賬單和收據"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.t_shirt_black_embroidered_product_template
+msgid "Black embroidered t-shirt"
+msgstr "黑色刺繡 T 恤"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_template_blue_denim_jeans
+msgid "Blue Denim Jeans"
+msgstr "藍色牛仔褲"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_blueberry_muffin_product_template
+msgid "Blueberry Muffin"
+msgstr "藍莓鬆餅"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Booking"
 msgstr "預訂"
@@ -1284,7 +1485,9 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
-"利用多種計劃刺激銷售額：優惠券、推廣促銷、禮品卡、會員/忠誠度計劃。你可設定特定條件（適用產品、客戶、最低消費額、有效期）。獎勵可以是折扣（百分比或指定金額）或免費禮品。"
+"利用多種計劃刺激銷售額：優惠券、推廣促銷、禮品卡、會員/忠誠度計劃。你可設定特"
+"定條件（適用產品、客戶、最低消費額、有效期）。獎勵可以是折扣（百分比或指定金"
+"額）或免費禮品。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_brand
@@ -1292,15 +1495,31 @@ msgid "Brand of card"
 msgstr "卡品牌"
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_breads
+msgid "Breads"
+msgstr "麵包"
+
+#. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Buffer:"
-msgstr "緩衝:"
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Break combo"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+msgid "Brean combo"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_bus_mixin
 msgid "Bus Mixin"
 msgstr "bus混入程式"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_butter_croissant_product_template
+msgid "Butter Croissant"
+msgstr "牛油牛角包"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1339,6 +1558,12 @@ msgstr "不能更換客戶"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Can't create a QR for a zero amount"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
@@ -1364,12 +1589,6 @@ msgstr "取消訂單"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.js:0
-msgid "Cancel Payment"
-msgstr "取消付款"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cancel Payment Request"
 msgstr "取消付款申請"
@@ -1384,26 +1603,20 @@ msgstr "已取消"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid "Cannot edit orderline"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Cannot modify a tip"
 msgstr "無法修改小費"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Cannot return change without a cash payment method"
 msgstr "如果沒有使用現金支付方式則無法退換零錢"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - IoT Box is disconnected"
-msgstr "未能秤量產品：IoT Box 連線已中斷"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Cannot weigh product - Scale is not connected to IoT Box"
-msgstr "未能秤量產品：磅秤未連接至 IoT Box"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__slots_per_interval
@@ -1451,6 +1664,7 @@ msgstr "購物車"
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__is_cash_count
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_payment_method__type__cash
+#: model:pos.payment.method,name:point_of_sale.cash_payment_method_furniture
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash"
 msgstr "現金"
@@ -1633,6 +1847,38 @@ msgid "Cashier"
 msgstr "收銀員"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.casual_denim_short_product_template
+msgid "Casual Denim Short"
+msgstr "休閒牛仔短褲"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.casual_t_shirt_product_template
+msgid "Casual T-shirt"
+msgstr "休閒 T 恤"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.casual_denim_short_product_template
+msgid "Casual denim shorts, comfortable and stylish for everyday wear."
+msgstr "休閒牛仔短褲，舒適時尚，適合日常穿着。"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.t_shirt_black_embroidered_product_template
+msgid ""
+"Casual slim t-shirt 100% cotton with white embroidery. Various sizes "
+"available"
+msgstr "休閒修身 T 恤，100% 全棉，配上白色刺繡。有多種尺寸可供選擇"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.t_shirt_slim_product_template
+msgid "Casual slim t-shirt 100% cotton. Various sizes available"
+msgstr "休閒修身 T 恤，100% 全棉。有多種尺寸可供選擇"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.casual_t_shirt_product_template
+msgid "Casual t-shirt 100% cotton. Various colors and sizes available."
+msgstr "休閒 T 恤，100% 全棉。有多種顏色及尺寸可供選擇。"
+
+#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
 msgid ""
 "Categories are used to browse your products through the\n"
@@ -1659,9 +1905,14 @@ msgid "Category used in the Point of Sale."
 msgstr "POS使用的類別。"
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_chairs
+msgid "Chairs"
+msgstr "椅子"
+
+#. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.js:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Change"
 msgstr "找續"
@@ -1676,8 +1927,7 @@ msgstr "找續小費"
 #: model:ir.model.fields,help:point_of_sale.field_product_product__to_weight
 #: model:ir.model.fields,help:point_of_sale.field_product_template__to_weight
 msgid ""
-"Check if the product should be weighted using the hardware scale "
-"integration."
+"Check if the product should be weighted using the hardware scale integration."
 msgstr "檢查產品是否應使用硬體規模整合進行加權。"
 
 #. module: point_of_sale
@@ -1704,12 +1954,51 @@ msgstr "在開店和閉店時檢查零用金總額。"
 msgid ""
 "Check the internet connection then try to sync again by clicking on the red "
 "wifi button (upper right of the screen)."
-msgstr "檢查網際網路連接，然後通過點擊紅色 wifi 按鈕 (螢幕右上角) 再次嘗試同步."
+msgstr ""
+"檢查網際網路連接，然後通過點擊紅色 wifi 按鈕 (螢幕右上角) 再次嘗試同步."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid ""
+"Check the printer configuration for the 'Device ID' setting.\n"
+"It should be set to: 'local_printer'"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
+msgid ""
+"Check the printer configuration for the 'Device ID' setting.\n"
+"It should be set to: local_printer"
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_cheese_croissant_product_template
+msgid "Cheese Croissant"
+msgstr "起司可頌/芝士牛角包"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_cherry_pie_product_template
+msgid "Cherry Pie"
+msgstr "櫻桃派"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_bagel_product_template
+msgid "Chewy and dense bagel, perfect for sandwiches or with cream cheese."
+msgstr "百吉餅/比高麵包圈，綿密有嚼勁，製作三明治或塗上奶油乳酪都是完美配搭。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__child_ids
 msgid "Children Categories"
 msgstr "兒童類別"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
+msgid "Choose"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1738,9 +2027,41 @@ msgstr "選擇門戶網站網址在收據上的列印方式。"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
+msgid "Choose the tax you want to apply"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "Choose your store"
 msgstr "選擇商店"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
+msgid "Chose a combo to apply"
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_cinnamon_roll_product_template
+msgid "Cinnamon Roll"
+msgstr "肉桂卷"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_classic_brown_jacket_product_template
+msgid "Classic Brown Jacket"
+msgstr "經典啡色外套"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.classic_leather_belt_product_template
+msgid "Classic Leather Belt"
+msgstr "經典皮帶"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.classic_leather_belt_product_template
+msgid "Classic leather belt, a must-have accessory for any wardrobe."
+msgstr "經典皮帶，衣櫥必備配飾。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1755,9 +2076,10 @@ msgstr "客戶"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Close"
 msgstr "關閉"
@@ -1783,6 +2105,12 @@ msgstr "關閉營業點並完成日結帳"
 #: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
 msgid "Close Session Wizard"
 msgstr "關閉操作時段精靈"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Close debug widget"
+msgstr "關閉除錯小工具"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -1813,8 +2141,8 @@ msgid "Closing Date"
 msgstr "關閉日期"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_closing_entry_by_product
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_closing_entry_by_product
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_closing_entry_by_product
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_closing_entry_by_product
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Closing Entry by product"
 msgstr "按產品劃分的結算記項"
@@ -1828,7 +2156,7 @@ msgstr "結算備註"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Closing Register"
-msgstr "正在關閉收銀機"
+msgstr "關閉收銀機"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1852,7 +2180,7 @@ msgstr "結算備註"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid "Closing session error"
-msgstr "關閉營業點錯誤"
+msgstr "操作時段結算錯誤"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1868,13 +2196,17 @@ msgstr "服裝店"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 msgid "Code:"
 msgstr "代碼："
 
 #. module: point_of_sale
-#: model:ir.actions.act_window,name:point_of_sale.action_pos_bill
 #: model:ir.model,name:point_of_sale.model_pos_bill
+msgid "Coin/Bill"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_bill
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_bill_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_bill_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_bill
@@ -1906,7 +2238,13 @@ msgstr "顏色索引"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Combine %(payment_method)s POS payments from %(session)s"
-msgstr "將以下操作時段使用 %(payment_method)s 付款方式的 POS 付款結合：%(session)s"
+msgstr ""
+"將以下操作時段使用 %(payment_method)s 付款方式的 POS 付款結合：%(session)s"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_t_shirt_pants_product_template
+msgid "Combo"
+msgstr "組合"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_product_combo
@@ -1930,16 +2268,11 @@ msgstr "組合母項"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_company
-msgid "Companies"
-msgstr "公司"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__company_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__company_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__company_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__company_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__company_id
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__company_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__company_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__company_id
 msgid "Company"
@@ -1982,6 +2315,7 @@ msgstr "至少要設定一個營業點."
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Confirm"
@@ -1991,12 +2325,6 @@ msgstr "確認"
 #: model:ir.actions.act_window,name:point_of_sale.action_confirm_action_wizard
 msgid "Confirm Action"
 msgstr "確認操作"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.js:0
-msgid "Confirm Payment"
-msgstr "確認付款"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2034,18 +2362,6 @@ msgstr "連接設備"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.xml:0
-msgid "Connecting to Proxy"
-msgstr "連接到代理伺服器"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/customer_display/utils.js:0
-msgid "Connecting to the IoT Box"
-msgstr "正在連線至 IoT Box"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Connection Lost"
 msgstr "連線中斷"
@@ -2055,18 +2371,6 @@ msgstr "連線中斷"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Connection error"
 msgstr "連線錯誤"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/customer_display/utils.js:0
-msgid "Connection failed"
-msgstr "連線失敗"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/customer_display/utils.js:0
-msgid "Connection successful"
-msgstr "連線成功"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2104,6 +2408,13 @@ msgid "Contact Info"
 msgstr "聯絡資訊"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+msgid "Continue"
+msgstr "繼續"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Continue Selling"
@@ -2116,11 +2427,19 @@ msgid "Continue with limited functionality"
 msgstr "繼續使用有限功能"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid ""
+"Continuous printing of high-density printing caused a printing error. Please "
+"retry later"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
-"Conversion Error: The following unit of measure conversions result in a zero"
-" quantity due to rounding:"
+"Conversion Error: The following unit of measure conversions result in a zero "
+"quantity due to rounding:"
 msgstr "轉換錯誤：由於四捨五入，以下計量單位換算後出現零數量："
 
 #. module: point_of_sale
@@ -2137,13 +2456,13 @@ msgstr "從公司貨幣到訂單貨幣的轉換率。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Cost:"
-msgstr "成本:"
+msgstr "成本："
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Count"
-msgstr "個數"
+msgstr "總數"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__count_linked_config
@@ -2160,7 +2479,7 @@ msgstr "點算已連結訂單"
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Counted"
-msgstr "盤點數量"
+msgstr "點算總數"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_country
@@ -2176,6 +2495,16 @@ msgstr "國家/地區代碼"
 #: model:ir.model,name:point_of_sale.model_res_country_state
 msgid "Country state"
 msgstr "國家州/省"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.cozy_sweater_product_template
+msgid "Cozy Sweater"
+msgstr "舒適毛衣"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.cozy_sweater_product_template
+msgid "Cozy sweater, perfect for colder weather. Available in various colors."
+msgstr "舒適毛衣，非常適合寒冷天氣。多種顏色選擇。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2294,6 +2623,11 @@ msgid "Created on"
 msgstr "建立於"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_crocheted_poncho_unisize_product_template
+msgid "Crocheted Poncho Unisize"
+msgstr "鈎織均碼套頭披風"
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_currency
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__currency_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__currency_id
@@ -2324,8 +2658,8 @@ msgid "Current Session State"
 msgstr "目前營業點狀態"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_header_or_footer
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_header_or_footer
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_header_or_footer
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_header_or_footer
 msgid "Custom Header & Footer"
 msgstr "自訂頁首及頁尾"
 
@@ -2338,9 +2672,11 @@ msgstr "自訂值"
 #. odoo-javascript
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/select_partner_button/select_partner_button.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__partner_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__partner_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__partner_id
@@ -2377,8 +2713,8 @@ msgstr "客戶發票"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/orderline/orderline.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__customer_note
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2398,7 +2734,7 @@ msgstr "客戶二維碼"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Customer Required"
 msgstr "客戶要求"
 
@@ -2411,16 +2747,10 @@ msgstr "必須提供客戶地址"
 #. module: point_of_sale
 #. odoo-javascript
 #. odoo-python
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr "客戶需要 %s 種付款方式。"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid "Customer required"
-msgstr "客戶要求"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2432,12 +2762,6 @@ msgstr "客戶小費,無法直接修改"
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
 msgid "Customers"
 msgstr "客戶"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
-msgid "DUPLICATA !"
-msgstr "重複！"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2480,13 +2804,6 @@ msgstr "日期選擇器"
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Days"
 msgstr "天"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Debug Window"
-msgstr "偵錯窗口"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_decimal_precision
@@ -2581,8 +2898,8 @@ msgstr "定義新類別"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"Define presets to manage taxes & prices for eat in, take out, members..."
-msgstr "定義預設組合，管理堂食、外賣、會員等不同稅項及價格⋯"
+"Define presets to manage taxes & prices for dine in, take out, members..."
+msgstr "定義預設設定，以管理堂食、外賣、會員等的適用稅項及價格。"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_template_action_pos_product
@@ -2621,13 +2938,19 @@ msgstr "刪除訂單？"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Delete Paid Orders"
+msgid "Delete all indexed DB"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Delete paid orders"
 msgstr "刪除已付款訂單"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Delete Unpaid Orders"
+msgid "Delete unpaid orders"
 msgstr "刪除未付款訂單"
 
 #. module: point_of_sale
@@ -2641,12 +2964,22 @@ msgid "Demo Name"
 msgstr "演示名稱"
 
 #. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_rye_bread_product_template
+msgid "Dense and dark, made with rye flour, perfect for sandwiches."
+msgstr "裸麥麵包，以黑麥麵粉製成，濃厚緊密，非常適合製作三明治。"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__pos_description
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Description"
-msgstr "說明"
+msgstr "描述"
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_desks
+msgid "Desks"
+msgstr "桌台"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
@@ -2672,13 +3005,15 @@ msgid "Determine the display order in the POS Terminal"
 msgstr "決定在 POS 終端機顯示的順序"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number_seq_id
-msgid ""
-"Determines the number of times the UI is opened. It is used as proxy to the "
-"identity of the device where the UI is opened. And as such, it is the LL "
-"part of the pos_reference field of the pos.order model."
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Device ID:"
 msgstr ""
-"決定操作介面開啟的次數，為開啟操作介面的裝置用作身份代理。因此，即是 pos.order 模型 pos_reference 欄位的 LL 部份。"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__device_seq_id
+msgid "Device Sequence"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2713,6 +3048,18 @@ msgid "Dine in"
 msgstr "堂食"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Disable"
+msgstr "停用"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Disable debug mode"
+msgstr "停用除錯模式"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Disc.%"
 msgstr "折扣%"
@@ -2733,7 +3080,7 @@ msgstr "折扣:"
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/product_configurator_popup/product_configurator_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/text_input_popup/text_input_popup.xml:0
@@ -2765,18 +3112,13 @@ msgstr "折扣的產品"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Discounts"
 msgstr "折扣"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Dismiss"
-msgstr "解除"
-
-#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_account__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cash_rounding__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_account_fiscal_position__display_name
@@ -2812,7 +3154,6 @@ msgstr "解除"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_category__display_name
@@ -2823,7 +3164,6 @@ msgstr "解除"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__display_name
-#: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_exclusion__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_line__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_value__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom__display_name
@@ -2842,6 +3182,7 @@ msgstr "解除"
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_move__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking_type__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_reference__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__display_name
@@ -2855,8 +3196,15 @@ msgid ""
 msgstr "透過電子價錢牌展示並更新您的產品訊息"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__is_closing_entry_by_product
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_is_closing_entry_by_product
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_group_by_categ
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_group_by_categ
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Display products grouped by categories."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__use_closing_entry_by_product
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_use_closing_entry_by_product
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Display the breakdown of sales lines by product in the automatically "
@@ -2867,12 +3215,6 @@ msgstr "在自動產生的結算記項中，顯示按產品細分的銷售資料
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pricer
 msgid "Display the price of your products through electronic price tags"
 msgstr "透過電子價錢牌顯示您的產品價格"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/digest.py:0
-msgid "Do not have access, skip this data for user's digest email"
-msgstr "沒有存取權限，使用者摘要電郵將跳過此數據"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2888,15 +3230,34 @@ msgstr "下載"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download Logs"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Download a report with all the sales of the current PoS Session"
 msgstr "下載目前PoS時段所有銷售額的報告"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download logs"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "EAN-13"
+msgstr "EAN-13"
+
+#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
 msgid ""
 "Each printer can be configured to print products from a specific category.\n"
-"            The printer will then only print updates for products belonging to one of\n"
+"            The printer will then only print updates for products belonging "
+"to one of\n"
 "            its linked categories."
 msgstr ""
 "每部打印機可設定至只列印特定類別的產品。\n"
@@ -2911,6 +3272,7 @@ msgstr "輕鬆載入一套預先配置的選項"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Edit"
 msgstr "編輯"
@@ -2925,12 +3287,6 @@ msgstr "編輯詳細資料"
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
 msgid "Edit Partner"
 msgstr "編輯合作夥伴"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "Edit Payment"
-msgstr "編輯付款"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_template_action_edit_pos
@@ -2958,6 +3314,8 @@ msgid "Electronic Scale"
 msgstr "電子秤"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__email
 msgid "Email"
 msgstr "Email"
@@ -2980,11 +3338,13 @@ msgid ""
 "Employees can scan their badge or enter a PIN to log in to a PoS session. "
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
-msgstr "員工可以掃瞄徽章或輸入PIN以登入PoS營業點。 這些憑證可在員工表單的 *HR 設定* 選項中進行設定。"
+msgstr ""
+"員工可以掃瞄徽章或輸入PIN以登入PoS營業點。 這些憑證可在員工表單的 *HR 設定* "
+"選項中進行設定。"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Empty Order"
 msgstr "空訂單"
 
@@ -2994,6 +3354,12 @@ msgid ""
 "Enable barcode scanning with a remotely connected barcode scanner and card "
 "swiping with a Vantiv card reader."
 msgstr "使用遠端連接的條碼掃描器啟用條碼掃描，並使用 Vantiv 讀卡器刷卡."
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__use_fast_payment
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_use_fast_payment
+msgid "Enable fast payment methods to validate orders on the product screen."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
@@ -3014,8 +3380,8 @@ msgstr "期末餘額"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"Ensure that there is an existing bank journal. Check if chart of accounts is"
-" installed in your company."
+"Ensure that there is an existing bank journal. Check if chart of accounts is "
+"installed in your company."
 msgstr "確保有現存的銀行日記賬。檢查你公司是否安裝了會計賬目總表。"
 
 #. module: point_of_sale
@@ -3025,11 +3391,27 @@ msgid "Ensure you validate the refund before taking another order."
 msgstr "接受另一張訂單前，請確保你已驗證退款。"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Error"
-msgstr "錯誤"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__epson_printer_ip
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_epson_printer_ip
+msgid "Epson Printer IP"
+msgstr "Epson 印表機 IP"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__epson_printer_ip
+msgid "Epson Printer IP Address"
+msgstr "Epson打印機IP地址"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_printer.py:0
+msgid "Epson Printer IP Address cannot be empty."
+msgstr "Epson 打印機IP地址不能為空。"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Epson Receipt Printer IP Address"
+msgstr "Epson 收據印表機 IP 地址"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3039,7 +3421,7 @@ msgstr "錯誤！你不可創建循環類別。"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Error: no internet connection."
 msgstr "錯誤：沒有網路連結。"
 
@@ -3056,21 +3438,21 @@ msgstr "預期"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 msgid "Expected delivery:"
 msgstr "預計送貨："
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Export Paid Orders"
-msgstr "匯出已付款訂單"
+msgid "Export PoS data"
+msgstr "匯出 POS 數據"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Export Unpaid Orders"
-msgstr "匯出未付款訂單"
+msgid "Export data"
+msgstr "匯出數據"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3090,9 +3472,17 @@ msgstr "挑選失敗"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Failed in printing %s changes of the order"
-msgstr "未能列印 %s 項訂單變更"
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Failed to print a test receipt. Check your printer."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid ""
+"Failed to reach the printer. Check the configured url. Make sure that the "
+"printer is online and you are on the same network."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3108,10 +3498,22 @@ msgid "Fallback Nomenclature"
 msgstr "後備命名規則"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__fast_payment_method_ids
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
+msgid "Fast Payment Methods"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_fast_payment
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_fast_payment
+msgid "Fast Payment Validation"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Financials"
-msgstr "財務"
+msgstr "財務資訊"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_fiscal_position
@@ -3140,7 +3542,18 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
-msgstr "財務狀況用於調整特定客戶的稅金和科目或銷售訂單/應收憑單. 預設值來自客戶."
+msgstr ""
+"財務狀況用於調整特定客戶的稅金和科目或銷售訂單/應收憑單. 預設值來自客戶."
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_butter_croissant_product_template
+msgid "Flaky all butter pastry, layered for a light and golden croissant."
+msgstr "鬆脆全奶油酥皮，層疊成鬆軟的金黃色牛角包。"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_cheese_croissant_product_template
+msgid "Flaky croissant filled with creamy cheese, a savory twist on a classic."
+msgstr "鬆脆牛角包，注滿奶油乳酪餡料，經典包點的滋味新食法。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3157,6 +3570,16 @@ msgstr "靈活稅項"
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Floor plan, tips, self order, etc."
 msgstr "樓面平面圖、小費、自助點餐或訂購等。"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_flour_product_template
+msgid "Flour"
+msgstr "麵粉"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_flour_product_template
+msgid "Flour sold by the kilogram."
+msgstr "麵粉，以公斤為單位出售。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_follower_ids
@@ -3195,7 +3618,7 @@ msgstr "適用於所有銷售點。"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_big_scrollbars
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_big_scrollbars
 msgid "For imprecise industrial touchscreens."
-msgstr "面向不精確的工業用觸摸屏。"
+msgstr "改善不精確觸控螢幕的導航及操作。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3226,11 +3649,13 @@ msgstr "強制未結帳戶"
 msgid ""
 "Forces to set a customer when using this payment method and splits the "
 "journal entries for each customer. It could slow down the closing process."
-msgstr "使用此付款方式時強制設置客戶並拆分每個客戶的日記帳分錄。它可能會減慢關閉過程。"
+msgstr ""
+"使用此付款方式時強制設置客戶並拆分每個客戶的日記帳分錄。它可能會減慢關閉過"
+"程。"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
+#: code:addons/point_of_sale/static/src/app/models/accounting/pos_order_line_accounting.js:0
 msgid "Free"
 msgstr "免費"
 
@@ -3255,7 +3680,7 @@ msgstr "從憑單收付款"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Full"
-msgstr "填滿"
+msgstr "完全"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__full_product_name
@@ -3297,17 +3722,6 @@ msgid "Generate a code on ticket"
 msgstr "在票上生成代碼"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Generation of your order references"
-msgstr "訂單編碼的產生"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
-msgid "Get Weight"
-msgstr "秤重"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Get my invoice"
 msgstr "獲取我的發票"
@@ -3337,25 +3751,26 @@ msgid "Greater than allowed"
 msgstr "大於允許量"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_green_hood_product_template
+msgid "Green Hood"
+msgstr "綠色頭巾"
+
+#. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Gross Weight:"
 msgstr "總重量："
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_search
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
-msgid "Group By"
-msgstr "分組依據"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__is_pos_groupable
 msgid "Group Products in POS"
 msgstr "銷售點產品分組"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_group_by_categ
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_group_by_categ
+msgid "Group products by categories"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_ir_http
@@ -3367,18 +3782,6 @@ msgstr "http路由"
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "HTTPS connection to IoT Box failed"
 msgstr "與IoT Box的HTTPS連接失敗"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Hardware Events"
-msgstr "硬體事件"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Hardware Status"
-msgstr "硬體狀態"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__has_active_session
@@ -3399,6 +3802,7 @@ msgstr "有已刪除資料行"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__has_image
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__has_image
+#: model:ir.model.fields,field_description:point_of_sale.field_product_tag__has_image
 msgid "Has Image"
 msgstr "有圖片"
 
@@ -3417,6 +3821,11 @@ msgstr "有可退款項目"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Header"
 msgstr "頁首"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_multigrain_bread_product_template
+msgid "Hearty multigrain loaf with seeds and grains for extra nutrition."
+msgstr "豐厚多穀麵包，含有種子及穀物，提供額外營養。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_qr_code_method
@@ -3439,10 +3848,17 @@ msgid "Hide pictures in POS"
 msgstr "在銷售點隱藏圖片"
 
 #. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_wholemeal_loaf_product_template
+msgid ""
+"High fibre loaf. Baked with fine wholemeal flour to give a soft texture."
+msgstr "高纖長包，採用幼細全麥粉烘焙，口感鬆軟。"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/product_template.py:0
 msgid ""
-"Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
+"Hold up! Archiving products while POS sessions are active is like pulling a "
+"plate mid-meal.\n"
 "Make sure to close all sessions first to avoid any issues."
 msgstr ""
 "請稍等，在 POS 操作時段生效時封存產品，就像用餐中途收碟！\n"
@@ -3464,6 +3880,7 @@ msgid "How to manage tax-included prices"
 msgstr "如何管理連稅價格"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_account_account__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_cash_rounding__id
 #: model:ir.model.fields,field_description:point_of_sale.field_account_fiscal_position__id
@@ -3499,7 +3916,6 @@ msgstr "如何管理連稅價格"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__id
-#: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_category__id
@@ -3510,7 +3926,6 @@ msgstr "如何管理連稅價格"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__id
-#: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_exclusion__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_line__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_value__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_uom__id
@@ -3529,6 +3944,7 @@ msgstr "如何管理連稅價格"
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_move__id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking_type__id
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_reference__id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_rule__id
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__id
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__id
@@ -3589,13 +4005,24 @@ msgid ""
 msgstr "如果此訂單項目為退款，則在此欄位中指定退款的訂單明細。"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
+msgid ""
+"If you are on a secure server (HTTPS) please make sure you manually accepted "
+"the certificate by accessing %s. "
+msgstr ""
+"如果您使用的是安全服務器（HTTPS）,請確保您通過存取 %s 手動接受了證書。 "
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__picking_policy
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_picking_policy
 msgid ""
 "If you deliver all products at once, the delivery order will be scheduled "
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
-msgstr "如果您同時交付所有產品，發貨單將根據最大的產品交貨時間來計劃。否則，它將根據最短的交貨時間。"
+msgstr ""
+"如果您同時交付所有產品，發貨單將根據最大的產品交貨時間來計劃。否則，它將根據"
+"最短的交貨時間。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_512
@@ -3613,13 +4040,19 @@ msgstr "圖像 128"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Import Orders"
+msgid "Import data"
+msgstr "匯入數據"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Import orders"
 msgstr "匯入訂單"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Improve navigation for imprecise industrial touchscreens"
-msgstr "改善不精確工業用觸摸屏的導航"
+msgstr "改善不精確觸控螢幕的導航及操作"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3646,9 +4079,16 @@ msgstr "在實際時間"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Incorrect address for shipping"
 msgstr "送貨地址不正確"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_product_combo__is_upsell
+msgid ""
+"Indicates if the combo is an upsell to the customer. This can be compared to "
+"a minimum quantity of 0."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3769,6 +4209,12 @@ msgid "Invoice Name"
 msgstr "發票名稱"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+msgid "Invoice Number"
+msgstr "發票號碼"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Invoice Request"
 msgstr "索取發票"
@@ -3783,7 +4229,8 @@ msgstr "發票狀態"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid ""
 "Invoice payment for %(order)s (%(account_move)s) using %(payment_method)s"
-msgstr "發票付款：訂單 %(order)s (%(account_move)s)，以 %(payment_method)s 付款"
+msgstr ""
+"發票付款：訂單 %(order)s (%(account_move)s)，以 %(payment_method)s 付款"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -3816,12 +4263,6 @@ msgid "IoT Box IP Address"
 msgstr "IoT Box IP地址"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
-msgid "IoT Customer Display Error"
-msgstr "物聯網顧客顯示屏錯誤"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_is_follower
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_is_follower
 msgid "Is Follower"
@@ -3833,7 +4274,7 @@ msgid "Is Invoiced"
 msgstr "已開立發票"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__is_kiosk_mode
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__use_kiosk_mode
 msgid "Is Kiosk Mode"
 msgstr "是自助服務點模式"
 
@@ -3847,6 +4288,11 @@ msgstr "是退款"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__is_total_cost_computed
 msgid "Is Total Cost Computed"
 msgstr "是否計算總成本"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_product_combo__is_upsell
+msgid "Is Upsell"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__is_in_company_currency
@@ -3880,7 +4326,8 @@ msgstr "這是付款變更嗎?"
 msgid ""
 "It is forbidden to modify a tax used in a POS order not posted. You must "
 "close the POS sessions before modifying the tax."
-msgstr "禁止修改未過帳的POS訂單中使用的稅金。在修改稅金之前, 必須關閉POS營業點。"
+msgstr ""
+"禁止修改未過帳的POS訂單中使用的稅金。在修改稅金之前, 必須關閉POS營業點。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3891,10 +4338,22 @@ msgstr "使用IoT Box可以打印票據。"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
+msgid "It seems like you do not have enough rights to create a shop."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "It seems like you don't have enough rights to load data."
+msgstr "你似乎沒有足夠權限去載入資料。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
 msgid ""
-"It seems like you don't have enough rights to create point of sale "
-"configurations."
-msgstr "似乎你未有足夠權限去建立銷售點配置。"
+"It seems that no barcode nomenclature is set in your point of sale. You can "
+"add it in the settings of your shop."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -3902,11 +4361,28 @@ msgstr "似乎你未有足夠權限去建立銷售點配置。"
 msgid ""
 "It seems that the POS order(s) %(order_ref)s do not have a customer.\n"
 "\n"
-"Would you like to set %(customer_name)s as the customer for the selected POS order(s)?"
+"Would you like to set %(customer_name)s as the customer for the selected POS "
+"order(s)?"
 msgstr ""
 "POS 訂單「%(order_ref)s」似乎未有客戶。\n"
 "\n"
 "要將 %(customer_name)s 設為所選 POS 訂單的客戶？"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
+msgid "It seems that the printer runs out of paper."
+msgstr ""
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.jean_jacket_product_template
+msgid "Jean Jacket"
+msgstr "牛仔外套"
+
+#. module: point_of_sale
+#: model:product.combo,name:point_of_sale.jeans_combo
+msgid "Jeans Combo"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_journal
@@ -3945,6 +4421,11 @@ msgid "Kpi Pos Total Value"
 msgstr "Kpi Pos 總計值"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.led_lamp_product_template
+msgid "LED Lamp"
+msgstr "LED燈"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__name
 msgid "Label"
@@ -3952,8 +4433,8 @@ msgstr "標籤"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_lang
-msgid "Languages"
-msgstr "語言"
+msgid "Language"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -4047,6 +4528,11 @@ msgid "Launch fake tours"
 msgstr "啟動模擬導覽"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.leather_jacket_product_template
+msgid "Leather Jacket"
+msgstr "皮褸"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 msgid "Leave a reason here"
@@ -4056,7 +4542,8 @@ msgstr "在此留下理由"
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
 msgid ""
 "Leave empty to use the default account from the company setting.\n"
-"Overrides the company's receivable account (for Point of Sale) used in the journal entries."
+"Overrides the company's receivable account (for Point of Sale) used in the "
+"journal entries."
 msgstr ""
 "留空以使用公司設置中的預設帳戶。\n"
 "覆蓋日記帳分錄中使用的公司應收帳款（針對營業點）。"
@@ -4070,22 +4557,43 @@ msgstr "留空使用客戶應收帳款"
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__journal_id
 msgid ""
 "Leave empty to use the receivable account of customer.\n"
-"Defines the journal where to book the accumulated payments (or individual payment if Identify Customer is true) after closing the session.\n"
-"For cash journal, we directly write to the default account in the journal via statement lines.\n"
-"For bank journal, we write to the outstanding account specified in this payment method.\n"
+"Defines the journal where to book the accumulated payments (or individual "
+"payment if Identify Customer is true) after closing the session.\n"
+"For cash journal, we directly write to the default account in the journal "
+"via statement lines.\n"
+"For bank journal, we write to the outstanding account specified in this "
+"payment method.\n"
 "Only cash and bank journals are allowed."
 msgstr ""
 "留空使用客戶的應收賬款。\n"
-"定義在結束營業點後在何處記錄累計付款（或個人付款，如果識別客戶為真）的日記帳。\n"
+"定義在結束營業點後在何處記錄累計付款（或個人付款，如果識別客戶為真）的日記"
+"帳。\n"
 "對於現金日記帳，我們通過報表行直接寫入日記帳中的默認帳戶。\n"
 "對於銀行日記帳，我們會寫入此付款方式中指定的未結帳戶。\n"
 "只允許使用現金和銀行日記帳。"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.letter_tray_product_template
+msgid "Letter Tray"
+msgstr "信託盤"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_template_blue_denim_jeans_slim
+msgid "Light Blue Jeans Slim"
+msgstr "淺藍色修身牛仔褲"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_classic_brown_jacket_product_template
+msgid ""
+"Lightweight bomber jacket in linen with a ribbed stand-up collar and zip "
+"down the front."
+msgstr "輕巧麻質飛行外套，羅紋立領，前方拉鏈。"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Limited"
-msgstr "受限制"
+msgstr "有限度"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4103,6 +4611,12 @@ msgstr "資料行折扣"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
 msgid "Line No"
 msgstr "行號"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Link Cashdrawer"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_uom
@@ -4128,6 +4642,13 @@ msgid "Linked POS Configurations"
 msgstr "已連結 POS 配置"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_order__reversed_move_ids
+msgid ""
+"List of account moves created when this POS order was reversed and invoiced "
+"after session close."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Load Order"
@@ -4151,27 +4672,25 @@ msgid "Loading..."
 msgstr "載入中⋯"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__epson_printer_ip
+#: model:ir.model.fields,help:point_of_sale.field_pos_printer__epson_printer_ip
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_epson_printer_ip
+msgid ""
+"Local IP address of an Epson receipt printer, or its serial number if the "
+"'Automatic Certificate Update' option is enabled in the printer settings."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Log in with Employees"
 msgstr "以員工身份登入"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number_seq_id
-msgid "Login Number Sequence"
-msgstr "登入號碼序號"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "Login Number Sequence of Session %s"
-msgstr "操作時段 %s 的登入號碼序號"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sales_detail_report.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/receipt_header/receipt_header.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/login_screen/login_screen.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Logo"
 msgstr "標誌"
 
@@ -4195,13 +4714,29 @@ msgstr "以下項目必須有批次/序號："
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__pack_lot_ids
 msgid "Lot/serial Number"
-msgstr "批次/序列號碼"
+msgstr "批次/序號"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Low voltage unrecoverable error occured, please check the printer"
+msgstr ""
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_lower
+msgid "Lower body"
+msgstr "下身"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.js:0
 msgid "Lunch"
 msgstr "午餐"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.magnetic_board_product_template
+msgid "Magnetic Board"
+msgstr "磁板"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
@@ -4211,20 +4746,14 @@ msgstr "付款"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__available_pricelist_ids
 msgid ""
-"Make several pricelists available in the Point of Sale. You can also apply a"
-" pricelist to specific customers from their contact form (in Sales tab). To "
+"Make several pricelists available in the Point of Sale. You can also apply a "
+"pricelist to specific customers from their contact form (in Sales tab). To "
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
-"使多個價目表可用於POS。您還可以將價目表應用於來自其聯絡人表單(在「銷售」選項卡中)的特定客戶。為使此價目表有效，必須將其在此處列出作為可用價目表。否則，將應用預設價目表。"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/customer_display/customer_display_data_service.js:0
-msgid ""
-"Make sure there is an IoT Box subscription associated with your Odoo "
-"database, then restart the IoT Box."
-msgstr "請確保你的 Odoo 資料庫有 IoT Box 物聯網盒子的訂閱計劃，然後重新啟動 IoT Box。"
+"使多個價目表可用於POS。您還可以將價目表應用於來自其聯絡人表單(在「銷售」選項"
+"卡中)的特定客戶。為使此價目表有效，必須將其在此處列出作為可用價目表。否則，將"
+"應用預設價目表。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4276,7 +4805,7 @@ msgstr "毛利 (%)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Margin:"
-msgstr "邊距:"
+msgstr "利潤："
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_margins_costs_accessible_to_every_user
@@ -4305,6 +4834,12 @@ msgstr "最大數量"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Maximum value reached"
 msgstr "數值已達最大上限"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Mechanical error, please check the printer"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4344,6 +4879,17 @@ msgid "Method Name"
 msgstr "方法名稱"
 
 #. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_miscellaneous
+msgid "Misc"
+msgstr "雜項"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid "Missing required"
+msgstr "須提供缺漏資料"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__mobile
 msgid "Mobile"
 msgstr "手機"
@@ -4358,6 +4904,11 @@ msgstr "模組"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Module Pos Hr"
 msgstr "模組Pos Hr"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_blueberry_muffin_product_template
+msgid "Moist and fluffy muffins bursting with blueberries."
+msgstr "濕潤軟熟的鬆餅，內裏盛滿了藍莓。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4375,6 +4926,11 @@ msgstr "上午"
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Multi colors and sizes"
 msgstr "多款顏色及尺碼"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_multigrain_bread_product_template
+msgid "Multigrain Bread"
+msgstr "多穀麵包"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_invoice
@@ -4420,7 +4976,7 @@ msgstr "名稱"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 msgid "Need an invoice?"
 msgstr "需要發票？"
 
@@ -4446,7 +5002,6 @@ msgstr "需要以下日記帳的利潤帳戶來過帳獲得的金額：%s"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Net Weight:"
 msgstr "淨重量："
@@ -4467,7 +5022,7 @@ msgstr "新增"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "New Order"
 msgstr "新訂單"
 
@@ -4481,6 +5036,11 @@ msgstr "新增產品"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "New amount"
 msgstr "新數額"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.newspaper_rack_product_template
+msgid "Newspaper Rack"
+msgstr "報紙架"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
@@ -4507,6 +5067,12 @@ msgstr "下一活動類型"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Next Order List"
 msgstr "下一個訂單列表"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Next number:"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4550,14 +5116,6 @@ msgstr "無稅"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
-msgid ""
-"No barcode nomenclature has been configured. This can be changed in the "
-"configuration settings."
-msgstr "尚未設置條形碼命名規則,可以在配置中進行更改。"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.xml:0
 msgid "No cash move found"
 msgstr "未發現現金轉移"
@@ -4573,8 +5131,8 @@ msgstr "此營業點沒有現金對帳單。不能記錄交回的現金。"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"No chart of account configured, go to the \"configuration / settings\" menu,"
-" and install one from the Invoicing tab."
+"No chart of account configured, go to the \"configuration / settings\" menu, "
+"and install one from the Invoicing tab."
 msgstr "沒有配置科目表,請轉到「配置/設置」菜單,從發票分頁安裝。"
 
 #. module: point_of_sale
@@ -4601,6 +5159,12 @@ msgstr "找不到現有批次/序號⋯"
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "No existing serial/lot number"
 msgstr "沒有現有的序號/批次號碼"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "No invoice journal configured for this POS session."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -4663,6 +5227,12 @@ msgid "Nomenclature"
 msgstr "命名規則"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "None required"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Cancelled"
 msgstr "未取消"
@@ -4677,6 +5247,12 @@ msgstr "未分類"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Not Invoiced"
 msgstr "未開立憑單"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
+msgid "Not available"
+msgstr "不可用"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -4771,15 +5347,27 @@ msgstr "交易數量："
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Number stack:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 msgid "Odoo"
 msgstr "Odoo"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_list_popup/cash_move_list_popup.js:0
 #: code:addons/point_of_sale/static/src/app/utils/error_handlers.js:0
 msgid "Odoo Server Error"
 msgstr "Odoo 伺服器錯誤"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_odoo_sneakers_product_template
+msgid "Odoo Sneakers"
+msgstr "Odoo 運動鞋"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4789,9 +5377,27 @@ msgstr "離線訂單"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Oh snap !"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/number_popup/number_popup.js:0
 msgid "Ok"
 msgstr "確定"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
+msgid "On hand:"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "One-click Payment"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4804,6 +5410,13 @@ msgstr "正在進行"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_appointment
 msgid "Online Booking"
 msgstr "網上預約"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"Online payment, delivery payment, terminal payment, and methods that require "
+"customer identification are not supported for fast payment validation."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4860,7 +5473,6 @@ msgstr "哎唷！"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Open Cashbox"
 msgstr "打開零用金"
 
@@ -4882,6 +5494,12 @@ msgstr "打開使用此付款方式的PoS營業點."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Open Register"
 msgstr "開啟收銀機"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Open debug widget"
+msgstr "開啟除錯小工具"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4946,7 +5564,7 @@ msgstr "開店現金"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening control message: "
-msgstr "開店控制訊息："
+msgstr "開店控制訊息： "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4986,13 +5604,13 @@ msgstr "可選購產品："
 msgid ""
 "Optional products are suggested when customers add items to their cart "
 "(e.g., adding a burger suggests cold drinks or fries)."
-msgstr "顧客將商品加入購物車時，會建議加購產品（例如：購買漢堡包時，會建議加購凍飲或薯條）。"
+msgstr ""
+"顧客將商品加入購物車時，會建議加購產品（例如：購買漢堡包時，會建議加購凍飲或"
+"薯條）。"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__pos_order_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__order_id
@@ -5004,6 +5622,11 @@ msgstr "訂單"
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "Order %s is not fully paid."
 msgstr "訂單  %s未全額支付。"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_backend_seq_id
+msgid "Order Backend Sequence"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_invoice__count
@@ -5019,15 +5642,9 @@ msgid "Order Date"
 msgstr "報價日期"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_id
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_sequence_id
-msgid "Order IDs Sequence"
-msgstr "訂單IDs 序列"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
-msgid "Order Line IDs Sequence"
-msgstr "訂單項目 ID 編碼"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_line_seq_id
+msgid "Order Line Sequence"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
@@ -5045,7 +5662,13 @@ msgid "Order Number"
 msgstr "訂單號碼"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_order_printer
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Order Outdated"
+msgstr "訂單已過期"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_order_printer
 msgid "Order Printer"
 msgstr "訂單印表機"
 
@@ -5064,12 +5687,7 @@ msgid "Order Ref"
 msgstr "訂單編碼"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Order Reference"
-msgstr "訂單關聯"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__order_seq_id
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_seq_id
 msgid "Order Sequence"
 msgstr "訂單序號"
 
@@ -5098,7 +5716,6 @@ msgstr "此欄位中的訂單項目是退款此訂單內容之用。"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_filtered
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_sale_graph
@@ -5126,6 +5743,11 @@ msgid "Orders status"
 msgstr "訂單狀態"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__source
+msgid "Origin"
+msgstr "原始"
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__original
 msgid "Original"
 msgstr "原價"
@@ -5148,8 +5770,7 @@ msgid "Other Information"
 msgstr "其他資訊"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+#: model:pos.category,name:point_of_sale.pos_category_others
 msgid "Others"
 msgstr "其他"
 
@@ -5165,6 +5786,7 @@ msgid "Outstanding Account"
 msgstr "未結項目"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "POS Category"
 msgstr "銷售點類別"
@@ -5174,17 +5796,6 @@ msgstr "銷售點類別"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__pos_optional_product_ids
 msgid "POS Optional Products"
 msgstr "POS 可選產品"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
-msgid "POS Order"
-msgstr "POS 訂單"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-msgid "POS Order %s"
-msgstr "PoS 訂單 %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_count
@@ -5244,7 +5855,7 @@ msgstr "POS 順序"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__pos_session_id
 msgid "POS Session"
-msgstr "POS營業點"
+msgstr "POS 操作時段"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_session_ids
@@ -5255,12 +5866,31 @@ msgstr "銷售點操作時段"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
-msgid "POS order line %s"
-msgstr "POS訂單明細 %s"
+msgid "POS device from config #%s"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "POS order backend from config #%s"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "POS order from config #%s"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "POS order line from config #%s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_paid
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__paid
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__paid
@@ -5268,9 +5898,19 @@ msgid "Paid"
 msgstr "已付款"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_pain_au_chocolat_product_template
+msgid "Pain au Chocolat"
+msgstr "法式朱古力包"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__parent_id
 msgid "Parent Category"
 msgstr "上級類別"
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_pastries
+msgid "Pastries"
+msgstr "酥皮餅點"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5290,6 +5930,7 @@ msgstr "支付訂單"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
+#: model:ir.model,name:point_of_sale.model_account_payment
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Payment"
@@ -5360,14 +6001,13 @@ msgstr "付款狀態"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Payment Successful"
 msgstr "付款成功"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Payment Terminals"
-msgstr "支付終端"
+msgstr "付款終端機"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
@@ -5416,7 +6056,6 @@ msgstr "付款被撤銷"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_form
-#: model:ir.model,name:point_of_sale.model_account_payment
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__payment_ids
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_payment
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -5452,6 +6091,17 @@ msgid "Payments:"
 msgstr "支付:"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_pecan_pie_product_template
+msgid "Pecan Pie"
+msgstr "胡桃派"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.js:0
+msgid "Phone"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product PoS categories are available"
 msgstr "選擇可用的產品 PoS 類別"
@@ -5483,6 +6133,16 @@ msgid "Pickings"
 msgstr "揀貨"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Pine Labs"
+msgstr "Pine Labs"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_pine_labs
+msgid "Pine Labs Payment Terminal"
+msgstr "Pine Labs 付款終端機"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "Please"
@@ -5490,13 +6150,13 @@ msgstr "請"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Please Confirm Large Amount"
 msgstr "請確認大金額"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "Please add a valid customer to the order."
 msgstr "請為訂單加入有效客戶。"
 
@@ -5512,17 +6172,23 @@ msgstr "請在關閉之前關閉此期間的所有營業點營業點. 打開的�
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid ""
-"Please close and validate the following open PoS Sessions before modifying this payment method.\n"
+"Please close and validate the following open PoS Sessions before modifying "
+"this payment method.\n"
 "Open sessions: %s"
 msgstr ""
 "在修改此付款方式前，請關閉並驗證以下打開的銷售點（PoS）時段。\n"
 "開啟的時段：%s"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Please configure a valid ePoS url in order to test the printer"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"Please create/select a Point of Sale above to show the configuration "
-"options."
+"Please create/select a Point of Sale above to show the configuration options."
 msgstr "請在上面創建/選擇一個銷售點,以顯示配置選項。"
 
 #. module: point_of_sale
@@ -5582,26 +6248,19 @@ msgstr "請從後端列印憑單"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
-msgid "Please register the voucher number"
-msgstr "請登記優惠券號碼"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.js:0
-#: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.js:0
-msgid "Please scan the QR code with %s"
-msgstr "請以 %s 掃瞄二維碼"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
 msgstr "請選擇付款方式"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Please select a time slot before proceeding."
+msgstr "請選擇一個時段，然後才繼續操作。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Please select the Customer"
 msgstr "請選擇客戶"
 
@@ -5645,13 +6304,8 @@ msgstr "PoS訂單資料行"
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-msgid "PoS Order Sequence of Session %s"
-msgstr "操作時段 %s 的 PoS 訂單序號"
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_reference__pos_order_ids
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_pivot
 msgid "PoS Orders"
@@ -5689,6 +6343,7 @@ msgstr "POS營業點"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__config_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_config_id
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__source__pos
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
 #: model:res.groups.privilege,name:point_of_sale.res_groups_privilege_point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.digest_digest_view_form
@@ -5780,12 +6435,16 @@ msgid "Point of Sale Operation Type"
 msgstr "POS操作類型"
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_order_line
-msgid "Point of Sale Order Lines"
-msgstr "銷售點訂單資料行"
+#: model:ir.model,name:point_of_sale.model_pos_order
+msgid "Point of Sale Order"
+msgstr ""
 
 #. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_order
+#: model:ir.model,name:point_of_sale.model_pos_order_line
+msgid "Point of Sale Order Line"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Point of Sale Orders"
@@ -5797,15 +6456,19 @@ msgid "Point of Sale Orders Report"
 msgstr "銷售訂單點報告"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_payment
+msgid "Point of Sale Payment"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
+msgid "Point of Sale Payment Method"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
 msgstr "POS付款條件"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_pos_payment
-msgid "Point of Sale Payments"
-msgstr "POS付款"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_printer
@@ -5838,6 +6501,12 @@ msgid "Point of Sales"
 msgstr "POS營業點"
 
 #. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_crocheted_poncho_unisize_product_template
+msgid ""
+"Poncho in a soft, crochet-look knit with a round, gently draped neckline."
+msgstr "南美風格披風，柔軟鈎針編織，套頭圓領輕垂。"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_url
 msgid "Portal Access URL"
 msgstr "網站入口訪問網址"
@@ -5852,11 +6521,6 @@ msgstr "POS允許的價格表"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__pos_config_ids
 msgid "Pos Config"
 msgstr "POS設定"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_order_printer
-msgid "Pos Is Order Printer"
-msgstr "POS是訂單打印機"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_order_ids
@@ -5927,8 +6591,13 @@ msgid "Pos Sessions"
 msgstr "銷售點操作時段"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
-#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_posbox
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_order_printer
+msgid "Pos Use Order Printer"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_posbox
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_posbox
 msgid "PosBox"
 msgstr "POSBox"
 
@@ -5947,7 +6616,7 @@ msgstr "已過賬"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Powered by"
 msgstr "官方技術支援"
@@ -5973,13 +6642,17 @@ msgstr "準備工作產能"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
 msgid ""
-"Preparation printers are typically used by restaurants and bars to print the\n"
+"Preparation printers are typically used by restaurants and bars to print "
+"the\n"
 "            orders at the kitchen/bar when the waiter updates an order."
 msgstr ""
 "侍應更新訂單時，餐廳和酒吧通常會使用準備工作打印機，\n"
 "            在廚房/酒吧直接列印訂單。"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/action_pad/action_pad.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Preset"
@@ -6104,6 +6777,7 @@ msgstr "價目表"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sale_details_button.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__point_of_sale_ticket_portal_url_display_mode
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6114,20 +6788,20 @@ msgstr "列印"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
 msgid "Print Basic Receipt"
 msgstr "列印基本收據"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
 msgid "Print Full Receipt"
 msgstr "列印完整收據"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/print_popup/print_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Print Receipt"
 msgstr "列印收據"
 
@@ -6167,7 +6841,7 @@ msgstr "列印廚房、酒吧等的訂單."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Print receipts automatically once the payment is registered"
-msgstr "註冊付款後自動列印收據"
+msgstr "登記付款後自動列印收據"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -6181,12 +6855,6 @@ msgid "Printed Product Categories"
 msgstr "列印產品類別"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.js:0
-msgid "Printer"
-msgstr "列印機"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__name
 msgid "Printer Name"
 msgstr "印表機名稱"
@@ -6197,6 +6865,18 @@ msgid "Printer Type"
 msgstr "印表機類型"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Printer cover is open, please close it before printing"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
+msgid "Printer cover is open. Please close it and try again!"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Printers"
 msgstr "印表機"
@@ -6204,12 +6884,7 @@ msgstr "印表機"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.js:0
-msgid "Printing error"
-msgstr "打印錯誤"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+#: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
 msgid "Printing failed"
 msgstr "列印失敗"
 
@@ -6224,12 +6899,6 @@ msgstr "部份瀏覽器不支援列印"
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid "Proceed Anyway"
 msgstr "繼續操作"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_procurement_group
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__procurement_group_id
-msgid "Procurement Group"
-msgstr "補貨組"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -6277,7 +6946,7 @@ msgstr "產品組合項目"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__public_description
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__public_description
 msgid "Product Description"
-msgstr "產品說明"
+msgstr "產品描述"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6330,11 +6999,6 @@ msgstr "產品標籤"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_tmpl_id
 msgid "Product Template"
 msgstr "產品模板"
-
-#. module: point_of_sale
-#: model:ir.model,name:point_of_sale.model_product_template_attribute_exclusion
-msgid "Product Template Attribute Exclusion"
-msgstr "產品模板屬性排除"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_line
@@ -6400,32 +7064,18 @@ msgid "Promotions, Coupons, Gift Card & Loyalty Program"
 msgstr "促銷、優惠券、禮品卡和忠誠度計劃"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.xml:0
-msgid "Proxy Connected"
-msgstr "代理連接"
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "QFPay"
+msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.xml:0
-msgid "Proxy Disconnected"
-msgstr "代理已斷線"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__proxy_ip
-msgid "Proxy IP Address"
-msgstr "代理 IP 地址"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.xml:0
-msgid "Proxy Warning"
-msgstr "代理警告"
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_qfpay
+msgid "QFPay Payment Terminal"
+msgstr "QFPay 付款終端機"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
-#: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.xml:0
 msgid "QR Code"
 msgstr "二維碼"
 
@@ -6436,9 +7086,9 @@ msgstr "二維碼格式"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.js:0
-msgid "QR Code Payment"
-msgstr "二維碼付款"
+#: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
+msgid "QR Payment"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_ticket_portal_url_display_mode__qr_code
@@ -6503,12 +7153,6 @@ msgstr "Razorpay 付款終端機"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Read Weighing Scale"
-msgstr "讀取秤重電子秤"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/tours/point_of_sale.js:0
 msgid "Ready to launch your <b>point of sale</b>?"
 msgstr "準備好啟動您的<b>營業點</b>了嗎?"
@@ -6551,6 +7195,8 @@ msgid "Receipt Number"
 msgstr "收據編號"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Receipt Printer"
@@ -6558,13 +7204,13 @@ msgstr "票據列印機"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.xml:0
 msgid "Receipt and invoice sent successfully"
 msgstr "已成功傳送收據及發票"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.xml:0
 msgid "Receipt sent successfully"
 msgstr "成功傳送收據"
 
@@ -6586,14 +7232,26 @@ msgstr "恢復營業點"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__stock_reference_ids
 msgid "Reference"
 msgstr "編號"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_reference
+msgid "Reference between stock documents"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Refresh Display"
-msgstr "刷新顯示"
+msgid "Refresh"
+msgstr "重新載入"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Refresh customer display"
+msgstr "更新顧客顯示屏"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6604,12 +7262,6 @@ msgstr "刷新顯示"
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Refund"
 msgstr "退款"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "Refund Initiated"
-msgstr "已啟動退款"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refund_orderline_ids
@@ -6678,7 +7330,7 @@ msgstr "退款"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Register"
-msgstr "註冊"
+msgstr "收銀機"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6706,7 +7358,7 @@ msgstr "重新載入所有資料（根據資料量，可能需要較長時間）
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
+#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.js:0
 msgid "Remaining"
 msgstr "差額"
 
@@ -6726,7 +7378,7 @@ msgstr "已移除 %(payment_method)s，付款金額為 %(amount)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Replenishment"
-msgstr "重訂貨規則"
+msgstr "補貨規則"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -6821,12 +7473,18 @@ msgid "Returned"
 msgstr "退回"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__reversed_move_ids
+msgid "Reversal Account Moves"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"Reversal of POS closing entry %(entry)s for order %(order)s from session "
-"%(session)s"
-msgstr "撤回銷售點結算記項 %(entry)s，相關訂單：%(order)s，操作時段：%(session)s"
+"Reversal of POS closing entry %(entry)s for order %(order)s from session %"
+"(session)s"
+msgstr ""
+"撤回銷售點結算記項 %(entry)s，相關訂單：%(order)s，操作時段：%(session)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6871,8 +7529,13 @@ msgid "Review Orders"
 msgstr "檢視訂單"
 
 #. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_pain_au_chocolat_product_template
+msgid "Rich buttery pastry with a dark chocolate center."
+msgstr "香濃牛油酥皮，包住黑朱古力。"
+
+#. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 msgid "Rounding"
 msgstr "四捨五入"
 
@@ -6883,7 +7546,7 @@ msgstr "捨入方式"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Rounding error in payment lines"
 msgstr "付款明细中的捨入錯誤"
 
@@ -6892,6 +7555,11 @@ msgstr "付款明细中的捨入錯誤"
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 msgid "Running a fake tour will create random orders. Use at your own risk."
 msgstr "運行虛假的模擬導覽時，會隨機建立一些訂單。請衡量風險使用。"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_rye_bread_product_template
+msgid "Rye Bread"
+msgstr "黑麥麵包"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_has_sms_error
@@ -6973,27 +7641,9 @@ msgstr "儲存這個頁面並返回來設定這個特性。"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.js:0
-msgid "Scale"
-msgstr "比例"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.js:0
-msgid "Scale error"
-msgstr "磅秤誤差"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Scan"
 msgstr "掃瞄"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "Scan EAN-13"
-msgstr "掃瞄EAN-13"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7008,8 +7658,6 @@ msgid "Scan via Proxy"
 msgstr "通過代理掃瞄"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/navbar/proxy_status/proxy_status.js:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Scanner"
 msgstr "掃瞄儀"
@@ -7073,21 +7721,27 @@ msgid "Select"
 msgstr "選擇"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/date_picker_popup/date_picker_popup.xml:0
+msgid "Select Date:"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Select PoS to start sharing orders"
 msgstr "選擇PoS以開始共享訂單"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid "Select a payment method to validate the order."
-msgstr "選擇付款方式以驗證訂單。"
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid "Select a customer with a valid address."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
-msgid "Select a preset"
-msgstr "選擇預設組合"
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid "Select a payment method to validate the order."
+msgstr "選擇付款方式以驗證訂單。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7147,6 +7801,7 @@ msgstr "銷售產品並稍後交付"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Send"
 msgstr "發送"
@@ -7166,6 +7821,12 @@ msgstr "發送付款請求"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+msgid "Send Receipt"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Send Refund Request"
 msgstr "傳送退款請求"
@@ -7177,7 +7838,7 @@ msgstr "以簡訊發送文字收據"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.xml:0
 msgid "Sending"
 msgstr "正在傳送"
 
@@ -7201,13 +7862,13 @@ msgstr "序列編號"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.js:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.js:0
 msgid "Served by %s"
 msgstr "服務員：%s"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/receipt_header/receipt_header.xml:0
 msgid "Served by:"
 msgstr "服務員："
 
@@ -7254,6 +7915,11 @@ msgstr "營業點日記帳分錄"
 #: model:ir.ui.menu,name:point_of_sale.menu_report_daily_details
 msgid "Session Report"
 msgstr "時段報告"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__statistics_for_current_session
+msgid "Session Statistics"
+msgstr "對話統計"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -7372,6 +8038,21 @@ msgid "Shopping cart"
 msgstr "購物車"
 
 #. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_apple_pie_product_template
+msgid "Shortcrust pastry with a Bramley apple filling."
+msgstr "酥皮餡餅，內有布拉姆利蘋果餡。"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_cherry_pie_product_template
+msgid "Shortcrust pastry with a Morello cherry filling."
+msgstr "酥皮餡餅，內有莫雷洛櫻桃餡。"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Shortcut to skip payment screen"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__show_category_images
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_show_category_images
 msgid "Show Category Images"
@@ -7434,9 +8115,32 @@ msgstr "跳過預覽螢幕"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "Slot"
+msgstr "時段"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.small_shelf_product_template
+msgid "Small Shelf"
+msgstr "小架子"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_cinnamon_roll_product_template
+msgid ""
+"Soft dough with a buttery cinnamon filling, topped with cream cheese icing."
+msgstr "鬆軟麵團，配以奶油肉桂餡料，灑上奶油乳酪糖霜。"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Some Serial/Lot Numbers are missing"
 msgstr "缺漏某些序號/批次號碼"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Some orders are already being invoiced. Please try again later."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7445,7 +8149,9 @@ msgid ""
 "Some orders could not be submitted to the server due to configuration "
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
-msgstr "由於設定錯誤，部分訂單無法提交到伺服器. 您可以退出營業點，但在問題解決之前不要關閉營業點."
+msgstr ""
+"由於設定錯誤，部分訂單無法提交到伺服器. 您可以退出營業點，但在問題解決之前不"
+"要關閉營業點."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7454,13 +8160,26 @@ msgid ""
 "Some orders could not be submitted to the server due to internet connection "
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
-msgstr "由於網際網路連接問題，某些訂單無法提交到伺服器. 您可以退出POS終端，但在問題解決之前不要關閉營業點."
+msgstr ""
+"由於網際網路連接問題，某些訂單無法提交到伺服器. 您可以退出POS終端，但在問題解"
+"決之前不要關閉營業點."
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
+msgid "Some required information is missing."
+msgstr "部份必須提供的資料缺漏。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Some, if not all, post-processing after syncing order failed."
 msgstr "同步訂單失敗後的一些（如果不是全部）後處理。"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
+msgid "Sourdough Loaf"
+msgstr "酸種麵包"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7477,6 +8196,11 @@ msgstr "在POS訂單明細中指定產品批號/序號"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_route_id
 msgid "Spefic route for products delivered later."
 msgstr "稍後發貨的產品的具體路線"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.sport_shoes_product_template
+msgid "Sport Shoes"
+msgstr "運動鞋"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
@@ -7527,21 +8251,15 @@ msgid "Stock Rule"
 msgstr "庫存規則"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Stock input for %s"
-msgstr "%s庫存入貨"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "Stock output for %s"
-msgstr "%s庫存出貨"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
 msgstr "庫存應在結束時更新"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid "Stock variation for %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7577,11 +8295,17 @@ msgstr "Stripe"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_stripe
 msgid "Stripe Payment Terminal"
-msgstr "Stripe支付終端"
+msgstr "Stripe 付款終端機"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.leather_jacket_product_template
+msgid "Stylish leather jacket, durable and fashionable for all occasions."
+msgstr "時尚皮褸，耐用耐看，適宜各種場合。"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 msgid "Subtotal"
 msgstr "小計"
 
@@ -7597,6 +8321,12 @@ msgstr "不帶折扣的小計"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Succesfully printed a test receipt"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.js:0
 msgid "Successfully made a cash %s of %s."
 msgstr "成功存入/提取現金（%s），金額為 %s。"
@@ -7605,6 +8335,37 @@ msgstr "成功存入/提取現金（%s），金額為 %s。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "Sum of subtotals"
 msgstr "小計總計"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.summer_hat_product_template
+msgid "Summer Hat"
+msgstr "遮陽帽"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.summer_hat_product_template
+msgid "Summer hat, ideal for beach days and sunny weather."
+msgstr "遮陽帽，適合在陽光普照的海灘活動時戴上。"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_pecan_pie_product_template
+msgid ""
+"Sweet pie filled with pecans, with a rich, buttery filling and flaky saltt."
+msgstr "甜味餡餅，餡料盛滿山核桃、濃郁奶油醬及鹽花片。"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.t_shirt_slim_product_template
+msgid "T shirt slim"
+msgstr "修身 T 恤"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_t_shirt_pants_product_template
+msgid "T-shirt & Pants Combo"
+msgstr "T 恤及褲子組合"
+
+#. module: point_of_sale
+#: model:product.combo,name:point_of_sale.tshirt_combo
+msgid "T-shirt Combo"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7616,12 +8377,6 @@ msgstr "餐桌管理、餐牌、廚房顯示屏等"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Take out / Delivery / Members"
 msgstr "外賣 / 送遞 / 會員"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
-msgid "Tare"
-msgstr "自重/空載重量"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7654,7 +8409,7 @@ msgstr "稅項組別"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.js:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.js:0
 msgid "Tax ID: %(vatId)s"
 msgstr "稅務編號：%(vatId)s"
 
@@ -7729,9 +8484,21 @@ msgstr "技術資料"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_receipt/cash_move_receipt.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 msgid "Tel:"
 msgstr "電話:"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "Terminal"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos_button.xml:0
+msgid "Test"
+msgstr "測試"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7758,9 +8525,12 @@ msgid "The Availability Until must be set between 00:00 and 24:00"
 msgstr "「可用時間直至」必須設定為 00:00 至 24:00 之間"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_printer__proxy_ip
-msgid "The IP Address or hostname of the Printer's hardware proxy"
-msgstr "印表機硬體代理的IP地址或主機名稱"
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid ""
+"The Epson receipt printer will be used instead of the receipt printer "
+"connected to the IoT Box."
+msgstr "將使用 Epson 收據印表機替换 IoT 收據印表機."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__country_code
@@ -7801,8 +8571,8 @@ msgstr "營業點僅支持“增加捨入明細”捨入策略."
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/controllers/main.py:0
-msgid "The Ticket Number should be at least 14 characters long."
-msgstr "票號長度至少應為14字元。"
+msgid "The Ticket Number should be at least 12 characters long."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7814,13 +8584,13 @@ msgstr "如果未配置現金付款方式，金額不可高於到期應付金額
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid ""
-"The amount of your payment lines must be rounded to validate the transaction.\n"
-"The rounding precision is %s so you should set %s as payment amount instead of %s."
+"The amount of your payment lines must be rounded to validate the "
+"transaction.\n"
+"The rounding precision is %(rounding)s so you should set %(expectedAmount)s "
+"as payment amount instead of %(paidAmount)s."
 msgstr ""
-"付款資料行的金額必須完成捨入，才可驗證交易。\n"
-"捨入精確度為 %s，因此你應該將付款金額設為 %s，而不是 %s。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__card_brand
@@ -7833,6 +8603,18 @@ msgstr "付款卡品牌（例：Visa、美國運通⋯）"
 msgid ""
 "The cash rounding strategy of the point of sale %(pos)s must be: '%(value)s'"
 msgstr "營業點 %(pos)s 的現金舍入策略必須是：“%(value)s”"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+msgid "The company must have a fiscal country set."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "The cutter has a foreign matter, please check the cutter mechanism"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -7852,9 +8634,16 @@ msgstr "預設價格表必須不屬於任何公司,或者屬於門店所屬的�
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"The default tip product is missing. Please manually specify the tip product."
-" (See Tips field.)"
+"The default tip product is missing. Please manually specify the tip product. "
+"(See Tips field.)"
 msgstr "缺漏預設小費產品,請手動指定小費產品。(見小費欄位.）"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid ""
+"The device is not connected, please check the printer power / connection"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7878,17 +8667,31 @@ msgstr "必填欄位 %s."
 msgid ""
 "The fiscal position used in the original order is not loaded. Make sure it "
 "is loaded by adding it in the pos configuration."
-msgstr "原始訂單中使用的財務狀況未載入,請確保通過在 POS 配置中添加該財務狀況來加載它。"
+msgstr ""
+"原始訂單中使用的財務狀況未載入,請確保通過在 POS 配置中添加該財務狀況來加載"
+"它。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
+msgid ""
+"The following error code was given by the printer: %s \n"
+"To find more details on the error reason, please search online for: Epson "
+"ePoS error %s "
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid ""
-"The following refund orders can't be part of a consolidated invoice because they refunded invoiced orders. Each refund order should be handled separately.\n"
+"The following refund orders can't be part of a consolidated invoice because "
+"they refunded invoiced orders. Each refund order should be handled "
+"separately.\n"
 "\n"
 "%s"
 msgstr ""
-"以下退款訂單不可成為合併發票的一部份，因為它們已就開立了發票的訂單完成退款。每張退款訂單應獨立處理。\n"
+"以下退款訂單不可成為合併發票的一部份，因為它們已就開立了發票的訂單完成退款。"
+"每張退款訂單應獨立處理。\n"
 "\n"
 "%s"
 
@@ -7901,8 +8704,14 @@ msgstr "免費項目數量必須小於或等於最大數量。"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/product_combo.py:0
-msgid "The free quantity of a combo must be greater or equal to 0."
-msgstr "組合的免費項目數量必須大於或等於 0。"
+msgid "The free quantity of a combo must be greater or equal to 1."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/product_combo.py:0
+msgid "The free quantity of an upsell combo must be equal to 0."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -7916,8 +8725,8 @@ msgstr "將自動檢測是否留空硬體代理的主機名或 IP 地址."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid ""
-"The invoice journal must be in the same currency as the Sales Journal or the"
-" company currency if that is not set."
+"The invoice journal must be in the same currency as the Sales Journal or the "
+"company currency if that is not set."
 msgstr "在未設定的情況下，憑單日記帳所使用幣別必須與銷售日記帳或公司幣別一致。"
 
 #. module: point_of_sale
@@ -7946,8 +8755,8 @@ msgstr "組合的最大數量必須大於或等於 1。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid ""
-"The money counted doesn't match what we expected. Want to log the difference"
-" for the books?"
+"The money counted doesn't match what we expected. Want to log the difference "
+"for the books?"
 msgstr "點算所得的現金不符預期，差異要記入賬簿嗎？"
 
 #. module: point_of_sale
@@ -7977,6 +8786,20 @@ msgstr "訂單送貨/取貨日期是在未來，你無法取消它。"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"The order has been modified on another device. If you have modified existing "
+"order lines, check that your changes have not been overwritten.\n"
+"\n"
+"The order will be sent to the server with the last changes made on this "
+"device."
+msgstr ""
+"其他裝置已修改此訂單。如果你已修改現有的資料行，請檢查你的變更有否被覆蓋。\n"
+"\n"
+"訂單將會連同此裝置所作的最新修改，一併發送至伺服器。"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/hooks/hooks.js:0
 msgid ""
 "The order has been synchronized earlier. Please make the invoice from the "
@@ -7988,6 +8811,12 @@ msgstr "訂單已提前同步。 請在後台為訂單開立憑單: "
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "The paid amount is different from the total amount of the order."
 msgstr "支付金額與訂單總金額不同。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "The paper is empty, please load paper into the printer"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -8007,9 +8836,10 @@ msgstr "營業點 %s 的付款方式必須屬於其公司。"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid ""
 "The point of sale will only display products which are within one of the "
-"selected category trees. If no category is specified, all available products"
-" will be shown"
-msgstr "營業點將僅顯示所選類別樹之一內的產品。 如果未指定類別，將顯示所有可用產品"
+"selected category trees. If no category is specified, all available products "
+"will be shown"
+msgstr ""
+"營業點將僅顯示所選類別樹之一內的產品。 如果未指定類別，將顯示所有可用產品"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
@@ -8028,9 +8858,15 @@ msgstr "此銷售點的預先定義備註。"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__pricelist_id
 msgid ""
-"The pricelist used if no customer is selected or if the customer has no Sale"
-" Pricelist configured if any."
+"The pricelist used if no customer is selected or if the customer has no Sale "
+"Pricelist configured if any."
 msgstr "如果未選擇客戶或客戶未配置銷售價格表（如有）,則使用該價格表。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/epson_printer.js:0
+msgid "The printer is not reachable."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_after
@@ -8079,13 +8915,13 @@ msgstr "要求退款的數量大於訂單數量。請求 %s，而只能退 %s。
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid ""
-"The requested quantity to be refunded is higher than the refundable "
-"quantity."
+"The requested quantity to be refunded is higher than the refundable quantity."
 msgstr "要求退款的數量，高於可退款的數量。"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "The selected customer needs an address."
 msgstr "選定的客戶需要一個地址"
 
@@ -8110,7 +8946,9 @@ msgid ""
 "The session has been already closed by another User. All sales completed in "
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
-msgstr "時段已被另一用戶關閉,在此期間完成的所有銷售已保存在救援時段中，可以隨時查看，並從銷售點Dashboard過賬至會計應用程式。"
+msgstr ""
+"時段已被另一用戶關閉,在此期間完成的所有銷售已保存在救援時段中，可以隨時查看，"
+"並從銷售點Dashboard過賬至會計應用程式。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -8122,8 +8960,7 @@ msgstr "營業點開了很長一段時間。請考慮關閉。"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid ""
-"The session is being closed by another user. The page will be reloaded."
+msgid "The session is being closed by another user. The page will be reloaded."
 msgstr "此操作時段正由另一使用者關閉。頁面將會重新載入。"
 
 #. module: point_of_sale
@@ -8158,29 +8995,54 @@ msgstr "交易由 Mercado Pago 在終端機上處理。"
 msgid ""
 "The transactions are processed by Mercado Pago. Set your Mercado Pago "
 "credentials on the related payment method."
-msgstr "交易由 Mercado Pago 處理。請在相關付款方式上，設定你的 Mercado Pago 登入資訊。"
+msgstr ""
+"交易由 Mercado Pago 處理。請在相關付款方式上，設定你的 Mercado Pago 登入資"
+"訊。"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "The transactions are processed by Pine Labs on the terminal."
+msgstr "交易由 Pine Labs 在終端機上處理。"
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pine_labs
+msgid ""
+"The transactions are processed by Pine Labs. Set your Pine Labs credentials "
+"on the related payment method."
+msgstr "交易由 Pine Labs 處理。請在相關付款方式上，設定你的 Pine Labs 憑證。"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "The transactions are processed by QFPay on the terminal."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_qfpay
+msgid ""
+"The transactions are processed by QFPay. Set your QFPay credentials on the "
+"related payment method."
+msgstr "交易由 QFPay 處理。請在相關的付款方式中，設定你的 QFPay 憑證。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_razorpay
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"The transactions are processed by Razorpay. Set your Razorpay credentials on"
-" the related payment method."
+"The transactions are processed by Razorpay. Set your Razorpay credentials on "
+"the related payment method."
 msgstr "交易由 Razorpay 處理。請在相關付款方式上，設定你的 Razorpay 登入資訊。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_stripe
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"The transactions are processed by Stripe. Set your Stripe credentials on the"
-" related payment method."
+"The transactions are processed by Stripe. Set your Stripe credentials on the "
+"related payment method."
 msgstr "交易由Stripe處理。在相關的付款方式上設置您的Stripe憑證。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_viva_com
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid ""
-"The transactions are processed by Viva.com on terminal or tap on phone."
+msgid "The transactions are processed by Viva.com on terminal or tap on phone."
 msgstr "交易會在終端機上，或透過輕按電話，由 Viva.com 處理。"
 
 #. module: point_of_sale
@@ -8203,7 +9065,8 @@ msgstr "該分類下沒有產品."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
-"There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
+"There are still orders in draft state in the session. Pay or cancel the "
+"following orders to validate the session:\n"
 "%s"
 msgstr ""
 "營業點中仍有訂單處於草稿狀態. 支付或取消以下訂單以驗證營業點:\n"
@@ -8219,6 +9082,13 @@ msgstr "過帳金額與訂單金額之間存在差異，這可能是由於稅收
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
+msgid "There is already a cash payment line."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "There is already an electronic payment in progress."
 msgstr "已經有電子支付正在進行中."
@@ -8233,15 +9103,14 @@ msgstr "公司沒有設定會計科目表. 請轉到會計設定以安裝會計�
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid ""
-"There is no cash payment method available in this point of sale to handle the change.\n"
+"There is no cash payment method available in this point of sale to handle "
+"the change.\n"
 "\n"
-" Please pay the exact amount or add a cash payment method in the point of sale configuration"
+" Please pay the exact amount or add a cash payment method in the point of "
+"sale settings."
 msgstr ""
-"POS上沒有可用的現金支付方式來處理找零。\n"
-"\n"
-"請支付準確的金額或者在PoS設定裡增加現金支付方式"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8261,23 +9130,31 @@ msgstr "本營業點未設收銀機"
 msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
-msgstr "所選產品沒有序號/批次號碼，而且不允許在 POS 銷售點管理應用程式建立它們。"
+msgstr ""
+"所選產品沒有序號/批次號碼，而且不允許在 POS 銷售點管理應用程式建立它們。"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "There must be at least one product in your order before it can be validated "
 "and invoiced."
 msgstr "您的訂單中必須至少有一種產品，才能對其進行驗證和開立憑單。"
 
 #. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__fast_payment_method_ids
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_fast_payment_method_ids
+msgid "These payment methods will be available for fast payment"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/barcode_reader_service.js:0
 msgid ""
-"This barcode is not compatible with the GS1 standard. Consider configuring a"
-" fallback barcode parser from the PoS settings."
-msgstr "此條碼不兼容 GS1 標準。你可考慮在 PoS 設定中，配置一個後備的條碼解析器。"
+"This barcode is not compatible with the GS1 standard. Consider configuring a "
+"fallback barcode parser from the PoS settings."
+msgstr ""
+"此條碼不兼容 GS1 標準。你可考慮在 PoS 設定中，配置一個後備的條碼解析器。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8293,12 +9170,14 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_amount_authorized_diff
 msgid ""
-"This field depicts the maximum difference allowed between the ending balance"
-" and the theoretical cash when closing a session, for non-POS managers. If "
+"This field depicts the maximum difference allowed between the ending balance "
+"and the theoretical cash when closing a session, for non-POS managers. If "
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
-"對於非POS經理，在關閉營業點時此欄位描述期末餘額和理論現金之間所允許的最大區別。如達到最大時，使用者在關閉營業點時將收到一個錯誤訊息需要使用者聯繫其經理。"
+"對於非POS經理，在關閉營業點時此欄位描述期末餘額和理論現金之間所允許的最大區"
+"別。如達到最大時，使用者在關閉營業點時將收到一個錯誤訊息需要使用者聯繫其經"
+"理。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -8321,10 +9200,19 @@ msgid "This invoice has been created from the point of sale session:%s"
 msgstr "此發票由以下銷售點操作時段建立：%s"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid ""
+"This invoice is linked to a POS Order, resetting it to draft prevents "
+"closing the session. You should rather refund the order or create a credit "
+"note."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
 msgid ""
-"This is useful for restaurants with onsite and take-away services that imply"
-" specific tax rates."
+"This is useful for restaurants with onsite and take-away services that imply "
+"specific tax rates."
 msgstr "這對於提供具有特定稅率的上門服務和外賣服務的餐廳十分有用。"
 
 #. module: point_of_sale
@@ -8341,8 +9229,8 @@ msgid ""
 "This journal is associated with payment method %(payment_method)s that is "
 "being used by order %(pos_order)s in the active pos session %(pos_session)s"
 msgstr ""
-"此日記賬已與付款方式 %(payment_method)s 相關聯，該付款方式由訂單 %(pos_order)s "
-"所使用，相關的生效銷售點操作時段：%(pos_session)s"
+"此日記賬已與付款方式 %(payment_method)s 相關聯，該付款方式由訂單 %"
+"(pos_order)s 所使用，相關的生效銷售點操作時段：%(pos_session)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8362,23 +9250,30 @@ msgstr "此選項或選項組合不可用"
 msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
-msgstr "此訂單已有 %s 的退款項目。我們無法更改與其關聯的客戶。為新客戶建立新訂單。"
+msgstr ""
+"此訂單已有 %s 的退款項目。我們無法更改與其關聯的客戶。為新客戶建立新訂單。"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
-"This order has already been paid. You cannot set it back to draft or edit "
-"it."
+"This order has already been paid. You cannot set it back to draft or edit it."
 msgstr "此訂單已經完成付款，不可編輯或還原為草稿。"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.js:0
 msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr "這個訂單還沒有同步到服務器。請確認它已被同步,然後再試。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.js:0
+msgid ""
+"This orderline has already been sent to the kitchen and cannot be edited."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -8391,21 +9286,6 @@ msgstr "此付款方式未配置至可以產生二維碼。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This product is used as reference on customer receipts."
 msgstr "本產品用作客戶收據之編碼。"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_line_id
-msgid ""
-"This sequence is automatically created by Odoo but you can change it to "
-"customize the reference numbers of your orders lines."
-msgstr "此序列由 Odoo 自動建立，但您可以進行更改以自訂訂單明細的編碼。"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_id
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_sequence_id
-msgid ""
-"This sequence is automatically created by Odoo but you can change it to "
-"customize the reference numbers of your orders."
-msgstr "這個序列號是由Odoo自動產生的，不過您可以把它改為自己定義訂單的序列號。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8425,9 +9305,9 @@ msgstr "這些設置對所有銷售點通用。"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/receipt_header/receipt_header.xml:0
 msgid "Ticket"
-msgstr "入場券"
+msgstr "訂單"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__ticket_code
@@ -8438,6 +9318,24 @@ msgstr "票據代碼"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "Ticket Nr"
 msgstr "票據編號"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_tiger_white_loaf_product_template
+msgid ""
+"Tiger bloomer. Baked for a soft inside, with its distinctive savoury "
+"crackled crust."
+msgstr "虎皮裂紋麵包，烘烤後包心鬆軟，外皮有獨特裂紋，香脆可口。"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_tiger_white_loaf_product_template
+msgid "Tiger white loaf"
+msgstr "虎紋白麵包"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
+msgid "Timeout occured, please try again"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8475,7 +9373,7 @@ msgstr "待開立發票"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 msgid "To Pay"
 msgstr "待支付"
 
@@ -8498,19 +9396,21 @@ msgstr "用秤秤重"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch "
+"a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and "
+"mayo go flying everywhere!"
 msgstr ""
 "若要刪除產品，請確保所有銷售點操作時段都已關閉。\n"
 "\n"
-"刪除在操作時段中仍然可用的產品，就像試圖從顧客手中，搶走咬了一半的漢堡包一樣，會引起大混亂！"
+"刪除在操作時段中仍然可用的產品，就像試圖從顧客手中，搶走咬了一半的漢堡包一"
+"樣，會引起大混亂！"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid ""
-"To ensure due balance follow-up, generate an invoice or download the "
-"accounting application. "
-msgstr "為確保到期結餘獲得跟進，請產生發票，或下載會計應用程式。"
+"To enable invoice creation, please add a journal for it in the settings."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8539,9 +9439,10 @@ msgstr "今天"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/order_display/order_display.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/money_details_popup/money_details_popup.xml:0
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Total"
 msgstr "總計"
 
@@ -8632,6 +9533,13 @@ msgid "Track orders edits"
 msgstr "追蹤訂單修訂"
 
 #. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_odoo_sneakers_product_template
+msgid ""
+"Trainers in cotton canvas with a padded top edge, tongue and lacing at the "
+"front."
+msgstr "棉質帆布運動鞋，頂部邊緣有襯墊，鞋舌及鞋帶位於前方。"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_transaction
 msgid "Transaction"
 msgstr "交易"
@@ -8695,7 +9603,8 @@ msgstr "網址"
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "Unable to close and validate the session.\n"
-"Please set corresponding tax account in each repartition line of the following taxes: \n"
+"Please set corresponding tax account in each repartition line of the "
+"following taxes: \n"
 "%s"
 msgstr ""
 "無法關閉和驗證營業點。\n"
@@ -8706,7 +9615,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 msgid ""
-"Unable to create consolidated invoice/s because the following orders can't be invoiced.\n"
+"Unable to create consolidated invoice/s because the following orders can't "
+"be invoiced.\n"
 "\n"
 "%s"
 msgstr ""
@@ -8781,9 +9691,9 @@ msgstr "未知錯誤"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_service.js:0
-msgid "Unnamed Product"
-msgstr "未命名產品"
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Unpaid"
+msgstr "未付"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8793,7 +9703,7 @@ msgstr "不支援的條碼格式"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
+#: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.js:0
 msgid "Unsynced order"
 msgstr "未同步的訂單"
 
@@ -8811,6 +9721,11 @@ msgstr "重新建立連線之前,Odoo銷售點將以有限功能運行。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Update quantities in stock"
 msgstr "更新庫存數量"
+
+#. module: point_of_sale
+#: model:pos.category,name:point_of_sale.pos_category_upper
+msgid "Upper body"
+msgstr "上身"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
@@ -8835,6 +9750,11 @@ msgid "Use a pricelist."
 msgstr "使用價目表。"
 
 #. module: point_of_sale
+#: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__epson_epos
+msgid "Use an Epson printer"
+msgstr "使用 Epson 印表機"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use automatic taxes mapping with Avatax"
 msgstr "向 Avatax 使用自動稅項配對"
@@ -8854,13 +9774,6 @@ msgstr "使用條碼掃描產品、客戶卡等."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
 msgstr "使用財務規則按訂單獲取不同稅項"
-
-#. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_session__order_seq_id
-msgid ""
-"Used to generate the OOOO part of the pos_reference field of the pos.order "
-"model."
-msgstr "用於產生 pos.order 模型 pos_reference 欄位的 OOOO 部份。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8894,7 +9807,7 @@ msgstr "UUID"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/receipt_header/receipt_header.xml:0
 msgid "VAT"
 msgstr "增值稅"
 
@@ -8902,7 +9815,7 @@ msgstr "增值稅"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "VAT:"
-msgstr "稅金:"
+msgstr "稅項："
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8914,6 +9827,18 @@ msgstr "核實"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
 msgid "Value"
 msgstr "值"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.product_green_hood_product_template
+msgid ""
+"Versatile cotton hoodie with an adjustable drawstring hood and front zipper "
+"closure."
+msgstr "多用途棉質連帽衫，附可調式拉繩兜帽及前方拉鍊開合。"
+
+#. module: point_of_sale
+#: model:product.template,description_sale:point_of_sale.jean_jacket_product_template
+msgid "Vintage jean jacket, a timeless piece for any casual outfit."
+msgstr "復古牛仔外套，適合任何休閒打扮的經典服飾。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
@@ -8937,6 +9862,11 @@ msgid "Waiting for card"
 msgstr "等待卡"
 
 #. module: point_of_sale
+#: model:product.template,name:point_of_sale.wall_shelf_product_template
+msgid "Wall Shelf Unit"
+msgstr "牆架單元"
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__warehouse_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8949,9 +9879,7 @@ msgid "Warehouse (PoS)"
 msgstr "倉庫(PoS)"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
 msgid "Warning"
@@ -8965,12 +9893,10 @@ msgid ""
 msgstr "警告：支付的金額高於總金額。差額：%s"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
-msgid ""
-"Warning: Your browser doesn't support IndexedDB. The data won't be saved. "
-"Please use a modern browser."
-msgstr "警告：你的瀏覽器不支援 IndexedDB，資料不會被儲存。請使用較新的瀏覽器。"
+#. odoo-python
+#: code:addons/point_of_sale/models/account_move.py:0
+msgid "Warning: Invoice Reset Risk"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
@@ -9018,9 +9944,26 @@ msgstr "停用後，只有PoS經理可在產品資料中查看產品的利潤和
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
 "Whenever you close a session, one entry is generated in the following "
-"accounting journal for all the orders not invoiced. Invoices are recorded in"
-" accounting separately."
-msgstr "無論何時關閉營業點，都會在所有未開立憑單訂單的以下會計日記帳中產生一個分錄。應收憑單在會計中單獨記錄。"
+"accounting journal for all the orders not invoiced. Invoices are recorded in "
+"accounting separately."
+msgstr ""
+"無論何時關閉營業點，都會在所有未開立憑單訂單的以下會計日記帳中產生一個分錄。"
+"應收憑單在會計中單獨記錄。"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.whiteboard_product_template
+msgid "Whiteboard"
+msgstr "白板"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.whiteboard_pen_product_template
+msgid "Whiteboard Pen"
+msgstr "白板筆"
+
+#. module: point_of_sale
+#: model:product.template,name:point_of_sale.product_wholemeal_loaf_product_template
+msgid "Wholemeal loaf"
+msgstr "全麥麵包"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9032,6 +9975,12 @@ msgstr "以一個"
 #: model:ir.model,name:point_of_sale.model_resource_calendar_attendance
 msgid "Work Detail"
 msgstr "工作詳情"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
+msgid "Would you like to continue without printing or retry?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9059,11 +10008,18 @@ msgstr "當使用的 pos營業點已經打開時，您不能更改現金捨入�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
-"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
+"You are trying to sell products with serial/lot numbers, but some of them "
+"are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
 "您正在嘗試銷售帶有序列號/批號的產品，但其中一些未設置。\n"
 "是否仍要繼續？"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
+msgid "You can not change the %s of the refund order."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9101,15 +10057,15 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
-"您不能：從後端界面創建 pos 訂單，或取消設置價目表，或使用表單工具在 python 測試中創建 "
-"pos.order，或者在工作室中編輯表單視圖（如果不存在 PoS訂單）"
+"您不能：從後端界面創建 pos 訂單，或取消設置價目表，或使用表單工具在 python 測"
+"試中創建 pos.order，或者在工作室中編輯表單視圖（如果不存在 PoS訂單）"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/stock_picking.py:0
 msgid ""
-"You cannot archive '%(picking_type)s' as it is used by POS configuration "
-"'%(config)s'."
+"You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
+"(config)s'."
 msgstr "不可封存 %(picking_type)s，因已被銷售點配置「%(config)s」使用。"
 
 #. module: point_of_sale
@@ -9149,6 +10105,14 @@ msgstr "你不可刪除未連結至此操作時段的現金轉移。"
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/res_partner.py:0
+msgid ""
+"You cannot delete a customer that has point of sales orders. You can archive "
+"it instead."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_category.py:0
 msgid ""
 "You cannot delete a point of sale category while a session is still opened."
@@ -9171,20 +10135,14 @@ msgstr "你不可刪除銷售點配置所使用的捨入方式。"
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/ir_sequence.py:0
-msgid "You cannot delete a sequence used in an active session: %s"
-msgstr "不可刪除正在生效操作時段中使用的序號：%s"
+msgid "You cannot delete a sequence used in an active POS config: %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "You cannot edit a payment for a posted order."
 msgstr "您無法編輯已過賬訂單的付款。"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_order.py:0
-msgid "You cannot invoice orders belonging to different companies."
-msgstr "不可為屬於不同公司的訂單開立發票。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9234,7 +10192,9 @@ msgstr "你沒有獲取銷售點結算控制數據的存取權限."
 msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
-msgstr "你已為 %(payment_method)s 付款方式啟用「識別客戶」選項，但訂單 %(order)s 內沒有客戶。"
+msgstr ""
+"你已為 %(payment_method)s 付款方式啟用「識別客戶」選項，但訂單 %(order)s 內沒"
+"有客戶。"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -9269,13 +10229,6 @@ msgstr "你必須選擇一種 QR 二維碼方式，以為此付款方式產生�
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "You need a loss and profit account on your cash journal."
 msgstr "您的現金日記帳上需要一個損益帳戶."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
-msgid ""
-"You need to select the customer before you can invoice or ship an order."
-msgstr "您需要先選擇客戶，然後才能為訂單開立憑單或發貨。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9316,20 +10269,6 @@ msgstr ""
 "                               請確保"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
-msgid ""
-"Your database is not registered.\n"
-"Buy a subscription, or register your subscription code, then retry.\n"
-"\n"
-"You can still download the receipt and print it manually."
-msgstr ""
-"你的資料庫尚未註冊。\n"
-"請購買訂閱計劃，或註冊你的訂閱碼，然後再試。\n"
-"\n"
-"你仍可下載收據並手動列印。"
-
-#. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
 msgid "Your {{ object.config_id.name }} receipt"
 msgstr "你的 {{ object.config_id.name }} 收據"
@@ -9344,7 +10283,7 @@ msgstr "及"
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "available,"
-msgstr "可用,"
+msgstr "可用，"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -9382,7 +10321,6 @@ msgstr "例：1234567890"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "e.g. Cash"
 msgstr "例如 現金"
 
@@ -9395,6 +10333,11 @@ msgstr "例如.芝士漢堡"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "e.g. Company Address, Website"
 msgstr "例如公司地址、網站"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
+msgid "e.g. Dine in"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -9424,7 +10367,7 @@ msgstr "電子郵件"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.xml:0
 msgid "failed. Please try again"
 msgstr "已失敗。請再試一次"
 
@@ -9440,7 +10383,7 @@ msgstr "給予"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
+#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "for an order of"
 msgstr "一個訂單"
 
@@ -9452,8 +10395,6 @@ msgid "forecasted"
 msgstr "預測"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_combo_view_form
 msgid "free"
 msgstr "免費"
@@ -9480,7 +10421,7 @@ msgstr "網誌："
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
+#: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.xml:0
 msgid "in progress"
 msgstr "進行中"
 
@@ -9489,6 +10430,12 @@ msgstr "進行中"
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "in this category."
 msgstr "在此類別中。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
+msgid "included"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9509,13 +10456,19 @@ msgid "minutes"
 msgstr "分鐘"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
+msgid "more)"
+msgstr ""
+
+#. module: point_of_sale
 #: model:mail.activity.type,summary:point_of_sale.mail_activity_old_session
 msgid "note"
 msgstr "注意"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#: code:addons/point_of_sale/static/src/app/components/receipt/order_receipt.xml:0
 msgid "on"
 msgstr "於"
 
@@ -9524,7 +10477,7 @@ msgstr "於"
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "open orders for the next few days."
-msgstr "未來幾天的開放訂單。"
+msgstr "張待處理訂單，需要在未來幾天處理。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -9535,7 +10488,7 @@ msgstr "訂單每"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "orders:"
-msgstr "訂單："
+msgstr "張訂單："
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -9560,16 +10513,10 @@ msgid "return"
 msgstr "退回"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
-msgid "the invoice"
-msgstr "該發票"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
-msgid "the receipt"
-msgstr "該收據"
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid "terminal"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

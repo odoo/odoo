@@ -1,35 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_import_module
-# 
+# * base_import_module
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-11-13 14:24+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/base_import_module/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: base_import_module
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid ""
 "\n"
-"You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
-"If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
+"You may need the Enterprise version to install the data module. Please visit "
+"https://www.odoo.com/pricing-plan for more information.\n"
+"If you need Website themes, it can be downloaded from https://github.com/"
+"odoo/design-themes.\n"
 msgstr ""
 "\n"
-"您可能需要企業版才可安裝數據模組。請瀏覽 https://www.odoo.com/pricing-plan 獲取更多資訊。\n"
+"您可能需要企業版才可安裝數據模組。請瀏覽 https://www.odoo.com/pricing-plan 獲"
+"取更多資訊。\n"
 "如果需要網站主題，可到 https://github.com/odoo/design-themes 下載。\n"
 
 #. module: base_import_module
@@ -87,6 +94,7 @@ msgstr "建立於"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
 #: model:ir.model.fields,field_description:base_import_module.field_base_module_uninstall__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_ir_http__display_name
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__display_name
 msgid "Display Name"
@@ -119,13 +127,18 @@ msgstr "強制初始化"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
-msgid ""
-"Force init mode even if installed. (will update `noupdate='1'` records)"
+msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr "即使已經安裝也強制初始化。（將更新 `noupdate='1'` 記錄）"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 路由"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
 #: model:ir.model.fields,field_description:base_import_module.field_base_module_uninstall__id
+#: model:ir.model.fields,field_description:base_import_module.field_ir_http__id
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__id
 #: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__id
 msgid "ID"
@@ -195,7 +208,9 @@ msgstr "載入範例資料"
 msgid ""
 "Load demo data to test the industry's features with sample records. Do not "
 "load them if this is your production database."
-msgstr "載入模擬數據，以使用範例記錄測試行業功能。如果這是正式運行資料庫，請勿載入模擬數據。"
+msgstr ""
+"載入模擬數據，以使用範例記錄測試行業功能。如果這是正式運行資料庫，請勿載入模"
+"擬數據。"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -241,8 +256,10 @@ msgstr "在模組 %(modules)s 中，找不到明確指示。未能匯入 zip 檔
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Note: you can only import data modules (.xml files and static assets)"
-msgstr "注意：您只能匯入資料模組（.xml 檔和靜態資產）"
+msgid ""
+"Note: you can only import data modules (.xml files, i18n files and static "
+"assets)"
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
@@ -282,11 +299,17 @@ msgstr "Studio自訂需要Odoo Studio模組。"
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid ""
-"The installation of the data module would fail as the following dependencies"
-" can't be found in the addons-path:\n"
+"The assets path in the manifest of imported module '%(module_name)s' cannot "
+"contain glob wildcards (e.g., *, **)."
 msgstr ""
-"數據模組的安裝會失敗，因為在 addons-path 中找不到以下依賴項：\n"
-"\n"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"The installation of the data module would fail as the following dependencies "
+"can't be found in the addons-path:\n"
+msgstr "數據模組的安裝會失敗，因為在 addons-path 中找不到以下依賴項：\n"
 
 #. module: base_import_module
 #. odoo-python
