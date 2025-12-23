@@ -8,7 +8,7 @@ import * as NumberPopup from "@point_of_sale/../tests/tours/utils/number_popup_u
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/utils/selection_popup_util";
 import { registry } from "@web/core/registry";
-import { negate } from "@point_of_sale/../tests/tours/utils/common";
+import { negate, scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
 
 registry.category("web_tour.tours").add("PosHrTour", {
     steps: () =>
@@ -306,5 +306,15 @@ registry.category("web_tour.tours").add("test_maximum_closing_difference", {
             Chrome.hasBtn("Proceed anyway"),
             Chrome.clickBtn("Proceed anyway"),
             PosHr.loginScreenIsShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_scan_employee_barcode_with_pos_hr_disabled", {
+    steps: () =>
+        [
+            // scan a barcode with 041 as prefix for cashiers
+            scan_barcode("041123"),
+            Chrome.clickBtn("Open Register"),
+            ProductScreen.isShown(),
         ].flat(),
 });
