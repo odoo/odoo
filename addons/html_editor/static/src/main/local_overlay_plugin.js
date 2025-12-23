@@ -15,6 +15,7 @@ export class LocalOverlayPlugin extends Plugin {
 
     setup() {
         this.localOverlayContainer = this.config.localOverlayContainers?.ref.el;
+        this.localOverlays = new Set();
     }
 
     /**
@@ -31,12 +32,16 @@ export class LocalOverlayPlugin extends Plugin {
         container.setAttribute("data-oe-local-overlay-id", containerId);
         if (this.localOverlayContainer) {
             this.localOverlayContainer.append(container);
+            this.localOverlays.add(container);
         }
         return container;
     }
 
     destroy() {
-        this.localOverlayContainer?.replaceChildren();
+        for (const container of this.localOverlays) {
+            container.remove();
+        }
+        this.localOverlays.clear();
         super.destroy();
     }
 }
