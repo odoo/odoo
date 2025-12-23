@@ -41,6 +41,7 @@ class ProductProduct(models.Model):
         if different_currency:
             for product in data:
                 product['lst_price'] = self.env.company.currency_id._convert(product['lst_price'], config.currency_id, self.env.company, fields.Date.today())
+                product['standard_price'] = self.env.company.currency_id._convert(product['standard_price'], config.currency_id, self.env.company, fields.Date.today())
         return super()._post_read_pos_data(data)
 
     def _can_return_content(self, field_name=None, access_token=None):
