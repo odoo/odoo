@@ -73,16 +73,15 @@ class Certificate(models.Model):
         cert_private, cert_public = self._decode_certificate()
         public_key_numbers = cert_public.public_key().public_numbers()
 
-        rfc4514_attr = dict(element.rfc4514_string().split("=", 1) for element in cert_public.issuer.rdns)
-
-        # The 'Organizational Unit' field is optional
-        issuer = f"CN={rfc4514_attr.pop('CN')}, "
-        if 'OU' in rfc4514_attr:
-            issuer += f"OU={rfc4514_attr.pop('OU')}, "
-        issuer += f"O={rfc4514_attr.pop('O')}, C={rfc4514_attr.pop('C')}"
-
-        # Add remaining certificate fields (not all certificates have other fields)
-        issuer += "".join([f", {key}={value}" for key, value in rfc4514_attr.items()])
+        issuer_key_priority = {
+            'CN': 0,
+            'OU': 1,
+            'O': 2,
+            'C': 3,
+        }
+        items = [rdn.rfc4514_string() for rdn in cert_public.issuer.rdns]
+        sorted_items = sorted(items, key=lambda item_string: issuer_key_priority.get(item_string.split('=', 1)[0], 99))
+        issuer = ", ".join(sorted_items)
 
         # Identifiers
         document_id = f"Document-{sha1(etree.tostring(edi_data)).hexdigest()}"
