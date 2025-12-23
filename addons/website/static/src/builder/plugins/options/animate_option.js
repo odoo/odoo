@@ -10,7 +10,7 @@ export class AnimateOption extends BaseOptionComponent {
     static dependencies = ["animateOption"];
     static selector = ".o_animable, section .row > div, img, .fa, .btn";
     static exclude =
-        "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize";
+        "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_website_form_submit";
     static props = {
         dropdownClass: { type: String, optional: true, default: "o-hb-select-dropdown" },
         requireAnimation: { type: Boolean, optional: true },
