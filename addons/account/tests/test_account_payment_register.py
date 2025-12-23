@@ -2036,3 +2036,24 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
         self.env.company.parent_ids.invalidate_recordset()
         payment = wizard._create_payments()
         self.assertTrue(payment)
+
+    def test_payment_register_wizard_without_receivable_line_due_date(self):
+        """Test creating the payment register wizard when a receivable line has no due date."""
+        invoice = self.out_invoice_1
+        invoice.button_draft()
+        invoice.invoice_payment_term_id = self.term_0_5_10_days
+        receivable_lines = invoice.line_ids.filtered(lambda x: x.account_type == 'asset_receivable')
+        self.assertEqual(len(receivable_lines), 3)
+
+        receivable_lines[0].date_maturity = False
+        invoice.action_post()
+
+        wizard = Form(self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=invoice.ids))
+
+        self.assertEqual(wizard.amount, invoice.amount_residual)
+        self.assertRecordValues(receivable_lines, [
+            {'amount_currency': 100, 'date_maturity': False},
+            {'amount_currency': 300, 'date_maturity': fields.Date.from_string('2017-01-06')},
+            {'amount_currency': 600, 'date_maturity': fields.Date.from_string('2017-01-11')},
+        ])
