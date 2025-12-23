@@ -50,6 +50,7 @@ export class FontFamilyPlugin extends Plugin {
                         });
                         this.fontFamily.displayName = item.nameShort;
                     },
+                    focusEditable: () => this.dependencies.selection.focusEditable(),
                 },
                 isAvailable: (selection) =>
                     isHtmlContentSupported(selection) && (this.config.allowFontFamily ?? true),

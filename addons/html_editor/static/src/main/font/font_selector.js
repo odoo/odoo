@@ -12,6 +12,7 @@ export class FontSelector extends Component {
         getItems: Function,
         getDisplay: Function,
         onSelected: Function,
+        focusEditable: { Type: Function, optional: true },
     };
     static components = { Dropdown, DropdownItem };
 
@@ -24,5 +25,7 @@ export class FontSelector extends Component {
 
     onSelected(item) {
         this.props.onSelected(item);
+        // Delay focusing the editable until the dropdown has settled.
+        setTimeout(() => this.props.focusEditable());
     }
 }

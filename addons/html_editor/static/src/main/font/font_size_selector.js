@@ -32,6 +32,7 @@ export class FontSizeSelector extends Component {
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.iframeContentRef = useRef("iframeContent");
         this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 200);
+        this.fontSizeSelector = useRef("fontSizeSelector");
 
         onMounted(() => {
             const iframeEl = this.iframeContentRef.el;
@@ -75,6 +76,7 @@ export class FontSizeSelector extends Component {
                 this.fontSizeInput.addEventListener("click", () => {
                     if (!this.dropdown.isOpen) {
                         this.dropdown.open();
+                        this.fontSizeSelector.el?.focus();
                     }
                 });
                 this.fontSizeInput.addEventListener("input", this.debouncedCustomFontSizeInput);
@@ -139,9 +141,10 @@ export class FontSizeSelector extends Component {
     }
 
     onKeyDownFontSizeInput(ev) {
-        if (["Enter", "Tab"].includes(ev.key) && this.dropdown.isOpen) {
+        if (["Enter", "Escape"].includes(ev.key) && this.dropdown.isOpen) {
             this.dropdown.close();
-        } else if (["ArrowUp", "ArrowDown"].includes(ev.key)) {
+        } else if (["ArrowUp", "ArrowDown", "Tab"].includes(ev.key)) {
+            ev.preventDefault();
             const fontSizeSelectorMenu = document.querySelector(".o_font_size_selector_menu div");
             if (!fontSizeSelectorMenu) {
                 return;
@@ -159,5 +162,7 @@ export class FontSizeSelector extends Component {
 
     onSelected(item) {
         this.props.onSelected(item);
+        // Delay focusing the editable until the dropdown has settled.
+        setTimeout(() => this.props.onBlur());
     }
 }

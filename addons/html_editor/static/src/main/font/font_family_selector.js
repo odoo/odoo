@@ -12,6 +12,7 @@ export class FontFamilySelector extends Component {
         fontFamilyItems: Object,
         currentFontFamily: Object,
         onSelected: Function,
+        focusEditable: { Type: Function, optional: true },
         ...toolbarButtonProps,
     };
     static components = { Dropdown, DropdownItem };
@@ -19,5 +20,11 @@ export class FontFamilySelector extends Component {
     setup() {
         this.menuRef = useChildRef();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
+    }
+
+    onSelected(item) {
+        this.props.onSelected(item);
+        // Delay focusing the editable until the dropdown has settled.
+        setTimeout(() => this.props.focusEditable());
     }
 }
