@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.PartnerDetailsEdit" t-inherit-mode="extension" owl="1">
+        <!-- Replace vat to change position to upside the picture  -->
+        <xpath expr="//input[@name='vat']/.." position="replace"></xpath>
+        <!-- New vat position-->
+        <xpath expr="//div[hasclass('partner-picture')]" position="before">
+            <div class="partner-details-box clearfix">
+                <div class="partner-details-left">
+                    <div class="partner-detail">
+                        <span class="label">Tax ID</span>
+                        <select
+                            t-att-class="props.partner.id != undefined ? 'input_disable detail l10n_latam_identification_type_id' : 'detail l10n_latam_identification_type_id'"
+                            t-on-change="captureChange"
+                            style="width: 140px;"
+                            t-att-disabled="props.partner.id != undefined ? 'disabled' : undefined"
+                            name="l10n_latam_identification_type_id"
+                            >
+                            <t t-foreach="env.pos.vat_types" t-as="v_type"
+                            t-key="v_type.id">
+                                <option t-att-value="v_type.id"
+                                        t-att-selected="props.partner.l10n_latam_identification_type_id ? (v_type.id === props.partner.l10n_latam_identification_type_id[0] ? true : false) : false">
+                                    <t t-esc="v_type.name" />
+                                </option>
+                            </t>
+                        </select>
+                        <input t-att-class="props.partner.id != undefined ? 'input_disable detail vat' : 'detail vat'"
+                            style="width: 195px;margin-left: 5px;"
+                            name="vat" t-on-change="captureChange"
+                            t-att-value="props.partner.vat || ''"
+                            t-att-disabled="props.partner.id != undefined ? 'disabled' : undefined"
+                            t-on-focusout="_onFocusOutVat"
+                            />
+                        <div t-att-class="props.partner.id != undefined ? 'button edit-vat' : 'button edit-vat oe_hidden'" t-on-click="_onClickEditVat"><i class='fa fa-pencil-square' /></div>
+                    </div>
+                </div>
+                <div class="partner-details-right"></div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>
