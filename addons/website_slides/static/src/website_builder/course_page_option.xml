@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_slides.CoursePageOption">
+    <BuilderContext action="'websiteConfig'">
+        <BuilderRow label.translate="Layout">
+            <BuilderSelect>
+                <BuilderSelectItem actionParam="{views: ['website_slides.opt_course_cover_overlap']}">Overlap</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_slides.opt_course_cover_top']}">Top</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_slides.opt_course_cover_inside']}">Inside</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>
