@@ -1559,7 +1559,7 @@ class HrExpense(models.Model):
 
     def _prepare_bills_vals(self):
         attachments_data = []
-        for attachment in self.message_main_attachment_id:
+        for attachment in self.attachment_ids:
             attachments_data.append(
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
             )
@@ -1660,7 +1660,7 @@ class HrExpense(models.Model):
             'line_ids': [Command.create(line) for line in move_lines],
             'attachment_ids': [
                 Command.create(attachment.copy_data({'res_model': 'account.move', 'res_id': False, 'raw': attachment.raw})[0])
-                for attachment in self.message_main_attachment_id]
+                for attachment in self.attachment_ids]
         }
         return move_vals, payment_vals
 
