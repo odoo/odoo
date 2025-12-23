@@ -18,7 +18,8 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * Called on the original element before clone.
  */
 
-const clonableSelector = "a.btn:not(.oe_unremovable)";
+const clonableSelector =
+    "a.btn:not(.oe_unremovable, .js_subscribe_btn, .s_website_form_send, .s_website_form_submit)";
 
 export function isClonable(el) {
     // TODO and isDraggable

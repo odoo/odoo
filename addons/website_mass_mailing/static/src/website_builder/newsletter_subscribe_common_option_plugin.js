@@ -30,6 +30,8 @@ class NewsletterSubscribeCommonOptionPlugin extends Plugin {
             },
         ],
         on_snippet_dropped_handlers: withSequence(-1, (args) => this.onSnippetDropped(args)),
+        is_unremovable_selector: ".js_subscribe_btn",
+        immutable_link_selectors: [".js_subscribe_btn"],
     };
 
     async onSnippetDropped({ snippetEl }) {

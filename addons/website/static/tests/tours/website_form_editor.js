@@ -547,6 +547,11 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            content: "Verify that the button options do not have clone/remove/save buttons.",
+            trigger:
+                "div[data-container-title='Button'] .options-container-header:not(:has(.oe_snippet_remove, .oe_snippet_clone, .oe_snippet_save))",
+        },
+        {
             content: "Click on button type dropdown",
             trigger: "[data-label=Type] .o-hb-select-toggle",
             run: "click",

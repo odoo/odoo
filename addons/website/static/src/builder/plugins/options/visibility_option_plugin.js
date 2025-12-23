@@ -25,7 +25,8 @@ export class DeviceVisibilityOption extends BaseOptionComponent {
     static template = "website.DeviceVisibilityOption";
     static dependencies = ["visibility"];
     static selector = DEVICE_VISIBILITY_OPTION_SELECTOR;
-    static exclude = ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize";
+    static exclude =
+        ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize, .s_website_form_submit";
 }
 
 class VisibilityOptionPlugin extends Plugin {
