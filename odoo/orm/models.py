@@ -1012,7 +1012,7 @@ class BaseModel(metaclass=MetaModel):
                 except psycopg2.Warning as e:
                     savepoint.rollback()
                     info = rec_data['info']
-                    messages.append(dict(info, type='warning', message=str(e)))
+                    messages.append(dict(info, type='error', message=str(e)))
                 except psycopg2.Error as e:
                     savepoint.rollback()
                     info = rec_data['info']
@@ -1080,6 +1080,8 @@ class BaseModel(metaclass=MetaModel):
             ids = False
             # cancel all changes done to the registry/ormcache
             self.pool.reset_changes()
+        else:
+            assert len(ids) == len(data)
         savepoint.close(rollback=False)
 
         nextrow = info['rows']['to'] + 1
