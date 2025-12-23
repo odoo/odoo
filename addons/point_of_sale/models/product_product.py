@@ -56,6 +56,9 @@ class ProductProduct(models.Model):
                 product['lst_price'] = self.env.company.currency_id._convert(
                     product['lst_price'], config.currency_id, self.env.company, fields.Date.today()
                 )
+                product['standard_price'] = self.env.company.currency_id._convert(
+                    product['standard_price'], config.currency_id, self.env.company, fields.Date.today()
+                )
         return read_records
 
     def _can_return_content(self, field_name=None, access_token=None):
