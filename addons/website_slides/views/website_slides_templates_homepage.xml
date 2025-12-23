@@ -299,6 +299,7 @@
 </template>
 
 <template id="courses_search_results">
+    <t t-set="opt_list_view" t-value="is_view_active('website_slides.opt_list_view')"/>
     <div class="o_wslides_home_main pb-5">
         <h2 t-if="not search_term and not search_slide_category and not search_my and not search_tags and channels" class="h5 mb-3">All Courses</h2>
         <t t-call="website_slides.courses_search_tags"/>
@@ -316,7 +317,7 @@
             <div t-if="original_search" class="alert alert-warning mb-5">
                 No results found for '<span t-out="original_search"/>'. Showing results for '<span t-out="search_term"/>'.
             </div>
-            <div t-attf-class="row g-4 g-lg-3 g-xxl-4 #{'row-cols-1 row-cols-sm-2 row-cols-xl-4' if is_public_user else 'row-cols-1 row-cols-sm-2 row-cols-xl-3'}">
+            <div t-attf-class="row g-4 g-lg-3 #{'row-cols-1' if opt_list_view else ('row-cols-1 row-cols-sm-2 row-cols-xl-4 g-xxl-4' if is_public_user else 'row-cols-1 row-cols-sm-2 row-cols-xl-3')}">
                 <t t-foreach="channels" t-as="channel">
                     <div class="d-flex">
                         <t t-call="website_slides.course_card"/>
@@ -324,7 +325,7 @@
                 </t>
             </div>
         </t>
-        <div class="d-flex justify-content-center" t-if="pager">
+        <div class="d-flex justify-content-center pt-5" t-if="pager">
             <t t-call="website.pager"/>
         </div>
     </div>
@@ -337,9 +338,9 @@
 </template>
 
 <template id='course_card' name="Course Card">
-    <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" t-attf-class="card o_wslides_course_card w-100 h-100 text-decoration-none #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
+    <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" t-attf-class="o_wslides_course_card w-100 h-100 text-decoration-none #{'o_wslides_course_unpublished' if not channel.is_published else ''} #{not opt_list_view and 'card' or 'd-flex align-items-end border-bottom pb-3'}">
         <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
-        <div>
+        <div t-if="not opt_list_view">
             <div t-field="channel.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_512'}" class="o_wslides_background_image ratio ratio-16x9"/>
             <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/>
         </div>
@@ -347,7 +348,7 @@
             <h3 class="o_line_clamp card-title h6" t-field="channel.name"/>
             <span t-if="not channel.is_published" class="badge text-bg-danger">Unpublished</span>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">
-                <div class="o_line_clamp small" t-field="channel.description_short"/>
+                <div t-if="not opt_list_view" class="o_line_clamp small" t-field="channel.description_short"/>
                 <div t-if="channel_frontend_tags" class="small o_wslides_desc_truncate_2_badges">
                     <t t-foreach="channel_frontend_tags" t-as="tag">
                         <t t-if="search_tags">
@@ -362,9 +363,9 @@
                 </div>
             </div>
         </div>
-        <div t-attf-class="card-footer d-flex align-items-center #{'justify-content-between' if channel.total_time else 'justify-content-end'}">
+        <div t-attf-class="card-footer d-flex align-items-center #{'justify-content-between' if channel.total_time else 'justify-content-end'} #{opt_list_view and 'gap-2 flex-shrink-0' or ''}">
             <t t-if="channel.completion and not channel.completed">
-                <div class="d-flex align-items-center gap-2 flex-basis-50">
+                <div class="d-flex align-items-center gap-2 flex-basis-50 border-end pe-2">
                     <div class="progress flex-grow-1" style="height: 6px">
                         <div class="progress-bar" role="progressbar" t-att-aria-valuenow="channel.completion" aria-valuemin="0" aria-valuemax="100" t-attf-style="width:#{channel.completion}%;" aria-label="Progress bar"/>
                     </div>
@@ -388,6 +389,8 @@
 <template id="course_card_information" name='Course Information'>
     <t id="course_card_information_content"/>
 </template>
+
+<template id="opt_list_view" name="List View" inherit_id="website_slides.course_card" active="False"/>
 
 <template id="course_card_information_badge" inherit_id="website_slides.course_card_information"
     active="True" name='New Content Badge'>
@@ -475,9 +478,9 @@
     </div>
     <div class="o_wslides_home_aside">
         <t t-set="next_rank_id" t-value="user._get_next_rank()"/>
-        <div t-if="next_rank_id">
+        <div t-if="next_rank_id" class="d-flex flex-column gap-3 mt-3 rounded p-3 bg-100">
             <t t-call="website_profile.profile_next_rank_card"/>
-            <div t-field="next_rank_id.description_motivational" class="mt-3 rounded p-3 bg-100"/>
+            <div t-field="next_rank_id.description_motivational"/>
         </div>
         <div t-else="" class="mt-3">Congratulations, you have reached the last rank!</div>
     </div>
