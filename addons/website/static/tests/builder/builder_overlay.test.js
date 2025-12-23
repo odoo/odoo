@@ -203,3 +203,25 @@ test("Mouse move on throttleForAnimation", async () => {
     await animationFrame();
     expect(".oe_overlay.oe_active:not(.o_overlay_hidden)").toHaveCount(1);
 });
+
+test("Overlay still present after reloadEditor", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <section>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <p>TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+
+    await contains(":iframe section").click();
+    expect(".oe_overlay.oe_active").toHaveCount(1);
+
+    await getEditor().config.reloadEditor();
+
+    await contains(":iframe section").click();
+    expect(".oe_overlay.oe_active").toHaveCount(1);
+});
