@@ -100,5 +100,13 @@ const discussChannelPatch = {
             (correspondent) => correspondent.livechat_member_type !== "bot"
         );
     },
+    async leaveChannel() {
+        if (this.livechatShouldAskLeaveConfirmation) {
+            await this.askLeaveConfirmation(
+                _t("Leaving will end the live chat. Do you want to proceed?")
+            );
+        }
+        super.leaveChannel(...arguments);
+    },
 };
 patch(DiscussChannel.prototype, discussChannelPatch);

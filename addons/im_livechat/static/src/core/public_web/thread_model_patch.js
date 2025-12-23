@@ -1,6 +1,5 @@
 import { fields } from "@mail/model/export";
 import { Thread } from "@mail/core/common/thread_model";
-import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -26,13 +25,5 @@ patch(Thread.prototype, {
         if (this.store.env.services.ui.isSmall && this.channel?.channel_type === "livechat") {
             this.store.discuss.activeTab = "livechat";
         }
-    },
-    async leaveChannel() {
-        if (this.channel?.livechatShouldAskLeaveConfirmation) {
-            await this.askLeaveConfirmation(
-                _t("Leaving will end the live chat. Do you want to proceed?")
-            );
-        }
-        await super.leaveChannel(...arguments);
     },
 });
