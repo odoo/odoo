@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import tagged
+from odoo import Command
 
 import time
 from unittest import skip
+from freezegun import freeze_time
 
 
 @tagged('-at_install', 'post_install')
@@ -290,3 +292,54 @@ class TestAveragePrice(ValuationReconciliationTestCommon):
         po.invoice_ids[0].action_post()
 
         self.assertFalse(po.picking_ids.move_ids.stock_valuation_layer_ids.stock_valuation_layer_ids)
+
+    def test_avco_currency_rate_on_move_date(self):
+        """
+        Ensure AVCO standard price uses the stock move validation date
+        for currency conversion, not the purchase order date.
+        """
+        # Company currency = USD, Purchase currency = EUR
+        eur = self.env.ref('base.EUR')
+        # Define currency rates:
+        # - 15 Dec: 1 EUR = 1 USD
+        # - 23 Dec: 1 EUR = 2 USD
+        self.env['res.currency.rate'].create([
+            {
+                'currency_id': eur.id,
+                'name': '2025-12-15',
+                'rate': 1.0,
+            },
+            {
+                'currency_id': eur.id,
+                'name': '2025-12-23',
+                'rate': 0.5,  # inverse rate: 1 EUR = 2 USD
+            },
+        ])
+        self.product_category.property_cost_method = 'average'
+        with freeze_time('2025-12-23'):
+            product = self.env['product.product'].create({
+                'name': 'AVCO Product',
+                'categ_id': self.product_category.id,
+            })
+        # Create purchase order on 15 Dec at 10 EUR
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'currency_id': eur.id,
+            'date_order': '2025-12-15',
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 1.0,
+                'price_unit': 10.0,
+            })],
+        })
+        purchase_order.button_confirm()
+        with freeze_time('2025-12-23'):
+            purchase_order.picking_ids.button_validate()
+        self.assertEqual(purchase_order.picking_ids.state, 'done')
+        # Expected:
+        # 10 EUR * 2 USD = 20 USD
+        self.assertEqual(
+            product.standard_price,
+            20.0,
+            "AVCO standard price should be computed using the stock move validation date currency rate"
+        )
