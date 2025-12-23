@@ -30,7 +30,11 @@ class AccountFiscalPosition(models.Model):
             return super()._get_fiscal_position(partner, delivery=delivery)
 
         # manually set fiscal position on partner has a higher priority
-        manual_fiscal_position = delivery.property_account_position_id or partner.property_account_position_id
+        company = self.env.company
+        manual_fiscal_position = (
+            delivery.with_company(company).property_account_position_id
+            or partner.with_company(company).property_account_position_id
+        )        
         if manual_fiscal_position:
             return manual_fiscal_position
 
