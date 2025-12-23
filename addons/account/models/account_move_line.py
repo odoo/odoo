@@ -3302,7 +3302,7 @@ class AccountMoveLine(models.Model):
 
         payment_date = payment_date or fields.Date.context_today(self)
 
-        term_lines = self.sorted(key=lambda line: (line.date_maturity, line.date))
+        term_lines = self.sorted(key=lambda line: (line.date_maturity or date.max, line.date))
         sign = move.direction_sign
         installments = []
         first_installment_mode = False
