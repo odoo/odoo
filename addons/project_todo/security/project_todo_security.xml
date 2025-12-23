@@ -10,5 +10,34 @@
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
+    <record model="ir.rule" id="task_type_own_write_rule">
+        <field name="name">Project/Task Type: write own stages</field>
+        <field name="model_id" ref="project.model_project_task_type"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="tags_own_write_rule">
+        <field name="name">Project/tags employees: Full access to own tags only</field>
+        <field name="model_id" ref="project.model_project_tags"/>
+        <field name="domain_force">[('create_uid', '=', user.id),('project_ids', '=', False)]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record model="ir.rule" id="tags_manager_rule">
+        <field name="name">Project/tags: manager sees all</field>
+        <field name="model_id" ref="project.model_project_tags"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
+    </record>
+
 </data>
 </odoo>
