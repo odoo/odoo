@@ -54,6 +54,7 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
             'property_account_expense_id': self.company_data['default_account_expense'].id,
             'property_account_income_id': self.company_data['default_account_revenue'].id,
         })
+        self.env.user.groups_id += self.env.ref('product.group_product_variant')
 
         # Create BoM for Kit A
         bom_product_form = Form(self.env['mrp.bom'])
