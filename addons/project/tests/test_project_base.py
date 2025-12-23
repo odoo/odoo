@@ -44,6 +44,12 @@ class TestProjectCommon(TransactionCase):
             'signature': 'SignChell',
             'notification_type': 'email',
             'group_ids': [(6, 0, [cls.env.ref('base.group_portal').id])]})
+        cls.user_employee = Users.create({
+            'name': 'Eustache Employee',
+            'login': 'eustache',
+            'password': 'eustache',
+            'email': 'eustache.projectuser@example.com',
+            'group_ids': [(6, 0, [user_group_employee.id])]})
         cls.user_projectuser = Users.create({
             'name': 'Armande ProjectUser',
             'login': 'armandel',
