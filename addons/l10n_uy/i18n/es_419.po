@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-11 15:10+0000\n"
+"POT-Creation-Date: 2025-12-16 19:06+0000\n"
 "PO-Revision-Date: 2025-02-11 15:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,16 +19,19 @@ msgstr ""
 #. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/l10n_latam_document_type.py:0
-#, python-format
 msgid ""
 "%(document_number)s is not a valid value for %(document_type)s.\n"
-"The document number must be entered with a maximum of 2 letters for the first part and 7 numbers for the second. The following are examples of valid document numbers:\n"
+"The document number must be entered with a maximum of 2 letters for the "
+"first part and 7 numbers for the second. The following are examples of valid "
+"document numbers:\n"
 "- XX0000001\n"
 " - YY0000123\n"
 " - A0000001"
 msgstr ""
 "%(document_number)s no es un un valor válida para %(document_type)s.\n"
-"El número de documento ingresado debe tener un máximo de 2 letras para la primera parte y 7 números para la segunda. Los siguientes son ejemplos de números de documento válidos:\n"
+"El número de documento ingresado debe tener un máximo de 2 letras para la "
+"primera parte y 7 números para la segunda. Los siguientes son ejemplos de "
+"números de documento válidos:\n"
 "- XX0000001\n"
 " - YY0000123\n"
 " - A0000001"
@@ -44,6 +48,21 @@ msgid "Account Chart Template"
 msgstr "Plantilla de plan contable"
 
 #. module: l10n_uy
+#: model:account.report.column,name:l10n_uy.tax_report_balance
+msgid "Balance"
+msgstr ""
+
+#. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_base_impb_cmprs_reduced
+msgid "Base Purchases Reduced VAT"
+msgstr ""
+
+#. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_base_impb_vnts_reduced
+msgid "Base Sales Reduced VAT"
+msgstr ""
+
+#. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/res_partner.py:0
 msgid "CI/NIE"
@@ -51,8 +70,8 @@ msgstr ""
 
 #. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_res_company
-msgid "Companies"
-msgstr "Empresas"
+msgid "Company"
+msgstr ""
 
 #. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_res_partner
@@ -60,15 +79,30 @@ msgid "Contact"
 msgstr "Contacto"
 
 #. module: l10n_uy
-#. odoo-python
-#: code:addons/l10n_uy/models/template_uy.py:0
-msgid "Customer Invoices"
-msgstr "Facturas de Clientes"
+#: model:ir.model,website_form_label:l10n_uy.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: l10n_uy
 #: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_identification_type__l10n_uy_dgi_code
 msgid "DGI Code"
 msgstr "Código DGI"
+
+#. module: l10n_uy
+#: model:ir.model.fields,field_description:l10n_uy.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_document_type__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_identification_type__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_res_company__display_name
+#: model:ir.model.fields,field_description:l10n_uy.field_res_partner__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_uy
+#: model:ir.model,name:l10n_uy.model_account_tax
+msgid "ETA tax codes mixin"
+msgstr ""
 
 #. module: l10n_uy
 #: model:l10n_latam.identification.type,description:l10n_uy.it_nife
@@ -81,9 +115,15 @@ msgid "Foreigner Identity Number"
 msgstr "Número de Identidad de Extranjero"
 
 #. module: l10n_uy
-#: model:l10n_latam.identification.type,description:l10n_uy.it_ci
-msgid "Identification Card"
-msgstr "Cédula de Identidad"
+#: model:ir.model.fields,field_description:l10n_uy.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_uy.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_uy.field_account_tax__id
+#: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_document_type__id
+#: model:ir.model.fields,field_description:l10n_uy.field_l10n_latam_identification_type__id
+#: model:ir.model.fields,field_description:l10n_uy.field_res_company__id
+#: model:ir.model.fields,field_description:l10n_uy.field_res_partner__id
+msgid "ID"
+msgstr ""
 
 #. module: l10n_uy
 #: model:ir.model,name:l10n_uy.model_l10n_latam_identification_type
@@ -101,34 +141,36 @@ msgid "Latam Document Type"
 msgstr "Tipo de Documento Latam"
 
 #. module: l10n_uy
-#: model:l10n_latam.identification.type,description:l10n_uy.it_dni
-msgid "National identity document of Argentina, Brazil, Chile or Paraguay"
+#: model:l10n_latam.identification.type,name:l10n_uy.it_nie
+msgid "NIE"
 msgstr ""
-"Documento Nacional de identidad de Argentina, Brasil, Chile o Paraguay"
 
 #. module: l10n_uy
-#: model:l10n_latam.identification.type,description:l10n_uy.it_other
-msgid "Others"
-msgstr "Otros"
-
-#. module: l10n_uy
-#: model:l10n_latam.identification.type,description:l10n_uy.it_pass
-msgid "Passport (all countries)"
-msgstr "Pasaporte (todos los paises)"
+#: model:l10n_latam.identification.type,name:l10n_uy.it_nife
+msgid "NIFE"
+msgstr ""
 
 #. module: l10n_uy
 #. odoo-python
-#: code:addons/l10n_uy/models/l10n_latam_document_type.py:0
-msgid ""
-"Please introduce a valid Document number: 2 letters and 7 digits (XX0000001)"
+#: code:addons/l10n_uy/models/template_uy.py:0
+msgid "Purchases"
 msgstr ""
-"Por favor ingrese un Número de documento válido: 2 letras y 7 dígitos "
-"(XX0000001)"
 
 #. module: l10n_uy
-#: model:ir.model,name:l10n_uy.model_account_tax
-msgid "Tax"
-msgstr "Impuestos"
+#: model:account.report.line,name:l10n_uy.account_tax_report_cmprs_iva_reduced
+msgid "Purchases Reduced VAT"
+msgstr ""
+
+#. module: l10n_uy
+#. odoo-python
+#: code:addons/l10n_uy/models/template_uy.py:0
+msgid "Sales"
+msgstr ""
+
+#. module: l10n_uy
+#: model:account.report.line,name:l10n_uy.account_tax_report_vnts_iva_reduced
+msgid "Sales Reduced VAT"
+msgstr ""
 
 #. module: l10n_uy
 #: model:ir.model.fields,field_description:l10n_uy.field_account_tax__l10n_uy_tax_category
@@ -149,10 +191,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_uy/models/res_partner.py:0
 msgid ""
-"The %(vat_label)s number [%(wrong_vat)s] for %(partner_label)s does not seem to be valid.\n"
+"The %(vat_label)s number [%(wrong_vat)s] for %(partner_label)s does not seem "
+"to be valid.\n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
-"El %(vat_label)s número [%(wrong_vat)s] para %(partner_label)s no parece válido.\n"
+"El %(vat_label)s número [%(wrong_vat)s] para %(partner_label)s no parece "
+"válido.\n"
 "Nota: el formato esperoado es %(expected_format)s"
 
 #. module: l10n_uy
@@ -164,11 +208,6 @@ msgstr ""
 "por DGI"
 
 #. module: l10n_uy
-#: model:l10n_latam.identification.type,description:l10n_uy.it_rut
-msgid "Unique Tax Registry / Unique Taxpayer Registry"
-msgstr "Registro Único Tributario / Registro Único de Contribuyente"
-
-#. module: l10n_uy
 #. odoo-python
 #: code:addons/l10n_uy/models/template_uy.py:0
 msgid "Uruguayan Generic Chart of Accounts"
@@ -178,12 +217,6 @@ msgstr "Plan Contable Genérico Uruguayo"
 #: model:ir.model.fields.selection,name:l10n_uy.selection__account_tax__l10n_uy_tax_category__vat
 msgid "VAT"
 msgstr "IVA"
-
-#. module: l10n_uy
-#. odoo-python
-#: code:addons/l10n_uy/models/template_uy.py:0
-msgid "Vendor Bills"
-msgstr "Facturas de Proveedor"
 
 #. module: l10n_uy
 #. odoo-python

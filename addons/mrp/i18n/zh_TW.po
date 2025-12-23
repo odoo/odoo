@@ -1,31 +1,37 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mrp
-# 
+# * mrp
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-06 18:35+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-12-16 18:35+0000\n"
+"PO-Revision-Date: 2025-11-08 17:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/mrp/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_state
 msgid ""
 " * Draft: The MO is not confirmed yet.\n"
-" * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
+" * Confirmed: The MO is confirmed, the stock rules and the reordering of the "
+"components are trigerred.\n"
 " * In Progress: The production has started (on the MO or on the WO).\n"
 " * To Close: The production is done, the MO has to be closed.\n"
 " * Done: The MO is closed, the stock moves are posted. \n"
@@ -48,12 +54,11 @@ msgstr " <br/><br/> 物料將取自 <b>%s</b>."
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 msgid ""
-" <br/><br/> The manufactured products will be moved towards "
-"<b>%(destination)s</b>, <br/> as specified from <b>%(operation)s</b> "
-"destination."
+" <br/><br/> The manufactured products will be moved towards <b>%"
+"(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
-" <br/><br/>製成的產品將會移至 <b>%(destination)s</b>，<br/>即 <b>%(operation)s</b> "
-"所指定之目的地。"
+" <br/><br/>製成的產品將會移至 <b>%(destination)s</b>，<br/>即 <b>%"
+"(operation)s</b> 所指定之目的地。"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -209,6 +214,12 @@ msgid "+ %d day(s)"
 msgstr "+ %d 天"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "- Overview"
 msgstr "- 概覽"
@@ -227,11 +238,13 @@ msgstr ""
 msgid ""
 "1 Step: Consume components from stock and produce.\n"
 "              2 Steps: Pick components from stock and then produce.\n"
-"              3 Steps: Pick components from stock, produce, and then move final product(s) from production area to stock."
+"              3 Steps: Pick components from stock, produce, and then move "
+"final product(s) from production area to stock."
 msgstr ""
 "1 步：直接消耗庫存中的組件，並進行生產。\n"
 "              2 步：從庫存中提取組件，然後進行生產。\n"
-"              3 步：從庫存中提取組件，進行生產，然後將最終成品從生產區域移入庫存。"
+"              3 步：從庫存中提取組件，進行生產，然後將最終成品從生產區域移入"
+"庫存。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -243,6 +256,11 @@ msgstr "100"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 msgid "12345678901"
 msgstr "12345678901"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
+msgid "18″ x 2½″ Square Leg"
+msgstr "18″ x 2½″ 方形脚"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -292,7 +310,8 @@ msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
 "                        Upload files to your product\n"
 "                    </p><p>\n"
-"                        Use this feature to store any files, like drawings or specifications.\n"
+"                        Use this feature to store any files, like drawings "
+"or specifications.\n"
 "                    </p>"
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
@@ -322,9 +341,40 @@ msgid "<span class=\"col-6\">Waiting</span>"
 msgstr "<span class=\"col-6\">等待中</span>"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
-msgstr "<span class=\"fw-bold text-nowrap\">待生產</span>"
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid ""
+"<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
+"absolute\">Time Clock</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_2 o_annotation_end position-absolute\">Quality Control</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_3 o_annotation_start position-absolute\">Feedback Loop</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_4 o_annotation_start position-absolute\">Register Materials</"
+"span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_5 o_annotation_start position-absolute\">Select Operator</span>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid ""
+"<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
+"absolute\">Time Clock</span>\n"
+"                    <span class=\"o_annotation o_annotation_2 "
+"o_annotation_end position-absolute\">Quality Control</span>\n"
+"                    <span class=\"o_annotation o_annotation_3 "
+"o_annotation_start position-absolute\">Feedback Loop</span>\n"
+"                    <span class=\"o_annotation o_annotation_4 "
+"o_annotation_start position-absolute\">Register Materials</span>\n"
+"                    <span class=\"o_annotation o_annotation_5 "
+"o_annotation_start position-absolute\">Select Operator</span>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "<span class=\"o_stat_text\">Add Operation</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -340,6 +390,11 @@ msgstr "<span class=\"o_stat_text\">用料清單概覽</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
 msgstr "<span class=\"o_stat_text\">下級 MO</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "<span class=\"o_stat_text\">Copy Existing Operations</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -401,6 +456,11 @@ msgstr "<span class=\"o_stat_text\">廢料</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span class=\"o_stat_text\">Serial Numbers</span>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Source MO</span>"
 msgstr "<span class=\"o_stat_text\">來源工單 MO</span>"
 
@@ -417,10 +477,34 @@ msgstr "<span class=\"o_stat_text\">拆解</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 msgid ""
-"<span class=\"text-muted\">Modifying the quantity to produce will also "
-"modify the quantities of components to consume for this manufacturing "
-"order.</span>"
-msgstr "<span class=\"text-muted\">修改生產數量將同時修改該生產訂單所需的組件數量。</span>"
+"<span class=\"text-muted\">\n"
+"                        Modifying the quantity to produce will also modify "
+"the quantities of components to consume for this manufacturing order.\n"
+"                        <br/>\n"
+"                        Split the MO if you plan to produce the remaining "
+"quantity later.\n"
+"                    </span>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+msgid ""
+"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutes</"
+"span>\n"
+"                                    <span invisible=\"time_mode == "
+"'manual'\"> / last </span>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+msgid "<span invisible=\"time_mode == 'manual'\">work orders</span>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid ""
+"<span name=\"to_produce\" class=\"fw-bold text-nowrap\">To Produce</span>"
+msgstr "<span name=\"to_produce\" class=\"fw-bold text-nowrap\">待生產</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -475,6 +559,7 @@ msgstr "<span>工單</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "<span>minutes</span>"
 msgstr "<span>分鐘</span>"
 
@@ -589,16 +674,12 @@ msgstr "? 這可能會導致您的庫存不一致."
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
-"                                Instead, it is used to decompose a BoM into its components when:"
+"                                Instead, it is used to decompose a BoM into "
+"its components when:"
 msgstr ""
 "類型為\"套件\"的用料清單（BoM）並非在生產訂單下生產。<br/>\n"
-"                                相反，在以下情況下，用於將物料清單分解為組件："
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_workorder.py:0
-msgid "A Manufacturing Order is already done or cancelled."
-msgstr "生產單已經完成或者被取消."
+"                                相反，在以下情況下，用於將物料清單分解為組"
+"件："
 
 #. module: mrp
 #. odoo-python
@@ -643,6 +724,13 @@ msgid "Activity Exception Decoration"
 msgstr "活動異常圖示"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_plans_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_plans_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_plans_ids
+msgid "Activity Plans"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_state
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_state
@@ -655,6 +743,16 @@ msgstr "活動狀態"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "活動類型圖示"
+
+#. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__cost_mode__actual
+msgid "Actual"
+msgstr "實際"
+
+#. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__actual
+msgid "Actual time"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -674,7 +772,9 @@ msgid ""
 "Add by-products to bills of materials. This can be used to get several "
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
-msgstr "增加副產品到物料清單. 這也可以用來獲得幾個成品. 沒有這個選項,您只能這樣做: A + B = C. 選項:A + B = C + D."
+msgstr ""
+"增加副產品到物料清單. 這也可以用來獲得幾個成品. 沒有這個選項,您只能這樣做: A "
+"+ B = C. 選項:A + B = C + D."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -718,11 +818,19 @@ msgid "All Products"
 msgstr "所有產品"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__batch_size
+msgid ""
+"All automatically generated manufacturing orders for this product will be of "
+"this size."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_line_bom_qty_zero
 msgid ""
 "All product quantities must be greater or equal to 0.\n"
 "Lines with 0 quantities can be used as optional lines. \n"
-"You should install the mrp_byproduct module if you want to manage extra products on BoMs!"
+"You should install the mrp_byproduct module if you want to manage extra "
+"products on BoMs!"
 msgstr ""
 "所有產品數量須大於或等於 0。\n"
 "數量為 0 的資料行可用作可選資料行。\n"
@@ -775,7 +883,6 @@ msgid "Allowed"
 msgstr "允許"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
 msgid "Allowed Uom"
 msgstr "允許的計量單位"
@@ -817,16 +924,16 @@ msgid ""
 msgstr "拆解單用於將成品分解為其物料."
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
+msgid "Apply"
+msgstr "套用"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__bom_product_template_attribute_value_ids
 msgid "Apply on Variants"
 msgstr "使用於變體"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
-msgid "Archive Operation"
-msgstr "歸檔製程"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -840,29 +947,43 @@ msgstr "已封存"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-msgid "Are you sure you want to cancel these manufacturing orders?"
-msgstr "確定要取消這些製造訂單？"
+msgid ""
+"Are you sure you want to cancel these manufacturing orders?\n"
+"This action cannot be undone."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Are you sure you want to cancel this manufacturing order?"
-msgstr "您確定要取消此製造訂單嗎？"
+msgid ""
+"Are you sure you want to cancel this manufacturing order?\n"
+"This action cannot be undone."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/product.py:0
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
-"been used for this product, the change of unit of measure can not be done.If"
-" you want to change it, please archive the product and create a new one."
+"been used for this product, the change of unit of measure can not be done.If "
+"you want to change it, please archive the product and create a new one."
 msgstr ""
-"由於此產品已經使用其他計量單位（例如：%(problem_uom)s），而非使用 "
-"%(uom)s，現已無法更改計量單位。如需更改，請將產品封存，然後建立一項新的產品。"
+"由於此產品已經使用其他計量單位（例如：%(problem_uom)s），而非使用 %(uom)s，現"
+"已無法更改計量單位。如需更改，請將產品封存，然後建立一項新的產品。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "Assembling"
 msgstr "組裝"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_assign_serial_numbers
+msgid "Assign Serial Numbers"
+msgstr "分配序號"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_serials
+msgid "Assign serial numbers to production order"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_attachment_count
@@ -889,6 +1010,7 @@ msgstr "附件數目"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_variant_attributes
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__product_variant_attributes
 msgid "Attribute Values"
 msgstr "屬性值"
 
@@ -968,10 +1090,11 @@ msgstr "可用"
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added. In "
-"case the product is subcontracted, this can be used to determine the date at"
-" which components should be sent to the subcontractor."
+"case the product is subcontracted, this can be used to determine the date at "
+"which components should be sent to the subcontractor."
 msgstr ""
-"製造該產品的平均提前期(以天為單位). 在多級 BOM 的情況下,將增加物料的製造提前期. 如果產品被分包,這可用於確定物料應發送給分包商的日期."
+"製造該產品的平均提前期(以天為單位). 在多級 BOM 的情況下,將增加物料的製造提前"
+"期. 如果產品被分包,這可用於確定物料應發送給分包商的日期."
 
 #. module: mrp
 #. odoo-javascript
@@ -1057,8 +1180,7 @@ msgstr "延期交貨序列"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__backorder_sequence
-msgid ""
-"Backorder sequence, if equals to 0 means there is not related backorder"
+msgid "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr "延期交貨序列, 如果等於 0 表示沒有相關的延期交貨"
 
 #. module: mrp
@@ -1073,10 +1195,9 @@ msgid "Based on"
 msgstr "根據"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_mrp_batch_produce
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_text
-msgid "Batch Production"
-msgstr "大批生產"
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__batch_size
+msgid "Batch Size"
+msgstr "批次大小"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__before
@@ -1117,6 +1238,7 @@ msgstr "生產工單上使用的物料清單"
 #: model:ir.actions.act_window,name:mrp.template_open_bom
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_ids
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_ids
+#: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__bom_id
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__bom_id
 #: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__bom
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
@@ -1129,6 +1251,7 @@ msgstr "物料清單"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
+#: model_terms:ir.ui.view,arch_db:mrp.view_stock_replenishment_info_stock_mrp_inherit
 msgid "Bills of Materials"
 msgstr "物料清單"
 
@@ -1137,15 +1260,16 @@ msgstr "物料清單"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__mo_bom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_bom_id
 msgid ""
-"Bills of Materials, also called recipes, are used to autocomplete components"
-" and work order instructions."
+"Bills of Materials, also called recipes, are used to autocomplete components "
+"and work order instructions."
 msgstr "用料清單，也稱為「配方」，用於自動完成組件和工作單指示。"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid ""
 "Bills of materials allow you to define the list of required raw\n"
-"                materials used to make a finished product; through a manufacturing\n"
+"                materials used to make a finished product; through a "
+"manufacturing\n"
 "                order or a pack of products."
 msgstr ""
 "物料清單(BoM)允許您定義製造成品所需原的材料,\n"
@@ -1255,6 +1379,21 @@ msgid "BoM Type"
 msgstr "BoM類型"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
+msgid "Bolt"
+msgstr "螺栓"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__bom_ids
+msgid "Bom"
+msgstr "用料清單 BoM"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__bom_id_placeholder
+msgid "Bom Id Placeholder"
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: code:addons/mrp/static/src/components/mo_overview_byproducts_block/mrp_mo_overview_byproducts_block.xml:0
@@ -1318,6 +1457,26 @@ msgstr "找不到任何生產位置."
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Cancel"
 msgstr "取消"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Cancel Manufacturing Order"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+msgid "Cancel Manufacturing Orders"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
+msgid "Cancel these Orders"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Cancel this Order"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -1406,6 +1565,11 @@ msgid "Check availability"
 msgstr "檢查可用"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_group__child_ids
+msgid "Child Manufacturing Orders"
+msgstr ""
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/wizard/stock_label_type.py:0
@@ -1434,6 +1598,16 @@ msgid "Cleanup Time (minutes)"
 msgstr "清理時間 (分鐘)"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Clear"
+msgstr "清除"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Clears the selected lot/serial number"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
 msgid "Code"
 msgstr "程式碼"
@@ -1450,10 +1624,6 @@ msgstr "顏色索引"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
-msgid "Companies"
-msgstr "公司"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__company_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__company_id
@@ -1472,6 +1642,7 @@ msgstr "公司"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Component"
 msgstr "組件"
 
@@ -1485,11 +1656,6 @@ msgstr "物料狀態"
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 msgid "Component of Draft MO"
 msgstr "草稿工單的物料"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__component_separator
-msgid "Component separator"
-msgstr "組件分隔器"
 
 #. module: mrp
 #. odoo-python
@@ -1528,18 +1694,16 @@ msgid "Compute"
 msgstr "計算"
 
 #. module: mrp
-#: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
-msgid "Compute based on tracked time"
-msgstr "根據追踪時間計算"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
-"                                                       Also note that "
-"purchase security lead times will be added when appropriate."
-msgstr "通過購買或製造組件和/或子組件，計算從 BoM 補給所有組件所需的天數。 還需注意的是，在適當情況下還需加上採購保障週轉時間。"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__auto
+msgid "Computed"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1634,6 +1798,11 @@ msgid "Cost Breakdown of Products"
 msgstr "產品成本細分"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__cost_mode
+msgid "Cost Mode"
+msgstr "成本模式"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__cost_share
 #: model:ir.model.fields,field_description:mrp.field_stock_move__cost_share
 msgid "Cost Share (%)"
@@ -1644,6 +1813,11 @@ msgstr "成本分攤 (%)"
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost as it is currently accumulated"
 msgstr "成本，按目前已累積金額"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__cost_mode
+msgid "Cost based on"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -1699,6 +1873,11 @@ msgid "Count of linked backorder"
 msgstr "已連結的缺貨數量"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__serial_numbers_count
+msgid "Count of serial numbers"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Create New Lots/Serial Numbers for Components"
@@ -1712,14 +1891,11 @@ msgstr "建立延期交貨欠單"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid ""
-"Create a backorder if you expect to process the remaining products later. Do"
-" not create a backorder if you will not process the remaining products."
-msgstr "如果您希望稍後處理剩餘產品,請建立延期交貨欠單. 如果您不處理剩餘產品,請不要建立延期交貨欠單."
-
-#. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
-msgid "Create a new operation"
-msgstr "建立一個新的作業流程"
+"Create a backorder if you expect to process the remaining products later. Do "
+"not create a backorder if you will not process the remaining products."
+msgstr ""
+"如果您希望稍後處理剩餘產品,請建立延期交貨欠單. 如果您不處理剩餘產品,請不要建"
+"立延期交貨欠單."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -1736,11 +1912,9 @@ msgstr "建立一個工單效能單"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that security lead times will also be considered when appropriate."
+"Create and confirm Manufacturing Orders this many days in advance, to have "
+"enough time to replenish components or manufacture semi-finished products."
 msgstr ""
-"提前創建並確認製造訂單這麼多天，以確保有足夠的時間來補充零部件或製造半成品。\n"
-"請注意，在適當的情況下，還將考慮安全提前時間。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1761,7 +1935,8 @@ msgid ""
 "and nothing is specified, Odoo will assume that all operations can be "
 "started simultaneously."
 msgstr ""
-"建立製程級別的依賴關係,這將在 MO 確認後影響計劃和生產工單的狀態. 如果這個特性被勾選,並且沒有指定任何東西,ERP 將假定所有製程可以同時啟動."
+"建立製程級別的依賴關係,這將在 MO 確認後影響計劃和生產工單的狀態. 如果這個特性"
+"被勾選,並且沒有指定任何東西,ERP 將假定所有製程可以同時啟動."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -1770,7 +1945,6 @@ msgstr "已建立生產工單"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__create_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__create_uid
@@ -1779,6 +1953,8 @@ msgstr "已建立生產工單"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_group__create_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__create_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__create_uid
@@ -1797,7 +1973,6 @@ msgstr "建立人員"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__create_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__create_date
@@ -1806,6 +1981,8 @@ msgstr "建立人員"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_group__create_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__create_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__create_date
@@ -1824,8 +2001,13 @@ msgstr "建立於"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "Creates a new serial/lot number"
-msgstr "建立新的序號/批號"
+msgid "Creates a new lot number"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Creates a new serial number"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__currency_id
@@ -1836,10 +2018,14 @@ msgstr "貨幣"
 #: model:ir.model.fields,help:mrp.field_stock_move__product_qty_available
 msgid ""
 "Current quantity of products.\n"
-"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"In a context with a single Stock Location, this includes goods stored at "
+"this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its "
+"children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
 "目前產品數量. \n"
 "對單一庫存位置來說, 包括了此位置或其任何子位置所存儲的產品. \n"
@@ -1857,6 +2043,11 @@ msgid "Custom Description"
 msgstr "自訂描述"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
+msgid "Cycles"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -1867,6 +2058,15 @@ msgstr "日期"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__search_date_category
 msgid "Date Category"
 msgstr "日期類別"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid ""
+"Date at which you plan to start.                                           "
+"Red if the scheduled end is forecasted after the production order "
+"deadline.                                           Orange if the scheduled "
+"date is in the past."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1920,11 +2120,6 @@ msgid "Default Duration"
 msgstr "預設時長"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_res_config_settings__use_manufacturing_lead
-msgid "Default Manufacturing Lead Time"
-msgstr "預設生產前置時間"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr "所有庫存操作使用的預設計量單位。"
@@ -1948,16 +2143,23 @@ msgstr "定義該資源的工作時間表。若未設置，該資源將享有完
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
 msgid ""
-"Defines if you can consume more or less components than the quantity defined on the BoM:\n"
+"Defines if you can consume more or less components than the quantity defined "
+"on the BoM:\n"
 "  * Allowed: allowed for all manufacturing users.\n"
-"  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
-"  Note that in the case of component Highlight Consumption, where consumption is registered manually exclusively, consumption warnings will still be issued when appropriate also.\n"
-"  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
+"  * Allowed with warning: allowed for all manufacturing users with summary "
+"of consumption differences when closing the manufacturing order.\n"
+"  Note that in the case of component Highlight Consumption, where "
+"consumption is registered manually exclusively, consumption warnings will "
+"still be issued when appropriate also.\n"
+"  * Blocked: only a manager can close a manufacturing order when the BoM "
+"consumption is not respected."
 msgstr ""
 "定義你相比物料清單上定義的數量，可否消耗更多或更少組件：\n"
 "  * 允許：允許所有製造管理使用者進行此操作。\n"
-"  * 允許但附有警告：允許所有製造管理使用者進行此操作，並在關閉製造訂單時，提供消耗差異摘要。\n"
-"  請留意，若有組件突出消耗（當中的消耗只有手動登記），系統仍會在適當時候發出消耗警告。\n"
+"  * 允許但附有警告：允許所有製造管理使用者進行此操作，並在關閉製造訂單時，提"
+"供消耗差異摘要。\n"
+"  請留意，若有組件突出消耗（當中的消耗只有手動登記），系統仍會在適當時候發出"
+"消耗警告。\n"
 "  * 封鎖：若不用考慮物料清單消耗時，只限經理可關閉製造訂單。"
 
 #. module: mrp
@@ -2003,17 +2205,26 @@ msgid "Details"
 msgstr "詳細資訊"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__cost_mode
+msgid ""
+"Determines the way Odoo calculates the cost of the operation:\n"
+"- Based on Actual time: the cost will be calculated based on tracked time "
+"and real employee costs.\n"
+"- Based on Estimated time: the cost will be calculated based on estimated "
+"time and costs."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unbuild_id
 msgid "Disassembly Order"
 msgstr "拆卸順序"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Discard"
@@ -2027,7 +2238,6 @@ msgstr "顯示"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__display_name
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__display_name
@@ -2036,6 +2246,8 @@ msgstr "顯示"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_group__display_name
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__display_name
@@ -2049,7 +2261,6 @@ msgstr "顯示"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_tag__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__display_name
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__display_name
-#: model:ir.model.fields,field_description:mrp.field_procurement_group__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_document__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__display_name
@@ -2067,7 +2278,10 @@ msgstr "顯示"
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_reference__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__display_name
+#: model:ir.model.fields,field_description:mrp.field_stock_route__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__display_name
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__display_name
@@ -2105,7 +2319,6 @@ msgstr "系統使用說明"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.xml:0
-#: model:ir.model.fields,field_description:mrp.field_stock_move__is_done
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__done
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_unbuild__state__done
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -2126,7 +2339,21 @@ msgid "Draft"
 msgstr "草稿"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
+#: model:product.template,name:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer Black"
+msgstr "抽屜黑色"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_drawer_case_product_template
+msgid "Drawer Case Black"
+msgstr "抽屜盒黑色"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer on casters for great usability."
+msgstr "腳輪上的抽屜, 具有極大的實用性."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__duration
 #: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
 msgid "Duration"
@@ -2159,6 +2386,19 @@ msgid "Duration Per Unit"
 msgstr "每單位的時長"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid ""
+"Each operation can have multiple steps (scan products, view instructions) or "
+"even quality checks."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__effective_bom_id
+msgid "Effective Bill of Materials"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_type
 msgid "Effectiveness"
 msgstr "有效性"
@@ -2167,6 +2407,18 @@ msgstr "有效性"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_type
 msgid "Effectiveness Category"
 msgstr "有效性類別"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__effective_bom_id
+msgid ""
+"Either the Bill of Materials set directly or the one computed to be used by "
+"this replenishment"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__enable_batch_size
+msgid "Enable Batch Size"
+msgstr "啟用批次大小"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_finished
@@ -2191,6 +2443,11 @@ msgstr "確保倉庫內可儲存產品的可追蹤性。"
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
 msgid "Equipment Failure"
 msgstr "設備故障"
+
+#. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__cost_mode__estimated
+msgid "Estimated"
+msgstr "估算"
 
 #. module: mrp
 #. odoo-python
@@ -2240,20 +2497,10 @@ msgid "Expected Duration (minutes)"
 msgstr "預計時長(分鐘)"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_text_help
-msgid "Explanation for batch production"
-msgstr "大批生產註釋"
-
-#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Files attached to the product."
 msgstr "產品附帶的檔案文件."
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
-msgid "Filters"
-msgstr "篩選"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
@@ -2267,7 +2514,7 @@ msgid "Finished"
 msgstr "已完工"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_move__order_finished_lot_id
+#: model:ir.model.fields,field_description:mrp.field_stock_move__order_finished_lot_ids
 msgid "Finished Lot/Serial Number"
 msgstr "完成的批次/序列號"
 
@@ -2302,9 +2549,14 @@ msgid "Finished Products Location"
 msgstr "完工產品位置"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__lot_name
-msgid "First Lot/SN"
-msgstr "首個批次/序號"
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__lot_name
+msgid "First SN"
+msgstr "首個序號"
+
+#. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
+msgid "Fixed"
+msgstr "固定"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__consumption
@@ -2314,6 +2566,8 @@ msgstr "彈性消耗"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.js:0
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.js:0
 msgid "Fold"
 msgstr "收起"
@@ -2365,15 +2619,15 @@ msgstr "預測報表"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
 msgid ""
-"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming)\n"
-"In a context with a single Stock Location, this includes goods stored in this location, or any of its children.\n"
-"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
-"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+"Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming - "
+"Quantity to Remove)\n"
+"In a context with a single Stock Location, this includes goods stored in "
+"this location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the "
+"Stock Location of this Warehouse, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' "
+"type."
 msgstr ""
-"預測數量(計算為手上數量 - 出庫 + 入庫) \n"
-"對於單一庫存位置來說, 這包括了存儲在此位置及其子位置的貨物.\n"
-"對於單一倉庫來說, 這包括了存儲在此倉庫的庫存位置及其子位置的貨物.\n"
-"否則, 這包括存儲在任何「內部」類型的任何庫存位置的貨物."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2426,12 +2680,22 @@ msgid "General Information"
 msgstr "一般資訊"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "Generate"
 msgstr "生成"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Generate Lot"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Generate Serial"
+msgstr "產生序號"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "Generate Serial Numbers"
 msgstr "產生序號"
 
@@ -2465,25 +2729,6 @@ msgstr "顯示工作中心列表時顯示序列的順序."
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__sequence
 msgid "Gives the sequence order when displaying."
 msgstr "顯示時提供序列的順序."
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
-msgid "Group By"
-msgstr "分組依據"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
-msgid "Group By..."
-msgstr "分組依據⋯"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
-#: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
-msgid "Group by..."
-msgstr "分組依據⋯"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
@@ -2533,7 +2778,6 @@ msgstr "小時"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__id
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__id
@@ -2542,6 +2786,8 @@ msgstr "小時"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_group__id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__id
@@ -2555,7 +2801,6 @@ msgstr "小時"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_tag__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__id
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__id
-#: model:ir.model.fields,field_description:mrp.field_procurement_group__id
 #: model:ir.model.fields,field_description:mrp.field_product_document__id
 #: model:ir.model.fields,field_description:mrp.field_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__id
@@ -2573,7 +2818,10 @@ msgstr "小時"
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__id
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:mrp.field_stock_quant__id
+#: model:ir.model.fields,field_description:mrp.field_stock_reference__id
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__id
+#: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__id
+#: model:ir.model.fields,field_description:mrp.field_stock_route__id
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__id
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__id
 #: model:ir.model.fields,field_description:mrp.field_stock_traceability_report__id
@@ -2632,7 +2880,9 @@ msgid ""
 "If checked, when the previous move of the move (which was generated by a "
 "next procurement) is cancelled or split, the move generated by this move "
 "will too"
-msgstr "如果勾選了, 當(從下一個需求單生成的)移動的前一個移動被取消或分割, 此移動產生的相關移動也會被取消"
+msgstr ""
+"如果勾選了, 當(從下一個需求單生成的)移動的前一個移動被取消或分割, 此移動產生"
+"的相關移動也會被取消"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__active
@@ -2646,35 +2896,41 @@ msgstr "如果啟用欄位設定為未啟用，它將允許您隱藏資源記錄
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report labels of a MO when it is done."
-msgstr "如果勾選此方格，Odoo 將在製造訂單（MO）完成後，自動列印 MO 的分配報告標籤。"
+msgstr ""
+"如果勾選此方格，Odoo 將在製造訂單（MO）完成後，自動列印 MO 的分配報告標籤。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
-msgstr "如果勾選此方格，而製造訂單（MO）已有指定動作，Odoo 將在 MO 完成後，自動列印 MO 的分配報告。"
+msgstr ""
+"如果勾選此方格，而製造訂單（MO）已有指定動作，Odoo 將在 MO 完成後，自動列印 "
+"MO 的分配報告。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
-msgstr "如果勾選此方格，Odoo 將在製造訂單（MO）完成後，自動列印 MO 的批次/序號標籤。"
+msgstr ""
+"如果勾選此方格，Odoo 將在製造訂單（MO）完成後，自動列印 MO 的批次/序號標籤。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid ""
-"If this checkbox is ticked, Odoo will automatically print the product labels"
-" of a MO when it is done."
-msgstr "如果勾選此方格，Odoo 將在製造訂單（MO）完成後，自動列印 MO 的產品標籤。"
+"If this checkbox is ticked, Odoo will automatically print the product labels "
+"of a MO when it is done."
+msgstr ""
+"如果勾選此方格，Odoo 將在製造訂單（MO）完成後，自動列印 MO 的產品標籤。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
-msgstr "如果勾選此方格，Odoo 將在製造訂單（MO）完成後，自動列印 MO 的生產訂單。"
+msgstr ""
+"如果勾選此方格，Odoo 將在製造訂單（MO）完成後，自動列印 MO 的生產訂單。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2691,8 +2947,7 @@ msgstr "物料清單的匯入用範本"
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
-"Impossible to plan the workorder. Please check the workcenter "
-"availabilities."
+"Impossible to plan the workorder. Please check the workcenter availabilities."
 msgstr "未能規劃生產工作單。請檢查工作中心的可用空檔。"
 
 #. module: mrp
@@ -2744,9 +2999,13 @@ msgid "Inventory Moves"
 msgstr "庫存移動"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_route
+msgid "Inventory Route"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
-msgid ""
-"Inventory moves for which you must scan a lot number at this work order"
+msgid "Inventory moves for which you must scan a lot number at this work order"
 msgstr "您必須在此工單掃瞄批次號碼的庫存移動"
 
 #. module: mrp
@@ -2812,7 +3071,9 @@ msgstr "已經解除阻塞."
 msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
 "Manufacturing Order instead in order to unplan all the linked operations."
-msgstr "不可能取消計劃一個單一的工單. 您應該取消計劃製造訂單,而不是取消計劃所有鏈接的製程."
+msgstr ""
+"不可能取消計劃一個單一的工單. 您應該取消計劃製造訂單,而不是取消計劃所有鏈接的"
+"製程."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
@@ -2836,8 +3097,6 @@ msgid "Kanban Dashboard Graph"
 msgstr "看板Dashboard圖表"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_move__description_bom_line
-#: model:ir.model.fields,field_description:mrp.field_stock_move_line__description_bom_line
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__bom_id
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -2866,7 +3125,6 @@ msgstr "筆記型電腦配備 16GB RAM"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_uid
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__write_uid
@@ -2875,6 +3133,8 @@ msgstr "筆記型電腦配備 16GB RAM"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_group__write_uid
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__write_uid
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__write_uid
@@ -2893,7 +3153,6 @@ msgstr "最後更新者"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_date
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__write_date
@@ -2902,6 +3161,8 @@ msgstr "最後更新者"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_group__write_date
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__write_date
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__write_date
@@ -2953,7 +3214,13 @@ msgstr "MO工單延遲或物料延遲交貨"
 msgid ""
 "Latest component availability status for this MO. If green, then the MO's "
 "readiness status is ready, as per BOM configuration."
-msgstr "此 MO 的最新物料可用性狀態. 如果為綠色,則根據 BOM 配置,MO 的就緒狀態為就緒."
+msgstr ""
+"此 MO 的最新物料可用性狀態. 如果為綠色,則根據 BOM 配置,MO 的就緒狀態為就緒."
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
+msgid "Layers that are stick together to assemble wood panels."
+msgstr "黏在一起的層來組裝木板."
 
 #. module: mrp
 #. odoo-javascript
@@ -2971,10 +3238,12 @@ msgstr "退出"
 #: model:ir.model.fields,help:mrp.field_product_document__attached_on_mrp
 msgid ""
 "Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment when this product is in a bill of material."
+"Select Bill of Materials to visualise this document as a product attachment "
+"when this product is in a bill of material."
 msgstr ""
 "如果文件只能在產品表單存取，可繼續保持隱藏。\n"
-"若產品屬於用料清單中項目，請選擇「用料清單」，以將此文件視覺化呈現為產品附件。"
+"若產品屬於用料清單中項目，請選擇「用料清單」，以將此文件視覺化呈現為產品附"
+"件。"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
@@ -3020,22 +3289,6 @@ msgid "Loss Reason"
 msgstr "損失理由"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_batch_produce.py:0
-msgid "Lot %s does not exist."
-msgstr "批次 %s 不存在。"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__lots_quantity_separator
-msgid "Lot quantity separator"
-msgstr "批次數量分隔符"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__lots_separator
-msgid "Lot separator"
-msgstr "批次分隔器"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Lot/SN Label"
 msgstr "批次/序號標籤"
@@ -3057,13 +3310,14 @@ msgid "Lot/Serial"
 msgstr "批次/序列號"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__lot_producing_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__lot_producing_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__lot_id
-#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__finished_lot_id
 msgid "Lot/Serial Number"
-msgstr "批次/序列號碼"
+msgstr "批次/序號"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__lot_producing_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_workorder__finished_lot_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Lot/Serial Numbers"
 msgstr "批次/序號"
@@ -3071,7 +3325,7 @@ msgstr "批次/序號"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_traceability
 msgid "Lots/Serial Numbers"
-msgstr "批次/序列號碼"
+msgstr "批次/序號"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
@@ -3169,11 +3423,6 @@ msgid "MRP Work Orders"
 msgstr "MRP 工單"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
-msgid "MRP Workorder productivity losses"
-msgstr "MRP 工單產能損失"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 msgid "MRP-001"
 msgstr "MRP-001"
@@ -3234,12 +3483,6 @@ msgid "Manufacture Rule"
 msgstr "製造規則"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/stock_rule.py:0
-msgid "Manufacture Security Lead Time"
-msgstr "製造安全前置時間"
-
-#. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__normal
 msgid "Manufacture this product"
 msgstr "製造此產品"
@@ -3290,8 +3533,6 @@ msgstr "製造預測"
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__produce_delay
-#: model:ir.model.fields,field_description:mrp.field_res_company__manufacturing_lead
-#: model:ir.model.fields,field_description:mrp.field_res_config_settings__manufacturing_lead
 msgid "Manufacturing Lead Time"
 msgstr "製造前置時間"
 
@@ -3351,15 +3592,12 @@ msgid "Manufacturing Reference"
 msgstr "製造編碼"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
-msgid "Manufacturing Visibility Days"
-msgstr "製造可見天數"
-
-#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid ""
-"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
-"                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
+"Manufacturing operations are processed at Work Centers. A Work Center can be "
+"composed of\n"
+"                workers and/or machines, they are used for costing, "
+"scheduling, capacity planning, etc."
 msgstr ""
 "製造製程在工作中心處理. 一個工作中心可以由\n"
 "                 工人和/或機器, 它們用於成本計算、調度、產能規劃等."
@@ -3367,8 +3605,10 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid ""
-"Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
-"                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
+"Manufacturing operations are processed at Work Centers. A Work Center can be "
+"composed of\n"
+"                workers and/or machines, they are used for costing, "
+"scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
 "製造製程在工作中心處理. 一個工作中心可以由\n"
@@ -3381,7 +3621,8 @@ msgstr ""
 msgid ""
 "Manufacturing readiness for this MO, as per bill of material configuration:\n"
 "            * Ready: The material is available to start the production.\n"
-"            * Waiting: The material is not available to start the production.\n"
+"            * Waiting: The material is not available to start the "
+"production.\n"
 msgstr ""
 "根據物料清單設定, 此 MO 的製造準備情況:\n"
 "            * 準備就緒: 材料可用於開始生產.\n"
@@ -3403,11 +3644,6 @@ msgstr "Marc Demo"
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
 msgid "Mark as Done"
 msgstr "標記為完成"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
-msgid "Mass Produce"
-msgstr "量產"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_mps
@@ -3494,7 +3730,6 @@ msgstr "MRP 顯示"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_ids
-#: model:ir.model.fields,field_description:mrp.field_procurement_group__mrp_production_ids
 msgid "Mrp Production"
 msgstr "Mrp: 製造生產"
 
@@ -3522,6 +3757,11 @@ msgid "My MOs"
 msgstr "我的製造訂單"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_group__name
+msgid "Name"
+msgstr "名稱"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
 msgid "Never attribute values"
 msgstr "從不賦予值"
@@ -3530,8 +3770,6 @@ msgstr "從不賦予值"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_unbuild.py:0
-#: code:addons/mrp/models/stock_rule.py:0
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "New"
 msgstr "新增"
 
@@ -3578,6 +3816,18 @@ msgstr "下一活動類型"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "No Backorder"
 msgstr "沒有缺貨訂單"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "No BoM Found"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "No Operations Yet !"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -3672,7 +3922,8 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
-"注意!! 已歸檔的工作中心: '%s' 仍然鏈接到啟用的物料清單, 這意味著仍然可以在其上計劃製程. 為防止這種情況, 建議改為刪除工作中心."
+"注意!! 已歸檔的工作中心: '%s' 仍然鏈接到啟用的物料清單, 這意味著仍然可以在其"
+"上計劃製程. 為防止這種情況, 建議改為刪除工作中心."
 
 #. module: mrp
 #. odoo-python
@@ -3680,7 +3931,8 @@ msgstr ""
 msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
 "which means that the product can still be used on it/them."
-msgstr "注意!! 產品: '%s' 仍然鏈接到有效的物料清單, 這意味著該產品仍可用於它/它們."
+msgstr ""
+"注意!! 產品: '%s' 仍然鏈接到有效的物料清單, 這意味著該產品仍可用於它/它們."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3717,7 +3969,7 @@ msgid "Number of Manufacturing Orders to Process"
 msgstr "製造訂單的數量"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__lot_qty
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__lot_quantity
 msgid "Number of SN"
 msgstr "序號號碼"
 
@@ -3784,12 +4036,16 @@ msgstr "設備綜合效率（OEE）目標"
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid ""
 "Odoo opens a PDF preview by default. If you want to print instantly,\n"
-"                                install the IoT App on a computer that is on the same local network as the\n"
-"                                barcode operator and configure the routing of the reports."
+"                                install the IoT App on a computer that is on "
+"the same local network as the\n"
+"                                barcode operator and configure the routing "
+"of the reports."
 msgstr ""
 "Odoo 預設開啟 PDF 預覽。若想立即列印，\n"
-"                                請在條碼操作器的同一區域網絡（local network）的電腦上\n"
-"                                安裝 IoT 物聯網應用程式，並設定報告的路由走向。"
+"                                請在條碼操作器的同一區域網絡（local network）"
+"的電腦上\n"
+"                                安裝 IoT 物聯網應用程式，並設定報告的路由走"
+"向。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
@@ -3829,6 +4085,11 @@ msgid "Operation"
 msgstr "製程"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
+msgid "Operation Category"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__allow_operation_dependencies
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__allow_operation_dependencies
 msgid "Operation Dependencies"
@@ -3846,13 +4107,9 @@ msgid "Operation Type"
 msgstr "作業類型"
 
 #. module: mrp
-#: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
-msgid ""
-"Operation define that need to be done to realize a Work Order.\n"
-"                Each operation is done at a specific Work Center and has a specific duration."
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+msgid "Operation..."
 msgstr ""
-"製程定義需要完成以實現工單.\n"
-"                 每個製程都在特定的工作中心完成並具有特定的持續時間."
 
 #. module: mrp
 #. odoo-javascript
@@ -3878,6 +4135,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
 msgid "Operations"
 msgstr "製程"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__operation_count
+msgid "Operations Count"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -3969,6 +4231,11 @@ msgstr "包裝條碼"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
 msgid "Parent BoM"
 msgstr "上級 BoM"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_group__parent_ids
+msgid "Parent Manufacturing Orders"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__parent_product_tmpl_id
@@ -4106,6 +4373,11 @@ msgid "Planning"
 msgstr "規劃"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_plastic_laminate_product_template
+msgid "Plastic Laminate"
+msgstr "塑膠層壓板"
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_move.py:0
 msgid "Please enter a positive quantity."
@@ -4119,15 +4391,18 @@ msgstr "請設置第一個序號或預設序列"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/wizard/mrp_batch_produce.py:0
-msgid "Please specify the first serial number you would like to use."
-msgstr "請指定你想使用的第一個序號。"
+#: code:addons/mrp/models/mrp_unbuild.py:0
+msgid ""
+"Please specify a manufacturing order.\n"
+"It will allow us to retrieve the lots/serial numbers of the correct "
+"components and/or byproducts."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/wizard/mrp_batch_produce.py:0
-msgid "Please specify the serial number you would like to use."
-msgstr "請指定你想使用的序號。"
+#: code:addons/mrp/wizard/change_production_qty.py:0
+msgid "Please specify a quantity bigger than 0."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -4140,6 +4415,16 @@ msgstr "請解除封鎖工作中心，以啟動工作單。"
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Please unblock the work center to validate the work order"
 msgstr "請解除封鎖工作中心，以驗證工作單。"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_wood_ply_product_template
+msgid "Ply Layer"
+msgstr "板層"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_ply_veneer_product_template
+msgid "Ply Veneer"
+msgstr "膠合板"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
@@ -4165,11 +4450,6 @@ msgstr "生產後位置"
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Pre-Production"
 msgstr "生產前位置"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
-msgid "Prepare MO"
-msgstr "預備製造訂單"
 
 #. module: mrp
 #. odoo-javascript
@@ -4224,20 +4504,12 @@ msgid "Processed Disassembly Lines"
 msgstr "已處理的拆解明細"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_procurement_group
-#: model:ir.model.fields,field_description:mrp.field_mrp_production__procurement_group_id
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-msgid "Procurement Group"
-msgstr "補貨組"
-
-#. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_procurement_compute_mrp
 msgid "Procurement: run scheduler"
 msgstr "補貨: 執行調度器"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_batch_produce_form
 msgid "Produce"
 msgstr "生產"
 
@@ -4245,11 +4517,6 @@ msgstr "生產"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Produce All"
 msgstr "生產全部"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_batch_produce
-msgid "Produce a batch of production order"
-msgstr "產生一批生產訂單"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -4271,6 +4538,11 @@ msgstr "已生產"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Produced Quantity"
 msgstr "生產數量"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__serial_numbers
+msgid "Produced Serial Numbers"
+msgstr "生產序號"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__operation_id
@@ -4349,12 +4621,12 @@ msgstr "產品生命周期管理（PLM）"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "產品移動(移庫明細)"
+msgstr "產品移動（庫存移動資料行）"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_qty_available
 msgid "Product On Hand Quantity"
-msgstr "現有產品數量"
+msgstr "產品在庫數量"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
@@ -4401,9 +4673,8 @@ msgid "Product/Unit capacity should be unique for each workcenter."
 msgstr "每個工作中心的產品/單位產能，應該獨一無二。"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_id
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__production_id
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__production_ids
-#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 msgid "Production"
 msgstr "生產"
 
@@ -4417,6 +4688,19 @@ msgstr "製程產能"
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_date
 msgid "Production Date"
 msgstr "生產日期"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "Production End Date"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_group
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__production_group_id
+#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_group_id
+msgid "Production Group"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -4446,6 +4730,12 @@ msgid "Production Order for finished products"
 msgstr "完工產品的生產工單"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "Production Start Date"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
 msgid "Production State"
 msgstr "生產狀態"
@@ -4465,6 +4755,13 @@ msgstr "草稿狀態下的工單生產製造"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Production started late"
 msgstr "生產開始延遲"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_group__production_ids
+#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
+#: model:ir.model.fields,field_description:mrp.field_stock_reference__production_ids
+msgid "Productions"
+msgstr "生產"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__production_ids
@@ -4530,6 +4827,7 @@ msgid "Quality Worksheet"
 msgstr "品質工作表"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__quant_ids
 msgid "Quant"
 msgstr "數量"
@@ -4599,11 +4897,6 @@ msgstr "待生產數量"
 #: model:ir.model.fields,help:mrp.field_mrp_production_split__production_capacity
 msgid "Quantity that can be produced with the current stock of components"
 msgstr "使用當前庫存的物料可生產數量"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_stock_quant
-msgid "Quants"
-msgstr "數量"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
@@ -4687,14 +4980,18 @@ msgid "Reference"
 msgstr "編號"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_reference
+msgid "Reference between stock documents"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_name_uniq
 msgid "Reference must be unique per Company!"
 msgstr "每個公司的編碼必須唯一!"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__origin
-msgid ""
-"Reference of the document that generated this production order request."
+msgid "Reference of the document that generated this production order request."
 msgstr "建立這張生產工單的前置單據編碼."
 
 #. module: mrp
@@ -4703,6 +5000,11 @@ msgstr "建立這張生產工單的前置單據編碼."
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "Reference:"
 msgstr "編號："
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__reference_ids
+msgid "References"
+msgstr "客戶成功案例"
 
 #. module: mrp
 #. odoo-javascript
@@ -4795,6 +5097,14 @@ msgid "Routing Work Centers"
 msgstr "路線工作中心"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid ""
+"Run your Shop Floor with work orders for each operation defined on your bill "
+"of material."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_has_sms_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_has_sms_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__message_has_sms_error
@@ -4807,11 +5117,6 @@ msgstr "簡訊發送錯誤"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__date
 msgid "Schedule Date"
 msgstr "預定日期"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-msgid "Schedule manufacturing orders earlier to avoid delays"
-msgstr "提前安排生產工單以避免延誤"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4858,6 +5163,11 @@ msgid "Scraps"
 msgstr "報廢"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
+msgid "Screw"
+msgstr "螺絲"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Search"
 msgstr "搜尋"
@@ -4883,17 +5193,6 @@ msgid "Search for mrp workcenter"
 msgstr "MRP工作中心的搜尋"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-msgid "Security Lead Time"
-msgstr "安全時間"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_res_company__manufacturing_lead
-#: model:ir.model.fields,help:mrp.field_res_config_settings__manufacturing_lead
-msgid "Security days for each manufacturing operation."
-msgstr "每個製造製程的確保天數."
-
-#. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
 msgid "Select Operations to Copy"
@@ -4911,6 +5210,19 @@ msgid "Sequence"
 msgstr "序列號"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
+msgid "Serial Numbers"
+msgstr "序號"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "Serial number(s) for product %(product_name)s already produced"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Set Quantities & Validate"
 msgstr "設置數量和驗證"
@@ -4921,9 +5233,17 @@ msgid "Set Quantity"
 msgstr "設置數量"
 
 #. module: mrp
-#: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
-msgid "Set duration manually"
-msgstr "手動設定時長"
+#. odoo-python
+#: code:addons/mrp/wizard/change_production_qty.py:0
+msgid ""
+"Set a quantity that is smaller than the intial demand to split the "
+"manufacturing order."
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_replenishment_tree_view
+msgid "Set as Bill of Materials"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4955,6 +5275,12 @@ msgid "Setup and Adjustments"
 msgstr "設定及調整"
 
 #. module: mrp
+#: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "Shop Floor"
+msgstr "工場"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_allocation
 msgid "Show Allocation"
 msgstr "顯示分配"
@@ -4971,6 +5297,16 @@ msgid "Show Bom"
 msgstr "顯示物料清單"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__show_bom_tab
+msgid "Show Bom Tab"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_copy_operations_button
+msgid "Show Copy Operations Button"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Show Details"
 msgstr "顯示詳細資訊"
@@ -4979,6 +5315,11 @@ msgstr "顯示詳細資訊"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_final_lots
 msgid "Show Final Lots"
 msgstr "顯示最後一批"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__show_generate_bom
+msgid "Show Generate BOM"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lock
@@ -4999,6 +5340,11 @@ msgstr "顯示生產"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_produce_all
 msgid "Show Produce All"
 msgstr "顯示生產全部"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_set_bom_button
+msgid "Show Set Bom Button"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__show_time_total
@@ -5022,26 +5368,21 @@ msgid "Slot into workcenter calendar once planned"
 msgstr "進行規劃後，插入工作中心日曆"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_unbuild.py:0
-msgid ""
-"Some of your byproducts are tracked, you have to specify a manufacturing "
-"order in order to retrieve the correct byproducts."
-msgstr "您的某些副產品被追蹤,您必須指定製造訂單才能檢索正確的副產品."
+#: model_terms:product.template,description:mrp.product_product_computer_desk_head_product_template
+msgid "Solid wood is a durable natural material."
+msgstr "實木是一種耐用的天然材料."
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_unbuild.py:0
-msgid ""
-"Some of your components are tracked, you have to specify a manufacturing "
-"order in order to retrieve the correct components."
-msgstr "追蹤了一些物料,必須指定生產單才能檢索正確的物料."
+#: model_terms:product.template,description:mrp.product_product_computer_desk_product_template
+msgid "Solid wood table."
+msgstr "實木桌子."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"Some work orders are already done, so you cannot unplan this manufacturing order.\n"
+"Some work orders are already done, so you cannot unplan this manufacturing "
+"order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
@@ -5053,7 +5394,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"Some work orders have already started, so you cannot unplan this manufacturing order.\n"
+"Some work orders have already started, so you cannot unplan this "
+"manufacturing order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
@@ -5073,12 +5415,12 @@ msgstr "來源位置"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
-msgid ""
-"Specific number of pieces that can be produced in parallel per product."
+msgid "Specific number of pieces that can be produced in parallel per product."
 msgstr "每個產品可以並行生產的具體件數."
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_split
+#: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
 msgid "Split"
 msgstr "拆分"
@@ -5115,6 +5457,16 @@ msgstr "拆分製程"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
 msgid "Split productions"
 msgstr "拆分的製程"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template
+msgid "Stainless steel screw"
+msgstr "不銹鋼螺絲"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_bolt_product_template
+msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
+msgstr "不銹鋼螺絲滿(直徑－5毫米, 長度－10毫米)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -5227,6 +5579,11 @@ msgid "Stock rule report"
 msgstr "庫存規則報告"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_stock_replenishment_info
+msgid "Stock supplier replenishment information"
+msgstr "庫存供應商補貨資訊"
+
+#. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Store Finished Product"
@@ -5241,6 +5598,31 @@ msgstr "子物料清單（BOM）"
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
 msgstr "委外生產"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_product_template
+msgid "Table"
+msgstr "桌子"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_table_kit_product_template
+msgid "Table Kit"
+msgstr "桌子組裝套件"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
+msgid "Table Leg"
+msgstr "桌腿"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_head_product_template
+msgid "Table Top"
+msgstr "桌頂部"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_table_kit_product_template
+msgid "Table kit"
+msgstr "桌子組裝套件"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tag_ids
@@ -5285,6 +5667,13 @@ msgid "Technical field to check when we can unreserve"
 msgstr "技術領域來檢查什麼時候我們可以取消保留"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__show_copy_operations_button
+msgid ""
+"Technical field used to control the visibility of the 'Copy Existing "
+"Operations' button."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
 msgstr "自建立製造訂單以來，用料清單（BoM）已經更新"
@@ -5301,13 +5690,21 @@ msgstr "工單 (%s) 無法重複啟動!"
 msgid ""
 "The attribute value %(attribute)s set on product %(product)s does not match "
 "the BoM product %(bom_product)s."
-msgstr "在產品 %(product)s 上設定的屬性值 %(attribute)s 與 BoM 產品 %(bom_product)s 不匹配."
+msgstr ""
+"在產品 %(product)s 上設定的屬性值 %(attribute)s 與 BoM 產品 %(bom_product)s "
+"不匹配."
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-msgid "The component %s should not be the same as the product to produce."
-msgstr "物料 %s 不應與要生產的產品相同."
+#: code:addons/mrp/wizard/change_production_qty.py:0
+msgid "The backorder %s has been created."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_bom.py:0
+msgid "The batch size must be positive!"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5347,14 +5744,17 @@ msgid ""
 "The percentage of the final production cost for this by-product line "
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
-msgstr "此副產品線的最終生產成本百分比(除以生產數量).所有副產品的成本份額總和必須小於或等於 100."
+msgstr ""
+"此副產品線的最終生產成本百分比(除以生產數量).所有副產品的成本份額總和必須小於"
+"或等於 100."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__cost_share
 msgid ""
 "The percentage of the final production cost for this by-product. The total "
 "of all by-products' cost share must be smaller or equal to 100."
-msgstr "此副產品在最終生產成本中的百分比.所有副產品的總成本份額必須小於或等於 100."
+msgstr ""
+"此副產品在最終生產成本中的百分比.所有副產品的總成本份額必須小於或等於 100."
 
 #. module: mrp
 #. odoo-python
@@ -5362,7 +5762,9 @@ msgstr "此副產品在最終生產成本中的百分比.所有副產品的總�
 msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
-msgstr "生產工作單的計劃結束日期，不可早過計劃開始日期。請更正此項資料，才可儲存生產工作單。"
+msgstr ""
+"生產工作單的計劃結束日期，不可早過計劃開始日期。請更正此項資料，才可儲存生產"
+"工作單。"
 
 #. module: mrp
 #. odoo-python
@@ -5371,7 +5773,9 @@ msgid ""
 "The product has already been used at least once, editing its structure may "
 "lead to undesirable behaviours. You should rather archive the product and "
 "create a new one with a new bill of materials."
-msgstr "該產品已經至少使用過一次, 編輯其結構可能會導致不良效果. 您應該歸檔產品並使用新的材料清單建立一個新產品."
+msgstr ""
+"該產品已經至少使用過一次, 編輯其結構可能會導致不良效果. 您應該歸檔產品並使用"
+"新的材料清單建立一個新產品."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_reported_from_previous_wo
@@ -5400,8 +5804,8 @@ msgstr "要拆解的數量必須是正數！"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"The serial number %(number)s used for byproduct %(product_name)s has already"
-" been produced"
+"The serial number %(number)s used for byproduct %(product_name)s has already "
+"been produced"
 msgstr "用於副產品 %(product_name)s 的序列號 %(number)s 已經生產"
 
 #. module: mrp
@@ -5443,6 +5847,11 @@ msgid "The work order should have already been processed."
 msgstr "工單應該已經被處理了."
 
 #. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__estimated
+msgid "Theorical time"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid ""
 "There are no components to consume. Are you still sure you want to continue?"
@@ -5482,8 +5891,9 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
-"此欄位用於計算此工作中心的工單的預期工期. 例如，如果工單耗時一小時，而效率係數為 100%，則預期工期將為一小時. 如果效率係數為 "
-"200%，則預計持續時間為 30 分鐘."
+"此欄位用於計算此工作中心的工單的預期工期. 例如，如果工單耗時一小時，而效率係"
+"數為 100%，則預期工期將為一小時. 如果效率係數為 200%，則預計持續時間為 30 分"
+"鐘."
 
 #. module: mrp
 #. odoo-javascript
@@ -5497,13 +5907,17 @@ msgstr "這是一個套件類型的BoM!"
 msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
-msgstr "這是根據產品的物料清單(BoM)的成本. 它是通過匯總構建產品所需的物料和製程的成本來計算的."
+msgstr ""
+"這是根據產品的物料清單(BoM)的成本. 它是通過匯總構建產品所需的物料和製程的成本"
+"來計算的."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
 msgid ""
-"This menu gives you the full traceability of inventory operations on a specific product.\n"
-"                You can filter on the product to see all the past movements for the product."
+"This menu gives you the full traceability of inventory operations on a "
+"specific product.\n"
+"                You can filter on the product to see all the past movements "
+"for the product."
 msgstr ""
 "此功能為您提供特定產品庫存製程的完整可追溯性.\n"
 "                 您可以過濾產品以查看該產品過去的所有動向."
@@ -5521,18 +5935,13 @@ msgid "This production order has been created from Replenishment Report."
 msgstr "此生產工單是根據補貨報告建立的."
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-msgid "This serial number for product %s has already been produced"
-msgstr "序列號的產品 %s 已經生產"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
 msgid ""
 "This should be the smallest quantity that this product can be produced in. "
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
-msgstr "這應該是該產品可以生產的最小數量.如果 BOM 包含製程, 請確保工作中心產能準確."
+msgstr ""
+"這應該是該產品可以生產的最小數量.如果 BOM 包含製程, 請確保工作中心產能準確."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -5573,9 +5982,9 @@ msgstr "設定的時間,以分鐘計."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
 msgid ""
-"Time in minutes:- In manual mode, time used- In automatic mode, supposed "
-"first time when there aren't any work orders yet"
-msgstr "時間以分鐘為單位:- 在手動模式下, 使用時間- 在自動模式下, 假設第一次沒有任何工單"
+"Time in minutes:- In fixed mode, time used- In computed mode, supposed first "
+"time when there aren't any work orders yet"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -5661,6 +6070,11 @@ msgstr "今天的活動"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Tomorrow"
 msgstr "明天"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_wood_wear_product_template
+msgid "Top layer of a wood panel."
+msgstr "木板的頂層."
 
 #. module: mrp
 #. odoo-javascript
@@ -5775,11 +6189,6 @@ msgid "Transfers"
 msgstr "調撥"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
-msgid "Type of Operation"
-msgstr "作業的類型"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_exception_decoration
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__activity_exception_decoration
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_decoration
@@ -5833,6 +6242,8 @@ msgstr "拆解"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.js:0
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.js:0
 msgid "Unfold"
@@ -5928,7 +6339,9 @@ msgstr "緊急"
 msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
-msgstr "使用製造訂單（MO）構建成品，同時消耗組件：例如，1 張桌子 = 4 件桌腿 + 1 個桌面"
+msgstr ""
+"使用製造訂單（MO）構建成品，同時消耗組件：例如，1 張桌子 = 4 件桌腿 + 1 個桌"
+"面"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
@@ -5947,6 +6360,11 @@ msgid "Used In"
 msgstr "用於"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_move__production_group_id
+msgid "Used for Productions"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__user_id
 #: model:res.groups,name:mrp.group_mrp_user
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -5959,7 +6377,9 @@ msgid ""
 "Using a MPS report to schedule your reordering and manufacturing operations "
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
-msgstr "如果您的前置時間很長,而且您是根據銷售預測進行生產,那麼使用MPS報告來安排您的重新下單排序和製造製程是非常有用的."
+msgstr ""
+"如果您的前置時間很長,而且您是根據銷售預測進行生產,那麼使用MPS報告來安排您的重"
+"新下單排序和製造製程是非常有用的."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__valid_details
@@ -5969,7 +6389,7 @@ msgstr "有效"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr "有效的產品屬性明細"
+msgstr "有效的產品屬性資料行"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -5981,9 +6401,11 @@ msgstr "核實"
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 msgid ""
 "Values cannot be set and validated because a Lot/Serial Number needs to be "
-"specified for a tracked product that is having its consumed amount "
-"increased:%(products)s"
-msgstr "未能設定及驗證數值，因為對於消耗量增加的追蹤產品，需要指定其批次/序號：%(products)s"
+"specified for a tracked product that is having its consumed amount increased:"
+"%(products)s"
+msgstr ""
+"未能設定及驗證數值，因為對於消耗量增加的追蹤產品，需要指定其批次/序號：%"
+"(products)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -6007,11 +6429,6 @@ msgid ""
 "View and allocate production quantities to customer orders or other "
 "manufacturing orders"
 msgstr "查看生產數量，並將其分配至客戶訂單或其他製造訂單"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
-msgid "Visibility Days applied on the manufacturing routes."
-msgstr "應用於製造路線的可見天數."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -6041,12 +6458,16 @@ msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
 msgstr "等待上一個工單,計劃從 %(start)s 到 %(end)s"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #: model:ir.model,name:mrp.model_stock_warehouse
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__warehouse_id
 msgid "Warehouse"
 msgstr "倉庫"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
+msgid "Warehouse:"
+msgstr "倉庫:"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
@@ -6065,6 +6486,11 @@ msgstr "警告"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Warnings"
 msgstr "警告"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_wood_wear_product_template
+msgid "Wear Layer"
+msgstr "磨損層"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__website_message_ids
@@ -6088,18 +6514,22 @@ msgstr "網站溝通記錄"
 #: model:ir.model.fields,help:mrp.field_mrp_bom__picking_type_id
 msgid ""
 "When a procurement has a ‘produce’ route with a operation type set, it will "
-"try to create a Manufacturing Order for that product using a BoM of the same"
-" operation type.If not,the operation type is not taken into account in the "
+"try to create a Manufacturing Order for that product using a BoM of the same "
+"operation type.If not,the operation type is not taken into account in the "
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
-"若採購操作下的「生產」路線已設定操作類型，會嘗試使用該操作類型的物料清單（BoM）為該產品建立製造單。如果沒有，搜尋物料清單時便不會考慮該操作類型。此安排讓你可定義能夠採用不同物料清單去觸發不同製造單的庫存規則。"
+"若採購操作下的「生產」路線已設定操作類型，會嘗試使用該操作類型的物料清單"
+"（BoM）為該產品建立製造單。如果沒有，搜尋物料清單時便不會考慮該操作類型。此安"
+"排讓你可定義能夠採用不同物料清單去觸發不同製造單的庫存規則。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
 msgid ""
-"When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-"If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also."
+"When activated, then the registration of consumption for that component is "
+"recorded manually exclusively.\n"
+"If not activated, and any of the components consumption is edited manually "
+"on the manufacturing order, Odoo assumes manual consumption also."
 msgstr ""
 "啟用後, 將專門手動記錄該物料的消耗記錄.\n"
 "如果未啟用, 並且任何物料消耗在製造訂單上手動編輯, ERP 也會視其為手動消耗."
@@ -6131,8 +6561,9 @@ msgid ""
 "perfectly integrated into the process. Workers can trigger feedback loops, "
 "maintenance alerts, scrap products, etc."
 msgstr ""
-"使用 Odoo 工作中心控制面板,您的員工可以在工廠開始生產工單並按照工作表的描述進行製程. 品質測試完美地融入了流程中. "
-"工人可以觸發反饋循環、維護警報、報廢產品等."
+"使用 Odoo 工作中心控制面板,您的員工可以在工廠開始生產工單並按照工作表的描述進"
+"行製程. 品質測試完美地融入了流程中. 工人可以觸發反饋循環、維護警報、報廢產品"
+"等."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning
@@ -6155,6 +6586,11 @@ msgstr "拆分製程引導"
 #: model:ir.model,name:mrp.model_mrp_production_backorder
 msgid "Wizard to mark as done or create back order"
 msgstr "標記為完成或建立延期訂單的引導"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_wood_panel_product_template
+msgid "Wood Panel"
+msgstr "木板"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -6212,7 +6648,7 @@ msgstr "工作中心"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_kanban_action
 msgid "Work Centers Overview"
-msgstr "工作中心概述"
+msgstr "工作中心概覽"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_workorder
@@ -6237,7 +6673,9 @@ msgid ""
 "operations that should be followed within your work centers in order to "
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
-msgstr "生產工單製程允許您建立和管理在工作中心內應遵循的製造製程,以便生產產品.它們附加到將定義所需物料的材料清單上."
+msgstr ""
+"生產工單製程允許您建立和管理在工作中心內應遵循的製造製程,以便生產產品.它們附"
+"加到將定義所需物料的材料清單上."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -6284,7 +6722,8 @@ msgstr "工作中心"
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
-"                    Operations are defined in the bill of materials or added in the manufacturing order directly."
+"                    Operations are defined in the bill of materials or added "
+"in the manufacturing order directly."
 msgstr ""
 "生產工單是作為製造訂單的一部分執行的製程.\n"
 "                     製程在物料清單中定義或直接增加到製造訂單中."
@@ -6296,7 +6735,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
-"            Operations are defined in the bill of materials or added in the manufacturing order directly."
+"            Operations are defined in the bill of materials or added in the "
+"manufacturing order directly."
 msgstr ""
 "工作訂單是作為製造訂單的一部分執行的操作。\n"
 "             操作在物料清單中定義或直接添加到製造訂單中."
@@ -6334,14 +6774,10 @@ msgid "Workcenter Productivity Log"
 msgstr "工作中心產能日誌"
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
 msgid "Workcenter Productivity Loss"
-msgstr "工作中心產能損失"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
-msgid "Workcenter Productivity Losses"
 msgstr "工作中心產能損失"
 
 #. module: mrp
@@ -6366,12 +6802,14 @@ msgid "Working user on this work order."
 msgstr "在此工單工作的使用者."
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/wizard/mrp_batch_produce.py:0
-msgid ""
-"Write one line per finished product to produce, with serial numbers as "
-"follows:\n"
-msgstr "為每件製成品寫入一行資料行，以進行生產，有關序號如下：\n"
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__workorder_id
+msgid "Workorder"
+msgstr "工作單"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
+msgid "Workorder Productivity Loss Type"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__yesterday
@@ -6387,7 +6825,9 @@ msgid ""
 "components with the operation type \"Manufacturing\". To change this, go on "
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
-msgstr "不允許為製程類型為\"製造\"的零部件建立或編輯批次或序號.要更改此更改,請轉到製程類型,並勾選\"為物料建立新批次/序號\"框."
+msgstr ""
+"不允許為製程類型為\"製造\"的零部件建立或編輯批次或序號.要更改此更改,請轉到製"
+"程類型,並勾選\"為物料建立新批次/序號\"框."
 
 #. module: mrp
 #. odoo-python
@@ -6436,6 +6876,12 @@ msgstr "您只能合併具有相同狀態的製造."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot cancel a manufacturing order that is already done."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
@@ -6445,10 +6891,8 @@ msgstr "處於已完成或取消狀態的工作單，不可變更已生產數量
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-msgid ""
-"You cannot change the workcenter of a work order that is in progress or "
-"done."
-msgstr "不能更改正在進行或已完成的生產工單的工作中心."
+msgid "You cannot change the workcenter of a work order that is done."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6462,6 +6906,12 @@ msgstr "您無法於此處建立新的物料清單 (BOM)"
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot create cyclic dependency."
 msgstr "您不能建立循環依賴."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot delete a manufacturing order that is already done."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6489,23 +6939,23 @@ msgstr "取消或完成生產工單後, 無法移動該訂單."
 
 #. module: mrp
 #. odoo-python
-#: code:addons/mrp/models/mrp_workorder.py:0
-msgid "You cannot produce more than 1 unit of a serial product at a time."
-msgstr "序列產品一次過不可生產超過 1 個單位。"
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_workorder.py:0
-msgid "You cannot produce the same serial number twice."
-msgstr "不能重複生產相同的序列號."
-
-#. module: mrp
-#. odoo-python
 #: code:addons/mrp/models/stock_picking.py:0
 msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
 msgstr "您不能將報廢位置設定為製造類型操作的目標位置."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot set more than 1 lot"
+msgstr ""
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot set more than 1 lot per product"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6535,9 +6985,12 @@ msgid ""
 "                            Please confirm it has been done on purpose.\n"
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
-"                            Please review your component consumption or ask a manager to validate\n"
-"                            <span invisible=\"mrp_production_count != 1\">this manufacturing order</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
+"                            Please review your component consumption or ask "
+"a manager to validate\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">this manufacturing order</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
 "你為以下產品消耗的數量，與預期數量不同。\n"
@@ -6546,8 +6999,10 @@ msgstr ""
 "                        </b>\n"
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            請再檢查組件消耗量，或請經理驗證\n"
-"                            <span invisible=\"mrp_production_count != 1\">這張製造訂單</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\">這些製造訂單</span>。\n"
+"                            <span invisible=\"mrp_production_count != 1\">這"
+"張製造訂單</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">這"
+"些製造訂單</span>。\n"
 "                        </b>"
 
 #. module: mrp
@@ -6563,16 +7018,20 @@ msgid ""
 "You need to define at least one productivity loss in the category "
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
-msgstr "您需要在「產能」類別中至少定義一個產能損失. 從製造模組建立一個選單:配置/產能損失."
+msgstr ""
+"您需要在「產能」類別中至少定義一個產能損失. 從製造模組建立一個選單:配置/產能"
+"損失."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
 "You need to define at least one productivity loss in the category "
-"'Productivity'. Create one from the Manufacturing app, menu: Configuration /"
-" Productivity Losses."
-msgstr "您需要在「產能」類別中定義至少一個產能損失. 從製造模組建立一個,選單:配置/產能損失."
+"'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
+"Productivity Losses."
+msgstr ""
+"您需要在「產能」類別中定義至少一個產能損失. 從製造模組建立一個,選單:配置/產能"
+"損失."
 
 #. module: mrp
 #. odoo-python
@@ -6581,26 +7040,22 @@ msgid ""
 "You need to define at least one unactive productivity loss in the category "
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
-msgstr "您需要在「產能」類別定義至少一個未啟用的產能損失. 從製造模組建立一個,選單:配置/產能損失."
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_workorder.py:0
-msgid "You need to provide a lot for the finished product."
-msgstr "您需要為完工產品提供批號."
+msgstr ""
+"您需要在「產能」類別定義至少一個未啟用的產能損失. 從製造模組建立一個,選單:配"
+"置/產能損失."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: "
-"%(missing_products)s"
+"You need to supply Lot/Serial Number for products and 'consume' them: %"
+"(missing_products)s"
 msgstr "你需要為產品提供批次/序號，並「消耗」它們：%(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
-msgid "You produced less than initial demand"
-msgstr "你的產量低於最初的需求"
+msgid "You produced less than the initial demand"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6635,14 +7090,14 @@ msgid "cancelled"
 msgstr "已取消"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
+msgid "copy paste a list and/or use Generate"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "days"
 msgstr "天"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-msgid "days before"
-msgstr "天前"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -6675,11 +7130,6 @@ msgid ""
 msgstr "通過轉移移動，如收貨或交貨單。"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid "last"
-msgstr "最後的"
-
-#. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "manufacturing order"
@@ -6694,7 +7144,6 @@ msgstr "已合併"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "minutes"
 msgstr "分鐘"
@@ -6729,8 +7178,3 @@ msgstr "實際持續時間"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "拆分"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
-msgid "work orders"
-msgstr "工單"

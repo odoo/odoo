@@ -67,27 +67,42 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr "Überprüfung, ob der Buchungssaldo ausgeglichen ist und ob Datum und Periode übereinstimmen."
+msgstr ""
+"Überprüfung, ob der Buchungssaldo ausgeglichen ist und ob Datum und Periode "
+"übereinstimmen."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
-msgid "Check on bank statement that the Closing Balance = Starting Balance + sum of statement lines"
-msgstr "Überprüfung, ob der Endsaldo im Bankauszug =  Startsaldo + Saldo der laufenden Buchungen"
+msgid ""
+"Check on bank statement that the Closing Balance = Starting Balance + sum of "
+"statement lines"
+msgstr ""
+"Überprüfung, ob der Endsaldo im Bankauszug =  Startsaldo + Saldo der "
+"laufenden Buchungen"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr "Überprüfung, ob bezahlte Rechnungen nicht im Status \"Offen\" verbleiben."
+msgstr ""
+"Überprüfung, ob bezahlte Rechnungen nicht im Status \"Offen\" verbleiben."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
-msgid "Check that reconciled account moves, that define Payable and Receivable accounts, are belonging to reconciled invoices"
-msgstr "Überprüfung, ob Ausgleichsbuchungen, die neue Kreditoren und Debitoren erstellen, zu offenen Rechnungen gehören."
+msgid ""
+"Check that reconciled account moves, that define Payable and Receivable "
+"accounts, are belonging to reconciled invoices"
+msgstr ""
+"Überprüfung, ob Ausgleichsbuchungen, die neue Kreditoren und Debitoren "
+"erstellen, zu offenen Rechnungen gehören."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
-msgid "Check that reconciled invoice for Sales/Purchases has reconciled entries for Payable and Receivable Accounts"
-msgstr "Überprüfung, ob ein direkter Rechnungsausgleich im Verkauf/Einkauf zu übereinstimmenden Buchungen auf den Kreditoren- und Debitorenkonten führt."
+msgid ""
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
+"Payable and Receivable Accounts"
+msgstr ""
+"Überprüfung, ob ein direkter Rechnungsausgleich im Verkauf/Einkauf zu "
+"übereinstimmenden Buchungen auf den Kreditoren- und Debitorenkonten führt."
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -102,23 +117,29 @@ msgstr "Eingabehilfe"
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your "
+"test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was "
+"successful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named "
+"`column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your code:\n"
+"Should you need them, you can also use the following variables into your "
+"code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct "
+"indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
@@ -215,7 +236,8 @@ msgstr "Test 3: Buchungspositionen"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
-msgid "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgid ""
+"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr "Test 5.1 : Kreditoren und Debitoren Buchungen der Rechnungsausgleiche"
 
 #. module: account_test

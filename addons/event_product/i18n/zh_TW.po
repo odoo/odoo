@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* event_product
-# 
+# * event_product
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-11-14 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 08:10+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/event_product/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: event_product
 #: model:ir.model.fields,help:event_product.field_event_event_ticket__description
@@ -63,9 +66,18 @@ msgstr "活動"
 #. module: event_product
 #: model:ir.model,name:event_product.model_event_registration
 #: model:ir.model.fields.selection,name:event_product.selection__product_template__service_tracking__event
-#: model:product.template,name:event_product.product_product_event_product_template
 msgid "Event Registration"
 msgstr "活動報名"
+
+#. module: event_product
+#: model:product.template,name:event_product.product_product_event_standard_product_template
+msgid "Event Registration - Standard"
+msgstr "活動登記 - 標準"
+
+#. module: event_product
+#: model:product.template,name:event_product.product_product_event_vip_product_template
+msgid "Event Registration - VIP"
+msgstr "活動登記 - VIP"
 
 #. module: event_product
 #: model:ir.model,name:event_product.model_event_type_ticket
@@ -95,7 +107,7 @@ msgstr "免費"
 #: model:ir.model.fields,field_description:event_product.field_product_product__id
 #: model:ir.model.fields,field_description:event_product.field_product_template__id
 msgid "ID"
-msgstr "識別碼"
+msgstr "識別號"
 
 #. module: event_product
 #: model:ir.model.fields.selection,name:event_product.selection__event_registration__sale_status__to_pay
@@ -136,6 +148,14 @@ msgstr "產品"
 #: model:ir.model,name:event_product.model_product_product
 msgid "Product Variant"
 msgstr "產品款式"
+
+#. module: event_product
+#. odoo-python
+#: code:addons/event_product/models/product_product.py:0
+msgid ""
+"Products linked to an event ticket must have \"%(tracking)s\" set to \"%"
+"(event)s\"."
+msgstr ""
 
 #. module: event_product
 #: model:ir.model.fields,field_description:event_product.field_event_registration__sale_status

@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_import_module
+# * base_import_module
 #
 # Translators:
 # Haojun Zou <apollo_zhj@msn.com>, 2022
@@ -10,20 +10,52 @@
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
 # Kristoffer Grundström <lovaren@gmail.com>, 2022
 # Martin Trigaux, 2022
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-11-07 10:14+0000\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
+"base_import_module/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"\n"
+"You may need the Enterprise version to install the data module. Please visit "
+"https://www.odoo.com/pricing-plan for more information.\n"
+"If you need Website themes, it can be downloaded from https://github.com/"
+"odoo/design-themes.\n"
+msgstr ""
+"\n"
+"Du kan behöva Enterprise-versionen för att installera datamodulen. Besök "
+"https://www.odoo.com/pricing-plan för mer information.\n"
+"Om du behöver Website themes kan du ladda ner det från https://github.com/"
+"odoo/design-themes.\n"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Activate"
+msgstr "Aktivera"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_module_filter_apps_inherit
+msgid "Apps"
+msgstr "Appar"
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -36,9 +68,26 @@ msgid "Close"
 msgstr "Stäng"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Connection to %(url)s failed, the module %(module)s cannot be downloaded."
+msgstr ""
+"Anslutningen till %(url)s misslyckades, modulen %(module)s kan inte laddas "
+"ner."
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Connection to %s failed The list of industry modules cannot be fetched"
+msgstr ""
+"Anslutningen till %s misslyckades. Listan över branschmoduler kan inte hämtas"
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 msgid "Could not select database '%s'"
-msgstr ""
+msgstr "Kunde inte välja databas '%s'"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_uid
@@ -48,65 +97,106 @@ msgstr "Skapad av"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__create_date
 msgid "Created on"
-msgstr "Skapad"
+msgstr "Skapad den"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_base_module_uninstall__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_ir_http__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
 
 #. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Error while importing module '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
+msgstr ""
+"Fel vid import av modul '%(module)s'.\n"
+"\n"
+" %(error_message)s \n"
+"\n"
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "File '%s' exceed maximum allowed file size"
-msgstr ""
+msgstr "Fil '%s' överskrider maximalt tillåten filstorlek"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__force
 msgid "Force init"
-msgstr ""
+msgstr "Forcera init"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module__force
 msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr ""
+"Tvinga init-läge även om det är installerat. (kommer att uppdatera "
+"`noupdate='1'`-poster)"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_http
+#, fuzzy
+msgid "HTTP Routing"
+msgstr "HTTP Routing"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__id
+#: model:ir.model.fields,field_description:base_import_module.field_base_module_uninstall__id
+#: model:ir.model.fields,field_description:base_import_module.field_ir_http__id
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__id
+#: model:ir.model.fields,field_description:base_import_module.field_ir_ui_view__id
 msgid "ID"
 msgstr "ID"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import App"
-msgstr ""
-
-#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__import_message
 msgid "Import Message"
-msgstr ""
+msgstr "Importera meddelande"
 
 #. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
 #: model:ir.model,name:base_import_module.model_base_import_module
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
 msgstr "Importera modulen"
 
 #. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Import module"
-msgstr "Importmodul"
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__with_demo
+msgid "Import demo data of module"
+msgstr "Importera demodata för modulen"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__imported
 msgid "Imported Module"
-msgstr ""
+msgstr "Importerad modul"
 
 #. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module____last_update
-msgid "Last Modified on"
-msgstr "Senast redigerad den"
+#: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__industries
+msgid "Industries"
+msgstr "Branscher"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Install"
+msgstr "Installera"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Install an Industry"
+msgstr "Installera en industri"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Install the application"
+msgstr "Installera applikationen"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_uid
@@ -116,7 +206,22 @@ msgstr "Senast uppdaterad av"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__write_date
 msgid "Last Updated on"
-msgstr "Senast uppdaterad på"
+msgstr "Senast uppdaterad den"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Load demo data"
+msgstr "Ladda demodata"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"Load demo data to test the industry's features with sample records. Do not "
+"load them if this is your production database."
+msgstr ""
+"Ladda demodata för att testa branschens funktioner med exempelposter. Ladda "
+"dem inte om detta är din produktionsdatabas."
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
@@ -126,37 +231,73 @@ msgstr "Modul"
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__module_file
 msgid "Module .ZIP file"
-msgstr "Modulens .ZIp fil"
+msgstr "Modulens .zip fil"
 
 #. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_ir_module_module__module_type
+msgid "Module Type"
+msgstr "Typ av modul"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_base_module_uninstall
+msgid "Module Uninstall"
+msgstr "Modul Avinstallera"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
+msgid "Module file (.zip)"
+msgstr "Fil för modul (.zip)"
+
+#. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module__modules_dependencies
+msgid "Modules Dependencies"
+msgstr "Moduler Beroenden"
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "No file sent."
+msgstr "Ingen fil skickade."
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "No manifest found in '%(modules)s'. Can't import the zip file."
 msgstr ""
+"Inget manifest hittades i '%(modules)s'. Det gick inte att importera zip-"
+"filen."
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Note: you can only import data modules (.xml files and static assets)"
+msgid ""
+"Note: you can only import data modules (.xml files, i18n files and static "
+"assets)"
 msgstr ""
+"Notera: du kan bara importera datamoduler (.xml-filer, i18n-filer och "
+"statiska resurser)"
 
 #. module: base_import_module
+#: model:ir.model.fields.selection,name:base_import_module.selection__ir_module_module__module_type__official
+msgid "Official Apps"
+msgstr "Officiella appar"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Only administrators can install data modules."
+msgstr "Endast administratörer kan installera datamoduler."
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 msgid "Only administrators can upload a module"
-msgstr ""
+msgstr "Endast administratörer kan ladda upp en modul"
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Only zip files are supported."
-msgstr ""
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Open Modules"
-msgstr "Öppna moduler"
-
-#. module: base_import_module
-#: model_terms:ir.ui.view,arch_db:base_import_module.view_base_module_import
-msgid "Select module package to import (.zip file):"
-msgstr "Välj modulpaket att importera (.zip fil)"
+msgstr "Endast zip-filer stöds."
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module__state
@@ -164,22 +305,56 @@ msgid "Status"
 msgstr "Status"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:0
-msgid "Studio customizations require Studio"
-msgstr ""
-
-#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid "Studio customizations require the Odoo Studio app."
-msgstr ""
+msgstr "Studio-anpassningar kräver Odoo Studio-appen."
 
 #. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 msgid ""
-"Unmet module dependencies: \n"
-"\n"
-" - %s"
+"The assets path in the manifest of imported module '%(module_name)s' cannot "
+"contain glob wildcards (e.g., *, **)."
 msgstr ""
+"Sökvägen för tillgångar i manifestet för den importerade modulen '%"
+"(module_name)s' får inte innehålla glob-jokertecken (t.ex. *, **)."
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"The installation of the data module would fail as the following dependencies "
+"can't be found in the addons-path:\n"
+msgstr ""
+"Installationen av datamodulen skulle misslyckas eftersom följande beroenden "
+"inte kan hittas i addons-sökvägen:\n"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid ""
+"The list of industry applications cannot be fetched. Please try again later"
+msgstr ""
+"Listan över branschansökningar kan inte hämtas. Vänligen försök igen senare"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "The module %s cannot be downloaded"
+msgstr "Modulen %s kan inte laddas ner"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+msgid "Unknown module dependencies:"
+msgstr "Okända modulberoenden:"
+
+#. module: base_import_module
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_form_apps_inherit
+#: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
+msgid "Upgrade"
+msgstr "Uppgradering"
 
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_ui_view

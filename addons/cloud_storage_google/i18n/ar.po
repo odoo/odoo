@@ -1,0 +1,115 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * cloud_storage_google
+#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-08 18:37+0000\n"
+"PO-Revision-Date: 2025-10-13 12:17+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
+"cloud_storage_google/ar/>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/ir_attachment.py:0
+msgid "%s is not a valid Google Cloud Storage URL."
+msgstr "%s ليس رابط URL صالح لمساحة التخزين السحابية لدى Google."
+
+#. module: cloud_storage_google
+#: model:ir.model,name:cloud_storage_google.model_ir_attachment
+msgid "Attachment"
+msgstr "مرفق"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_provider
+msgid "Cloud Storage Provider for new attachments"
+msgstr "مزود مساحة التخزين السحابية للمرفقات الجديدة"
+
+#. module: cloud_storage_google
+#: model:ir.model,name:cloud_storage_google.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_bucket_name
+msgid "Google Bucket Name"
+msgstr "اسم Google Bucket"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields.selection,name:cloud_storage_google.selection__res_config_settings__cloud_storage_provider__google
+msgid "Google Cloud Storage"
+msgstr "مساحة التخزين السحابية لـ Google"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_account_info
+msgid "Google Service Account Info"
+msgstr "معلومات حساب خدمة Google"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_service_account_key
+msgid "Google Service Account Key"
+msgstr "مفتاح حساب خدمة Google"
+
+#. module: cloud_storage_google
+#: model:ir.model.fields,field_description:cloud_storage_google.field_ir_attachment__id
+#: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/res_config_settings.py:0
+msgid ""
+"Some Google attachments are in use, please migrate cloud storages before "
+"disable the provider"
+msgstr ""
+"بعض مرفقات Google قيد الاستخدام في الوقت الراهن. يٌرجى نقل مساحات التخزين "
+"السحابية قبل تعطيل المزوّد"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/res_config_settings.py:0
+msgid ""
+"The account info is not allowed to download blobs from the bucket.\n"
+"%s"
+msgstr ""
+"لا يُسمح لمعلومات الحساب بتنزيل الكتل من الحاوية.\n"
+"%s"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/res_config_settings.py:0
+msgid ""
+"The account info is not allowed to set the bucket's CORS.\n"
+"%s"
+msgstr ""
+"لا يُسمح لمعلومات الحساب بتعيين CORS الخاص بالحاوية.\n"
+"%s"
+
+#. module: cloud_storage_google
+#. odoo-python
+#: code:addons/cloud_storage_google/models/res_config_settings.py:0
+msgid ""
+"The account info is not allowed to upload blobs to the bucket.\n"
+"%s"
+msgstr ""
+"لا يُسمح لمعلومات الحساب بتحميل الكتل إلى الحاوية.\n"
+"%s"

@@ -73,12 +73,18 @@ msgstr ""
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr "Hareket kalemlerinin denk olduğunu ve aynı tarih ve dönemde olduğunu denetleyin"
+msgstr ""
+"Hareket kalemlerinin denk olduğunu ve aynı tarih ve dönemde olduğunu "
+"denetleyin"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
-msgid "Check on bank statement that the Closing Balance = Starting Balance + sum of statement lines"
-msgstr "Hesap özetinde Kapanış Bakiyesi = Açılış Bakiyesi + hesap özeti kalemleri toplamı olduğunu denetleyin"
+msgid ""
+"Check on bank statement that the Closing Balance = Starting Balance + sum of "
+"statement lines"
+msgstr ""
+"Hesap özetinde Kapanış Bakiyesi = Açılış Bakiyesi + hesap özeti kalemleri "
+"toplamı olduğunu denetleyin"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -87,13 +93,21 @@ msgstr "Ödenmiş/uzlaştırılmış faturaların 'Açık' durumda olmadığın�
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
-msgid "Check that reconciled account moves, that define Payable and Receivable accounts, are belonging to reconciled invoices"
-msgstr "Borç ve Alacak hesaplarını tanımlayan uzlaştırılmış hareket kalemlerinin uzlaştırılmış faturalara ait olduğunu denetleyin"
+msgid ""
+"Check that reconciled account moves, that define Payable and Receivable "
+"accounts, are belonging to reconciled invoices"
+msgstr ""
+"Borç ve Alacak hesaplarını tanımlayan uzlaştırılmış hareket kalemlerinin "
+"uzlaştırılmış faturalara ait olduğunu denetleyin"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
-msgid "Check that reconciled invoice for Sales/Purchases has reconciled entries for Payable and Receivable Accounts"
-msgstr "Uzlaştırılmış Satış/Satınalma faturasının Alacak ve Borç Hesaplarında uzlaştırılmış girişler olup olmadığını denetleyin"
+msgid ""
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for "
+"Payable and Receivable Accounts"
+msgstr ""
+"Uzlaştırılmış Satış/Satınalma faturasının Alacak ve Borç Hesaplarında "
+"uzlaştırılmış girişler olup olmadığını denetleyin"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -108,23 +122,29 @@ msgstr "Kod Yardımı"
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
-"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will\n"
+"Code should always set a variable named `result` with the result of your "
+"test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was "
+"successful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
-"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
+"If the result of your test is a dictionary, you can set a variable named "
+"`column_order` to choose in\n"
 "what order you want to print `result`'s content.\n"
 "\n"
-"Should you need them, you can also use the following variables into your code:\n"
+"Should you need them, you can also use the following variables into your "
+"code:\n"
 "    * cr: cursor to the database\n"
 "    * uid: ID of the current user\n"
 "\n"
-"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
+"In any ways, the code must be legal python statements with correct "
+"indentation (if needed).\n"
 "\n"
 "Example: \n"
 "    sql = '''SELECT id, name, ref, date\n"
 "             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
@@ -221,7 +241,8 @@ msgstr "Test 3: Hareket kalemleri"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
-msgid "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgid ""
+"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr "Test 5.1 : Uzlaştırılmış faturaların Borç ve Alacak hesap kalemleri"
 
 #. module: account_test
