@@ -47,7 +47,7 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         invoice_admin = self._create_invoice()
         invoice_admin.action_post()
         # As the user has admin right, the move doesn't need to be checked
-        self.assertFalse(invoice_admin.review_state)
+        self.assertEqual(invoice_admin.review_state, 'no_review')
 
         invoice_invoicing = self._create_invoice(user_id=self.simple_accountman.id)
         invoice_invoicing.with_user(self.simple_accountman).action_post()
@@ -57,10 +57,10 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def test_post_move_auto_check_with_auto_post_at_date_accountant(self):
         invoice = self._create_invoice(date=fields.Date.today())
         invoice.auto_post = 'at_date'
-        self.assertFalse(invoice.review_state)
+        self.assertEqual(invoice.review_state, 'no_review')
         with freeze_time(invoice.date + relativedelta(days=1)), self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
-        self.assertFalse(invoice.review_state)
+        self.assertEqual(invoice.review_state, 'no_review')
 
     def test_post_move_auto_check_with_auto_post_at_date_sales(self):
         invoice = self._create_invoice(date=fields.Date.today())
@@ -82,12 +82,12 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def test_post_move_auto_check_with_auto_post_monthly_accountant(self):
         invoice = self._create_invoice(date=fields.Date.today())
         invoice.auto_post = 'monthly'
-        self.assertFalse(invoice.review_state)
+        self.assertEqual(invoice.review_state, 'no_review')
         with freeze_time(invoice.date + relativedelta(days=1)), self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
-        self.assertFalse(invoice.review_state)
+        self.assertEqual(invoice.review_state, 'no_review')
         last_recurring = self.env['account.move'].search([('auto_post_origin_id', '=', invoice.id)], limit=1, order='date desc')
-        self.assertFalse(last_recurring.review_state)
+        self.assertEqual(last_recurring.review_state, 'no_review')
 
     def test_post_move_auto_check_with_auto_post_monthly_sales(self):
         invoice = self._create_invoice(date=fields.Date.today())
@@ -146,7 +146,7 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
             'amount': -100,
         }])
         bank_line_1._try_auto_reconcile_statement_lines()
-        self.assertFalse(bank_line_1.move_id.review_state)
+        self.assertEqual(bank_line_1.move_id.review_state, 'no_review')
         with self.assertRaisesRegex(ValidationError, 'Validated entries can only be changed by your accountant.'):
             bank_line_1.with_user(self.simple_accountman).delete_reconciled_line(payment.move_id.line_ids[0].id)
 

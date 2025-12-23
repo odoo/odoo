@@ -27,6 +27,7 @@ export class FormViewDialog extends Component {
         preventEdit: { type: Boolean, optional: true },
         canExpand: { type: Boolean, optional: true },
         isToMany: { type: Boolean, optional: true },
+        customHeader: { type: String, optional: true },
         size: Dialog.props.size,
     };
     static defaultProps = {
@@ -35,6 +36,7 @@ export class FormViewDialog extends Component {
         preventEdit: false,
         canExpand: true,
         isToMany: false,
+        customHeader: "web.Dialog.header",
     };
 
     setup() {
