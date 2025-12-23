@@ -462,3 +462,22 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         wizard.action_send_and_print()
 
         self._assert_invoice_ubl_file(invoice, 'test_invoice_send_and_print_additional_documents')
+
+    def test_invoice_negative_discount_upsell(self):
+        """ Ensure a negative discount (upsell) is correctly handled as a Charge
+        with the appropriate UNCL 7161 reason code (ADK) instead of an Allowance.
+        """
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(lst_price=10.0, taxes_id=tax_21)
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            quantity=10.0,
+            price_unit=5.76,
+            discount=-1.09,
+            partner_id=self.partner_be,
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_negative_discount_upsell')
