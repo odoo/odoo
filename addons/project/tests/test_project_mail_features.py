@@ -687,3 +687,61 @@ Content-Type: text/html;
         )
         self.assertEqual(task.name, "In a cage")
         self.assertEqual(task.project_id, self.project_pigs)
+
+    def test_task_access_action(self):
+        """ Test that the access action link is correctly generated for internal and portal users """
+
+        # 1. Internal User + Task with Project -> Deep Link
+        task_internal = self.env['project.task'].create({
+            'name': 'Test Task Internal',
+            'project_id': self.project_pigs.id,
+        })
+
+        action = task_internal.with_user(self.user_projectuser)._get_access_action()
+        self.assertEqual(
+            action['type'],
+            'ir.actions.act_url',
+            "Internal user should get an act_url instead of act_window",
+        )
+        self.assertIn(
+            f'/odoo/project/{self.project_pigs.id}/tasks/{task_internal.id}',
+            action['url'],
+            "URL should contain project and task IDs",
+        )
+
+        # 2. Portal User -> Standard Portal Link
+        project_portal = self.env['project.project'].create({
+            'name': 'Portal Project',
+            'privacy_visibility': 'portal',
+        })
+        task_portal = self.env['project.task'].create({
+            'name': 'Test Task Portal',
+            'project_id': project_portal.id,
+        })
+
+        task_portal.message_subscribe(partner_ids=[self.user_portal.partner_id.id])
+        action = task_portal.with_user(self.user_portal)._get_access_action()
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        self.assertIn(
+            '/my/tasks',
+            action['url'],
+            "Portal user should get a link to /my/tasks",
+        )
+
+        # 3. Internal User + Private Task (No Project) -> All Tasks Link
+        task_private = self.env['project.task'].create({
+            'name': 'Private Task',
+            'project_id': False,
+            'user_ids': [Command.set([self.user_projectuser.id])],
+        })
+        action = task_private.with_user(self.user_projectuser)._get_access_action()
+        self.assertEqual(
+            action['type'],
+            'ir.actions.act_url',
+            "Internal user should get an act_url instead of act_window",
+        )
+        self.assertIn(
+            f'/odoo/all-tasks/{task_private.id}',
+            action['url'],
+            "URL should point to the all-tasks route",
+        )
