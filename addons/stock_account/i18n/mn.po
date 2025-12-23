@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_account
+# * stock_account
 #
 # Translators:
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2024
@@ -13,20 +13,21 @@
 # Bayarkhuu Bataa, 2024
 # Minj P <pminj322@gmail.com>, 2024
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-10-24 18:36+0000\n"
-"PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025\n"
-"Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
+"PO-Revision-Date: 2025-12-17 07:12+0000\n"
+"Last-Translator: Lodoikhuu <baskhuujacara@gmail.com>\n"
+"Language-Team: Mongolian <https://translate.odoo.com/projects/odoo-18/"
+"stock_account/mn/>\n"
 "Language: mn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_account
 #. odoo-python
@@ -36,31 +37,35 @@ msgid ""
 "Affected valuation layers: %s"
 msgstr ""
 "\n"
-"Дараах өртөгийн түүхт хэрэгжүүлсэн нь: %s"
+"Дараах өртөгийн бичилтээр хэрэгжсэн: %s"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
-msgstr ""
+msgstr " Барааны өртөг %(previous)s байснаас %(new_cost)s болж шинэчлэгдсэн."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [%s өдрөөр бүртгэл хийгдсэн]"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid " lot/serial number cost updated from %(previous)s to %(new_cost)s."
 msgstr ""
+" цуврал/серийн дугаарын өртөг %(previous)s байснаас %(new_cost)s болж "
+"шинэчлэгдсэн."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(record)s"
 msgstr ""
+"%(user)s хэрэглэгч нэгж өртөгийг %(previous)s байснаас %(new_price)s болгож "
+"өөрчилсөн - %(record)s"
 
 #. module: stock_account
 #. odoo-python
@@ -70,6 +75,9 @@ msgid ""
 "(product)s\n"
 "%(reason)s"
 msgstr ""
+"%(user)s өртөгийн үлдэгдэл дүнг  %(previous)s байснаас %(new_value)s болгож "
+"өөрчилсөн - %(product)s\n"
+"%(reason)s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -78,6 +86,9 @@ msgid ""
 "                            <small class=\"mx-2 fst-italic\">Use a negative "
 "added value to record a decrease in the product value</small>"
 msgstr ""
+")\n"
+"                            <small class=\"mx-2 fst-italic\">Барааны "
+"өртөгийг буруулахын бол хасах утгатай дүн оруулна уу</small>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -87,7 +98,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>Тусгай орлого/зарлагын өртөгийн данс тохируулах </b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
@@ -151,7 +162,7 @@ msgstr "Өртөг гараар нэмэх"
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
-msgstr ""
+msgstr "Барааны өртөгт нэмэлт зардал шингээх (тээвэр, гааль, ...)."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -222,7 +233,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "Bacon"
-msgstr ""
+msgstr "Гахайн мах"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -263,12 +274,12 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
-msgstr ""
+msgstr "Огноо сонгож тухайн огноонд байсан өртөгийн үлдэгдлийг харна"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
 msgid "Cogs Origin"
-msgstr ""
+msgstr "Өртөгийн эх сурвалж"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
@@ -339,6 +350,13 @@ msgid ""
 "                set on the source location. This is the default value for "
 "all products in this category. It can also directly be set on each product."
 msgstr ""
+"Автомат өртөгийн бичилттэй үед, орлогын гүйлгээний журналын бичилт дээрх "
+"бараа материалын данстай харьцсан бичилт дээр энд сонгосон данс эсвэл\n"
+"                                     гарах байрлал дээр тусгайлан сонгосон "
+"данс ашиглагдана. Энэхүү данс нь тухайн ангилалын бараануудад шууд хэрэгжих "
+"бөгөөд мөн хүсвэл\n"
+"                                     бараа тус бүр дээр нь тусгайлан данс "
+"сонгож ашиглах боломжтой."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -425,6 +443,9 @@ msgid ""
 "(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
+"Барааны ангилалыг (%(old_category)s байсныг %(new_category)s болгож) өөрчлөн "
+"тохируулснаар, %(product)s барааны өртөг тооцох арга: %(old_method)s "
+"байснаас %(new_method)s болж өөрчлөгдсөн."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -483,7 +504,7 @@ msgstr "Нэхэмжлэлийн мөр"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr ""
+msgstr "Нэхэмжлэлийн үнэ тохируулгын зөрүү, нэхэмжлэлийн валюатаар"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -522,7 +543,7 @@ msgstr "Сүүлд зассан огноо"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
-msgstr ""
+msgstr "Дараах өртөгтэй холбогдоно"
 
 #. module: stock_account
 #. odoo-python
@@ -531,12 +552,16 @@ msgid ""
 "Lot %(lot)s has a negative quantity in stock.\n"
 "Correct this quantity before enabling/disabling lot valuation."
 msgstr ""
+"Серийн дугаар %(lot)s нь хасах нөөцтэй байна.\n"
+"Серийн түвшинд өртөг бүртгэх тохиргоог идэвхижүүлэхээс өмнө энэ хасах "
+"нөөцийг засна уу."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot value manually modified (from %(old)s to %(new)s)"
 msgstr ""
+"Серийн дугаарын өртөгийг гараар өөрчилсөн (%(old)s байснаас %(new)s болгов)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
@@ -553,18 +578,20 @@ msgstr "Серийн дугаар"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot/Serial number Revaluation"
-msgstr ""
+msgstr "Цуврал/серийн дугаарт өртөг өөрчлөлт хийх"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move_line.py:0
 msgid "Lot/Serial number is mandatory for product valuated by lot"
 msgstr ""
+"Серийн дугаарын түвшинд өртөг хөтлөдөг барааны хувьд серийн дугаарыг заавал "
+"сонгох ёстой"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Lots & Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Цуврал & Серийн дугаар нэхэмжлэл дээр харагдана"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -575,7 +602,7 @@ msgstr "Гараар"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "Manual Stock Valuation: %s."
-msgstr ""
+msgstr "Гараар өртөг өөрчлөв: %s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -634,6 +661,10 @@ msgid ""
 "lot.\n"
 "Please assign lots to all your quantities before enabling lot valuation."
 msgstr ""
+"%(product)s бараа нь %(location)s байрлалд серийн дугааргүйгээр байршсан "
+"байна.\n"
+"Серийн дугаарын түвшинд өртөг хөтлөх тохиргоог идэвхижүүлэхээс өмнө бүх "
+"байгаа нөөцөө өртөгтэй болгоно уу."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
@@ -652,7 +683,7 @@ msgstr "Барааны хөдөлгөөн (Дэлгэрэнгүй)"
 #: code:addons/stock_account/models/product.py:0
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Product Revaluation"
-msgstr ""
+msgstr "Барааны өртөг өөрчлөлт"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
@@ -670,16 +701,18 @@ msgstr "Барааны хувилбар"
 msgid ""
 "Product value manually modified (from %(original_price)s to %(new_price)s)"
 msgstr ""
+"Барааны өртөгийг гараар өөрчилсөн (%(original_price)s байснаас %(new_price)s "
+"болгов)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
 msgid "Production WIP Account"
-msgstr ""
+msgstr "Дуусаагүй үйлдвэрлэлийн өртөгийн данс"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
 msgid "Production WIP Overhead Account"
-msgstr ""
+msgstr "Дуусаагүй үйлдвэрлэлийн ҮНЗ данс"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -691,7 +724,7 @@ msgstr "Тоо хэмжээ"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__quantity_svl
 msgid "Quantity Svl"
-msgstr ""
+msgstr "Svl дээрх тоо"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -706,12 +739,12 @@ msgstr "Шалтгаан"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr ""
+msgstr "Өртөг өөрчлөлтийн шалтгаан"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__warehouse_id
 msgid "Receipt WH"
-msgstr ""
+msgstr "Орлогодсон агуулах"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
@@ -747,24 +780,24 @@ msgstr "Буцаалтын баримтын мөр"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Revaluation of %(name)s (negative inventory)"
-msgstr ""
+msgstr "%(name)s -ын өртөг тохируулалт (хасах нөөц)"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "Revaluation of %s"
-msgstr ""
+msgstr "%s өртөг өөрчлөлт"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr ""
+msgstr "Хэрэгжүүлэх"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Select an existing lot/serial number to be reevaluated"
-msgstr ""
+msgstr "Өртөг өөрчлөх цуврал/серийн дугаарыг сонгоно уу"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -795,7 +828,7 @@ msgstr ""
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
 msgid "Stock Accounting Automatic"
-msgstr ""
+msgstr "Бараа материалын өртөгийн автомат бичилт"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -852,12 +885,12 @@ msgstr "Бараа материалын данс"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
 msgid "Stock Valuation Account (Incoming)"
-msgstr "Бараа материалын данс (Орлого)"
+msgstr "Бараа өртөгийн данс (Орлого)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_out_account_id
 msgid "Stock Valuation Account (Outgoing)"
-msgstr "Бараа материалын данс (Зарлага)"
+msgstr "Бараа өртөгийн данс (Зарлага)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer
@@ -877,6 +910,8 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"Энэ бол барааны өртгийн бүртгэл дээрх нийт өртөгийг таарах, тухайн компани "
+"дээр сонгогдсон валютыг зөв харуулах зориулалттай техникийн талбар юм"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -894,6 +929,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
+"Ирж буй болон гарч буй барааны өртөгийн данс нь Бараа материалын үндсэн "
+"данстай ижил байж болохгүй."
 
 #. module: stock_account
 #. odoo-python
@@ -902,12 +939,15 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
+"Энэхүү үйлдэл нь бараа материалын журналын бичилт үүсгэх ёстой боловч, таны "
+"хандах эрх хүрэлцэхгүй байна."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "The added value doesn't have any impact on the stock valuation"
 msgstr ""
+"Нэмэгдүүлсэн өртөг нь барааны өртөгийн үлдэгдэлд ямар нэг нөгөө үзүүлэхгүй"
 
 #. module: stock_account
 #. odoo-python
@@ -947,6 +987,8 @@ msgstr ""
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
 msgstr ""
+"Бараа материалын өртөгийн бичилт автоматаар бүртгэхийн тулд Өртөгийн дансууд "
+"тохируулагдсан байх шаардлагатай."
 
 #. module: stock_account
 #. odoo-python
@@ -957,6 +999,9 @@ msgid ""
 "the locations in a way that changes the valuation logic defined during the "
 "initial processing."
 msgstr ""
+"Хөдөлгөөний өртөгийн бүртгэл хөтлөгдөхдөө гарах болон очих байрлалын төрлөөс "
+"хамаарна. Нэгэнт хөдөлгөөнийг боловсруулж дууссан бол, өртөгт өөрчлөлт "
+"оруулахгүй байх үүднээс байрлалд өөрчлөлт хийхийг хориглоно."
 
 #. module: stock_account
 #. odoo-python
@@ -965,6 +1010,9 @@ msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
 msgstr ""
+"Өртөгийн бүртгэл дээрх өртөгийн дүн хасах утгатай байж болохгүй. Онцгой "
+"тохиолдолд өртөг бууруулах шаардлагатай бол өртөгт шингээх зардлын бүртгэл "
+"ашиглаарай."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -973,6 +1021,8 @@ msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
 msgstr ""
+"Өртөгийн бүртгэл алга. Барааны тоон нөөцөд өөрчлөлт орох бүрд өртөгийн "
+"бүртгэл хөтлөгдөх болно."
 
 #. module: stock_account
 #. odoo-javascript
@@ -981,6 +1031,8 @@ msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for "
 "all lots/SN. Do you want to proceed ? "
 msgstr ""
+"Энэ үйлдэл нь өгөгдлийн цоорхой үүсгэж болзошгүй. Өртөг өөрчлөлт нь бүх "
+"серийн дугааруудад ижил үйлчилнэ. Та үргэлжлүүлэхдээ итгэлтэй байна уу ? "
 
 #. module: stock_account
 #. odoo-python
@@ -989,6 +1041,8 @@ msgid ""
 "This product is valuated by lot/serial number. Changing the cost will update "
 "the cost of every lot/serial number in stock."
 msgstr ""
+"Энэ бараа нь серийн дугаарын түвшинд өртөг хөтлөдөг. Өртөг өөрчлөлт нь "
+"нөөцөд байгаа бүхий л серийн дугаарт хэрэгжих болно."
 
 #. module: stock_account
 #. odoo-python
@@ -997,6 +1051,8 @@ msgid ""
 "This product is valuated by lot: an explicit Lot/Serial number is required "
 "when adding quantity"
 msgstr ""
+"Энэ бараа нь серийн дугаарын түвшинд өртөг хөтлөдөг. Тоо хэмжээ нэмэх үед "
+"тодорхой Lot/серийн дугаар заавал шаардлагатай"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
@@ -1065,13 +1121,13 @@ msgstr "Хэмжих нэгж"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
-msgstr ""
+msgstr "Борл/Худ авалт дээрх тоонд нөлөөлөх"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Updating lot valuation for product %s."
-msgstr ""
+msgstr "%s барааны серийн өртөгийг өөрчиллөө."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -1120,7 +1176,7 @@ msgstr "Өртөгийн валютын төрөл"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuation Layers"
-msgstr ""
+msgstr "Өртөгийн бүртгэл"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -1146,11 +1202,13 @@ msgid ""
 "Valuation method change for product category %(category)s: from %"
 "(old_method)s to %(new_method)s."
 msgstr ""
+"%(category)s ангилалын өртөг тооцох арга шинэчлэгдсэн: %(old_method)s "
+"байсныг %(new_method)s болгов."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuations layers being adjusted"
-msgstr ""
+msgstr "Өртөгийн бүртгэлүүдэд өөрчлөлт орсон"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -1167,7 +1225,7 @@ msgstr "Гарт буй барааны өртөг:"
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__value_svl
 msgid "Value Svl"
-msgstr ""
+msgstr "Svl өртөгийн дүн"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
@@ -1177,6 +1235,11 @@ msgid ""
 "inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Серийн дугаарын өртөг (Дундаж өртөгөөр тооцоологдсон, AVCO)\n"
+"                   Худалдан авалтын бус тохиолдлоор орлогод авах үед уг "
+"өртөгийг ашиглана (ж.ш тооллогын орлого)\n"
+"                   Борлуулалтын бохир ашгийн түвшинг тодорхойлоход "
+"ашиглагдана."
 
 #. module: stock_account
 #. odoo-python
@@ -1190,6 +1253,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Барааны өртөгийн бичилтийг автоматаар бичих тохиргоотой үед, энэ дансанд "
+"тухайн барааны өртөгийн үлдэгдэл хөтлөгдөнө."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -1201,6 +1266,13 @@ msgid ""
 "category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"Автомат өртөгийн бичилттэй үед, зарлагын гүйлгээний журналын бичилт дээрх "
+"бараа материалын данстай харьцсан бичилт дээр энд сонгосон данс эсвэл\n"
+"                                     очих байрлал дээр тусгайлан сонгосон "
+"данс ашиглагдана. Энэхүү данс нь тухайн ангилалын бараануудад шууд хэрэгжих "
+"бөгөөд мөн хүсвэл\n"
+"                                     бараа тус бүр дээр нь тусгайлан данс "
+"сонгож ашиглах боломжтой."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -1208,24 +1280,26 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"Өртөгийн бичилт автоматаар бүртгэх тохиргоотой үед, бараа материалын дансны "
+"бичилтүүд нь энэ журналд хөтлөгдөнө."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr ""
+msgstr "Барааны өртөгт өөрчлөлт оруулах визард модел"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
-msgstr ""
+msgstr "Та тэг тоо хэмжээтэй өртөгийн бүртгэл дээр тохируулга хийх боломжгүй"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust valuation without a product"
-msgstr ""
+msgstr "Өртөг өөрчлөлт хийх бараа тодорхойгүй байна"
 
 #. module: stock_account
 #. odoo-python
@@ -1234,6 +1308,8 @@ msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
 msgstr ""
+"Серийн дугаарийн түвшинд өртөг хөтлөлттэй барааны өртөг тооцох аргыг сольж "
+"өөрчлөх боломжгүй."
 
 #. module: stock_account
 #. odoo-python
@@ -1242,24 +1318,27 @@ msgid ""
 "You cannot change the product category of a product valuated by lot/serial "
 "number."
 msgstr ""
+"Серийн дугаарын түвшинд өртөг хөтлөлттэй барааны хувьд ангилал сольж өөрчлөх "
+"боломжгүй."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue a product with a standard cost method."
 msgstr ""
+"Стандарт өртөг тооцох аргатай барааны өртөгт өөрчлөлт оруулах боломжгүй."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
+msgstr "Үлдэгдэлтэй эсвэл хасах нөөцтэй бараанд өртөг өөрчлөлт хийх боломжгүй."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue multiple products at once"
-msgstr ""
+msgstr "Олон бараанд нэгэн зэрэг өртөг өөрчлөлт хийх боломжгүй"
 
 #. module: stock_account
 #. odoo-python
@@ -1270,6 +1349,8 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
+"Танд зохих хандах эрх хүрэлцэхгүй байгаа тул, та барааны өртөгийг өөрчилж "
+"улмаар өртөг өөрчлөлтийн журналын бичилт үүсгэх боломжгүй байна."
 
 #. module: stock_account
 #. odoo-python
@@ -1278,6 +1359,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category. "
 "You must define one before processing this operation."
 msgstr ""
+"Танай барааны ангилалд зохих ирж буй өртөгийн данс тодорхойлогдоогүй байна. "
+"Энэ үйлдлийг гүйцэлдүүлэхээс өмнө дансаа тохируулна уу."
 
 #. module: stock_account
 #. odoo-python
@@ -1286,6 +1369,8 @@ msgid ""
 "You don't have any output valuation account defined on your product "
 "category. You must define one before processing this operation."
 msgstr ""
+"Танай барааны ангилалд зохих гарч буй өртөгийн данс тодорхойлогдоогүй байна. "
+"Энэ үйлдлийг гүйцэлдүүлэхээс өмнө дансаа тохируулна уу."
 
 #. module: stock_account
 #. odoo-python
@@ -1294,6 +1379,8 @@ msgid ""
 "You don't have any stock input account defined on your product category. You "
 "must define one before processing this operation."
 msgstr ""
+"Танай барааны ангилалд зохих ирж буй өртөгийн данс тодорхойлогдоогүй байна. "
+"Энэ үйлдлийг гүйцэлдүүлэхээс өмнө дансаа тохируулна уу."
 
 #. module: stock_account
 #. odoo-python
@@ -1322,6 +1409,8 @@ msgstr ""
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "You must set a counterpart account on your product category."
 msgstr ""
+"Барааны ангилал дээр бараа материалын данстай харьцах дансуудыг тохируулна "
+"уу."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -1336,14 +1425,14 @@ msgstr "дараахид"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
+msgstr "байрлалууд"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
-msgstr ""
+msgstr "ширхэг"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
-msgstr ""
+msgstr "Өртөгийн граффик"

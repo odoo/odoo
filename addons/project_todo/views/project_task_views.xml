@@ -81,6 +81,9 @@
             <form string="To-do"
                   class="o_todo_form_view"
                   js_class="todo_form">
+                <field name="name" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="project_id" invisible="1"/>
                 <header>
                     <field name="personal_stage_type_id"
                            domain="[('user_id','=',uid)]"

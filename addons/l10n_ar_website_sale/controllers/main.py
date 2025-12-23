@@ -53,12 +53,20 @@ class L10nARWebsiteSale(WebsiteSale):
 
         # Identification type and AFIP Responsibility Combination
         if address_type == 'billing' and request.website.sudo().company_id.country_id.code == 'AR':
-            if missing_fields and any(
-                fname in missing_fields
-                for fname in [
-                    'l10n_latam_identification_type_id', 'l10n_ar_afip_responsibility_type_id'
-                ]
-            ):
+            fnames = {'l10n_latam_identification_type_id', 'l10n_ar_afip_responsibility_type_id'}
+            for fname in fnames:
+                if fname in address_values:
+                    continue
+                if fvalue := partner_sudo[fname]:
+                    # fill in values in case they weren't displayed as part of the form
+                    address_values[fname] = fvalue.id
+                else:
+                    missing_fields.add(fname)
+            if missing_fields & fnames:
+                if request.httprequest.path != '/my/account':
+                    error_messages.append(request.env._(
+                        'Please go to "My Account" to add your Identification and/or AFIP Resposibility Types.',
+                    ))
                 return invalid_fields, missing_fields, error_messages
 
             afip_resp = request.env['l10n_ar.afip.responsibility.type'].browse(

@@ -187,6 +187,7 @@ patch(PosStore.prototype, {
                 converted_line.lot_names.length > 0 &&
                 useLoadedLots
             ) {
+                const priceUnit = newLine.price_unit;
                 newLine.delete();
                 let total_lot_quantity = 0;
                 for (const lot of converted_line.lot_names) {
@@ -206,6 +207,7 @@ patch(PosStore.prototype, {
                             ...newLineValues,
                         });
                         splitted_line.set_quantity(lot_remaining_quantity, true);
+                        splitted_line.set_unit_price(priceUnit);
                         splitted_line.set_discount(line.discount);
                         splitted_line.setPackLotLines({
                             modifiedPackLotLines: [],
