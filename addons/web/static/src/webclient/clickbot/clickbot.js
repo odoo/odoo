@@ -19,6 +19,7 @@ const BLACKLISTED_MENUS = [
     "hr_attendance.menu_hr_attendance_onboarding", // same here (tablet mode)
     "mrp_workorder.menu_mrp_workorder_root", // same here (tablet mode)
     "pos_enterprise.menu_point_kitchen_display_root", // conditional menu that may leads to frontend
+    "mail.menu_settings", // menut that leads to another App
 ];
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
@@ -386,9 +387,9 @@ async function testViews() {
                 triggerClick(target, `${viewType} view switcher`);
             }
         }, 250);
-        await waitForCondition(() => {
-            return document.querySelector(`.o_switch_view.o_${viewType}.active`) !== null;
-        });
+        await waitForCondition(
+            () => document.querySelector(`.o_switch_view.o_${viewType}.active`) !== null
+        );
         await testStudio();
         await testFilters();
     }
