@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_fleet
+# * hr_fleet
 #
 # Translators:
 # Cristina Loureiro <cloureiro@live.com>, 2022
@@ -9,26 +9,51 @@
 # Martin Trigaux, 2022
 # Pedro Filipe <pedro2.10@hotmail.com>, 2022
 # Manuela Silva <mmsrs@sky.com>, 2023
-#
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2023\n"
-"Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
+"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"PO-Revision-Date: 2025-09-16 18:31+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/"
+"hr_fleet/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
+msgid "<span class=\"o_stat_text\">Employee</span>"
+msgstr ""
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_form_inherit_hr
 msgid ""
 "<span class=\"o_stat_value\">1</span>\n"
 "                        <span class=\"o_stat_text\">Employee</span>"
+msgstr ""
+"<span class=\"o_stat_value\">1</span>\n"
+"                        <span class=\"o_stat_text\">Funcionário</span>"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_mail_activity_plan_template
+msgid "Activity plan template"
+msgstr ""
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__responsible_type
+msgid "Assignment"
+msgstr ""
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_ir_attachment
+msgid "Attachment"
 msgstr ""
 
 #. module: hr_fleet
@@ -41,32 +66,54 @@ msgstr "Anexos"
 #. odoo-python
 #: code:addons/hr_fleet/models/employee.py:0
 msgid "Cannot remove address from employees with linked cars."
-msgstr ""
+msgstr "Não é possível remover endereço de funcionários com carros vinculados."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
-#: model:ir.model.fields,field_description:hr_fleet.field_res_users__employee_cars_count
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__employee_cars_count
 msgid "Cars"
+msgstr "Carros"
+
+#. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/employee.py:0
+#: model_terms:ir.ui.view,arch_db:hr_fleet.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
+msgid "Cars History"
 msgstr ""
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.hr_departure_wizard_view_form
 msgid "Company Car"
-msgstr ""
+msgstr "Carro da empresa"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_employee_view_list
 msgid "Current Driver"
-msgstr ""
+msgstr "Motorista atual"
 
 #. module: hr_fleet
-#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
-msgid "Current Driver (Employee)"
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_attachment_kanban_inherit_hr
+msgid "Delete"
 msgstr ""
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
 msgid "Departure Wizard"
+msgstr "Assistente de desligamento"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_contract__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_services__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: hr_fleet
@@ -82,7 +129,7 @@ msgstr "Condutor"
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
 msgid "Driver (Employee)"
-msgstr ""
+msgstr "Motorista (funcionário)"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
@@ -97,9 +144,9 @@ msgstr "Funcionário"
 
 #. module: hr_fleet
 #. odoo-python
-#: code:addons/hr_fleet/models/hr_plan_activity_type.py:0
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
 msgid "Employee %s is not linked to a vehicle."
-msgstr ""
+msgstr "O funcionário %s não está vinculado a um veículo."
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
@@ -107,37 +154,39 @@ msgid "Employee Name"
 msgstr "Nome do Funcionário"
 
 #. module: hr_fleet
-#. odoo-python
-#: code:addons/hr_fleet/models/hr_plan_activity_type.py:0
-msgid "Employee's vehicle %s is not linked to a fleet manager."
-msgstr ""
-
-#. module: hr_fleet
-#: model:ir.model.fields.selection,name:hr_fleet.selection__hr_plan_activity_type__responsible__fleet_manager
+#: model:ir.model.fields.selection,name:hr_fleet.selection__mail_activity_plan_template__responsible_type__fleet_manager
 msgid "Fleet Manager"
-msgstr ""
+msgstr "Gerente de frota"
 
 #. module: hr_fleet
-#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
-msgid "Fleet Mobility Card"
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+msgid "Fleet Manager is limited to Employee plans."
 msgstr ""
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
 msgid "Future Driver (Employee)"
+msgstr "Futuro motorista (funcionário)"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_contract__id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_services__id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__id
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__id
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__id
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__id
+#: model:ir.model.fields,field_description:hr_fleet.field_ir_attachment__id
+#: model:ir.model.fields,field_description:hr_fleet.field_mail_activity_plan_template__id
+msgid "ID"
 msgstr ""
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__license_plate
 msgid "License Plate"
 msgstr "Matrícula"
-
-#. module: hr_fleet
-#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__mobility_card
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__mobility_card
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__mobility_card
-msgid "Mobility Card"
-msgstr "Número da Carta de Condução"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
@@ -150,30 +199,21 @@ msgid "Odometer log for a vehicle"
 msgstr "Registo de quilometragem para um veículo"
 
 #. module: hr_fleet
-#: model:ir.model,name:hr_fleet.model_hr_plan_activity_type
-msgid "Plan activity type"
-msgstr ""
-
-#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Empregado público"
 
 #. module: hr_fleet
 #. odoo-python
 #: code:addons/hr_fleet/models/fleet_vehicle.py:0
+#: code:addons/hr_fleet/models/fleet_vehicle_log_contract.py:0
 msgid "Related Employee"
-msgstr ""
+msgstr "Funcionário relacionado"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
 msgid "Release Company Car"
-msgstr ""
-
-#. module: hr_fleet
-#: model:ir.model.fields,field_description:hr_fleet.field_hr_plan_activity_type__responsible
-msgid "Responsible"
-msgstr ""
+msgstr "Liberar carro da empresa"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
@@ -181,15 +221,18 @@ msgid "Services for vehicles"
 msgstr "Serviços para veículos"
 
 #. module: hr_fleet
+#. odoo-python
+#: code:addons/hr_fleet/models/mail_activity_plan_template.py:0
+msgid ""
+"The vehicle of employee %(employee)s is not linked to a fleet manager, "
+"assigning to you."
+msgstr ""
+
+#. module: hr_fleet
 #. odoo-javascript
 #: code:addons/hr_fleet/static/src/views/hr_fleet_kanban/hr_fleet_kanban_controller.xml:0
 msgid "Upload"
 msgstr "Enviar"
-
-#. module: hr_fleet
-#: model:ir.model,name:hr_fleet.model_res_users
-msgid "User"
-msgstr "Utilizador"
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle
@@ -199,9 +242,9 @@ msgstr "Veículo"
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_contract
 msgid "Vehicle Contract"
-msgstr ""
+msgstr "Contrato de veículo"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
 msgid "Vehicles (private)"
-msgstr ""
+msgstr "Veículos (privado)"

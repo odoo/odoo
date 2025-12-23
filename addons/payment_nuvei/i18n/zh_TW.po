@@ -1,23 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_nuvei
-# 
+# * payment_nuvei
+#
 # Translators:
 # Wil Odoo, 2025
-# 
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"PO-Revision-Date: 2025-09-16 08:11+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/payment_nuvei/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: payment_nuvei
 #. odoo-python
@@ -29,8 +32,8 @@ msgstr "%(payment_method)s 須提供姓氏及名字。"
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid ""
-"An error occurred during the processing of your payment (%(reason)s). Please"
-" try again."
+"An error occurred during the processing of your payment (%(reason)s). Please "
+"try again."
 msgstr "處理付款時發生錯誤，請再試一次。（%(reason)s）"
 
 #. module: payment_nuvei
@@ -48,18 +51,12 @@ msgstr "顯示名稱"
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__id
 msgid "ID"
-msgstr "識別碼"
+msgstr "識別號"
 
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Merchant Identifier"
 msgstr "商戶識別碼"
-
-#. module: payment_nuvei
-#. odoo-python
-#: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid "No transaction found matching reference %(ref)s."
-msgstr "找不到參考編號符合 %(ref)s 的交易。"
 
 #. module: payment_nuvei
 #: model:ir.model.fields.selection,name:payment_nuvei.selection__payment_provider__code__nuvei
@@ -100,14 +97,7 @@ msgstr "收到的數據中缺漏付款狀態。"
 #. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid "Received data with missing reference."
-msgstr "收到的數據缺漏參考編號。"
-
-#. module: payment_nuvei
-#. odoo-python
-#: code:addons/payment_nuvei/models/payment_transaction.py:0
-msgid ""
-"Received invalid transaction status %(status)s and reason '%(reason)s'."
+msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
 msgstr "收到無效交易狀態 %(status)s，原因：%(reason)s。"
 
 #. module: payment_nuvei

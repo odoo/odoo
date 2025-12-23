@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mass_mailing_sale
+# * mass_mailing_sale
 #
 # Translators:
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
@@ -9,22 +9,40 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-07 10:47+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"POT-Creation-Date: 2025-10-08 18:38+0000\n"
+"PO-Revision-Date: 2025-11-08 01:50+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"mass_mailing_sale/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
+
+#. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__id
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__id
+msgid "ID"
+msgstr "ID"
+
+#. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "INVOICED"
 msgstr "INVOICED"
@@ -40,6 +58,7 @@ msgid "Invoiced Amount"
 msgstr "Fatura Tutarı"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "Invoices Analysis"
 msgstr "Faturaların Analizi"
@@ -50,16 +69,19 @@ msgid "Mass Mailing"
 msgstr "Toplu E-Posta"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "No Quotations yet!"
 msgstr "Henüz Teklif Yok!"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "No Revenues yet!"
 msgstr "Henüz Gelir Yok!"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "QUOTATIONS"
 msgstr "QUOTATIONS"
@@ -76,9 +98,14 @@ msgid "Quotations"
 msgstr "Teklifler"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
-msgid "Quotations will appear here once your customers add products to their Carts or when your sales reps assign this mailing."
-msgstr "Müşterileriniz Sepetlerine ürün eklediğinde veya satış temsilcileriniz bu postayı atadığında, teklifler burada görünecektir."
+msgid ""
+"Quotations will appear here once your customers add products to their Carts "
+"or when your sales reps assign this mailing."
+msgstr ""
+"Müşterileriniz Sepetlerine ürün eklediğinde veya satış temsilcileriniz bu "
+"postayı atadığında, teklifler burada görünecektir."
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields.selection,name:mass_mailing_sale.selection__utm_campaign__ab_testing_winner_selection__sale_invoiced_amount
@@ -86,14 +113,17 @@ msgid "Revenues"
 msgstr "Gelirler"
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "Revenues will appear here once orders are turned into invoices."
-msgstr "Siparişler faturaya dönüştürüldükten sonra gelirler burada görünecektir."
+msgstr ""
+"Siparişler faturaya dönüştürüldükten sonra gelirler burada görünecektir."
 
 #. module: mass_mailing_sale
+#. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "Sales Analysis"
-msgstr "Sipariş & Teklif Analizi"
+msgstr "Satış Analizi"
 
 #. module: mass_mailing_sale
 #: model:ir.model,name:mass_mailing_sale.model_sale_order
@@ -108,7 +138,7 @@ msgstr "Gönderilecek kazanan postayı belirlemek için seçim."
 #. module: mass_mailing_sale
 #: model:ir.model,name:mass_mailing_sale.model_utm_campaign
 msgid "UTM Campaign"
-msgstr "UTM kampanyası"
+msgstr "UTM Kampanyası"
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection

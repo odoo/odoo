@@ -1,24 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sms
-# 
+# * sms
+#
 # Translators:
 # Wil Odoo, 2025
 # Tony Ng, 2025
-# 
+#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:36+0000\n"
-"PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
-"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"PO-Revision-Date: 2025-11-11 17:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/sms/zh_Hant/>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -36,7 +40,8 @@ msgstr "#有效的收件人"
 msgid ""
 "%(count)s out of the %(total)s selected SMS Text Messages have successfully "
 "been resent."
-msgstr "已成功重新傳送 %(count)s 個 SMS 文字訊息。原本選取的總數為 %(total)s 個。"
+msgstr ""
+"已成功重新傳送 %(count)s 個 SMS 文字訊息。原本選取的總數為 %(total)s 個。"
 
 #. module: sms
 #. odoo-python
@@ -60,7 +65,9 @@ msgstr "+1 555-555-555"
 msgid ""
 "<i class=\"fa fa-warning\"/> An error occurred with your account. Please "
 "contact the support for more information..."
-msgstr "<i class=\"fa fa-warning\"/> 你的帳戶發生錯誤。請聯絡技術支援人員，以獲取更多資訊。"
+msgstr ""
+"<i class=\"fa fa-warning\"/> 你的帳戶發生錯誤。請聯絡技術支援人員，以獲取更多"
+"資訊。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.iap_account_view_form
@@ -91,7 +98,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text\">添加</span>\n"
 "                                <span class=\"o_stat_text\">上下文動作</span>"
@@ -105,43 +113,55 @@ msgstr "<span class=\"o_stat_text\">預覽</span>"
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
-"                                <span class=\"o_stat_text\">Context Action</span>"
+"                                <span class=\"o_stat_text\">Context Action</"
+"span>"
 msgstr ""
 "<span class=\"o_stat_text\">移除</span>\n"
 "                                <span class=\"o_stat_text\">上下文動作</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
-msgid "<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
-msgstr "<span class=\"text-warning\" invisible=\"not no_record\">沒有記錄</span>"
+msgid ""
+"<span class=\"text-warning\" invisible=\"not no_record\">No records</span>"
+msgstr ""
+"<span class=\"text-warning\" invisible=\"not no_record\">沒有記錄</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                    The message will be sent as an SMS to the recipients of the template\n"
-"                                    and will not appear in the messaging history.\n"
+"                                    The message will be sent as an SMS to "
+"the recipients of the template\n"
+"                                    and will not appear in the messaging "
+"history.\n"
 "                                </span>\n"
 "                                <span invisible=\"sms_method != 'note'\">\n"
-"                                    The SMS will not be sent, it will only be posted as an\n"
+"                                    The SMS will not be sent, it will only "
+"be posted as an\n"
 "                                    internal note in the messaging history.\n"
 "                                </span>\n"
-"                                <span invisible=\"sms_method != 'comment'\">\n"
-"                                    The SMS will be sent as an SMS to the recipients of the\n"
-"                                    template and it will also be posted as an internal note\n"
+"                                <span invisible=\"sms_method != "
+"'comment'\">\n"
+"                                    The SMS will be sent as an SMS to the "
+"recipients of the\n"
+"                                    template and it will also be posted as "
+"an internal note\n"
 "                                    in the messaging history.\n"
 "                                </span>"
 msgstr ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                    訊息將以 SMS 簡訊形式發送給範本的收件人，\n"
+"                                    訊息將以 SMS 簡訊形式發送給範本的收件"
+"人，\n"
 "                                    而且不會出現在訊息歷史記錄中。\n"
 "                                </span>\n"
 "                                <span invisible=\"sms_method != 'note'\">\n"
 "                                    簡訊不會被發送，只會在訊息歷史記錄中，\n"
 "                                    作為內部備註發佈。\n"
 "                                </span>\n"
-"                                <span invisible=\"sms_method != 'comment'\">\n"
-"                                    簡訊將以 SMS 簡訊形式發送給範本的收件人，\n"
+"                                <span invisible=\"sms_method != "
+"'comment'\">\n"
+"                                    簡訊將以 SMS 簡訊形式發送給範本的收件"
+"人，\n"
 "                                    亦會在訊息歷史記錄中，\n"
 "                                    作為內部備註發佈。\n"
 "                                </span>"
@@ -178,6 +198,12 @@ msgid ""
 "Add a contextual action on the related model to open a sms composer with "
 "this template"
 msgstr "在相關的模型上添加上下文操作以使用此模板打開簡訊作者"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_composer__sms_type__alert
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__sms_type__alert
+msgid "Alert"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_sms__uuid
@@ -241,25 +267,10 @@ msgid "Body"
 msgstr "內文"
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
-msgid "Buy credits"
-msgstr "購買點數"
-
-#. module: sms
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "Buy credits."
 msgstr "購買積分。"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend__can_cancel
-msgid "Can Cancel"
-msgstr "可取消"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend__can_resend
-msgid "Can Resend"
-msgstr "可重新發送"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_code_view_form
@@ -299,9 +310,9 @@ msgid "Choose your sender name"
 msgstr "選擇發訊人名稱"
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
-msgid "Close"
-msgstr "關閉"
+#: model:ir.model,name:sms.model_res_company
+msgid "Company"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -345,8 +356,6 @@ msgstr "需要有在特定國家的註冊。"
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_composer__create_uid
-#: model:ir.model.fields,field_description:sms.field_sms_resend__create_uid
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_sms__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_uid
@@ -360,8 +369,6 @@ msgstr "建立人員"
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_composer__create_date
-#: model:ir.model.fields,field_description:sms.field_sms_resend__create_date
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_sms__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_template__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_date
@@ -379,6 +386,16 @@ msgstr "點數"
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
 msgid "Customer"
 msgstr "客戶"
+
+#. module: sms
+#: model:sms.template,name:sms.sms_template_demo_0
+msgid "Customer: automated SMS"
+msgstr "客戶：自動簡訊"
+
+#. module: sms
+#: model:sms.template,body:sms.sms_template_demo_0
+msgid "Dear {{ object.display_name }} this is an automated SMS."
+msgstr "親愛的{{ object.display_name }} 這是一條自動簡訊。"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
@@ -399,12 +416,11 @@ msgstr "捨棄"
 #: model:ir.model.fields,field_description:sms.field_mail_message__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_notification__display_name
 #: model:ir.model.fields,field_description:sms.field_mail_thread__display_name
+#: model:ir.model.fields,field_description:sms.field_res_company__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_composer__display_name
-#: model:ir.model.fields,field_description:sms.field_sms_resend__display_name
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_sms__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_template__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__display_name
@@ -415,8 +431,8 @@ msgstr "顯示名稱"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
-msgid "Document Followers"
-msgstr "單據關注者"
+msgid "Document Follower"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
@@ -444,11 +460,6 @@ msgid "Duplicate"
 msgstr "複製"
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
-msgid "Edit Partners"
-msgstr "編輯夥伴"
-
-#. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
 msgstr "電郵對話串"
@@ -470,11 +481,6 @@ msgid "Error"
 msgstr "錯誤"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
-msgid "Error Message"
-msgstr "錯誤訊息"
-
-#. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_expired
@@ -493,31 +499,20 @@ msgstr "失敗類型"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
-msgid ""
-"File from where the template originates. Used to reset broken template."
+msgid "File from where the template originates. Used to reset broken template."
 msgstr "範本來自的來源檔案。用於重設損壞的範本。"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Following numbers are not correctly encoded: %s"
-msgstr "以下數字未正確編碼：%s"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend__has_insufficient_credit
-msgid "Has Insufficient Credit"
-msgstr "點數不足"
+msgstr "以下號碼的編碼不正確：%s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_message__has_sms_error
 msgid "Has SMS error"
 msgstr "有簡訊錯誤"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
-msgid "Has Unregistered Account"
-msgstr "有未註冊的帳號"
 
 #. module: sms
 #: model:ir.model,name:sms.model_iap_account
@@ -532,12 +527,11 @@ msgstr "IAP 帳戶"
 #: model:ir.model.fields,field_description:sms.field_mail_message__id
 #: model:ir.model.fields,field_description:sms.field_mail_notification__id
 #: model:ir.model.fields,field_description:sms.field_mail_thread__id
+#: model:ir.model.fields,field_description:sms.field_res_company__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__id
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__id
 #: model:ir.model.fields,field_description:sms.field_sms_composer__id
-#: model:ir.model.fields,field_description:sms.field_sms_resend__id
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__id
 #: model:ir.model.fields,field_description:sms.field_sms_sms__id
 #: model:ir.model.fields,field_description:sms.field_sms_template__id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__id
@@ -557,6 +551,7 @@ msgstr "識別號"
 #: model:ir.model.fields,help:sms.field_fleet_vehicle_log_services__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_fleet_vehicle_model__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_gamification_badge__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_gamification_badge_user__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_gamification_challenge__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_iap_account__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_ir_actions_server__message_has_sms_error
@@ -568,6 +563,7 @@ msgstr "識別號"
 #: model:ir.model.fields,help:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_main_attachment__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_phone__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_mail_tracking_duration_mixin__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_request__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_maintenance_team__message_has_sms_error
@@ -583,11 +579,6 @@ msgid "If checked, some messages have a delivery error."
 msgstr "勾選代表有訊息發生傳送錯誤。"
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
-msgid "Ignore all"
-msgstr "全部忽略"
-
-#. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
 msgid "In Queue"
 msgstr "排隊"
@@ -596,6 +587,12 @@ msgstr "排隊"
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
 msgstr "指示 SMS 編輯器是否針對單個特定收件人"
+
+#. module: sms
+#. odoo-javascript
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+msgid "Insert Field"
+msgstr "插入欄位"
 
 #. module: sms
 #. odoo-javascript
@@ -619,13 +616,15 @@ msgid ""
 "Invalid phone number. Please make sure to follow the international format, "
 "i.e. a plus sign (+), then country code, city code, and local phone number. "
 "For example: +1 555-555-555"
-msgstr "電話號碼無效。請確保使用國際電話格式：首先是加號 (+)，然後是國家代碼、城市代碼，最後是當地電話號碼。例：+1 555-555-555"
+msgstr ""
+"電話號碼無效。請確保使用國際電話格式：首先是加號 (+)，然後是國家代碼、城市代"
+"碼，最後是當地電話號碼。例：+1 555-555-555"
 
 #. module: sms
 #. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 msgid "Invalid recipient number. Please update it."
-msgstr "收件人號碼無效。請更新它。"
+msgstr "收訊人號碼無效，請更正。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
@@ -647,8 +646,6 @@ msgstr "語言"
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_composer__write_uid
-#: model:ir.model.fields,field_description:sms.field_sms_resend__write_uid
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_sms__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_uid
@@ -662,8 +659,6 @@ msgstr "最後更新者"
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_account_sender__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_composer__write_date
-#: model:ir.model.fields,field_description:sms.field_sms_resend__write_date
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_sms__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_template__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_date
@@ -698,17 +693,22 @@ msgid "Marked for deletion"
 msgstr "已標記作刪除"
 
 #. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_composer__sms_type__marketing
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__sms_type__marketing
+msgid "Marketing"
+msgstr ""
+
+#. module: sms
 #: model:ir.model,name:sms.model_mail_message
 #: model:ir.model.fields,field_description:sms.field_sms_composer__body
-#: model:ir.model.fields,field_description:sms.field_sms_resend__mail_message_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Message"
 msgstr "消息"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
-msgid "Message Notifications"
-msgstr "訊息通知"
+msgid "Message Notification"
+msgstr ""
 
 #. module: sms
 #. odoo-javascript
@@ -720,8 +720,8 @@ msgstr "缺少電話號碼"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_model
-msgid "Models"
-msgstr "型號"
+msgid "Model"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__name
@@ -757,12 +757,8 @@ msgstr "只留備註"
 msgid ""
 "Note that this is not required, if you don't set a sender name, your SMS "
 "will be sent from a short code."
-msgstr "請留意，此項並非必須填寫。若不設定發訊人名稱，短訊發送方將顯示為簡短代碼。"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
-msgid "Notification"
-msgstr "通知"
+msgstr ""
+"請留意，此項並非必須填寫。若不設定發訊人名稱，短訊發送方將顯示為簡短代碼。"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
@@ -777,13 +773,13 @@ msgstr "號碼"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Number Field"
-msgstr "數字欄位"
+msgstr "號碼欄位"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
-"Number of recipients that will receive the SMS if sent in mass mode, without"
-" applying the Active Domain value"
+"Number of recipients that will receive the SMS if sent in mass mode, without "
+"applying the Active Domain value"
 msgstr "如果以群發模式發送，而不應用 Active Domain 值，將接收 SMS 的收件人數量"
 
 #. module: sms
@@ -795,12 +791,13 @@ msgstr "選擇退出"
 #: model:ir.model.fields,help:sms.field_sms_template__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
-"email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. {{ "
-"object.partner_id.lang }}."
+"email. If not set, the main partner's language will be used. This should "
+"usually be a placeholder expression that provides the appropriate language, "
+"e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"發送電子郵件時要選擇的可選翻譯語言（ISO 代碼）。如果未設置，將使用英文版本。這通常應該是提供適當語言的佔位符表達式，例如{{ "
-"object.partner_id.lang }}。"
+"發送電子郵件時使用的翻譯語言（ISO 代碼），可選填。若未有設定，會使用合作夥伴"
+"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如："
+"{{ object.partner_id.lang }}。"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -808,13 +805,7 @@ msgid "Outgoing SMS"
 msgstr "出向簡訊"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_id
-msgid "Partner"
-msgstr "業務夥伴"
-
-#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__phone_number
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
 msgid "Phone Number"
 msgstr "電話號碼"
 
@@ -829,6 +820,13 @@ msgstr "收件人的電話號碼。如果更改，將記錄在收件人的個人
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
 msgstr "提交在文件上"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__use_exclusion_list
+msgid ""
+"Prevent sending messages to blacklisted contacts. Disable only when "
+"absolutely necessary."
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -851,34 +849,14 @@ msgid "Put in queue"
 msgstr "加入佇列"
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
-msgid "Reason"
-msgstr "原因"
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
-msgid "Recipient"
-msgstr "收件人"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
-msgid "Recipient Name"
-msgstr "收件人名稱"
-
-#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
 msgid "Recipient Number"
-msgstr "收件人編號"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
-msgid "Recipients"
-msgstr "接收者"
+msgstr "收訊人號碼"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__numbers
 msgid "Recipients (Numbers)"
-msgstr "收件人（數字）"
+msgstr "收訊人（號碼）"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_description
@@ -940,11 +918,6 @@ msgstr "呈現模型"
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
 msgid "Resend"
 msgstr "重新發送"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_resend_recipient
-msgid "Resend Notification"
-msgstr "重新發送通知"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_reset_action
@@ -1023,6 +996,7 @@ msgstr "短訊帳戶驗證碼精靈"
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle_log_services__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_fleet_vehicle_model__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_gamification_badge__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_gamification_badge_user__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_gamification_challenge__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_iap_account__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__message_has_sms_error
@@ -1034,6 +1008,7 @@ msgstr "短訊帳戶驗證碼精靈"
 #: model:ir.model.fields,field_description:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_main_attachment__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_phone__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_mail_tracking_duration_mixin__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_request__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_maintenance_team__message_has_sms_error
@@ -1080,11 +1055,6 @@ msgstr "簡訊預覽"
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 msgid "SMS Pricing"
 msgstr "簡訊價格"
-
-#. module: sms
-#: model:ir.model,name:sms.model_sms_resend
-msgid "SMS Resend"
-msgstr "簡訊重新發送"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__state
@@ -1157,7 +1127,7 @@ msgstr "簡訊：簡訊佇列管理器"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr "消毒數量"
+msgstr "已清理格式號碼"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
@@ -1171,15 +1141,10 @@ msgid "Send"
 msgstr "傳送"
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
-msgid "Send & Close"
-msgstr "發送並關閉"
-
-#. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
-msgid "Send (%(method)s): %(template_name)s"
-msgstr "傳送（%(method)s）：%(template_name)s"
+msgid "Send %(template_name)s"
+msgstr "傳送 %(template_name)s"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -1212,7 +1177,7 @@ msgstr "傳送短訊形式"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
 msgid "Send SMS Wizard"
-msgstr "傳送簡訊嚮導"
+msgstr "傳送短訊精靈"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
@@ -1256,11 +1221,6 @@ msgid "Sender Name"
 msgstr "發訊人名稱"
 
 #. module: sms
-#: model:ir.actions.act_window,name:sms.sms_resend_action
-msgid "Sending Failures"
-msgstr "發送失敗"
-
-#. module: sms
 #. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 msgid "Sending SMS can only be done on a not transient mail.thread model"
@@ -1290,11 +1250,6 @@ msgid "Set sender name"
 msgstr "設定發訊人名稱"
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
-msgid "Set up an account"
-msgstr "設置帳戶"
-
-#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
 msgid "Sidebar action"
 msgstr "邊欄動作"
@@ -1317,19 +1272,20 @@ msgid "Skip for now"
 msgstr "暫時跳過"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
-msgid "Sms Resend"
-msgstr "簡訊重新發送"
-
-#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
 msgid "Sms Template"
 msgstr "簡訊範本"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__sms_type
+#: model:ir.model.fields,field_description:sms.field_sms_sms__sms_type
+msgid "Sms Type"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
 msgid "Stored Recipient Number"
-msgstr "存儲的收件人號碼"
+msgstr "儲存的收訊人號碼"
 
 #. module: sms
 #. odoo-python
@@ -1392,7 +1348,7 @@ msgstr "不支援目的地國家。"
 #. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "The number you're trying to reach is not correctly formatted."
-msgstr "您嘗試撥打的號碼格式不正確。"
+msgstr "你嘗試發送至的號碼格式不正確。"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
@@ -1448,11 +1404,6 @@ msgid "To"
 msgstr "至"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
-msgid "Try Again"
-msgstr "再試"
-
-#. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
 #: model:ir.model.fields,field_description:sms.field_ir_cron__state
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
@@ -1468,11 +1419,14 @@ msgid ""
 "- 'Update a Record': update the values of a record\n"
 "- 'Create Activity': create an activity (Discuss)\n"
 "- 'Send Email': post a message, a note or send an email (Discuss)\n"
-"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': add or remove followers to a record (Discuss)\n"
+"- 'Send SMS': send SMS, log them on documents (SMS)- 'Add/Remove Followers': "
+"add or remove followers to a record (Discuss)\n"
 "- 'Create Record': create a new record with new values\n"
 "- 'Execute Code': a block of Python code that will be executed\n"
-"- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
-"- 'Multi Actions': define an action that triggers several other server actions\n"
+"- 'Send Webhook Notification': send a POST request to an external system, "
+"also known as a Webhook\n"
+"- 'Multi Actions': define an action that triggers several other server "
+"actions\n"
 msgstr ""
 "伺服器操作類型。可使用以下的值：\n"
 "- 更新記錄：更新某項記錄的值\n"
@@ -1509,14 +1463,14 @@ msgid "Unregistered Account"
 msgstr "未註冊賬戶"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__use_exclusion_list
+msgid "Use Exclusion List"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
 msgid "Use Template"
 msgstr "使用模板"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_composer__mass_use_blacklist
-msgid "Use blacklist"
-msgstr "使用黑名單"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__message_type
@@ -1527,7 +1481,8 @@ msgid ""
 "'comment': generated by user input e.g. through discuss or composer\n"
 "'email_outgoing': generated by a mailing\n"
 "'notification': generated by system e.g. tracking messages\n"
-"'auto_comment': generated by automated notification mechanism e.g. acknowledgment\n"
+"'auto_comment': generated by automated notification mechanism e.g. "
+"acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
 "用於對訊息生成器進行分類\n"
@@ -1595,12 +1550,6 @@ msgstr "錯誤的電話號碼格式"
 
 #. module: sms
 #. odoo-python
-#: code:addons/sms/wizard/sms_resend.py:0
-msgid "You do not have access to the message and/or related document."
-msgstr "您無權存取消息和/或相關的文件。"
-
-#. module: sms
-#. odoo-python
 #: code:addons/sms/tools/sms_api.py:0
 msgid "You don't have an eligible IAP account."
 msgstr "您沒有符合條件的 IAP 帳戶。"
@@ -1642,11 +1591,14 @@ msgstr "你的發訊人名稱，長度必須為 3 至 11 個字元，並只可�
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_account_sender_view_form
 msgid ""
-"Your sender name must be between 3 and 11 characters long and only contain alphanumeric characters.\n"
-"                        It must fit your company name, and you aren't allowed to modify it once you registered one, choose it carefully."
+"Your sender name must be between 3 and 11 characters long and only contain "
+"alphanumeric characters.\n"
+"                        It must fit your company name, and you aren't "
+"allowed to modify it once you registered one, choose it carefully."
 msgstr ""
 "你的發訊人名稱長度必須介乎 3 至 11 個字元之間，並只可包含英數字元。\n"
-"                        此名稱必須與你的公司名稱相符，一經註冊便不能修改，故此請謹慎選擇。"
+"                        此名稱必須與你的公司名稱相符，一經註冊便不能修改，故"
+"此請謹慎選擇。"
 
 #. module: sms
 #. odoo-python
@@ -1684,7 +1636,7 @@ msgstr "除外"
 msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
-msgstr "收件人電話號碼無效，將不會收到此訊息。"
+msgstr "收訊人電話號碼無效，將不會收到此訊息。"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form

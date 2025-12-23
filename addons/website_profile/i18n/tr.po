@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_profile
+# * website_profile
 #
 # Translators:
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2022
@@ -16,20 +16,25 @@
 # abc Def <hdogan1974@gmail.com>, 2022
 # Murat Durmuş <muratd@projetgrup.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
-#
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:50+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"POT-Creation-Date: 2025-12-16 18:37+0000\n"
+"PO-Revision-Date: 2025-11-21 14:46+0000\n"
+"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
+"website_profile/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -41,14 +46,24 @@ msgstr ""
 "            Almadınız mı?"
 
 #. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/models/res_users.py:0
+msgid "%(company_name)s Profile validation"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "(not verified)"
 msgstr "(Doğrulanmadı)"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid ". Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks."
-msgstr ". Forumda veya e-Öğrenim platformunda puan toplayın. Bu puanlar yeni seviyelere ulaşmanızı sağlayacaktır."
+msgid ""
+". Collect points on the forum or on the eLearning platform. Those points "
+"will make you reach new ranks."
+msgstr ""
+". Forumda veya e-Öğrenim platformunda puan toplayın. Bu puanlar yeni "
+"seviyelere ulaşmanızı sağlayacaktır."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
@@ -56,14 +71,27 @@ msgid ". Try another search."
 msgstr ". Başka bir arama yapmayı deneyin."
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<i class=\"fa fa-pencil fa-1g float-sm-none float-md-start\" title=\"Edit\"/>"
-msgstr "<i class=\"fa fa-pencil fa-1g float-sm-none float-md-start\" title=\"Edit\"/>"
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
+msgid ""
+"<a class=\"o_translate_inline\" t-attf-href=\"/\">Return to the website.</a>"
+msgstr ""
+"<a class=\"o_translate_inline\" t-attf-href=\"/\">Web sitesine geri dönün.</"
+"a>"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "<i class=\"fa fa-arrow-right\"/> Get Badges"
+msgstr "<i class=\"fa fa-arrow-right\"/> Rozet Alın"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "<i class=\"fa fa-pencil me-1\"/>EDIT"
 msgstr "<i class=\"fa fa-pencil me-1\"/>DÜZENLE"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
+msgstr "<i class=\"fa fa-pencil me-1\"/>Düzenle"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
@@ -73,22 +101,17 @@ msgstr "<i class=\"fa fa-pencil me-2\"/>PROFİLİ DÜZENLE"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "<i class=\"oi oi-arrow-right me-1\"/>All Badges"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Tüm Rozetler"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
 msgid "<i class=\"oi oi-arrow-right\"/> All Badges"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right\"/> Tüm Rozetler"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid "<i class=\"text-muted\"> awarded users</i>"
 msgstr "<i class=\"text-muted\"> ödül kazanan kullanıcılar</i>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<option value=\"\">Country...</option>"
-msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -104,41 +127,6 @@ msgstr "<small class=\"fw-bold\">Rozetler</small>"
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "<small class=\"fw-bold\">Joined</small>"
 msgstr "<small class=\"fw-bold\">Katıldı</small>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"fw-bold\">Biography</span>"
-msgstr "<span class=\"fw-bold\">Biyografi</span>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"fw-bold\">City</span>"
-msgstr "<span class=\"fw-bold\">Şehir</span>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"fw-bold\">Country</span>"
-msgstr "<span class=\"fw-bold\">Ülke</span>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"fw-bold\">Email</span>"
-msgstr "<span class=\"fw-bold\">Eposta</span>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"fw-bold\">Name</span>"
-msgstr "<span class=\"fw-bold\">Adı</span>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"fw-bold\">Public profile</span>"
-msgstr "<span class=\"fw-bold\">Halka açık profil</span>"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"fw-bold\">Website</span>"
-msgstr "<span class=\"fw-bold\">Website</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -162,103 +150,39 @@ msgstr "<span class=\"text-muted\">XP</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
-msgid "<span id=\"email_validated_message\">Congratulations! Your email has just been validated.</span>"
-msgstr "<span id=\"email_validated_message\">Tebrikler! E-postanız doğrulandı.</span>"
+msgid ""
+"<span id=\"email_validated_message\">Congratulations! Your email has just "
+"been validated.</span>"
+msgstr ""
+"<span id=\"email_validated_message\">Tebrikler! E-postanız doğrulandı.</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "<strong class=\"mb-3 text-white me-2\">Rank by:</strong>"
-msgstr ""
+msgstr "<strong class=\"mb-3 text-white me-2\">Sıralama:</strong>"
 
 #. module: website_profile
 #: model:mail.template,body_html:website_profile.validation_email
 msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <!-- HEADER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\">\n"
-"                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                            <t t-out=\"object.company_id.name or ''\">YourCompany</t> Profile validation\n"
-"                        </span>\n"
-"                    </td>\n"
-"                    <td t-if=\"not user.company_id.uses_default_logo\" valign=\"middle\" align=\"right\">\n"
-"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td colspan=\"2\" style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Hello <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
-"                            You have been invited to validate your email in order to get access to \"<t t-out=\"object.company_id.name or ''\">YourCompany</t>\" website.\n"
-"                            To validate your email, please click on the following link:\n"
-"                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                                <a t-att-href=\"ctx.get('token_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"<t>\n"
+"                            Hello <t t-out=\"object.name or ''\">Marc Demo</"
+"t>,<br/><br/>\n"
+"                            You have been invited to validate your email in "
+"order to get access to \"<t t-out=\"object.company_id.name or "
+"''\">YourCompany</t>\" website.\n"
+"                            To validate your email, please click on the "
+"button below:\n"
+"                            <div style=\"margin: 32px 0px 32px 0px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" t-"
+"attf-style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"font-size:13px;\">\n"
 "                                    Validate my account\n"
 "                                </a>\n"
 "                            </div>\n"
 "                            Thanks for your participation!\n"
-"                        </p>\n"
-"                    </td>\n"
-"                </tr>\n"
-"                <tr>\n"
-"                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"    <!-- FOOTER -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <tr>\n"
-"                    <td valign=\"middle\" align=\"left\">\n"
-"                         <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
-"                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
-"                        <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
-"                        <t t-if=\"user.company_id.email\">\n"
-"                            | <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
-"                        </t>\n"
-"                        <t t-if=\"user.company_id.website\">\n"
-"                            | <a t-attf-href=\"{{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
-"                        </t>\n"
-"                    </td>\n"
-"                </tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"</td></tr>\n"
-"<!-- POWERED BY -->\n"
-"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
-"        <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"            Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=forum\" style=\"color: #875A7B;\">Odoo</a>\n"
-"        </td></tr>\n"
-"    </table>\n"
-"</td></tr>\n"
-"</table>\n"
-"            "
+"            </t>"
 msgstr ""
 
 #. module: website_profile
@@ -282,6 +206,12 @@ msgid "About"
 msgstr "Hakkında"
 
 #. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "All Courses"
+msgstr "Tüm Kurslar"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "All Users"
 msgstr "Tüm Kullanıcılar"
@@ -293,6 +223,16 @@ msgid "All time"
 msgstr "Tüm Zaman"
 
 #. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__publish_on
+msgid "Auto publish on"
+msgstr ""
+
+#. module: website_profile
+#: model:ir.model.fields,help:website_profile.field_gamification_badge__publish_on
+msgid "Automatically publish the page on the chosen date and time."
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -300,14 +240,26 @@ msgid "Badges"
 msgstr "Rozetler"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "Badges are your collection of achievements. Wear them proudly! <br/>"
+msgstr ""
+"Rozetler, başarılarınızın koleksiyonudur. Onları gururla taşıyın! <br/>"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid ""
 "Besides gaining reputation with your questions and answers,\n"
-"                        you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
+"                        you receive badges for being especially helpful.<br "
+"class=\"d-none d-lg-inline-block\"/>Badges\n"
 "                        appear on your profile page, and your posts."
-msgstr "Sorularınız ve cevaplarınızla itibar kazanmanın yanı sıra özellikle yardımcı olduğunuz için rozetler alırsınız. <br class=\"d-none d-lg-inline-block\"/>Rozetler profil sayfanızda ve gönderilerinizde görünür."
+msgstr ""
+"Sorularınız ve cevaplarınızla itibar kazanmanın yanı sıra özellikle yardımcı "
+"olduğunuz için rozetler alırsınız. <br class=\"d-none d-lg-inline-block\"/"
+">Rozetler profil sayfanızda ve gönderilerinizde görünür."
 
 #. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Biography"
 msgstr "Biyografi"
@@ -318,7 +270,15 @@ msgid "Can Publish"
 msgstr "Yayınlanabilir"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
+#: model:ir.model.fields,field_description:website_profile.field_res_users__city
+msgid "City"
+msgstr "Şehir"
+
+#. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Clear"
 msgstr "Temizle"
 
@@ -328,14 +288,54 @@ msgid "Close"
 msgstr "Kapat"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
+#: model:ir.model.fields,field_description:website_profile.field_res_users__country_id
+msgid "Country"
+msgstr "Ülke"
+
+#. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
+msgid "Country..."
+msgstr "Ülke..."
+
+#. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
+msgid "Discard"
+msgstr "Sil"
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__display_name
+#: model:ir.model.fields,field_description:website_profile.field_res_users__display_name
+#: model:ir.model.fields,field_description:website_profile.field_website__display_name
+msgid "Display Name"
+msgstr "İsim Göster"
+
+#. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Edit"
 msgstr "Düzenle"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
 msgid "Edit Profile"
 msgstr "Profili Düzenle"
+
+#. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
+msgid "Email"
+msgstr "E-Posta"
+
+#. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "Forum"
+msgstr "Forum"
 
 #. module: website_profile
 #: model:mail.template,name:website_profile.validation_email
@@ -350,7 +350,7 @@ msgstr "Oyunlaştırma Rozeti"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
 msgid "Get"
-msgstr ""
+msgstr "Almak"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -366,6 +366,13 @@ msgstr "Rozetleri nasıl kazanabilirim?"
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "How do I score more points?"
 msgstr "Nasıl daha fazla puan kazanırım?"
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__id
+#: model:ir.model.fields,field_description:website_profile.field_res_users__id
+#: model:ir.model.fields,field_description:website_profile.field_website__id
+msgid "ID"
+msgstr "ID"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
@@ -393,6 +400,12 @@ msgid "More info"
 msgstr "Daha Fazla Bilgi"
 
 #. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
+msgid "Name"
+msgstr "Adı"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Nav"
 msgstr "Gezinme"
@@ -418,9 +431,23 @@ msgid "No user found for"
 msgstr "İçin kullanıcı bulunamadı"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "Please enter a valid email address in order to receive notifications from answers or comments."
-msgstr "Cevap ya da yorumlardan bildirim almak için lütfen geçerli bir e-posta adresi giriniz."
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "Not have enough karma to view other users' profile."
+msgstr ""
+"Diğer kullanıcıların profillerini görüntülemek için yeterli karmaya sahip "
+"değilsiniz."
+
+#. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
+msgid "Public Profile"
+msgstr "Genel Profil"
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__published_date
+msgid "Published date"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -428,19 +455,15 @@ msgid "Ranks"
 msgstr "Rütbeler"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.private_profile
-msgid "Return to the website."
-msgstr "Web sitesine dön."
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "Ranks and Badges"
+msgstr "Rütbeler ve Rozetler"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search"
 msgstr "Arama"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
-msgid "Search courses"
-msgstr "Kursları ara"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -453,9 +476,14 @@ msgid "Sent to forum visitors to confirm their mail address"
 msgstr "Posta adreslerini doğrulamak için forum ziyaretçilerine gönderildi"
 
 #. module: website_profile
+#: model:ir.model.fields,help:website_profile.field_gamification_badge__website_absolute_url
+msgid "The full absolute URL to access the document through the website."
+msgstr "Belgeye web sitesi üzerinden erişmek için tam mutlak URL."
+
+#. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
-msgid "The full URL to access the document through the website."
-msgstr "Web sitesi aracılığıyla belgeye erişmek için tam URL."
+msgid "The full relative URL to access the document through the website."
+msgstr "Belgeye web sitesi üzerinden erişmek için tam göreli URL."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -463,7 +491,8 @@ msgid "This month"
 msgstr "Bu Ay"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.private_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
 msgid "This profile is private!"
 msgstr "Bu profil özeldir!"
 
@@ -479,7 +508,8 @@ msgid "Unpublished"
 msgstr "Yayında Değil"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Update"
 msgstr "Güncelle"
 
@@ -487,6 +517,12 @@ msgstr "Güncelle"
 #: model:ir.model,name:website_profile.model_res_users
 msgid "User"
 msgstr "Kullanıcı"
+
+#. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "User Profiles"
+msgstr "Kullanıcı Profilleri"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
@@ -505,13 +541,31 @@ msgstr "Doğrulama E-postası şuraya gönderildi:"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_published
+#: model:ir.model.fields,field_description:website_profile.field_res_users__website_published
 msgid "Visible on current website"
 msgstr "Mevcut web sitesinde görülebilir"
 
 #. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 #: model:ir.model,name:website_profile.model_website
 msgid "Website"
 msgstr "Websitesi"
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_absolute_url
+msgid "Website Absolute URL"
+msgstr "Web Sitesi Mutlak URL"
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_res_users__website
+msgid "Website Link"
+msgstr ""
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_res_users__website_description
+msgid "Website Partner Full Description"
+msgstr ""
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
@@ -521,7 +575,15 @@ msgstr "Web Sitesi URL Adresi"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "When you finish a course or reach milestones, you're awarded badges."
-msgstr "Bir kursu bitirdiğinizde veya kilometre taşlarına ulaştığınızda, size rozetler verilir."
+msgstr ""
+"Bir kursu bitirdiğinizde veya kilometre taşlarına ulaştığınızda, size "
+"rozetler verilir."
+
+#. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
+msgid "Write a few words about yourself..."
+msgstr "Kendiniz hakkında birkaç kelime yazın..."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -531,8 +593,14 @@ msgstr "XP"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid "You can score more points by answering quizzes at the end of each course content. Points can also be earned on the forum. Follow this link to the guidelines of the forum."
-msgstr "Her dersin sonunda sınavlara cevap vererek daha fazla puan alabilirsiniz. Puanlar forumda da kazanılabilir. Forumun yönergeleri için bu bağlantıyı izleyin."
+msgid ""
+"You can score more points by answering quizzes at the end of each course "
+"content. Points can also be earned on the forum. Follow this link to the "
+"guidelines of the forum."
+msgstr ""
+"Her dersin sonunda sınavlara cevap vererek daha fazla puan alabilirsiniz. "
+"Puanlar forumda da kazanılabilir. Forumun yönergeleri için bu bağlantıyı "
+"izleyin."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -565,6 +633,12 @@ msgid "point"
 msgstr "nokta"
 
 #. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid "slides"
+msgstr "slaytlar"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 msgid "this month"
 msgstr "bu ay"
@@ -590,16 +664,13 @@ msgid ""
 "xp\n"
 "                        to level up!"
 msgstr ""
+"xp\n"
+"                        seviye atlamak için!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "your account settings"
 msgstr "hesap ayarlarınız"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
-msgid "{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else ''}}"
-msgstr ""
 
 #. module: website_profile
 #: model:mail.template,subject:website_profile.validation_email
