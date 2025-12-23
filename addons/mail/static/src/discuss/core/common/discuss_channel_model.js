@@ -125,6 +125,9 @@ export class DiscussChannel extends Record {
     channel_type;
     chatWindow = fields.One("ChatWindow", {
         inverse: "channel",
+        onDelete() {
+            this._onDeleteChatWindow();
+        },
     });
     get chatChannelTypes() {
         return ["chat", "group"];
@@ -312,8 +315,10 @@ export class DiscussChannel extends Record {
         return (this.member_count ?? 0) - (this.channel_member_ids.length ?? 0);
     }
 
+    _onDeleteChatWindow() {}
+
     delete() {
-        this.chatWindow?.close({ force: true });
+        this.chatWindow?.close();
         super.delete(...arguments);
     }
 
@@ -516,7 +521,7 @@ export class DiscussChannel extends Record {
     }
 
     async _unpinExecute() {
-        this.chatWindow?.close({ force: true });
+        this.chatWindow?.close();
         if (this.self_member_id?.is_pinned) {
             await this.pinRpc({ pinned: false });
         }

@@ -69,14 +69,9 @@ export class LivechatService {
             return thread;
         }
         const temporaryThread = thread;
-        const deleteTemporary = async () => {
-            await this.store.chatHub.initPromise;
-            temporaryThread.channel.chatWindow?.close({ force: true });
-            temporaryThread?.delete();
-        };
         const savedChannel = await this._createChannel({ originThread: thread, persist: true });
         if (!savedChannel) {
-            await deleteTemporary();
+            temporaryThread.channel.chatWindow?.close();
             return;
         }
         savedChannel.fetchNewMessages();
@@ -85,11 +80,11 @@ export class LivechatService {
             if (!savedChannel?.exists()) {
                 return;
             }
-            // Do not load unread messaes: new messages were loaded to avoid
+            // Do not load unread messages: new messages were loaded to avoid
             // flickering, we do not want another load that would result in the
             // same issue.
             savedChannel.scrollUnread = false;
-            deleteTemporary();
+            temporaryThread.channel.chatWindow?.close();
             savedChannel.openChatWindow({ focus: true });
         });
         return savedChannel;

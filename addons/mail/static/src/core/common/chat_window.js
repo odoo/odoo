@@ -154,8 +154,7 @@ export class ChatWindow extends Component {
     }
 
     close(options) {
-        const chatWindow = toRaw(this.props.chatWindow);
-        chatWindow.close(options);
+        this.props.chatWindow.requestClose(options);
     }
 
     get actionsMenuTitleText() {

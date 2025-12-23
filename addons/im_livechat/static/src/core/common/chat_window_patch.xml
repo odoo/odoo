@@ -3,9 +3,7 @@
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
         <xpath expr="//*[@name='thread content']" position="replace">
             <t>$0</t>
-            <t t-if="props.chatWindow.livechatStep === CW_LIVECHAT_STEP.CONFIRM_CLOSE">
-                <CloseConfirmation onCloseConfirmationDialog.bind="onCloseConfirmationDialog" onClickLeaveConversation.bind="close"/>
-            </t>
+            <CloseConfirmation t-if="props.chatWindow.confirmCloseResolver" onCloseConfirmationDialog="() => this.props.chatWindow.confirmCloseResolver.resolve(false)" onClickLeaveConversation="() => this.props.chatWindow.confirmCloseResolver.resolve(true)"/>
         </xpath>
         <xpath expr="//Composer" position="replace">
             <div t-if="channel.composerHidden" class="bg-200 py-1 text-center d-flex fst-italic fw-bold text-muted" t-ref="composerHiddenContainer">
