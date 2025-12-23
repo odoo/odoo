@@ -561,6 +561,25 @@ class TestExpenses(TestExpenseCommon):
             'res_id': expense_2_move.id
         }])
 
+    def test_multiple_attachments_in_move_from_company_expense(self):
+        """ Checks that all attachments from expense are copied to their journal entries. """
+        expense = self.create_expenses({
+            'name': 'Company expense',
+            'payment_mode': 'company_account',
+        })
+        self.env['ir.attachment'].create([{
+            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'name': f'file{i}.png',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        } for i in range(1, 3)])
+
+        expense.action_submit()
+        expense._do_approve()  # Skip duplicate wizard
+        expense.action_post()
+
+        self.assertEqual(len(expense.account_move_id.attachment_ids), 2)
+
     def test_expense_payment_method(self):
         default_payment_method_line = self.company_data['default_journal_bank'].outbound_payment_method_line_ids[0]
         check_method = self.env['account.payment.method'].sudo().create({
